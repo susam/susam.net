@@ -1,0 +1,30 @@
+<main class="{{ class }}">
+<h1>Post Comment</h1>
+<form method="post" action="/comment/?slug={{ slug }}">
+
+  <!-- Name -->
+  <label for="name">Name:</label>
+  <input id="name" name="name" value="{{ name }}" required>
+
+  <!-- URL -->
+  <label for="url">URL:</label>
+  <input id="url" type="url" name="url" value="{{ url }}">
+
+  <!-- Comment -->
+  <label for="comment">Comment:</label>
+  <textarea id="comment" name="comment" required>{{ comment }}</textarea>
+
+  <!-- Hidden fields -->
+  <input type="hidden" name="slug" value="{{ slug }}">
+  <input type="hidden" name="email" value="">
+
+  <!-- Success or error messages -->
+  <div class="notice">
+  {{ notice }}
+  </div>
+
+  <!-- Submit button -->
+  <input type="submit" id="submit" name="submit" value="Submit Comment">
+
+</form>
+</main>

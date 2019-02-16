@@ -1,0 +1,27 @@
+/* Music control */
+.music .widget, .musiclist h2 {
+  text-align: center;
+}
+
+.music .links {
+  font-size: small;
+  font-weight: bold;
+}
+
+.music .links a:last-child {
+  display: none; /* Hide 'details' link */
+}
+
+
+/* Music list */
+.musiclist h2 {
+  text-align: center;
+}
+
+.musiclist section {
+  margin: 2.5em 0;
+}
+
+.musiclist .music .links a:last-child {
+  display: inline;
+}

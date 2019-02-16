@@ -1,0 +1,204 @@
+<!-- title: My Favourite Email Prank -->
+<!-- tag: technology -->
+
+<h2>The Prank</h2>
+
+<p>
+My favourite email prank ends with my friends receiving an email like
+this:
+</p>
+
+<div class="email">
+<div class="header">
+<b>From:</b> "Prunthaban Kanthakumar" &lt;p****@gmail.com&gt;<br>
+<b>To:</b> "Prunthaban Kanthakumar" &lt;p****@gmail.com&gt;<br>
+<b>Cc:</b> Susam Pal &lt;s****@gmail.com&gt;, John Wesley
+&lt;w****@gmail.com&gt;<br>
+<b>Cc:</b> Indhu Bharathi &lt;i****@gmail.com&gt;, Karthik
+&lt;k****@gmail.com&gt;<br>
+<b>Subject:</b> Experiment Successful
+</div>
+<div class="body">
+<p>
+I was working today (21 Dec, 2012) on an experiment to send messages to
+a space-time co-ordinate in the past. If this experiment is successful I
+should receive this mail on 15 Feb, 2010, a date in the past.
+</p>
+<p>
+It is quite funny that we can remember the past but not the future.  So,
+when I receive this message on (15 Feb, 2010), I wouldn't remember that
+this is the result of a successful revolutionary experiment to be
+performed in future. I should have got this message time stamped by a
+trusted time stamping authority in order to prove that this message is
+indeed from the future but that has its own problems. Why would I, in
+the past, believe that such a trusted time stamping authority would
+exist in the future?  Moreover, I don't have time to get all this done
+as the world is coming to an end today.
+</div>
+</div>
+
+
+<h2>SMTP Session</h2>
+
+<p>
+The prank begins with a connection to my email server with
+<code>telnet</code> or <code>netcat</code> and holding an SMTP session
+like this:
+</p>
+
+<pre>
+<samp>$ <kbd>telnet mail.susam.in 25</kbd>
+Trying 67.43.13.244...
+Connected to susam.in.
+Escape character is '^]'.
+220-orion.susam.in ESMTP Exim 4.69 #1 Mon, 15 Feb 2010 02:10:18
++0530
+220-We do not authorize the use of this system to transport unsolicited,
+220 and/or bulk e-mail.
+<kbd>EHLO</kbd>
+250-orion.susam.in Hello  [122.167.69.67]
+250-SIZE 52428800
+250-PIPELINING
+250-AUTH PLAIN LOGIN
+250-STARTTLS
+250 HELP
+<kbd>AUTH PLAIN ****</kbd>
+235 Authentication succeeded
+<kbd>MAIL FROM:&lt;p****@gmail.com&gt;</kbd>
+250 OK
+<kbd>RCPT TO:&lt;p****@gmail.com&gt;</kbd>
+250 Accepted
+<kbd>RCPT TO:&lt;w****@gmail.com&gt;</kbd>
+250 Accepted
+<kbd>RCPT TO:&lt;s****@gmail.com&gt;</kbd>
+250 Accepted
+<kbd>RCPT
+TO:&lt;i****@gmail.com&gt;</kbd>
+250 Accepted
+<kbd>RCPT TO:&lt;k****@gmail.com&gt;</kbd>
+250 Accepted
+<kbd>DATA</kbd>
+354 Enter message, ending with "." on a line by itself
+<kbd>Date: Mon, 21 Dec 2012 10:28:00 +0530
+From: "Prunthaban Kanthakumar" &lt;p****@gmail.com&gt;
+To: "Prunthaban Kanthakumar" &lt;p****@gmail.com&gt;
+Cc: "Susam Pal" &lt;s****@gmail.com&gt;, "John Wesley" &lt;w****@gmail.com&gt;
+Cc: "Indhu Bharathi" &lt;i****@gmail.com&gt;, "Karthik" &lt;k****@gmail.com&gt;
+Subject: Experiment Successful
+
+I was working today (21 Dec, 2012) on an experiment to send messages to
+a space-time co-ordinate in the past. If this experiment is successful I
+should receive this mail on 15 Feb, 2010, a date in the past.
+
+It is quite funny that we can remember the past but not the future.  So,
+when I receive this message on (15 Feb, 2010), I wouldn't remember that
+this is the result of a successful revolutionary experiment to be
+performed in future. I should have got this message time stamped by a
+trusted time stamping authority in order to prove that this message is
+indeed from the future but that has its own problems. Why would I, in
+the past, believe that such a trusted time stamping authority would
+exist in the future?  Moreover, I don't have time to get all this done
+as the world is coming to an end today.
+.</kbd>
+250 OK id=1NglGq-0008JC-RK
+<kbd>QUIT</kbd>
+221 orion.susam.in closing connection
+Connection closed by foreign host.</samp>
+</pre>
+
+<p>
+<em>Note: In the above examples, sensitive details such as email
+addresses and the <code>AUTH PLAIN</code> response have been replaced
+with <code>****</code> for privacy and security reasons. See my blog
+post titled <a href="/blog/auth-cram-md5/">AUTH CRAM-MD5</a> for more
+details on how to craft an <code>AUTH PLAIN</code> response.
+</em>
+</p>
+
+<h2>Message Format</h2>
+
+<p>
+An internet message or email consists of two sections: header and body.
+The header usually consists of fields like <code>From</code>,
+<code>To</code>, <code>Cc</code>, <code>Subject</code>, etc. which are
+usually displayed to the user. It may have more fields like
+<code>Message-ID</code>, <code>Return-Path</code>,
+<code>Content-Type</code>, etc. which are usually not displayed to the
+user. But many email programs provide some mechanism to view them as
+well. For example, in GMail, we can click the little arrow near the
+<samp>Reply</samp> button and select the <samp>Show original</samp>
+option to view the message with all the message headers. In Microsoft
+Office Outlook, we can go to the <samp>View</samp> menu and select
+<samp>Options</samp> to see all the message headers.
+</p>
+
+<p>
+These headers are used by the email client and the various programs
+running on various email servers to deliver the email to the recipient's
+inbox. For example, if the delivery of the email fails for some reason,
+a message describing the failure is sent to the email address found in
+the <code>Return-Path</code> header. This is usually the email address
+of the sender. For example, the email address specified in the
+<code>MAIL FROM</code> command appears in the <code>Return-Path</code>
+header in the email received by the recipient.
+</p>
+
+<p>
+The actual message meant to be read by the recipient is contained in the
+message body. The message body begins after the message headers. The
+message header and the message body are separated by an empty line.
+</p>
+
+<p>
+When we compose an email using web-based email applications like GMail,
+Hotmail, etc. or desktop email clients such as Microsoft Outlook,
+Mozilla Thunderbird, etc., the email application or client automatically
+enters the sender's email address in the <code>From</code> header field
+while sending the email. Similarly, it automatically uses the email
+addresses mentioned in the <code>To</code> and <code>Cc</code> fields as
+recipients of the email. The email client connects to the SMTP server
+and executes the necessary commands to send the email to all the
+recipients mentioned in the <code>To</code> and <code>Cc</code> fields.
+</p>
+
+<p>
+In the above SMTP session example, since we are manually interacting the
+email server, we enter all the necessary commands ourselves. For
+example, each recipient is specified with the <code>RCPT TO</code>
+command. The actual email message that is displayed to the recipient by
+their various email clients begins after the <code>DATA</code> command.
+The message headers such as <code>From</code>, <code>Date</code>, etc.
+are also composed manually.
+</p>
+
+<p>
+Since we enter every SMTP command manually instead of an email
+application entering it for us, we have more freedom while entering the
+header values and make this prank possible. For example, we specify
+a future date as the value of the <code>Date</code> header field. We
+also specify a false email address as the value of the <code>From</code>
+header field. There need not be any relation between the recipients
+specified with the <code>RCPT TO</code> command and the email addresses
+specified in <code>To</code> and <code>Cc</code> fields. It is possible
+to send an email to one person with the <code>To</code> or
+<code>Cc</code> header field containing the email address of another
+person. Similarly, the <code>From</code> header field need not contain
+the email address of the actual sender. SMTP is not concerned with the
+correctness of these fields.
+</p>
+
+
+<h2>Further Reading</h2>
+
+<p>
+Here are a couple of hyperlinks for further reading:
+</p>
+
+<ol>
+  <li><a href="https://tools.ietf.org/html/rfc5321">RFC 5321</a>:
+      Simple Mail Transfer Protocol
+  </li>
+  <li><a href="https://tools.ietf.org/html/rfc5322">RFC 5322</a>:
+      Internet Message Format
+  </li>
+</ol>

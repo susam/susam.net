@@ -1,0 +1,129 @@
+Apache CGI Script Source Code Disclosure
+========================================
+
+If the directory specified in `ScriptAlias` directive lies inside the
+directory specified in `DocumentRoot` and the name of the script-alias
+is same as that of the directory containing the scripts, then an
+attacker can obtain the source code of the scripts by making HTTP
+request for the scripts by altering the case of the directory containing
+the scripts. This issue can be exploited on Windows operating systems.
+
+
+Researcher
+----------
+
+Susam Pal <susam@susam.in>
+
+
+Type
+----
+
+Information disclosure
+
+
+Timeline
+--------
+
+* 2006-08-08 - Discovered
+* 2006-08-09 - Public disclosure
+
+
+Description
+-----------
+
+Apache web server can run on many platforms. The basic configuration of
+the server is mentioned in the file httpd.conf. The `DocumentRoot`
+directive specifies the directory to be considered root for serving
+documents. For example:
+
+    DocumentRoot "/home/webmaster/site/docroot/"
+
+In the above example, a request to `http://[target]/foo.html` would
+fetch the page `foo.html` from the `/home/webmaster/site/docroot/`
+directory of the server.
+
+The `ScriptAlias` directive specifies the directory that contains
+server-side scripts. For example:
+
+  ScriptAlias /cgi-bin/ "/home/webmaster/site/docroot/cgi-bin"
+
+In the above example, a request to `http://[target]/cgi-bin/foo` would
+fetch the output of script named foo. In a secure system, the user is
+not supposed to view the source code of the script named foo by making
+an HTTP request.
+
+
+Issue
+-----
+
+Usually the following directives in httpd.conf file can be considered
+safe on Linux:
+
+    # Sample safe configuration for UNIX/Linux
+    DocumentRoot "/opt/www/"
+    ScriptAlias /cgi-bin/ "/opt/www/cgi-bin/"
+
+A similar configuration is not safe on Windows:
+
+    # Sample unsafe configuration for Windows
+    DocumentRoot "C:/www"
+    ScriptAlias "C:/www/cgi-bin"
+
+With the above configuration example, an attacker can obtain the source
+code of the server side scripts at `C:\www\cgi-bin directory` by
+altering the case of the directory name in the request. For example, a
+request to `http://[target]/CGI-BIN/foo` would fetch the source code of
+the script named foo.
+
+Apache HTTP Server checks for the exact case mentioned in the
+`ScriptAlias` directive before deciding whether the directory mentioned
+in the HTTP request is a directory meant for scripts or not. When it
+receives a request for a file in `CGI-BIN` (uppercase), it finds it to
+be different from `cgi-bin` (lowercase) mentioned in the `ScriptAlias`
+directive. Therefore it concludes that `CGI-BIN` is not a script-alias.
+As a result, it sends the content of the file named foo as the HTTP
+response.
+
+
+Impact
+------
+
+An attacker can obtain the source code of server side scripts resulting
+in a loss of confidentiality.
+
+
+Example Exploit
+---------------
+
+    http://[target]/CGI-BIN/foo
+
+
+Prevention
+----------
+
+The directory referenced by the `ScriptAlias` directive should lie
+outside the directory referenced by the `DocumentRoot` directive.
+
+
+Initial Publication
+-------------------
+
+http://www.securityfocus.com/archive/1/442882
+
+
+Related URLs
+------------
+
+* http://cve.mitre.org/cgi-bin/cvename.cgi?name=2006-4110
+  (CVE-2006-4110)
+* http://nvd.nist.gov/nvd.cfm?cvename=CVE-2006-4110
+  (Overall CVSS Score: 4.3)
+* http://www.osvdb.org/27913
+  (OSVDB ID: 27913)
+* http://www.securityfocus.com/bid/19447
+  (Bugtraq ID: 19447)
+* http://secunia.com/advisories/21490
+  (SA21490)
+* http://www.frsirt.com/english/advisories/2006/3265
+  (FrSIRT/ADV-2006-3265)
+* http://xforce.iss.net/xforce/xfdb/28357

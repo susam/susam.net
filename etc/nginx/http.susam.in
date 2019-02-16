@@ -1,0 +1,24 @@
+# http://example.com/
+server {
+    listen 80;
+    listen [::]:80;
+    server_name susam.in susam;
+    root /var/www/susam.in;
+
+    location /comment/ {
+        include uwsgi_params;
+        uwsgi_pass unix:/tmp/spapp.sock;
+    }
+
+    location /files/ {
+        autoindex on;
+    }
+}
+
+# http://www.example.com/ => http://example.com/
+server {
+    listen 80;
+    listen [::]:80;
+    server_name www.susam.in;
+    return 301 http://susam.in$request_uri;
+}

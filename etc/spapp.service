@@ -1,0 +1,18 @@
+[Unit]
+Description=Susam.in App
+After=network.target
+
+[Service]
+User=www-data
+ExecStart=/usr/bin/uwsgi --socket /tmp/spapp.sock \
+                         --uid www-data --gid www-data \
+                         --chdir /opt/live/susam.in \
+                         --plugin python3 \
+                         --module py.spapp:app
+Restart=Always
+RestartSec=5
+
+# TODO: Troubleshoot RestartSec
+
+[Install]
+WantedBy=multi-user.target

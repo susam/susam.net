@@ -1,0 +1,308 @@
+/* General */
+body {
+  margin: 0;
+  line-height: 1.5;
+  color: #303030;
+  font-family: helvetica, arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0;
+  margin-top: 1em;
+}
+
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+  margin-top: 0.5em;
+}
+
+audio {
+  min-width: 75%;
+  max-width: 100%;
+}
+
+figure {
+  text-align: center;
+  margin: 2em 0;
+}
+
+figure img {
+  max-width: 100%;
+}
+
+figcaption {
+  font-size: small;
+}
+
+
+/* Code */
+pre, code, samp, kbd {
+  font-family: monospace,monospace;
+  color: #000060;
+  font-size: 0.9em;
+}
+
+pre code, pre samp, pre kbd {
+  font-size: 1em;
+}
+
+pre {
+  background: #f0f0f0;
+  padding: 0.5em;
+  overflow: auto;
+}
+
+pre kbd {
+  font-style: italic;
+  color: #007000;
+}
+
+
+/* Blockquote */
+blockquote {
+  background: #f0f0f0;
+  border-left: medium solid #c0c0c0;
+  margin-right: 0;
+  margin-left: 0;
+  padding: 0.5em;
+}
+
+blockquote *:first-child {
+  margin-top: 0;
+}
+
+blockquote *:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Layout */
+header, main, footer {
+  max-width: 42em;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1em;
+}
+
+hr {
+  max-width: 44em;
+  margin: 1em auto;
+  border: 0;
+  border-bottom: thin dotted gray;
+}
+
+
+/* Links */
+a:link, a:visited {
+  color: #0040c0;
+  text-decoration: none
+}
+
+a:hover, a:active {
+  color: #0040a0;
+  text-decoration: underline
+}
+
+.links a {
+  font-size: small;
+  font-weight: bold;
+  margin-right: 1em;
+}
+
+.links a:last-child {
+  margin-right: 0;
+}
+
+h1 a:link, h1 a:visited,
+h2 a:link, h2 a:visited,
+h3 a:link, h3 a:visited,
+h4 a:link, h4 a:visited,
+h5 a:link, h5 a:visited,
+h6 a:link, h6 a:visited,
+.links a:link, .links a:visited,
+.posts a:link, .posts a:visited
+{
+  color: #303030;
+}
+
+h1 a:hover, h1 a:active,
+h2 a:hover, h2 a:active,
+h3 a:hover, h3 a:active,
+h4 a:hover, h4 a:active,
+h5 a:hover, h5 a:active,
+h6 a:hover, h6 a:active,
+.links a:hover, .links a:active,
+.posts a:hover, .posts a:active
+{
+  color: #707070;
+}
+
+
+/* Footer */
+footer .links a {
+  font-size: medium;
+  font-weight: normal;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+footer .links, footer .social {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+footer .social a {
+  margin-right: 0.5em;
+}
+
+footer .social a:last-child {
+  margin-right: 0;
+}
+
+footer .social img {
+  height: 1.25em;
+  opacity: 0.81;
+}
+
+footer .social img:hover {
+  opacity: 0.56;
+}
+
+
+/* Blog Listing */
+ul.posts {
+  padding-left: 1em;
+}
+
+
+/* Post */
+.meta {
+  font-size: small;
+  color: #707070;
+  font-style: italic;
+}
+
+.meta a:link, .meta a:visited {
+  color: #707070;
+}
+
+.meta a:hover, .meta a:active {
+  color: #303030;
+}
+
+
+/* Comments */
+.comment h2 {
+  font-size: 1em;
+  margin-top: 0;
+}
+
+.comment :last-child {
+  margin-bottom: 0;
+}
+
+.comment {
+  border: thin solid #707070;
+  padding: 0.625em;
+  margin: 1em 0;
+}
+
+.comment.author {
+  border-width: medium;
+  border-style: double;
+}
+
+
+/* Home page */
+p.summary {
+  margin-bottom: 0.25em;
+}
+
+.all {
+  margin-top: 1em;
+}
+
+
+/* Everything below this comment is meant for usage in content body. */
+
+/* Generic text centering */
+.textcenter {
+  text-align: center;
+}
+
+/* Generic block element centering */
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Highlight Box */
+.highlight {
+  /* Should be similar to pre style */
+  background: #f1f5f9;
+  padding: 0.5em;
+}
+
+.highlight *:first-child {
+  margin-top: 0;
+}
+
+.highlight *:last-child {
+  margin-bottom: 0;
+}
+
+/* Plain Table */
+table {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+thead {
+  text-align: left;
+}
+
+th, td {
+  padding-right: 1.0em;
+}
+
+/* Grid Table */
+table.grid {
+  border-collapse: collapse;
+}
+
+table.grid th, table.grid td {
+  border: thin solid;
+}
+
+table.grid th, table.grid td {
+  padding: 0.3em 0.4em;
+}
+
+/* Ruled Table */
+table.ruled {
+  border-collapse: collapse;
+  border-top: medium double;
+  border-bottom: medium double;
+}
+
+table.ruled thead {
+  border-bottom: medium double;
+}
+
+table.ruled tr {
+  border-bottom: thin solid;
+}
+
+table.ruled th, table.ruled td {
+  padding: 0.3em 0.4em;
+}
+
+/* Email */
+.email {
+  border: thin solid gray;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.email .header, .email .body {
+  margin: 1em;
+}

@@ -1,0 +1,40 @@
+<!-- date: 2010-11-30 05:56:11 +0000 -->
+<!-- name: Mandeep Sandhu -->
+<!-- url: https://www.blogger.com/profile/03525698623916624105 -->
+<p>
+Nice! The syntax on returning function pointers was a little tricky.
+Learnt that today! :)
+</p>
+<!-- date: 2011-06-07 05:02:04 +0000 -->
+<!-- name: Iouri -->
+<p>
+There is a website that you can use for this:
+<a href="https://cdecl.org/">https://cdecl.org/</a>.
+</p>
+<p>
+It can take a description like <em>"declare x as pointer to function
+(array 10 of pointer to function (pointer to int) returning void)
+returning pointer to function (pointer to int) returning void"</em> and
+give back its declaration like this:
+</p>
+<pre>
+<code>void (*(*x)(void (*[10])(int *)))(int *)</code>
+</pre>
+<!-- date: 2011-11-24 02:26:12 +0000 -->
+<!-- name: Michael -->
+<p>
+I wrote a simple C parser once, and found this page to be very helpful
+in understanding complex C declarators:
+<a
+href="http://msdn.microsoft.com/en-us/library/1x82y1z4.aspx">https://msdn.microsoft.com/en-us/library/1x82y1z4.aspx</a>.
+</p>
+<!-- date: 2011-12-09 18:18:08 +0000 -->
+<!-- name: Peter Desnoyers -->
+<p>
+See R. P. Mody. 1992. "On understanding type declarations in C."
+<em>SIGPLAN Not. 27</em>, 6 (June 1992), 80-83.
+</p><p>
+It gives a short calculus for understanding pre-ANSI type declarations.
+Best quote from it: "We are now ready to tackle a famous horror &mdash;
+'signal' of UNIX".
+</p>

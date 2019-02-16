@@ -1,0 +1,94 @@
+<!-- title: From Diophantus to Fermat -->
+<!-- tag: mathematics -->
+<!-- import: tex.js -->
+
+<p>
+Here is a puzzle I created recently for my friends who love to indulge
+in recreational mathematics:
+</p>
+
+<div class="highlight">
+Find all integer solutions to the equation
+\[
+  y^2 + 3 = \frac{x^3}{18}.
+\]
+</div>
+
+<p>
+<em>
+If you want to think about this puzzle, this is a good time to pause and
+think about it. There are spoilers ahead.
+</em>
+</p>
+
+<p>
+It does not take long to realize that this is a Diophantine equation of
+the form \( a^n + b^n = c^n \). Here is how the equation looks after
+rearranging the terms:
+
+\[
+  x^3 = 18y^2 + 54.
+\]
+</p>
+
+<p>
+The right hand side is positive, so any \( x \) that satisfies this
+equation must also be positive, i.e., \( x > 0 \) must hold good for any
+solution \( x \) and \( y \).
+</p>
+
+<p>
+Also, if some \( y \) satisfies the equation, then \( -y \) also
+satisfies the equation because the right hand side value remains the
+same for both \( y \) and \( -y \).
+</p>
+
+<p>
+The right hand side is \( 2(9y^2 + 3^3) \). This is of the form \(
+2(3a^2b + b^3) \) where \( a = y \) and \( b = 3 \). Now \( 2(3a^2b +
+b^3) = (a + b)^3 - (a - b)^3 \). Using these details, we get
+
+\begin{align*}
+  x^3 = 18y^2 + 54
+  & \iff x^3 = 2(9y^2 + 3^3) \\
+  & \iff x^3 = (y + 3)^3 - (y - 3)^3 \\
+  & \iff x^3 + (y - 3)^3 = (y + 3)^3.
+\end{align*}
+</p>
+
+<p>
+From Fermat's Last Theorem, we know that an equation of the form \( a^n
++ b^n = c^n \) does not have any solution for positive integers \( a
+\), \( b \), \( c \), and positive integer \( n > 2 \). Therefore we
+arrive at the following constraints for any \( x \) and \( y \) that
+satisfy the equation:
+
+\begin{align*}
+       & x > 0, \\
+-3 \le & y \le 3.
+\end{align*}
+</p>
+
+<p>
+We established the first constraint earlier when we discussed that \( x
+\) must be positive. The second constraint follows from Fermat's Last
+Theorem. If there were a solution \( x \) and \( y \) such that \( x > 0
+\) and \( y > 3 \), then \( x^3 + (y - 3)^3 = (y + 3)^3 \) would
+contradict Fermat's Last Theorem. Therefore \( y \le 3 \) must hold
+good. Further since for every solution \( x \) and \( y \), there is
+also a solution \( x \) and \( -y \), \( -y < 3 \) must also hold good.
+</p>
+
+<p>
+Since \( y \) must be one of the seven integers between \( -3 \) and \(
+3 \), inclusive, we can try solving for \( x \) with each of these seven
+values of \( y \). When we do so, we find that there are only two values
+of \( y \) for which we get integer solutions for \( x \). They are \( y
+= 3 \) and \( y = -3 \). In both cases, we get \( x = 6 \). Therefore,
+the solutions to the given equation are:
+
+\begin{align*}
+x & = 6 \\
+y & = \pm 3.
+\end{align*}
+</p>
