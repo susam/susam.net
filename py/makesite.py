@@ -504,9 +504,18 @@ def main():
 
     make_pages('content/[!_]*.html', '_site/{{ slug }}/index.html',
                page_layout, **params)
+
+    # Blog.
     posts = make_blog('content/blog/*.html', page_layout, **params)
+
+    # Comments.
     make_comments('content/comments/*.html', posts, page_layout, **params)
-    make_home(posts, page_layout, **params)
+
+    # Home page.
+    listed_posts = [post for post in posts if post.get('list') != 'no']
+    make_home(listed_posts, page_layout, **params)
+
+    # Special directories.
     make_text_dir('static/security/*.txt', page_layout, **params)
     make_text_dir('static/poetry/*.txt', page_layout, **params)
     make_music('content/music/*.html', page_layout, **params)
