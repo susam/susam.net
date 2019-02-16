@@ -1,0 +1,49 @@
+/* Input */
+label {
+  margin-top: 1em;
+  display: block;
+}
+
+#name, #url, #comment {
+  /* Make all input fields look similar. */
+  width: 100%;
+  border: thin solid gray;
+  border-radius: 0.25em;
+  padding: 0.5em;
+}
+
+textarea {
+    min-height: 10em;
+}
+
+input#submit {
+  min-width: 75%;
+  min-height: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 1em;
+}
+
+
+/* Status */
+.notice {
+  display: none;
+}
+
+.errors .notice, .success .notice {
+  display: block;
+  border-width: medium;
+  border-style: double;
+  margin-top: 1em;
+}
+
+.errors .notice {
+  color: red;
+  border-color: red;
+}
+
+.success .notice {
+  color: green;
+  border-color: green;
+}

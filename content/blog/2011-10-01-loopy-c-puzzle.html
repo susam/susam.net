@@ -1,0 +1,454 @@
+<!-- title: Loopy C Puzzle -->
+<!-- tag: technology -->
+<!-- import: tex.js -->
+<h2>Integer Underflow</h2>
+<p>
+Let us talk a little bit about integer underflow and undefined behaviour
+in C before we discuss the puzzle I want to share in this post.
+</p>
+
+<pre>
+<code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int i;
+    for (i = 0; i &lt; 6; i--)
+        printf(".");
+    return 0;
+}</code>
+</pre>
+
+<p>
+This code invokes undefined behaviour. The value in variable
+<code>i</code> decrements to <code>INT_MIN</code> after
+<code>|INT_MIN| + 1</code> iterations. In the next iteration, there is a
+negative overflow which is undefined for signed integers in C. On many
+implementations though, <code>INT_MIN - 1</code> wraps around to
+<code>INT_MAX</code>. Since <code>INT_MAX</code> is not less than
+<code>6</code>, the loop terminates. With such implementations, this
+code prints print <code>|INT_MIN| + 1</code> dots. With 32-bit integers,
+that amounts to 2147483649 dots. Here is one such example output:
+</p>
+
+<pre>
+<samp>$ <kbd>gcc -std=c89 -Wall -Wextra -pedantic foo.c && ./a.out | wc -c</kbd>
+2147483649</samp>
+</pre>
+
+<p>
+It is worth noting that the above behaviour is only one of the many
+possible ones. The code invokes undefined behaviour and the ISO standard
+imposes no requirements on a specific implementation of the compiler
+regarding what the behaviour of such code should be. For example, an
+implementation could also exploit the undefined behaviour to turn the
+loop into an infinite loop. In fact, GCC does optimize it to an infinite
+loop if we compile the code with the <code>-O2</code> option.
+</p>
+
+<pre>
+<samp><kbd># This never terminates!</kbd>
+$ <kbd>gcc -O2 -std=c89 -Wall -Wextra -pedantic foo.c && ./a.out</kbd>
+</pre>
+
+
+<h2>Loopy C Puzzle</h2>
+<p>
+Let us take a look at the puzzle now.
+</p>
+
+<div class="highlight">
+<p>
+Add or modify exactly one operator in the following code such that it
+prints exactly 6 dots.
+</p>
+
+<pre>
+<code>for (i = 0; i &lt; 6; i--)
+    printf(".");</code>
+</div>
+
+<p>
+An obvious solution is to change <code>i--</code> to <code>i++</code>.
+</p>
+
+<pre>
+<code>for (i = 0; i &lt; 6; i--)
+    printf(".");</code>
+</pre>
+
+<p>
+There are a few more solutions to this puzzle. One of the solutions is
+very interesting. We will discuss the interesting solution in detail
+below.
+</p>
+
+<h2>Solutions to Loopy C Puzzle</h2>
+<p>
+<em><strong>Update on 02 Oct 2011:</strong> The puzzle has been solved
+in the <a href="comments/">comments</a> section. We will discuss the
+solutions now. If you want to think about the problem before you see the
+solutions, this is a good time to pause and think about it. There are
+spoilers ahead.</em>
+</p>
+
+<p>
+Here is a list of some solutions:
+</p>
+
+<ul>
+  <li>
+    <code>for (i = 0; i &lt; 6; i++)</code>
+  </li>
+  <li>
+    <code>for (i = 0; i &lt; 6; ++i)</code>
+  </li>
+  <li>
+    <code>for (i = 0; -i &lt; 6; i--)</code>
+  </li>
+  <li>
+    <code>for (i = 0; i + 6; i--)</code>
+  </li>
+  <li>
+    <code>for (i = 0; i ^= 6; i--)</code>
+  </li>
+</ul>
+
+<p>
+The last solution involving the bitwise XOR operation is not immediately
+obvious. A little analysis is required to understand why it works. 
+</p>
+
+<h2>Generalization</h2>
+<p>
+Let us generalize the puzzle by replacing \( 6 \) in the loop with an
+arbitrary positive integer \( n \). The loop in the last solution now
+becomes:
+</p>
+
+<pre>
+<code>for (i = 0; i ^= n; i--)
+    printf(".");</code>
+</pre>
+
+<p>
+If we denote the value of the variable <code>i</code> set by the
+execution of <code>i ^= n</code> after \( k \) dots are printed as
+\( f(k) \), then
+
+\[
+  f(k) =
+    \begin{cases}
+      n                        & \text{if } n = 0, \\
+      n \bitxor (f(k - 1) - 1) & \text{if } n > 1
+    \end{cases}
+\]
+
+where \( k \) is a nonnegative integer and \( n \) is a positive integer.
+
+Note that \( f(0) \) represents the value of <code>i</code> set by the
+execution of <code>i ^= n</code> when no dots have been printed yet.
+</p>
+
+<p>
+If we can show that \( n \) is the least value of \( k \) for which \(
+f(k) = 0 \), it would prove that the loop terminates after printing
+\( n \) dots.
+</p>
+
+<p>
+We will see in the next section that for odd values of \( n \),
+
+\[
+f(k) =
+\begin{cases}
+n & \text{if } k \text{ is even}, \\
+1 & \text{if } k \text{ is odd}.
+\end{cases}
+\]
+
+Therefore there is no value of \( k \) for which \( f(k) = 0 \) when \(
+n \) is odd. As a result, the loop never terminates when \( n \) is odd.
+</p>
+
+<p>
+We will then see that for even values of \( n \) and
+\( 0 \leq k \leq n \),
+
+\[
+f(k) = 0 \iff k = n.
+\]
+
+Therefore the loop terminates after printing \( n \) dots when \( n \)
+is even.
+</p>
+
+
+<h2>Lemmas</h2>
+<p>
+We will first prove a few lemmas about some interesting properties of
+the bitwise XOR operation. We will then use it to prove the claims made
+in the previous section.
+</p>
+
+<!-- Lemma 1 -->
+<p>
+<strong>Lemma 1.</strong>
+<em>
+For an odd positive integer \( n \),
+
+\[
+n \bitxor (n - 1) = 1
+\]
+
+where the symbol \( \bitxor \) denotes bitwise XOR operation on two
+nonnegative integers.
+</em>
+</p>
+
+<p>
+<em>Proof.</em>
+Let the binary representation of \( n \) be \( b_m \dots b_1 b_0 \)
+where \( m \) is a nonnegative integer and \( b_m \) represents the most
+significant nonzero bit of \( n \). Since \( n \) is an odd number,
+\( b_0 = 1\).
+
+Thus \( n \) may be written as
+
+\[ b_m \dots b_1 1. \]
+
+As a result \( n - 1 \) may be written as
+
+\[ b_m \dots b_1 0. \]
+
+The bitwise XOR of both binary representations is \( 1 \).
+\( \qed \)
+</p>
+
+<!-- Lemma 2 -->
+<p>
+<strong>Lemma 2.</strong>
+<em>
+For a nonnegative integer \( n \),
+
+\[
+n \bitxor 1 =
+  \begin{cases}
+    n + 1 & \text{if } n \text{ is even}, \\
+    n - 1 & \text{if } n \text{ is odd}.
+  \end{cases}
+\]
+
+where the symbol \( \bitxor \) denotes bitwise XOR operation on two
+nonnegative integers.
+</em>
+</p>
+
+<p>
+<em>Proof.</em>
+Let the binary representation of \( n \) be \( b_m \dots b_1 b_0 \)
+where \( m \) is a nonnegative integer and \( b_m \) represents the most
+significant nonzero bit of \( n \).
+</p>
+<p>
+If \( n \) is even, \( b_0 = 0 \). In this case, \( n \) may be written
+as \( b_m \dots b_1 0 \). Thus \( n \bitxor 1 \) may be written as \(
+b_m \dots b_1 1 \). Therefore \( n \bitxor 1 = n + 1 \).
+</p>
+
+<p>
+If \( n \) is odd, \( b_0 = 1 \). In this case, \( n \) may be written
+as \( b_m \dots b_1 1 \). Thus \( n \bitxor 1 \) may be written as \(
+b_m \dots b_1 0 \). Therefore \( n \bitxor 1 = n - 1 \).
+\( \qed \)
+</p>
+
+<p>
+Note that for odd \( n \), lemma 1 can also be derived as a corollary of
+lemma 2 in this manner:
+
+\[
+k \bitxor (k - 1)
+= k \bitxor (k \bitxor 1)
+= (k \bitxor k) \bitxor 1
+= 0 \bitxor 1
+= 1.
+\]
+</p>
+
+
+<!-- Lemma 3 -->
+<p>
+<strong>Lemma 3.</strong>
+<em>
+If \( x \) is an even nonnegative integer and \( y \) is an odd positive
+integer, then \( x \bitxor y \) is odd, where the symbol
+\( \bitxor \) denotes bitwise XOR operation on two nonnegative integers.
+</em>
+</p>
+
+<p>
+<em>Proof.</em>
+Let the binary representation of \( x \) be \( b_{xm_x} \dots b_{x1}
+b_{x0} \) and that of \( y \) be \( b_{ym_y} \dots b_{y1} b_{y0} \)
+where \( m_x \) and \( m_y \) are nonnegative integers and \( b_{xm_x}
+\) and \( b_{xm_y} \) represent the most significant nonzero bits of \(
+x \) and \( y \), respectively.
+</p>
+
+<p>
+Since \( x \) is even, \( b_{x0} = 0 \). Since \( y \) is odd,
+\( b_{y0} = 1 \).
+</p>
+
+<p>
+Let \( z = x \bitxor y \) with a binary representation of
+\( b_{zm_z} \dots b_{z1} b_{z0} \) where \( m_{zm_z} \) is a nonnegative
+integer and \( b_{zm_z} \) is the most significant nonzero bit of
+\( z \).
+</p>
+
+<p>
+We get \( b_{z0} = b_{x0} \bitxor b_{y0} = 0 \bitxor 1 = 1 \). Therefore
+\( z \) is odd.
+\( \qed \)
+</p>
+
+
+<h2>Theorems</h2>
+
+<!-- Theorem 1 -->
+<p>
+<strong>Theorem 1.</strong>
+<em>
+Let \( \bitxor \) denote bitwise XOR operation on two nonnegative
+integers and
+
+\[
+  f(k) =
+    \begin{cases}
+      n                        & \text{if } n = 0, \\
+      n \bitxor (f(n - 1) - 1) & \text{if } n > 1.
+    \end{cases}
+\]
+
+where \( k \) is a nonnegative integer and \( n \) is an odd positive
+integer. Then
+
+\[
+  f(k) =
+    \begin{cases}
+      n & \text{if } k \text{ is even}, \\
+      1 & \text{if } k \text{ is odd}.
+    \end{cases}
+\]
+</em>
+</p>
+
+<p>
+<em>Proof.</em>
+This is a proof by mathematical induction. We have \( f(0) = n \) by
+definition. Therefore the base case holds good.
+</p>
+
+<p>
+Let us assume that \( f(k) = n \) for any even \( k \) (induction
+hypothesis). Let \( k' = k + 1 \) and \( k'' = k + 2 \).
+</p>
+
+<p>
+If \( k \) is even, we get
+
+\begin{align*}
+f(k')  & = n \bitxor (f(k) - 1)  && \text{(by definition)} \\
+       & = n \bitxor (n - 1)     && \text{(by induction hypothesis)} \\
+       & = 1                     && \text{(by lemma 1)},\\
+f(k'') & = n \bitxor (f(k') - 1) && \text{(by definition)} \\
+       & = n \bitxor (1 - 1)     && \text{(since \( f(k') = 1\))} \\
+       & = n \bitxor 0 \\
+       & = n.
+\end{align*}
+</p>
+
+<p>
+Since \( f(k'') = n \) and \( k'' \) is the next even number after
+\( k \), the induction step is complete. The induction step shows that
+for every even \( k \), \( f(k) = n \) holds good. It also shows that as
+a result of \( f(k) = n \) for every even \( k \), we get \( f(k') = 1
+\) for every odd \( k' \).
+\( \qed \)
+</p>
+
+<!-- Theorem 2 -->
+<p>
+<strong>Theorem 2.</strong>
+<em>
+Let \( \bitxor \) denote bitwise XOR operation on two nonnegative
+integers and
+
+\[
+  f(k) =
+    \begin{cases}
+      n                        & \text{if } n = 0, \\
+      n \bitxor (f(n - 1) - 1) & \text{if } n > 1.
+    \end{cases}
+\]
+
+where \( k \) is a nonnegative integer, \( n \) is an even positive
+integer, and \( 0 \leq k \leq n \). Then
+
+\[
+  f(k) = 0 \iff k = n.
+\]
+</em>
+</p>
+
+<p>
+<em>Proof.</em>
+We will first show by the principle of mathematical induction that for
+even \( k \), \( f(k) = n - k \). We have \( f(0) = n \) by definition,
+so the base case holds good. Now let us assume that \( f(k) = n - k \)
+holds good for any even \( k \) where \( 0 \leq k \leq n \) (induction
+hypothesis).
+<p>
+
+<p>
+Since \( n \) is even (by definition) and \( k \) is even (by induction
+hypothesis), \( f(k) = n - k \) is even. As a result, \( f(k) - 1 \) is
+odd. By lemma 3, we conclude that \( f(k + 1) = n \bitxor (f(k) - 1) \)
+is odd.
+</p>
+
+<p>
+Now we perform the induction step as follows:
+
+\begin{align*}
+f(k + 2) & = n \bitxor (f(k + 1) - 1)
+                 && \text{(by definition)} \\
+         & = n \bitxor (f(k + 1) \bitxor 1)
+                 && \text{(by lemma 2 for odd \( n \))} \\
+         & = n \bitxor ((n \bitxor (f(k) - 1)) \bitxor 1)
+                 && \text{(by definition)} \\
+         & = (n \bitxor n ) \bitxor ((f(k) - 1) \bitxor 1)
+                 && \text{(by associativity of XOR)} \\
+         & = 0 \bitxor ((f(k) - 1) \bitxor 1) \\
+         & = (f(k) - 1) \bitxor 1 \\
+         & = (f(k) - 1) - 1
+                 && \text{(from lemma 2 for odd \( n \))} \\
+         & = f(k) - 2 \\
+         & = n - k - 2
+                 && \text{(by induction hypothesis).}
+\end{align*}
+
+This completes the induction step and proves that \( f(k) = n - k \)
+for even \( k \) where \( 0 \leq k \leq n. \)
+</p>
+
+<p>
+We have shown above that \( f(k) \) is even for every even \( k \) where
+\( 0 \leq k \leq n \) which results in \( f(k + 1) \) as odd for every
+odd \( k + 1 \). This means that \( f(k) \) cannot be \( 0 \) for any
+odd \( k \). Therefore \( f(k) = 0 \) is possible only even \( k \).
+Solving \( f(k) = n - k = 0 \), we conclude that \( f(k) = 0 \) if and
+only if \( k = n \). \( \qed \)
+</p>

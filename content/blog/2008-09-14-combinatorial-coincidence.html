@@ -1,0 +1,189 @@
+<!-- title: Combinatorial Coincidence -->
+<!-- tag: mathematics -->
+<!-- import: tex.js -->
+
+<h2>Combinatorics for Fun</h2>
+
+<p>
+I joined <a href="https://www.rsa.com/">RSA</a> a few weeks ago. It is a
+small and delightful place with a great work culture. It was founded by
+Ron Rivest, Adi Shamir, and Leonard Adleman (the inventors of RSA
+algorithm) in 1982. The company develops and sells the RSA BSAFE
+cryptography libraries, SecurID two-factor authentication tokens, and
+several network security software products these days.
+</p>
+
+<p>
+Perhaps due to the nature of work in this domain, some of the engineers
+in this organization also happen to be math geeks. There is a certain
+fondness for combinatorics among them which I believe is due to being
+involved with the analysis of security tokens, authentication schemes,
+password complexity, information entropy, etc. on a daily basis.
+Probability theory is another popular topic of discussion. Of course,
+often combinatorics and probability theory go hand in hand. There is a
+culture of challenging each other with combinatorics problems for fun.
+</p>
+
+
+<h2>Recurrence Relation</h2>
+
+<p>
+One of these math geeks is a good friend of mine. Recently, I shared the
+the following problem with him at lunch:
+</p>
+
+<div class="highlight">
+<p>
+For integers \( n \ge 1 \) and \( k \ge 1 \),
+
+\[
+  f_k(n) =
+    \begin{cases}
+      n                       & \text{if } k = 1, \\
+      \sum_{i=1}^n f_{k-1}(i) & \text{if } k > 0.
+    \end{cases}
+\]
+
+Find a closed-form expression for \( f_k(n) \).
+</p>
+</div>
+
+
+<h2>Nested Loops</h2>
+
+<p>
+Soon after I shared the above problem, he gave me a problem of his own.
+Here is the problem shared by him:
+</p>
+
+<div class="highlight">
+<p>
+Consider the following pseudocode with <code>k</code> nested loops.
+</p>
+<pre>
+<code>x = 0
+for c<sub>1</sub> in 1 to n:
+    for c<sub>2</sub> in 1 to c<sub>1</sub>:
+        ...
+            for c<sub>k</sub> in 1 to c<sub>k-1</sub>:
+                x = x + 1</code>
+</pre>
+<p>
+What is the final value of <code>x</code> after the outermost loop
+terminates?
+</p>
+</div>
+
+
+<h2>Coincidence</h2>
+
+<p>
+With one problem each, we went back to our desks. As I started solving
+the <em>nested loops</em> problem shared by him, I realized that the
+solution to his problem led me to the <em>recurrence relation</em>
+in the problem I shared with him.
+</p>
+
+<p>
+In the <em>nested loops</em> problem, if \( k = 1 \), the final value of
+\( x \) after the loop terminates is \( x = n \). This is also the value
+of \( f_1(n) \).
+</p>
+
+<p>
+If \( k = 2 \), the inner loop with counter \( c_2 \) runs
+once when \( c_1 = 1 \), twice when \( c_1 = 2 \), and so on.
+Therefore after the loop terminates, \( x = 1 + 2 + \dots + n =
+\frac{n(n + 1)}{2} \). Note that this series is same as \( f_2(n) =
+f_1(1) + f_1(2) + \dots + f_1(n) \).
+</p>
+
+<p>
+Extending this argument, we now see that for any \( k > 0 \), the final
+value of \( x \) is
+
+\[
+f_k(n) = f_{k-1}(1) + f_{k-1}(2) + \dots + f_{k-1}(n).
+\]
+
+In other words, the solution to his <em>nested loops</em> problem is the
+solution to my <em>recurrence relation</em> problem. It was an
+interesting coincidence that the problems we shared with each other had
+the same solution.
+</p>
+
+
+<h2>Closed-Form Expression</h2>
+<p>
+The closed form expression for the recurrence relation is
+
+\[
+f_k(n) = \binom{n + k - 1}{k}.
+\]
+</p>
+
+<p>
+It is quite easy to prove this using the principle of mathematical
+induction. Since we know that this is also the result of the <em>nested
+loops</em> problem, we can also arrive at this result by another way.
+</p>
+
+<p>
+In the <em>nested loops</em> problem, the following condition is always
+met due to the loop conditions:
+
+\[
+n \ge c_1 \ge c_2 \ge \dots \ge c_k \ge 1.
+\]
+</p>
+
+<p>
+The variables \( c_1, c_2, \dots, c_k \) take every possible choice
+of integer values that satisfy the above condition. If we find out how
+many such choices are there, we would know how many times the
+variable \( x \) is incremented.
+</p>
+
+<p>
+Therefore the final value of \( x \) is the number of possible ways of
+arranging \( k \) numbers from the first \( n \) natural numbers in
+descending order. To find this number, let us consider \( n \)
+similar balls and \( k \) similar sticks. For every possible permutation
+of these balls and sticks such that there is at least one ball to the
+right of the rightmost stick, if we count the number of balls to the
+right of the \( i \)th stick, we get a number that the variable \( c_i
+\) (the counter variable in the \( i \)th loop statement) holds in some
+iteration of its loop. Therefore the variable \( c_i \) is represented
+as the number of balls lying on the right side of the \( i \)th stick
+where \( 1 \le i \le k \).
+</p>
+
+<p>
+The above argument holds good because the first stick has more balls to
+its right than the second one, the second stick has more balls to its
+right than the third one, and so on, so \( n \ge c_1 \ge c_2 \ge \dots
+\ge c_k \) is always satisfied. Further, we have added the constraint
+that at least one ball must lie on the right side of the \( k \)th
+stick, so \( c_k \ge 1 \). Also, any set of valid values for \( c_1,
+c_2, \dots, c_k \) can be represented as an arrangement of these sticks
+and balls.
+</p>
+
+<p>
+To compute the number of permutations of \( n \) similar balls and \( k
+\) similar sticks such that there is at least one ball to the right side
+of the rightmost stick, we need to consider the rightmost ball to be
+fixed in its position in all permutations. Thus we are left with only \(
+n - 1 \) similar balls and \( k \) similar sticks that we can rearrange
+in different ways. The number of permutations of \( n - 1 \) similar
+balls and \( k \) similar sticks is
+
+\[
+\frac{(n + k - 1)!}{(n - 1)! k!} = \binom{n + k - 1}{k}.
+\]
+</p>
+
+<p>
+This closed-form expression is the solution to both the <em>recurrence
+relation</em> problem and the <em>nested loops</em> problem.
+</p>

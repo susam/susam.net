@@ -1,0 +1,75 @@
+HomestayFinder XSS in Wikipedia Mirror
+======================================
+
+HomestayFinder has a Wikipedia mirror that takes content from Wikipedia
+and displays it. However, in doing so, it does not santize the input.
+
+
+Researcher
+----------
+
+Susam Pal <susam@susam.in>
+
+
+Type
+----
+
+Cross site scripting
+
+
+Timeline
+--------
+
+* 2007-06-26 - Discovered; reported to vendor
+* 2007-07-11 - Public disclosure; 
+             Vendor moved vulnerable script to another domain
+
+
+Description
+-----------
+
+HomestayFinder has a Wikipedia mirror. The `Dictionary.aspx` script
+consumes content from Wikipedia and displays it. The following are the
+URLs of the same content on Wikipedia and HomestayFinder:
+
+  - Wikipedia: http://en.wikipedia.org/wiki/Linux
+  - HomestayFinder: http://homestayfinder.com/Dictionary.aspx?q=Linux
+
+
+Vulnerability
+-------------
+
+The `Dictionary.aspx` script doesn't sanitize the input to convert the
+HTML special characters into HTML entities. An attacker can edit a
+Wikipedia page to introduce JavaScript code. When the same page is
+viewed through HomestayFinder, the JavaScript code is executed on the
+browser of the visitor.
+
+
+Exploit
+-------
+
+The URL http://en.wikipedia.org/wiki/User:Susam_pal/Sandbox consists of
+the following JavaScript code embedded as text in the source wiki markup:
+
+    <script>alert('XSS Demo')</script>
+
+The URL http://www.homestayfinder.com/Dictionary.aspx?q=User:Susam_pal/Sandbox
+consists of the same code as HTML without the special characters encoded
+as HTML entities. Hence, the script is executed on the browser of the
+visitor.
+
+
+Impact
+------
+
+* An attacker can execute malicious code in a user's browser within the
+  trust relationship between the browser and homestayfinder.com.
+* An attacker can steal session cookies and hijack sessions of the
+  users of homestayfinder.com.
+
+
+Initial Publication
+-------------------
+
+http://seclists.org/fulldisclosure/2007/Jul/191

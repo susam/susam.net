@@ -1,0 +1,108 @@
+Google Re-authentication Bypass
+===============================
+
+During a session, while performing a crucial operation Orkut requires a
+user to authenticate himself with his or her password in order to
+prevent walk-by attacks. If a user fails this authentication, he or she
+is redirected to login page for re-authentication. However at this stage
+the session is not disabled temporarily at the server-side. This can be
+exploited by an attacker to bypass re-authentication.
+
+
+Researcher
+----------
+
+Susam Pal <susam@susam.in>
+
+
+Type
+----
+
+Session management error
+
+
+Timeline
+--------
+
+* 2007-06-21 - Discovered
+* 2007-06-22 - Reported to vendor
+* 2007-06-29 - Public disclosure
+
+
+Description
+-----------
+
+On successful Orkut login, the following cookies are set:
+
+    Domain: .www.orkut.com
+    Cookie: orkut_state
+
+    Domain: .google.com
+    Cookie: SID
+
+    Domain: www.google.com
+    Cookie: LSID
+
+The security flaw associated with the first cookie has been explained at
+http://susam.in/security/advisory-2007-06-22.txt already.
+
+The second and the third cookies are responsible for another flaw which
+is described in this advisory. In the login page of Orkut, the login
+form appears from google.com in an inline frame and the form inputs are
+submitted back to google.com. Hence these cookies are set for the domain
+google.com and www.google.com.
+
+
+Vulnerability
+-------------
+
+When an Orkut user fails to authenticate himself during a session (say,
+while deleting a community), the user is redirected to a login page
+where the user has to enter his or her password to login again. At this
+stage, ideally the session should be disabled and should be enabled only
+after the user re-authenticates successfully. However it was found that
+the session associated with SID and LSID cookies remains alive at the
+server-side. Therefore it is not safe to abandon the session at this
+stage. An attacker can set these cookies in his or her browser and
+access the compromised account by visiting http://www.gmail.com/ or
+https://www.google.com/accounts/ManageAccount or other such URLs.
+
+
+Impact
+------
+
+* If an attacker manages to steal the SID and LSID cookies of the user,
+  he or she can gain access to the compromised account even after the
+  user has been logged out as described in the previous section.
+* In case of unsuccessful authentication during a session, when the
+  user is logged out, if he or she leaves the browser unattended, a
+  trespasser can login to his or her account simply by accessing a valid
+  URL for his or her account.
+
+
+Solution
+--------
+
+When a user fails to authenticate during a session, then the session
+associated with the user should be disabled at the server-side. The
+session should be enabled only after the user authenticates
+successfully.
+
+
+Prevention
+----------
+
+* When a user fails to authenticate himself during a session and he or
+  she is logged out for re-authentication, he or she must
+  re-authenticate himself to log in and then logout properly by clicking
+  the "Logout" link. This deletes the session associated with SID and
+  LSID cookies at the server-side.
+* A user logged into Orkut, Google, GMail, etc. should not run any
+  untrusted JavaScript or program to prevent the cookies from being
+  stolen.
+
+
+Initial Publication
+-------------------
+
+http://seclists.org/fulldisclosure/2007/Jun/609

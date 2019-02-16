@@ -1,0 +1,96 @@
+<!-- date: 2010-02-15 00:55:24 +0000 -->
+<!-- name: JB -->
+<!-- url: https://www.blogger.com/profile/01183284149384821074 -->
+<p>
+Nice one, Susam.
+</p>
+<p>
+Though I could not understand the technical details of how it was done,
+I could understand the prank.
+</p>
+<!-- date: 2010-02-15 16:41:56 +0000 -->
+<!-- name: Kumar Veetrag -->
+<!-- url: https://twitter.com/kv -->
+<p>
+Good job Susam! Who fell for the prank?
+</p>
+<!-- date: 2010-02-15 16:58:47 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+Veetrag, some people were scared that someone else has gained access to
+their email accounts. A few friends asked me if I know their passwords.
+Others guessed that I must have done something and asked me how I did
+it.
+</p>
+<!-- date: 2010-02-17 11:20:55 +0000 -->
+<!-- name: Gaurav Mogre -->
+<p>
+Got to love the simplicity of SMTP.
+</p>
+<p>
+Though a bit surprised that the GMail SMTP server accepted the request.
+One would think that after GMail's SMTP server has AUTH, it would check
+for false addresses like this.
+</p>
+<p>
+Ofcourse, the icing on the cake was the email content.
+</p>
+<!-- date: 2010-02-21 08:02:17 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+Gaurav,
+</p>
+<p>
+The <code>AUTH</code> command is used by the client to authenticate
+itself to the SMTP server before it can send emails. In this example, I
+have authenticated myself to my SMTP server (not Google's server).
+</p>
+<p>
+Normally, an email server is meant to receive all emails meant for it.
+Yes, it might want to classify an email as spam after email
+authentication. Note that the <code>AUTH</code> command is meant for
+client authentication while email authentication is done to detect spam
+by considering the information in the message header, message body,
+sender's IP address, sender's domain name, etc.
+</p>
+<p>
+A false email address is not a good reason to classify an email as spam.
+The possibility of specifying false email addresses in the
+<code>From</code> and <code>Return-Path</code> fields offers the
+flexibility of using one of multiple email addresses as the
+<code>From</code> address while sending an email as well as controlling
+where one would want to receive notifications if the email delivery
+fails. For example, I have configured my GMail account such that I can
+send emails with my <code>From</code> email address ending with either
+<code>gmail.com</code> or <code>susam.in</code>.
+</p>
+<!-- date: 2011-06-13 10:23:45 +0000 -->
+<!-- name: Yuvi Panda -->
+<!-- url: http://yuvi.in/ -->
+<p>
+Interesting that GMail doesn't check for wrong timestamps. Perhaps they
+let it pass - servers with wrong time perhaps do exist. I don't see why
+it shouldn't be rejected though - maybe they will, eventually?
+</p>
+<p>
+Neat hack though :)
+</p>
+<!-- date: 2011-06-13 12:09:39 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+Yuvi,
+</p>
+<p>
+If you see the SMTP session in this blog post, you'll find that the
+<code>Date</code> belongs to the data to be transferred by the SMTP
+server.
+</p>
+<p>
+The job of an SMTP server is to transfer the data section to the
+intended recipients irrespective of what the data contains. The email
+application or client could then flag an email if its content (including
+<code>Date</code> and other header fields) looks suspicious.
+</p>

@@ -1,0 +1,42 @@
+# https://example.com/
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name susam.in susam;
+
+    ssl_certificate /etc/letsencrypt/live/susam.in/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/susam.in/privkey.pem;
+
+    root /var/www/susam.in;
+
+    location /comment/ {
+        include uwsgi_params;
+        uwsgi_pass unix:/tmp/spapp.sock;
+    }
+
+    location /files/ {
+        autoindex on;
+    }
+}
+
+# https://www.example.com/ => https://example.com/
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name www.susam.in;
+
+    ssl_certificate /etc/letsencrypt/live/susam.in/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/susam.in/privkey.pem;
+
+    return 301 https://susam.in$request_uri;
+}
+
+# http://example.com/, http://www.example.com/ => https://example.com/
+server {
+    listen 80;
+    listen [::]:80;
+    server_name susam.in www.susam.in;
+    return 301 https://susam.in$request_uri;
+}

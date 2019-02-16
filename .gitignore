@@ -1,0 +1,11 @@
+# Vim swap files
+*.sw?
+
+# Generated files
+*.pyc
+__pycache__/
+_site/
+_live/
+_gone/
+/plots/*.png
+venv
