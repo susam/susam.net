@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2018 Susam Pal
+# Copyright (c) 2018-2019 Susam Pal
 # Licensed under the terms of the MIT License.
 
 # This software is a derivative of the original makesite.py.

@@ -32,5 +32,5 @@ modified version of [makesite.py][MAKESITE].
 Copyright
 ---------
 
-Copyright (c) 2014-2018 Susam Pal  
+Copyright (c) 2014-2019 Susam Pal  
 All Rights Reserved.
