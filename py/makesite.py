@@ -434,7 +434,12 @@ def make_home(posts, page_layout, **params):
     home_layout = fread('layout/home/list.html')
     item_layout = fread('layout/home/item.html')
     home_layout = render(page_layout, content=home_layout)
-    home_params = dict(params, title=params['author'], subtitle='')
+
+    title = params['author']
+    subtitle = re.search('<strong>(.*)</strong>', home_layout).group(1)
+    subtitle = ' - ' + subtitle
+    home_params = dict(params, title=title, subtitle=subtitle)
+
     make_list(posts[:5], '_site/index.html', home_layout, item_layout,
               blog='blog', **home_params)
 
