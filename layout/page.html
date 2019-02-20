@@ -6,6 +6,13 @@
   <meta name="viewport" content="width=device-width; initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="/css/main.css">
   <link rel="icon" type="image/png" href="/favicon.png">
+  <script>
+    window.onload = function () {
+      if (localStorage.getItem('dark') === 'yes') {
+        document.body.className = 'dark'
+      }
+    }
+  </script>
   {{ imports }}
 </head>
 
@@ -23,6 +30,8 @@
   <div class="social">
       <a href="/blog/rss.xml"><img
          src="/img/social/feed.svg" alt="Feed" title="RSS Feed"></a>
+      <a href="/dark/"><img
+         src="/img/social/moon.svg" alt="Dark Mode" title="Dark Mode"></a>
       <a href="https://github.com/susam"><img
          src="/img/social/github.svg" alt="GitHub" title="GitHub"></a>
       <a href="https://twitter.com/susam"><img

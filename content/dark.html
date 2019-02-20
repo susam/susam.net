@@ -1,0 +1,63 @@
+<!-- title: Dark Mode -->
+<main>
+
+<h1 id="dark-mode">Dark Mode</h1>
+
+<p>
+This website can be viewed in dark mode. This feature requires
+JavaScript to be enabled.
+</p>
+
+<noscript>
+<div>
+<p>
+JavaScript appears to be disabled on your web browser.
+</p>
+<p>
+Please enable JavaScript to use dark mode.
+</p>
+</div>
+</noscript>
+
+<p>
+<button id="darkButton" style="min-height: 2em; font-size: 1em">
+Toggle Dark Mode
+</button>
+</p>
+
+<p>
+<button id="backButton" style="min-height: 2em; font-size: 1em">
+Go Back
+</button>
+</p>
+
+<script>
+var oldOnload = window.onload
+
+window.onload = function() {
+  if (typeof oldOnload === 'function') {
+    oldOnload()
+  }
+
+
+  var darkButton = document.getElementById('darkButton')
+  var backButton = document.getElementById('backButton')
+
+  darkButton.onclick = function () {
+    darkEnabled = localStorage.getItem('dark') === 'yes'
+
+    if (darkEnabled) {
+      localStorage.removeItem('dark')
+      document.body.className = ''
+    } else {
+      localStorage.setItem('dark', 'yes')
+      document.body.className = 'dark'
+    }
+  }
+
+  backButton.onclick = function () {
+    window.history.back()
+  }
+}
+</script>
+</main>
