@@ -113,20 +113,20 @@ footer .links a {
   margin-bottom: 1em;
 }
 
-footer .links, footer .social {
+footer .links, footer .icons {
   margin-top: 1em;
   margin-bottom: 1em;
 }
 
-footer .social a {
+footer .icons a {
   margin-right: 0.5em;
 }
 
-footer .social a:last-child {
+footer .icons a:last-child {
   margin-right: 0;
 }
 
-footer .social img {
+footer .icons img {
   height: 1.25em;
 }
 
@@ -426,20 +426,20 @@ a:hover, a:active {
 }
 
 /* Social media icon colors */
-.social img {
+.icons img {
   opacity: 0.8; /* 1 - 0x33 / 0xff */
 }
 
-.social img:hover {
+.icons img:hover {
   opacity: 0.6; /* 1 - 0x66 / 0xff */
 }
 
-.dark .social img {
+.dark .icons img {
   opacity: 1; 
   filter: invert(0.8); /* 0xcc / 0xff */
 }
 
-.dark .social img:hover {
+.dark .icons img:hover {
   opacity: 1; 
   filter: invert(1);  /* 0xff / 0xff */
 }
