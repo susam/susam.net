@@ -2,7 +2,6 @@
 body {
   margin: 0;
   line-height: 1.5;
-  color: #303030;
   font-family: helvetica, arial, sans-serif;
 }
 
@@ -37,7 +36,6 @@ figcaption {
 /* Code */
 pre, code, samp, kbd {
   font-family: monospace,monospace;
-  color: #000060;
   font-size: 0.9em;
 }
 
@@ -46,21 +44,18 @@ pre code, pre samp, pre kbd {
 }
 
 pre {
-  background: #f0f0f0;
   padding: 0.5em;
   overflow: auto;
 }
 
 pre kbd {
   font-style: italic;
-  color: #007000;
 }
 
 
 /* Blockquote */
 blockquote {
-  background: #f0f0f0;
-  border-left: medium solid #c0c0c0;
+  border-left: medium solid;
   margin-right: 0;
   margin-left: 0;
   padding: 0.5em;
@@ -93,12 +88,10 @@ hr {
 
 /* Links */
 a:link, a:visited {
-  color: #0040c0;
   text-decoration: none
 }
 
 a:hover, a:active {
-  color: #0040a0;
   text-decoration: underline
 }
 
@@ -111,31 +104,6 @@ a:hover, a:active {
 .links a:last-child {
   margin-right: 0;
 }
-
-h1 a:link, h1 a:visited,
-h2 a:link, h2 a:visited,
-h3 a:link, h3 a:visited,
-h4 a:link, h4 a:visited,
-h5 a:link, h5 a:visited,
-h6 a:link, h6 a:visited,
-.links a:link, .links a:visited,
-.posts a:link, .posts a:visited
-{
-  color: #303030;
-}
-
-h1 a:hover, h1 a:active,
-h2 a:hover, h2 a:active,
-h3 a:hover, h3 a:active,
-h4 a:hover, h4 a:active,
-h5 a:hover, h5 a:active,
-h6 a:hover, h6 a:active,
-.links a:hover, .links a:active,
-.posts a:hover, .posts a:active
-{
-  color: #707070;
-}
-
 
 /* Footer */
 footer .links a {
@@ -160,11 +128,6 @@ footer .social a:last-child {
 
 footer .social img {
   height: 1.25em;
-  opacity: 0.81;
-}
-
-footer .social img:hover {
-  opacity: 0.56;
 }
 
 
@@ -177,16 +140,13 @@ ul.posts {
 /* Post */
 .meta {
   font-size: small;
-  color: #707070;
   font-style: italic;
 }
 
 .meta a:link, .meta a:visited {
-  color: #707070;
 }
 
 .meta a:hover, .meta a:active {
-  color: #303030;
 }
 
 
@@ -201,7 +161,7 @@ ul.posts {
 }
 
 .comment {
-  border: thin solid #707070;
+  border: thin solid;
   padding: 0.625em;
   margin: 1em 0;
 }
@@ -238,7 +198,6 @@ p.summary {
 /* Highlight Box */
 .highlight {
   /* Should be similar to pre style */
-  background: #f1f5f9;
   padding: 0.5em;
 }
 
@@ -305,4 +264,182 @@ table.ruled th, table.ruled td {
 
 .email .header, .email .body {
   margin: 1em;
+}
+
+noscript div {
+  border: medium double #cc0000;
+  color: #cc0000;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+/* Colors */
+body,
+h1 a:link, h1 a:visited,
+h2 a:link, h2 a:visited,
+h3 a:link, h3 a:visited,
+h4 a:link, h4 a:visited,
+h5 a:link, h5 a:visited,
+h6 a:link, h6 a:visited,
+.links a:link, .links a:visited,
+.posts a:link, .posts a:visited
+{
+  color: #333333;
+}
+
+h1 a:hover, h1 a:active,
+h2 a:hover, h2 a:active,
+h3 a:hover, h3 a:active,
+h4 a:hover, h4 a:active,
+h5 a:hover, h5 a:active,
+h6 a:hover, h6 a:active,
+.links a:hover, .links a:active,
+.posts a:hover, .posts a:active
+{
+  color: #666666;
+}
+
+body.dark {
+  background: #333333;
+}
+
+body.dark,
+.dark h1 a:link, .dark h1 a:visited,
+.dark h2 a:link, .dark h2 a:visited,
+.dark h3 a:link, .dark h3 a:visited,
+.dark h4 a:link, .dark h4 a:visited,
+.dark h5 a:link, .dark h5 a:visited,
+.dark h6 a:link, .dark h6 a:visited,
+.dark .links a:link, .dark .links a:visited,
+.dark .posts a:link, .dark .posts a:visited
+{
+  color: #cccccc;
+}
+
+.dark h1 a:hover, .dark h1 a:active,
+.dark h2 a:hover, .dark h2 a:active,
+.dark h3 a:hover, .dark h3 a:active,
+.dark h4 a:hover, .dark h4 a:active,
+.dark h5 a:hover, .dark h5 a:active,
+.dark h6 a:hover, .dark h6 a:active,
+.dark .links a:hover, .dark .links a:active,
+.dark .posts a:hover, .dark .posts a:active
+{
+  color: #ffffff;
+}
+
+/* Image background */
+figure img {
+  opacity: 0.8;
+}
+
+/* Code and quote colors */
+pre, code, samp, kbd {
+  color: #000066;
+}
+
+pre, blockquote {
+  background: #eeeeee;
+}
+
+pre kbd {
+  color: #006600;
+}
+
+.dark pre, .dark code, .dark samp, .dark kbd {
+  color: #66ccff;
+}
+
+.dark pre, .dark blockquote {
+  background: #222222;
+}
+
+.dark pre kbd {
+  color: #00cc00;
+}
+
+/* Quote border colors */
+blockquote {
+  border-left-color: #cccccc;
+}
+
+.dark blockquote {
+  border-left-color: #444444;
+}
+
+/* Highlight colors */
+.highlight {
+  background: #f1f5f9;
+}
+
+.dark .highlight {
+  background: #413d39;
+}
+
+/* Link colors */
+a:link, a:visited {
+  color: #0033cc;
+}
+
+a:hover, a:active {
+  color: #0066ff;
+}
+
+.dark a:link, .dark a:visited {
+  color: #99ccff;
+}
+
+.dark a:hover, .dark a:active {
+  color: #aaddff;
+}
+
+/* Meta link colors */
+.meta, .meta a:link, .meta a:visited {
+  color: #666666;
+}
+
+.meta a:hover, .meta a:active {
+  color: #333333;
+}
+
+.dark .meta, .dark .meta a:link, .dark .meta a:visited {
+  color: #999999;
+}
+
+.dark .meta a:hover, .dark .meta a:active {
+  color: #cccccc;
+}
+
+/* Comment border colors */
+.comment {
+  border-color: #666666;
+}
+
+.dark .comment {
+  border-color: #999999;
+}
+
+/* Form colors */
+.dark input, .dark textarea, .dark button {
+  background: #222222;
+  color: #cccccc;
+}
+
+/* Social media icon colors */
+.social img {
+  opacity: 0.8; /* 1 - 0x33 / 0xff */
+}
+
+.social img:hover {
+  opacity: 0.6; /* 1 - 0x66 / 0xff */
+}
+
+.dark .social img {
+  opacity: 1; 
+  filter: invert(0.8); /* 0xcc / 0xff */
+}
+
+.dark .social img:hover {
+  opacity: 1; 
+  filter: invert(1);  /* 0xff / 0xff */
 }
