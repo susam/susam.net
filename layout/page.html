@@ -6,17 +6,15 @@
   <meta name="viewport" content="width=device-width; initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="/css/main.css">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <script>
-    window.onload = function () {
-      if (localStorage.getItem('dark') === 'yes') {
-        document.body.className = 'dark'
-      }
-    }
-  </script>
   {{ imports }}
 </head>
 
 <body>
+<script>
+if (localStorage.getItem('dark') === 'yes') {
+  document.body.className = 'dark'
+}
+</script>
 {{ content }}
 
 <hr>
