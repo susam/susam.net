@@ -112,10 +112,13 @@ def form_html(params):
     page_layout = fread('layout/page.html')
     form_layout = fread('layout/form.html')
     form_layout = render(page_layout, content=form_layout)
-    params['title'] = 'Post Comment'
-    params['subtitle'] = ' - Susam Pal'
-    params['imports'] = (
-        '<link rel="stylesheet" type="text/css" href="/css/form.css">')
+    params.update({
+        'title': 'Post Comment',
+        'subtitle': ' - Susam Pal',
+        'current_year': datetime.datetime.now().year,
+        'imports':
+            '<link rel="stylesheet" type="text/css" href="/css/form.css">',
+    })
     content = render(form_layout, **params)
     return content
 
