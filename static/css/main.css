@@ -423,6 +423,7 @@ a:hover, a:active {
 .dark input, .dark textarea, .dark button {
   background: #222222;
   color: #cccccc;
+  border-color: #666666;
 }
 
 /* Social media icon colors */
