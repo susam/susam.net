@@ -39,18 +39,18 @@ input#submit {
 }
 
 .errors .notice {
-  color: #cc0000;
-  border-color: #cc0000;
+  color: #990000;
+  border-color: #990000;
 }
 
 .success .notice {
-  color: #009900;
-  border-color: #009900;
+  color: #006600;
+  border-color: #006600;
 }
 
 .dark .errors .notice {
-  color: #ff6666;
-  border-color: #ff6666;
+  color: #ff9999;
+  border-color: #ff9999;
 }
 
 .dark .success .notice {

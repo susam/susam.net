@@ -143,12 +143,6 @@ ul.posts {
   font-style: italic;
 }
 
-.meta a:link, .meta a:visited {
-}
-
-.meta a:hover, .meta a:active {
-}
-
 
 /* Comments */
 .comment h2 {
@@ -267,8 +261,8 @@ table.ruled th, table.ruled td {
 }
 
 noscript div {
-  border: medium double #cc0000;
-  color: #cc0000;
+  border: medium double #990000;
+  color: #990000;
   padding-left: 1em;
   padding-right: 1em;
 }
@@ -296,11 +290,11 @@ h6 a:hover, h6 a:active,
 .links a:hover, .links a:active,
 .posts a:hover, .posts a:active
 {
-  color: #666666;
+  color: #555555;
 }
 
 body.dark {
-  background: #333333;
+  background: #202020;
 }
 
 body.dark,
@@ -330,7 +324,7 @@ body.dark,
 
 /* Image background */
 figure img {
-  opacity: 0.8;
+  opacity: 0.8; /* 1 - 0x33 / 0xff; 0xcc / 0xff */
 }
 
 /* Code and quote colors */
@@ -343,7 +337,7 @@ pre, blockquote {
 }
 
 pre kbd {
-  color: #006600;
+  color: #005500;
 }
 
 .dark pre, .dark code, .dark samp, .dark kbd {
@@ -351,11 +345,15 @@ pre kbd {
 }
 
 .dark pre, .dark blockquote {
-  background: #222222;
+  background: #111111;
+}
+
+.dark blockquote {
+  color: #bbbbbb;
 }
 
 .dark pre kbd {
-  color: #00cc00;
+  color: #99cc99;
 }
 
 /* Quote border colors */
@@ -373,7 +371,8 @@ blockquote {
 }
 
 .dark .highlight {
-  background: #413d39;
+  background: #111418;
+  color: #bbbbbb;
 }
 
 /* Link colors */
@@ -382,7 +381,7 @@ a:link, a:visited {
 }
 
 a:hover, a:active {
-  color: #0066ff;
+  color: #0033ff;
 }
 
 .dark a:link, .dark a:visited {
@@ -395,7 +394,7 @@ a:hover, a:active {
 
 /* Meta link colors */
 .meta, .meta a:link, .meta a:visited {
-  color: #666666;
+  color: #555555;
 }
 
 .meta a:hover, .meta a:active {
@@ -421,8 +420,8 @@ a:hover, a:active {
 
 /* Form colors */
 .dark input, .dark textarea, .dark button {
-  background: #222222;
-  color: #cccccc;
+  background: #181818;
+  color: #bfbfbf;
   border-color: #666666;
 }
 
