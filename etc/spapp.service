@@ -9,10 +9,8 @@ ExecStart=/usr/bin/uwsgi --socket /tmp/spapp.sock \
                          --chdir /opt/live/susam.in \
                          --plugin python3 \
                          --module py.spapp:app
-Restart=Always
+Restart=always
 RestartSec=5
-
-# TODO: Troubleshoot RestartSec
 
 [Install]
 WantedBy=multi-user.target
