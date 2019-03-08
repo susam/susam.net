@@ -48,10 +48,6 @@ pre {
   overflow: auto;
 }
 
-pre kbd {
-  font-style: italic;
-}
-
 
 /* Blockquote */
 blockquote {
@@ -307,7 +303,7 @@ body.dark,
 .dark .links a:link, .dark .links a:visited,
 .dark .posts a:link, .dark .posts a:visited
 {
-  color: #cccccc;
+  color: #aaaaaa;
 }
 
 .dark h1 a:hover, .dark h1 a:active,
@@ -319,12 +315,16 @@ body.dark,
 .dark .links a:hover, .dark .links a:active,
 .dark .posts a:hover, .dark .posts a:active
 {
-  color: #ffffff;
+  color: #cccccc;
 }
 
 /* Image background */
 figure img {
-  opacity: 0.8; /* 1 - 0x33 / 0xff; 0xcc / 0xff */
+  opacity: 0.8; /* 1 - 0x33 / 0xff */
+}
+
+.dark figure img {
+  opacity: 0.667; /* 0xaa / 0xff */
 }
 
 /* Code and quote colors */
@@ -341,19 +341,15 @@ pre kbd {
 }
 
 .dark pre, .dark code, .dark samp, .dark kbd {
-  color: #66ccff;
+  color: #33ccff;
 }
 
 .dark pre, .dark blockquote {
   background: #111111;
 }
 
-.dark blockquote {
-  color: #bbbbbb;
-}
-
 .dark pre kbd {
-  color: #99cc99;
+  color: #6ad463;
 }
 
 /* Quote border colors */
@@ -385,11 +381,11 @@ a:hover, a:active {
 }
 
 .dark a:link, .dark a:visited {
-  color: #99ccff;
+  color: #77aaee;
 }
 
 .dark a:hover, .dark a:active {
-  color: #aaddff;
+  color: #88bbff;
 }
 
 /* Meta link colors */
@@ -406,7 +402,7 @@ a:hover, a:active {
 }
 
 .dark .meta a:hover, .dark .meta a:active {
-  color: #cccccc;
+  color: #aaaaaa;
 }
 
 /* Comment border colors */
@@ -436,10 +432,10 @@ a:hover, a:active {
 
 .dark .icons img {
   opacity: 1; 
-  filter: invert(0.8); /* 0xcc / 0xff */
+  filter: invert(0.667); /* 0xaa / 0xff */
 }
 
 .dark .icons img:hover {
   opacity: 1; 
-  filter: invert(1);  /* 0xff / 0xff */
+  filter: invert(0.8);  /* 0xcc / 0xff */
 }
