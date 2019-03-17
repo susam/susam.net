@@ -23,9 +23,9 @@ when there are 4 discs.
 </p>
 
 <p>
-Referring to the problem as the <em>Lucas' Tower</em> made me wonder why
-it was called so instead of calling it the <em>Tower of Hanoi</em>. I
-guessed it was probably because the puzzle was invented by the French
+Referring to the problem as the Lucas' Tower made me wonder why it was
+called so instead of calling it the Tower of Hanoi. I guessed it was
+probably because the puzzle was invented by the French
 mathematician Édouard Lucas. Later when I checked the <a
 href="https://en.wikipedia.org/wiki/Tower_of_Hanoi">Wikipedia article
 on this topic</a>, I realized I was right about this. In fact, the
@@ -37,7 +37,7 @@ move of the puzzle is completed. Now, even if they make one move every
 second, it'll take 18,446,744,073,709,551,615 seconds to complete the
 puzzle. That's about 585 billion years. The article also had this nice
 animation of a solution involving four discs.
-</p><p>
+</p>
 
 <figure>
   <img src="/img/blog/tower-of-hanoi-animation.gif"
@@ -146,7 +146,7 @@ the number of \( 1 \)-bits in the sum. It takes \( O(n^2) \) time to add
 the \( n \) integers. The sum is an \( (n + 1) \)-bit integer, so it
 takes \( O(n) \) time to count the number of \( 1 \)-bits in the sum.
 Since the sum is \( (n + 1) \)-bit long, it takes \( O(n) \) memory to
-store the sum. If \( n \) is as large as, say, \( 2^{64} \), it takes a
+store the sum. If \( n \) is as large as, say, \( 2^{64} \), it takes
 2 exbibytes plus one more byte of memory to store the sum.
 </p>
 
@@ -184,12 +184,12 @@ integer \( n \), then we get
 </p>
 
 <p>
-Now the computation involves counting the number of \( 1 \)-bits in (n -
-1) which takes \( O(\log n) \) and subtracting this count from \( n + 1 \)
-which also takes \( O(\log n) \) time. Further, the largest numbers that
-we keep in memory are \( n + 1 \) and \( n - 1 \) which occupy \( O(log
-n) \) space each. Therefore, the entire problem can be solved in \( O(log
-n) \) time with \( O(log n) \) space.
+Now the computation involves counting the number of \( 1 \)-bits in \( n
+- 1 \) which takes \( O(\log n) \) and subtracting this count from \( n
++ 1 \) which also takes \( O(\log n) \) time. Further, the largest
+numbers that we keep in memory are \( n + 1 \) and \( n - 1 \) which
+occupy \( O(\log n) \) space each. Therefore, the entire problem can be
+solved in \( O(\log n) \) time with \( O(\log n) \) space.
 </p>
 
 <p>

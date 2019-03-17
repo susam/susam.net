@@ -197,9 +197,9 @@ fare:
 
 km = 1.9
 
-while km < 30.01:
-    old_fare = 20 if km <= 1.8 else 20 + 11 * (km - 1.8)
-    new_fare = 25 if km <= 1.9 else 25 + 13 * (km - 1.9)
+while km &lt; 30.01:
+    old_fare = 20 if km &lt;= 1.8 else 20 + 11 * (km - 1.8)
+    new_fare = 25 if km &lt;= 1.9 else 25 + 13 * (km - 1.9)
     approx_fare = (old_fare // 10) * 2 + old_fare
     error = approx_fare - new_fare
 
