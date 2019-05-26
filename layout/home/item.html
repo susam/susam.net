@@ -1,11 +1,11 @@
 <section>
-<h2><a href="/{{ blog }}/{{ slug }}/">{{ title }}</a></h2>
+<h2><a href="{{ root }}{{ blog }}/{{ slug }}/">{{ title }}</a></h2>
 <div class="meta">By <b>{{ author }}</b> on {{ simple_date }}</div>
 <p class="summary">
 {{ summary }}&nbsp;<span
-  class="links"><a href="/{{ blog }}/{{ slug }}/">...</a></span>
+  class="links"><a href="{{ root }}{{ blog }}/{{ slug }}/">...</a></span>
 </p>
 <div class="links">
-  <a href="/{{ blog }}/{{ slug }}/">[Read More]</a>
+  <a href="{{ root }}{{ blog }}/{{ slug }}/">[Read More]</a>
 </div>
 </section>

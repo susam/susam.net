@@ -164,14 +164,16 @@ def render(template, **params):
                   template)
 
 
-def head_content(import_header):
+def head_content(import_header, root):
     tokens = [x.strip() for x in import_header.split()]
     imports = []
     for token in tokens:
         if token.endswith('.js'):
-            code = '<script src="/js/{}"></script>'.format(token)
+            code = ('<script src="{}js/{}"></script>'
+                    .format(root, token))
         elif token.endswith('.css'):
-            code = '<link rel="stylesheet" href="/css/{}">'.format(token)
+            code = ('<link rel="stylesheet" href="{}css/{}">'
+                    .format(root, token))
         else:
             raise ValueError('unknown type: {} in {}'
                              .format(token, import_header))
@@ -185,12 +187,12 @@ def make_pages(src, dst, layout, **params):
 
     for src_path in glob.glob(src):
         content = read_content(src_path)
-        page_params = dict(params, **content)
 
         # Invoke callback if registered.
-        if 'callback' in page_params:
-            page_params['callback'](content)
-            page_params.update(**content)
+        if 'callback' in params:
+            params['callback'](content)
+
+        page_params = dict(params, **content)
 
         # Populate placeholders in content if content-rendering is enabled.
         if page_params.get('render') == 'yes':
@@ -200,7 +202,8 @@ def make_pages(src, dst, layout, **params):
 
         # Add imports if importing is requested.
         if 'import' in page_params:
-            page_params['imports'] = head_content(page_params['import'])
+            page_params['imports'] = head_content(page_params['import'],
+                                                  page_params['root'])
 
         items.append(content)
 
@@ -217,6 +220,9 @@ def make_list(posts, dst, list_layout, item_layout, **params):
     """Generate list page for a blog."""
     items = []
     for post in posts:
+        # Invoke callback if registered.
+        if 'callback' in params:
+            params['callback'](post)
         item_params = dict(params, **post)
         item_params['summary'] = truncate(post['content'])
         item = render(item_layout, **item_params)
@@ -225,7 +231,7 @@ def make_list(posts, dst, list_layout, item_layout, **params):
     params['content'] = ''.join(items)
     params['count'] = len(posts)
     if 'import' in params:
-        params['imports'] = head_content(params['import'])
+        params['imports'] = head_content(params['import'], params['root'])
 
     dst_path = render(dst, **params)
     output = render(list_layout, **params)
@@ -278,20 +284,27 @@ def make_blog(src, page_layout, **params):
     feed_xml = fread('layout/blog/feed.xml')
     item_xml = fread('layout/blog/item.xml')
 
+    blog_root = params['root']
+    post_root = blog_root + '../'
+
     # Combine layouts to form final layouts.
     post_layout = render(page_layout, content=post_layout)
     list_layout = render(page_layout, content=list_layout)
     tags_layout = render(page_layout, content=tags_layout)
 
     # Read all posts.
+    params['root'] = post_root
     posts = make_pages(src, '_site/blog/{{ slug }}/index.html',
                        post_layout, blog='blog', **params)
     listed_posts = [post for post in posts if post.get('list') != 'no']
 
     # Create blog list pages.
+    params['root'] = blog_root
     make_list(listed_posts, '_site/blog/index.html',
               list_layout, item_layout,
               blog='blog', title="Susam's Blog", **params)
+
+    params['root'] = post_root
     make_tags(listed_posts, '_site/blog/tags/index.html',
               tags_layout, tagh_layout, tagc_layout, item_layout,
               blog='blog', title="Posts by Tags", **params)
@@ -383,7 +396,7 @@ def make_comment_list(post, comments, dst,
 
     # Add imports if importing is requested.
     if 'import' in post:
-        params['imports'] = head_content(post['import'])
+        params['imports'] = head_content(post['import'], params['root'])
 
     log('Rendering {} => {} ...', slug, dst_path)
     output = render(list_layout, **params)
@@ -443,7 +456,6 @@ def make_home(posts, page_layout, **params):
     subtitle = re.search('<strong>(.*)</strong>', home_layout).group(1)
     subtitle = ' - ' + subtitle
     home_params = dict(params, title=title, subtitle=subtitle)
-
     make_list(posts[:5], '_site/index.html', home_layout, item_layout,
               blog='blog', **home_params)
 
@@ -472,20 +484,22 @@ def make_music(src, page_layout, **params):
     post_layout = render(page_layout, content=post_layout)
 
     def make_widget(content):
-        widget_params = dict(params, **content)
+        widget_params = dict(music_params, **content)
         widget = render(widget_layout, **widget_params)
         content['widget'] = widget
 
     music_params = dict(params)
     music_params['import'] = 'music.css'
+    music_params['root'] = params['root'] + '../'
     posts = make_pages(src,
                        '_site/music/{{ slug }}/index.html',
                        post_layout, blog='music', render='yes',
                        **music_params, callback=make_widget)
 
+    music_params['root'] = params['root']
     make_list(posts, '_site/music/index.html',
               list_layout, item_layout, blog='music', title='Music',
-              **music_params)
+              **music_params, callback=make_widget)
 
 
 def main():
@@ -511,23 +525,32 @@ def main():
 
     page_layout = fread('layout/page.html')
 
+    params['root'] = '../'
     make_pages('content/[!_]*.html', '_site/{{ slug }}/index.html',
                page_layout, **params)
 
     # Blog.
+    params['root'] = '../'
     posts = make_blog('content/blog/*.html', page_layout, **params)
 
     # Comments.
+    params['root'] = '../../../'
     make_comments('content/comments/*.html', posts, page_layout, **params)
 
     # Home page.
     listed_posts = [post for post in posts if post.get('list') != 'no']
+    params['root'] = ''
     make_home(listed_posts, page_layout, **params)
 
+    # Music.
+    params['root'] = '../'
+    make_music('content/music/*.html', page_layout, **params)
+
     # Special directories.
+    params['root'] = '../'
     make_text_dir('static/security/*.txt', page_layout, **params)
     make_text_dir('static/poetry/*.txt', page_layout, **params)
-    make_music('content/music/*.html', page_layout, **params)
+
     #make_licenses('content/licenses/*.html', page_layout, **params)
 
 

@@ -1,12 +1,12 @@
 <div class="widget">
   <audio controls preload="none">
-    <source src="/files/music/{{ slug }}/{{ slug }}.mp3" type="audio/mpeg">
+    <source src="{{ root }}files/music/{{ slug }}/{{ slug }}.mp3" type="audio/mpeg">
   </audio>
 
   <div class="links">
-    <a href="/files/music/{{ slug }}/{{ slug }}.mp3">[MP3]</a>
-    <a href="/files/music/{{ slug }}/{{ slug }}.pdf">[Score]</a>
-    <a href="/files/music/{{ slug }}/{{ slug }}.ly">[Lilypond]</a>
-    <a href="/music/{{ slug }}/">[Details]</a>
+    <a href="{{ root }}files/music/{{ slug }}/{{ slug }}.mp3">[MP3]</a>
+    <a href="{{ root }}files/music/{{ slug }}/{{ slug }}.pdf">[Score]</a>
+    <a href="{{ root }}files/music/{{ slug }}/{{ slug }}.ly">[Lilypond]</a>
+    <a href="{{ root }}music/{{ slug }}/">[Details]</a>
   </div>
 </div>
