@@ -4,8 +4,8 @@
   <title>{{ title }}{{ subtitle }}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width; initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="/css/main.css">
-  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" type="text/css" href="{{ root }}css/main.css">
+  <link rel="icon" type="image/png" href="{{ root }}favicon.png">
   {{ imports }}
 </head>
 
@@ -21,21 +21,21 @@ if (localStorage.getItem('dark') === 'yes') {
 
 <footer>
   <div class="links">
-      <a href="/">Home</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about/">About</a>
+      <a href="{{ root }}">Home</a>
+      <a href="{{ root }}blog/">Blog</a>
+      <a href="{{ root }}about/">About</a>
   </div>
   <div class="icons">
-      <a href="/blog/rss.xml"><img
-         src="/img/footer/feed.svg" alt="Feed" title="RSS Feed"></a>
-      <a href="/dark/"><img
-         src="/img/footer/moon.svg" alt="Dark Mode" title="Dark Mode"></a>
+      <a href="{{ root }}blog/rss.xml"><img
+         src="{{ root }}img/footer/feed.svg" alt="Feed" title="RSS Feed"></a>
+      <a href="{{ root }}dark/"><img
+         src="{{ root }}img/footer/moon.svg" alt="Dark" title="Dark Mode"></a>
       <a href="https://github.com/susam"><img
-         src="/img/footer/github.svg" alt="GitHub" title="GitHub"></a>
+         src="{{ root }}img/footer/github.svg" alt="GitHub" title="GitHub"></a>
       <a href="https://twitter.com/susam"><img
-         src="/img/footer/twitter.svg" alt="Twitter" title="Twitter"></a>
+         src="{{ root }}img/footer/twitter.svg" alt="Twitter" title="Twitter"></a>
       <a href="https://www.linkedin.com/in/susam/"><img
-         src="/img/footer/linkedin.svg" alt="LinkedIn" title="LinkedIn"></a>
+         src="{{ root }}img/footer/linkedin.svg" alt="LinkedIn" title="LinkedIn"></a>
   </div>
   <p>&copy; 2006&ndash;{{ current_year }} Susam Pal</p>
 </footer>

@@ -1,16 +1,16 @@
 <main>
 <h1>
 Comments on
-<a href="{{ base_path }}/{{ blog }}/{{ slug }}/">{{ post_title }}</a>
+<a href="{{ root }}{{ blog }}/{{ slug }}/">{{ post_title }}</a>
 </h1>
 
 <div class="links">
-  <a href="/comment/?slug={{ slug }}">[Post Comment]</a>
+  <a href="{{ root }}comment/?slug={{ slug }}">[Post Comment]</a>
 </div>
 
 {{ content }}
 
 <div class="links">
-  <a href="/comment/?slug={{ slug }}">[Post Comment]</a>
+  <a href="{{ root }}comment/?slug={{ slug }}">[Post Comment]</a>
 </div>
 </main>
