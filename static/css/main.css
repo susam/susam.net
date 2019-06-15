@@ -21,7 +21,7 @@ audio {
 
 figure {
   text-align: center;
-  margin: 2em 0;
+  margin: 1.5em 0;
 }
 
 figure img {
@@ -327,6 +327,10 @@ figure img {
   opacity: 0.667; /* 0xaa / 0xff */
 }
 
+figure.opaque img {
+  opacity: 1;
+}
+
 /* Code and quote colors */
 pre, code, samp, kbd {
   color: #000066;
@@ -334,6 +338,19 @@ pre, code, samp, kbd {
 
 pre, blockquote {
   background: #eeeeee;
+}
+
+p kbd {
+  border: thin solid;
+  border-radius: 0.2em;
+  padding: 0.1em 0.2em;
+}
+
+p kbd {
+  background: #eee;
+  border-color: #ccc;
+  border-bottom-color: #999;
+  box-shadow: 0 0.15em 0.15em #999;
 }
 
 pre kbd {
@@ -346,6 +363,13 @@ pre kbd {
 
 .dark pre, .dark blockquote {
   background: #111111;
+}
+
+.dark p kbd {
+  background: #111;
+  border-color: #444;
+  border-bottom-color: #333;
+  box-shadow: 0 0.15em 0.15em #333;
 }
 
 .dark pre kbd {
@@ -431,11 +455,11 @@ a:hover, a:active {
 }
 
 .dark .icons img {
-  opacity: 1; 
+  opacity: 1;
   filter: invert(0.667); /* 0xaa / 0xff */
 }
 
 .dark .icons img:hover {
-  opacity: 1; 
+  opacity: 1;
   filter: invert(0.8);  /* 0xcc / 0xff */
 }

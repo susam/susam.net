@@ -1,0 +1,268 @@
+<!-- title: Good Quality DOSBox Video Capture -->
+<!-- tag: technology -->
+
+<h2>Contents</h2>
+
+<ul>
+  <li><a href="#ibm-lcsi-logo-in-dosbox">IBM/LCSI Logo in DOSBox</a></li>
+  <li><a href="#dosbox-screenshot-capture">DOSBox Screenshot Capture</a></li>
+  <li><a href="#dosbox-video-capture">DOSBox Video Capture</a></li>
+  <li><a href="#ffmpeg-options">FFmpeg Options</a></li>
+  <li><a href="#further-reading">Further Reading</a></li>
+</ul>
+
+<h2 id="ibm-lcsi-logo-in-dosbox">IBM/LCSI Logo in DOSBox</h2>
+
+<p>
+Once in a while, I fire up one of the vintage DOS games or language
+interpreters in DOSBox for nostalgia's sake. I have archived these
+vintage programs at <a
+href="https://github.com/susam/dosage">https://github.com/susam/dosage</a>.
+Last night, I picked the IBM Personal Computer Logo developed by Logo
+Computer Systems Inc. (LCSI) in 1983.
+</p>
+
+<figure class="opaque">
+  <img src="../../img/blog/dosbox-logo-1.png"
+       alt="Screenshot of IBM PC Logo"
+       style="width: 40em">
+  <figcaption>
+    Welcome screen of IBM Personal Computer Logo developed by LCSI.
+  </figcaption>
+</figure>
+
+<p>
+Logo was the first programming language I learnt in my life. I came
+across it at the age of 8 when I was in Class 4 and our school had a
+5&frac14;-inch floppy disk with the IBM PC Logo on it. About 20 years
+later, I would realize that the first programming language I learnt is a
+dialect of Lisp. How wonderful!
+</p>
+
+<!--
+Class Age Year
+   KG   4   88
+    1   5   89
+    2   6   90
+    3   7   91
+    4   8   92
+    5   9   93
+    6  10   94
+    7  11   95
+    8  12   96
+    9  13   97
+   10  14   98
+-->
+
+<p>
+One of the things I enjoyed drawing with Logo was a grid of overlapping
+circles like this:
+</p>
+
+<figure class="opaque">
+  <img src="../../img/blog/dosbox-logo-2.png"
+       alt="Grid of overlapping circles drawn in Logo"
+       style="width: 40em">
+  <figcaption>
+    Grid of circles drawn with IBM Personal Computer Logo.
+  </figcaption>
+</figure>
+
+<p>
+Here is the Logo source code for the above output:
+</p>
+
+<pre>
+<code>REPEAT 20 [REPEAT 180 [FD 1 RT 2] RT 18]</code>
+</pre>
+
+
+<h2 id="dosbox-screenshot-capture">DOSBox Screenshot Capture</h2>
+
+<p>
+The screenshots above were obtained by running the IBM Personal Computer
+Logo Version 1.00 running in DOSBox v0.74-2 in macOS High Sierra version
+10.13.6.
+</p>
+
+<p>
+To obtain such screenshots, we press <kbd>Ctrl</kbd> + <kbd>F5</kbd>
+while DOSBox is running. The screenshot path appears in the console
+output at the terminal where DOSBox was launched. For example:
+</p>
+
+<pre>
+<samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_000.png</samp>
+</pre>
+
+<p>
+By the way, I have donated both images above to Wikimedia Commons under
+the Creative Commons Attribution 4.0 International (CC BY 4.0) license:
+</p>
+
+<ul>
+  <li><a href="https://commons.wikimedia.org/wiki/File:IBM_LCSI_Logo_Welcome_Screen.png">https://commons.wikimedia.org/wiki/File:IBM_LCSI_Logo_Welcome_Screen.png</a></li>
+  <li><a href="https://commons.wikimedia.org/wiki/File:IBM_LCSI_Logo_Circles.png">https://commons.wikimedia.org/wiki/File:IBM_LCSI_Logo_Circles.png</a></li>
+</ul>
+
+<p>
+Having the images on Wikimedia Commons helps to include these
+screenshots in the <a
+href="https://en.wikipedia.org/wiki/Logo_(programming_language)#Implementations">Wikipedia
+article on Logo</a>.
+</p>
+
+
+<h2 id="dosbox-video-capture">DOSBox Video Capture</h2>
+
+<p>
+To start capturing video of DOSBox, we press <kbd>Ctrl</kbd> +
+<kbd>Alt</kbd> + <kbd>F5</kbd>. The same key combination stops capturing
+video. The following output appears in the console output to show where
+the video file is saved:
+</p>
+
+<pre>
+<samp>Capturing Video to /Users/susam/Library/Preferences/capture/logo_000.avi
+Stopped capturing video.</samp>
+</pre>
+
+<p>
+Now I wanted to share this video with my contacts who might be on a
+device that does not support playing AVI files, so I decided to convert
+this to MP4 format. I did so with the following FFmpeg command:
+</p>
+
+<pre>
+<code>ffmpeg -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow \
+       -pix_fmt yuv420p logo.mp4</code>
+</pre>
+
+<p>
+Here is what the output looks like:
+</p>
+
+<figure>
+  <video controls style="width: 40em">
+    <source src="../../vid/logo.mp4" type="video/mp4">
+  </video>
+  <figcaption>
+    Video capture of IBM Personal Computer Logo.
+    [<a href="../../vid/logo.mp4">MP4</a>]
+  </figcaption>
+</figure>
+
+
+<h2 id="ffmpeg-options">FFmpeg Options</h2>
+
+<p>
+Let us briefly discuss the various FFmpeg options we used in the
+previous section:
+</p>
+
+<ul>
+  <li>
+    <p>
+      <code>-i logo_000.avi</code>
+    </p>
+    <p>
+      This of course specifies the input file.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>-an</code>
+    </p>
+    <p>
+      We do not have any audio in this video, so we reduce the file size
+      a little by disabling the audio stream with this option. For
+      example, without this option, the output file size was 243 KB but
+      with this option it turned out to be 203 KB.
+    </p>
+    <p>
+      This option should not be specified if the audio stream needs to
+      preserved, for example, with DOS games that have audio.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>-crf 17</code>
+    </p>
+    <p>
+      This provides visually lossless output, i.e., high quality output
+      without any loss in quality that can be perceived by human eyes.
+      For completely lossless output, we need to use the <code>-crf
+      0</code> option. The <code>-crf 51</code> options produces the
+      most lossy (worst quality) output.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>-preset veryslow</code>
+    </p>
+    <p>
+      This provides better compression at the cost of encoding speed.
+      For example, without this option it produces an output of size 221
+      KB in about 1.2 second but with this option it produces an output of
+      size 203 KB in about 1.8 seconds.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>-pix_fmt yuv420p</code>
+    </p>
+    <p>
+      These options ensure that the output video file can be run in
+      players that do not support the YUV444p format.
+    </p>
+    <p>
+      For example, without this option, we get the output in the YUV444p
+      format. I found that QuickTime Player version 10.4 on macOS High
+      Sierra as well as Android 9.0.0 was unable to play this format.
+    </p>
+<pre>
+<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow logo.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo.mp4</kbd>
+[STREAM]
+codec_name=h264
+profile=High 4:4:4 Predictive
+pix_fmt=yuv444p
+[/STREAM]</samp>
+</pre>
+    <p>
+      With this option, we get the output in the YUV240p format. Now
+      both QuickTime Player version 10.4 as well as Android 9.0.0 was
+      able to play this format.
+    </p>
+<pre>
+$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p logo.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo.mp4</kbd>
+[STREAM]
+codec_name=h264
+profile=High
+pix_fmt=yuv420p
+[/STREAM]
+</pre>
+    <p>
+      For maximum compatibility with old devices, we should add the
+      <code>-profile:v baseline -level 3.0</code> options too.
+    </p>
+<pre>
+$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p -profile:v baseline -level 3.0 logo.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo.mp4</kbd>
+[STREAM]
+codec_name=h264
+profile=Constrained Baseline
+pix_fmt=yuv420p
+[/STREAM]
+</pre>
+  </li>
+</ul>
+
+
+<h2 id="further-reading">Further Reading</h2>
+
+<ul>
+<li><a href="https://www.dosbox.com/wiki/Special_Keys">DOSBox Special Keys</a></li>
+<li><a href="https://trac.ffmpeg.org/wiki/Encode/H.264">FFmpeg H.264 Video Encoding Guide</a></li>
+</ul>
