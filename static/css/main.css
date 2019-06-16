@@ -326,16 +326,12 @@ body.dark,
 }
 
 /* Image background */
-figure img {
+figure.soft img {
   opacity: 0.8; /* 1 - 0x33 / 0xff */
 }
 
-.dark figure img {
+.dark figure.soft img {
   opacity: 0.667; /* 0xaa / 0xff */
-}
-
-figure.opaque img {
-  opacity: 1;
 }
 
 /* Code and quote colors */
