@@ -14,18 +14,18 @@ Computer Systems Inc. (LCSI) in 1983.
 
 <figure class="opaque">
   <img src="../../img/blog/dosbox-logo-1.png"
-       alt="Screenshot of IBM PC Logo"
-       style="width: 40em">
+       alt="A screenshot of IBM Personal Computer Logo with copyright notices of IBM and LCSI, welcome message, and question mark prompt"
+       style="width: 640px">
   <figcaption>
-    Welcome screen of IBM Personal Computer Logo developed by LCSI.
+    Welcome screen of IBM Personal Computer Logo
   </figcaption>
 </figure>
 
 <p>
 Logo was the first programming language I learnt in my life. I came
 across it at the age of 8 when I was in Class 4 and our school had a
-5&frac14;-inch floppy disk with the IBM PC Logo on it. About 20 years
-later, I would realize that the first programming language I learnt is a
+5&frac14;-inch floppy disk with IBM PC Logo on it. About 20 years later,
+I would realize that the first programming language I learnt is a
 dialect of Lisp. How wonderful!
 </p>
 
@@ -51,10 +51,10 @@ circles like this:
 
 <figure class="opaque">
   <img src="../../img/blog/dosbox-logo-2.png"
-       alt="Grid of overlapping circles drawn in Logo"
-       style="width: 40em">
+       alt="A grid made with 20 circles along with Logo source code for it"
+       style="width: 640px">
   <figcaption>
-    Grid of circles drawn with IBM Personal Computer Logo.
+    Grid of circles drawn with IBM Personal Computer Logo
   </figcaption>
 </figure>
 
@@ -70,8 +70,8 @@ Here is the Logo source code for the above output:
 <h2 id="dosbox-screenshot-capture">DOSBox Screenshot Capture</h2>
 
 <p>
-The screenshots above were obtained by running the IBM Personal Computer
-Logo Version 1.00 running in DOSBox v0.74-2 in macOS High Sierra version
+The screenshots above were obtained by running IBM Personal Computer
+Logo Version 1.00 in DOSBox v0.74-2 in macOS High Sierra version
 10.13.6.
 </p>
 
@@ -118,9 +118,9 @@ Stopped capturing video.</samp>
 </pre>
 
 <p>
-Now I wanted to share this video with my contacts who might be on a
-device that does not support playing AVI files, so I decided to convert
-this to MP4 format. I did so with the following FFmpeg command:
+Now I wanted to share this video with my contacts who might be on
+devices that do not support playing AVI files, so I decided to convert
+this to MP4 format with the following FFmpeg command:
 </p>
 
 <pre>
@@ -133,7 +133,7 @@ Here is what the output looks like:
 </p>
 
 <figure>
-  <video controls style="width: 40em">
+  <video controls style="width: 640px">
     <source src="../../vid/logo.mp4" type="video/mp4">
   </video>
   <figcaption>
@@ -156,7 +156,7 @@ previous section:
       <code>-i logo_000.avi</code>
     </p>
     <p>
-      This of course specifies the input file.
+      This, of course, specifies the input file.
     </p>
   </li>
   <li>
@@ -166,7 +166,7 @@ previous section:
     <p>
       We do not have any audio in this video, so we reduce the file size
       a little by disabling the audio stream with this option. For
-      example, without this option, the output file size was 243 KB but
+      example, without this option the output file size was 243 KB but
       with this option it turned out to be 203 KB.
     </p>
     <p>
@@ -179,11 +179,11 @@ previous section:
       <code>-crf 17</code>
     </p>
     <p>
-      This provides visually lossless output, i.e., high quality output
-      without any loss in quality that can be perceived by human eyes.
-      For completely lossless output, we need to use the <code>-crf
-      0</code> option. The <code>-crf 51</code> options produces the
-      most lossy (worst quality) output.
+      This option provides visually lossless output, i.e., high quality
+      output without any loss in quality that can be perceived by human
+      eyes. For completely lossless output, we need to use the
+      <code>-crf 0</code> option. The <code>-crf 51</code> option
+      produces the most lossy (worst quality) output.
     </p>
   </li>
   <li>
@@ -191,10 +191,10 @@ previous section:
       <code>-preset veryslow</code>
     </p>
     <p>
-      This provides better compression at the cost of encoding speed.
-      For example, without this option it produces an output of size 221
-      KB in about 1.2 second but with this option it produces an output of
-      size 203 KB in about 1.8 seconds.
+      This option provides better compression at the cost of encoding
+      speed. For example, without this option it produces an output of
+      size 221 KB in about 1.2 second but with this option it produces
+      an output of size 203 KB in about 1.8 seconds.
     </p>
   </li>
   <li>
@@ -202,8 +202,8 @@ previous section:
       <code>-pix_fmt yuv420p</code>
     </p>
     <p>
-      These options ensure that the output video file can be run in
-      players that do not support the YUV444p format.
+      This option ensures that the output video file can be run in
+      a wide range of devices and players.
     </p>
     <p>
       For example, without this option, we get the output in the YUV444p
