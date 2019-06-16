@@ -264,8 +264,8 @@ table.ruled th, table.ruled td {
 }
 
 noscript div {
-  border: medium double #990000;
-  color: #990000;
+  border: medium double #900;
+  color: #900;
   padding-left: 1em;
   padding-right: 1em;
 }
@@ -281,7 +281,7 @@ h6 a:link, h6 a:visited,
 .links a:link, .links a:visited,
 .posts a:link, .posts a:visited
 {
-  color: #333333;
+  color: #333;
 }
 
 h1 a:hover, h1 a:active,
@@ -293,11 +293,11 @@ h6 a:hover, h6 a:active,
 .links a:hover, .links a:active,
 .posts a:hover, .posts a:active
 {
-  color: #555555;
+  color: #555;
 }
 
 body.dark {
-  background: #202020;
+  background: #222;
 }
 
 body.dark,
@@ -310,7 +310,7 @@ body.dark,
 .dark .links a:link, .dark .links a:visited,
 .dark .posts a:link, .dark .posts a:visited
 {
-  color: #aaaaaa;
+  color: #aaa;
 }
 
 .dark h1 a:hover, .dark h1 a:active,
@@ -322,7 +322,7 @@ body.dark,
 .dark .links a:hover, .dark .links a:active,
 .dark .posts a:hover, .dark .posts a:active
 {
-  color: #cccccc;
+  color: #ccc;
 }
 
 /* Image background */
@@ -340,11 +340,11 @@ figure.opaque img {
 
 /* Code and quote colors */
 pre, code, samp, kbd {
-  color: #000066;
+  color: #006;
 }
 
 pre, blockquote {
-  background: #eeeeee;
+  background: #eee;
 }
 
 p kbd {
@@ -355,15 +355,15 @@ p kbd {
 }
 
 pre kbd {
-  color: #005500;
+  color: #050;
 }
 
 .dark pre, .dark code, .dark samp, .dark kbd {
-  color: #33ccff;
+  color: #3cf;
 }
 
 .dark pre, .dark blockquote {
-  background: #111111;
+  background: #111;
 }
 
 .dark p kbd {
@@ -374,76 +374,76 @@ pre kbd {
 }
 
 .dark pre kbd {
-  color: #6ad463;
+  color: #8c9;
 }
 
 /* Quote border colors */
 blockquote {
-  border-left-color: #cccccc;
+  border-left-color: #ccc;
 }
 
 .dark blockquote {
-  border-left-color: #444444;
+  border-left-color: #444;
 }
 
 /* Highlight colors */
 .highlight {
-  background: #f1f5f9;
+  background: #eef;
 }
 
 .dark .highlight {
-  background: #111418;
-  color: #bbbbbb;
+  background: #112;
+  color: #bbb;
 }
 
 /* Link colors */
 a:link, a:visited {
-  color: #0033cc;
+  color: #03c;
 }
 
 a:hover, a:active {
-  color: #0033ff;
+  color: #03f;
 }
 
 .dark a:link, .dark a:visited {
-  color: #77aaee;
+  color: #7ae;
 }
 
 .dark a:hover, .dark a:active {
-  color: #88bbff;
+  color: #8bf;
 }
 
 /* Meta link colors */
 .meta, .meta a:link, .meta a:visited {
-  color: #555555;
+  color: #555;
 }
 
 .meta a:hover, .meta a:active {
-  color: #333333;
+  color: #333;
 }
 
 .dark .meta, .dark .meta a:link, .dark .meta a:visited {
-  color: #999999;
+  color: #999;
 }
 
 .dark .meta a:hover, .dark .meta a:active {
-  color: #aaaaaa;
+  color: #aaa;
 }
 
 /* Comment border colors */
 .comment {
-  border-color: #666666;
+  border-color: #666;
 }
 
 .dark .comment {
-  border-color: #999999;
+  border-color: #999;
 }
 
 /* Form colors */
 .dark input, .dark textarea, .dark button {
-  background: #181818;
-  color: #bfbfbf;
-  border-color: #666666;
+  background: #111;
+  color: #bbb;
+  border-color: #666;
 }
 
 /* Social media icon colors */
