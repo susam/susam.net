@@ -1,6 +1,9 @@
 # Vim swap files
 *.sw?
 
+# Ignore macOS desktop services store files.
+.DS_Store
+
 # Generated files
 *.pyc
 __pycache__/
