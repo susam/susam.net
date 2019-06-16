@@ -49,6 +49,12 @@ pre {
   overflow: auto;
 }
 
+p kbd {
+  border: thin solid;
+  border-radius: 0.2em;
+  padding: 0.1em 0.2em;
+}
+
 
 /* Blockquote */
 blockquote {
@@ -339,12 +345,6 @@ pre, code, samp, kbd {
 
 pre, blockquote {
   background: #eeeeee;
-}
-
-p kbd {
-  border: thin solid;
-  border-radius: 0.2em;
-  padding: 0.1em 0.2em;
 }
 
 p kbd {
