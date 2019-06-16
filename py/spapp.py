@@ -113,6 +113,7 @@ def form_html(params):
     form_layout = fread('layout/form.html')
     form_layout = render(page_layout, content=form_layout)
     params.update({
+        'root': '../',
         'title': 'Post Comment',
         'subtitle': ' - Susam Pal',
         'current_year': datetime.datetime.now().year,
