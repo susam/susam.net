@@ -355,7 +355,7 @@ pre kbd {
 }
 
 .dark pre, .dark code, .dark samp, .dark kbd {
-  color: #3cf;
+  color: #6cf;
 }
 
 .dark pre, .dark blockquote {
@@ -370,7 +370,7 @@ pre kbd {
 }
 
 .dark pre kbd {
-  color: #8c9;
+  color: #9c9;
 }
 
 /* Quote border colors */
