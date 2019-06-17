@@ -9,11 +9,11 @@ venv: FORCE
 
 clumsy-equations: clean
 	. ./venv && python clumsy-equations.py
-	cp *.png ../static/img/blog
+	cp *.png ../static/files/blog
 
 channel-capacity: clean
 	. ./venv && python channel-capacity.py
-	cp *.png ../static/img/blog
+	cp *.png ../static/files/blog
 
 view:
 	for f in *.png; do xdg-open "$$f"; done

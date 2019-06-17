@@ -13,7 +13,7 @@ Computer Systems Inc. (LCSI) in 1983.
 </p>
 
 <figure>
-  <img src="../../img/blog/dosbox-logo-1.png"
+  <img src="../../files/blog/dosbox-logo-1.png"
        alt="A screenshot of IBM Personal Computer Logo with copyright notices of IBM and LCSI, welcome message, and question mark prompt"
        style="width: 640px">
   <figcaption>
@@ -50,7 +50,7 @@ circles like this:
 </p>
 
 <figure>
-  <img src="../../img/blog/dosbox-logo-2.png"
+  <img src="../../files/blog/dosbox-logo-2.png"
        alt="A grid made with 20 circles along with Logo source code for it"
        style="width: 640px">
   <figcaption>
@@ -125,7 +125,7 @@ this to MP4 format with the following FFmpeg command:
 
 <pre>
 <code>ffmpeg -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow \
-       -pix_fmt yuv420p logo.mp4</code>
+       -pix_fmt yuv420p logo-circles.mp4</code>
 </pre>
 
 <p>
@@ -134,11 +134,11 @@ Here is what the output looks like:
 
 <figure>
   <video controls style="width: 640px">
-    <source src="../../vid/logo.mp4" type="video/mp4">
+    <source src="../../files/blog/logo-circles.mp4" type="video/mp4">
   </video>
   <figcaption>
     Video capture of IBM Personal Computer Logo.
-    [<a href="../../vid/logo.mp4">MP4</a>]
+    [<a href="../../files/blog/logo-circles.mp4">MP4</a>]
   </figcaption>
 </figure>
 
@@ -211,8 +211,8 @@ previous section:
       Sierra as well as Android 9.0.0 was unable to play this format.
     </p>
 <pre>
-<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow logo.mp4</kbd>
-$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo.mp4</kbd>
+<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow logo-circles.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo-circles.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=High 4:4:4 Predictive
@@ -225,8 +225,8 @@ pix_fmt=yuv444p
       able to play this format.
     </p>
 <pre>
-$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p logo.mp4</kbd>
-$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo.mp4</kbd>
+$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p logo-circles.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo-circles.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=High
@@ -238,8 +238,8 @@ pix_fmt=yuv420p
       <code>-profile:v baseline -level 3.0</code> options too.
     </p>
 <pre>
-$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p -profile:v baseline -level 3.0 logo.mp4</kbd>
-$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo.mp4</kbd>
+$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p -profile:v baseline -level 3.0 logo-circles.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo-circles.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=Constrained Baseline
