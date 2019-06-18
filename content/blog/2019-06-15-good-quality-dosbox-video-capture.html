@@ -13,9 +13,8 @@ Computer Systems Inc. (LCSI) in 1983.
 </p>
 
 <figure>
-  <img src="../../files/blog/dosbox-logo-1.png"
-       alt="A screenshot of IBM Personal Computer Logo with copyright notices of IBM and LCSI, welcome message, and question mark prompt"
-       style="width: 640px">
+  <img src="../../files/blog/dosbox-logo-0.png"
+       alt="A screenshot of IBM Personal Computer Logo with copyright notices of IBM and LCSI, welcome message, and question mark prompt">
   <figcaption>
     Welcome screen of IBM Personal Computer Logo
   </figcaption>
@@ -50,9 +49,8 @@ circles like this:
 </p>
 
 <figure>
-  <img src="../../files/blog/dosbox-logo-2.png"
-       alt="A grid made with 20 circles along with Logo source code for it"
-       style="width: 640px">
+  <img src="../../files/blog/dosbox-logo-1.png"
+       alt="A grid made with 20 circles along with Logo source code for it">
   <figcaption>
     Grid of circles drawn with IBM Personal Computer Logo
   </figcaption>
@@ -71,19 +69,64 @@ Here is the Logo source code for the above output:
 
 <p>
 The screenshots above were obtained by running IBM Personal Computer
-Logo Version 1.00 in DOSBox v0.74-2 in macOS High Sierra version
-10.13.6.
+Logo Version 1.00 in DOSBox v0.74-2 in macOS High Sierra version 10.13.6
+and then resizing the screenshots such that their aspect ratio matches
+the aspect ratio of old CRT computer monitors.
 </p>
 
 <p>
-To obtain such screenshots, we press <kbd>Ctrl</kbd> + <kbd>F5</kbd>
-while DOSBox is running. The screenshot path appears in the console
-output at the terminal where DOSBox was launched. For example:
+To obtain the screenshots, we first press <kbd>Ctrl</kbd> +
+<kbd>F5</kbd> while DOSBox is running. The paths of the screenshots
+appear in the console output at the terminal where DOSBox was launched.
+For example:
 </p>
 
 <pre>
-<samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_000.png</samp>
+<samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_000.png
+Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_001.png</samp>
 </pre>
+
+<p>
+The screenshots obtained in this manner have an aspect ratio of 8:5
+which makes the output look stretched horizontally. The old CRT computer
+monitors for which these old DOS programs were written had an aspect
+ratio of 4:3 instead. This stretched look can be fixed by resizing the
+images to an aspect ratio of 4:3. Here are the commands used to fix the
+aspect ratio and produce the images:
+</p>
+
+<pre>
+<code>convert logo_000.png -sample '640x480!' dosbox-logo-0.png
+convert logo_001.png -sample '640x480!' dosbox-logo-1.png</code>
+</pre>
+
+<p>
+The <code>convert</code> program comes with ImageMagick. There are a few
+things worth noting here:
+</p>
+
+<ul>
+  <li>
+    We use the <code>-sample</code> option here to resize the image as
+    opposed to using <code>-resize</code> or <code>-scale</code>. The
+    <code>-resize</code> or <code>-scale</code> option would smooth the
+    jagged edges in the text and graphics with additional grey shades.
+    The <code>-resize</code> option is great for real world images where
+    we do want the edges to be smooth while scaling up or down but in
+    these screenshots we want to retain the crisp and jagged edges that
+    is typical of DOSBox and the old CRT monitors. Therefore we use the
+    <code>-sample</code> option that does not introduce any new colours.
+    Instead it uses nearest-neighbour interpolation (point sampling) to
+    decide the colours of the scaled image.
+  </li>
+  <li>
+    The <code>!</code> flag is used to ignore the aspect ratio of the
+    original image. Without this flag, the output files would be 640x400
+    in size, i.e., the largest size with an aspect ratio of 8:5 that
+    fits in a 640x480 box. With this flag, the original aspect ratio of
+    8:5 is ignored and the output is exactly 640x480 in size.
+  </li>
+</ul>
 
 <p>
 By the way, I have donated both images above to Wikimedia Commons under
@@ -125,7 +168,8 @@ this to MP4 format with the following FFmpeg command:
 
 <pre>
 <code>ffmpeg -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow \
-       -pix_fmt yuv420p logo-circles.mp4</code>
+       -pix_fmt yuv420p -vf scale=640:480:flags=neighbor \
+       dosbox-logo-circles.mp4</code>
 </pre>
 
 <p>
@@ -133,21 +177,17 @@ Here is what the output looks like:
 </p>
 
 <figure>
-  <video controls style="width: 640px">
-    <source src="../../files/blog/logo-circles.mp4" type="video/mp4">
+  <video controls>
+    <source src="../../files/blog/dosbox-logo-circles.mp4" type="video/mp4">
   </video>
   <figcaption>
-    Video capture of IBM Personal Computer Logo.
-    [<a href="../../files/blog/logo-circles.mp4">MP4</a>]
+    Video capture of IBM Personal Computer Logo
+    [<a href="../../files/blog/dosbox-logo-circles.mp4">MP4</a>]
   </figcaption>
 </figure>
 
-
-<h2 id="ffmpeg-options">FFmpeg Options</h2>
-
 <p>
-Let us briefly discuss the various FFmpeg options we used in the
-previous section:
+Let us briefly discuss the various FFmpeg options used here:
 </p>
 
 <ul>
@@ -166,8 +206,8 @@ previous section:
     <p>
       We do not have any audio in this video, so we reduce the file size
       a little by disabling the audio stream with this option. For
-      example, without this option the output file size was 243 KB but
-      with this option it turned out to be 203 KB.
+      example, without this option the output file size was 352 KB but
+      with this option it turned out to be 312 KB.
     </p>
     <p>
       This option should not be specified if the audio stream needs to
@@ -193,8 +233,9 @@ previous section:
     <p>
       This option provides better compression at the cost of encoding
       speed. For example, without this option it produces an output of
-      size 221 KB in about 1.2 second but with this option it produces
-      an output of size 203 KB in about 1.8 seconds.
+      size 328 KB in about 2.2 seconds on my system but with this option
+      it produces an output of size 312 KB in about 6.2 seconds on the
+      same system.
     </p>
   </li>
   <li>
@@ -211,8 +252,8 @@ previous section:
       Sierra as well as Android 9.0.0 was unable to play this format.
     </p>
 <pre>
-<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow logo-circles.mp4</kbd>
-$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo-circles.mp4</kbd>
+<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow dosbox-logo-circles.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt dosbox-logo-circles.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=High 4:4:4 Predictive
@@ -221,38 +262,75 @@ pix_fmt=yuv444p
 </pre>
     <p>
       With this option, we get the output in the YUV240p format. Now
-      both QuickTime Player version 10.4 as well as Android 9.0.0 was
-      able to play this format.
+      both QuickTime Player version 10.4 as well as Android 9.0.0 could
+      play this format.
     </p>
 <pre>
-$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p logo-circles.mp4</kbd>
-$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo-circles.mp4</kbd>
+<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p dosbox-logo-circles.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt dosbox-logo-circles.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=High
 pix_fmt=yuv420p
-[/STREAM]
+[/STREAM]</samp>
 </pre>
     <p>
-      For maximum compatibility with old devices, we should add the
-      <code>-profile:v baseline -level 3.0</code> options too.
+      For maximum compatibility with old devices, we could add the
+      <code>-profile:v baseline -level 3.0</code> options too. However,
+      we need to keep in mind that this baseline profile does not
+      support lossless encoding with the <code>-crf 0</code> option.
+      The least lossy encoding option we can specify with this profile
+      is <code>-crf 1</code> which while not technically lossless is
+      much better than visually lossless.
     </p>
 <pre>
-$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p -profile:v baseline -level 3.0 logo-circles.mp4</kbd>
-$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt logo-circles.mp4</kbd>
+<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -crf 17 -preset veryslow -pix_fmt yuv420p -profile:v baseline -level 3.0 dosbox-logo-circles.mp4</kbd>
+$ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt dosbox-logo-circles.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=Constrained Baseline
 pix_fmt=yuv420p
-[/STREAM]
+[/STREAM]</samp>
 </pre>
+  </li>
+  <li>
+    <p>
+      <code>-vf scale=640:480:flags=neighbor</code>
+    </p>
+    <p>
+      Finally, we resize the video to maintain an aspect ratio of 4:3,
+      i.e., the aspect ratio of the old CRT computer monitors, so that
+      the output looks similar to how it used to look on those monitors.
+    </p>
+    <p>
+      The <code>neighbor</code> flag ensures that the nearest-neighbor
+      interpolation (point sampling) is used to decide the colours of
+      the scaled image. Without this option, the default bicubic
+      interpolation algorithm is used. It has the effect of smoothing
+      the edges with grey shades. While such smoothing of edges is good
+      for scaling pictures of the real world, in this case, it spoils
+      the crisp and jagged edges that is typical of output visible in
+      DOSBox or the old CRT monitors. With the <code>neighbor</code>
+      option, we retain the crisp and jagged edges visible in the
+      original video capture.
+    </p>
   </li>
 </ul>
 
 
 <h2 id="further-reading">Further Reading</h2>
 
+<p>
+Here is a bunch of references that contains more details about the
+commands used in this article:
+</p>
+
 <ul>
 <li><a href="https://www.dosbox.com/wiki/Special_Keys">DOSBox Special Keys</a></li>
+<li><a href="https://www.imagemagick.org/Usage/resize/">ImageMagick Examples: Resize or Scaling</a></li>
+<li><a href="https://www.imagemagick.org/Usage/filter/">ImageMagick Examples: Resampling Filters</a></li>
 <li><a href="https://trac.ffmpeg.org/wiki/Encode/H.264">FFmpeg H.264 Video Encoding Guide</a></li>
+<li><a href="https://trac.ffmpeg.org/wiki/Scaling">FFmpeg Scaling Guide</a></li>
+<li><a href="https://www.ffmpeg.org/ffmpeg-scaler.html">FFmpeg Scaler Documentation</a></li>
+<li><a href="https://ffmpeg.org/ffmpeg-filters.html">FFmpeg Filters Documentation</a></li>
 </ul>
