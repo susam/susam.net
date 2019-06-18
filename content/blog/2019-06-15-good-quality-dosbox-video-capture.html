@@ -318,6 +318,35 @@ pix_fmt=yuv420p
 </ul>
 
 
+<h2 id="dosbox-animated-gif">DOSBox GIF Animation</h2>
+
+<p>
+Now just for fun, let us see if we can convert the video capture into a
+GIF animation. This can be done quite easily with FFmpeg like this:
+</p>
+
+<pre>
+<samp>ffmpeg -i logo_000.avi -vf palettegen palette.png
+ffmpeg -i logo_000.avi -i palette.png \
+       -lavfi 'fps=30,scale=640:480:flags=neighbor,paletteuse' \
+       dosbox-logo-circles.gif</samp>
+</pre>
+
+<p>
+The first command generates a color palette from the video capture. The
+second command uses this color palette to generate a GIF animation. Like
+before, we use the <code>neighbor</code> flag to retain the crisp and
+jagged edges. Here is the output:
+</p>
+
+<figure>
+  <img src="../../files/blog/dosbox-logo-circles.gif"
+       alt="An animated image of programming in Logo">
+  <figcaption>
+    GIF Animation of IBM Personal Computer Logo
+  </figcaption>
+</figure>
+
 <h2 id="further-reading">Further Reading</h2>
 
 <p>
