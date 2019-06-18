@@ -1,0 +1,108 @@
+#!/bin/sh
+
+logs()
+{
+    cd /var/log/nginx
+    echo 'Usage: . logs; FUNCTION
+
+Functions:
+  user_hits          Select user hits (no bot hits).
+  all_views          Select all page views.
+  user_views         Select user page views (no bot views).
+  follow_all_hits    Follow all current hits.
+  follow_all_views   Follow all current page views.
+  follow_user_hits   Follow current hits from users.
+  follow_user_views  Follow current page views from users.
+  stats              Print log statistics.
+'
+}
+
+user_hits()
+{
+    patterns='
+AhrefsBot|
+Apache-HttpClient|
+AppEngine-Google|
+BingPreview|
+Blogtrottr|
+Go-http-client|
+SemrushBot|
+SeznamBot|
+Tiny Tiny RSS|
+bingbot
+'
+    patterns=$(printf '%s' "$patterns" | tr -d '\n')
+    grep -v -E "$patterns"
+    unset patterns
+}
+
+all_views()
+{
+    grep -E 'GET / |GET /(about|blog|dark|music|poetry|security)/'
+}
+
+user_views()
+{
+    all_views | user_hits
+}
+
+follow_all_hits()
+{
+    cd /var/log/nginx
+    sudo tail -f access.log
+}
+
+follow_all_views()
+{
+    cd /var/log/nginx
+    sudo tail -f access.log | all_views
+}
+
+follow_user_hits()
+{
+    cd /var/log/nginx
+    sudo tail -f access.log | user_hits
+}
+
+follow_user_views()
+{
+    cd /var/log/nginx
+    sudo tail -f access.log | user_views
+}
+
+
+stats()
+{
+    cd /var/log/nginx
+    sudo zless access.log* > /tmp/access.log
+
+    fmt='%11s %10s %10s %10s %10s\n'
+    rule='-------------------------------------------------------'
+
+    printf '%s\n' "$rule"
+    printf "$fmt" date all_hits all_views user_hits user_views
+    printf '%s\n' "$rule"
+
+    cut -d[ -f2 < /tmp/access.log | cut -d: -f1 | sort -r -u |
+    while read -r date
+    do
+        _date_stats "$date" "$fmt"
+    done
+
+    printf '%s\n' "$rule"
+
+    unset date
+    unset fmt
+    unset rule
+}
+
+_date_stats()
+{
+    grep "$1" /tmp/access.log > /tmp/date.log
+    all_hits=$(wc -l < /tmp/date.log)
+    all_views=$(all_views < /tmp/date.log | wc -l)
+    user_hits=$(user_hits < /tmp/date.log | wc -l)
+    user_views=$(user_views < /tmp/date.log | wc -l)
+    printf "$2" \
+           $1 $all_hits $all_views $user_hits $user_views
+}
