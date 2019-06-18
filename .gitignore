@@ -10,5 +10,4 @@ __pycache__/
 _site/
 _live/
 _gone/
-/raw/*.png
 venv
