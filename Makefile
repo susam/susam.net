@@ -204,3 +204,9 @@ rmsmtp:
 	# Remove files that apt-get purge did not remove.
 	rm -f /etc/mailname /etc/aliases
 	@echo Done; echo
+
+# Checks
+checks:
+	# Ensure punctuation goes inside inline-math.
+	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</h[1-6]>|\)|:)'
+	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content

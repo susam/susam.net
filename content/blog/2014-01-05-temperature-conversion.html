@@ -190,15 +190,15 @@ Here is a brief justification for this:
 <ol>
   <li>
     Subtracting one-tenth (floor division by 10) of \( c \) from itself
-    gives us \( c - \left\lfloor \frac{c}{10} \right\rfloor \).
+    gives us \( c - \left\lfloor \frac{c}{10} \right\rfloor. \)
   </li>
   <li>
     Doubling the previous result gives us \( 2 \left(c - \left\lfloor
-    \frac{c}{10} \right\rfloor \right) \).
+    \frac{c}{10} \right\rfloor \right). \)
   </li>
   <li>
     Adding \( 31 \) to the previous result gives us \( 2 \left(c -
-    \left\lfloor \frac{c}{10} \right\rfloor \right) + 31 \).
+    \left\lfloor \frac{c}{10} \right\rfloor \right) + 31. \)
   </li>
 </ol>
 
@@ -232,16 +232,16 @@ We don't want to deal with fractions, so we decide to approximate \(
 
 where \( \overset{\sim}{f} \) is an approximation of the value in
 Fahrenheit. The floor division has the effect of potentially
-overestimating the final result by a value that is less than \( 2 \).
+overestimating the final result by a value that is less than \( 2. \)
 This is the approximation error.
 </p>
 
 <p>
-If we define the approximation error as \( \overset{\sim}{f} - f \),
-then the approximation error lies in the half-open interval \( [0, 2)
-\). To ensure that the magnitude of the error never exceeds \( 1 \),
-i.e., to make the approximation error lie in the half-open interval \(
-[-1, 1) \), we subtract \( 1 \) from the above formula and get
+If we define the approximation error as \( \overset{\sim}{f} - f, \)
+then the approximation error lies in the half-open interval \( [0, 2). \)
+To ensure that the magnitude of the error never exceeds \( 1, \) i.e.,
+to make the approximation error lie in the half-open interval \( [-1,
+1), \) we subtract \( 1 \) from the above formula and get
 
 \[
   \overset{\approx}{f} =
@@ -276,18 +276,18 @@ Here is a brief justification for this:
 
 <ol>
   <li>
-    Subtracting \( 31 \) from \( f \) gives us \( f - 31 \).
+    Subtracting \( 31 \) from \( f \) gives us \( f - 31. \)
   </li>
   <li>
     Halving (floor division by \( 2 \)) the previous result gives us \(
-    \left\lfloor \frac{f - 31}{2} \right\rfloor \).
+    \left\lfloor \frac{f - 31}{2} \right\rfloor. \)
   </li>
   <li>
     Adding one-tenth (floor division by \( 10 \)) of the previous result
     to itself gives us \( \left\lfloor \frac{f - 31}{2} \right\rfloor +
     \left\lfloor \frac{1}{10} \left\lfloor \frac{f - 31}{2}
     \right\rfloor \right\rfloor = \left\lfloor \frac{f - 31}{2}
-    \right\rfloor + \left\lfloor \frac{f - 31}{20} \right\rfloor \).
+    \right\rfloor + \left\lfloor \frac{f - 31}{20} \right\rfloor. \)
   </li>
 </ol>
 
@@ -320,7 +320,7 @@ follows:
 <p>
 Like we discussed earlier, the magnitude of the approximation error does
 not exceed 1.89 &deg;C for integer values of \( f \) between \( -148 \)
-and \( 212 \). The error here is a little bit more than the previous
+and \( 212. \) The error here is a little bit more than the previous
 approximation method to convert temperature in Celsius to Fahrenheit but
 it is still small enough to give us a reasonably good estimate of what a
 temperature value in Fahrenheit would look like in Celsius if we are
