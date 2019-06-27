@@ -65,16 +65,16 @@ one afternoon.
 
 <p>
 Here is an interesting thing to note: If we denote the minimum number of
-moves required to solve the Tower of Hanoi puzzle as \( T_n \), then \(
+moves required to solve the Tower of Hanoi puzzle as \( T_n, \) then \(
 T_n \) when expressed in binary is the largest possible \( n \)-bit
-integer. For example, \( T_4 = 15_{10} = 1111_{2} \). That makes sense
+integer. For example, \( T_4 = 15_{10} = 1111_{2}. \) That makes sense
 because \( T_n = 2^n - 1 \) indeed represents the maximum possible \( n
-\)-bit integer where all \( n \) bits are set to \( 1 \).
+\)-bit integer where all \( n \) bits are set to \( 1. \)
 </p>
 
 <p>
 While playing with different values of \( T_n \) for different values of
-\( n \), I stumbled upon an interesting result which I will pose as a
+\( n, \) I stumbled upon an interesting result which I will pose as a
 problem in a later section below.
 </p>
 
@@ -90,8 +90,8 @@ eliminate any possibility of ambiguity:
   <li>
     A positive integer \( x \) is said to be an \( n \)-bit integer if
     and only if the minimum number of bits required to express the
-    integer is \( n \), or equivalently, \( \lfloor \log_2 x \rfloor + 1
-    = n \).
+    integer is \( n, \) or equivalently, \( \lfloor \log_2 x \rfloor + 1
+    = n. \)
   </li>
 </ul>
 
@@ -136,7 +136,7 @@ What is the most efficient way to compute the number of \( 1 \)-bits in
 \[ T_1 + T_2 + \dots + T_n \]
 
 where \( n \) is a positive integer, each \( T_i = 2^i - 1 \) for
-integers \( 1 \le i \le n \), and efficiency is measured in terms of
+integers \( 1 \le i \le n, \) and efficiency is measured in terms of
 time and space complexity?
 </div>
 
@@ -146,7 +146,7 @@ the number of \( 1 \)-bits in the sum. It takes \( O(n^2) \) time to add
 the \( n \) integers. The sum is an \( (n + 1) \)-bit integer, so it
 takes \( O(n) \) time to count the number of \( 1 \)-bits in the sum.
 Since the sum is \( (n + 1) \)-bit long, it takes \( O(n) \) memory to
-store the sum. If \( n \) is as large as, say, \( 2^{64} \), it takes
+store the sum. If \( n \) is as large as, say, \( 2^{64}, \) it takes
 2 exbibytes plus one more byte of memory to store the sum.
 </p>
 
@@ -166,16 +166,16 @@ T_1 + T_2 + \dots + T_n
 
 <p>
 Now \( 2^{n + 1} - 1 \) is an \( (n + 1) \)-bit number with all its bits
-set to \( 1 \). Subtracting \( n - 1 \) from it is equivalent to
+set to \( 1. \) Subtracting \( n - 1 \) from it is equivalent to
 performing the following operation with their binary representations:
-for each \( 1 \)-bit in \( (n - 1) \), set the corresponding bit in \(
-(2^{n + 1} - 1) \) to \( 0 \).
+for each \( 1 \)-bit in \( (n - 1), \) set the corresponding bit in \(
+(2^{n + 1} - 1) \) to \( 0. \)
 </p>
 
 <p>
 If we use the notation \( \text{bitcount}(n) \) to represent the
 number of \( 1 \)-bits in the binary representation of a positive
-integer \( n \), then we get
+integer \( n, \) then we get
 
 \[
 \text{bitcount}(T_1 + T_2 + \dots + T_n)

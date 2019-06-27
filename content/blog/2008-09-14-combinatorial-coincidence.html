@@ -35,7 +35,7 @@ the following problem with him at lunch:
 
 <div class="highlight">
 <p>
-For integers \( n \ge 1 \) and \( k \ge 1 \),
+For integers \( n \ge 1 \) and \( k \ge 1, \)
 
 \[
   f_k(n) =
@@ -45,7 +45,7 @@ For integers \( n \ge 1 \) and \( k \ge 1 \),
     \end{cases}
 \]
 
-Find a closed-form expression for \( f_k(n) \).
+Find a closed-form expression for \( f_k(n). \)
 </p>
 </div>
 
@@ -86,21 +86,21 @@ in the problem I shared with him.
 </p>
 
 <p>
-In the <em>nested loops</em> problem, if \( k = 1 \), the final value of
-\( x \) after the loop terminates is \( x = n \). This is also the value
-of \( f_1(n) \).
+In the <em>nested loops</em> problem, if \( k = 1, \) the final value of
+\( x \) after the loop terminates is \( x = n. \) This is also the value
+of \( f_1(n). \)
 </p>
 
 <p>
-If \( k = 2 \), the inner loop with counter \( c_2 \) runs
-once when \( c_1 = 1 \), twice when \( c_1 = 2 \), and so on.
+If \( k = 2, \) the inner loop with counter \( c_2 \) runs
+once when \( c_1 = 1, \) twice when \( c_1 = 2, \) and so on.
 Therefore after the loop terminates, \( x = 1 + 2 + \dots + n =
-\frac{n(n + 1)}{2} \). Note that this series is same as \( f_2(n) =
-f_1(1) + f_1(2) + \dots + f_1(n) \).
+\frac{n(n + 1)}{2}. \) Note that this series is same as \( f_2(n) =
+f_1(1) + f_1(2) + \dots + f_1(n). \)
 </p>
 
 <p>
-Extending this argument, we now see that for any \( k > 0 \), the final
+Extending this argument, we now see that for any \( k > 0, \) the final
 value of \( x \) is
 
 \[
@@ -156,7 +156,7 @@ right of the \( i \)th stick, we get a number that the variable \( c_i
 \) (the counter variable in the \( i \)th loop statement) holds in some
 iteration of its loop. Therefore the variable \( c_i \) is represented
 as the number of balls lying on the right side of the \( i \)th stick
-where \( 1 \le i \le k \).
+where \( 1 \le i \le k. \)
 </p>
 
 <p>
@@ -165,7 +165,7 @@ its right than the second one, the second stick has more balls to its
 right than the third one, and so on, so \( n \ge c_1 \ge c_2 \ge \dots
 \ge c_k \) is always satisfied. Further, we have added the constraint
 that at least one ball must lie on the right side of the \( k \)th
-stick, so \( c_k \ge 1 \). Also, any set of valid values for \( c_1,
+stick, so \( c_k \ge 1. \) Also, any set of valid values for \( c_1,
 c_2, \dots, c_k \) can be represented as an arrangement of these sticks
 and balls.
 </p>

@@ -15,7 +15,7 @@ x e^{-x} + (1 - e^{-x}) \ln (1 - e^{-x}) = 0.
 
 <p>
 This equation is a little clumsy to deal with. Let us make this neat by
-substituting \( e^{-x} \) with \( t \). Now we get
+substituting \( e^{-x} \) with \( t. \) Now we get
 
 \[
 -t \ln t + (1 - t) \ln (1 - t) = 0.
@@ -29,8 +29,8 @@ If we rearrange this equation as
 t \ln t = (1 - t) \ln (1 - t),
 \]
 
-it is easy to see that one of the solutions is \( t = 1 - t \), thus
-\( t = \frac{1}{2} \). Are there more solutions to this equation? The
+it is easy to see that one of the solutions is \( t = 1 - t, \) thus
+\( t = \frac{1}{2}. \) Are there more solutions to this equation? The
 answer turns out to be: <em>no</em>.
 </p>
 
@@ -42,33 +42,33 @@ answer turns out to be: <em>no</em>.
 </figure>
 
 <p>
-In this problem, \( x \) is a real number and so is \( t \). In the
-domain of real numbers, \( \ln t \) is undefined for \( t \le 0 \). As a
-result, \( \ln (1 - t) \) is undefined for \( t \ge 1 \). Therefore we
+In this problem, \( x \) is a real number and so is \( t. \) In the
+domain of real numbers, \( \ln t \) is undefined for \( t \le 0. \) As a
+result, \( \ln (1 - t) \) is undefined for \( t \ge 1. \) Therefore we
 need to look for values of \( t \) in the open interval \( (0, 1) \)
 that could be solutions to the equation.
 </p>
 
 <p>
-The function \( \ln t \) is a strictly increasing function for \( t > 0
-\). This is easy to show from the derivative of \( \ln t \). The
+The function \( \ln t \) is a strictly increasing function for \( t > 0.
+\) This is easy to show from the derivative of \( \ln t. \) The
 derivative of \( \ln t \) is \( \frac{1}{t} \) which is strictly
-positive for \( t > 0 \).
+positive for \( t > 0. \)
 <p>
 
 <p>
-Since \( \ln t \) is a strictly increasing function for \( t > 0 \), we
+Since \( \ln t \) is a strictly increasing function for \( t > 0, \) we
 can make the following conclusions:
 </p>
 
 <ul>
   <li>
-    For \( 0 < t < \frac{1}{2} \), \( t < (1 - t) \implies
-    t \ln t < (1 - t) \ln (1 - t) \).
+    For \( 0 < t < \frac{1}{2}, \) \( t < (1 - t) \implies
+    t \ln t < (1 - t) \ln (1 - t). \)
   </li>
   <li>
-    For \( \frac{1}{2} < t < 1 \), \( t > (1 - t) \implies
-    t \ln t > (1 - t) \ln (1 - t) \).
+    For \( \frac{1}{2} < t < 1, \) \( t > (1 - t) \implies
+    t \ln t > (1 - t) \ln (1 - t). \)
   </li>
 </ul>
 
@@ -80,8 +80,8 @@ is the only solution to the equation.
 </p>
 
 <p>
-Since \( t = e^{-x} \), we now arrive at the solution to the original
-equation expressed in terms of \( x \):
+Since \( t = e^{-x}, \) we now arrive at the solution to the original
+equation expressed in terms of \( x \) as follows:
 
 \begin{align*}
   t = \frac{1}{2} & \iff e^{-x} = \frac{1}{2} \\
@@ -115,7 +115,7 @@ the <a href="https://en.wikipedia.org/wiki/Lambert_W_function">Lambert W
 function</a> to solve this. To use this function, we first need to bring
 our equation to \( f(x) e^{f(x)} = Y \) form where \( f(x) \) is a
 function of \( x \) and \( Y \) is an expression that does not contain
-\( x \). The solution of \( f(x) e^{f(x)} = Y \) is \( f(x) = W(Y) \).
+\( x. \) The solution of \( f(x) e^{f(x)} = Y \) is \( f(x) = W(Y). \)
 To summarize:
 
 \[
@@ -137,7 +137,7 @@ Applying this technique to our equation, we get
 
 <p>
 We have brought the equation to the desired \( f(x) e^{f(x)} = Y \) form
-where \( f(x) = -0.03 \ln x \) and \( Y = -0.03 \). Therefore the
+where \( f(x) = -0.03 \ln x \) and \( Y = -0.03. \) Therefore the
 solution to this equation is
 
 \[
@@ -158,7 +158,7 @@ The Maclaurin series of \( W(x) \) is given by
          \frac{125}{24} x^5 - \dots
 \]
 
-Using the Maclaurin series of \( W(x) \), we get
+Using the Maclaurin series of \( W(x), \) we get
 
 \[
   W(-0.03) \approx -0.0309428.
