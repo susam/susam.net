@@ -22,10 +22,14 @@ user_hits()
     patterns='
 AhrefsBot|
 Apache-HttpClient|
+Applebot|
 AppEngine-Google|
 BingPreview|
 Blogtrottr|
+CCBot|
+DotBot|
 Go-http-client|
+Googlebot|
 SemrushBot|
 SeznamBot|
 Tiny Tiny RSS|
