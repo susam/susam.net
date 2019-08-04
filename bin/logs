@@ -28,12 +28,21 @@ BingPreview|
 Blogtrottr|
 CCBot|
 DotBot|
+Feedly|
 Go-http-client|
 Googlebot|
+HackerNews|
+Hatena-Favicon|
+Python-urllib|
 SemrushBot|
 SeznamBot|
 Tiny Tiny RSS|
-bingbot
+bingbot|
+example-user-agent|
+http\.rb|
+ift\.tt|
+newspaper|
+redditbot
 '
     patterns=$(printf '%s' "$patterns" | tr -d '\n')
     grep -v -E "$patterns"
