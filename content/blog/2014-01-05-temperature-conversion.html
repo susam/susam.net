@@ -9,7 +9,7 @@ having to convert temperature from the Celsius scale to the Fahrenheit
 scale and vice versa. The exact conversion formulas are:
 
 \begin{align*}
-  f & = \frac{9f}{5} + 32, \\
+  f & = \frac{9c}{5} + 32, \\
   c & = \frac{5(f - 32)}{9}
 \end{align*}
 
@@ -40,24 +40,118 @@ of simplifying the computations, so that they can be performed mentally.
 </p>
 
 
-<h2>Approximation Methods</h2>
+<h2 id="crude-approximation-methods">Crude Approximation Methods</h2>
 
 <p>
-This section presents the approximation methods that I have arrived at.
-They can be performed mentally. To keep the methods convenient enough to
-perform mentally, we work with integers only. We always start with an
-integer value in Celsius or Fahrenheit. The result of conversion is also
-an integer. If a fraction arises in an intermediate step, we discard the
-fractional part. For example, if a step requires us to calculate
-one-tenth of a number, say, 25, we consider the result to be 2.
-Similarly, if a step requires us to halve the number 25, we consider the
-result to be 12. This is also known as floor division or integer
-division.
+Before we dive into the <a href="#refined-approximation-methods">refined
+approximation methods</a> I have arrived at, let us first see a very
+popular method that obtains a crude approximation of the result of
+temperature conversion from &deg;C to &deg;F and vice versa pretty
+quickly.
 </p>
 
 <p>
-To go from&nbsp;&deg;C to&nbsp;&deg;F, here is my quick three-step
-approximation method:
+To go from &deg;C to &deg;F, we perform the following two steps:
+</p>
+
+<ol>
+  <li>Double the value in Celsius.</li>
+  <li>Add 30 to the previous result.</li>
+</ol>
+
+<p>
+To go from &deg;F to &deg;C, we perform the inverse:
+</p>
+
+<ol>
+  <li>Subtract 30 from the value in Fahrenheit.</li>
+  <li>Halve the result.</li>
+</ol>
+
+<p>
+We arrive at the above methods by approximating 9/5 and 32 in the exact
+conversion formulas with 2 an 30, respectively. These methods can be
+performed mentally quite fast but this speed of mental calculation comes
+at the cost of accuracy. That's why I call them crude approximation
+methods.
+</p>
+
+<p>
+The first method converts 10&nbsp;&deg;C exactly to 50&nbsp;&deg;F
+without any error. But then it introduces an error of 1&nbsp;&deg;F for
+every 5&nbsp;&deg;C interval. For example, the error is 3&nbsp;&deg;F
+for 25&nbsp;&deg;C and 18&nbsp;&deg;F for 100&nbsp;&deg;C.
+</p>
+
+<p>
+Similarly, the second method converts 50&nbsp;&deg;F exactly to
+10&nbsp;&deg;C without any error. But it introduces an error of
+0.5&nbsp;&deg;C for every 9&nbsp;&deg;F interval. For example, the error
+is 1.5&nbsp;&deg;C for 77&nbsp;&deg;C and 9&nbsp;&deg;C for
+212&nbsp;&deg;F.
+</p>
+
+
+<h3>Examples</h3>
+
+<p>
+Let us do a few examples to see how well the crude approximation methods
+work. Let us say, we want to convert 24&nbsp;&deg;C to &deg;F.
+</p>
+
+<ol>
+  <li>Double 24. We get 48.</li>
+  <li>Add 30 to it. We get 78.</li>
+</ol>
+
+</p>
+The exact value for 24&nbsp;&deg;C is 75.2&nbsp;&deg;F. This
+approximation method overestimated the actual temperature in Fahrenheit
+by 2.8&nbsp;&deg;F.
+</p>
+
+<p>
+Let us now convert 75&nbsp;&deg;F to &deg;C.
+</p>
+
+<ol>
+  <li>Subtract 30. We get 45.</li>
+  <li>Divide by 2. We get 22.5.</li>
+</ol>
+
+<p>
+The exact value for 75&nbsp;&deg;F is 23.89&nbsp;&deg;C. This
+approximation method underestimated the actual temperature in Celsius by
+1.39&nbsp&deg;C.
+</p>
+
+<p>
+Can we do better?
+</p>
+
+
+<h2 id="refined-approximation-methods">Refined Approximation Methods</h2>
+
+<p>
+This section presents the refined approximation methods that I have
+arrived at. They can be performed mentally. They are a little slower
+than the crude approximation methods but they are more accurate.
+</p>
+
+<p>
+To keep the methods convenient enough to perform mentally, we work with
+integers only. We always start with an integer value in Celsius or
+Fahrenheit. The result of conversion is also an integer. If a fraction
+arises in an intermediate step, we discard the fractional part. For
+example, if a step requires us to calculate one-tenth of a number, say,
+25, we consider the result to be 2. Similarly, if a step requires us to
+halve the number 25, we consider the result to be 12. This is also known
+as floor division or integer division.
+</p>
+
+<p>
+To go from &deg;C to &deg;F, here is my quick three-step approximation
+method:
 </p>
 
 <ol>
@@ -80,8 +174,7 @@ about setting the thermostat temperature.
 </p>
 
 <p>
-To go from&nbsp;&deg;F to&nbsp;&deg;C, we roughly inverse the above
-steps:
+To go from &deg;F to &deg;C, we roughly inverse the above steps:
 </p>
 
 <ol>
@@ -100,58 +193,59 @@ steps:
 In fact, for integer temperature values between 32&nbsp;&deg;F
 (0&nbsp;&deg;C) and 86&nbsp;&deg;F (30&nbsp;&deg;C), the approximation
 error due to this method does not exceed 1.12&nbsp;&deg;C. Further, for
-integer temperature values between -148&nbsp;&deg;F (-100&nbsp;&deg;C)
-and 212&nbsp;&deg;F (100&nbsp;&deg;C), the approximation error does not
-exceed 1.89&nbsp;&deg;C.
+integer temperature values between &minus;148&nbsp;&deg;F
+(&minus;100&nbsp;&deg;C) and 212&nbsp;&deg;F (100&nbsp;&deg;C), the
+approximation error does not exceed 1.89&nbsp;&deg;C. This is pretty
+good if we are talking about the weather.
 </p>
 
 
-<h2>Examples</h2>
+<h3>Examples</h3>
 
 <p>
 Let us do a few examples to see how well the three-step methods above
-work. Let us say, we want to convert 82&nbsp;&deg;C to&nbsp;&deg;F.
+work. Let us say, we want to convert 24&nbsp;&deg;C to &deg;F.
 </p>
 
 <ol>
   <li>
-    Subtract one-tenth of 82 from itself, i.e., subtract 8 from 82. We
-    get 74.
+    Subtract one-tenth of 24 from itself, i.e., subtract 2 from 24. We
+    get 22.
   </li>
   <li>
-    Double 74. We get 148.
+    Double 22. We get 44.
   </li>
   <li>
-    Add 31 to 148. We get 179.
+    Add 31 to 44. We get 75.
   </li>
 </ol>
 
 <p>
-The exact value for 83&nbsp;&deg;C is 179.6&nbsp;&deg;F. The
+The exact value for 22&nbsp;&deg;C is 75.2&nbsp;&deg;F. The
 approximation method has underestimated the actual temperature in
-Fahrenheit by only 0.6&nbsp;&deg;F.
+Fahrenheit by only 0.2&nbsp;&deg;F.
 </p>
 
 <p>
-Let us now try to convert 179&nbsp;&deg;F to&nbsp;&deg;C.
+Let us now try to convert 75&nbsp;&deg;F to &deg;C.
 </p>
 
 <ol>
   <li>
-    Subtract 31 from 179. We get 148.
+    Subtract 31 from 75. We get 44.
   </li>
   <li>
-    Halve 148. We get 74.
+    Halve 44. We get 22.
   </li>
   <li>
-    Add one-tenth of 74 to itself, i.e., add 7 to 74. We get 81.
+    Add one-tenth of 22 to itself, i.e., add 2 to 22. We get 24.
   </li>
 </ol>
 
 <p>
-The exact value for 179&nbsp;&deg;F is 81.7&nbsp;&deg;C, so this
-approximation method underestimated the actual temperature in Celsius by
-0.7&nbsp;&deg;C.
+The exact value for 75&nbsp;&deg;F is 23.89&nbsp;&deg;C, so this
+approximation method overestimated the actual temperature in Celsius by
+0.11&nbsp;&deg;C only.
 </p>
 
 <p>
@@ -162,15 +256,15 @@ methods work.
 </p>
 
 
-<h2>Analysis</h2>
+<h3>Analysis</h3>
 
 <p>
-In this section, we will see why these approximation methods work so
-well.
+In this section, we will see why the refined approximation methods work
+so well.
 </p>
 
 
-<h3>Celsius to Fahrenheit Conversion</h3>
+<h4>Celsius to Fahrenheit Conversion</h4>
 
 <p>
 The method to convert temperature value from Celsius to Fahrenheit is
@@ -256,7 +350,7 @@ from Celsius to Fahrenheit is equivalent to.
 </p>
 
 
-<h3>Fahrenheit to Celsius Conversion</h3>
+<h4>Fahrenheit to Celsius Conversion</h4>
 
 <p>
 The inverse method to convert temperature value from Fahrenheit to
@@ -322,10 +416,10 @@ follows:
 
 <p>
 Like we discussed earlier, the magnitude of the approximation error does
-not exceed 1.89&nbsp;&deg;C for integer values between -148&nbsp;&deg;F
-and 212&nbsp;&deg;F. The error here is a little bit more than the
-previous approximation method to convert temperature in Celsius to
-Fahrenheit but it is still small enough to give us a reasonably good
-estimate of what a temperature value in Fahrenheit would look like in
-Celsius if we are just talking about the weather.
+not exceed 1.89&nbsp;&deg;C for integer values between
+&minus;148&nbsp;&deg;F and 212&nbsp;&deg;F. The error here is a little
+bit more than the previous approximation method to convert temperature
+in Celsius to Fahrenheit but it is still small enough to give us a
+reasonably good estimate of what a temperature value in Fahrenheit would
+look like in Celsius when we are talking about the weather.
 </p>
