@@ -11,10 +11,11 @@ clumsy-equations: clean
 	. ./venv && python clumsy-equations.py
 	cp clumsy-equations-1.png ../static/files/blog
 	cp clumsy-equations-2.png ../static/files/blog
+	cp clumsy-equations-3.png ../static/files/blog
 
 channel-capacity: clean
 	. ./venv && python channel-capacity.py
-	cp clumsy-capacity.png ../static/files/blog
+	cp channel-capacity.png ../static/files/blog
 
 dosbox-logo: clean
 	# PNGs
@@ -42,6 +43,7 @@ clean:
 	# Clumsy Equations
 	rm -f clumsy-equations-1.png
 	rm -f clumsy-equations-2.png
+	rm -f clumsy-equations-3.png
 	# When Worse is Better
 	rm -f channel-capacity.png
 	# Good Quality DOSBox Video Capture
