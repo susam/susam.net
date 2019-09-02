@@ -15,4 +15,4 @@ plt.xlabel('p')
 plt.ylabel('$ 1 + p \log_2 p + (1 - p) \log_2 (1 - p) $')
 
 # Output
-plt.savefig('channel-capacity.png', dpi=200, bbox_inches='tight')
+plt.savefig('channel-capacity.png', dpi=300, bbox_inches='tight')
