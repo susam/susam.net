@@ -1,16 +1,16 @@
 <!-- title: Sinkholed -->
 <!-- tag: technology -->
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="introduction"><a href="#introduction">Introduction</a></h2>
 
 <p>
-On 26 Nov 2019 at 14:55 UTC, I logged into my server that hosts this
+On 26 Nov 2019 at 14:55 UTC, I logged into my server that hosts my
 website to perform a simple maintenance activity. Merely three minutes
 later, at 14:58 UTC, the domain name <a
 href="https://susam.in/">susam.in</a> used to host this website was
 transferred to another registrant without any authorization by me or
 without any notification sent to me. Since the DNS results for this
-domain was cached on my system, I was unaware of this issue at that
+domain name was cached on my system, I was unaware of this issue at that
 time. It would take me three days to realize that I had lost control of
 the domain name I had been using for my website for the last 12 years.
 This blog post documents when this happened, how this happened, and what
@@ -18,7 +18,7 @@ it took to regain control of this domain name.
 </p>
 
 
-<h2 id="contents">Contents</h2>
+<h2 id="contents"><a href="#contents">Contents</a></h2>
 <ul>
   <li><a href="#introduction">Introduction</a></li>
   <li><a href="#domain-name-transfer">Domain Name Transfer</a></li>
@@ -42,13 +42,13 @@ not resolve to the address of my Linode server anymore.
 </p>
 
 <p>
-I checked the WHOIS records for this domain. To my astonishment, I found
-that I was no longer the registrant of this domain. An entity named The
-Verden Public Prosecutor's Office was the new registrant of this domain.
-The WHOIS records showed that the domain was transferred to this
-organization on 26 Nov 2019 at 14:58 UTC, merely three minutes after I
-had performed my maintenance activity on the same day. Here is a snippet
-of the WHOIS records that I found:
+I checked the WHOIS records for this domain name. To my astonishment, I
+found that I was no longer the registrant of this domain. An entity
+named The Verden Public Prosecutor's Office was the new registrant of
+this domain. The WHOIS records showed that the domain name was
+transferred to this organization on 26 Nov 2019 at 14:58 UTC, merely
+three minutes after I had performed my maintenance activity on the same
+day. Here is a snippet of the WHOIS records that I found:
 </p>
 
 <pre id="whois">
@@ -120,17 +120,17 @@ WHOIS name server records pointed to Shadowserver's sinkholes.
 </p>
 
 <p>
-The fact that the domain was transferred to another organization merely
-three minutes after I had performed a simple maintenance activity got me
-worried. Was the domain name hijacked? Did my maintenance activity on the
-server have anything to do with it? What kind of attack one might have
-pulled off to hijack the domain name? I checked all the logs and there
-was no evidence that anyone other than me had logged into the server or
-executed any commands or code on it. Further, a domain transfer usually
-involves email notification and authorization. None of that had
-happened. It increasingly looked like that the three minute interval
-between the maintenance activity and the domain transfer was merely a
-coincidence.
+The fact that the domain name was transferred to another organization
+merely three minutes after I had performed a simple maintenance activity
+got me worried. Was the domain name hijacked? Did my maintenance
+activity on the server have anything to do with it? What kind of attack
+one might have pulled off to hijack the domain name? I checked all the
+logs and there was no evidence that anyone other than me had logged into
+the server or executed any commands or code on it. Further, a domain
+name transfer usually involves email notification and authorization.
+None of that had happened. It increasingly looked like that the three
+minute interval between the maintenance activity and the domain name
+transfer was merely a coincidence.
 </p>
 
 <p>
@@ -178,13 +178,13 @@ contractual authority on a country code top-level domain (ccTLD).
 <p>
 At 21:23 UTC, I emailed National Internet Exchange of India (NIXI). NIXI
 is the ccTLD manager for .IN domain and they have authority on it. I
-found their contact details from the IANA <a
-href="https://www.iana.org/domains/root/db/in.html">Delegation Record
-for .IN</a>. Again, I was not expecting a response from NIXI because
-they do not have any contractual relationship directly with me. They
-have a contractual relationship with Namecheap, so any communication
-from them would be received by Namecheap and Namecheap would have to
-pass that on to me.
+found their contact details from the <a
+href="https://www.iana.org/domains/root/db/in.html">IANA Delegation
+Record for .IN</a>. Again, I was not expecting a response from NIXI
+because they do not have any contractual relationship directly with me.
+They have a contractual relationship with Namecheap, so any
+communication from them would be received by Namecheap and Namecheap
+would have to pass that on to me.
 </p>
 
 <p>
@@ -197,7 +197,7 @@ way, NIXI never replied to my email.
 
 
 <h2 id="tweets-and-retweets"><a
- href="#tweets-and-retweets">Tweet and Retweets</a></h2>
+ href="#tweets-and-retweets">Tweets and Retweets</a></h2>
 
 <p>
 On 30 Nov 2019 at 07:30 UTC, I <a
@@ -237,13 +237,13 @@ name was sinkholed accidentally as part of their Avalanche operation.
 Although it is now three years since the initial takedown of the botnet,
 they still see over 3.5 million unique IP addresses connecting to their
 sinkholes everyday. Unfortunately, their operation inadvertently flagged
-my domain as one of the domains to be sinkholed because it matched the
-pattern of command and control (C2) domain names generated by a malware
-family named Nymaim, one of the malware families hosted on Avalanche.
-Although, they had validity checks to avoid sinkholing false-positives,
-my domain name unfortunately slipped through those checks. Benedict
-mentioned that he had just raised this issue with NIXI and requested
-them to return the domain name to me as soon as possible.
+my domain name as one of the domain names to be sinkholed because it
+matched the pattern of command and control (C2) domain names generated
+by a malware family named Nymaim, one of the malware families hosted on
+Avalanche. Although, they had validity checks to avoid sinkholing
+false-positives, my domain name unfortunately slipped through those
+checks. Benedict mentioned that he had just raised this issue with NIXI
+and requested them to return the domain name to me as soon as possible.
 </p>
 
 
@@ -252,10 +252,10 @@ them to return the domain name to me as soon as possible.
 
 <p>
 On 2 Dec 2019 at 04:00 UTC, when I looked up the WHOIS records for the
-domain, I found that the domain had been returned to me already.
-At 08:37 UTC, Namecheap support responded to my support ticket to say
-that they had been informed that NIXI had returned the domain name to
-its original state. At 09:55 UTC, Juliya Zinovjeva, Domains Product
+domain name, I found that it had been returned to me already. At 08:37
+UTC, Namecheap support responded to my support ticket to say that they
+had been informed that NIXI had returned the domain name to its original
+state. At 09:55 UTC, Juliya Zinovjeva, Domains Product
 Manager of Namecheap, <a
 href="https://twitter.com/JuliyaZinovjeva/status/1201439676118290432">commented
 on Twitter</a> and confirmed the same thing.
