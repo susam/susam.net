@@ -122,6 +122,45 @@ clean:
 
 FORCE:
 
+
+# GitHub Pages Mirror
+
+TMP_REV = /tmp/rev.txt
+CAT_REV = cat $(TMP_REV)
+GIT_SRC = https://github.com/susam/susam.in
+GIT_DST = https://github.com/susam/susam.github.io
+WEB_URL = https://github.susam.io/
+TMP_GIT = /tmp/tmpgit
+README  = $(TMP_GIT)/README.md
+
+ghmirror: site
+	#
+	## Create mirror.
+	rm -rf $(TMP_GIT)
+	mv _site $(TMP_GIT)
+	git rev-parse --short HEAD > $(TMP_REV)
+	echo Mirror of Susam\'s Blog >> $(README)
+	echo ====================== >> $(README)
+	echo >> $(README)
+	echo Automatically generated from [susam/susam.in][GIT_SRC] >> $(README)
+	echo "([$$($(CAT_REV))][GIT_REV])". >> $(README)
+	echo >> $(README)
+	echo Visit $(WEB_URL) to view the the mirror. >> $(README)
+	echo >> $(README)
+	echo [GIT_SRC]: $(GIT_SRC) >> $(README)
+	echo [WEB_URL]: $(WEB_URL) >> $(README)
+	echo [GIT_REV]: $(GIT_SRC)/commit/$$($(CAT_REV)) >> $(README)
+	#
+	# Push mirror.
+	cd $(TMP_GIT) && git init
+	cd $(TMP_GIT) && git config user.name "Susam Pal"
+	cd $(TMP_GIT) && git config user.email susam@susam.in
+	cd $(TMP_GIT) && git add .
+	cd $(TMP_GIT) && git commit -m "Generated from $(GIT_SRC) - $$($(CAT_REV))"
+	cd $(TMP_GIT) && git remote add origin "$(GIT_DST).git"
+	cd $(TMP_GIT) && git log
+	cd $(TMP_GIT) && git push -f origin master
+
 # SMTP
 SMTP_USER = susam
 SMTP_FWDS = susam.pal@gmail.com, susampal@protonmail.com
