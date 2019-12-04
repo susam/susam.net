@@ -181,6 +181,11 @@ def head_content(import_header, root):
     return '\n'.join(imports)
 
 
+def set_canonical_url(params, dst_path):
+    clean_path = dst_path.replace('_site', '').replace('index.html', '')
+    params['canonical_url'] = params['site_url'] + clean_path
+
+
 def make_pages(src, dst, layout, **params):
     """Generate pages from page content."""
     items = []
@@ -208,6 +213,7 @@ def make_pages(src, dst, layout, **params):
         items.append(content)
 
         dst_path = render(dst, **page_params)
+        set_canonical_url(page_params, dst_path)
         output = render(layout, **page_params)
 
         log('Rendering {} => {} ...', content['slug'], dst_path)
@@ -234,6 +240,7 @@ def make_list(posts, dst, list_layout, item_layout, **params):
         params['imports'] = head_content(params['import'], params['root'])
 
     dst_path = render(dst, **params)
+    set_canonical_url(params, dst_path)
     output = render(list_layout, **params)
 
     log('Rendering list => {} ...', dst_path)
@@ -269,6 +276,8 @@ def make_tags(posts, dst,
 
     params['header'] = ''.join(header)
     params['content'] = ''.join(content)
+    set_canonical_url(params, dst_path)
+
     log('Rendering list => {} ...', dst_path)
     fwrite(dst_path, render(tags_layout, **params))
 
@@ -393,10 +402,12 @@ def make_comment_list(post, comments, dst,
     params['title'] = title
     params['post_title'] = post['title']
     dst_path = render(dst, **params)
+    set_canonical_url(params, dst_path)
 
     # Add imports if importing is requested.
     if 'import' in post:
         params['imports'] = head_content(post['import'], params['root'])
+
 
     log('Rendering {} => {} ...', slug, dst_path)
     output = render(list_layout, **params)
@@ -413,6 +424,7 @@ def make_comments_none(post, dst, none_layout, **params):
     params['post_title'] = post['title']
 
     dst_path = render(dst, **params)
+    set_canonical_url(params, dst_path)
 
     log('Rendering {} => {} ...', slug, dst_path)
     output = render(none_layout, **params)
