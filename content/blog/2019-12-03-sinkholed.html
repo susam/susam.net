@@ -114,16 +114,15 @@ href="https://en.wikipedia.org/wiki/Avalanche_(phishing_group)">Avalanche</a>
 malware-hosting network. It took a four-year concerted effort by
 INTERPOL, Europol, the Shadowserver Foundation, Eurojust, the Luneberg
 Police, and several other international organizations to finally destroy
-the Avalanche botnet on 30 Nov 2016. Among these list of organizations,
-one name caught my attention immediately. It was the Shadowserver
-Foundation. The WHOIS name server records pointed to Shadowserver's
-sinkholes.
+the Avalanche botnet on 30 Nov 2016. In this list of organizations, one
+name caught my attention immediately: The Shadowserver Foundation. The
+WHOIS name server records pointed to Shadowserver's sinkholes.
 </p>
 
 <p>
 The fact that the domain was transferred to another organization merely
 three minutes after I had performed a simple maintenance activity got me
-worried. Was my domain name hijacked? Did my maintenance activity on the
+worried. Was the domain name hijacked? Did my maintenance activity on the
 server have anything to do with it? What kind of attack one might have
 pulled off to hijack the domain name? I checked all the logs and there
 was no evidence that anyone other than me had logged into the server or
@@ -136,11 +135,11 @@ coincidence.
 
 <p>
 More questions sprang up as I thought about it. The Avalanche botnet was
-destroyed in 2016. What has that got to do with my domain name being
+destroyed in 2016. What has that got to do with the domain name being
 transferred in 2019? Did my server somehow become part of the Avalanche
 botnet? My server ran a minimal installation of the latest Debian
 GNU/Linux system. It was always kept up-to-date to minimize the risk of
-malware infection or security breach. It served a static website
+malware infection or security breach. It hosted a static website
 composed of static HTML files served with Nginx. I found no evidence of
 unauthorized access of my server while inspecting the logs. I could not
 find any malware on the system.
@@ -150,10 +149,10 @@ find any malware on the system.
 The presence of Shadowserver sinkhole name servers in the WHOIS records
 was a good clue. Sinkholing of a domain name can be done both malicously
 as well as constructively. In this case, it looked like the Shadowserver
-Foundation sinkholed my domain name constructively, so that any malware
-client trying to connect to my server nefariously would end up
-connecting to a sinkhole address instead. My domain name was sinkholed!
-The question now was: Why was it sinkholed?
+Foundation intended to sinkhole the domain name constructively, so that
+any malware client trying to connect to my server nefariously would end
+up connecting to a sinkhole address instead. My domain name was
+sinkholed! The question now was: Why was it sinkholed?
 </p>
 
 
@@ -266,28 +265,28 @@ on Twitter</a> and confirmed the same thing.
 <h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
 
 <p>
-Despite the successful resolution, it was still quite upsetting that a
-domain name could be transferred accidentally to another registrant and
-sinkholed for some perceived violation. I thought there would be more
-checks in place to confirm that a perceived violation was real before a
-domain could be transferred. Losing a domain name I have been using for
-actively for 12 years was an unpleasant experience. Losing a domain name
-accidentally should be a lot harder than this. Benedict from the
-Shadowserver Foundation assured that my domain name would be excluded
+Despite the successful resolution, it was still quite unsettling that a
+domain name could be transferred to another registrant and sinkholed for
+some perceived violation. I thought there would be more checks in place
+to confirm that a perceived violation was real before a domain name
+could be transferred. Losing a domain name I have been using actively
+for 12 years was an unpleasant experience. Losing a domain name
+accidentally should have been a lot harder than this. Benedict from the
+Shadowserver Foundation assured me that my domain name would be excluded
 from future sinkholing for this particular case. However, the
 possibility that this could happen again due to another unrelated
-operation by another organization in future is quite disconcerting.
+operation by another organization in future is disconcerting.
 </p>
 
 <p>
 I also wondered if a domain name under a country code top-level domain
-(ccTLD) like .COM is more susceptible to this kind of sinkholing than a
-domain name under a generic top-level domain (gTLD) like .COM. I asked
-Benedict if it is worth migrating my website from .IN to .COM. He
+(ccTLD) like .in is more susceptible to this kind of sinkholing than a
+domain name under a generic top-level domain (gTLD) like .com. I asked
+Benedict if it is worth migrating my website from .in to .com. He
 replied that in his personal opinion, NIXI runs an excellent, clean
 registry, and are very responsive in resolving issues when they arise.
 He also added that domain generation algorithms (DGAs) of malware are
-equally, and possibly more, problematic for .COM domains. He advised
+equally, and possibly more, problematic for .com domains. He advised
 against migrating my website.
 </p>
 
