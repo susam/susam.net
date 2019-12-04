@@ -22,7 +22,7 @@ written in PHP that served my new blog as well as other pages. The blog
 posts from my earlier blog at [susampal.blogspot.com][BP] were merged
 into this new blog.
 
-On 16 Feb, 2019, I turned my blog into a static website generated with a
+On 16 Feb 2019, I turned my blog into a static website generated with a
 modified version of [makesite.py][MAKESITE].
 
 [BP]: https://susampal.blogspot.com/
