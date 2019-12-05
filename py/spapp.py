@@ -117,6 +117,7 @@ def form_html(params):
         'title': 'Post Comment',
         'subtitle': ' - Susam Pal',
         'current_year': datetime.datetime.now().year,
+        'canonical_url': '/comment/',
         'imports':
             '<link rel="stylesheet" type="text/css" href="/css/form.css">',
     })
