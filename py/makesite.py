@@ -393,6 +393,13 @@ def make_comment_list(post, comments, dst,
     for index, comment in enumerate(comments, 1):
         item_params = dict(params, index=index, **comment)
         item_params['count_label'] = count_label
+        item_params['retrieved'] = ''
+        source_url = item_params.get('source')
+        if source_url is not None:
+            item_params['retrieved'] = (
+                '<div class="meta">(Retrieved from <a href="{}">{}</a>)</div>'
+                .format(source_url, source_url)
+            )
         item = render(item_layout, **item_params)
         items.append(item)
 
