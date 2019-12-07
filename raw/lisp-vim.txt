@@ -1,0 +1,402 @@
+Notes for Lisp in Vim Post
+==========================
+
+
+General Setup
+-------------
+
+### Create User in Remote Servers
+
+```
+userpass=PASSWORD
+hostname=debian
+[ -z "$userpass" ] && echo "error: userpass not set" >&2 && read -r userpass
+[ -z "$hostname" ] && echo "error: hostname not set" >&2 && read -r hostname
+adduser susam --gecos "Susam Pal,,," --disabled-password
+echo "susam:$userpass" | chpasswd
+adduser susam sudo
+echo "susam ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers.d/nopasswd
+echo "$hostname" > /etc/hostname
+echo 127.0.0.1 "$hostname" >> /etc/hosts
+reboot
+```
+
+
+### Create Helper Functions Locally
+
+Edit `~/my/bin/env` and add these functions:
+
+```
+sv() {
+    ssh susam@172.105.52.133
+}
+
+vl() {
+    ssh susam@172.105.49.220
+}
+```
+
+
+### Upload SSH Keys from Local System
+
+```
+ssh root@172.105.52.133 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo $(cat ~/.ssh/id_rsa.pub) >> ~/.ssh/authorized_keys" &&
+ssh susam@172.105.52.133  "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo $(cat ~/.ssh/id_rsa.pub) >> ~/.ssh/authorized_keys" &&
+ssh root@172.105.49.220 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo $(cat ~/.ssh/id_rsa.pub) >> ~/.ssh/authorized_keys" &&
+ssh susam@172.105.49.220  "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo $(cat ~/.ssh/id_rsa.pub) >> ~/.ssh/authorized_keys" &&
+ssh root@172.105.52.133 uname -a &&
+ssh susam@172.105.52.133 uname -a &&
+ssh root@172.105.49.220 uname -a &&
+ssh susam@172.105.49.220 uname -a &&
+echo Done
+```
+
+
+### Install Tools on Remote Servers
+
+```
+sudo apt-get update
+sudo apt-get install tree
+```
+
+
+Slimv Setup
+-----------
+
+### Install Prerequisites
+
+```
+sudo apt-get install vim-nox sbcl tmux git
+
+cat > ~/.tmux.conf <<eof
+set -g prefix2 C-j
+bind-key C-j send-prefix -2
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+set -g escape-time 0
+set -g default-terminal screen-256color
+set -g mode-keys vi
+eof
+
+cat > ~/.vimrc <<eof
+syntax on
+colorscheme murphy
+eof
+```
+
+### Install Slimv
+
+```
+rm -rf ~/.vim/bundle/slimv
+sed -i.bkp '/runtimepath.*slimv/d' ~/.vimrc
+
+git clone https://github.com/kovisoft/slimv.git ~/.vim/bundle/slimv
+git -C ~/.vim/bundle/slimv checkout -b pinned 5279951
+echo 'set runtimepath^=~/.vim/bundle/slimv' >> ~/.vimrc
+vim +'helptags ~/.vim/bundle/slimv/doc' +q
+```
+
+### Detailed Notes
+
+```
+rm -rf ~/.vim/bundle/slimv
+sed -i.bkp '/runtimepath.*slimv/d' ~/.vimrc
+
+git clone https://github.com/kovisoft/slimv.git ~/.vim/bundle/slimv
+git -C ~/.vim/bundle/slimv checkout -b pinned 5279951
+echo 'set runtimepath^=~/.vim/bundle/slimv' >> ~/.vimrc
+vim +'helptags ~/.vim/bundle/slimv/doc' +q
+```
+
+When `,c` is pressed in Vim to connect to Swank, the following error
+appears:
+
+```
+Vim is compiled without the Python feature or Python is not installed.
+Unable to run SWANK client. Press ENTER to continue.
+```
+
+To resolve this, enter:
+
+```
+sudo apt-get install vim-nox
+```
+
+The next issue is:
+
+```
+Enter Lisp path (or fill g:slimv_lisp in your vimrc):
+```
+
+To resolve this install a Common Lisp implementation:
+
+```
+sudo apt-get install sbcl
+```
+
+The next issue is:
+
+```
+No X server. Run Vim from screen/tmux or start SWANK server manually.
+Press ENTER to continue.
+```
+
+To resolve this, install tmux or GNU screen:
+
+```
+sudo apt-get install tmux
+```
+
+or start Swank manually:
+
+```
+sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp
+```
+
+
+Vlime Setup
+-----------
+
+### Install Prerequisites
+
+```
+sudo apt-get install sbcl git curl
+
+cat > ~/.vimrc <<eof
+syntax on
+colorscheme murphy
+eof
+```
+
+
+### Install Quicklisp
+
+```
+rm -rf ~/.sbclrc ~/quicklisp quicklisp.lisp
+curl -O https://beta.quicklisp.org/quicklisp.lisp
+sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(exit)'
+sbcl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(exit)'
+```
+
+or
+
+```
+rm -rf ~/.sbclrc ~/quicklisp quicklisp.lisp
+curl -O https://beta.quicklisp.org/quicklisp.lisp
+sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql:add-to-init-file)' --eval '(exit)'
+```
+
+When the "Press Enter to continue." message appears, press
+<kbd>enter</kbd> to complete the installation.
+
+
+### Install Vlime
+
+```
+rm -rf ~/.vim/bundle/vlime ~/.vim/bundle/paredit
+sed -i.bkp '/runtimepath.*vlime/d; /runtimepath.*paredit/d' ~/.vimrc
+
+git clone https://github.com/l04m33/vlime.git ~/.vim/bundle/vlime
+git -C ~/.vim/bundle/vlime checkout -b pinned 065b95f
+echo 'set runtimepath^=~/.vim/bundle/vlime/vim' >> ~/.vimrc
+
+git clone https://github.com/kovisoft/paredit ~/.vim/bundle/paredit
+git -C ~/.vim/bundle/paredit checkout -b pinned 81e3a7d
+echo 'set runtimepath^=~/.vim/bundle/paredit' >> ~/.vimrc
+
+vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/bundle/paredit/doc' +q
+```
+
+
+### Start Swank Manually (Optional)
+
+```
+sbcl --load ~/.vim/bundle/vlime/lisp/start-vlime.lisp
+```
+
+Attempting to run Swank without Quicklisp leads to this error:
+
+```
+debugger invoked on a VLIME::QUICKLISP-NOT-FOUND-ERROR in thread
+#<THREAD "main thread" RUNNING {10005D05B3}>:
+  Quicklisp not found. Please set up Quicklisp or install the dependencies for VLIME manually.
+```
+
+
+Run with CLISP
+--------------
+
+### Run Vlime with CLISP
+
+
+Install:
+
+```
+rm -rf ~/.clisprc.lisp ~/quicklisp quicklisp.lisp
+curl -O https://beta.quicklisp.org/quicklisp.lisp
+clisp -i quicklisp.lisp -x '(quicklisp-quickstart:install)'
+clisp -i ~/quicklisp/setup.lisp -x '(ql:add-to-init-file)'
+```
+
+Manual:
+
+```
+clisp -i ~/.vim/bundle/vlime/lisp/start-vlime.lisp
+```
+
+Automatic:
+
+```
+let g:vlime_cl_impl = "clisp"
+function! VlimeBuildServerCommandFor_clisp(vlime_loader, vlime_eval)
+    return ["clisp", "-i", a:vlime_loader,
+                   \ "-x", a:vlime_eval,
+                   \ "-repl"]
+endfunction
+```
+
+
+Run with ECL
+------------
+
+### Run Vlime with ECL
+
+
+Install:
+
+```
+rm -rf ~/.eclrc ~/quicklisp quicklisp.lisp
+curl -O https://beta.quicklisp.org/quicklisp.lisp
+ecl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(quit)'
+ecl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(quit)'
+```
+
+Manual:
+
+```
+ecl --load ~/.vim/bundle/vlime/lisp/start-vlime.lisp
+```
+
+Automatic:
+
+```
+let g:vlime_cl_impl = "ecl"
+function! VlimeBuildServerCommandFor_ecl(vlime_loader, vlime_eval)
+    return ["ecl", "--load", a:vlime_loader,
+                 \ "--eval", a:vlime_eval]
+endfunction
+```
+
+
+Run with GCL
+------------
+
+### Run Vlime with GCL
+
+
+Installation Failure:
+
+```
+rm -rf ~/.eclrc ~/quicklisp quicklisp.lisp
+curl -O https://beta.quicklisp.org/quicklisp.lisp
+gcl -load quicklisp.lisp -eval '(quicklisp-quickstart:install)' -eval '(quit)'
+gcl -load ~/quicklisp/setup.lisp -eval '(ql:add-to-init-file)' -eval '(quit)'
+```
+
+Error:
+
+```
+Error: UNBOUND-VARIABLE :NAME #:CL-USER
+```
+
+
+Run with MIT/GNU Scheme
+-----------------------
+
+### Install MIT/GNU Scheme
+
+```
+sudo apt-get install vim-nox sbcl tmux git
+```
+
+
+### Run Swank Manually
+
+```
+scheme --load ~/.vim/bundle/slimv/slime/contrib/swank-mit-scheme.scm
+```
+
+### Run Vim
+
+```
+vim foo.scm
+```
+
+Connect to Swank by pressing `,c`.
+
+Error on Debian 10.1 (MIT/GNU Scheme 10.1.5):
+
+```
+;The object #[package 12 (user)], passed as an argument to ->environment, is not an environment.
+;To continue, call RESTART with an option number:
+; (RESTART 1) => Return to read-eval-print level 1.
+```
+
+Works fine on Debian 9.11 (MIT/GNU Scheme 9.1.1.).
+
+
+Run with Clojure (Debian/Default)
+---------------------------------
+
+### Install Clojure
+
+```
+sudo apt-get install clojure
+```
+
+clojure -i ~/.vim/bundle/slimv/swank-clojure/swank/swank.clj -e "(swank.swank/start-repl)" -r
+
+CLASSPATH=~/.vim/bundle/slimv/swank-clojure clojure -i ~/.vim/bundle/slimv/swank-clojure/swank/swank.clj -e "(swank.swank/start-repl)" -r
+
+```error
+$ clojure -i ~/.vim/bundle/slimv/swank-clojure/swank/swank.clj -e "(swank.swank/start-repl)" -r
+Syntax error (FileNotFoundException) compiling at (swank.clj:1:1).
+Could not locate swank/core__init.class, swank/core.clj or swank/core.cljc on classpath.
+user=> 
+```
+
+```error
+$ CLASSPATH=~/.vim/bundle/slimv/swank-clojure clojure -i ~/.vim/bundle/slimv/swank-clojure/swank/swank.clj -e "(swank.swank/start-repl)" -r
+Syntax error (IllegalArgumentException) compiling new at (basic.clj:174:24).
+No matching ctor found for class clojure.lang.Compiler$CompilerException
+user=>
+```
+
+
+Run with Clojure (Debian/Maven)
+-------------------------------
+
+### Install Clojure
+
+It takes about 3.5 to 4.5 minutes to build:
+
+```
+sudo apt-get install maven
+git clone https://github.com/clojure/clojure.git ~/clojure
+git -C ~/clojure checkout clojure-1.10.1
+mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package
+java -jar ~/clojure/clojure.jar -e '(clojure-version)'
+```
+
+### Run Swank Manually
+
+```
+java -cp $HOME/.vim/bundle/slimv/swank-clojure:$HOME/clojure/clojure.jar clojure.main -i ~/.vim/bundle/slimv/swank-clojure/swank/swank.clj -e '(swank.swank/start-repl)' -r
+```
+
+### Uninstall Clojure
+
+```
+rm -rf ~/.m2 ~/clojure
+```
