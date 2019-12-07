@@ -55,6 +55,10 @@ p kbd {
   padding: 0.1em 0.2em;
 }
 
+pre .cursor {
+  border-bottom: 0.2em solid;
+}
+
 
 /* Blockquote */
 blockquote {
@@ -62,14 +66,6 @@ blockquote {
   margin-right: 0;
   margin-left: 0;
   padding: 0.5em;
-}
-
-blockquote *:first-child {
-  margin-top: 0;
-}
-
-blockquote *:last-child {
-  margin-bottom: 0;
 }
 
 
@@ -179,7 +175,15 @@ p.summary {
 }
 
 
-/* Everything below this comment is meant for usage in content body. */
+/* Remove margins from content in container elements. */
+blockquote *:first-child, td *:first-child, .highlight *:first-child {
+  margin-top: 0;
+}
+
+blockquote *:last-child, td *:last-child, .highlight *:last-child {
+  margin-bottom: 0;
+}
+
 
 /* Generic text centering */
 .textcenter {
@@ -198,13 +202,6 @@ p.summary {
   padding: 0.5em;
 }
 
-.highlight *:first-child {
-  margin-top: 0;
-}
-
-.highlight *:last-child {
-  margin-bottom: 0;
-}
 
 /* Plain Table */
 table {
@@ -220,13 +217,15 @@ th, td {
   padding-right: 1.0em;
 }
 
+
 /* Grid Table */
 table.grid {
   border-collapse: collapse;
 }
 
 table.grid th, table.grid td {
-  border: thin solid;
+  border-width: thin;
+  border-style: solid;
 }
 
 table.grid th, table.grid td {
@@ -236,20 +235,29 @@ table.grid th, table.grid td {
 /* Ruled Table */
 table.ruled {
   border-collapse: collapse;
-  border-top: medium double;
-  border-bottom: medium double;
+  border-top-width: medium;
+  border-top-style: double;
+  border-bottom-width: medium;
+  border-bottom-style: double;
 }
 
 table.ruled thead {
-  border-bottom: medium double;
+  border-bottom-width: medium;
+  border-bottom-style: double;
 }
 
 table.ruled tr {
-  border-bottom: thin solid;
+  border-bottom-width: thin;
+  border-bottom-style: solid;
 }
 
 table.ruled th, table.ruled td {
   padding: 0.3em 0.4em;
+}
+
+/* Top-align table content */
+table.top td {
+  vertical-align: top;
 }
 
 /* Email */
@@ -269,6 +277,7 @@ noscript div {
   padding-left: 1em;
   padding-right: 1em;
 }
+
 
 /* Colors */
 body,
@@ -459,4 +468,14 @@ a:hover, a:active {
 .dark .icons img:hover {
   opacity: 1;
   filter: invert(0.8);  /* 0xcc / 0xff */
+}
+
+
+/* Table rule colors */
+table, thead, tr, th, td {
+  border-color: #666;
+}
+
+.dark table, .dark thead, .dark tr, .dark th, .dark td {
+  border-color: #999;
 }
