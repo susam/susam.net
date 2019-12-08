@@ -1,0 +1,33 @@
+<!-- date: 2019-08-04 16:31:54 +0000 -->
+<!-- name: non-entity -->
+<!-- url: https://news.ycombinator.com/user?id=non-entity -->
+<p>
+Boot sector programming has always seemed like one of the cooler ways to
+play with writing lower level code, but am I wrong to assume it won't
+work on systems with UEFI?
+</p>
+<!-- date: 2019-08-04 17:00:50 +0000 -->
+<!-- name: leo89 -->
+<!-- url: https://news.ycombinator.com/user?id=leo89 -->
+<p>
+It may work with UEFI if it's set to compatibility mode.
+</p>
+<!-- date: 2019-08-04 17:02:47 +0000 -->
+<!-- name: Masud Rahman -->
+<!-- url: https://keybase.io/masudrahman -->
+<p>
+That's correct. UEFI firmware will execute a PE image (the same
+format that Windows executables use) on a FAT32 file system, and can
+access UEFI services to execute a kernel.
+</p>
+<p>
+The UEFI firmware may support a CSM (compatibility support module) that
+can boot a legacy BIOS loader.
+</p>
+<!-- date: 2019-12-03 15:57:00 +0000 -->
+<!-- name: Randall Degges -->
+<!-- url: https://twitter.com/rdegges -->
+<p>
+This is a great introduction to writing boot sector code! Really brings
+back memories. So awesome.
+</p>
