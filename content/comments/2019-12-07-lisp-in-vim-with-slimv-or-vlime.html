@@ -1,0 +1,80 @@
+<!-- date: 2019-12-08 14:55:26 +0000 -->
+<!-- name: dcassett -->
+<!-- url: https://news.ycombinator.com/user?id=dcassett -->
+<p>
+IMHO a very well-written article with great attention to detail. I
+especially liked the section on paredit with its step-by-step
+explanation.
+</p>
+<!-- date: 2019-12-08 15:56:38 +0000 -->
+<!-- name: lancebeet -->
+<!-- url: https://news.ycombinator.com/user?id=lancebeet -->
+<p>
+I wonder why the author doesn't mention the plugin <a
+href="https://github.com/jpalardy/vim-slime">vim-slime</a>, given that
+it seems to be more popular than either Slimv or Vlime on GitHub. From
+what I can gather, Slimv and Vlime are more focused on Lisp with
+built-in completion and debugging whereas vim-slime is language agnostic
+and simply recreates just the "connected REPL" behavior of Slime.
+</p>
+<!-- date: 2019-12-08 18:32:44 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+The "vim-slime" plugin is not appropriate for my blog post because it is
+nothing like SLIME. In fact, the word "slime" in "vim-slime" is poorly
+chosen. It supports none of the SLIME features. It does not even provide
+the "connected REPL" experience like SLIME, Slimv, or Vlime does. Here
+are the major reasons why vim-slime is very limited and insufficient as
+a Lisp development environment when compared to SLIME, Slimv, or Vlime:
+</p>
+<ol>
+  <li>
+    It does not understand s-expressions. It can only send the current
+    text paragraph or text selected in visual mode to a terminal running
+    in GNU Screen, tmux, Neovim, etc. Therefore, it cannot send, say,
+    only the current expression or an entire function definition or a
+    top-level form to the terminal.
+  </li>
+  <li>
+    Since it is language-agnostic and really only sends text from a
+    buffer to a terminal, it does not care whether the text is code or
+    prose. It also does not care if the terminal is running a Unix shell
+    or a REPL. It is the user's responsibility to ensure that the
+    correct REPL is running on the terminal and the corresponding code
+    is being sent from Vim using vim-slime.
+  </li>
+  <li>
+    Since it does not implement the client-server architecture that
+    SLIME and Swank implement together, it has none of the interactive
+    debugging features of SLIME. It cannot automatically launch the
+    integrated Slime Debugger (SLDB) when an unhandled condition occurs.
+    As a result, all debugging features like inspecting code, inspecting
+    variables, etc. are missing.
+  </li>
+  <li>
+    Almost all of the SLIME features are missing from it. It does not
+    support displaying argument lists as we type function calls, Common
+    Lisp HyperSpec (CLHS) lookup and completion, describing symbols,
+    cross-referencing, etc.
+  </li>
+  <li>
+    It does not provide any key-bindings for common tasks such as macro
+    expansion, function tracing, etc.
+  </li>
+</ol>
+<p>
+Swank server is an integral component of SLIME. It is essential to the
+way SLIME works. A plugin that does not talk to Swank server can hardly
+be anything like SLIME. Slimv and Vlime on the other hand talk to the
+same Swank server that SLIME talks to. Slimv and Vlime are
+re-implementations of the client component of SLIME. They send SLIME
+commands to Swank just like SLIME does. As a result, Slimv and Vlime are
+able to support a good portion of the features available in SLIME.
+</p>
+<!-- date: 2019-12-08 19:49:29 +0000 -->
+<!-- name: lancebeet -->
+<!-- url: https://news.ycombinator.com/user?id=lancebeet -->
+<p>
+Thanks for the explanation.
+</p>

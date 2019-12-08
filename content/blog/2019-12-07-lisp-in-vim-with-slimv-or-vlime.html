@@ -26,7 +26,7 @@ href="#references"><em>References</em></a> section.
 
 <p>
 If you are looking only for a comparison of the two plugins or a quick
-recommendation, jump straight to the <a
+recommendation, jump directly to the <a
 href="#comparison-of-slimv-and-vlime"><em>Comparison of Slimv and
 Vlime</em></a> section or the <a href="#quick-recommendation"><em>Quick
 Recommendation</em></a> section.
@@ -44,6 +44,8 @@ Recommendation</em></a> section.
       <li><a href="#vim-slimv-vlime">Vim: Slimv/Vlime</a></li>
     </ul>
   </li>
+  <li><a href="#vim-plugin-management">Vim Plugin Management</a></li>
+  <li><a href="#software-versions">Software Versions</a></li>
   <li><a href="#get-started">Get Started</a>
     <ul>
       <li><a href="#get-started-with-slimv-and-sbcl">Get Started with Slimv and SBCL</a></li>
@@ -189,8 +191,9 @@ webcomic has dedicated two comic strips to Lisp:
 <p>
 Developed in 1958 by John McCarthy, Lisp is the second oldest
 programming language in use today. Only Fortran is older, by one year.
-There are three popular Lisp dialects today: Common Lisp, Scheme, and
-Clojure. Most of this article would focus on Common Lisp.
+There are three Lisp dialects popular today: Common Lisp, Scheme, and
+Clojure. Most of this article would focus on Common Lisp. Scheme and
+Clojure would be discussed briefly towards the end of this article.
 </p>
 
 
@@ -200,8 +203,8 @@ Clojure. Most of this article would focus on Common Lisp.
 Many Lisp programmers immediately think of Emacs when they think of
 writing Lisp code. Emacs is a family of text editors. An Emacs editor
 itself is typically implemented in a dialect of Lisp. There is an Emacs
-mode named SLIME. It stands for Superior Lisp Interaction Mode for
-Emacs. SLIME provides excellent support for programming in Lisp. First
+mode named SLIME that provides excellent support for programming in
+Lisp. SLIME stands for Superior Lisp Interaction Mode for Emacs. First
 released in August 2003, SLIME was created by Eric Marsden and then
 later developed further by Luke Gorrie and Helmut Eller. It offers a
 Read-Eval-Print-Loop (REPL), integrated debugging, and interactive
@@ -254,28 +257,50 @@ automatically downloads Swank server when needed.
 </p>
 
 
-<h2 id="get-started"><a href="#get-started">Get Started</a></h2>
+<h2 id="vim-plugin-management"><a
+ href="#vim-plugin-management">Vim Plugin Management</a></h2>
 
 <p>
 When I started using Vim fifteen years ago, we used to just download a
 Vim plugin and copy/extract it to <code>~/.vim</code> directory. These
 days, there are a few plugin management tools for Vim such as <a
 href="https://github.com/tpope/vim-pathogen">Pathogen</a>, <a
-href="https://github.com/VundleVim/Vundle.Vim">Vundle</a>, and <a
-href="https://github.com/junegunn/vim-plug">vim-plug</a>. I am not going
-to use any of them because I don't know which one of them you use and I
-don't want to write down steps for each one of them.
+href="https://github.com/VundleVim/Vundle.Vim">Vundle</a>, <a
+href="https://github.com/junegunn/vim-plug">vim-plug</a>, etc. I am not
+going to use any of them because I don't know which one of them you use
+and I don't want to write down steps for each one of them.
 </p>
 
 <p>
-In fact, I do not use any Vim plugin manager myself. Instead, I create a
-<code>~/.vim/bundle</code> directory and then copy each plugin to its
-own directory within it and add the plugin's directory path to Vim's
-<code>runtimepath</code> option. In the next two subsections, I will
-show the steps for setting up the plugins in this manner. If you use a
-Vim plugin manager, you may ignore my way of installing the plugins and
-install them with your plugin manager.
+In fact, I don't use any Vim plugin manager myself. Until Vim 7, I used
+to create a <code>~/.vim/bundle</code> directory, then copy each plugin
+to its own directory within it, and add the plugin's directory path to
+Vim's <code>runtimepath</code> option.
 </p>
+
+<p>
+Vim 8 has native support for packages which makes installing plugins and
+loading them simpler. With Vim 8, I copy each plugin to its own
+directory within <code>~/.vim/pack/plugins/start</code> and they are
+loaded automatically when Vim starts. The directory name
+<code>plugins</code> in this path is only an example. It could be any
+arbitrary name and Vim would still load the plugins fine.
+</p>
+
+<p>
+In this article, I will use Vim 8's native support for packages to set
+up Vim plugins. The only exception to this would be installing Vlime.
+The top-level directory of Vlime is not the plugin directory. The plugin
+directory is contained in a subdirectory named <code>vim</code>. This
+does not conform to the directory structure of plugins in a Vim package.
+Therefore, in this article, I will set up Vlime in the old fashioned way
+by copying it to <code>~/.vim/bundle</code> and then adding the path to
+its plugin directory to Vim's <code>runtimepath</code> option.
+</p>
+
+
+<h2 id="software-versions"><a
+ href="#software-versions">Software Versions</a></h2>
 
 <p>
 Since this article involves several layers of software, some of what is
@@ -289,12 +314,12 @@ writing this article. Here they are:
   <li>Debian GNU/Linux 10.1 (buster)</li>
   <li>Vim 8.1</li>
   <li>
-    Slimv (Git repo last updated on 16 Oct 2017 with commit
-    <a href="https://github.com/l04m33/vlime/commits/065b95f">065b95f</a>)
+    Slimv (Git repo last updated on 30 Nov 2019 with commit
+    <a href="https://github.com/kovisoft/slimv/commits/47a0070">47a0070</a>)
   </li>
   <li>
-    Vlime (Git repo last updated on 30 Nov 2019 with commit
-    <a href="https://github.com/kovisoft/slimv/commits/47a0070">47a0070</a>)
+    Vlime (Git repo last updated on 16 Oct 2017 with commit
+    <a href="https://github.com/l04m33/vlime/commits/065b95f">065b95f</a>)
   </li>
   <li>
     Paredit (Git repo last updated on 30 Nov 2019 with commit
@@ -307,6 +332,7 @@ writing this article. Here they are:
   </li>
   <li>SBCL 1.4.16.debian</li>
   <li>GNU CLISP 2.49.92</li>
+  <li>ECL 16.1.3</li>
   <li>MIT/GNU Scheme 9.1.1 on Debian GNU/Linux 9.11 (stretch)</li>
   <li>Clojure 1.10.1</li>
   <li>Quicklisp beta (libraries last updated on 30 Nov 2019)</li>
@@ -314,23 +340,25 @@ writing this article. Here they are:
 </ul>
 
 <p>
-You will probably need only a small subset of the tools above depending
+You will probably need only a tiny subset of the tools above depending
 on which sections in this article you would follow. Just pick the
 sections you want to try out and follow the steps written in them. They
 will walk you through the procedure to install the tools applicable to
 the sections you have picked. Regardless of which sections you pick, I
 recommend that you definitely go through the three "Get Started"
 subsections below. These subsections go into detail about some of the
-requirements such as support for Python interface in Vim, tmux, Paredit,
-etc. that are not covered in the other sections.
+prerequisites such as support for tmux, Paredit, support for Python
+interface in Vim, etc. that are not covered in the other sections.
 </p>
 
 <p>
-The choice of Debian may look like an odd one. I wanted the commands and
-steps provided in this article to be easily reproducible in a free and
+The choice of Debian may look like an odd one. I want the commands and
+steps discussed in this article to be easily reproducible in a free and
 open source operating system. Debian happens to be my favourite. What
-works on Debian is easily reproducible on Ubuntu and other derivatives
-often.
+works on Debian is easily reproducible on Ubuntu and other derivatives,
+often without any changes to the steps. I believe, it will not be too
+difficult to translate the steps provided for Debian to the steps that
+would work on another operating system.
 </p>
 
 <p>
@@ -341,6 +369,8 @@ often.
   for the most up-to-date instructions to install Quicklisp.
 </p>
 
+
+<h2 id="get-started"><a href="#get-started">Get Started</a></h2>
 
 <h3 id="get-started-with-slimv-and-sbcl"><a
  href="#get-started-with-slimv-and-sbcl">Get Started with Slimv and SBCL</a></h3>
@@ -358,22 +388,21 @@ Here are the steps to set up Slimv and use it:
     <pre><code>sudo apt-get install vim-nox sbcl tmux git</code></pre>
     <p>
       The default Vim in Debian is <code>vim.basic</code> provided by
-      the <code>vim</code> package which does not have support for Vim
-      scripting with Python 3. Slimv is written in Vim script, Lisp, and
-      Python 3, so it does need a Vim package that is compiled with
-      support for scripting with Python 3. One such package is
-      <code>vim-nox</code> that provides <code>vim.nox</code>.
-      Installing it automatically updates the <code>vim</code> command
-      to launch <code>vim.nox</code>. Another such package is
-      <code>vim-gtk</code> which additionally provides GUI support. The
-      graphical Vim known as GVim can be launched with the
-      <code>gvim</code> command. It runs in the desktop environment. I
-      usually install <code>vim-gtk</code> on Debian, MacVim on macOS,
-      and GVim on Windows because I like my editor to be a GUI window on
-      the desktop. However, for the purpose of this article, I will
-      stick to <code>vim-nox</code> because it is lightweight. All steps
-      meant for Slimv would run equally well on <code>vim-gtk</code>,
-      MacVim, and GVim.
+      the <code>vim</code> package which does not have support for
+      Python interface. Slimv is written in Vim script, Lisp, and Python
+      3, so it does need a Vim package that has support for Python
+      interface. One such package is <code>vim-nox</code> that provides
+      the <code>vim.nox</code> command. Installing it automatically
+      updates the <code>vim</code> command to run <code>vim.nox</code>.
+      Another such package is <code>vim-gtk</code> which additionally
+      provides GUI support. The graphical Vim known as GVim can be
+      launched with the <code>gvim</code> command. It runs in the
+      desktop environment. I usually install <code>vim-gtk</code> on
+      Debian, MacVim on macOS, and GVim on Windows because I like my
+      editor to be a GUI window on the desktop. However, for the purpose
+      of this article, I will stick to <code>vim-nox</code> because it
+      is lightweight. All steps meant for Slimv would run equally well
+      on <code>vim-gtk</code>, MacVim, and GVim.
     </p>
     <p>
       Installing tmux is optional. Slimv can launch Swank server
@@ -398,13 +427,12 @@ Here are the steps to set up Slimv and use it:
       Installing Slimv is pretty simple. Here is how I do it:
     </p>
 <pre>
-<code>git clone https://github.com/kovisoft/slimv.git ~/.vim/bundle/slimv
-echo 'set runtimepath^=~/.vim/bundle/slimv' &gt;&gt; ~/.vimrc
-vim +'helptags ~/.vim/bundle/slimv/doc' +q</code>
+<code>git clone https://github.com/kovisoft/slimv.git ~/.vim/pack/plugins/start/slimv
+vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
 </pre>
     <p>
       That's it! Slimv is set up. It's that straightforward. The
-      commands above show how to set up Slimv with just three shell
+      commands above show how to set up Slimv with just two shell
       commands. You could also use a Vim plugin manager to install Slimv
       for you but I am not going to cover that here.
     </p>
@@ -434,7 +462,7 @@ vim +'helptags ~/.vim/bundle/slimv/doc' +q</code>
       or a desktop environment. The following command shows how to start
       Swank server manually:
     </p>
-    <pre><code>sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp</code></pre>
+    <pre><code>sbcl --load ~/.vim/pack/plugins/start/slimv/slime/start-swank.lisp</code></pre>
     <p>
       If you are using tmux, GNU Screen, or a desktop environment, Slimv
       can start Swank server automatically when needed and you don't
@@ -481,9 +509,13 @@ vim +'helptags ~/.vim/bundle/slimv/doc' +q</code>
     </p>
     <pre><code>(format t "hello, world~%")</code></pre>
     <p>
-      Press <kbd>esc</kbd> to return to normal mode. To evaluate, the
-      current expression under the cursor, enter the following command
-      in normal mode:
+      Press <kbd>esc</kbd> to return to normal mode.
+    </p>
+  </li>
+  <li>
+    <p>
+      To evaluate, the current expression under the cursor, enter the
+      following command in normal mode:
     </p>
     <p>
       <kbd>,</kbd><kbd>e</kbd>
@@ -519,12 +551,10 @@ vim +'helptags ~/.vim/bundle/slimv/doc' +q</code>
     <p>
       Now that you have got started with Slimv, here is a brief note on
       uninstallation, in case you ever need it. If Slimv is installed as
-      described in point 2 above, run these commands to uninstall it:
+      described in point 2 above, enter the following command to
+      uninstall it:
     </p>
-<pre>
-<code>rm -rf ~/.vim/bundle/slimv
-sed -i.bkp '/runtimepath.*slimv/d' ~/.vimrc</code>
-</pre>
+    <pre><code>rm -rf ~/.vim/pack/plugins/start/slimv</code></pre>
   </li>
 </ol>
 
@@ -585,10 +615,9 @@ sbcl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(exit)
     </p>
 <pre>
 <code>git clone https://github.com/l04m33/vlime.git ~/.vim/bundle/vlime
-git clone https://github.com/kovisoft/paredit ~/.vim/bundle/paredit
+git clone https://github.com/kovisoft/paredit ~/.vim/pack/plugins/start/paredit
 echo 'set runtimepath^=~/.vim/bundle/vlime/vim' &gt;&gt; ~/.vimrc
-echo 'set runtimepath^=~/.vim/bundle/paredit' &gt;&gt; ~/.vimrc
-vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/bundle/paredit/doc' +q</code>
+vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start/paredit/doc' +q</code>
 </pre>
     <p>
       Unlike Slimv, Vlime does not bundle <a
@@ -706,13 +735,13 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/bundle/paredit/doc
 
   <li>
     <p>
-      Now that you have got started with Slimv, here is a brief note on
+      Now that you have got started with Vlime, here is a brief note on
       uninstallation, in case you ever need it. If Quicklisp and Vlime
       are installed as described in the points 2 and 3 above, run these
       commands to uninstall them:
     </p>
 <pre>
-<code>rm -rf ~/quicklisp ~/.vim/bundle/vlime ~/.vim/bundle/paredit
+<code>rm -rf ~/quicklisp ~/.vim/bundle/vlime ~/.vim/pack/plugins/start/paredit
 sed -i.bkp '/runtimepath.*vlime/d; /runtimepath.*paredit/d' ~/.vimrc</code>
 </pre>
     <p>
@@ -944,9 +973,9 @@ the keybindings.
 
 <p>
 I think it is a good idea to read the entire Paredit documentation.
-Enter <code>:help paredit</code> to do so. It is about 500 lines in
-length and takes about 30 to 40 minutes to read. The time spent reading
-this documentation is worth it because it makes editing Lisp code very
+Enter <code>:help paredit</code> to do so. It is about 500 lines long
+and takes about 30 to 40 minutes to read. The time spent reading this
+documentation is worth it because it makes editing Lisp code very
 pleasant and productive.
 </p>
 
@@ -959,7 +988,7 @@ After getting started with Slimv or Vlime, the very next thing you might
 want to know is how to work with debugger. The debugger window comes
 up whenever an error or an unhandled condition occurs. It might look
 quite scary to a beginner, so it is a good idea to become comfortable
-with it as soon as possible. Fortunately, both Slimv and Vlime provides
+with it as soon as possible. Fortunately, both Slimv and Vlime provide
 excellent key-bindings to inspect the error or dismiss it to return to
 the source code buffer quickly and easily.
 </p>
@@ -1037,7 +1066,7 @@ Backtrace:
     </p>
     <pre><samp>  1: (SQUARE "foo")</samp></pre>
     <p>
-      Then press <code>enter</code>. This line should now unfold to
+      Then press <kbd>enter</kbd>. This line should now unfold to
       show the following details:
     </p>
 <pre>
@@ -1055,7 +1084,7 @@ Backtrace:
     </p>
     <pre><samp>      in "(SB-INT:NAMED-LAMBDA SQUARE-----------------------------------</samp></pre>
     <p>
-      Then press <code>enter</code>. Some information about its source
+      Then press <kbd>enter</kbd>. Some information about its source
       code should appear like this:
     </p>
 <pre>
@@ -1076,7 +1105,7 @@ Backtrace:
     <p>
       Then press <kbd>,</kbd><kbd>i</kbd> to inspect this variable. A
       prompt would appear to confirm the variable name. Press
-      <code>enter</code> to confirm. An inspector window should now
+      <kbd>enter</kbd> to confirm. An inspector window should now
       appear with more details about this variable. This window should
       look like this:
     </p>
@@ -1127,7 +1156,7 @@ Contents:
     </p>
     <pre><samp>  1: [*ABORT] Return to SLIME's top level.</samp></pre>
     <p>
-      Then press <code>enter</code> to execute this restart.
+      Then press <kbd>enter</kbd> to execute this restart.
       Alternatively, enter <kbd>,</kbd><kbd>a</kbd> in normal mode to
       select the abort restart or <kbd>,</kbd><kbd>q</kbd> to quit to
       toplevel.
@@ -1137,11 +1166,10 @@ Contents:
 
 <p>
 Most of the times when an error occurs, I quickly take a look at the
-stack trace to realize that I have made a silly mistake and then use the
-<kbd>,</kbd><kbd>a</kbd> command in normal mode to select the abort
-restart and continue working on my code. This is one of my most
-favourite commands in Slimv because it allows me to return from
-debugging to writing code really fast with only two keystrokes.
+stack trace to realize that I have made a silly mistake and enter the
+<kbd>,</kbd><kbd>a</kbd> command to select the abort restart. This is
+one of my most favourite commands in Slimv because it allows me to
+return from debugging to coding really fast with only two keystrokes.
 </p>
 
 
@@ -1219,8 +1247,8 @@ Frames:
     </p>
     <pre><samp>  1.  (SQUARE "foo")</samp></pre>
     <p>
-      Then press <code>d</code>. A new split window should appear with
-      the following details about this frame.
+      Then press <kbd>d</kbd>. A new split window should appear with the
+      following details about this frame:
     </p>
 <pre>
 <samp>Frame: 1 (Restartable)
@@ -1299,7 +1327,7 @@ Contents:
     </p>
     <pre><samp>  1: [*ABORT] Return to SLIME's top level.</samp></pre>
     <p>
-      Then press <code>enter</code> to execute this restart.
+      Then press <kbd>enter</kbd> to execute this restart.
       Alternatively, we can enter <kbd>a</kbd> in normal mode to
       select the abort restart to return to the previous level. At this
       time, there is no command to return to SLIME's top level.
@@ -1464,14 +1492,14 @@ following steps show how to do it:
   <li>
     <p>
       Under <code>Trace Entries</code>, place the cursor on
-      <code>[refresh]</code> and press <code>enter</code>.
+      <code>[refresh]</code> and press <kbd>enter</kbd>.
     </p>
   </li>
 
   <li>
     <p>
       Then place the cursor on <code>[fetch next batch]</code> and press
-      <code>enter</code>. Two results should appear for the two
+      <kbd>enter</kbd>. Two results should appear for the two
       <code>square</code> calls that were made due to step 7. The trace
       information would be folded under each call.
     </p>
@@ -1535,28 +1563,42 @@ small exercise to see this:
   <li>
     <p>
       With Slimv or Vlime connected to Swank, let us do a quick recap of
-      how to evaluate the current expression. With Slimv, enter the
-      normal mode command <kbd>,</kbd><kbd>e</kbd> to evaluate the
-      current expression. With Vlime, enter the normal mode command
+      how to evaluate the current expression.
+    </p>
+    <p>
+      With Slimv, enter the normal mode command <kbd>,</kbd><kbd>e</kbd>
+      to evaluate the current expression.
+    </p>
+    <p>
+      With Vlime, enter the normal mode command
       <kbd>\</kbd><kbd>s</kbd><kbd>s</kbd> to evaluate the current
-      expression. The current expression, i.e., <code>(/ 6 2)</code>
-      should get evaluated and the result <code>7</code> should appear
-      in the REPL buffer.
+      expression.
+    </p>
+    <p>
+      The current expression, i.e., <code>(/ 6 2)</code> should get
+      evaluated and the result <code>3</code> should appear in the REPL
+      buffer.
     </p>
   </li>
 
   <li>
     <p>
-      Let us now see how to evaluate the top-level expression. With
-      Slimv, enter the normal mode command <kbd>,</kbd><kbd>d</kbd> to
-      evaluate the top-level expression. With Vlime, enter the normal
-      mode command <kbd>\</kbd><kbd>s</kbd><kbd>t</kbd> to evaluate the
-      top-level expression. The top-level expression should get
-      evaluated and the result <code>7</code> should appear in the REPL
-      buffer.
+      Let us now see how to evaluate the top-level expression.
+    </p>
+    <p>
+      With Slimv, enter the normal mode command <kbd>,</kbd><kbd>d</kbd>
+      to evaluate the top-level expression.
+    </p>
+    <p>
+      With Vlime, enter the normal mode command
+      <kbd>\</kbd><kbd>s</kbd><kbd>t</kbd> to evaluate the top-level
+      expression.
+    </p>
+    <p>
+      The top-level expression should get evaluated and the result
+      <code>7</code> should appear in the REPL buffer.
     </p>
   </li>
-
 </ol>
 
 
@@ -1564,7 +1606,7 @@ small exercise to see this:
  href="#rainbow-parentheses">Rainbow Parentheses</a></h3>
 
 <p>
-Rainbow parentheses makes it easier to see matching parentheses by
+Rainbow parentheses make it easy to see matching parentheses by
 colouring different levels of parentheses with different colours.
 Matching parentheses have the same colour. To enable this feature in
 Slimv, add this command to <code>~/.vimrc</code>:
@@ -1574,21 +1616,22 @@ Slimv, add this command to <code>~/.vimrc</code>:
 
 <p>
 This feature is not available in Vlime. But there are several Vim
-plugins that support parentheses plugins. Here are the steps to install
-one of the popular ones:
+plugins that support rainbow parentheses. Here are the steps to install
+one such plugin that is quite popular:
 </p>
 
 <pre>
-<code>git clone https://github.com/junegunn/rainbow_parentheses.vim.git ~/.vim/bundle/rainbow_parentheses
-echo 'set runtimepath^=~/.vim/bundle/rainbow_parentheses' &gt;&gt; ~/.vimrc
+<code>git clone https://github.com/junegunn/rainbow_parentheses.vim.git ~/.vim/pack/plugins/start/rainbow_parentheses
 echo 'autocmd FileType lisp,scheme,clojure RainbowParentheses' &gt;&gt; ~/.vimrc</code>
 </pre>
 
-To install, enter these commands:
+<p>
+In case you ever want to uninstall it, enter these commands:
+</p>
 
 <pre>
-<code>rm -rf ~/.vim/bundle/rainbow_parentheses
-sed -i.bkp '/runtimepath.*rainbow_parentheses\|autocmd.*RainbowParentheses/d' ~/.vimrc</code>
+<code>rm -rf ~/.vim/pack/plugins/start/rainbow_parentheses
+sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
 </pre>
 
 
@@ -1675,7 +1718,10 @@ editing a Lisp source file:
   <li>
     <p>
       With Slimv, enter <kbd>,</kbd><kbd>b</kbd> in normal mode to
-      evaluate the entire buffer. With Vlime, save the file and press
+      evaluate the entire buffer.
+    </p>
+    <p>
+      With Vlime, save the file and press
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile the
       entire buffer.
     </p>
@@ -1685,9 +1731,14 @@ editing a Lisp source file:
     <p>
       With Slimv, while the cursor is on the last expression, enter
       <kbd>,</kbd><kbd>1</kbd> in normal mode to expand the macro form
-      once. With Vlime, press <kbd>\</kbd><kbd>m</kbd><kbd>1</kbd> to do
-      the same thing. The following expansion should appear as the
-      result:
+      once.
+    </p>
+    <p>
+      With Vlime, enter <kbd>\</kbd><kbd>m</kbd><kbd>1</kbd> in normal
+      mode to do the same thing.
+    </p>
+    <p>
+      The following expansion should appear as the result:
     </p>
     <pre><code>(CALC 2 * 2)</code></pre>
     <p>
@@ -1700,9 +1751,14 @@ editing a Lisp source file:
     <p>
       With Slimv, enter <kbd>,</kbd><kbd>m</kbd> in normal mode to
       recursively expand the current expression until it is no longer a
-      macro. With Vlime, enter <kbd>\</kbd><kbd>m</kbd><kbd>a</kbd> in
-      normal mode to do the same thing. The following expansion should
-      appear as the result:
+      macro.
+    </p>
+    <p>
+      With Vlime, enter <kbd>\</kbd><kbd>m</kbd><kbd>a</kbd> in
+      normal mode to do the same thing.
+    </p>
+    <p>
+      The following expansion should appear as the result:
     </p>
     <pre><code>(* 2 2)</code></pre>
   </li>
@@ -1762,8 +1818,8 @@ in Slimv and Vlime:
       <code>square</code> and enter <kbd>\</kbd><kbd>x</kbd><kbd>c</kbd>
       in normal mode to list all callers of the function. The output
       appears in a split window containing the cross reference (xref)
-      buffer. Press <code>enter</code> on any item in the xref buffer
-      and Vlime will take you directly to the referenced location.
+      buffer. Press <kbd>enter</kbd> on any item in the xref buffer and
+      Vlime will take you directly to the referenced location.
     </p>
   </li>
 </ol>
@@ -1821,7 +1877,7 @@ sudo apt-get install clisp</code></pre>
     <p>
       To start Swank server manually, enter this command:
     </p>
-    <pre><code>clisp ~/.vim/bundle/slimv/slime/start-swank.lisp</code></pre>
+    <pre><code>clisp ~/.vim/pack/plugins/start/slimv/slime/start-swank.lisp</code></pre>
     <p>
       Then edit a Lisp source file and enter the normal command
       <kbd>,</kbd><kbd>c</kbd> to connect to it and bring up the REPL
@@ -1871,7 +1927,7 @@ sudo apt-get install ecl</code></pre>
     <p>
       To start Swank server manually, enter this command:
     </p>
-    <pre><code>ecl --load ~/.vim/bundle/slimv/slime/start-swank.lisp</code></pre>
+    <pre><code>ecl --load ~/.vim/pack/plugins/start/slimv/slime/start-swank.lisp</code></pre>
     <p>
       Then edit a Lisp source file and enter the normal command
       <kbd>,</kbd><kbd>c</kbd> to connect to it and bring up the REPL
@@ -1919,7 +1975,7 @@ will see what more it takes to use Vlime with CLISP in the steps below:
     <p>
       Let us assume we want to start afresh with CLISP, i.e., we do not
       have previous artifacts created by SBCL. To clean up old
-      artifacts, enter this command:
+      artifacts, enter these commands:
     </p>
 
 <pre>
@@ -2016,7 +2072,7 @@ Here are the steps to use Vlime with ECL:
     <p>
       Let us assume we want to start afresh with ECL, i.e., we do not
       have previous artifacts created by SBCL or ECL. To clean up old
-      artifacts, enter this command:
+      artifacts, enter these commands:
     </p>
 
 <pre>
@@ -2107,8 +2163,8 @@ You need MIT/GNU Scheme 9.2
 
 <p>
 At the time of writing this article, I have confirmed that both these
-requirements are indeed important. The steps below work well when both
-these requirements are met.
+requirements indeed need to be met to use Slimv with MIT/GNU Scheme.
+Here are the steps to use Slimv with MIT/GNU Scheme:
 </p>
 
 <ol>
@@ -2138,7 +2194,7 @@ these requirements are met.
       or a desktop environment. In such a case, enter this command to
       start Swank server manually:
     </p>
-    <pre><code>scheme --load ~/.vim/bundle/slimv/slime/contrib/swank-mit-scheme.scm</code></pre>
+    <pre><code>scheme --load ~/.vim/pack/plugins/start/slimv/slime/contrib/swank-mit-scheme.scm</code></pre>
   </li>
   <li>
     <p>
@@ -2215,30 +2271,28 @@ depends on the installation procedure chosen to set up Clojure.
 </p>
 
 <p>
+On Unix-like systems, Slimv looks for JAR files that match the glob
+pattern <code>clojure*.jar</code> at paths that match the glob pattern
+<code>/usr/local/bin/*clojure*</code> and <code>~/*clojure</code>, in
+that order. On Windows, it looks for the JAR files at directory paths
+that match the glob pattern <code>C:\*clojure*</code> and
+<code>C:\*clojure*\lib</code>. Additionally, Slimv also looks for the
+JAR files at the paths mentioned in the <code>PATH</code> environment
+variable. There are a few more strategies too to locate Clojure but we
+will not get into that here.
+</p>
+
+<p>
 In this section, I will show how to build Clojure from source with Maven
 and install it at <code>~/clojure/clojure.jar</code>, a path Slimv can
 easily find, so installing it here would mean that the steps below would
-work everywhere regardless of the operating system. The only exception
-to this is Windows where Clojure should be installed at
-<code>C:\clojure\clojure.jar</code> instead.
+work everywhere regardless of the operating system. If you are on
+Windows, install Clojure at <code>C:\clojure\clojure.jar</code> instead.
 </p>
 
 <p>
-In fact, to be precise, on Unix-like systems, Slimv looks for JAR files
-that match the glob pattern <code>clojure*.jar</code> at paths that
-match the glob pattern <code>/usr/local/bin/*clojure*</code> and
-<code>~/*clojure</code>, in that order. On Windows, it looks for the JAR
-files at directory paths that match the glob pattern
-<code>C:\*clojure*</code> and <code>C:\*clojure*\lib</code>.
-Additionally, Slimv also looks for the JAR files at the paths mentioned
-in the <code>PATH</code> environment variable. There are a few more
-strategies too to locate Clojure but we will not get into that here.
-</p>
-
-<p>
-Let us now see how to install Clojure at
-<code>~/clojure/clojure.jar</code> and use it with Slimv. Remember, on
-Windows, install it at <code>C:\clojure\clojure.jar</code> instead.
+Here are the steps to install Clojure at
+<code>~/clojure/clojure.jar</code> and use it with Slimv:
 </p>
 
 <ol>
@@ -2285,11 +2339,11 @@ mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code>
   <li>
     <p>
       This step is necessary only if you are not using tmux, GNU Screen,
-      or a desktop environment. In such a case, enter this command to
+      or a desktop environment. In such a case, enter these commands to
       start Swank server manually:
     </p>
 <pre>
-<code>SWANK_DIR=~/.vim/bundle/slimv/swank-clojure
+<code>SWANK_DIR=~/.vim/pack/plugins/start/slimv/swank-clojure
 java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swank/swank.clj" -e '(swank.swank/start-repl)' -r</code>
 </pre>
   </li>
@@ -2337,10 +2391,8 @@ java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swan
 
 <p>
 Finally, let me provide a comparison of both Slimv and Vlime side by
-side. Some of the points in the table below have been discussed above
-while some have not been discussed above. Also, this comparison table
-below is not exhaustive. There are more differences between the tools
-than what is mentioned below.
+side. This comparison table below is not exhaustive. There are more
+differences between the tools than what is mentioned below.
 </p>
 
 
@@ -2352,6 +2404,28 @@ than what is mentioned below.
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td style="width: 50%">
+        <p>
+          Slimv's directory structure conforms to the directory
+          structure of plugins in a Vim package as well as the default
+          directory structure expected by popular Vim plugin managers,
+          so installing Slimv is quite straightforward.
+        </p>
+      </td>
+      <td style="width: 50%">
+        <p>
+          Vlime's directory structure does not conform to the directory
+          structure of plugins in a Vim package or the default directory
+          structure expected by popular Vim plugin managers. As a
+          result, Vim's native support for packages cannot be used to
+          install Vlime. Installing it via a plugin manager requires
+          fiddling with Vim's <code>runtimepath</code> option in order
+          to load it successfully.
+        </p>
+      </td>
+    </tr>
+
     <tr>
       <td style="width: 50%">
         <p>
@@ -2372,16 +2446,15 @@ than what is mentioned below.
         <p>
           Slimv requires Vim to be running within tmux, GNU Screen, or a
           desktop environment to be able to start Swank server
-          automatically. Slimv starts the Swank server in a new tmux
-          window, GNU Screen window, or a desktop terminal depending on
-          where Vim is running.
+          automatically. If you have none of these, Swank server needs
+          to be started manually.
         </p>
       </td>
       <td>
         <p>
           Vlime does not require tmux, GNU Screen, or a desktop
-          environment in order to start Swank server automatically. It
-          can start Swank server on its own.
+          environment in order to start Vlime server automatically. It
+          can start Vlime server on its own.
         </p>
       </td>
     </tr>
@@ -2454,15 +2527,15 @@ than what is mentioned below.
     <tr>
       <td>
         <p>
-          Slimv shows argument list of a function in the status line at
-          the bottom.
+          Slimv shows argument list of a function, symbol description,
+          etc. in the status line or message area at the bottom.
         </p>
       </td>
       <td>
         <p>
-          Vlime shows argument list of a function in a separate split
-          window. This is an extra window to skip over while cycling
-          between windows with the normal mode
+          Vlime shows argument list of a function, symbol description,
+          etc. in separate split windows. These are extra windows to
+          skip over while cycling between windows with the normal mode
           <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>w</kbd>&nbsp;<kbd>w</kbd>
           command which could feel inconvenient.
         </p>
@@ -2472,16 +2545,16 @@ than what is mentioned below.
     <tr>
       <td>
         <p>
-          Slimv shows symbol documentation in the Vim message area.
+          Slimv shows trace results, macro expansion, cross reference,
+          etc. in the REPL buffer.
         </p>
       </td>
       <td>
         <p>
-          Vlime shows symbol documentation in a separate split window.
-          This is an extra window to skip over while cycling between
-          windows with the normal mode
-          <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>w</kbd>&nbsp;<kbd>w</kbd>
-          command which could feel inconvenient.
+          Vlime shows resultions of trace results, macro expansion,
+          cross reference, etc. in split windows. These are extra
+          windows to skip over while cycling between windows. This could
+          feel inconvenient.
         </p>
       </td>
     </tr>
@@ -2542,11 +2615,11 @@ than what is mentioned below.
 <h2 id="quick-recommendation"><a href="#quick-recommendation">Quick Recommendation</a></h2>
 
 <p>
-If you are looking for a quick recommendation on what tool to use, I am
-going to recommend Slimv. It has been around for much longer. It
+If you are looking for a quick recommendation on which plugin to use, I
+am going to recommend Slimv. It has been around for much longer. It
 supports a wider variety of Lisp implementations. I find its default key
 bindings more convenient. A truly interactive REPL buffer is also a
-bonus.
+bonus. Also, Slimv supports Scheme and Clojure whereas Vlime does not.
 </p>
 
 <p>
@@ -2566,6 +2639,10 @@ on your own and then find out which one suits you more.
 <ul>
   <li>
     <a href="https://web.archive.org/web/20160303225220/http://osdir.com/ml/lisp.cmucl.devel/2003-08/msg00302.html">Couple of Emacs hacks</a>
+  </li>
+  <li>
+    <a
+    href="https://groups.google.com/forum/#!topic/vim_announce/EKTuhjF3ET0">Vim 8.0 Released</a>
   </li>
   <li>
     <a href="https://kovisoft.bitbucket.io/tutorial.html">Slimv Tutorial</a>
