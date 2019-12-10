@@ -24,24 +24,31 @@ AhrefsBot|
 Apache-HttpClient|
 Applebot|
 AppEngine-Google|
+AwarioSmartBot|
 BingPreview|
 Blogtrottr|
 CCBot|
 DotBot|
+Feedbin|
 Feedly|
 Go-http-client|
 Googlebot|
 HackerNews|
 Hatena-Favicon|
+NetNewsWire|
 Python-urllib|
+Ruby|
 SemrushBot|
 SeznamBot|
 Tiny Tiny RSS|
+Winds:|
 bingbot|
 example-user-agent|
 http\.rb|
+ichiro|
 ift\.tt|
 newspaper|
+popsicle|
 redditbot
 '
     patterns=$(printf '%s' "$patterns" | tr -d '\n')
