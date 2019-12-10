@@ -58,7 +58,7 @@ redditbot
 
 all_views()
 {
-    grep -E 'GET / |GET /(about|blog|dark|music|poetry|security)/'
+    grep -E 'GET / |GET /(about|blog|dark|music|poetry|security|cv\.html)/'
 }
 
 user_views()
