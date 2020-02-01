@@ -196,6 +196,11 @@ blockquote *:last-child, td *:last-child, .highlight *:last-child {
   margin-right: auto;
 }
 
+/* Generic block element indentation */
+.indent {
+  margin-left: 1.5em;
+}
+
 /* Highlight Box */
 .highlight {
   /* Should be similar to pre style */
@@ -209,7 +214,7 @@ table {
   margin-bottom: 1em;
 }
 
-thead {
+th {
   text-align: left;
 }
 
@@ -335,11 +340,11 @@ body.dark,
 }
 
 /* Image background */
-figure.soft img {
+.soft img {
   opacity: 0.8; /* 1 - 0x33 / 0xff */
 }
 
-.dark figure.soft img {
+.dark .soft img {
   opacity: 0.667; /* 0xaa / 0xff */
 }
 
