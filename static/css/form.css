@@ -36,6 +36,7 @@ input#submit {
   border-width: medium;
   border-style: double;
   margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 .errors .notice {
