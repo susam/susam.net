@@ -1,18 +1,18 @@
 <!-- date: 2011-10-01 04:26:20 +0000 -->
 <!-- name: Ryan -->
 <!-- url: http://www.blogger.com/profile/17574626231451600275 -->
-<pre class="code">
-int i;
+<pre>
+<code>int i;
 for (i = 0; abs(i) &lt; 6; i--)
-printf(".");
+    printf(".");</code>
 </pre>
 <!-- date: 2011-10-01 04:46:44 +0000 -->
 <!-- name: Ryan -->
 <!-- url: http://www.blogger.com/profile/17574626231451600275 -->
-<pre class="code">
-int i;
+<pre>
+<code>int i;
 for (i = 0; -i &lt; 6; i--)
-printf(".");
+    printf(".");</code>
 </pre>
 <!-- date: 2011-10-01 04:48:38 +0000 -->
 <!-- name: Sean -->
@@ -24,10 +24,11 @@ Changing the loop condition to <code>i ^= 6;</code> is another solution.
 <!-- url: http://www.blogger.com/profile/17574626231451600275 -->
 <p>
 Ah-ha, a tricky one:
-</p><pre class="code">
-int i;
+</p>
+<pre>
+<code>int i;
 for (i = 0; i ^= 6; i--)
-printf(".");
+    printf(".");</code>
 </pre>
 <!-- date: 2011-10-01 04:54:56 +0000 -->
 <!-- name: Ryan -->
@@ -38,9 +39,7 @@ Ah, Sean beat me to it. :(
 <!-- date: 2011-10-01 05:11:24 +0000 -->
 <!-- name: Martin DeMello -->
 <!-- url: http://zem.novylen.net -->
-<pre class="code">
-for (i = 0; i + 6; i--)
-</pre>
+<pre><code>for (i = 0; i + 6; i--)</code></pre>
 <p>
 will stop when i&nbsp;+&nbsp;6&nbsp;=&nbsp;0.
 </p>
@@ -52,15 +51,18 @@ All solutions except the one in the first comment are correct. The first
 one involves <code>abs()</code> function. The code would indeed end up
 printing 6 dots but it doesn't meet the requirement in the question
 since <code>abs()</code> is not an operator.
-</p><p>
+</p>
+<p>
 There is another very simple solution similar to the obvious solution I
 have provided in the post. Instead of post-increment operator, use the
 pre-increment operator.
-</p><pre class="code">
-int i;
+</p>
+<pre>
+<code>int i;
 for (i = 0; i &lt; 6; ++i)
-printf(".");
-</pre><p>
+    printf(".");</code>
+</pre>
+<p>
 The one involving the bitwise XOR operator is the one I had in my mind
 while mentioning that one of the solutions is very interesting. I find
 it interesting because it is not obvious at the first glance why it
@@ -79,11 +81,11 @@ the set of acceptable operators. :P
 <!-- url: https://susam.in/ -->
 <p>
 Ryan,
-</p><p>
-I am used to referring to |x| as the absolute value function. But yeah,
-I see your point. The terminology is what we make it.
-</p><p>
-The problem statement could have specified that exactly one operator
-from the C programming language must be added to or modified in the
-given code snippet. That would have ruled out this little ambiguity.
+</p>
+<p>
+I am used to referring to <code>abs()</code> as the absolute value
+function. But yes, I see your point. The problem statement could have
+specified that exactly one operator from the C programming language must
+be added to or modified in the given code snippet. That would have ruled
+out this little ambiguity.
 </p>

@@ -1,6 +1,7 @@
 <!-- title: Writing Boot Sector Code -->
 <!-- tag: technology -->
-<h2>Introduction</h2>
+
+<h2 id="introduction"><a href="#introduction">Introduction</a></h2>
 
 <p>
 In this article, we discuss how to write our own
@@ -13,7 +14,7 @@ fill this gap.
 </p>
 
 
-<h2>Boot Sector</h2>
+<h2 id="boot-sector"><a href="#boot-sector">Boot Sector</a></h2>
 
 <p>
 When the computer starts, the processor starts executing instructions
@@ -82,15 +83,15 @@ writing this article:
 </ol>
 
 
-<h2>Print Character</h2>
+<h2 id="print-character"><a href="#print-character">Print Character</a></h2>
 
 <p>
 The following code prints a single character in yellow color on a blue
 background:
 </p>
 
-<pre class="code">
-.code16
+<pre>
+<code>.code16
 .section .text
 .globl _start
 _start:
@@ -99,7 +100,7 @@ _start:
   movb $'A', 0
   movb $0x1e, 1
 idle:
-  jmp idle
+  jmp idle</code>
 </pre>
 
 <p>
@@ -205,14 +206,14 @@ Now booting the computer with this device should show display the letter
 </p>
 
 
-<h2>Print String</h2>
+<h2 id="print-string"><a href="#print-string">Print String</a></h2>
 
 <p>
 The following code prints a string in yellow color on a blue background:
 </p>
 
-<pre class="code">
-.code16
+<pre>
+<code>.code16
 
 .section .data
 message:
@@ -237,7 +238,7 @@ idle:
   movb $0x1e, (%di)
   inc %di
   inc %si
-  jmp move
+  jmp move</code>
 </pre>
 
 <p>
@@ -272,11 +273,11 @@ worth looking at how the binary code looks like with a trial linking
 with the following command:
 </p>
 
-<pre class="code">
-as -o string.o string.s
+<pre>
+<code>as -o string.o string.s
 ld --oformat binary -Ttext 0 -Tdata 100 -o string.com string.o
 objdump -bbinary -mi8086 -D string.com
-xxd -g1 string.com
+xxd -g1 string.com</code>
 </pre>
 
 <p>
@@ -292,14 +293,14 @@ shows where the text section and data section are placed. Let us take a
 close look at this portion of the output:
 </p>
 
-<pre class="code">
-  1b:   47                      inc    %di
+<pre>
+<code>  1b:   47                      inc    %di
   1c:   46                      inc    %si
   1d:   eb ec                   jmp    0xb
         ...
   ff:   00 68 65                add    %ch,0x65(%bx,%si)
  102:   6c                      insb   (%dx),%es:(%di)
- 103:   6c                      insb   (%dx),%es:(%di)
+ 103:   6c                      insb   (%dx),%es:(%di)</code>
 </pre>
 
 <pr>
@@ -313,14 +314,14 @@ this (repeated sequence of zeros have been replaced with
 <code>...</code> by me for the sake of brevity):
 </p>
 
-<pre class="code">
-00000000: 90 31 ff b8 00 b8 8e d8 be 00 01 31 d2 2e 8a 14  .1.........1....
+<pre>
+<code>00000000: 90 31 ff b8 00 b8 8e d8 be 00 01 31 d2 2e 8a 14  .1.........1....
 00000010: 80 fa 00 74 fe 88 15 47 c6 05 1e 47 46 eb ec 00  ...t...G...GF...
 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 ...
 000000e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 000000f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-00000100: 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64 00           hello, world.
+00000100: 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64 00           hello, world.</code>
 </pre>
 
 <p>
@@ -344,19 +345,19 @@ data section, so that it resolves the value of the label named
 and test it with DOSBox with these commands:
 </p>
 
-<pre class="code">
-ld --oformat binary -Ttext 100 -Tdata 120 -o string.com string.o
-dosbox -c cls string.com
+<pre>
+<code>ld --oformat binary -Ttext 100 -Tdata 120 -o string.com string.o
+dosbox -c cls string.com</code>
 </pre>
 
 <p>
 If everything looks fine, we link it once again for boot sector and write it
 to the boot sector of our device.
 
-<pre class="code">
-ld --oformat binary -Ttext 7c00 -Tdata 7c20 -o string string.o
+<pre>
+<code>ld --oformat binary -Ttext 7c00 -Tdata 7c20 -o string string.o
 dd if=string of=/dev/sdb
-printf '\x55\xaa' | dd seek=510 bs=1 of=/dev/sdb
+printf '\x55\xaa' | dd seek=510 bs=1 of=/dev/sdb</code>
 </pre>
 
 <p>

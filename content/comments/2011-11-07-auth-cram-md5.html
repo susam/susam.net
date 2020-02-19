@@ -24,12 +24,11 @@ systems that need to be protected to such a high degree.
 Matt, you make a very good point. Yes, the server needs to store the
 passwords in plaintext in case of CRAM-MD5 authentication so that it can
 compute the expected response and match it with the received response.
-</p><p>
+</p>
+<p>
 Here is a sample entry in the /etc/exim4/passwd file for the curious:
 </p>
-<pre>
-<code>alice:$1$vRPkzzDi$3sqk2e4Jcgn/YEeB1JqgT1</code>
-</pre>
+<pre><code>alice:$1$vRPkzzDi$3sqk2e4Jcgn/YEeB1JqgT1</code></pre>
 <p>
 In case of PLAIN or LOGIN authentication mechanism, the above entry is
 enough to setup the user 'alice' with password 'wonderland' that has
@@ -43,9 +42,7 @@ case) and check that the result matches with the hash in this file.
 For CRAM-MD5 authentication mechanism to work properly, we'll need an
 entry like this in the <code>passwd</code> file.
 </p>
-<pre>
-<code>alice:$1$vRPkzzDi$3sqk2e4Jcgn/YEeB1JqgT1:wonderland</code>
-</pre>
+<pre><code>alice:$1$vRPkzzDi$3sqk2e4Jcgn/YEeB1JqgT1:wonderland</code></pre>
 <p>
 Strictly speaking, the second field is not necessary. It could have been
 empty since only the third field containing the password in plaintext is
