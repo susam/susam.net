@@ -2,7 +2,8 @@
 <!-- tag: technology -->
 <!-- import: tex.js -->
 
-<h2>Integer Underflow</h2>
+<h2 id="integer-underflow"><a
+ href="#integer-underflow">Integer Underflow</a></h2>
 <p>
 Let us talk a little bit about integer underflow and undefined behaviour
 in C before we discuss the puzzle I want to share in this post.
@@ -53,7 +54,7 @@ $ <kbd>gcc -O2 -std=c89 -Wall -Wextra -pedantic foo.c && ./a.out</kbd>
 </pre>
 
 
-<h2>Loopy C Puzzle</h2>
+<h2 id="puzzle"><a href="#puzzle">Puzzle</a></h2>
 <p>
 Let us take a look at the puzzle now.
 </p>
@@ -84,7 +85,8 @@ very interesting. We will discuss the interesting solution in detail
 below.
 </p>
 
-<h2>Solutions to Loopy C Puzzle</h2>
+
+<h2 id="solutions"><a href="#solutions">Solutions</a></h2>
 <p>
 <em><strong>Update on 02 Oct 2011:</strong> The puzzle has been solved
 in the <a href="comments/">comments</a> section. We will discuss the
@@ -120,7 +122,8 @@ The last solution involving the bitwise XOR operation is not immediately
 obvious. A little analysis is required to understand why it works. 
 </p>
 
-<h2>Generalization</h2>
+
+<h2 id="generalization"><a href="#generalization">Generalization</a></h2>
 <p>
 Let us generalize the puzzle by replacing \( 6 \) in the loop with an
 arbitrary positive integer \( n. \) The loop in the last solution now
@@ -187,7 +190,7 @@ is even.
 </p>
 
 
-<h2>Lemmas</h2>
+<h2 id="lemmas"><a href="#lemmas">Lemmas</a></h2>
 <p>
 We will first prove a few lemmas about some interesting properties of
 the bitwise XOR operation. We will then use it to prove the claims made
@@ -314,7 +317,7 @@ We get \( b_{z0} = b_{x0} \oplus b_{y0} = 0 \oplus 1 = 1. \) Therefore
 </p>
 
 
-<h2>Theorems</h2>
+<h2 id="theorems"><a href="#theorems">Theorems</a></h2>
 
 <!-- Theorem 1 -->
 <p>

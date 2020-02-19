@@ -135,7 +135,7 @@ README  = $(TMP_GIT)/README.md
 
 ghmirror: site
 	#
-	## Create mirror.
+	# Create mirror.
 	rm -rf $(TMP_GIT)
 	mv _site $(TMP_GIT)
 	git rev-parse --short HEAD > $(TMP_REV)
@@ -164,5 +164,12 @@ ghmirror: site
 # Checks
 checks:
 	# Ensure punctuation goes inside inline-math.
-	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</h[1-6]>|\)|:)'
+	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</a>|\)|:)'
 	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
+	# Ensure current year is present in footer.
+	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
+	# Ensure all page headings are hyperlinks to themselves.
+	! grep -IErn '<h1>' content | grep -vE '<h1><a href="./">'
+	# Ensure all section headings are hyperlinks to themselves.
+	! grep -IErn '<h[2-6]>' content | grep -vE '<h[2-6] id=".*"><a|dixit:'
+	@echo Done; echo

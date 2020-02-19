@@ -431,7 +431,7 @@ Here are the steps to set up Slimv and use it:
 vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
 </pre>
     <p>
-      That's it! Slimv is set up. It's that straightforward. The
+      That is it! Slimv is set up. It's that straightforward. The
       commands above show how to set up Slimv with just two shell
       commands. You could also use a Vim plugin manager to install Slimv
       for you but I am not going to cover that here.
@@ -514,7 +514,7 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
   </li>
   <li>
     <p>
-      To evaluate, the current expression under the cursor, enter the
+      To evaluate the current expression under the cursor, enter the
       following command in normal mode:
     </p>
     <p>
@@ -559,9 +559,9 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
 </ol>
 
 <p>
-In steps 7 and 8 of the previous section, you may have noticed that as
+In steps 7 and 9 of the previous section, you may have noticed that as
 soon as you type an opening parenthesis or double quotation mark, a
-matching closing one is automatically inserted. That's done by the <a
+matching closing one is automatically inserted. That is done by the <a
 href="https://github.com/kovisoft/paredit">Paredit</a> plugin which is
 bundled along with Slimv. Paredit ensures structured editing of Lisp
 s-expressions and keeps all matched characters (parentheses, brackets,
@@ -696,9 +696,12 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start
     </p>
     <pre><code>(format t "hello, world~%")</code></pre>
     <p>
-      Press <kbd>esc</kbd> to return to normal mode. To evaluate, the
-      current expression under the cursor, enter the following command
-      in normal mode:
+      Press <kbd>esc</kbd> to return to normal mode.
+    </p>
+  <li>
+    <p>
+      To evaluate, the current expression under the cursor, enter the
+      following command in normal mode:
     </p>
     <p>
       <kbd>\</kbd><kbd>s</kbd><kbd>s</kbd>
@@ -712,8 +715,8 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start
       interactive. Its <code>nomodifiable</code> option is set, so we
       cannot type code directly into the REPL window. This can be a bit
       of a problem if we want to type arbitrary expressions into the
-      REPL and execute it. To mitigate this shortcoming to some extent,
-      Vlime provides an alternative way to evaluate the current
+      REPL and execute them. To mitigate this shortcoming to some
+      extent, Vlime provides an alternative way to evaluate the current
       expression known as the interaction mode. This is explained in the
       next point.
     </p>
@@ -742,7 +745,7 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start
     </p>
 <pre>
 <code>rm -rf ~/quicklisp ~/.vim/bundle/vlime ~/.vim/pack/plugins/start/paredit
-sed -i.bkp '/runtimepath.*vlime/d; /runtimepath.*paredit/d' ~/.vimrc</code>
+sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
 </pre>
     <p>
       Optionally, remove <code>~/.sblrc</code> or edit it to remove the
@@ -985,7 +988,7 @@ pleasant and productive.
 
 <p>
 After getting started with Slimv or Vlime, the very next thing you might
-want to know is how to work with debugger. The debugger window comes
+want to know is how to work with the debugger. The debugger window comes
 up whenever an error or an unhandled condition occurs. It might look
 quite scary to a beginner, so it is a good idea to become comfortable
 with it as soon as possible. Fortunately, both Slimv and Vlime provide
@@ -2265,7 +2268,7 @@ GNU/Linux 10.1 (buster), the following error occurs:
 <p>
 Slimv works fine with Clojure too. However, it may have some trouble
 locating Clojure on the system if we attempt to start Swank server
-automatically with Clojure. That's because where and how Clojure is
+automatically with Clojure. That is because where and how Clojure is
 installed varies from operating system to operating system and also
 depends on the installation procedure chosen to set up Clojure.
 </p>
