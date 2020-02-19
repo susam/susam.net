@@ -196,11 +196,6 @@ blockquote *:last-child, td *:last-child, .highlight *:last-child {
   margin-right: auto;
 }
 
-/* Generic block element indentation */
-.indent {
-  margin-left: 1.5em;
-}
-
 /* Highlight Box */
 .highlight {
   /* Should be similar to pre style */
