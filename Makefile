@@ -129,7 +129,7 @@ TMP_REV = /tmp/rev.txt
 CAT_REV = cat $(TMP_REV)
 GIT_SRC = https://github.com/susam/susam.in
 GIT_DST = https://github.com/susam/susam.github.io
-WEB_URL = https://github.susam.io/
+WEB_URL = https://susam.github.io/
 TMP_GIT = /tmp/tmpgit
 README  = $(TMP_GIT)/README.md
 
