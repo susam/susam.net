@@ -164,6 +164,24 @@ Attempting to run Swank without Quicklisp leads to this error:
       Quicklisp not found. Please set up Quicklisp or install the
       dependencies for VLIME manually.
 
+### Tracing
+
+When the `\TD` command is entered in Vlime, the following error occurs:
+
+    SWANK-TRACE-DIALOG is not available.
+    Error detected while processing function vlime#plugin#OpenTraceDialog:
+    line   10:
+    E716: Key not present in Dictionary: ReportSpecs
+    Press ENTER or type command to continue
+
+Resolving this requires adding the following configuration in
+`~/.vimrc`:
+
+    let g:vlime_contribs = ['SWANK-ASDF', 'SWANK-PACKAGE-FU',
+                          \ 'SWANK-PRESENTATIONS', 'SWANK-FANCY-INSPECTOR',
+                          \ 'SWANK-C-P-C', 'SWANK-ARGLISTS', 'SWANK-REPL',
+                          \ 'SWANK-FUZZY', 'SWANK-TRACE-DIALOG']
+
 
 Run Vlime with CLISP
 --------------------
@@ -242,7 +260,7 @@ Run Slimv with GCL
     Too few arguments are supplied to defmacro-lambda-list.
 
     Broken at FUNCALL.  Type :H for Help.
-        1  Return to top level. 
+        1  Return to top level.
     SWANK-LOADER>>
 
 
@@ -375,7 +393,7 @@ error:
 Attempting to start it automatically also leads to the same error
 because Slimv executes this command:
 
-    clojure -i "/home/susam/.vim/pack/plugins/start/slimv/swank-clojure/swank/swank.clj" -e "(swank.swank/start-repl)" -r 
+    clojure -i "/home/susam/.vim/pack/plugins/start/slimv/swank-clojure/swank/swank.clj" -e "(swank.swank/start-repl)" -r
 
 
 ### CompilerException
