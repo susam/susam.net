@@ -169,7 +169,7 @@ checks:
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
 	# Ensure all page headings are hyperlinks to themselves.
-	! grep -IErn '<h1>' content | grep -vE '<h1><a href="./">'
+	! grep -IErn '<h1' content | grep -vE '<h1><a href="./">'
 	# Ensure all section headings are hyperlinks to themselves.
-	! grep -IErn '<h[2-6]>' content | grep -vE '<h[2-6] id=".*"><a|dixit:'
+	! grep -IErn '<h[2-6]' content | grep -vE '<h[2-6] id=".*"><a|dixit:'
 	@echo Done; echo
