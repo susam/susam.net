@@ -1161,8 +1161,8 @@ Contents:
     <p>
       Then press <kbd>enter</kbd> to execute this restart.
       Alternatively, enter <kbd>,</kbd><kbd>a</kbd> in normal mode to
-      select the abort restart or <kbd>,</kbd><kbd>q</kbd> to quit to
-      toplevel.
+      select the abort restart and quit to the previous level or
+      <kbd>,</kbd><kbd>q</kbd> to quit to top level.
     </p>
   </li>
 </ol>
@@ -1170,7 +1170,7 @@ Contents:
 <p>
 Most of the times when an error occurs, I quickly take a look at the
 stack trace to realize that I have made a silly mistake and enter the
-<kbd>,</kbd><kbd>a</kbd> command to select the abort restart. This is
+<kbd>,</kbd><kbd>q</kbd> command to abort and quit to top level. This is
 one of my most favourite commands in Slimv because it allows me to
 return from debugging to coding really fast with only two keystrokes.
 </p>
@@ -1724,7 +1724,7 @@ editing a Lisp source file:
       evaluate the entire buffer.
     </p>
     <p>
-      With Vlime, save the file and press
+      With Vlime, save the file, connect to Vlime server, and press
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile the
       entire buffer.
     </p>
@@ -1803,7 +1803,7 @@ in Slimv and Vlime:
       evaluate the entire buffer.
     </p>
     <p>
-      With Vlime, save the file and press
+      With Vlime, save the file, connect to Vlime server, and press
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile the
       entire buffer.
     </p>
@@ -1813,8 +1813,9 @@ in Slimv and Vlime:
     <p>
       With Slimv, place the cursor on any occurrence of the symbol
       <code>square</code> and enter <kbd>,</kbd><kbd>x</kbd><kbd>l</kbd>
-      in normal mode to list all callers of the function. The output
-      appears in the REPL buffer.
+      in normal mode. A prompt would appear to confirm the symbol name.
+      Press <kbd>enter</kbd> to confirm. The list of all callers should
+      now appear in the REPL buffer.
     </p>
     <p>
       With Vlime, place the cursor on any occurrence of the symbol

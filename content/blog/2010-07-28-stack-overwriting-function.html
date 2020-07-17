@@ -1,7 +1,8 @@
 <!-- title: Stack Overwriting Function -->
 <!-- tag: technology -->
 
-<h2 id="skipping">Skipping Over a Function Call</h2>
+<h2 id="skipping-over-a-function-call"><a
+  href="#skipping-over-a-function-call">Skipping Over a Function Call</a></h2>
 
 <p>
 Here is a C puzzle that involves some analysis of the machine code
@@ -69,7 +70,8 @@ operation. I'll share two solutions for two different implementations:
 </ol>
 
 
-<h2 id="gcc">Solution for GCC</h2>
+<h2 id="solution-for-gcc"><a
+ href="#solution-for-gcc">Solution for GCC</a></h2>
 
 <p>
 Let us first see step by step how I approached this problem for GCC. We
@@ -107,7 +109,7 @@ Then we compile the code and analyze the machine code generated for
 </p>
 
 <pre>
-<samp>$ <kbd>gcc -c overwrite.c && objdump -d overwrite.o</kbd>
+<samp>$ <kbd>gcc -c overwrite.c &amp;&amp; objdump -d overwrite.o</kbd>
 
 overwrite.o:     file format elf64-x86-64
 
@@ -206,17 +208,17 @@ stack is in the following state:
     <th>Size (in bytes)</th>
   </tr>
   <tr>
-    <td><code>&a + 5</code></td>
+    <td><code>&amp;a + 5</code></td>
     <td>Return address (old RIP)</td>
     <td>8</td>
   </tr>
   <tr>
-    <td><code>&a + 1</code></td>
+    <td><code>&amp;a + 1</code></td>
     <td>Old base pointer (old RBP)</td>
     <td>8</td>
   </tr>
   <tr>
-    <td><code>&a</code></td>
+    <td><code>&amp;a</code></td>
     <td>Variable <code>a</code></td>
     <td>1</td>
   </tr>
@@ -224,9 +226,9 @@ stack is in the following state:
 
 <p>
 If we add 9 to the address of the variable <code>a</code>, i.e.,
-<code>&a</code>, we get the address where the return address is stored.
-We saw earlier that if we increment this return address by 10 bytes, it
-solves the problem. Therefore here is the solution code:
+<code>&amp;a</code>, we get the address where the return address is
+stored. We saw earlier that if we increment this return address by 10
+bytes, it solves the problem. Therefore here is the solution code:
 </p>
 
 <pre>
@@ -235,7 +237,7 @@ solves the problem. Therefore here is the solution code:
 void f()
 {
     char a;
-    (&a)[9] += 10;
+    (&amp;a)[9] += 10;
 }
 
 int main()
@@ -254,13 +256,14 @@ works fine:
 </p>
 
 <pre>
-<samp>$ <kbd>gcc overwrite.c && ./a.out</kbd>
+<samp>$ <kbd>gcc overwrite.c &amp;&amp; ./a.out</kbd>
 1
 3</samp>
 </pre>
 
 
-<h2 id="visual-studio">Solution for Visual Studio</h2>
+<h2 id="solution-for-visual-studio"><a
+ href="#solution-for-visual-studio">Solution for Visual Studio</a></h2>
 
 <p>
 Now we will see another example solution, this time for Visual Studio
@@ -380,17 +383,17 @@ looks like this after <code>7</code> is assigned to the variable
     <th>Size (in bytes)</th>
   </tr>
   <tr>
-    <td><code>&a + 5</code></td>
+    <td><code>&amp;a + 5</code></td>
     <td>Return address (old EIP)</td>
     <td>4</td>
   </tr>
   <tr>
-    <td><code>&a + 1</code></td>
+    <td><code>&amp;a + 1</code></td>
     <td>Old base pointer (old EBP)</td>
     <td>4</td>
   </tr>
   <tr>
-    <td><code>&a</code></td>
+    <td><code>&amp;a</code></td>
     <td>Variable <code>a</code></td>
     <td>1</td>
   </tr>
@@ -398,8 +401,8 @@ looks like this after <code>7</code> is assigned to the variable
 
 <p>
 If we add 5 to the address of the variable <code>a</code>, i.e.,
-<code>&a</code>, we get the address where the return address is stored.
-Here is the solution code:
+<code>&amp;a</code>, we get the address where the return address is
+stored. Here is the solution code:
 </p>
 
 <pre>
@@ -408,7 +411,7 @@ Here is the solution code:
 void f()
 {
     char a;
-    (&a)[5] += 13;
+    (&amp;a)[5] += 13;
 }
 
 int main()
@@ -427,7 +430,7 @@ works fine:
 </p>
 
 <pre>
-<samp>C:\><kbd>cl /w overwrite.c</kbd>
+<samp>C:\&gt;<kbd>cl /w overwrite.c</kbd>
 Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14.00.50727.42
 for 80x86
 Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -439,13 +442,13 @@ Copyright (C) Microsoft Corporation.  All rights reserved.
 /out:overwrite.exe
 overwrite.obj
 
-C:\><kbd>overwrite.exe</kbd>
+C:\&gt;<kbd>overwrite.exe</kbd>
 1
 3</samp>
 </pre>
 
 
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
 
 <p>
 The machine code that the compiler generates for a given C code is
@@ -463,8 +466,8 @@ that I am using in the examples above.
 </p>
 
 <p>
-However, we can always arrive at the solution for any implementation of
-the compiler by determining what number to add to <code>&a</code> to get
+However, we can arrive at the solution for an implementation of the
+compiler by determining what number to add to <code>&amp;a</code> to get
 the address where the return address is saved on stack and what number
 to add to this return address to make it point to the instruction we
 want to skip to after <code>f()</code> returns.
