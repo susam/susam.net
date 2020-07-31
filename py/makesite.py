@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2018-2019 Susam Pal
+# Copyright (c) 2018-2020 Susam Pal
 # Licensed under the terms of the MIT License.
 
 # This software is a derivative of the original makesite.py.
@@ -69,6 +69,7 @@ def truncate(text, words=25):
     text = re.sub(r'(?s)</h[1-6]>', ':', text)
     text = re.sub(r'(?s)\\\(|\\\)|\\[|\\]|\\begin{.*?}|\\end{.*?}', '', text)
     text = re.sub(r'(?s)<.*?>', '', text)
+    text = re.sub(r'(?s)\\[a-z]*?{(.*?)}', r'\1', text)
     text = ' '.join(text.split()[:words])
     return text
 
