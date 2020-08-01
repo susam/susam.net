@@ -3,10 +3,12 @@
 
 <h2 id="optimal-lecture-time"><a
  href="#optimal-lecture-time">Optimal Lecture Time</a></h2>
+
 <p>
 I recently found this interesting paragraph from an article titled <a
 href="https://www.ams.org/notices/199701/comm-rota.pdf">Ten Lessons I
-Wish I Had Been Taught</a> written by Gian-Carlo Rota:
+Wish I Had Been Taught</a> that is based on a talk presented by
+Gian-Carlo Rota in Apr 1996:
 </p>
 
 <blockquote>
@@ -18,7 +20,7 @@ lectures.
 </blockquote>
 
 <p>
-That's a fine advice. In fact, the whole article is full of good advice
+That's fine advice. In fact, the whole article is full of good advice
 like this. Although it was written primarily for mathematicians, a lot
 of what is said in the article applies quite well to professionals in
 other fields too.
@@ -54,11 +56,11 @@ This looks incorrect to me. This is based on the oversimplified
 assumption that a century contains 36500 days, that is, it assumes that
 a century is a span of 100 years where each year has exactly 365 days.
 If a century were to have exactly 36500 days, then indeed it would have
-3153600000 seconds and one millionth of it would be 3153.6 seconds which
-is equivalent to 52 minutes 33.6 seconds. This looks consistent with the
-Wiktionary entry. However, an actual century on the calendar does not
-have exactly 36500 days. Some years are leap years, so the actual number
-of days in a century is more than that.
+3&#8239;153&#8239;600&#8239;000 seconds and one millionth of it would be
+3153.6 seconds which is equivalent to 52 minutes 33.6 seconds. This
+looks consistent with the Wiktionary entry. However, an actual century
+on the calendar does not have exactly 36500 days. Some years are leap
+years, so the actual number of days in a century is more than that.
 </p>
 
 
@@ -72,7 +74,7 @@ from the Julian calendar to the Gregorian calendar:
 <p>
 
 <pre>
-<samp><kbd>cal 9 1752</kbd>
+<samp>$ <kbd>cal 9 1752</kbd>
    September 1752
 Su Mo Tu We Th Fr Sa
        1  2 14 15 16
@@ -129,7 +131,7 @@ quick demonstration of this with a simple Python program:
 
 import datetime
 
-for year in range(1, 2500, 100):
+for year in range(1, 2400, 100):
     delta = datetime.date(year + 100, 1, 1) - datetime.date(year, 1, 1)
     print('{:04}-{:04}: {} d = {} s'
           .format(year, year + 100, delta.days, delta.total_seconds()))</code>
@@ -163,8 +165,7 @@ Here is the output of this program:
 2001-2101: 36524 d = 3155673600.0 s
 2101-2201: 36524 d = 3155673600.0 s
 2201-2301: 36524 d = 3155673600.0 s
-2301-2401: 36525 d = 3155760000.0 s
-2401-2501: 36524 d = 3155673600.0 s</samp>
+2301-2401: 36525 d = 3155760000.0 s</samp>
 </pre>
 
 <p>
@@ -176,5 +177,6 @@ is 52 minutes 35.6736 seconds or 52 minutes 35.7600 seconds.
 <h2 id="Conclusion"><a href="#conclusion">Conclusion</a></h2>
 
 <p>
-A microcentury is very close to 52 minutes 35.7 seconds long.
+If we round off the number of seconds in a microcentury to one decimal
+place, we can say that a microcentury has 52 minutes 35.7 seconds.
 </p>
