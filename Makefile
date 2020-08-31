@@ -5,6 +5,10 @@ MAIL = $(NAME)@$(FQDN)
 help:
 	@echo 'Usage: make [target]'
 	@echo
+	@echo 'Publish targets:'
+	@echo '  web     Publish website on susam.in.'
+	@echo '  gh      Publish website on GitHub Pages.'
+	@echo
 	@echo 'High-level targets:'
 	@echo '  setup   Install Debian packages.'
 	@echo '  https   Reinstall live website and serve with Nginx via HTTPS.'
@@ -123,6 +127,10 @@ clean:
 FORCE:
 
 
+web:
+	ssh -t susam.in "cd /opt/susam.in; sudo git pull; sudo make live"
+
+
 # GitHub Pages Mirror
 
 TMP_REV = /tmp/rev.txt
@@ -133,7 +141,7 @@ WEB_URL = https://susam.github.io/
 TMP_GIT = /tmp/tmpgit
 README  = $(TMP_GIT)/README.md
 
-ghmirror: site
+gh: site
 	#
 	# Create mirror.
 	rm -rf $(TMP_GIT)
