@@ -34,9 +34,9 @@ Tower of Brahma</em> that involves 64 discs made of pure gold and three
 diamond needles. According to a legend, a group of Brahmin priests are
 working at the problem and the world will end when the last move of the
 puzzle is completed. Now, even if they make one move every second, it'll
-take 18,446,744,073,709,551,615 seconds to complete the puzzle. That's
-about 585 billion years. The article also had this nice animation of a
-solution involving four discs.
+take 18&#8239;446&#8239;744&#8239;073&#8239;709&#8239;551&#8239;615
+seconds to complete the puzzle. That's about 585 billion years. The
+article also had this nice animation of a solution involving four discs.
 </p>
 
 <figure>
@@ -64,12 +64,12 @@ one afternoon.
 <h2 id="binary-numbers"><a href="#binary-numbers">Binary Numbers</a></h2>
 
 <p>
-Here is an interesting thing to note: If we denote the minimum number of
-moves required to solve the Tower of Hanoi puzzle as \( T_n, \) then \(
-T_n \) when expressed in binary is the largest possible \( n \)-bit
-integer. For example, \( T_4 = 15_{10} = 1111_{2}. \) That makes sense
-because \( T_n = 2^n - 1 \) indeed represents the maximum possible \( n
-\)-bit integer where all \( n \) bits are set to \( 1. \)
+If we denote the minimum number of moves required to solve the Tower of
+Hanoi puzzle as \( T_n, \) then \( T_n \) when expressed in binary is
+the largest possible \( n \)-bit integer. For example, \( T_4 = 15_{10}
+= 1111_{2}. \) That makes sense because \( T_n = 2^n - 1 \) indeed
+represents the maximum possible \( n \)-bit integer where all \( n \)
+bits are set to \( 1. \)
 </p>
 
 <p>
@@ -82,8 +82,8 @@ problem in a later section below.
 <h2 id="assumptions"><a href="#assumptions">Assumptions</a></h2>
 
 <p>
-Before proceeding to the problem, let us define a few things to
-eliminate any possibility of ambiguity:
+Before proceeding to the problem, let us define the bit-length of an
+integer to eliminate any possibility of ambiguity:
 </p>
 
 <ul>
@@ -119,7 +119,7 @@ conclusions:
 <ul>
   <li>
     Adding or subtracting two integers \( a \) and \( b \) takes \(
-    O(\log(max(a, b))) \) time.
+    O(\log(\max(a, b))) \) time.
   </li>
   <li>
     Counting the number of \( 1 \)-bits in an integer \( a \) takes
@@ -147,7 +147,7 @@ the \( n \) integers. The sum is an \( (n + 1) \)-bit integer, so it
 takes \( O(n) \) time to count the number of \( 1 \)-bits in the sum.
 Since the sum is \( (n + 1) \)-bit long, it takes \( O(n) \) memory to
 store the sum. If \( n \) is as large as, say, \( 2^{64}, \) it takes
-2 exbibytes plus one more byte of memory to store the sum.
+2 exbibytes plus one more bit of memory to store the sum.
 </p>
 
 <p>
@@ -160,15 +160,15 @@ T_1 + T_2 + \dots + T_n
   & = (2 - 1) + (2^2 - 1) + \dots + (2^n - 1) \\
   & = (2 + 2^2 + \dots + 2^n) - n \\
   & = (2^{n + 1} - 2) - n \\
-  & = (2^{n + 1} - 1) - (n - 1).
+  & = (2^{n + 1} - 1) - (n + 1).
 \end{align*}
 </p>
 
 <p>
 Now \( 2^{n + 1} - 1 \) is an \( (n + 1) \)-bit number with all its bits
-set to \( 1. \) Subtracting \( n - 1 \) from it is equivalent to
+set to \( 1. \) Subtracting \( n + 1 \) from it is equivalent to
 performing the following operation with their binary representations:
-for each \( 1 \)-bit in \( (n - 1), \) set the corresponding bit in \(
+for each \( 1 \)-bit in \( (n + 1), \) set the corresponding bit in \(
 (2^{n + 1} - 1) \) to \( 0. \)
 </p>
 
@@ -179,20 +179,20 @@ integer \( n, \) then we get
 
 \[
 \text{bitcount}(T_1 + T_2 + \dots + T_n)
-  = (n + 1) - \text{bitcount}(n - 1).
+  = (n + 1) - \text{bitcount}(n + 1).
 \]
 </p>
 
 <p>
 Now the computation involves counting the number of \( 1 \)-bits in \( n
-- 1 \) which takes \( O(\log n) \) and subtracting this count from \( n
++ 1 \) which takes \( O(\log n) \) and subtracting this count from \( n
 + 1 \) which also takes \( O(\log n) \) time. Further, the largest
-numbers that we keep in memory are \( n + 1 \) and \( n - 1 \) which
-occupy \( O(\log n) \) space each. Therefore, the entire problem can be
-solved in \( O(\log n) \) time with \( O(\log n) \) space.
+number that we keep in memory is \( n + 1 \) which occupies \( O(\log n)
+\) space. Therefore, the entire problem can be solved in \( O(\log n) \)
+time with \( O(\log n) \) space.
 </p>
 
 <p>
-What would have taken over 2 exbibytes of memory with the naive approach
-requires a little over 8 bytes of memory now.
+What would have taken 2 exbibytes and 1 bit of memory with the naive
+approach requires 8 bytes and 1 bit of memory now.
 </p>
