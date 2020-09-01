@@ -476,7 +476,7 @@ def make_home(posts, page_layout, **params):
     subtitle = re.search('<strong>(.*)</strong>', home_layout).group(1)
     subtitle = ' - ' + subtitle
     home_params = dict(params, title=title, subtitle=subtitle)
-    make_list(posts[:5], '_site/index.html', home_layout, item_layout,
+    make_list(posts[:10], '_site/index.html', home_layout, item_layout,
               blog='blog', **home_params)
 
 
