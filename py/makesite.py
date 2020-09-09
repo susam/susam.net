@@ -235,8 +235,10 @@ def make_list(posts, dst, list_layout, item_layout, **params):
         item = render(item_layout, **item_params)
         items.append(item)
 
+    count = len(posts)
     params['content'] = ''.join(items)
-    params['count'] = len(posts)
+    params['count'] = count
+    params['post_label'] = 'post' if count == 1 else 'posts'
     if 'import' in params:
         params['imports'] = head_content(params['import'], params['root'])
 
@@ -270,7 +272,8 @@ def make_tags(posts, dst,
         params['content'] = ''.join(items)
         params['tag'] = tag
         params['count'] = count
-        params['tag_title'] = tag.capitalize()
+        params['post_label'] = 'post' if count == 1 else 'posts'
+        params['tag_title'] = tag.title()
         dst_path = render(dst, **params)
         header.append(render(tagh_layout, **params))
         content.append(render(tagc_layout, **params))
@@ -388,12 +391,12 @@ def make_comment_list(post, comments, dst,
     slug = post['slug']
 
     count = len(comments)
-    count_label = '{} comment{}'.format(count, 's' if count != 1 else '')
 
     items = []
     for index, comment in enumerate(comments, 1):
         item_params = dict(params, index=index, **comment)
-        item_params['count_label'] = count_label
+        item_params['count'] = count
+        item_params['comment_label'] = 'comment' if count == 1 else 'comments'
         item_params['retrieved'] = ''
         source_url = item_params.get('source')
         if source_url is not None:
@@ -489,7 +492,7 @@ def make_text_dir(src, page_layout, **params):
     list_layout = render(page_layout, content=list_layout)
     file_list = read_files(src)
     file_list = sorted(file_list, key=lambda x: x['basename'], reverse=True)
-    title = topic.capitalize() + ' Files'
+    title = topic.title() + ' Files'
     make_list(file_list, '_site/' + path + '/index.html',
               list_layout, item_layout, title=title, dirname=path, **params)
 
