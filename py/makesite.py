@@ -251,7 +251,7 @@ def make_list(posts, dst, list_layout, item_layout, **params):
 
 
 def make_tags(posts, dst,
-              tags_layout, tagh_layout, tagc_layout,
+              tags_layout, tagh_layout, tagl_layout,
               item_layout, **params):
     """Generate tags page for a blog."""
     tag_map = collections.defaultdict(list)
@@ -276,7 +276,7 @@ def make_tags(posts, dst,
         params['tag_title'] = tag.title()
         dst_path = render(dst, **params)
         header.append(render(tagh_layout, **params))
-        content.append(render(tagc_layout, **params))
+        content.append(render(tagl_layout, **params))
 
     params['header'] = ''.join(header)
     params['content'] = ''.join(content)
@@ -292,7 +292,7 @@ def make_blog(src, page_layout, **params):
     list_layout = fread('layout/blog/list.html')
     tags_layout = fread('layout/blog/tags.html')
     tagh_layout = fread('layout/blog/tagh.html')
-    tagc_layout = fread('layout/blog/tagc.html')
+    tagl_layout = fread('layout/blog/tagl.html')
     item_layout = fread('layout/blog/item.html')
     feed_xml = fread('layout/blog/feed.xml')
     item_xml = fread('layout/blog/item.xml')
@@ -319,7 +319,7 @@ def make_blog(src, page_layout, **params):
 
     params['root'] = post_root
     make_tags(listed_posts, '_site/blog/tags/index.html',
-              tags_layout, tagh_layout, tagc_layout, item_layout,
+              tags_layout, tagh_layout, tagl_layout, item_layout,
               blog='blog', title="Posts by Tags", **params)
 
     # Create RSS feeds.
