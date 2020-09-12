@@ -6,6 +6,7 @@ help:
 	@echo 'Usage: make [target]'
 	@echo
 	@echo 'Publish targets:'
+	@echo '  pub     Invoke all publish targets.'
 	@echo '  web     Publish website on susam.in.'
 	@echo '  gh      Publish website on GitHub Pages.'
 	@echo
@@ -126,6 +127,8 @@ clean:
 
 FORCE:
 
+
+pub: web gh
 
 web:
 	ssh -t susam.in "cd /opt/susam.in; sudo git pull; sudo make live"
