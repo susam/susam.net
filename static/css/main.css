@@ -165,6 +165,22 @@ ul.posts {
 }
 
 
+/* Reading */
+.reading section {
+  border: thin dotted;
+  padding: 0.625em;
+  margin: 1em 0;
+}
+
+.reading section h3 {
+  margin-top: 0;
+}
+
+.reading section :last-child {
+  margin-bottom: 0;
+}
+
+
 /* Home page */
 p.summary {
   margin-bottom: 0.25em;
@@ -436,11 +452,11 @@ a:hover, a:active {
 }
 
 /* Comment border colors */
-.comment {
+.comment, .reading section {
   border-color: #666;
 }
 
-.dark .comment {
+.dark .comment, .dark .reading section {
   border-color: #999;
 }
 
