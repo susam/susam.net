@@ -83,7 +83,7 @@ _HEADER_TEXT_RE = re.compile(_HEADER_TEXT_RE)
 
 def read_headers(text, pos=0):
     """Parse headers in text and yield (key, value, end-index) tuples."""
-    for match in _HEADER_TEXT_RE.finditer(text, pos):
+    for match in _HEADER_RE.finditer(text, pos):
         if not match.group(1):
             break
         yield match.group(1), match.group(2), match.end()
@@ -176,7 +176,7 @@ def head_content(import_header, root):
             code = ('<link rel="stylesheet" href="{}css/{}">'
                     .format(root, token))
         else:
-            raise ValueError('unknown type: {} in {}'
+            raise ValueError('Unknown import type {!r} in {!r}'
                              .format(token, import_header))
         imports.append(code)
     return '\n'.join(imports)
@@ -467,6 +467,102 @@ def make_comments(src, posts, page_layout, **params):
             make_comments_none(post, dst, none_layout, blog='blog', **params)
 
 
+
+_SECTION_RE = re.compile('\s*<!--\s*(note|quote)\s*-->\s*')
+
+
+def parse_reading_content(post):
+    """Parse reading content into quotes and notes."""
+    begin = -1
+    for match in _SECTION_RE.finditer(post['content']):
+        end = match.start()
+        if begin != -1:
+            if kind not in post:
+                post[kind] = []
+            post[kind].append(post['content'][begin:end] + '\n')
+        kind = match.group(1)
+        begin = match.end()
+
+    if begin != -1:
+        if kind not in post:
+            post[kind] = []
+        post[kind].append(post['content'][begin:])
+    return post
+
+
+def make_reading(src, page_layout, **params):
+    """Generate reading listing."""
+    tag_attrs = collections.OrderedDict({
+        # tag: (title, singular_label, plural_label)
+        'non-fiction': ('Non-Fiction', 'book', 'books'),
+        'technical': ('Technical', 'book', 'books'),
+        'textbook': ('Textbooks', 'book', 'books'),
+        'paper': ('Papers', 'paper', 'papers'),
+        'fiction': ('Fiction', 'book', 'books'),
+    })
+    # Read file content.
+    read_layout = fread('layout/reading/read.html')
+    tagl_layout = fread('layout/reading/tagl.html')
+    item_layout = fread('layout/reading/tagi.html')
+    tocl_layout = fread('layout/reading/tocl.html')
+    toci_layout = fread('layout/reading/toci.html')
+    read_layout = render(page_layout, content=read_layout)
+
+    tag_map = collections.defaultdict(list)
+    for src_path in glob.glob(src):
+        post = parse_reading_content(read_content(src_path))
+        tag = post['tag']
+        if tag not in tag_attrs:
+            msg = 'Unknown tag {!r} in {}'.format(tag, src_path)
+            raise ValueError(msg)
+        tag_map[tag].append(post)
+
+    toc_list = []
+    tag_list = []
+
+    for tag, (tag_title, singular_label, plural_label) in tag_attrs.items():
+        # Ignore tags with no posts.
+        count = len(tag_map[tag])
+        if count == 0:
+            continue
+
+        tag_params = dict(params)
+        tag_params['tag'] = tag
+        tag_params['tag_title'] = tag.title()
+        tag_params['count'] = count
+        tag_params['tag_label'] = (singular_label if count == 1 else
+                                   plural_label)
+
+        toc_items = []
+        tag_items = []
+
+        posts = tag_map[tag]
+        posts = sorted(posts, key=lambda x: x['date'], reverse=True)
+
+        for post in posts:
+            item_params = dict(params, **post)
+            quotes = ['<blockquote>\n{}</blockquote>\n'.format(quote)
+                      for quote in post['quote']]
+            item_params['quotes'] = ''.join(quotes)
+            item_params['notes'] = ''.join(post['note'])
+            item_params['quote_title'] = ('An Excerpt' if len(quotes) == 1 else
+                                          'Some Excerpts')
+            tag_items.append(render(item_layout, **item_params))
+            toc_items.append(render(toci_layout, **item_params))
+
+        toc_list.append(render(tocl_layout, content=''.join(toc_items), **tag_params))
+        tag_list.append(render(tagl_layout, content=''.join(tag_items), **tag_params))
+
+    read_params = dict(params)
+    read_params['content'] = ''.join(tag_list)
+    read_params['toc'] = ''.join(toc_list)
+
+    dst_path = '_site/reading/index.html'
+    set_canonical_url(read_params, dst_path)
+    output = render(read_layout, title='My Reading Log', **read_params)
+    fwrite(dst_path, output)
+
+
 # Other Sections
 # ==============
 def make_home(posts, page_layout, **params):
@@ -569,6 +665,10 @@ def main():
     params['root'] = '../'
     make_music('content/music/*.html', page_layout, **params)
 
+    # Reading.
+    params['root'] = '../'
+    make_reading('content/reading/*.html', page_layout, **params)
+
     # Special directories.
     params['root'] = '../'
     make_text_dir('static/security/*.txt', page_layout, **params)
@@ -593,7 +693,7 @@ def checks():
     # For each comment file, there must exist a post file.
     for comment in comments:
         if comment not in posts:
-            msg = 'Cannot find post for comment file: ' + comment
+            msg = 'Cannot find post for comment file ' + comment
             raise LookupError(msg)
 
 
