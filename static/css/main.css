@@ -139,7 +139,6 @@ ul.posts {
 /* Post */
 .meta {
   font-size: small;
-  font-style: italic;
 }
 
 
@@ -418,19 +417,23 @@ blockquote {
 }
 
 /* Link colors */
-a:link, a:visited {
+a:link, a:visited,
+.reading a.extra:link, .reading a.extra:visited {
   color: #03c;
 }
 
-a:hover, a:active {
+a:hover, a:active,
+.reading a.extra:hover, .reading a.extra:active {
   color: #03f;
 }
 
-.dark a:link, .dark a:visited {
+.dark a:link, .dark a:visited,
+.dark .reading a.extra:link, .dark .reading a.extra:visited {
   color: #7ae;
 }
 
-.dark a:hover, .dark a:active {
+.dark a:hover, .dark a:active,
+.dark .reading a.extra:hover, .dark .reading a.extra:active {
   color: #8bf;
 }
 
