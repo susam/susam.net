@@ -471,7 +471,7 @@ def make_comments(src, posts, page_layout, **params):
 _SECTION_RE = re.compile('\s*<!--\s*(note|quote)\s*-->\s*')
 
 
-def parse_reading_content(post):
+def set_parsed_reading_content(post):
     """Parse reading content into quotes and notes."""
     begin = -1
     for match in _SECTION_RE.finditer(post['content']):
@@ -487,7 +487,21 @@ def parse_reading_content(post):
         if kind not in post:
             post[kind] = []
         post[kind].append(post['content'][begin:])
-    return post
+
+
+def set_reading_extra_meta(post):
+    """Populate extra meta data to be rendered for reading posts."""
+    key_attrs = collections.OrderedDict({
+        'pdf': 'PDF',
+        'url': 'url',
+    })
+    extra = []
+    for key, key_label in key_attrs.items():
+        url = post.get(key)
+        if url is not None:
+            extra.append(' [<a href="{}" class="extra">{}</a>]'
+                         .format(url, key_label))
+    post['extra'] = ''.join(extra)
 
 
 def make_reading(src, page_layout, **params):
@@ -510,7 +524,9 @@ def make_reading(src, page_layout, **params):
 
     tag_map = collections.defaultdict(list)
     for src_path in glob.glob(src):
-        post = parse_reading_content(read_content(src_path))
+        post = read_content(src_path)
+        set_parsed_reading_content(post)
+        set_reading_extra_meta(post)
         tag = post['tag']
         if tag not in tag_attrs:
             msg = 'Unknown tag {!r} in {}'.format(tag, src_path)
@@ -556,6 +572,7 @@ def make_reading(src, page_layout, **params):
     read_params = dict(params)
     read_params['content'] = ''.join(tag_list)
     read_params['toc'] = ''.join(toc_list)
+    read_params['imports'] = head_content('tex.js', params['root'])
 
     dst_path = '_site/reading/index.html'
     set_canonical_url(read_params, dst_path)
