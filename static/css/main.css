@@ -94,18 +94,21 @@ a:hover, a:active {
   text-decoration: underline
 }
 
-.links a {
+.links {
   font-size: small;
   font-weight: bold;
+}
+
+.links span {
   margin-right: 1em;
 }
 
-.links a:last-child {
+.links span:last-child {
   margin-right: 0;
 }
 
 /* Footer */
-footer .links a {
+footer .links {
   font-size: medium;
   font-weight: normal;
   margin-top: 1em;
@@ -185,8 +188,8 @@ p.summary {
   margin-bottom: 0.25em;
 }
 
-.all {
-  margin-top: 1em;
+.all.links, .comments .links, .tags .links {
+  margin: 1em 0em;
 }
 
 
