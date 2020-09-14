@@ -8,7 +8,7 @@
   font-weight: bold;
 }
 
-.music .links a:last-child {
+.music .links span:last-child {
   display: none; /* Hide 'details' link */
 }
 
