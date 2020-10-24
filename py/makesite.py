@@ -83,7 +83,7 @@ _HEADER_TEXT_RE = re.compile(_HEADER_TEXT_RE)
 
 def read_headers(text, pos=0):
     """Parse headers in text and yield (key, value, end-index) tuples."""
-    for match in _HEADER_RE.finditer(text, pos):
+    for match in _HEADER_TEXT_RE.finditer(text, pos):
         if not match.group(1):
             break
         yield match.group(1), match.group(2), match.end()
