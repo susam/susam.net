@@ -6,3 +6,50 @@ Very nice solution! It is quite interesting that this does not work for
 \( e^x. \) I wonder if there is any general way to tell for any
 function.
 </p>
+<!-- date: 2020-09-24 09:15:40 +0000 -->
+<!-- name: Eschborn -->
+<p>
+This is a nice example for why the axiom of choice is controversial. The
+proof from this blog post only works because of it. However, the result
+seems counter-intuitive. Let us have a look at whether this is only our
+intuition being off or whether functions with these properties are just
+"weird".
+</p>
+<p>
+When speaking of periodic functions the first that comes to mind is the
+\( \sin \) function. Can something similar to such a function be used to
+construct the functions \( g \) and \( h \) from the blog post? If we
+define them similar to \( \sin \) as periodic and continuous, then the
+answer is no. Every periodic and continuous function has a maximum
+value. The sum of two functions with a maximum value has a maximum
+value. However, the identity is unbounded. The sum can therefore not be
+the identity.
+</p>
+<p>
+Okay, so \( \sin \)-like functions are out. What about \( \tan \)-like
+functions? For example \( \tan(x) \) and \( -\tan(2x) \)? Those are not
+continuous everywhere. Well, we can also rule out many functions like
+this. Suppose \( g \) and \( h \) are two periodic functions with period
+lengths \( a \) and \( b \). If \( \frac{a}{b} \) is rational, then the
+sum of \( g \) and \( h \) cannot be the identity function. Suppose that
+\( \frac{a}{b} \) was rational, then \( ab \) is a common period of both
+functions, i.e., \( g(x) = g(x + ab) \) and \( h(x) = h(x + ab). \) It
+follows that \( (g + h)(x) = (g + h)(x + ab). \) As \( a \) and \( b \)
+are non-zero, it follows that \( g + h \) cannot be the identity
+function. Functions of the form \( a \tan(bx) \) for rational \( b \)
+thus do not work. Any two periodic functions where you can reason about
+their sum by just looking at what happens for individual periods are
+thus ruled out.
+</p>
+<p>
+My conclusion is that the two periodic functions from the blog post must
+look "weird".
+</p>
+<p>
+A common theme with axiom of choice proofs is also that they show the
+existence of something but give no hint at how this something actually
+looks like. The proof in this blog post is a good example of this. We
+know that the functions "exist" but have absolutely no clue about how
+they look like. It is also an open question whether describing them in
+any other way than "the function from this proof" is even possible.
+</p>
