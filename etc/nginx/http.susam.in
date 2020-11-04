@@ -13,6 +13,14 @@ server {
     location /files/ {
         autoindex on;
     }
+
+    location = /articles/boot-sector-code/ {
+        return 301 /blog/writing-boot-sector-code/;
+    }
+
+    location = /blog/urls-in-c/ {
+        return 301 /blog/url-in-c/;
+    }
 }
 
 # http://www.example.com/ => http://example.com/
