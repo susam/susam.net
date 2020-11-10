@@ -104,7 +104,7 @@ live: site
 
 site:
 	@echo Generating website ...
-	python3 -m py.makesite
+	python3 -m makesite
 	@echo Done; echo
 
 pull:
