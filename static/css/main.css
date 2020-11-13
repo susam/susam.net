@@ -70,7 +70,7 @@ blockquote {
 
 
 /* Layout */
-header, main, footer {
+main, footer {
   max-width: 42em;
   margin-left: auto;
   margin-right: auto;
@@ -108,9 +108,8 @@ a:hover, a:active {
 }
 
 /* Footer */
+
 footer .links {
-  font-size: medium;
-  font-weight: normal;
   margin-top: 1em;
   margin-bottom: 1em;
 }
@@ -135,13 +134,22 @@ footer .icons img {
 
 /* Blog Listing */
 ul.posts {
-  padding-left: 1em;
+  list-style-type: none;
+  padding: 0;
+}
+
+.posts li {
+  margin: 0.25em 0;
 }
 
 
 /* Post */
 .meta {
   font-size: small;
+}
+
+.count {
+  margin-top: 0.5em;
 }
 
 

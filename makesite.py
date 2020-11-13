@@ -170,10 +170,10 @@ def head_content(import_header, root):
     imports = []
     for token in tokens:
         if token.endswith('.js'):
-            code = ('<script src="{}js/{}"></script>'
+            code = ('\n  <script src="{}js/{}"></script>'
                     .format(root, token))
         elif token.endswith('.css'):
-            code = ('<link rel="stylesheet" href="{}css/{}">'
+            code = ('\n  <link rel="stylesheet" href="{}css/{}">'
                     .format(root, token))
         else:
             raise ValueError('Unknown import type {!r} in {!r}'
@@ -589,10 +589,12 @@ def make_home(posts, page_layout, **params):
     home_layout = render(page_layout, content=home_layout)
 
     title = params['author']
-    subtitle = re.search('<strong>(.*)</strong>', home_layout).group(1)
+    subtitle = re.search(r'(?s)<strong>(.*)</strong>', home_layout).group(1)
+    subtitle = re.sub(r'(?s)<.*?>', '', subtitle)
+    subtitle = re.sub(r'\s+', ' ', subtitle).strip()
     subtitle = ' - ' + subtitle
     home_params = dict(params, title=title, subtitle=subtitle)
-    make_list(posts[:10], '_site/index.html', home_layout, item_layout,
+    make_list(posts, '_site/index.html', home_layout, item_layout,
               blog='blog', **home_params)
 
 
