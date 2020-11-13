@@ -6,40 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="{{ root }}css/main.css">
   <link rel="icon" type="image/png" href="{{ root }}favicon.png">
-  <link rel="canonical" href="{{ canonical_url }}">
-  {{ imports }}
+  <link rel="canonical" href="{{ canonical_url }}">{{ imports }}
 </head>
-
 <body>
 <script>
 if (localStorage.getItem('dark') === 'yes') {
   document.body.className = 'dark'
 }
 </script>
-{{ content }}
-
-<hr>
-
+{{ content }}<hr>
 <footer>
-  <div class="links">
-      <span><a href="{{ root }}">Home</a></span>
-      <span><a href="{{ root }}blog/">Blog</a></span>
-      <span><a href="{{ root }}about/">About</a></span>
-  </div>
-  <div class="icons">
-      <a href="{{ root }}blog/rss.xml"><img
-         src="{{ root }}img/footer/feed.svg" alt="Feed" title="RSS Feed"></a>
-      <a href="{{ root }}dark/"><img
-         src="{{ root }}img/footer/moon.svg" alt="Dark" title="Dark Mode"></a>
-      <a href="https://github.com/susam"><img
-         src="{{ root }}img/footer/github.svg" alt="GitHub" title="GitHub"></a>
-      <a href="https://twitter.com/susam"><img
-         src="{{ root }}img/footer/twitter.svg" alt="Twitter" title="Twitter"></a>
-      <a href="https://www.linkedin.com/in/susam/"><img
-         src="{{ root }}img/footer/linkedin.svg" alt="LinkedIn" title="LinkedIn"></a>
-  </div>
+  <nav class="links">
+    <span>[<a class="feed" href="{{ root }}">Home</a>]</span>
+    <span>[<a class="feed" href="{{ root }}blog/rss.xml">Feed</a>]</span>
+    <span>[<a class="feed" href="{{ root }}dark/">Dark</a>]</span>
+    <span>[<a class="feed" href="{{ root }}about/">About</a>]</span>
+    <span>[<a class="feed" href="https://github.com/susam">GitHub</a>]</span>
+    <span>[<a class="feed" href="https://twitter.com/susam">Twitter</a>]</span>
+  </nav>
   <p>&copy; 2006&ndash;{{ current_year }} Susam Pal</p>
 </footer>
-
 </body>
 </html>
