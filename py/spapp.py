@@ -6,7 +6,7 @@ import urllib.parse
 import datetime
 import random
 
-from py.makesite import fread, render
+from makesite import fread, render
 
 
 def app(environ, start_response):
