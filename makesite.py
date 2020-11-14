@@ -637,7 +637,7 @@ def main():
         'base_path': '',
         'subtitle': ' - Susam Pal',
         'author': 'Susam Pal',
-        'site_url': 'https://susam.in',
+        'site_url': 'https://susam.in/',
         'current_year': datetime.datetime.now().year,
         'imports': ''
     }
