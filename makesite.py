@@ -312,7 +312,7 @@ def make_blog(src, page_layout, **params):
     listed_posts = [post for post in posts if post.get('list') != 'no']
 
     # Create blog list page as the home page.
-    params['root'] = ''
+    params['root'] = './'
     make_list(listed_posts, '_site/index.html',
               list_layout, item_layout,
               blog='blog', title="Susam's Blog", **params)

@@ -94,44 +94,26 @@ a:hover, a:active {
   text-decoration: underline
 }
 
-.links {
+.links a {
   font-size: small;
   font-weight: bold;
-}
-
-.links span {
   margin-right: 1em;
+  line-height: 2.5em;
 }
 
-.links span:last-child {
+.links a:last-child {
   margin-right: 0;
+}
+
+.links a::before {
+  content: "[";
+}
+
+.links a::after {
+  content: "]";
 }
 
 /* Footer */
-
-footer .links {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-footer .links, footer .icons {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-footer .icons a {
-  margin-right: 0.5em;
-}
-
-footer .icons a:last-child {
-  margin-right: 0;
-}
-
-footer .icons img {
-  height: 1.25em;
-}
-
-
 /* Blog Listing */
 ul.posts {
   list-style-type: none;
@@ -480,26 +462,6 @@ a:hover, a:active,
   color: #bbb;
   border-color: #666;
 }
-
-/* Social media icon colors */
-.icons img {
-  opacity: 0.8; /* 1 - 0x33 / 0xff */
-}
-
-.icons img:hover {
-  opacity: 0.6; /* 1 - 0x66 / 0xff */
-}
-
-.dark .icons img {
-  opacity: 1;
-  filter: invert(0.667); /* 0xaa / 0xff */
-}
-
-.dark .icons img:hover {
-  opacity: 1;
-  filter: invert(0.8);  /* 0xcc / 0xff */
-}
-
 
 /* Table rule colors */
 table, thead, tr, th, td {

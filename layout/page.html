@@ -17,12 +17,12 @@ if (localStorage.getItem('dark') === 'yes') {
 {{ content }}<hr>
 <footer>
   <nav class="links">
-    <span>[<a class="feed" href="{{ root }}">Home</a>]</span>
-    <span>[<a class="feed" href="{{ root }}blog/rss.xml">Feed</a>]</span>
-    <span>[<a class="feed" href="{{ root }}dark/">Dark</a>]</span>
-    <span>[<a class="feed" href="{{ root }}about/">About</a>]</span>
-    <span>[<a class="feed" href="https://github.com/susam">GitHub</a>]</span>
-    <span>[<a class="feed" href="https://twitter.com/susam">Twitter</a>]</span>
+    <a class="feed" href="{{ root }}">Home</a>
+    <a class="feed" href="{{ root }}blog/rss.xml">Feed</a>
+    <a class="feed" href="{{ root }}dark/">Dark</a>
+    <a class="feed" href="{{ root }}about/">About</a>
+    <a class="feed" href="https://github.com/susam">GitHub</a>
+    <a class="feed" href="https://twitter.com/susam">Twitter</a>
   </nav>
   <p>&copy; 2006&ndash;{{ current_year }} Susam Pal</p>
 </footer>
