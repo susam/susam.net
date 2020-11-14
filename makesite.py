@@ -311,16 +311,17 @@ def make_blog(src, page_layout, **params):
                        post_layout, blog='blog', **params)
     listed_posts = [post for post in posts if post.get('list') != 'no']
 
-    # Create blog list pages.
-    params['root'] = blog_root
-    make_list(listed_posts, '_site/blog/index.html',
+    # Create blog list page as the home page.
+    params['root'] = ''
+    make_list(listed_posts, '_site/index.html',
               list_layout, item_layout,
               blog='blog', title="Susam's Blog", **params)
 
-    params['root'] = post_root
-    make_tags(listed_posts, '_site/blog/tags/index.html',
+    # Create tag list page as the blog page.
+    params['root'] = blog_root
+    make_tags(listed_posts, '_site/blog/index.html',
               tags_layout, tagh_layout, tagl_layout, item_layout,
-              blog='blog', title="Posts by Tags", **params)
+              blog='blog', title="Susam's Blog", **params)
 
     # Create RSS feeds.
     make_list(listed_posts, '_site/blog/rss.xml',
@@ -582,22 +583,6 @@ def make_reading(src, page_layout, **params):
 
 # Other Sections
 # ==============
-def make_home(posts, page_layout, **params):
-    """Generate home page."""
-    home_layout = fread('layout/home/list.html')
-    item_layout = fread('layout/home/item.html')
-    home_layout = render(page_layout, content=home_layout)
-
-    title = params['author']
-    subtitle = re.search(r'(?s)<strong>(.*)</strong>', home_layout).group(1)
-    subtitle = re.sub(r'(?s)<.*?>', '', subtitle)
-    subtitle = re.sub(r'\s+', ' ', subtitle).strip()
-    subtitle = ' - ' + subtitle
-    home_params = dict(params, title=title, subtitle=subtitle)
-    make_list(posts, '_site/index.html', home_layout, item_layout,
-              blog='blog', **home_params)
-
-
 def make_text_dir(src, page_layout, **params):
     """Generate directory listing."""
     path = '/'.join(src.split('/')[1:-1]) # static/dir/topic/*.txt => dir/topic
@@ -674,11 +659,6 @@ def main():
     # Comments.
     params['root'] = '../../../'
     make_comments('content/comments/*.html', posts, page_layout, **params)
-
-    # Home page.
-    listed_posts = [post for post in posts if post.get('list') != 'no']
-    params['root'] = ''
-    make_home(listed_posts, page_layout, **params)
 
     # Music.
     params['root'] = '../'
