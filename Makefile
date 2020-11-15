@@ -190,4 +190,8 @@ checks:
 	! grep -IErn '<h1' content | grep -vE '<h1><a href="./">'
 	# Ensure all section headings are hyperlinks to themselves.
 	! grep -IErn '<h[2-6]' content | grep -vE '<h[2-6] id=".*"><a|dixit:'
+	# Ensure http.susam.in and https.susam.in are consistent.
+	sed -n '/location/,/^}/p' etc/nginx/http.susam.in > /tmp/http.susam.in
+	sed -n '/location/,/^}/p' etc/nginx/https.susam.in > /tmp/https.susam.in
+	diff -u /tmp/http.susam.in /tmp/https.susam.in
 	@echo Done; echo
