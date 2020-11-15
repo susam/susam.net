@@ -17,10 +17,10 @@ if (localStorage.getItem('dark') === 'yes') {
 {{ content }}<hr>
 <footer class="textcenter">
   <nav class="links">
-    <a class="feed" href="{{ root }}">Home</a>
+    <a class="feed" href="{{ root }}{{ index }}">Home</a>
     <a class="feed" href="{{ root }}blog/rss.xml">Feed</a>
-    <a class="feed" href="{{ root }}dark/">Dark</a>
-    <a class="feed" href="{{ root }}about/">About</a>
+    <a class="feed" href="{{ root }}dark/{{ index }}">Dark</a>
+    <a class="feed" href="{{ root }}about/{{ index }}">About</a>
     <a class="feed" href="https://github.com/susam">GitHub</a>
     <a class="feed" href="https://twitter.com/susam">Twitter</a>
   </nav>

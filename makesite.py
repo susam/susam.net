@@ -308,7 +308,7 @@ def make_blog(src, page_layout, **params):
     # Read all posts.
     params['root'] = post_root
     posts = make_pages(src, '_site/blog/{{ slug }}/index.html',
-                       post_layout, blog='blog', **params)
+                       post_layout, blog='blog', render='yes', **params)
     listed_posts = [post for post in posts if post.get('list') != 'no']
 
     # Create blog list page as the home page.
@@ -617,7 +617,7 @@ def make_music(src, page_layout, **params):
     posts = make_pages(src,
                        '_site/music/{{ slug }}/index.html',
                        post_layout, blog='music', render='yes',
-                       **music_params, callback=make_widget)
+                       callback=make_widget, **music_params)
 
     music_params['root'] = params['root']
     make_list(posts, '_site/music/index.html',
@@ -639,7 +639,8 @@ def main():
         'author': 'Susam Pal',
         'site_url': 'https://susam.in/',
         'current_year': datetime.datetime.now().year,
-        'imports': ''
+        'imports': '',
+        'index': '',
     }
 
     # If params.json exists, load it.
@@ -650,7 +651,7 @@ def main():
 
     params['root'] = '../'
     make_pages('content/[!_]*.html', '_site/{{ slug }}/index.html',
-               page_layout, **params)
+               page_layout, render='yes', **params)
 
     # Blog.
     params['root'] = '../'

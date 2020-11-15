@@ -107,6 +107,13 @@ site:
 	python3 -m makesite
 	@echo Done; echo
 
+dist:
+	@echo Generating distributable website ...
+	echo '{"index": "index.html"}' > params.json
+	python3 -m makesite
+	rm params.json
+	@echo Done; echo
+
 pull:
 	@echo Pulling new changes ...
 	git fetch
