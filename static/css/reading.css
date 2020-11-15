@@ -1,0 +1,26 @@
+.reading section {
+  border: thin dotted #666;
+  padding: 0.625em;
+  margin: 1em 0;
+}
+.reading section h3 {
+  margin-top: 0;
+}
+.reading section :last-child {
+  margin-bottom: 0;
+}
+.reading a.extra:link, .reading a.extra:visited {
+  color: #03c;
+}
+.reading a.extra:hover, .reading a.extra:active {
+  color: #03f;
+}
+.reading a.extra::before {
+  content: "[";
+}
+.reading a.extra::after {
+  content: "]";
+}
+.dark .reading section {
+  border-color: #999;
+}
