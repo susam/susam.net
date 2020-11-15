@@ -14,15 +14,15 @@ server {
         include uwsgi_params;
         uwsgi_pass unix:/tmp/spapp.sock;
     }
-
     location /files/ {
         autoindex on;
     }
-
     location = /articles/boot-sector-code/ {
         return 301 /blog/writing-boot-sector-code/;
     }
-
+    location = /blog/rss/ {
+        return 301 /blog/rss.xml;
+    }
     location = /blog/urls-in-c/ {
         return 301 /blog/url-in-c/;
     }
