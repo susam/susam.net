@@ -4,15 +4,13 @@
   <title>{{ title }}{{ subtitle }}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="{{ root }}css/main.css">
+  <link rel="canonical" href="{{ canonical_url }}">
   <link rel="icon" type="image/png" href="{{ root }}favicon.png">
-  <link rel="canonical" href="{{ canonical_url }}">{{ imports }}
+  <link rel="stylesheet" href="{{ root }}css/main.css">{{ imports }}
 </head>
 <body>
 <script>
-if (localStorage.getItem('dark') === 'yes') {
-  document.body.className = 'dark'
-}
+if (localStorage.getItem('dark')) { document.body.className = 'dark' }
 </script>
 {{ content }}<hr>
 <footer class="textcenter">

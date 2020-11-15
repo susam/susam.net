@@ -1,0 +1,75 @@
+audio {
+  min-width: 75%;
+  max-width: 100%;
+}
+figure {
+  text-align: center;
+  margin: 1em 0;
+}
+figure img, figure video {
+  max-width: 100%;
+}
+figcaption {
+  font-size: small;
+}
+table {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+th {
+  text-align: left;
+}
+th, td {
+  padding-right: 1.0em;
+}
+td *:first-child {
+  margin-top: 0;
+}
+td *:last-child {
+  margin-bottom: 0;
+}
+table.grid {
+  border-collapse: collapse;
+}
+table.grid th, table.grid td {
+  border-width: thin;
+  border-style: solid;
+}
+table.grid th, table.grid td {
+  padding: 0.3em 0.4em;
+}
+table.ruled {
+  border-collapse: collapse;
+  border-top-width: medium;
+  border-top-style: double;
+  border-bottom-width: medium;
+  border-bottom-style: double;
+}
+table.ruled thead {
+  border-bottom-width: medium;
+  border-bottom-style: double;
+}
+table.ruled tr {
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+}
+table.ruled th, table.ruled td {
+  padding: 0.3em 0.4em;
+}
+table.top td {
+  vertical-align: top;
+}
+table, thead, tr, th, td {
+  border-color: #666;
+}
+.email {
+  border: thin solid gray;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.email .header, .email .body {
+  margin: 1em;
+}
+.dark table, .dark thead, .dark tr, .dark th, .dark td {
+  border-color: #999;
+}

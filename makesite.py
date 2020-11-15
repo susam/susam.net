@@ -170,16 +170,16 @@ def head_content(import_header, root):
     imports = []
     for token in tokens:
         if token.endswith('.js'):
-            code = ('\n  <script src="{}js/{}"></script>'
+            code = ('  <script src="{}js/{}"></script>'
                     .format(root, token))
         elif token.endswith('.css'):
-            code = ('\n  <link rel="stylesheet" href="{}css/{}">'
+            code = ('  <link rel="stylesheet" href="{}css/{}">'
                     .format(root, token))
         else:
             raise ValueError('Unknown import type {!r} in {!r}'
                              .format(token, import_header))
         imports.append(code)
-    return '\n'.join(imports)
+    return '\n' + '\n'.join(imports)
 
 
 def set_canonical_url(params, dst_path):
@@ -416,10 +416,9 @@ def make_comment_list(post, comments, dst,
     dst_path = render(dst, **params)
     set_canonical_url(params, dst_path)
 
-    # Add imports if importing is requested.
-    if 'import' in post:
-        params['imports'] = head_content(post['import'], params['root'])
-
+    # Inherit imports from post.
+    import_value = 'comment.css ' + post.get('import', '')
+    params['imports'] = head_content(import_value, params['root'])
 
     log('Rendering {} => {} ...', slug, dst_path)
     output = render(list_layout, **params)
@@ -500,7 +499,7 @@ def set_reading_extra_meta(post):
     for key, key_label in key_attrs.items():
         url = post.get(key)
         if url is not None:
-            extra.append(' [<a href="{}" class="extra">{}</a>]'
+            extra.append(' <a href="{}" class="extra">{}</a>'
                          .format(url, key_label))
     post['extra'] = ''.join(extra)
 
@@ -573,7 +572,7 @@ def make_reading(src, page_layout, **params):
     read_params = dict(params)
     read_params['content'] = ''.join(tag_list)
     read_params['toc'] = ''.join(toc_list)
-    read_params['imports'] = head_content('tex.js', params['root'])
+    read_params['imports'] = head_content('reading.css tex.js', params['root'])
 
     dst_path = '_site/reading/index.html'
     set_canonical_url(read_params, dst_path)
@@ -593,8 +592,11 @@ def make_text_dir(src, page_layout, **params):
     file_list = read_files(src)
     file_list = sorted(file_list, key=lambda x: x['basename'], reverse=True)
     title = topic.title() + ' Files'
+    dir_params = dict(params)
+    dir_params['import'] = 'extra.css'
     make_list(file_list, '_site/' + path + '/index.html',
-              list_layout, item_layout, title=title, dirname=path, **params)
+              list_layout, item_layout, title=title, dirname=path,
+              **dir_params)
 
 
 def make_music(src, page_layout, **params):

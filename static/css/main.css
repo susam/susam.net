@@ -1,293 +1,119 @@
-/* General */
 body {
   margin: 0;
   line-height: 1.5;
   font-family: helvetica, arial, sans-serif;
   overflow-wrap: break-word;
 }
-
-h1, h2, h3, h4, h5, h6 {
-  margin-bottom: 0;
-  margin-top: 1em;
-}
-
-h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
-  margin-top: 0.5em;
-}
-
-audio {
-  min-width: 75%;
-  max-width: 100%;
-}
-
-figure {
-  text-align: center;
-  margin: 1.5em 0;
-}
-
-figure img, figure video {
-  max-width: 100%;
-}
-
-figcaption {
-  font-size: small;
-}
-
-
-/* Code */
-pre, code, samp, kbd {
-  font-family: monospace,monospace;
-  font-size: 0.9em;
-}
-
-pre code, pre samp, pre kbd {
-  font-size: 1em;
-}
-
-pre {
-  padding: 0.5em;
-  overflow: auto;
-}
-
-p kbd {
-  border: thin solid;
-  border-radius: 0.2em;
-  padding: 0.1em 0.2em;
-}
-
-pre .cursor {
-  border-bottom: 0.2em solid;
-}
-
-
-/* Blockquote */
-blockquote {
-  border-left: medium solid;
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.5em;
-}
-
-
-/* Layout */
 main, footer {
   max-width: 42em;
   margin-left: auto;
   margin-right: auto;
   padding: 0 1em;
 }
-
+footer .links a {line-height: 2.5em}
 hr {
   max-width: 44em;
   margin: 1em auto;
   border: 0;
   border-bottom: thin dotted gray;
 }
-
-
-/* Links */
-a:link, a:visited {
+h1, h2, h3, h4, h5, h6 {
+  margin: 1em 0 0 0;
+}
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+  margin-top: 0.5em;
+}
+blockquote {
+  border-left: medium solid;
+  margin-right: 0;
+  margin-left: 0;
+  padding: 0.5em;
+}
+pre {
+  padding: 0.5em;
+  overflow: auto;
+}
+div.highlight {
+  padding: 0.5em; /* Match blockquote and pre */
+  background: #eef;
+}
+blockquote *:first-child, div.highlight *:first-child {
+  margin-top: 0;
+}
+blockquote *:last-child, div.highlight *:last-child {
+  margin-bottom: 0;
+}
+pre, code, samp, kbd {
+  font-family: monospace,monospace;
+  font-size: 0.9em;
+  color: #006;
+}
+pre code, pre samp, pre kbd {
+  font-size: 1em;
+}
+pre, blockquote, p kbd {
+  background: #eee;
+}
+pre kbd {
+  color: #050;
+}
+p kbd {
+  border: thin solid;
+  border-radius: 0.2em;
+  padding: 0.1em 0.2em;
+  box-shadow: 0 0.15em 0.15em #999;
+  border-color: #ccc;
+  border-bottom-color: #999;
+}
+pre .cursor {
+  border-bottom: 0.2em solid;
+}
+a:link, a:active {
   text-decoration: none
 }
-
 a:hover, a:active {
   text-decoration: underline
 }
-
-.links a {
-  font-size: small;
-  font-weight: bold;
-  margin-right: 1em;
-  line-height: 2.5em;
-}
-
-.links a:last-child {
-  margin-right: 0;
-}
-
-.links a::before {
-  content: "[";
-}
-
-.links a::after {
-  content: "]";
-}
-
-/* Footer */
-/* Blog Listing */
 ul.posts {
   list-style-type: none;
   padding: 0;
 }
-
-.posts li {
+ul.posts li {
   margin: 0.25em 0;
 }
-
-
-/* Post */
+.subtitle {
+  margin-bottom: 0.5em;
+}
 .meta {
   font-size: small;
 }
-
-.count {
-  margin-top: 0.5em;
+.links a {
+  font-size: small;
+  font-weight: bold;
+  margin-right: 1em;
 }
-
-
-/* Comments */
-.comment h2 {
-  font-size: 1em;
-  margin-top: 0;
+.links a:last-child {
+  margin-right: 0;
 }
-
-.comment :last-child {
-  margin-bottom: 0;
+.links a::before {
+  content: "[";
 }
-
-.comment {
-  border: thin solid;
-  padding: 0.625em;
-  margin: 1em 0;
+.links a::after {
+  content: "]";
 }
-
-.comment.author {
-  border-width: medium;
-  border-style: double;
-}
-
-
-/* Reading */
-.reading section {
-  border: thin dotted;
-  padding: 0.625em;
-  margin: 1em 0;
-}
-
-.reading section h3 {
-  margin-top: 0;
-}
-
-.reading section :last-child {
-  margin-bottom: 0;
-}
-
-
-/* Home page */
-p.summary {
-  margin-bottom: 0.25em;
-}
-
-.all.links, .comments .links, .tags .links {
-  margin: 1em 0em;
-}
-
-
-/* Remove margins from content in container elements. */
-blockquote *:first-child, td *:first-child, .highlight *:first-child {
-  margin-top: 0;
-}
-
-blockquote *:last-child, td *:last-child, .highlight *:last-child {
-  margin-bottom: 0;
-}
-
-
-/* Generic text centering */
 .textcenter {
   text-align: center;
 }
-
-/* Generic block element centering */
 .center {
   margin-left: auto;
   margin-right: auto;
 }
-
-/* Highlight Box */
-.highlight {
-  /* Should be similar to pre style */
-  padding: 0.5em;
-}
-
-
-/* Plain Table */
-table {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-th {
-  text-align: left;
-}
-
-th, td {
-  padding-right: 1.0em;
-}
-
-
-/* Grid Table */
-table.grid {
-  border-collapse: collapse;
-}
-
-table.grid th, table.grid td {
-  border-width: thin;
-  border-style: solid;
-}
-
-table.grid th, table.grid td {
-  padding: 0.3em 0.4em;
-}
-
-/* Ruled Table */
-table.ruled {
-  border-collapse: collapse;
-  border-top-width: medium;
-  border-top-style: double;
-  border-bottom-width: medium;
-  border-bottom-style: double;
-}
-
-table.ruled thead {
-  border-bottom-width: medium;
-  border-bottom-style: double;
-}
-
-table.ruled tr {
-  border-bottom-width: thin;
-  border-bottom-style: solid;
-}
-
-table.ruled th, table.ruled td {
-  padding: 0.3em 0.4em;
-}
-
-/* Top-align table content */
-table.top td {
-  vertical-align: top;
-}
-
-/* Email */
-.email {
-  border: thin solid gray;
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-.email .header, .email .body {
-  margin: 1em;
-}
-
 noscript div {
   border: medium double #900;
   color: #900;
   padding-left: 1em;
   padding-right: 1em;
 }
-
-
-/* Colors */
 body,
 h1 a:link, h1 a:visited,
 h2 a:link, h2 a:visited,
@@ -300,7 +126,6 @@ h6 a:link, h6 a:visited,
 {
   color: #333;
 }
-
 h1 a:hover, h1 a:active,
 h2 a:hover, h2 a:active,
 h3 a:hover, h3 a:active,
@@ -312,11 +137,27 @@ h6 a:hover, h6 a:active,
 {
   color: #555;
 }
-
+.soft img {
+  opacity: 0.8; /* 1 - 0x33 / 0xff */
+}
+blockquote {
+  border-left-color: #ccc;
+}
+a:link, a:visited {
+  color: #03c;
+}
+a:hover, a:active {
+  color: #03f;
+}
+.meta, .meta a:link, .meta a:visited {
+  color: #555;
+}
+.meta a:hover, .meta a:active {
+  color: #333;
+}
 body.dark {
   background: #222;
 }
-
 body.dark,
 .dark h1 a:link, .dark h1 a:visited,
 .dark h2 a:link, .dark h2 a:visited,
@@ -329,7 +170,6 @@ body.dark,
 {
   color: #aaa;
 }
-
 .dark h1 a:hover, .dark h1 a:active,
 .dark h2 a:hover, .dark h2 a:active,
 .dark h3 a:hover, .dark h3 a:active,
@@ -341,133 +181,46 @@ body.dark,
 {
   color: #ccc;
 }
-
-/* Image background */
-.soft img {
-  opacity: 0.8; /* 1 - 0x33 / 0xff */
-}
-
 .dark .soft img {
   opacity: 0.667; /* 0xaa / 0xff */
 }
-
-/* Code and quote colors */
-pre, code, samp, kbd {
-  color: #006;
-}
-
-pre, blockquote {
-  background: #eee;
-}
-
-p kbd {
-  background: #eee;
-  border-color: #ccc;
-  border-bottom-color: #999;
-  box-shadow: 0 0.15em 0.15em #999;
-}
-
-pre kbd {
-  color: #050;
-}
-
 .dark pre, .dark code, .dark samp, .dark kbd {
   color: #6cf;
 }
-
-.dark pre, .dark blockquote {
+.dark pre, .dark blockquote, .dark p kbd {
   background: #111;
 }
-
 .dark p kbd {
-  background: #111;
   border-color: #444;
   border-bottom-color: #333;
   box-shadow: 0 0.15em 0.15em #333;
 }
-
 .dark pre kbd {
   color: #9c9;
 }
-
-/* Quote border colors */
-blockquote {
-  border-left-color: #ccc;
-}
-
 .dark blockquote {
   border-left-color: #444;
 }
-
-/* Highlight colors */
-.highlight {
-  background: #eef;
-}
-
 .dark .highlight {
   background: #112;
   color: #bbb;
 }
-
-/* Link colors */
-a:link, a:visited,
-.reading a.extra:link, .reading a.extra:visited {
-  color: #03c;
-}
-
-a:hover, a:active,
-.reading a.extra:hover, .reading a.extra:active {
-  color: #03f;
-}
-
 .dark a:link, .dark a:visited,
 .dark .reading a.extra:link, .dark .reading a.extra:visited {
   color: #7ae;
 }
-
 .dark a:hover, .dark a:active,
 .dark .reading a.extra:hover, .dark .reading a.extra:active {
   color: #8bf;
 }
-
-/* Meta link colors */
-.meta, .meta a:link, .meta a:visited {
-  color: #555;
-}
-
-.meta a:hover, .meta a:active {
-  color: #333;
-}
-
 .dark .meta, .dark .meta a:link, .dark .meta a:visited {
   color: #999;
 }
-
 .dark .meta a:hover, .dark .meta a:active {
   color: #aaa;
 }
-
-/* Comment border colors */
-.comment, .reading section {
-  border-color: #666;
-}
-
-.dark .comment, .dark .reading section {
-  border-color: #999;
-}
-
-/* Form colors */
 .dark input, .dark textarea, .dark button {
   background: #111;
   color: #bbb;
   border-color: #666;
-}
-
-/* Table rule colors */
-table, thead, tr, th, td {
-  border-color: #666;
-}
-
-.dark table, .dark thead, .dark tr, .dark th, .dark td {
-  border-color: #999;
 }
