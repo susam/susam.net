@@ -21,6 +21,9 @@ server {
     location = /blog/urls-in-c/ {
         return 301 /blog/url-in-c/;
     }
+    location = /blog/universal-palindrome-day/ {
+        return 301 /blog/global-palindrome-day/;
+    }
 }
 
 # http://www.example.com/ => http://example.com/

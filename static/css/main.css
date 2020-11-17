@@ -36,8 +36,7 @@ pre {
 div.highlight {
   background: #eef;
 }
-div.notice {
-  background: #eef;
+div.highlight.more {
   margin: 1em 0;
   border: medium double #99c;
 }
