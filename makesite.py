@@ -183,7 +183,7 @@ def head_content(import_header, root):
 
 
 def set_canonical_url(params, dst_path):
-    clean_path = dst_path.replace('_site', '').replace('index.html', '')
+    clean_path = dst_path.replace('_site/', '').replace('index.html', '')
     params['canonical_url'] = params['site_url'] + clean_path
 
 
