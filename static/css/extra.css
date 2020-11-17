@@ -9,6 +9,16 @@ figure {
 figure img, figure video {
   max-width: 100%;
 }
+figure > a:hover, figure > a:active,
+.dark figure > a:hover, .dark figure > a:active {
+  filter: brightness(1);
+}
+figure.soft img {
+  opacity: 0.8; /* (0xff - 0x33) / 0xff */
+}
+.dark figure.soft img {
+  opacity: 0.6923; /* (0xbb - 0x22) / (0xff - 0x22) */
+}
 figcaption {
   font-size: small;
 }

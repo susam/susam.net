@@ -499,7 +499,7 @@ def set_reading_extra_meta(post):
     for key, key_label in key_attrs.items():
         url = post.get(key)
         if url is not None:
-            extra.append(' <a href="{}" class="extra">{}</a>'
+            extra.append(' [<a href="{}" class="basic">{}</a>]'
                          .format(url, key_label))
     post['extra'] = ''.join(extra)
 

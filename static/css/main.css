@@ -10,7 +10,9 @@ main, footer {
   margin-right: auto;
   padding: 0 1em;
 }
-footer .links a {line-height: 2.5em}
+footer .links a {
+  line-height: 2.5em
+}
 hr {
   max-width: 44em;
   margin: 1em auto;
@@ -24,18 +26,18 @@ h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
   margin-top: 0.5em;
 }
 blockquote {
-  border-left: medium solid;
+  border-left: medium solid #ccc;
   margin-right: 0;
   margin-left: 0;
-  padding: 0.5em;
 }
 pre {
-  padding: 0.5em;
   overflow: auto;
 }
 div.highlight {
-  padding: 0.5em; /* Match blockquote and pre */
   background: #eef;
+}
+blockquote, pre, div.highlight {
+  padding: 0.5em;
 }
 blockquote *:first-child, div.highlight *:first-child {
   margin-top: 0;
@@ -51,28 +53,29 @@ pre, code, samp, kbd {
 pre code, pre samp, pre kbd {
   font-size: 1em;
 }
-pre, blockquote, p kbd {
-  background: #eee;
+pre .cursor {
+  border-bottom: 0.2em solid;
 }
 pre kbd {
   color: #050;
 }
+blockquote, pre, p kbd {
+  background: #eee;
+}
 p kbd {
-  border: thin solid;
+  border: thin solid #aaa;
   border-radius: 0.2em;
   padding: 0.1em 0.2em;
   box-shadow: 0 0.15em 0.15em #999;
-  border-color: #ccc;
   border-bottom-color: #999;
 }
-pre .cursor {
-  border-bottom: 0.2em solid;
+a, .meta a.basic {
+  text-decoration: none;
+  color: #03c;
 }
-a:link, a:active {
-  text-decoration: none
-}
-a:hover, a:active {
-  text-decoration: underline
+a:hover, .meta a.basic:hover {
+  text-decoration: underline;
+  color: #03f;
 }
 ul.posts {
   list-style-type: none;
@@ -111,78 +114,34 @@ ul.posts li {
 noscript div {
   border: medium double #900;
   color: #900;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 0 1em;
 }
-body,
-h1 a:link, h1 a:visited,
-h2 a:link, h2 a:visited,
-h3 a:link, h3 a:visited,
-h4 a:link, h4 a:visited,
-h5 a:link, h5 a:visited,
-h6 a:link, h6 a:visited,
-.links a:link, .links a:visited,
-.posts a:link, .posts a:visited
+body, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, .links a, .posts a
 {
   color: #333;
 }
-h1 a:hover, h1 a:active,
-h2 a:hover, h2 a:active,
-h3 a:hover, h3 a:active,
-h4 a:hover, h4 a:active,
-h5 a:hover, h5 a:active,
-h6 a:hover, h6 a:active,
-.links a:hover, .links a:active,
-.posts a:hover, .posts a:active
-{
+h1 a:hover, h2 a:hover, h3 a:hover,
+h4 a:hover, h5 a:hover, h6 a:hover, .links a:hover, .posts a:hover {
   color: #555;
 }
-.soft img {
-  opacity: 0.8; /* 1 - 0x33 / 0xff */
-}
-blockquote {
-  border-left-color: #ccc;
-}
-a:link, a:visited {
-  color: #03c;
-}
-a:hover, a:active {
-  color: #03f;
-}
-.meta, .meta a:link, .meta a:visited {
+.meta, .meta a {
   color: #555;
 }
-.meta a:hover, .meta a:active {
+.meta a:hover {
   color: #333;
 }
 body.dark {
   background: #222;
 }
 body.dark,
-.dark h1 a:link, .dark h1 a:visited,
-.dark h2 a:link, .dark h2 a:visited,
-.dark h3 a:link, .dark h3 a:visited,
-.dark h4 a:link, .dark h4 a:visited,
-.dark h5 a:link, .dark h5 a:visited,
-.dark h6 a:link, .dark h6 a:visited,
-.dark .links a:link, .dark .links a:visited,
-.dark .posts a:link, .dark .posts a:visited
-{
-  color: #aaa;
+.dark h1 a, .dark h2 a, .dark h3 a, .dark h4 a,
+.dark h5 a, .dark h6 a, .dark .links a, .dark .posts a {
+  color: #bbb;
 }
-.dark h1 a:hover, .dark h1 a:active,
-.dark h2 a:hover, .dark h2 a:active,
-.dark h3 a:hover, .dark h3 a:active,
-.dark h4 a:hover, .dark h4 a:active,
-.dark h5 a:hover, .dark h5 a:active,
-.dark h6 a:hover, .dark h6 a:active,
-.dark .links a:hover, .dark .links a:active,
-.dark .posts a:hover, .dark .posts a:active
-{
-  color: #ccc;
-}
-.dark .soft img {
-  opacity: 0.667; /* 0xaa / 0xff */
+.dark h1 a:hover, .dark h2 a:hover, .dark h3 a:hover,
+.dark h4 a:hover, .dark h5 a:hover, .dark h6 a:hover,
+.dark .links a:hover, .dark .posts a:hover {
+  color: #ddd;
 }
 .dark pre, .dark code, .dark samp, .dark kbd {
   color: #6cf;
@@ -192,8 +151,8 @@ body.dark,
 }
 .dark p kbd {
   border-color: #444;
-  border-bottom-color: #333;
-  box-shadow: 0 0.15em 0.15em #333;
+  border-bottom-color: #555;
+  box-shadow: 0 0.15em 0.15em #555;
 }
 .dark pre kbd {
   color: #9c9;
@@ -203,21 +162,18 @@ body.dark,
 }
 .dark .highlight {
   background: #112;
-  color: #bbb;
 }
-.dark a:link, .dark a:visited,
-.dark .reading a.extra:link, .dark .reading a.extra:visited {
-  color: #7ae;
+.dark a, .dark .meta a.basic {
+  color: #9bf;
 }
-.dark a:hover, .dark a:active,
-.dark .reading a.extra:hover, .dark .reading a.extra:active {
-  color: #8bf;
+.dark a:hover, .dark .meta a.basic:hover {
+  color: #acf;
 }
-.dark .meta, .dark .meta a:link, .dark .meta a:visited {
-  color: #999;
-}
-.dark .meta a:hover, .dark .meta a:active {
+.dark .meta, .dark .meta a {
   color: #aaa;
+}
+.dark .meta a:hover {
+  color: #ccc;
 }
 .dark input, .dark textarea, .dark button {
   background: #111;

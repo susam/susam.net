@@ -18,5 +18,5 @@
   border-style: double;
 }
 .dark .comment {
-  border-color: #999;
+  border-color: #999; /* Match reading.css */
 }
