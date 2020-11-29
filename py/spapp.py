@@ -31,21 +31,21 @@ def app(environ, start_response):
     content = ''
     if method in ('HEAD', 'GET', 'POST'):
         if path == '/comment/':
-            status = '200 OK'
+            http_status = '200 OK'
             content = comment_form(environ, method, query, form)
         else:
-            status = '404 Not Found'
-            content = '<p>' + status + '</p>\n'
+            http_status = '404 Not Found'
+            content = '<p>' + http_status + '</p>\n'
     else:
-        status = '501 Not Implemented'
-        content = '<p>' + status + '</p>\n'
+        http_status = '501 Not Implemented'
+        content = '<p>' + http_status + '</p>\n'
 
     # Response
     headers = [
         ('Content-Type', 'text/html; charset=UTF-8'),
         ('Content-Length', str(len(content)))
     ]
-    start_response(status, headers)
+    start_response(http_status, headers)
     return [content.encode()]
 
 
@@ -59,7 +59,7 @@ def comment_form(environ, method, query, form):
         'name': '',
         'url': '',
         'comment': '',
-        'notice': '',
+        'status': '',
     }
 
 
@@ -95,14 +95,14 @@ def comment_form(environ, method, query, form):
 
         if error_lines:
             params['class'] = 'errors'
-            notice_lines = error_lines
+            status_lines = error_lines
         else:
             params['class'] = 'success'
-            notice_lines = success_lines
+            status_lines = success_lines
             write_comment(environ, params)
 
-        notice_lines = ['<li>' + x + '</li>\n' for x in notice_lines]
-        params['notice'] = '<ul>\n' + ''.join(notice_lines) + '</ul>\n'
+        status_lines = ['<li>' + x + '</li>\n' for x in status_lines]
+        params['status'] = '<ul>\n' + ''.join(status_lines) + '</ul>\n'
 
     content = form_html(params)
     return content
