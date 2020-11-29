@@ -27,11 +27,11 @@ input#submit {
 
 
 /* Status */
-.notice {
+.status {
   display: none;
 }
 
-.errors .notice, .success .notice {
+.errors .status, .success .status {
   display: block;
   border-width: medium;
   border-style: double;
@@ -39,22 +39,22 @@ input#submit {
   margin-bottom: 1em;
 }
 
-.errors .notice {
+.errors .status {
   color: #900;
   border-color: #900;
 }
 
-.success .notice {
+.success .status {
   color: #060;
   border-color: #060;
 }
 
-.dark .errors .notice {
+.dark .errors .status {
   color: #f99;
   border-color: #f99;
 }
 
-.dark .success .notice {
+.dark .success .status {
   color: #6c6;
   border-color: #6c6;
 }
