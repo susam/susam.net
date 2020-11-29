@@ -36,6 +36,11 @@ pre {
 div.highlight {
   background: #eef;
 }
+div.notice {
+  background: #eef;
+  margin: 1em 0;
+  border: medium double #99c;
+}
 blockquote, pre, div.highlight {
   padding: 0.5em;
 }
