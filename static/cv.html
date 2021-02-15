@@ -5,26 +5,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {color: #333; font-family: helvetica,arial,sans-serif; line-height: 1.5}
-    main {max-width: 50em; margin: 0 auto}
-    header span {margin: 0 0.25em}
-    h1 {margin-bottom: 0}
-    h2 {margin-top: 1em; margin-bottom: 0.5em}
-    a:link, a:visited {color: #009; text-decoration: none}
-    a:hover, a:active {color: #00c; text-decoration: underline}
-    h2 a:link, h2 a:visited {color: #333}
-    h2 a:hover, h2:active {color: #666}
-    table {border-collapse: collapse}
-    td {vertical-align: top}
-    td {padding-right: 1em; padding-bottom: 0.25em}
-    td:first-child {white-space: nowrap} /* Don't wrap year-ranges in Chrome. */
-    .spaced td {padding-bottom: 0.75em}
-    .spaced tr:last-child td {padding-bottom: 0}
-    footer {margin: 1.5em 0}
+  body {color: #333; font-family: helvetica,arial,sans-serif;
+        line-height: 1.5; margin: 0 auto; max-width: 52em; padding: 0 1em}
+  header span {margin: 0 0.25em}
+  h1 {margin-bottom: 0}
+  h2 {margin: 1em 0 0.5em 0; line-height: 1.2}
+  a:link, a:visited {color: #03c; text-decoration: none}
+  a:hover, a:active, a:focus {color: #06f; text-decoration: underline}
+  table {border-collapse: collapse}
+  td {vertical-align: top}
+  td {padding-right: 1em; padding-bottom: 0.25em}
+  td:first-child {white-space: nowrap} /* Don't wrap year-ranges in Chrome. */
+  .spaced td {padding-bottom: 0.75em}
+  .spaced tr:last-child td {padding-bottom: 0}
+  footer {margin: 1.5em 0}
+  h2 a:empty:before {content: "#"}
+  h2 a:empty {visibility: hidden; padding-left: 0.25em}
+  h2:hover a:empty {visibility: visible}
+  @media (prefers-color-scheme: dark) {
+    body {color: #bbb; background: #222}
+    a:link, a:visited {color: #9bf}
+    a:hover, a:active {color: #acf}
+  }
   </style>
 </head>
 <body>
-<main>
   <header>
     <h1>Susam Pal</h1>
     <div>
@@ -40,12 +45,11 @@
     </div>
   </header>
 
-
-  <h2 id="professional"><a href="#professional">Professional Work</a></h2>
+  <h2 id="professional">Professional Work<a href="#professional"></a></h2>
   <table>
     <tr>
       <td>Since 2017</td>
-      <td><a href="https://www.walmartlabs.com/">Walmart&nbsp;Labs</a></td>
+      <td><a href="https://www.walmartlabs.com/">Walmart Labs</a></td>
       <td>Senior Architect</td>
       <td>Information Security Architecture</td>
     </tr>
@@ -69,18 +73,16 @@
     </tr>
   </table>
 
-
-  <h2 id="opensource"><a href="#opensource">Open Source Work</a></h2>
+  <h2 id="opensource">Open Source Work<a href="#opensource"></a></h2>
   <table>
     <tr>
       <td>2021&ndash;2021</td> <!-- 14 Jan 2021 to 10 Feb 2021 -->
       <td><a href="https://portacle.github.io/">Portacle</a></td>
       <td>Contributor</td>
       <td>
-        Eliminate delay in matching parentheses
+        Fixed paren matching
         (<a href="https://github.com/portacle/emacsd/pull/18">#18</a>)
-        and
-        fix file name autocomplete
+        and file name autocomplete
         (<a href="https://github.com/portacle/emacsd/pull/19">#19</a>)
       </td>
     </tr>
@@ -89,8 +91,7 @@
       <td><a href="https://10kbclub.com/">10 KB Club</a></td>
       <td>Author</td>
       <td>
-        Curated collection of websites whose home pages do not exceed 10
-        KB compressed size
+        Curated collection of websites with small home pages
       </td>
     </tr>
     <tr>
@@ -98,8 +99,7 @@
       <td><a href="https://github.com/susam/emacs4cl">Emacs4CL</a></td>
       <td>Author</td>
       <td>
-        Tiny Emacs initialization file written in Emacs Lisp to quickly
-        set up vanilla Emacs Lisp for Common Lisp programming
+        Common Lisp development environment for Emacs
       </td>
     </tr>
     <tr>
@@ -228,8 +228,7 @@
     </tr>
   </table>
 
-
-  <h2 id="publications"><a href="#publications">Publications</a></h2>
+  <h2 id="publications">Publications<a href="#publications"></a></h2>
   <table class="spaced">
     <tr>
       <td>2010</td>
@@ -261,8 +260,7 @@
     </tr>
   </table>
 
-
-  <h2 id="talks"><a href="#talks">Talks</a></h2>
+  <h2 id="talks">Talks<a href="#talks"></a></h2>
   <table class="spaced">
     <tr>
       <td>2019</td>
@@ -302,8 +300,7 @@
     </tr>
   </table>
 
-
-  <h2 id="security"><a href="#security">Security Advisories</a></h2>
+  <h2 id="security">Security Advisories<a href="#security"></a></h2>
   <table>
     <tr>
       <td>2007</td> <!-- 11 Jul 2007 -->
