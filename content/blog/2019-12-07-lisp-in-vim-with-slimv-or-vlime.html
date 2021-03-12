@@ -273,15 +273,15 @@ and I don't want to write down steps for each one of them.
 </p>
 
 <p>
-In fact, I don't use any Vim plugin manager myself. Until Vim 7, I used
-to create a <code>~/.vim/bundle</code> directory, then copy each plugin
-to its own directory within it, and add the plugin's directory path to
-Vim's <code>runtimepath</code> option.
+In fact, I have never used any Vim plugin manager myself. Until Vim 7, I
+used to create a <code>~/.vim/bundle</code> directory, then copy each
+plugin to its own directory within it, and add the plugin's directory
+path to Vim's <code>runtimepath</code> option.
 </p>
 
 <p>
 Vim 8 has native support for packages which makes installing plugins and
-loading them simpler. With Vim 8, I copy each plugin to its own
+loading them simpler. With Vim 8, we can copy each plugin to its own
 directory within <code>~/.vim/pack/plugins/start</code> and they are
 loaded automatically when Vim starts. The directory name
 <code>plugins</code> in this path is only an example. It could be any
@@ -398,12 +398,10 @@ Here are the steps to set up Slimv and use it:
       Another such package is <code>vim-gtk</code> which additionally
       provides GUI support. The graphical Vim known as GVim can be
       launched with the <code>gvim</code> command. It runs in the
-      desktop environment. I usually install <code>vim-gtk</code> on
-      Debian, MacVim on macOS, and GVim on Windows because I like my
-      editor to be a GUI window on the desktop. However, for the purpose
-      of this article, I will stick to <code>vim-nox</code> because it
-      is lightweight. All steps meant for Slimv would run equally well
-      on <code>vim-gtk</code>, MacVim, and GVim.
+      desktop environment. For the purpose of this article, I will stick
+      to <code>vim-nox</code> because it is lightweight. All steps meant
+      for Slimv would run equally well on <code>vim-gtk</code>, MacVim,
+      and GVim.
     </p>
     <p>
       Installing tmux is optional. Slimv can launch Swank server
@@ -425,7 +423,7 @@ Here are the steps to set up Slimv and use it:
 
   <li>
     <p>
-      Installing Slimv is pretty simple. Here is how I do it:
+      Installing Slimv is pretty simple. Here is one way to do it:
     </p>
 <pre>
 <code>git clone https://github.com/kovisoft/slimv.git ~/.vim/pack/plugins/start/slimv
@@ -2138,8 +2136,8 @@ endfunction</code>
 So far, we saw how to use Slimv or Vlime with a Common Lisp
 implementation. Now let us see how well these plugins work with other
 Lisp dialects. Vlime does not support other Lisp dialects. It supports
-Common Lisp only. Thankfully, Vlime supports two other popular dialects
-of Lisp: Scheme and Clojure. In the next two subsections, we see how
+Common Lisp only. Slimv supports two other popular dialects of Lisp:
+Scheme and Clojure. In the next two subsections, we see how
 </p>
 
 
@@ -2625,15 +2623,6 @@ am going to recommend Slimv. It has been around for much longer. It
 supports a wider variety of Lisp implementations. I find its default key
 bindings more convenient. A truly interactive REPL buffer is also a
 bonus. Also, Slimv supports Scheme and Clojure whereas Vlime does not.
-</p>
-
-<p>
-I use Slimv myself. The additional dependency on Python interface for
-Vim is not a problem for me because I use one of GVim, MacVim, or
-vim-gtk anyway and these are compiled with support for Python interface.
-</p>
-
-<p>
 Having said that, I think it is a good idea to try out both the plugins
 on your own and then find out which one suits you more.
 </p>
