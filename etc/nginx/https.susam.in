@@ -11,8 +11,7 @@ server {
     root /var/www/susam.in;
 
     location /comment/ {
-        include uwsgi_params;
-        uwsgi_pass unix:/tmp/spapp.sock;
+        proxy_pass http://127.0.0.1:4242;
     }
     location /files/ {
         autoindex on;

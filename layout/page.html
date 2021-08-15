@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#333">
-  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="canonical" href="{{ canonical-url }}">
   <link rel="icon" type="image/png" href="{{ root }}favicon.png">
   <link rel="stylesheet" href="{{ root }}css/main.css">{{ imports }}
 </head>
@@ -13,7 +13,7 @@
 <script>
 if (localStorage.getItem('dark')) { document.body.className = 'dark' }
 </script>
-{{ content }}<hr>
+{{ body }}<hr>
 <footer class="textcenter">
   <nav class="links">
     <a class="feed" href="{{ root }}{{ index }}">Home</a>
@@ -23,7 +23,7 @@ if (localStorage.getItem('dark')) { document.body.className = 'dark' }
     <a class="feed" href="https://github.com/susam">GitHub</a>
     <a class="feed" href="https://twitter.com/susam">Twitter</a>
   </nav>
-  <p>&copy; 2006&ndash;{{ current_year }} Susam Pal</p>
+  <p>&copy; 2006&ndash;{{ current-year }} Susam Pal</p>
 </footer>
 </body>
 </html>

@@ -16,11 +16,10 @@ help:
 	@echo '  http    Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  update  Pull latest Git commits and update live website.'
 	@echo '  rm      Uninstall live website.'
-	@echo '  local   Generate local website and serve with Python.'
 	@echo
 	@echo 'Low-level targets:'
-	@echo '  live    Generate live website but do not serve.'
-	@echo '  site    Generate local website but do not serve.'
+	@echo '  live    Generate live website.'
+	@echo '  site    Generate local website.'
 	@echo '  pull    Pull latest Git commits but do not update live website.'
 	@echo
 	@echo 'Default target:'
@@ -28,7 +27,7 @@ help:
 
 setup:
 	apt-get update
-	apt-get -y install nginx certbot uwsgi uwsgi-plugin-python3
+	apt-get -y install nginx certbot sbcl
 
 https: http
 	@echo Setting up HTTPS website ...
@@ -49,12 +48,9 @@ http: rm live spapp
 
 spapp: FORCE
 	@echo Setting up spapp ...
-	uwsgi --version
-	mkdir -p /opt/live
 	mkdir -p /opt/cache
 	chown www-data:www-data /opt/cache
-	ln -snf "$$PWD" '/opt/live/$(FQDN)' # Symlink for spapp.service
-	systemctl enable "$$PWD/etc/spapp.service"
+	systemctl enable "/opt/susam.in/etc/spapp.service"
 	systemctl daemon-reload
 	systemctl start spapp
 	@echo Done; echo
@@ -72,27 +68,9 @@ rm: checkroot
 	-systemctl stop spapp
 	-systemctl disable spapp
 	systemctl daemon-reload
-	rm -f '/opt/live/$(FQDN)'
-	rm -f /tmp/spapp.sock # Created by sapp.service
 	#
 	# Following crontab entries left intact:
 	crontab -l | grep -v "^#" || :
-	@echo Done; echo
-
-local: site
-	@echo Serving website locally ...
-	if python3 -c "import http.server" 2> /dev/null; then \
-		echo Running Python3 http.server ...; \
-		cd _site && python3 -m http.server; \
-	elif python -c "import http.server" 2> /dev/null; then \
-		echo Running Python http.server ...; \
-		cd _site && python -m http.server; \
-	elif python -c "import SimpleHTTPServer" 2> /dev/null; then \
-		echo Running Python SimpleHTTPServer ...; \
-		cd _site && python -m SimpleHTTPServer; \
-	else \
-		echo Cannot find http.server or SimpleHTTPServer.;  \
-	fi
 	@echo Done; echo
 
 live: site
@@ -104,14 +82,12 @@ live: site
 
 site:
 	@echo Generating website ...
-	python3 -m makesite
+	sbcl --script site.lisp
 	@echo Done; echo
 
 dist:
 	@echo Generating distributable website ...
-	echo '{"index": "index.html"}' > params.json
-	python3 -m makesite
-	rm params.json
+	sbcl --eval '(defvar *params* (list (cons "index" "index.html")))' --script site.lisp
 	@echo Done; echo
 
 pull:
@@ -135,7 +111,10 @@ clean:
 FORCE:
 
 
-pub: web gh
+pub: push web gh
+
+push:
+	git push
 
 web:
 	ssh -t susam.in "cd /opt/susam.in; sudo git pull; sudo make live"
@@ -180,6 +159,9 @@ gh: site
 	cd $(TMP_GIT) && git push -f origin master
 
 # Checks
+test:
+	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
+
 checks:
 	# Ensure punctuation goes inside inline-math.
 	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</a>|\)|:)'
