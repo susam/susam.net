@@ -4,11 +4,8 @@ After=network.target
 
 [Service]
 User=www-data
-ExecStart=/usr/bin/uwsgi --socket /tmp/spapp.sock \
-                         --uid www-data --gid www-data \
-                         --chdir /opt/live/susam.in \
-                         --plugin python3 \
-                         --module py.spapp:app
+WorkingDirectory=/opt/susam.in
+ExecStart=/usr/bin/sbcl --load spapp.lisp
 Restart=always
 RestartSec=5
 
