@@ -568,6 +568,47 @@
 ;;; Site
 ;;; ----
 
+(defun make-tags (posts dst tags-layout tagh-layout tagl-layout
+                  item-layout params)
+  (let ((tag-map)
+        (tag)
+        (rendered-item)
+        (rendered-header)
+        (rendered-body)
+        (dst-path)
+        (count))
+    ;; Render each post using item-layout and collect them in tag-map.
+    (dolist (post posts)
+      (setf post (append post params))
+      (setf rendered-item (render item-layout post))
+      (setf tag (get-value "tag" post))
+      (unless (get-value tag tag-map)
+        (add-value tag () tag-map))
+      (add-list-value tag rendered-item tag-map))
+    ;; Sort tag-map entries by ascending order of post count.
+    (setf tag-map (sort tag-map #'(lambda (x y)
+                                    (< (length (cdr x)) (length (cdr y))))))
+    ;; Render each tag-map entry with tagh-layout and tagl-layout.
+    (dolist (tag-entry tag-map)
+      (setf count (length (cdr tag-entry)))
+      (add-value "body" (join-strings (cdr tag-entry)) params)
+      (add-value "tag" tag params)
+      (add-value "count" count params)
+      (add-value "post-label" (if (= count 1) "post" "posts") params)
+      (add-value "tag-title" (string-capitalize (car tag-entry))
+                 params)
+      (push (render tagh-layout params) rendered-header)
+      (push (render tagl-layout params) rendered-body))
+    ;; Add tag list page parameters.
+    (add-value "header" (join-strings rendered-header) params)
+    (add-value "body" (join-strings rendered-body) params)
+    ;; Determine destination path and URL.
+    (setf dst-path (render dst params))
+    (add-canonical-url dst-path params)
+    ;; Render tag list.
+    (write-log "Rendering list => ~a ..." dst-path)
+    (write-file dst-path (render tags-layout params))))
+
 (defun make-blog (src page-layout &optional params)
   "Generate blog."
   (let* ((post-layout (read-file "layout/blog/post.html"))
@@ -633,47 +674,6 @@
             (make-comment-list post comments dst
                                list-layout item-layout params)
             (make-comment-none post dst none-layout params))))))
-
-(defun make-tags (posts dst tags-layout tagh-layout tagl-layout
-                  item-layout params)
-  (let ((tag-map)
-        (tag)
-        (rendered-item)
-        (rendered-header)
-        (rendered-body)
-        (dst-path)
-        (count))
-    ;; Render each post using item-layout and collect them in tag-map.
-    (dolist (post posts)
-      (setf post (append post params))
-      (setf rendered-item (render item-layout post))
-      (setf tag (get-value "tag" post))
-      (unless (get-value tag tag-map)
-        (add-value tag () tag-map))
-      (add-list-value tag rendered-item tag-map))
-    ;; Sort tag-map entries by ascending order of post count.
-    (setf tag-map (sort tag-map #'(lambda (x y)
-                                    (< (length (cdr x)) (length (cdr y))))))
-    ;; Render each tag-map entry with tagh-layout and tagl-layout.
-    (dolist (tag-entry tag-map)
-      (setf count (length (cdr tag-entry)))
-      (add-value "body" (join-strings (cdr tag-entry)) params)
-      (add-value "tag" tag params)
-      (add-value "count" count params)
-      (add-value "post-label" (if (= count 1) "post" "posts") params)
-      (add-value "tag-title" (string-capitalize (car tag-entry))
-                 params)
-      (push (render tagh-layout params) rendered-header)
-      (push (render tagl-layout params) rendered-body))
-    ;; Add tag list page parameters.
-    (add-value "header" (join-strings rendered-header) params)
-    (add-value "body" (join-strings rendered-body) params)
-    ;; Determine destination path and URL.
-    (setf dst-path (render dst params))
-    (add-canonical-url dst-path params)
-    ;; Render tag list.
-    (write-log "Rendering list => ~a ..." dst-path)
-    (write-file dst-path (render tags-layout params))))
 
 (defun make-text-directory (src page-layout &optional params)
   "Generate index for a directory of text files."
