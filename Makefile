@@ -25,9 +25,17 @@ help:
 	@echo 'Default target:'
 	@echo '  help    Show this help message.'
 
-setup:
+setup: quicklisp
 	apt-get update
 	apt-get -y install nginx certbot sbcl
+
+quicklisp:
+	rm -rf /opt/quicklisp.lisp /opt/quicklisp
+	curl https://beta.quicklisp.org/quicklisp.lisp -o /opt/quicklisp.lisp
+	sbcl --load /opt/quicklisp.lisp \
+	     --eval '(quicklisp-quickstart:install :path "/opt/quicklisp/")' \
+	     --quit
+	chown -R www-data:www-data /opt/quicklisp
 
 https: http
 	@echo Setting up HTTPS website ...

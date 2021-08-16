@@ -10,8 +10,7 @@
                 (format s "post: ~a~%" (get-value "post" params))
                 (format s "user-agent: ~a~%" (hunchentoot:user-agent))
                 (format s "remote-addr: ~a~%" (hunchentoot:remote-addr*))
-                (multiple-value-bind (a b) (hunchentoot:real-remote-addr)
-                  (format s "real-remote-addr: ~a ~a~%" a b))
+                (format s "x-real-ip: ~a~%" (hunchentoot:header-in* :x-real-ip))
                 (format s "<!-- date: ~a -->~%" (current-utc-time-string))
                 (format s "<!-- name: ~a -->~%" (get-value "name" params))
                 (when (string/= (get-value "url" params) "")
@@ -94,6 +93,8 @@
     (when (member method '(:head :get :post))
       (comment-form-page method post slug name url comment email))))
 
-(defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor :port 4242))
+(defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor
+                                  :address "127.0.0.1" :port 4242))
 (setf (hunchentoot:acceptor-document-root *acceptor*) #p"static/")
 (hunchentoot:start *acceptor*)
+(sleep most-positive-fixnum)

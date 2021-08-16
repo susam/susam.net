@@ -3,11 +3,12 @@ server {
     listen 80;
     listen [::]:80;
     server_name susam.in susam;
-    root /var/www/susam.in;
 
+    root /var/www/susam.in;
     location /comment/ {
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real-IP $remote_addr;
         proxy_pass http://127.0.0.1:4242;
-        uwsgi_pass unix:/tmp/spapp.sock;
     }
     location /files/ {
         autoindex on;
