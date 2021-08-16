@@ -25,6 +25,9 @@ into this new blog.
 On 16 Feb 2019, I turned my blog into a static website generated with a
 modified version of [makesite.py][MAKESITE].
 
+On 16 Aug 2021, I turned my blog into a static website generated with
+my own Common Lisp program.
+
 [BP]: https://susampal.blogspot.com/
 [BL]: https://www.blogger.com/
 
@@ -32,5 +35,5 @@ modified version of [makesite.py][MAKESITE].
 Copyright
 ---------
 
-Copyright (c) 2014-2019 Susam Pal  
+Copyright (c) 2006-2021 Susam Pal\
 All Rights Reserved.
