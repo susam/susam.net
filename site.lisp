@@ -491,7 +491,7 @@
       (unless next-index
         (return)))
     (setf comments (sort comments #'(lambda (x y)
-                                      (string< (get-value "date" x)
+                                      (string> (get-value "date" x)
                                                (get-value "date" y)))))
     (values slug comments)))
 
