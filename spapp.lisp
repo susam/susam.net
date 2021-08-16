@@ -11,7 +11,9 @@
                 (format s "user-agent: ~a~%" (hunchentoot:user-agent))
                 (format s "remote-addr: ~a~%" (hunchentoot:remote-addr*))
                 (format s "x-real-ip: ~a~%" (hunchentoot:header-in* :x-real-ip))
-                (format s "<!-- date: ~a -->~%" (current-utc-time-string))
+                (format s "<!-- date: ~a ~a +0000 -->~%"
+                        (current-utc-date-string)
+                        (current-utc-time-string))
                 (format s "<!-- name: ~a -->~%" (get-value "name" params))
                 (when (string/= (get-value "url" params) "")
                   (format s "<!-- url: ~a -->~%" (get-value "url" params)))
