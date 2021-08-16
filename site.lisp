@@ -506,18 +506,22 @@
          (comment-label (if (= count 1) "comment" "comments"))
          (rendered-comments)
          (dst-path))
-    ;; Render each comment.
-    (loop for index from count downto 1
-          for comment in comments
-          do (setf comment (append comment params))
-             (add-value "index" index comment)
-             (push (render item-layout comment) rendered-comments))
-    ;; Add list parameters.
+    ;; Add comment item parameters.
     (add-value "slug" post-slug params)
     (add-value "title" (format nil "Comments on ~a" post-title) params)
     (add-value "post-title" (get-value "title" post) params)
     (add-value "count" count params)
     (add-value "comment-label" comment-label params)
+    ;; Render each comment.
+    (loop for index from count downto 1
+          for comment in comments
+          do (setf comment (append comment params))
+             (add-value "index" index comment)
+             (add-value "commenter-type"
+                        (if (string= (get-value "name" comment)
+                                     (get-value "author" params))
+                            "author" "visitor") comment)
+             (push (render item-layout comment) rendered-comments))
     ;; Inherit imports from post.
     (if post-import
         (setf post-import (format nil "comment.css ~a" post-import))
