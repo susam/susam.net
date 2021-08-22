@@ -4,6 +4,19 @@
 
 (setf *random-state* (make-random-state t))
 
+(defun current-utc-date-string ()
+  "Return current UTC date in yyyy-mm-dd format."
+  (multiple-value-bind (sec min hour date month year)
+      (decode-universal-time (get-universal-time) 0)
+    (declare (ignore sec min hour))
+    (format nil "~4,'0d-~2,'0d-~2,'0d" year month date)))
+
+(defun current-utc-time-string ()
+  "Return current UTC time in hh:mm:ss format."
+  (multiple-value-bind (sec min hour)
+      (decode-universal-time (get-universal-time) 0)
+    (format nil "~2,'0d:~2,'0d:~2,'0d" hour min sec)))
+
 (defun write-comment (params)
   "Save comment to a file."
   (let ((text (with-output-to-string (s)
@@ -79,7 +92,7 @@
     (add-value "subtitle" "- Susam Pal" params)
     (add-value "current-year" (nth-value 5 (get-decoded-time)) params)
     (add-value "import" "form.css" params)
-    (add-imports params)    
+    (add-imports params)
     ;; Render form layout.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))

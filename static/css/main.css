@@ -1,29 +1,38 @@
 body {
-  margin: 0;
-  line-height: 1.5;
+  color: #eee;
+  color: #333;
   font-family: helvetica, arial, sans-serif;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 40em;
   overflow-wrap: break-word;
 }
-main, footer {
-  max-width: 42em;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1em;
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.5em 0 0.25em 0;
+  line-height: 1.2em
 }
-footer .links a {
-  line-height: 2.5em
+a:link, a:visited {
+  color: #00e;
+}
+a:focus, a:hover, a:active {
+  color: #03f;
+}
+h1 a:empty:before, h2 a:empty:before, h3 a:empty:before,
+h4 a:empty:before, h5 a:empty:before, h6 a:empty:before {
+  content: "#";
+}
+h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty {
+  visibility: hidden;
+  padding-left: 0.25em;
+}
+h1:hover a:empty, h2:hover a:empty, h3:hover a:empty,
+h4:hover a:empty, h5:hover a:empty, h6:hover a:empty {
+  visibility: visible;
 }
 hr {
-  max-width: 44em;
   margin: 1em auto;
   border: 0;
   border-bottom: thin dotted gray;
-}
-h1, h2, h3, h4, h5, h6 {
-  margin: 1em 0 0 0;
-}
-h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
-  margin-top: 0.5em;
 }
 blockquote {
   border-left: medium solid #ccc;
@@ -35,10 +44,6 @@ pre {
 }
 div.highlight {
   background: #eef;
-}
-div.highlight.more {
-  margin: 1em 0;
-  border: medium double #99c;
 }
 blockquote, pre, div.highlight {
   padding: 0.5em;
@@ -73,40 +78,18 @@ p kbd {
   box-shadow: 0 0.15em 0.15em #999;
   border-bottom-color: #999;
 }
-a, .meta a.basic {
-  text-decoration: none;
-  color: #03c;
-}
-a:hover, .meta a.basic:hover {
-  text-decoration: underline;
-  color: #03f;
-}
 ul.posts {
   list-style-type: none;
   padding: 0;
 }
 ul.posts li {
-  margin: 0.25em 0;
-}
-.subtitle {
-  margin-bottom: 0.5em;
-}
-.meta {
-  font-size: small;
+  margin: 1em 0;
 }
 .links a {
-  font-size: small;
-  font-weight: bold;
   margin-right: 1em;
 }
 .links a:last-child {
   margin-right: 0;
-}
-.links a::before {
-  content: "[";
-}
-.links a::after {
-  content: "]";
 }
 .textcenter {
   text-align: center;
@@ -120,67 +103,40 @@ noscript div {
   color: #900;
   padding: 0 1em;
 }
-body, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, .links a, .posts a
-{
-  color: #333;
-}
-h1 a:hover, h2 a:hover, h3 a:hover,
-h4 a:hover, h5 a:hover, h6 a:hover, .links a:hover, .posts a:hover {
-  color: #555;
-}
-.meta, .meta a {
-  color: #555;
-}
-.meta a:hover {
-  color: #333;
-}
-body.dark {
-  background: #222;
-}
-body.dark,
-.dark h1 a, .dark h2 a, .dark h3 a, .dark h4 a,
-.dark h5 a, .dark h6 a, .dark .links a, .dark .posts a {
-  color: #bbb;
-}
-.dark h1 a:hover, .dark h2 a:hover, .dark h3 a:hover,
-.dark h4 a:hover, .dark h5 a:hover, .dark h6 a:hover,
-.dark .links a:hover, .dark .posts a:hover {
-  color: #ddd;
-}
-.dark pre, .dark code, .dark samp, .dark kbd {
-  color: #6cf;
-}
-.dark pre, .dark blockquote, .dark p kbd {
-  background: #111;
-}
-.dark p kbd {
-  border-color: #444;
-  border-bottom-color: #555;
-  box-shadow: 0 0.15em 0.15em #555;
-}
-.dark pre kbd {
-  color: #9c9;
-}
-.dark blockquote {
-  border-left-color: #444;
-}
-.dark .highlight {
-  background: #112;
-}
-.dark a, .dark .meta a.basic {
-  color: #9bf;
-}
-.dark a:hover, .dark .meta a.basic:hover {
-  color: #acf;
-}
-.dark .meta, .dark .meta a {
-  color: #aaa;
-}
-.dark .meta a:hover {
-  color: #ccc;
-}
-.dark input, .dark textarea, .dark button {
-  background: #111;
-  color: #bbb;
-  border-color: #666;
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #222;
+    color: #bbb;
+  }
+  a:link, a:visited {
+    color: #9bf;
+  }
+  a:focus, a:hover, a:active {
+    color: #9cf;
+  }
+  pre, code, samp, kbd {
+    color: #6cf;
+  }
+  pre, blockquote, p kbd {
+    background: #111;
+  }
+  p kbd {
+    border-color: #444;
+    border-bottom-color: #555;
+    box-shadow: 0 0.15em 0.15em #555;
+  }
+  pre kbd {
+    color: #9c9;
+  }
+  blockquote {
+    border-left-color: #444;
+  }
+  .highlight {
+    background: #112;
+  }
+  input, textarea, button {
+    background: #111;
+    color: #bbb;
+    border-color: #666;
+  }
 }

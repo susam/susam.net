@@ -97,29 +97,22 @@
 
 (defun string-replace (old new string)
   "Replace old substring in string with new substring."
-  (let* ((next-index 0)
-         (oldlen (length old))
-         (strlen (length string))
-         (result "")
-         (match-index)
-         (static))
-    (loop
-      (setf match-index (search old string :start2 next-index))
-      (unless match-index
-        (setf static (subseq string next-index))
-        (setf result (format nil "~a~a" result static))
-        (return))
-      (setf static (subseq string next-index match-index))
-      (setf result (format nil "~a~a~a" result static new))
-      (cond ((zerop oldlen)
-             (when (= next-index strlen)
-               (return))
-             (setf static (char string next-index))
-             (setf result (format nil "~a~a" result static))
-             (incf next-index))
-            (t
-             (setf next-index (+ match-index oldlen)))))
-    result))
+  (with-output-to-string (s)
+    (let* ((next-index 0)
+           (match-index))
+      (loop
+        (setf match-index (search old string :start2 next-index))
+        (unless match-index
+          (format s "~a" (subseq string next-index))
+          (return))
+        (format s "~a~a" (subseq string next-index match-index) new)
+        (cond ((zerop (length old))
+               (when (= next-index (length string))
+                 (return))
+               (format s "~a" (char string next-index))
+               (incf next-index))
+              (t
+               (setf next-index (+ match-index (length old)))))))))
 
 (defun join-strings (strings)
   "Join strings into a single string."
@@ -149,7 +142,8 @@
 ;;; ----------------
 
 (defun read-header-line (text next-index)
-  "Parse one line of header in text."
+  "Parse one line of header in text and return multiple values: key,
+value, next-index."
   (let* ((start-token "<!-- ")
          (end-token (format nil " -->~%"))
          (sep-token ": ")
@@ -179,36 +173,6 @@
         (return))
       (push (cons key val) headers))
     (values headers next-index)))
-
-(defun read-sections (body)
-  "Read sections within post body."
-  (let* ((start-token "<!-- ")
-         (end-token (format nil " -->~%"))
-         (start-len (length start-token))
-         (end-len (length end-token))
-         (start-index 0)   ; Index of start-token.
-         (end-index)       ; Index of end-token.
-         (section-name)    ; Text between start-token and end-token.
-         (section-body)    ; Text between end-token and next start-token/EOT.
-         (result))
-    (loop
-      ;; Extract section name between start-token and end-token.
-      (unless (setf start-index (search start-token body :start2 start-index))
-        (return))
-      (incf start-index start-len)
-      (unless (setf end-index (search end-token body :start2 start-index))
-        (return))
-      (setf section-name (subseq body start-index end-index))
-      ;; Extract section body between end-token and next start-token/EOT.
-      (setf start-index (+ end-index end-len))
-      (setf end-index (search start-token body :start2 start-index))
-      (setf section-body (subseq body start-index end-index))
-      ;; Collect section name and section body.
-      (add-list-value section-name section-body result)
-      (unless end-index
-        (return)))
-    ;; Order the section bodies in the order they were read.
-    (reverse-list-values-in-alist result)))
 
 (defun weekday-name (weekday-index)
   "Given an index, return the corresponding day of week."
@@ -274,25 +238,6 @@
       (setf result (format nil "~a ~a" result tz)))
     result))
 
-(defun current-utc-date-string ()
-  "Return current UTC date in yyyy-mm-dd format."
-  (multiple-value-bind (sec min hour date month year)
-      (decode-universal-time (get-universal-time) 0)
-    (declare (ignore sec min hour))
-    (format nil "~4,'0d-~2,'0d-~2,'0d" year month date)))
-
-(defun current-utc-time-string ()
-  "Return current UTC time in hh:mm:ss format."
-  (multiple-value-bind (sec min hour)
-      (decode-universal-time (get-universal-time) 0)
-    (format nil "~2,'0d:~2,'0d:~2,'0d" hour min sec)))
-
-(defun current-utc-date-time-string ()
-  (multiple-value-bind (sec min hour date month year)
-      (decode-universal-time (get-universal-time) 0)
-    (format nil "~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d:~2,'0d +0000"
-            year month date hour min sec)))
-
 (defun date-slug (filename)
   "Parse filename to extract date and slug."
   (let* ((basename (file-namestring filename))
@@ -308,36 +253,58 @@
 
 (defun render (template params)
   "Render parameter tokens in template with their values from params."
-  (let* ((start-token "{{ ")
-         (end-token " }}")
-         (next-index 0)     ; Next place to start searching "{{".
-         (start-index)      ; Starting of "{{ ".
-         (end-index)        ; Starting of " }}".
-         (text)             ; Text between next-index and start-index.
-         (result "")        ; Rendered result.
-         (key)              ; Parameter key between "{{" and "}}".
-         (val))             ; Parameter value found in params.
-    (loop
-      ;; Look for start-token and extract static text before it.
-      (setf start-index (search start-token template :start2 next-index))
-      (unless start-index
-        (return))
-      (setf text (subseq template next-index start-index))
-      ;; Extract parameter name between start-token and end-token.
-      (incf start-index (length start-token))
-      (setf end-index (search end-token template :start2 start-index))
-      (setf key (subseq template start-index end-index))
-      ;; Replace parameter name with value if present. Otherwise leave
-      ;; the parameter name along with start and end tokens intact.
-      (setf val (get-value key params))
-      (if val
-          (setf result (format nil "~a~a~a" result text val))
-          (setf result (format nil "~a~a{{ ~a }}" result text key)))
-      (setf next-index (+ end-index (length end-token))))
-    ;; Extract static text after the last parameter token.
-    (setf text (subseq template next-index))
-    (setf result (format nil "~a~a" result text))
-    result))
+  (with-output-to-string (s)
+    (let* ((start-token "{{ ")
+           (end-token " }}")
+           (next-index 0)     ; Next place to start searching "{{".
+           (start-index)      ; Starting of "{{ ".
+           (end-index))       ; Starting of " }}".
+      (loop
+        ;; Look for start-token and extract static text before it.
+        (setf start-index (search start-token template :start2 next-index))
+        (unless start-index
+          (return))
+        (format s "~a" (subseq template next-index start-index))
+        ;; Extract parameter name between start-token and end-token.
+        (incf start-index (length start-token))
+        (setf end-index (search end-token template :start2 start-index))
+        (let* ((key (subseq template start-index end-index))
+               (val (get-value key params)))
+          ;; If key exists in params, replace key with value.
+          ;; Otherwise, leave the key intact in text.
+          (if val
+              (format s "~a" val)
+              (format s "{{ ~a }}" key)))
+        (setf next-index (+ end-index (length end-token))))
+      ;; Extract static text after the last parameter token.
+      (format s "~a" (subseq template next-index)))))
+
+(defun extra-markup (text)
+  "Add extra markup to the page to create heading anchor links."
+  (with-output-to-string (s)
+    (let* ((begin-tag-index)
+           (end-id-index)
+           (end-tag-index)
+           (next-index 0))
+      (loop
+        (setf begin-tag-index (search "<h" text :start2 next-index))
+        (unless begin-tag-index
+          (return))
+        (cond ((and (digit-char-p (char text (+ begin-tag-index 2)))
+                    (substring-at "id=\"" text (+ begin-tag-index 4)))
+
+               (setf end-id-index (search "\"" text
+                                          :start2 (+ begin-tag-index 8)))
+               (setf end-tag-index (search "</h" text
+                                           :start2 (+ end-id-index 2)))
+               (format s "~a" (subseq text next-index end-tag-index))
+               (format s "<a href=\"#~a\"></a></h"
+                       (subseq text (+ begin-tag-index 8) end-id-index))
+               (setf next-index (+ end-tag-index 3)))
+              (t
+               (format s "~a" (subseq text next-index (+ begin-tag-index 2)))
+               (setf next-index (+ begin-tag-index 2)))))
+      (format s (subseq text next-index)))))
 
 
 ;;; Posts
@@ -425,7 +392,7 @@
       (add-canonical-url dst-path page)
       ;; Render the post using the layout.
       (write-log "Rendering ~a => ~a ..." (get-value "slug" page) dst-path)
-      (write-file dst-path (render layout page)))
+      (write-file dst-path (extra-markup (render layout page))))
     ;; Sort the posts in chronological order.
     (sort posts #'(lambda (x y) (string< (get-value "date" x)
                                          (get-value "date" y))))))
@@ -551,6 +518,133 @@
     (write-log "Rendering ~a => ~a ..." post-slug dst-path)
     (write-file dst-path (render none-layout params))))
 
+(defun links-html (post)
+  "Generate HTML for reference links in reading post."
+  (let ((key-attrs (list (cons "pdf" "PDF") (cons "url" "url")))
+        (result))
+    (dolist (entry key-attrs)
+      (let* ((key (car entry))
+             (label (cdr entry))
+             (link (get-value key post)))
+        (when link
+          (push (format nil " [<a href=\"~a\" class=\"basic\">~a</a>]"
+                        link label) result))))
+    (join-strings result)))
+
+(defun read-sections (body)
+  "Read sections within post body."
+  (let* ((start-token "<!-- ")
+         (end-token (format nil " -->~%"))
+         (start-len (length start-token))
+         (end-len (length end-token))
+         (start-index 0)   ; Index of start-token.
+         (end-index)       ; Index of end-token.
+         (section-name)    ; Text between start-token and end-token.
+         (section-body)    ; Text between end-token and next start-token/EOT.
+         (result))
+    (loop
+      ;; Extract section name between start-token and end-token.
+      (unless (setf start-index (search start-token body :start2 start-index))
+        (return))
+      (incf start-index start-len)
+      (unless (setf end-index (search end-token body :start2 start-index))
+        (return))
+      (setf section-name (subseq body start-index end-index))
+      ;; Extract section body between end-token and next start-token/EOT.
+      (setf start-index (+ end-index end-len))
+      (setf end-index (search start-token body :start2 start-index))
+      (setf section-body (subseq body start-index end-index))
+      ;; Collect section name and section body.
+      (add-list-value section-name section-body result)
+      (unless end-index
+        (return)))
+    ;; Order the section bodies in the order they were read.
+    (reverse-list-values-in-alist result)))
+
+
+;;; Reading Log
+;;; -----------
+
+(defun make-reading (src page-layout &optional params)
+  "Generate reading list page."
+  (let ((tag-defs '(("non-fiction" . ("Non-Fiction" "book" "books"))
+                    ("technical" . ("Technical" "book" "books"))
+                    ("textbook" . ("Textbooks" "book" "books"))
+                    ("paper" . ("Papers" "paper" "papers"))
+                    ("fiction" . ("Fiction" "book" "books"))))
+        (read-layout (read-file "layout/reading/read.html"))
+        (tagl-layout (read-file "layout/reading/tagl.html"))
+        (item-layout (read-file "layout/reading/tagi.html"))
+        (tocl-layout (read-file "layout/reading/tocl.html"))
+        (toci-layout (read-file "layout/reading/toci.html"))
+        (dst-path "_site/reading.html")
+        (tag-map)
+        (toc-list)
+        (tag-list))
+    ;; Combine layouts to form final layouts.
+    (setf read-layout (render page-layout (list (cons "body" read-layout))))
+    ;; Read all reading posts and insert them into tag-map by tags
+    ;; such that each entry in tag-map maps a tag to a list of posts.
+    (dolist (src-path (directory src))
+      (let* ((post (read-post src-path))
+             (tag (get-value "tag" post)))
+        (setf post (append (read-sections (get-value "body" post)) post))
+        (add-value "extra" (links-html post) post)
+        (unless (get-value tag tag-defs)
+          (error (format nil "Unknown tag ~a in ~a" tag src-path)))
+        (add-list-value tag post tag-map)))
+    ;; Render posts under each tag to form tag lists for each tag.
+    (dolist (tag-def tag-defs)
+      (let* ((tag-name (car tag-def))
+             (posts (get-value tag-name tag-map))
+             (count (length posts))
+             (tag-title (first (cdr tag-def)))
+             (singular (second (cdr tag-def)))
+             (plural (third (cdr tag-def)))
+             (tag-params params)
+             (toc-items)
+             (tag-items))
+        ;; Sort posts under current tag in reverse chronological order.
+        (setf posts (sort posts #'(lambda (x y)
+                                    (string< (get-value "date" x)
+                                             (get-value "date" y)))))
+        ;; Ensure the post list under the current tag is not empty.
+        (unless (zerop count)
+          ;; Add parameters for rendering tag list for current tag.
+          (add-value "tag" tag-name tag-params)
+          (add-value "tag-title" (string-capitalize tag-title) tag-params)
+          (add-value "count" count tag-params)
+          (add-value "tag-label" (if (= count 1) singular plural) tag-params)
+          ;; Render posts under current tag to form tag list for current tag.
+          (dolist (post posts)
+            (let ((post-params (append post params))
+                  (quotes (loop for q in (get-value "quote" post)
+                                collect
+                                (format nil "<blockquote>~%~a</blockquote>" q))))
+              (add-value "quotes" (join-strings quotes) post-params)
+              (add-value "notes" (join-strings (get-value "note" post)) post-params)
+              (add-value "quote-title" (if (= (length quotes) 1)
+                                           "An Excerpt"
+                                           "Some Excerpts") post-params)
+              (push (render item-layout post-params) tag-items)
+              (push (render toci-layout post-params) toc-items)))
+          ;; Render table of contents for current tag.
+          (add-value "body" (join-strings toc-items) tag-params)
+          (push (render tocl-layout tag-params) toc-list)
+          ;; Render tag list for current tag.
+          (add-value "body" (join-strings tag-items) tag-params)
+          (push (render tagl-layout tag-params) tag-list))))
+    ;; Add parameters for reading list page.
+    (add-value "root" "" params)
+    (add-value "body" (join-strings tag-list) params)
+    (add-value "toc" (join-strings toc-list) params)
+    (add-value "title" "My Reading List" params)
+    (add-value "import" "reading.css tex.js" params)
+    (add-imports params)
+    (add-canonical-url dst-path params)
+    ;; Render reading list.
+    (write-file dst-path (extra-markup (render read-layout params)))))
+
 
 ;;; Text Files
 ;;; ----------
@@ -630,11 +724,11 @@
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (setf tags-layout (render page-layout (list (cons "body" tags-layout))))
     ;; Add parameters for blog rendering.
-    (add-value "root" "../../" params)
+    (add-value "root" "../" params)
     (add-value "blog" "blog" params)
     (add-value "render" "yes" params)
     ;; Read and render all posts.
-    (setf posts (make-posts src "_site/blog/{{ slug }}/index.html"
+    (setf posts (make-posts src "_site/blog/{{ slug }}.html"
                             post-layout params))
     (setf listed (remove-if #'(lambda (p)
                                 (string= (get-value "list" p) "no")) posts))
@@ -658,7 +752,7 @@
   (let ((none-layout (read-file "layout/comments/none.html"))
         (list-layout (read-file "layout/comments/list.html"))
         (item-layout (read-file "layout/comments/item.html"))
-        (dst "_site/{{ blog }}/{{ slug }}/comments/index.html")
+        (dst "_site/{{ blog }}/comments/{{ slug }}.html")
         (comment-map))
     ;; Combine layouts to form final layouts.
     (setf none-layout (render page-layout (list (cons "body" none-layout))))
@@ -668,7 +762,7 @@
       (multiple-value-bind (slug comments) (read-comments src-path)
         (add-value slug comments comment-map)))
     ;; Add parameters for comment list rendering.
-    (add-value "root" "../../../" params)
+    (add-value "root" "../../" params)
     (add-value "blog" "blog" params)
     ;; For each post, render its comment list page.
     (dolist (post posts)
@@ -720,106 +814,13 @@
     (add-value "render" "yes" params)
     (add-value "callback" #'make-widget params)
     ;; Render all music posts.
-    (setf posts (make-posts src "_site/music/{{ slug }}/index.html"
+    (setf posts (make-posts src "_site/music/{{ slug }}.html"
                             post-layout params))
     ;; Generate music list page.
     (add-value "root" "../" params)
     (add-value "title" "Music" params)
     (make-post-list posts "_site/music/index.html"
                     list-layout item-layout params)))
-
-(defun links-html (post)
-  "Generate HTML for reference links in reading post."
-  (let ((key-attrs (list (cons "pdf" "PDF") (cons "url" "url")))
-        (result))
-    (dolist (entry key-attrs)
-      (let* ((key (car entry))
-             (label (cdr entry))
-             (link (get-value key post)))
-        (when link
-          (push (format nil " [<a href=\"~a\" class=\"basic\">~a</a>]"
-                        link label) result))))
-    (join-strings result)))
-
-(defun make-reading (src page-layout &optional params)
-  "Generate reading list page."
-  (let ((tag-defs '(("non-fiction" . ("Non-Fiction" "book" "books"))
-                    ("technical" . ("Technical" "book" "books"))
-                    ("textbook" . ("Textbooks" "book" "books"))
-                    ("paper" . ("Papers" "paper" "papers"))
-                    ("fiction" . ("Fiction" "book" "books"))))
-        (read-layout (read-file "layout/reading/read.html"))
-        (tagl-layout (read-file "layout/reading/tagl.html"))
-        (item-layout (read-file "layout/reading/tagi.html"))
-        (tocl-layout (read-file "layout/reading/tocl.html"))
-        (toci-layout (read-file "layout/reading/toci.html"))
-        (dst-path "_site/reading/index.html")
-        (tag-map)
-        (toc-list)
-        (tag-list))
-    ;; Combine layouts to form final layouts.
-    (setf read-layout (render page-layout (list (cons "body" read-layout))))
-    ;; Read all reading posts and insert them into tag-map by tags
-    ;; such that each entry in tag-map maps a tag to a list of posts.
-    (dolist (src-path (directory src))
-      (let* ((post (read-post src-path))
-             (tag (get-value "tag" post)))
-        (setf post (append (read-sections (get-value "body" post)) post))
-        (add-value "extra" (links-html post) post)
-        (unless (get-value tag tag-defs)
-          (error (format nil "Unknown tag ~a in ~a" tag src-path)))
-        (add-list-value tag post tag-map)))
-    ;; Render posts under each tag to form tag lists for each tag.
-    (dolist (tag-def tag-defs)
-      (let* ((tag-name (car tag-def))
-             (posts (get-value tag-name tag-map))
-             (count (length posts))
-             (tag-title (first (cdr tag-def)))
-             (singular (second (cdr tag-def)))
-             (plural (third (cdr tag-def)))
-             (tag-params params)
-             (toc-items)
-             (tag-items))
-        ;; Sort posts under current tag in reverse chronological order.
-        (setf posts (sort posts #'(lambda (x y)
-                                    (string< (get-value "date" x)
-                                             (get-value "date" y)))))
-        ;; Ensure the post list under the current tag is not empty.
-        (unless (zerop count)
-          ;; Add parameters for rendering tag list for current tag.
-          (add-value "tag" tag-name tag-params)
-          (add-value "tag-title" (string-capitalize tag-title) tag-params)
-          (add-value "count" count tag-params)
-          (add-value "tag-label" (if (= count 1) singular plural) tag-params)
-          ;; Render posts under current tag to form tag list for current tag.
-          (dolist (post posts)
-            (let ((post-params (append post params))
-                  (quotes (loop for q in (get-value "quote" post)
-                                collect
-                                (format nil "<blockquote>~%~a</blockquote>" q))))
-              (add-value "quotes" (join-strings quotes) post-params)
-              (add-value "notes" (join-strings (get-value "note" post)) post-params)
-              (add-value "quote-title" (if (= (length quotes) 1)
-                                           "An Excerpt"
-                                           "Some Excerpts") post-params)
-              (push (render item-layout post-params) tag-items)
-              (push (render toci-layout post-params) toc-items)))
-          ;; Render table of contents for current tag.
-          (add-value "body" (join-strings toc-items) tag-params)
-          (push (render tocl-layout tag-params) toc-list)
-          ;; Render tag list for current tag.
-          (add-value "body" (join-strings tag-items) tag-params)
-          (push (render tagl-layout tag-params) tag-list))))
-    ;; Add parameters for reading list page.
-    (add-value "root" "../" params)
-    (add-value "body" (join-strings tag-list) params)
-    (add-value "toc" (join-strings toc-list) params)
-    (add-value "title" "My Reading List" params)
-    (add-value "import" "reading.css tex.js" params)
-    (add-imports params)
-    (add-canonical-url dst-path params)
-    ;; Render reading list.
-    (write-file dst-path (render read-layout params))))
 
 (defvar *params* nil
   "Global parameters that may be provided externally to override any
@@ -829,7 +830,7 @@
   ;; Create a new site directory from scratch.
   (remove-directory "_site/")
   (copy-directory "static/" "_site/")
-  (let ((params (list (cons "base-path" "")
+  (let ((params (list (cons "root" "")
                       (cons "subtitle" " - Susam Pal")
                       (cons "author" "Susam Pal")
                       (cons "site-url" "https://susam.in/")
@@ -843,17 +844,15 @@
     (when *params*
       (setf params (append *params* params)))
     ;; Top-level pages.
-    (add-value "root" "../" params)
     (add-value "render" "yes" params)
-    (make-posts "content/*.html" "_site/{{ slug }}/index.html"
+    (make-posts "content/*.html" "_site/{{ slug }}.html"
                 page-layout params)
     ;; Blog, comments, music, reading, and text directories.
     (setf posts (make-blog "content/blog/*.html" page-layout params))
     (make-comments posts "content/comments/*.html" page-layout params)
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)
-    (make-text-directory "static/security/*.txt" page-layout params)
-    )
+    (make-text-directory "static/security/*.txt" page-layout params))
   t)
 
 (when *main-mode*
