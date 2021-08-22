@@ -6,7 +6,7 @@
 </div>
 
 
-<h2 id="out-shuffles"><a href="#out-shuffles">Out Shuffles</a></h2>
+<h2 id="out-shuffles">Out Shuffles</h2>
 
 <p>
 A <em>perfect riffle shuffle</em> of a deck of cards involves splitting
@@ -17,7 +17,7 @@ remain preserved at their positions, then it is an <em>out shuffle</em>.
 </p>
 
 
-<h2 id="problem"><a href="#problem">Problem</a></h2>
+<h2 id="problem">Problem</h2>
 
 <p>
 Here is a problem that a colleague asked me recently while discussing
@@ -30,14 +30,14 @@ return the deck to its initial state?
 </div>
 
 
-<h2 id="solution"><a href="#solution">Solution</a></h2>
+<h2 id="solution">Solution</h2>
 <p>
 The solution to this problem is rather long, so it has been split into
 three parts below.
 </p>
 
 
-<h3 id="part-1"><a href="#part-1">Part 1: Congruence Relation</a></h3>
+<h3 id="part-1">Part 1: Congruence Relation</h3>
 
 <p>
 Let us assume that there are \( n \) cards where \( n \) is a positive
@@ -113,7 +113,7 @@ as
 </p>
 
 
-<h3 id="part-2"><a href="#part-2">Part 2: Multiplicative Order</a></h3>
+<h3 id="part-2">Part 2: Multiplicative Order</h3>
 
 <p>
 The smallest positive integer \( m \) that satisfies the above
@@ -148,7 +148,7 @@ shuffles, i.e., their positions do not change with out shuffles.
 </p>
 
 
-<h4 id="case-1"><a href="#case-1">Case \( n \ge 4 \)</a></h4>
+<h4 id="case-1">Case \( n \ge 4 \)</h4>
 <p>
 If \( n \ge 4, \) we know that there exists at least one integer between
 \( 1 \) and \( n - 1 \) that is coprime to \( n - 1 \) because \(
@@ -157,8 +157,7 @@ Euler's totient of \( n. \)
 </p>
 
 
-<h5 id="subcase-1-1"><a
- href="#subcase-1-1">Subcase \( i \) is coprime to \( n - 1 \)</a></h5>
+<h5 id="subcase-1-1">Subcase \( i \) is coprime to \( n - 1 \)</h5>
 
 <p>
 For any arbitrary \( n \ge 4, \) let \( i \) be an integer that is
@@ -170,8 +169,7 @@ requires a minimum of \( \ord_{n - 1}(2) \) out shuffles to return to
 its initial place.
 </p>
 
-<h5 id="subcase-1-2"><a
- href="#subcase-1-2">Subcase \( i \) is <em>not</em> coprime to \( n - 1 \)</a></h5>
+<h5 id="subcase-1-2">Subcase \( i \) is <em>not</em> coprime to \( n - 1 \)</h5>
 
 <p>
 For any arbitrary \( n \ge 4, \) now let us consider the case of a card
@@ -210,7 +208,7 @@ shuffles. Therefore, it takes a minimum of \( \ord_{n - 1}{2} \) out
 shuffles to return the deck of cards to its initial state.
 </p>
 
-<h4 id="case-2"><a href="#case-2">Case \( n = 2 \)</a></h4>
+<h4 id="case-2">Case \( n = 2 \)</h4>
 <p>
 When there are only \( 2 \) cards in the deck, every out shuffle
 trivially returns the deck to its initial state. In other words, it
@@ -225,8 +223,7 @@ out shuffles.
 </p>
 
 
-<h3 id="part-3"><a
- href="#part-3">Part 3: Computing Multiplicative Order</a></h3>
+<h3 id="part-3">Part 3: Computing Multiplicative Order</h3>
 
 <p>
 For a deck of \( 52 \) cards, we have \( n = 52. \) A minimum of

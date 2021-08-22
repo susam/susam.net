@@ -170,14 +170,10 @@ test:
 
 checks:
 	# Ensure punctuation goes inside inline-math.
-	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</a>|\)|:)'
+	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</h[1-6]>|\)|:)'
 	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
-	# Ensure all page headings are hyperlinks to themselves.
-	! grep -IErn '<h1' content | grep -vE '<h1><a href="./">'
-	# Ensure all section headings are hyperlinks to themselves.
-	! grep -IErn '<h[2-6]' content | grep -vE '<h[2-6] id=".*"><a|dixit:'
 	# Ensure http.susam.in and https.susam.in are consistent.
 	sed -n '/location/,/^}/p' etc/nginx/http.susam.in > /tmp/http.susam.in
 	sed -n '/location/,/^}/p' etc/nginx/https.susam.in > /tmp/https.susam.in
