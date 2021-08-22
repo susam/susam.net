@@ -1,13 +1,13 @@
 <!-- {{ title }} -->
 <section id="{{ slug }}">
-<h3><a href="#{{ slug }}">{{ title }}</a></h3>
+<h3>{{ title }}<a href="#{{ slug }}"></a></h3>
 <div class="meta">
 By {{ author }} ({{ published }}){{ extra }}
 &middot;
 Reviewed on {{ simple-date }}
 </div>
-<h4 id="{{ slug }}-quote"><a href="#{{ slug }}-quote">{{ quote-title }}</a></h4>
+<h4 id="{{ slug }}-quote">{{ quote-title }}</h4>
 {{ quotes }}
-<h4 id="{{ slug }}-note"><a href="#{{ slug }}-note">My Comment</a></h4>
+<h4 id="{{ slug }}-note">My Comment</h4>
 {{ notes }}
 </section>
