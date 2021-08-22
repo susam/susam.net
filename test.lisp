@@ -405,6 +405,23 @@
                  (cons "c" (list "val1"))
                  (cons "d" '())))))
 
+(test-case extra-markup
+  (assert (string= (extra-markup "") ""))
+  (assert (string= (extra-markup "foo") "foo"))
+  (assert (string= (extra-markup "<h1>Foo</h1>") "<h1>Foo</h1>"))
+  (assert (string= (extra-markup "<hx id=\"foo\">Foo</hx>")
+                   "<hx id=\"foo\">Foo</hx>"))
+  (assert (string= (extra-markup "<h1 id=\"foo\">Foo</h1>")
+                   "<h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>"))
+  (assert (string= (extra-markup "begin<h1 id=\"foo\">Foo</h1>end")
+                   "begin<h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>end"))
+  (assert (string= (extra-markup "Hello
+<h1 id=\"foo\">Foo</h1>
+<h2 id=\"bar\">Bar</h2>")
+                   "Hello
+<h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>
+<h2 id=\"bar\">Bar<a href=\"#bar\"></a></h2>")))
+
 (test-case read-post
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- title: Foo Bar -->~%Baz Qux"))
@@ -746,15 +763,15 @@ Z")
     (let* ((comment1 (first comments))
            (comment2 (second comments))
            (comment3 (third comments)))
-      (assert (string= (get-value "date" comment1) "2020-06-01"))
-      (assert (string= (get-value "author" comment1) "Alice"))
-      (assert (string= (get-value "body" comment1) (format nil "X~%")))
+      (assert (string= (get-value "date" comment1) "2020-06-03"))
+      (assert (string= (get-value "author" comment1) "Carol"))
+      (assert (string= (get-value "body" comment1) (format nil "Z")))
       (assert (string= (get-value "date" comment2) "2020-06-02"))
       (assert (string= (get-value "author" comment2) "Bob"))
       (assert (string= (get-value "body" comment2) (format nil "Y~%")))
-      (assert (string= (get-value "date" comment3) "2020-06-03"))
-      (assert (string= (get-value "author" comment3) "Carol"))
-      (assert (string= (get-value "body" comment3) (format nil "Z"))))))
+      (assert (string= (get-value "date" comment3) "2020-06-01"))
+      (assert (string= (get-value "author" comment3) "Alice"))
+      (assert (string= (get-value "body" comment3) (format nil "X~%"))))))
 
 (test-case make-comment-list
   (make-comment-list
