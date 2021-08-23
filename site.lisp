@@ -809,7 +809,7 @@ value, next-index."
         (list (cons "widget" rendered-widget))))
     ;; Add parameters for music post rendering.
     (add-value "import" "music.css" params)
-    (add-value "root" "../../" params)
+    (add-value "root" "../" params)
     (add-value "blog" "music" params)
     (add-value "render" "yes" params)
     (add-value "callback" #'make-widget params)
