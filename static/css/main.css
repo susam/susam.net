@@ -43,7 +43,7 @@ blockquote {
 pre {
   overflow: auto;
 }
-div.highlight {
+.highlight {
   background: #eef;
 }
 blockquote, pre, div.highlight {
