@@ -88,11 +88,12 @@
        (add-value "status" status-lines params)))
     ;; Add page parameters.
     (add-value "root" "../" params)
+    (add-value "index" "" params)
+    (add-value "canonical-url" "https://susam.in/comment/" params)
     (add-value "title" "Post Comment" params)
     (add-value "subtitle" "- Susam Pal" params)
     (add-value "current-year" (nth-value 5 (get-decoded-time)) params)
     (add-value "import" "form.css" params)
-    (add-value "canonical-url" "https://susam.in/comment/" params)
     (add-imports params)
     ;; Render form layout.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))

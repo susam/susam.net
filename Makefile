@@ -123,7 +123,7 @@ push:
 	git push
 
 web:
-	ssh -t susam.in "cd /opt/susam.in; sudo git pull; sudo make live"
+	ssh -t susam.in "cd /opt/susam.in; sudo git pull; sudo make live; sudo systemctl restart spapp"
 
 
 # GitHub Pages Mirror
