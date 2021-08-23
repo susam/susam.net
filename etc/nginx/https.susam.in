@@ -16,18 +16,9 @@ server {
     location /files/ {
         autoindex on;
     }
-    location = /articles/boot-sector-code/ {
-        return 301 /blog/writing-boot-sector-code/;
-    }
-    location = /blog/rss/ {
-        return 301 /blog/rss.xml;
-    }
-    location = /blog/urls-in-c/ {
-        return 301 /blog/url-in-c/;
-    }
-    location = /blog/universal-palindrome-day/ {
-        return 301 /blog/global-palindrome-day/;
-    }
+    rewrite /boot-sector-code/ /blog/writing-boot-sector-code.html permanent;
+    rewrite ^/blog/rss/$ /blog/rss.xml permanent;
+    rewrite ^/blog/([^/]*)/$ /blog/$1.html permanent;
 }
 
 # https://www.example.com/ => https://example.com/
