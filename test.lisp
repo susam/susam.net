@@ -232,6 +232,28 @@
 ;;; -------------------------------
 
 (test-case read-header-line
+  (let ((text (format nil "<!-- k1: v1 -->~%")))
+    (multiple-value-bind (k v next-index) (read-header-line text 0)
+      (assert (string= k "k1"))
+      (assert (string= v "v1"))
+      (assert (= next-index 16)))
+    (multiple-value-bind (k v next-index) (read-header-line text 16)
+      (assert (not k))
+      (assert (not v))
+      (assert (= next-index 16)))))
+
+(test-case read-header-line-empty-value
+  (let ((text (format nil "<!-- k1:  -->~%")))
+    (multiple-value-bind (k v next-index) (read-header-line text 0)
+      (assert (string= k "k1"))
+      (assert (string= v ""))
+      (assert (= next-index 14)))
+    (multiple-value-bind (k v next-index) (read-header-line text 14)
+      (assert (not k))
+      (assert (not v))
+      (assert (= next-index 14)))))
+
+(test-case read-header-lines
   (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
     (multiple-value-bind (k v next-index) (read-header-line text 0)
       (assert (string= k "k1"))

@@ -845,8 +845,7 @@ value, next-index."
       (setf params (append *params* params)))
     ;; Top-level pages.
     (add-value "render" "yes" params)
-    (make-posts "content/*.html" "_site/{{ slug }}.html"
-                page-layout params)
+    (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
     ;; Blog, comments, music, reading, and text directories.
     (setf posts (make-blog "content/blog/*.html" page-layout params))
     (make-comments posts "content/comments/*.html" page-layout params)
