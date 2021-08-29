@@ -1,5 +1,4 @@
 body {
-  color: #eee;
   color: #333;
   font-family: helvetica, arial, sans-serif;
   line-height: 1.5;
@@ -10,7 +9,7 @@ body {
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 1.5em 0 0.25em 0;
-  line-height: 1.2em
+  line-height: 1.2;
 }
 a:link, a:visited {
   color: #00e;
@@ -18,16 +17,14 @@ a:link, a:visited {
 a:focus, a:hover, a:active {
   color: #03f;
 }
-h1 a:empty:before, h2 a:empty:before, h3 a:empty:before,
-h4 a:empty:before, h5 a:empty:before, h6 a:empty:before {
+a:empty:before {
   content: "#";
 }
-h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty {
+a:empty {
   visibility: hidden;
   padding-left: 0.25em;
 }
-h1:hover a:empty, h2:hover a:empty, h3:hover a:empty,
-h4:hover a:empty, h5:hover a:empty, h6:hover a:empty {
+:hover > a:empty {
   visibility: visible;
 }
 hr {
@@ -46,7 +43,7 @@ pre {
 .highlight {
   background: #eef;
 }
-blockquote, pre, div.highlight {
+blockquote, pre, .highlight {
   padding: 0.5em;
 }
 blockquote *:first-child, div.highlight *:first-child {
@@ -57,11 +54,10 @@ blockquote *:last-child, div.highlight *:last-child {
 }
 pre, code, samp, kbd {
   font-family: monospace,monospace;
-  font-size: 0.9em;
   color: #006;
 }
-pre code, pre samp, pre kbd {
-  font-size: 1em;
+pre code, pre samp {
+  font-size: 0.9em;
 }
 pre .cursor {
   border-bottom: 0.2em solid;
@@ -87,7 +83,7 @@ ul.posts li {
   margin: 1em 0;
 }
 .links a {
-  margin-right: 1em;
+  margin-right: 1.5em;
 }
 .links a:last-child {
   margin-right: 0;
