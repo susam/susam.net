@@ -1,3 +1,118 @@
+<!-- date: 2020-09-17 15:25:07 +0000 -->
+<!-- name: NRClark -->
+<!-- source: https://news.ycombinator.com/item?id=24505775 -->
+<p>
+  The instructions in this article should work, but they're more
+  complicated than necessary maybe. If you don't
+  have <code>scp</code>, you can usually just do something like this:
+</p>
+<pre><code>ssh &lt;host&gt; cat remote_file &gt; local_file</code></pre>
+<!-- date: 2020-09-17 15:27:02 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in -->
+<p>
+  NRClark, I mention in the first two paragraphs of my blog post that
+  the SSH gateway in between forbids execution of remote commands
+  without a login shell, so your solution is not going to work in this
+  environment.
+</p>
+<!-- date: 2020-09-17 15:34:45 +0000 -->
+<!-- name: Silviot -->
+<!-- source: https://news.ycombinator.com/item?id=24505912 -->
+<p>
+  My solution in these cases:
+</p>
+<pre><code>ssh &lt;host&gt; tar cjf - /path/to/folder | tar xjf -</code></pre>
+<p>
+  Basically I ask ssh to execute tar on the remote host to create a
+  compressed archive. ssh will output the archive contents on the
+  local host; this data is then passed on to a local tar for
+  extraction.
+</p>
+<!-- date: 2020-09-17 15:35:20 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+  Silviot, I mention in my blog post that the SSH gateway in between
+  forbids execution of remote commands without a login shell, so your
+  solution is not going to work in such an environment.
+</p>
+<!-- date: 2020-09-17 15:35:22 +0000 -->
+<!-- name: Djent -->
+<!-- source: https://news.ycombinator.com/item?id=24505923 -->
+<p>
+This seems like a CTF trick. If I were faced with this problem, I
+would do an SSH local port forward, and then just <code>wget</code>
+the file, hosted locally with <code>python -m SimpleHTTPServer</code>.
+</p>
+<!-- date: 2020-09-17 15:36:30 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+  I mentioned in my blog post that there is an SSH gateway in between
+  that blocks port forwarding, so your solution is not going to work.
+</p>
+<p>
+  For example, say, I run the following command:
+</p>
+<pre><code>ssh -L 9000:127.0.0.1:8000 &lt;host&gt;</code></pre>
+<p>
+  Now when I visit <code>http://127.0.0.1:9000/</code> on my local
+  system, I get a "connection reset by peer" error. At the same time,
+  on the terminal where I have set up the port forward with the ssh
+  command above, I get this error:
+</p>
+<pre><code>open failed: unknown channel type</code></pre>
+<p>
+  The SSH gateway forbids port forwarding as well.
+</p>
+<!-- date: 2020-09-17 15:55:36 +0000 -->
+<!-- name: Lmilcin -->
+<!-- source: https://news.ycombinator.com/item?id=24506200 -->
+<p>
+  Honestly, I find it distasteful to have to spend time working around
+  somebody's incompetence at securing systems.
+</p>
+<p>
+  Doing it on your time means you delay delivering on your project and
+  you let whoever did this get away with wasting everybody elses time.
+</p>
+<!-- date: 2020-09-17 16:13:06 +0000 -->
+<!-- name: JadeNB -->
+<!-- source: https://news.ycombinator.com/item?id=24506446 -->
+<p>
+  Susam, Your patience in (re-)explaining this constraint to everyone
+  in this thread who thinks you don't know your way around standard
+  Unix tools is impressive. :-)
+</p>
+<!-- date: 2020-09-17 16:19:19 +0000 -->
+<!-- name: JadeNB -->
+<!-- source: https://news.ycombinator.com/item?id=24506545 -->
+<blockquote>
+  <p>
+    Honestly, I find it distasteful to have to spend time working around
+    somebody's incompetence at securing systems.
+  </p>
+  <p>
+    Doing it on your time means you delay delivering on your project and
+    you let whoever did this get away with wasting everybody elses time.
+  </p>
+</blockquote>
+<p>
+  Lmilcin,
+</p>
+<p>
+  While it may be distasteful, what's the alternative? Refusing on
+  principle to use a system configured in a way you don't like is way
+  more likely to hurt you than it is to hurt anyone else, especially
+  the person who configured the system.
+</p>
+<p>
+  Even if you are doing work for someone else (which, I think, is not
+  indicated in the post), so that that person will be affected by your
+  principled refusal, there's no guarantee that they're the ones who
+  misconfigured the environment in which you're operating.
+</p>
 <!-- date: 2020-09-23 11:09:57 +0000 -->
 <!-- name: Hai Vu -->
 <!-- url: https://github.com/vtvh -->

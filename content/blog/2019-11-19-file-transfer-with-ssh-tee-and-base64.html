@@ -2,24 +2,48 @@
 <!-- tag: technology -->
 
 <p>
-Computer servers deployed in a secure environment may allow SSH sessions
-but forbid SCP, SFTP, and execution of remote commands without a login
-shell. Such restricted access is typically enforced with SSH gateways
-and firewalls. An SSH gateway provides controlled access to the remote
-system. A firewall can ensure that only an SSH gateway can connect to
-the remote system. Thus, users can be forced to connect to the remote
-system only via the SSH gateway which can now control what is allowed
-and what isn't.
+  Computer servers deployed in a secure environment may allow SSH sessions
+  but forbid SCP, SFTP, and execution of remote commands without a login
+  shell. Such restricted access is typically enforced with SSH gateways
+  and firewalls. An SSH gateway provides controlled access to the remote
+  system. A firewall can ensure that only an SSH gateway can connect to
+  the remote system. Thus, users can be forced to connect to the remote
+  system only via the SSH gateway which can now control what is allowed
+  and what isn't.
 </p>
 
 <p>
-Even if SCP, SFTP, and remote command execution without a login shell
-are forbidden, as long as we get a login shell on our terminal and we
-can print data on the terminal, we are already able to transfer data
-from the remote system to our local system. The data is in the terminal.
-It is now only a matter of figuring out how to copy that data to a file.
-Assuming that both the remote and local systems are Unix-like, the
-following steps show one way to achieve this:
+  Even if SCP, SFTP, port forwarding, and remote command execution
+  without a login shell are forbidden, as long as we get a login shell
+  on our terminal and we can print data on the terminal, we are already
+  able to transfer data from the remote system to our local system. The
+  data is in the terminal. It is now only a matter of figuring out how
+  to copy that data to a file.
+</p>
+
+<div class="highlight">
+  <p>
+    <strong>Note:</strong> Various readers of this post notice that
+    SCP or SFTP is not allowed and immediately begin suggesting me a
+    solution similar to one of the following ones:
+  </p>
+  <ul>
+    <li><code>ssh &lt;host&gt; cat file > file</code></li>
+    <li><code>ssh &lt;host&gt; tar cf - file | tar xf -</code></li>
+  </ul>
+  <p>
+    Note that these solutions and other similar solutions are not
+    going to work because the SSH gateway described in the previous
+    two paragraphs forbid remote command execution without a login
+    shell. It also blocks port forwarding, so any solution involving
+    port forwarding is not going to work either.
+  </p>
+</div>
+
+<p>
+  Assuming that both the remote and local systems are Unix-like, the
+  following steps show one way to accomplish copying a file from the
+  remote system to our local system:
 </p>
 
 <ol>
@@ -29,7 +53,7 @@ following steps show one way to achieve this:
       output to <code>tee</code> to write the entire session to a text
       file on the local system.
     </p>
-    <pre><code>ssh &lt;user&gt;@&lt;host&gt; | tee ssh.txt</code></pre>
+    <pre><code>ssh &lt;host&gt; | tee ssh.txt</code></pre>
     <p>
       This type of pipeline works as intended even while connecting to a
       remote system via a jumphost or an SSH gateway.
@@ -43,8 +67,8 @@ following steps show one way to achieve this:
     </p>
     <pre><code>head -c 10485760 /dev/urandom &gt; /tmp/payload</code></pre>
     <p>
-       You probably already have a meaningful payload that you want to
-       copy, so in that case, you would skip this step.
+      You probably already have a meaningful payload that you want to
+      copy, so in that case, you would skip this step.
     </p>
   </li>
 
@@ -109,5 +133,5 @@ following steps show one way to achieve this:
   <code>sha1</code>, <code>shasum</code>, or something else that serves
   this purpose well. If you are worried about collision attacks, you
   might want <code>sha256sum</code>, <code>sha256</code>, <code>shasum
-  -a 256</code>, etc. instead.
+    -a 256</code>, etc. instead.
 </p>
