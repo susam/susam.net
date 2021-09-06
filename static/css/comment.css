@@ -17,6 +17,8 @@ main > div {
   border-width: medium;
   border-style: double;
 }
-.dark .comment {
-  border-color: #999; /* Match reading.css */
+@media (prefers-color-scheme: dark) {
+  .comment {
+    border-color: #999; /* Match reading.css */
+  }
 }

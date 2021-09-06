@@ -9,15 +9,8 @@ figure {
 figure img, figure video {
   max-width: 100%;
 }
-figure > a:hover, figure > a:active,
-.dark figure > a:hover, .dark figure > a:active {
-  filter: brightness(1);
-}
 figure.soft img {
   opacity: 0.8; /* (0xff - 0x33) / 0xff */
-}
-.dark figure.soft img {
-  opacity: 0.6923; /* (0xbb - 0x22) / (0xff - 0x22) */
 }
 figcaption {
   font-size: small;
@@ -80,6 +73,23 @@ table, thead, tr, th, td {
 .email .header, .email .body {
   margin: 1em;
 }
-.dark table, .dark thead, .dark tr, .dark th, .dark td {
-  border-color: #999;
+.light {
+  display: block;
+}
+.dark {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  figure.soft img {
+    opacity: 0.7143; /* (0xbb - 0x11) / (0xff - 0x11) */
+  }
+  table, thead, tr, th, td {
+    border-color: #999;
+  }
+  .light {
+    display: none;
+  }
+  .dark {
+    display: block;
+  }
 }
