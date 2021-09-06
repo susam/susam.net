@@ -83,7 +83,7 @@ live: site
 	@echo Setting up live directory ...
 	mv _live _gone || :
 	mv _site _live
-	ln -snf /opt/cafe/_live _live/cafe
+	ln -snf /opt/wiki/_live _live/wiki
 	rm -rf _gone
 	@echo Done; echo
 
