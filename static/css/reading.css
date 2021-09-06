@@ -9,6 +9,8 @@
 .reading section :last-child {
   margin-bottom: 0;
 }
-.dark .reading section {
-  border-color: #999; /* Match comment.css */
+@media (prefers-color-scheme: dark) {
+  .reading section {
+    border-color: #999; /* Match comment.css */
+  }
 }
