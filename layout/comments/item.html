@@ -1,8 +1,8 @@
 <section id="{{ index }}" class="comment {{ commenter-type }}">
 <h2>{{ commenter }} said:</h2>
-<div class="meta">
+{{ body }}
+<div>
 <a href="#{{ index }}">{{ simple-date }}</a>
   (<a href="#{{ index }}">#{{ index }} of {{ count }} {{ comment-label }}</a>)
 </div>
-{{ body }}
 </section>
