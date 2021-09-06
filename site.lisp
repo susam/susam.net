@@ -493,7 +493,8 @@ value, next-index."
     (if post-import
         (setf post-import (format nil "comment.css ~a" post-import))
         (setf post-import "comment.css"))
-    (add-value "imports" (head-html post-import root) params)
+    (add-value "import" post-import params)
+    (add-imports params)
     ;; Determine destination path and URL.
     (add-value "body" (join-strings rendered-comments) params)
     (setf dst-path (render dst params))
@@ -700,12 +701,14 @@ value, next-index."
     ;; Add tag list page parameters.
     (add-value "header" (join-strings rendered-header) params)
     (add-value "body" (join-strings rendered-body) params)
+    (add-value "import" "tags.css" params)
+    (add-imports params)
     ;; Determine destination path and URL.
     (setf dst-path (render dst params))
     (add-canonical-url dst-path params)
     ;; Render tag list.
     (write-log "Rendering list => ~a ..." dst-path)
-    (write-file dst-path (render tags-layout params))))
+    (write-file dst-path (extra-markup (render tags-layout params)))))
 
 (defun make-blog (src page-layout &optional params)
   "Generate blog."

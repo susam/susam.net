@@ -88,10 +88,11 @@ ul.posts {
 ul.posts li {
   margin: 1em 0;
 }
-.links a {
+footer a {
   margin-right: 1.5em;
+  line-height: 2;
 }
-.links a:last-child {
+footer a:last-child {
   margin-right: 0;
 }
 .textcenter {
@@ -121,24 +122,24 @@ noscript div {
     color: #6cf;
   }
   pre, blockquote, p kbd {
-    background: #111;
+    background: #000;
   }
   p kbd {
-    border-color: #444;
-    border-bottom-color: #555;
-    box-shadow: 0 0.15em 0.15em #555;
+    border-color: #333;
+    border-bottom-color: #444;
+    box-shadow: 0 0.15em 0.15em #444;
   }
   pre kbd {
-    color: #9c9;
+    color: #9c6;
   }
   blockquote {
-    border-left-color: #444;
+    border-left-color: #333;
   }
   .highlight {
-    background: #112;
+    background: #001;
   }
   input, textarea, button {
-    background: #111;
+    background: #000;
     color: #bbb;
     border-color: #666;
   }

@@ -2,26 +2,20 @@
 .music .widget, .musiclist h2 {
   text-align: center;
 }
-
-.music .links {
-  font-size: small;
-  font-weight: bold;
+/* Music post */
+.music .widget {
+  text-align: center;
 }
-
-.music .links span:last-child {
-  display: none; /* Hide 'details' link */
+.music a:last-child {
+  display: none; /* Hide 'details' link in music post */
 }
-
-
 /* Music list */
 .musiclist h2 {
   text-align: center;
 }
-
 .musiclist section {
   margin: 2.5em 0;
 }
-
-.musiclist .music .links a:last-child {
+.musiclist .music a:last-child {
   display: inline;
 }

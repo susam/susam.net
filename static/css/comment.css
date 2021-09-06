@@ -1,5 +1,5 @@
-.comments .links {
-  margin: 1em 0em;
+main > div {
+  margin: 1.5em 0;
 }
 .comment h2 {
   font-size: 1em;
