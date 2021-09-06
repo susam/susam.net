@@ -1,6 +1,9 @@
-/* Music control */
-.music .widget, .musiclist h2 {
-  text-align: center;
+/* Music widget */
+.widget a {
+  margin-right: 1.5em;
+}
+.widget a:last-child {
+  margin-right: 0;
 }
 /* Music post */
 .music .widget {
