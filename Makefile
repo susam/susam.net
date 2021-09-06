@@ -97,6 +97,9 @@ dist:
 	sbcl --eval '(defvar *params* (list (cons "index" "index.html")))' --script site.lisp
 	@echo Done; echo
 
+loop:
+	while true; do make dist; sleep 5; done
+
 pull:
 	@echo Pulling new changes ...
 	git fetch
