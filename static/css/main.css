@@ -1,6 +1,7 @@
 body {
   color: #333;
-  font-family: helvetica, arial, sans-serif;
+  font-family: georgia, serif;
+  font-size: large;
   line-height: 1.5;
   margin: 0 auto;
   max-width: 40em;
@@ -34,9 +35,9 @@ a:empty {
   visibility: visible;
 }
 hr {
-  margin: 1em auto;
+  margin: 1.5em auto;
   border: 0;
-  border-bottom: thin dotted gray;
+  border-bottom: thin dotted #999;
 }
 blockquote {
   border-left: medium solid #ccc;
@@ -82,6 +83,7 @@ p kbd {
   border-bottom-color: #999;
 }
 ul.posts {
+  margin-top: 1.5em;
   list-style-type: none;
   padding: 0;
 }

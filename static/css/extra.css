@@ -13,7 +13,7 @@ figure.soft img {
   opacity: 0.8; /* (0xff - 0x33) / 0xff */
 }
 figcaption {
-  font-size: small;
+  font-size: medium;
 }
 table {
   margin-top: 1em;
