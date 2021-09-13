@@ -840,7 +840,8 @@ value, next-index."
                       (cons "current-year"
                             (nth-value 5 (get-decoded-time)))
                       (cons "imports" "")
-                      (cons "index" "")))
+                      (cons "index" "")
+                      (cons "maze" "/maze/")))
         (page-layout (read-file "layout/page.html"))
         (posts))
     ;; If *params* exists, merge it with local params.
