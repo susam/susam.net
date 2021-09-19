@@ -3,7 +3,7 @@ label {
   margin-top: 1em;
   display: block;
 }
-#name, #url, #comment {
+#name, #url, #comment, #email {
   /* Make all input fields look similar. */
   width: 100%;
   border: thin solid gray;
@@ -25,14 +25,17 @@ input#submit {
 .status {
   display: none;
 }
-.errors .status, .success .status {
+.status p {
+  margin: 1em 1em;
+}
+.error .status, .success .status {
   display: block;
   border-width: medium;
   border-style: double;
   margin-top: 1em;
   margin-bottom: 1em;
 }
-.errors .status {
+.error .status {
   color: #900;
   border-color: #900;
 }
@@ -41,7 +44,7 @@ input#submit {
   border-color: #060;
 }
 @media (prefers-color-scheme: dark) {
-  .errors .status {
+  .error .status {
     color: #f99;
     border-color: #f99;
   }

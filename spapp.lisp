@@ -38,10 +38,20 @@
                           (random 1000000))))
     (write-file filename text)))
 
+(defun write-subscriber (email action)
+  "Save subscriber/unsubscriber to a file."
+  (let ((text (format nil "~a~%" email))
+        (filename (format nil "/opt/cache/~a_~a_~a_~a.txt"
+                          action
+                          (current-utc-date-string)
+                          (string-replace ":" "-" (current-utc-time-string))
+                          (random 1000000))))
+    (write-file filename text)))
+
 (defun comment-form-page (method post slug name url comment email)
-  "Return HTML response to the request handler."
+  "Return HTML response to the request handler for comments."
   (let ((page-layout (read-file "layout/page.html"))
-        (form-layout (read-file "layout/form.html"))
+        (form-layout (read-file "layout/forms/comment.html"))
         (success-lines '("Comment was submitted successfully."
                          "It may be published after review."))
         (error-lines)
@@ -75,7 +85,7 @@
        (when (string= (get-value "comment" params) "")
          (push "You must write a comment message." error-lines))
        (cond (error-lines
-              (add-value "class" "errors" params)
+              (add-value "class" "error" params)
               (setf status-lines error-lines))
              (t
               (add-value "class" "success" params)
@@ -87,11 +97,10 @@
        (setf status-lines (format nil "<ul>~%~a</ul>~%" status-lines))
        (add-value "status" status-lines params)))
     ;; Add page parameters.
-    (add-value "root" "../" params)
-    (add-value "index" "" params)
-    (add-value "canonical-url" "https://susam.in/comment/" params)
+    (add-value "root" "../../" params)
     (add-value "title" "Post Comment" params)
-    (add-value "subtitle" "- Susam Pal" params)
+    (add-value "subtitle" " - Susam Pal" params)
+    (add-value "site-url" "https://susam.in/" params)
     (add-value "current-year" (nth-value 5 (get-decoded-time)) params)
     (add-value "import" "form.css" params)
     (add-imports params)
@@ -99,7 +108,43 @@
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
 
-(hunchentoot:define-easy-handler (comment :uri "/comment/")
+(defun comment-subscribe-page (method email action)
+  "Return HTML response to the request handler for subscribe/unsubscribe form."
+  (let ((page-layout (read-file "layout/page.html"))
+        (form-layout (read-file (format nil "layout/forms/~a.html" action)))
+        (params))
+    (cond
+      ;; Handle GET request.
+      ((eq method :get)
+       (add-value "class" "" params)
+       (add-value "email" "" params)
+       (add-value "readonly" "" params))
+      ;; Handle POST request.
+      ((eq method :post)
+       (add-value "email" (or email "") params)
+       (cond
+         ((string= (get-value "email" params) "")
+          (add-value "class" "error" params)
+          (add-value "readonly" "" params)
+          (add-value "status" "<p>You must enter your email address!</p>" params))
+         (t
+          (add-value "class" "success" params)
+          (add-value "readonly" "readonly" params)
+          (add-value "status" (format nil "<p>Successfully ~ad!</p>" action) params)
+          (write-subscriber email action)))))
+    ;; Add page parameters.
+    (add-value "root" "../../" params)
+    (add-value "title" (string-capitalize action) params)
+    (add-value "subtitle" " - Susam Pal" params)
+    (add-value "site-url" "https://susam.in/" params)
+    (add-value "current-year" (nth-value 5 (get-decoded-time)) params)
+    (add-value "import" "form.css" params)
+    (add-imports params)
+    ;; Render form layout.
+    (setf form-layout (render page-layout (list (cons "body" form-layout))))
+    (render form-layout params)))
+
+(hunchentoot:define-easy-handler (comment :uri "/app/comment/")
     ((post :request-type :get)
      (slug :request-type :post)
      (name :request-type :post)
@@ -109,6 +154,18 @@
   (let ((method (hunchentoot:request-method*)))
     (when (member method '(:head :get :post))
       (comment-form-page method post slug name url comment email))))
+
+(hunchentoot:define-easy-handler (subscribe :uri "/app/subscribe/")
+    ((email :request-type :post))
+  (let ((method (hunchentoot:request-method*)))
+    (when (member method '(:head :get :post))
+      (comment-subscribe-page method email "subscribe"))))
+
+(hunchentoot:define-easy-handler (unsubscribe :uri "/app/unsubscribe/")
+    ((email :request-type :post))
+  (let ((method (hunchentoot:request-method*)))
+    (when (member method '(:head :get :post))
+      (comment-subscribe-page method email "unsubscribe"))))
 
 (defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor
                                   :address "127.0.0.1" :port 4242))

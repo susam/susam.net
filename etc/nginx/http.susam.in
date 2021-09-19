@@ -5,7 +5,7 @@ server {
     server_name susam.in susam;
 
     root /var/www/susam.in;
-    location /comment/ {
+    location /app/ {
         proxy_set_header HOST $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_pass http://127.0.0.1:4242;
