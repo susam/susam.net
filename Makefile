@@ -94,7 +94,7 @@ site:
 
 dist:
 	@echo Generating distributable website ...
-	sbcl --eval '(defvar *params* (list (cons "index" "index.html")))' --script site.lisp
+	sbcl --eval '(defvar *params* (list (cons "index" "index.html") (cons "maze" "https://susam.in/maze/")))' --script site.lisp
 	@echo Done; echo
 
 loop:

@@ -468,7 +468,6 @@ value, next-index."
   (let* ((post-slug (get-value "slug" post))
          (post-title (get-value "title" post))
          (post-import (get-value "import" post))
-         (root (get-value "root" params))
          (count (length comments))
          (comment-label (if (= count 1) "comment" "comments"))
          (rendered-comments)
