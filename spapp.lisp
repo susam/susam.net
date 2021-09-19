@@ -48,6 +48,17 @@
                           (random 1000000))))
     (write-file filename text)))
 
+(defmacro add-page-params (params)
+  `(progn
+     (add-value "root" "../../" ,params)
+     (add-value "index" "" ,params)
+     (add-value "maze" "/maze/" ,params)
+     (add-value "subtitle" " - Susam Pal" ,params)
+     (add-value "site-url" "https://susam.in/" ,params)
+     (add-value "current-year" (nth-value 5 (get-decoded-time)) ,params)
+     (add-value "import" "form.css" ,params)
+     (add-imports ,params)))
+
 (defun comment-form-page (method post slug name url comment email)
   "Return HTML response to the request handler for comments."
   (let ((page-layout (read-file "layout/page.html"))
@@ -97,13 +108,8 @@
        (setf status-lines (format nil "<ul>~%~a</ul>~%" status-lines))
        (add-value "status" status-lines params)))
     ;; Add page parameters.
-    (add-value "root" "../../" params)
+    (add-page-params params)
     (add-value "title" "Post Comment" params)
-    (add-value "subtitle" " - Susam Pal" params)
-    (add-value "site-url" "https://susam.in/" params)
-    (add-value "current-year" (nth-value 5 (get-decoded-time)) params)
-    (add-value "import" "form.css" params)
-    (add-imports params)
     ;; Render form layout.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
@@ -133,13 +139,8 @@
           (add-value "status" (format nil "<p>Successfully ~ad!</p>" action) params)
           (write-subscriber email action)))))
     ;; Add page parameters.
-    (add-value "root" "../../" params)
+    (add-page-params params)
     (add-value "title" (string-capitalize action) params)
-    (add-value "subtitle" " - Susam Pal" params)
-    (add-value "site-url" "https://susam.in/" params)
-    (add-value "current-year" (nth-value 5 (get-decoded-time)) params)
-    (add-value "import" "form.css" params)
-    (add-imports params)
     ;; Render form layout.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
