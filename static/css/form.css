@@ -8,6 +8,7 @@ label {
 }
 #name, #url, #comment, #email {
   /* Make all input fields look similar. */
+  box-sizing: border-box;
   width: 100%;
   border: thin solid gray;
   border-radius: 0.25em;
