@@ -214,7 +214,7 @@ value, next-index."
     (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d ~a"
             weekday-name date month-name year hour minute second tz)))
 
-(defun simple-date (date-string)
+(defun simple-date (date-string &key (sep ""))
   "Convert yyyy-mm-dd[ HH:MM[:SS[ TZ]]] to a human-readable date."
   (let ((len (length date-string))
         (year (parse-integer (subseq date-string 0 4)))
@@ -230,7 +230,7 @@ value, next-index."
     (when (>= len 16)
       (setf hour (parse-integer (subseq date-string 11 13)))
       (setf minute (parse-integer (subseq date-string 14 16)))
-      (setf result (format nil "~a ~2,'0d:~2,'0d" result hour minute)))
+      (setf result (format nil "~a ~a~2,'0d:~2,'0d" result sep hour minute)))
     (when (>= len 21)
       (setf tz (subseq date-string 20))
       (when (string= tz "+0000")
