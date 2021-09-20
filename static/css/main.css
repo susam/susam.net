@@ -8,9 +8,6 @@ body {
   padding: 0 1em;
   overflow-wrap: break-word;
 }
-input, textarea {
-  font-size: 1em;
-}
 h1, h2, h3, h4, h5, h6 {
   margin: 1.25em 0 0.5em 0;
   line-height: 1.2;
@@ -142,10 +139,5 @@ noscript div {
   }
   .highlight {
     background: #001;
-  }
-  input, textarea, button {
-    background: #000;
-    color: #bbb;
-    border-color: #666;
   }
 }

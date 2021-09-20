@@ -1,4 +1,7 @@
 /* Input */
+input, textarea {
+  font-size: 1em;
+}
 label {
   margin-top: 1em;
   display: block;
@@ -44,6 +47,11 @@ input#submit {
   border-color: #060;
 }
 @media (prefers-color-scheme: dark) {
+  input, textarea, button {
+    background: #000;
+    color: #bbb;
+    border-color: #666;
+  }
   .error .status {
     color: #f99;
     border-color: #f99;
