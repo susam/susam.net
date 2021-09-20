@@ -36,6 +36,28 @@ dosbox-logo: clean
 	cp dosbox-logo-circles.mp4 ../static/files/blog
 	cp dosbox-logo-circles.gif ../static/files/blog
 
+fd-100-logo: clean
+	convert logo_001.png -sample '1920x1500!' logo-circles.png
+	convert logo_002.png -sample '1920x1500!' logo-line.png
+	convert logo_003.png -sample '1920x1500!' logo-square.png
+	convert logo_004.png -sample '1920x1500!' logo-pentagon.png
+	convert logo_005.png -sample '1920x1500!' logo-star.png
+	convert logo_006.png -sample '1920x1500!' logo-square-centered.png
+	convert logo_007.png -sample '1920x1500!' logo-pentagon-centered.png
+	convert logo_008.png -sample '1920x1500!' logo-star-centered.png
+	convert logo_009.png -sample '1920x1500!' logo-circle.png
+	convert logo_010.png -sample '1920x1500!' logo-circle-centered.png
+	cp logo-circles.png ../static/files/blog
+	cp logo-line.png ../static/files/blog
+	cp logo-square.png ../static/files/blog
+	cp logo-pentagon.png ../static/files/blog
+	cp logo-star.png ../static/files/blog
+	cp logo-square-centered.png ../static/files/blog
+	cp logo-pentagon-centered.png ../static/files/blog
+	cp logo-star-centered.png ../static/files/blog
+	cp logo-circle.png ../static/files/blog
+	cp logo-circle-centered.png ../static/files/blog
+
 view:
 	for f in *.png; do xdg-open "$$f"; done
 
