@@ -97,6 +97,9 @@ dist:
 	sbcl --eval '(defvar *params* (list (cons "index" "index.html") (cons "maze" "https://susam.in/maze/")))' --script site.lisp
 	@echo Done; echo
 
+runapp:
+	sbcl --load spapp.lisp
+
 loop:
 	while true; do make dist; sleep 5; done
 
