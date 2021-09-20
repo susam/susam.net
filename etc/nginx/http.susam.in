@@ -14,9 +14,9 @@ server {
         autoindex on;
     }
     rewrite /boot-sector-code/ /blog/writing-boot-sector-code.html permanent;
+    rewrite /maze/fd-100.html /blog/fd-100.html permanent;
     rewrite ^/blog/rss/$ /blog/rss.xml permanent;
     rewrite ^/blog/([^/]*)/$ /blog/$1.html permanent;
-    rewrite ^/(?:cafe|wiki)/(.*) /maze/$1 redirect;
 }
 
 # http://www.example.com/ => http://example.com/
