@@ -719,8 +719,7 @@ value, next-index."
          (item-layout (read-file "layout/blog/item.html"))
          (feed-xml (read-file "layout/blog/feed.xml"))
          (item-xml (read-file "layout/blog/item.xml"))
-         (posts)
-         (listed))
+         (posts))
     ;; Combine layouts to form final layouts.
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
@@ -732,21 +731,19 @@ value, next-index."
     ;; Read and render all posts.
     (setf posts (make-posts src "_site/blog/{{ slug }}.html"
                             post-layout params))
-    (setf listed (remove-if #'(lambda (p)
-                                (string= (get-value "list" p) "no")) posts))
     ;; Create blog list page as the site home page.
     (add-value "root" "./" params)
     (add-value "blog" "blog" params)
     (add-value "title" "Susam Pal" params)
     (add-value "subtitle" "" params)
-    (make-post-list listed "_site/index.html" list-layout item-layout params)
+    (make-post-list posts "_site/index.html" list-layout item-layout params)
     ;; Create tag list page as the blog page.
     (add-value "root" "../" params)
     (add-value "title" "Susam's Blog" params)
-    (make-tags listed "_site/blog/index.html"
+    (make-tags posts "_site/blog/index.html"
                tags-layout tagh-layout tagl-layout item-layout params)
     ;; Create RSS feed.
-    (make-post-list listed "_site/blog/rss.xml" feed-xml item-xml params)
+    (make-post-list posts "_site/blog/rss.xml" feed-xml item-xml params)
     posts))
 
 (defun make-comments (posts src page-layout &optional params)
@@ -838,20 +835,24 @@ value, next-index."
                       (cons "site-url" "https://susam.in/")
                       (cons "current-year"
                             (nth-value 5 (get-decoded-time)))
+                      (cons "render" "yes")
                       (cons "imports" "")
                       (cons "index" "")
                       (cons "maze" "/maze/")))
         (page-layout (read-file "layout/page.html"))
-        (posts))
+        (hidden-posts)
+        (listed-posts))
     ;; If *params* exists, merge it with local params.
     (when *params*
       (setf params (append *params* params)))
     ;; Top-level pages.
-    (add-value "render" "yes" params)
     (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
-    ;; Blog, comments, music, reading, and text directories.
-    (setf posts (make-blog "content/blog/*.html" page-layout params))
-    (make-comments posts "content/comments/*.html" page-layout params)
+    ;; Hidden blog posts, listed blog posts, and comments.
+    (setf hidden-posts (make-blog "content/xlog/*.html" page-layout params))
+    (setf listed-posts (make-blog "content/blog/*.html" page-layout params))
+    (make-comments (append hidden-posts listed-posts)
+                   "content/comments/*.html" page-layout params)
+    ;; Music, reading, and text directories.
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)
     (make-text-directory "static/security/*.txt" page-layout params))
