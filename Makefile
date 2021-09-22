@@ -6,24 +6,29 @@ help:
 	@echo 'Usage: make [target]'
 	@echo
 	@echo 'Publish targets:'
-	@echo '  pub     Invoke all publish targets.'
-	@echo '  web     Publish website on susam.in.'
-	@echo '  gh      Publish website on GitHub Pages.'
+	@echo '  pub         Invoke all publish targets.'
+	@echo '  web         Publish website on susam.in.'
+	@echo '  gh          Publish website on GitHub Pages.'
 	@echo
 	@echo 'High-level targets:'
-	@echo '  setup   Install Debian packages.'
-	@echo '  https   Reinstall live website and serve with Nginx via HTTPS.'
-	@echo '  http    Reinstall live website and serve with Nginx via HTTP.'
-	@echo '  update  Pull latest Git commits and update live website.'
-	@echo '  rm      Uninstall live website.'
+	@echo '  setup       Install Debian packages.'
+	@echo '  https       Reinstall live website and serve with Nginx via HTTPS.'
+	@echo '  http        Reinstall live website and serve with Nginx via HTTP.'
+	@echo '  update      Pull latest Git commits and update live website.'
+	@echo '  rm          Uninstall live website.'
 	@echo
 	@echo 'Low-level targets:'
-	@echo '  live    Generate live website.'
-	@echo '  site    Generate local website.'
-	@echo '  pull    Pull latest Git commits but do not update live website.'
+	@echo '  live        Generate live website.'
+	@echo '  site        Generate local website.'
+	@echo '  pull        Pull latest Git commits but do not update live website.'
+	@echo
+	@echo 'Test targets:'
+	@echo '  test        Test Common Lisp program.'
+	@echo '  checks      Check posts for known formatting issues.'
+	@echo '  livechecks  Test live website for redirects and hidden posts.'
 	@echo
 	@echo 'Default target:'
-	@echo '  help    Show this help message.'
+	@echo '  help        Show this help message.'
 
 setup:
 	apt-get update
@@ -186,3 +191,12 @@ checks:
 	sed -n '/location/,/^}/p' etc/nginx/https.susam.in > /tmp/https.susam.in
 	diff -u /tmp/http.susam.in /tmp/https.susam.in
 	@echo Done; echo
+
+livechecks:
+	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.in/blog/fd-100/'
+	curl -sSI http://susam.in/blog/fd-100.html | grep 'Location: https://susam.in/blog/fd-100.html'
+	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.in/blog/fd-100.html'
+	curl -sSI https://susam.in/blog/infosys-tcs-or-wipro.html | grep '200 OK'
+	curl -sSI https://susam.in/blog/re-infosys-tcs-or-wipro.html | grep '200 OK'
+	curl -sSI https://susam.in/maze/c-quine.html | grep '200 OK'
+	curl -sSI https://susam.in/maze/fd-100.html | grep 'Location: https://susam.in/blog/fd-100.html'
