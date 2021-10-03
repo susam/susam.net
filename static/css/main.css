@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   margin-bottom: 0.25em;
 }
-h1 + div {
+h1 + div, h2 + div {
   margin: 0.5em 0;
 }
 a:link, a:visited {
@@ -82,19 +82,19 @@ p kbd {
   box-shadow: 0 0.15em 0.15em #999;
   border-bottom-color: #999;
 }
-ul.posts {
+ul.blog {
   margin-top: 1.5em;
   list-style-type: none;
   padding: 0;
 }
-ul.posts li {
+ul.blog li {
   margin: 1em 0;
 }
-footer a {
+nav a, footer a {
   margin-right: 1.5em;
   line-height: 2.5;
 }
-footer a:last-child {
+nav a:last-child, footer a:last-child  {
   margin-right: 0;
 }
 .textcenter {

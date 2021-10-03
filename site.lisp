@@ -418,7 +418,7 @@ value, next-index."
     (add-canonical-url dst-path params)
     ;; Render the post using list layout.
     (write-log "Rendering list => ~a ..." dst-path)
-    (write-file dst-path (render list-layout params))))
+    (write-file dst-path (extra-markup (render list-layout params)))))
 
 
 ;;; Comments
@@ -666,64 +666,76 @@ value, next-index."
 ;;; Site
 ;;; ----
 
-(defun make-tags (posts dst tags-layout tagh-layout tagl-layout
-                  item-layout params)
-  (let ((tag-map)
-        (tag)
-        (rendered-item)
-        (rendered-header)
-        (rendered-body)
-        (dst-path)
-        (count))
-    ;; Render each post using item-layout and collect them in tag-map.
+(defun capitalize-tag (tag)
+  "Capitalized tag name found in a post file's content header."
+  (let ((tag-defs '(("asm" . "ASM")
+                    ("opensource" . "OpenSource"))))
+    (or (get-value tag tag-defs)
+        (string-capitalize tag))))
+
+(defun collect-tags (posts)
+  "Group post by tags and return an alist of tag and post list."
+  (let ((tags))
     (dolist (post posts)
-      (setf post (append post params))
-      (setf rendered-item (render item-layout post))
-      (setf tag (get-value "tag" post))
-      (unless (get-value tag tag-map)
-        (add-value tag () tag-map))
-      (add-list-value tag rendered-item tag-map))
-    ;; Sort tag-map entries by ascending order of post count.
-    (setf tag-map (sort tag-map #'(lambda (x y)
-                                    (< (length (cdr x)) (length (cdr y))))))
-    ;; Render each tag-map entry with tagh-layout and tagl-layout.
-    (dolist (tag-entry tag-map)
+      (dolist (tag (uiop:split-string (get-value "tag" post)))
+        (add-list-value tag post tags)))
+    (sort tags #'(lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
+
+(defun tag-list-html (tags &optional params)
+  "Render tag list as HTML."
+  (let ((item-layout (read-file "layout/blog/tag-item.html"))
+        (tag)
+        (count)
+        (rendered-tags))
+    ;; Render each tag-map entry.
+    (dolist (tag-entry tags)
+      (setf tag (car tag-entry))
       (setf count (length (cdr tag-entry)))
-      (add-value "body" (join-strings (cdr tag-entry)) params)
       (add-value "tag" tag params)
       (add-value "count" count params)
       (add-value "post-label" (if (= count 1) "post" "posts") params)
-      (add-value "tag-title" (string-capitalize (car tag-entry))
-                 params)
-      (push (render tagh-layout params) rendered-header)
-      (push (render tagl-layout params) rendered-body))
-    ;; Add tag list page parameters.
-    (add-value "header" (join-strings rendered-header) params)
-    (add-value "body" (join-strings rendered-body) params)
-    (add-value "import" "tags.css" params)
-    (add-imports params)
-    ;; Determine destination path and URL.
-    (setf dst-path (render dst params))
-    (add-canonical-url dst-path params)
-    ;; Render tag list.
-    (write-log "Rendering list => ~a ..." dst-path)
-    (write-file dst-path (extra-markup (render tags-layout params)))))
+      (add-value "tag-title" (capitalize-tag tag) params)
+      (push (render item-layout params) rendered-tags))
+    (join-strings rendered-tags)))
+
+(defun make-tag-blog (tags page-layout &optional params)
+  "Generate blog for a specific tag"
+  (let ((list-layout (read-file "layout/tag/list.html"))
+        (item-layout (read-file "layout/blog/item.html"))
+        (feed-xml (read-file "layout/blog/feed.xml"))
+        (item-xml (read-file "layout/blog/item.xml"))
+        (list-path "_site/blog/tag/{{ tag }}.html")
+        (feed-path "_site/blog/tag/{{ tag }}.xml")
+        (tag)
+        (posts))
+    (setf list-layout (render page-layout (list (cons "body" list-layout))))
+    (dolist (tag-entry tags)
+      (setf tag (car tag-entry))
+      (setf posts (cdr tag-entry))
+      (add-value "tag" tag params)
+      (add-value "tag-title" (capitalize-tag tag) params)
+      (add-value "count" (length posts) params)
+      (add-value "post-label" (if (= (length posts) 1) "post" "posts") params)
+      (add-value "title" (render "Susam's {{ tag-title }} Blog" params) params)
+      (make-post-list posts (render list-path params)
+                      list-layout item-layout params)
+      (make-post-list posts (render feed-path params)
+                      feed-xml item-xml params))))
 
 (defun make-blog (src page-layout &optional params)
   "Generate blog."
-  (let* ((post-layout (read-file "layout/blog/post.html"))
-         (list-layout (read-file "layout/blog/list.html"))
-         (tags-layout (read-file "layout/blog/tags.html"))
-         (tagh-layout (read-file "layout/blog/tagh.html"))
-         (tagl-layout (read-file "layout/blog/tagl.html"))
-         (item-layout (read-file "layout/blog/item.html"))
-         (feed-xml (read-file "layout/blog/feed.xml"))
-         (item-xml (read-file "layout/blog/item.xml"))
-         (posts))
+  (let ((home-layout (read-file "layout/home.html"))
+        (post-layout (read-file "layout/blog/post.html"))
+        (list-layout (read-file "layout/blog/list.html"))
+        (item-layout (read-file "layout/blog/item.html"))
+        (feed-xml (read-file "layout/blog/feed.xml"))
+        (item-xml (read-file "layout/blog/item.xml"))
+        (posts)
+        (tags))
     ;; Combine layouts to form final layouts.
+    (setf home-layout (render page-layout (list (cons "body" home-layout))))
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
-    (setf tags-layout (render page-layout (list (cons "body" tags-layout))))
     ;; Add parameters for blog rendering.
     (add-value "root" "../" params)
     (add-value "blog" "blog" params)
@@ -731,19 +743,25 @@ value, next-index."
     ;; Read and render all posts.
     (setf posts (make-posts src "_site/blog/{{ slug }}.html"
                             post-layout params))
-    ;; Create blog list page as the site home page.
+    (setf tags (collect-tags posts))
+    ;; Create home page with the list of blog posts.
     (add-value "root" "./" params)
     (add-value "blog" "blog" params)
     (add-value "title" "Susam Pal" params)
     (add-value "subtitle" "" params)
-    (make-post-list posts "_site/index.html" list-layout item-layout params)
-    ;; Create tag list page as the blog page.
+    (make-post-list posts "_site/index.html" home-layout item-layout params)
+    ;; Create blog list page.
     (add-value "root" "../" params)
     (add-value "title" "Susam's Blog" params)
-    (make-tags posts "_site/blog/index.html"
-               tags-layout tagh-layout tagl-layout item-layout params)
+    (add-value "tag-list" (tag-list-html tags params) params)
+    (add-value "tag-count" (length tags) params)
+    (add-value "tag-label" (if (= (length tags) 1) "tag" "tags") params)
+    (make-post-list posts "_site/blog/index.html" list-layout item-layout params)
     ;; Create RSS feed.
     (make-post-list posts "_site/blog/rss.xml" feed-xml item-xml params)
+    ;; Create blog list page for each tag.
+    (add-value "root" "../../" params)
+    (make-tag-blog tags page-layout params)
     posts))
 
 (defun make-comments (posts src page-layout &optional params)

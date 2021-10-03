@@ -4,7 +4,7 @@
 <channel>
 <title>{{ title }}</title>
 <link>{{ site-url }}{{ blog }}/</link>
-<atom:link href="{{ site-url }}{{ blog }}/rss.xml"
+<atom:link href="{{ canonical-url }}"
            rel="self" type="application/rss+xml"/>
 <description>Feed from {{ title }}</description>
 
