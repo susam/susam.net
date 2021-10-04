@@ -722,6 +722,18 @@ value, next-index."
       (make-post-list posts (render feed-path params)
                       feed-xml item-xml params))))
 
+(defun make-xlog (src page-layout &optional params)
+  "Generate unlisted posts."
+  (let ((post-layout (read-file "layout/blog/post.html")))
+    ;; Combine layouts to form final layouts.
+    (setf post-layout (render page-layout (list (cons "body" post-layout))))
+    ;; Add parameters for blog rendering.
+    (add-value "root" "../" params)
+    (add-value "blog" "blog" params)
+    (add-value "render" "yes" params)
+    ;; Read and render all posts.
+    (make-posts src "_site/blog/{{ slug }}.html" post-layout params)))
+
 (defun make-blog (src page-layout &optional params)
   "Generate blog."
   (let ((home-layout (read-file "layout/home.html"))
@@ -866,7 +878,7 @@ value, next-index."
     ;; Top-level pages.
     (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
     ;; Hidden blog posts, listed blog posts, and comments.
-    (setf hidden-posts (make-blog "content/xlog/*.html" page-layout params))
+    (setf hidden-posts (make-xlog "content/xlog/*.html" page-layout params))
     (setf listed-posts (make-blog "content/blog/*.html" page-layout params))
     (make-comments (append hidden-posts listed-posts)
                    "content/comments/*.html" page-layout params)
