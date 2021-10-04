@@ -679,11 +679,17 @@ value, next-index."
     (dolist (post posts)
       (dolist (tag (uiop:split-string (get-value "tag" post)))
         (add-list-value tag post tags)))
+    ;; Sort posts in chronological order under each tag.
+    (dolist (tag tags)
+      (setf (cdr tag) (sort (cdr tag) #'(lambda (x y)
+                                          (string< (get-value "date" x)
+                                                   (get-value "date" y))))))
+    ;; Sort tags in ascending order of post count.
     (sort tags #'(lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
 
 (defun tag-list-html (tags &optional params)
   "Render tag list as HTML."
-  (let ((item-layout (read-file "layout/blog/tag-item.html"))
+  (let ((item-layout (read-file "layout/tag/item.html"))
         (tag)
         (count)
         (rendered-tags))
