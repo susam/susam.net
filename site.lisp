@@ -453,13 +453,19 @@ value, next-index."
         (comment)
         (comments))
     (loop
-      (setf (values comment next-index) (read-comment text next-index))
-      (push comment comments)
-      (unless next-index
-        (return)))
-    (setf comments (sort comments #'(lambda (x y)
-                                      (string> (get-value "date" x)
-                                               (get-value "date" y)))))
+       (setf (values comment next-index) (read-comment text next-index))
+       ;; Comment date must end with " +0000".
+       (unless (string-ends-with " +0000" (get-value "date" comment))
+         (error (format nil "Time zone missing in comment date ~a in ~a"
+                        (get-value "date" comment) filename)))
+       ;; Current comment date must be more recent than the previous comment.
+       (when (and (consp comments) (string< (get-value "date" comment)
+                                            (get-value "date" (car comments))))
+         (error (format nil "Incorrect order for comment ~a in ~a"
+                        (get-value "date" comment) filename)))
+       (push comment comments)
+       (unless next-index
+         (return)))
     (values slug comments)))
 
 (defun make-comment-list (post comments dst list-layout item-layout
