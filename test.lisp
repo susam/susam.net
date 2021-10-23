@@ -363,7 +363,7 @@
   (assert (string= (simple-date "2020-06-01 17:30:10 IST")
                    "01 Jun 2020 17:30 IST"))
   (assert (string= (simple-date "2020-06-01 17:30:10 IST" :sep "at ")
-                     "01 Jun 2020 at 17:30 IST")))
+                   "01 Jun 2020 at 17:30 IST")))
 
 (test-case date-slug
   (multiple-value-bind (date slug) (date-slug "foo")

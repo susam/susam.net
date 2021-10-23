@@ -6,7 +6,7 @@
   complicated than necessary maybe. If you don't
   have <code>scp</code>, you can usually just do something like this:
 </p>
-<pre><code>ssh &lt;host&gt; cat remote_file &gt; local_file</code></pre>
+<pre><code>ssh HOST cat remote_file &gt; local_file</code></pre>
 <!-- date: 2020-09-17 15:27:02 +0000 -->
 <!-- name: Susam Pal -->
 <!-- url: https://susam.in -->
@@ -22,7 +22,7 @@
 <p>
   My solution in these cases:
 </p>
-<pre><code>ssh &lt;host&gt; tar cjf - /path/to/folder | tar xjf -</code></pre>
+<pre><code>ssh HOST tar cjf - /path/to/folder | tar xjf -</code></pre>
 <p>
   Basically I ask ssh to execute tar on the remote host to create a
   compressed archive. ssh will output the archive contents on the
@@ -49,13 +49,14 @@ the file, hosted locally with <code>python -m SimpleHTTPServer</code>.
 <!-- name: Susam Pal -->
 <!-- url: https://susam.in/ -->
 <p>
-  I mentioned in my blog post that there is an SSH gateway in between
-  that blocks port forwarding, so your solution is not going to work.
+  Djent, I mentioned in my blog post that there is an SSH gateway in
+  between that blocks port forwarding, so your solution is not going
+  to work.
 </p>
 <p>
   For example, say, I run the following command:
 </p>
-<pre><code>ssh -L 9000:127.0.0.1:8000 &lt;host&gt;</code></pre>
+<pre><code>ssh -L 9000:127.0.0.1:8000 HOST</code></pre>
 <p>
   Now when I visit <code>http://127.0.0.1:9000/</code> on my local
   system, I get a "connection reset by peer" error. At the same time,
