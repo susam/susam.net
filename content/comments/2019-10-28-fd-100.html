@@ -144,8 +144,225 @@ END</code>
 </blockquote>
 <p>
   It's a great image because it reminds me exactly of what we used to
-  do, especially the <code>RT 2</code> instead of <code>RT 1</code> to
-  avoid repeating 360 times since the circle looks the same anyway on
-  those monitors. Once you move up to <code>RT 3</code> or more it
-  begins to look a bit more like a polygon.
+  do, especially the <code>REPEAT 180</code> with <code>RT 2</code>
+  instead of <code>REPEAT 360</code> to avoid repeating the circle
+  twice since the circle looks the same anyway on those monitors. Once
+  you move up to <code>RT 3</code> or more it begins to look a bit
+  more like a polygon.
+</p>
+<!-- date: 2021-09-08 20:51:38 +0000 -->
+<!-- name: Dvirsky -->
+<!-- source: https://news.ycombinator.com/item?id=28462895 -->
+<p>
+  I started with LOGO at school and it was a great teaching language
+  and gave me a good basis (e.g. we did a ton of recursive stuff) and
+  a passion for creating things with code.
+</p>
+<!-- date: 2021-09-08 21:03:19 +0000 -->
+<!-- name: Tristor -->
+<!-- url: https://github.com/tristor -->
+<!-- source: https://news.ycombinator.com/item?id=28463031 -->
+<p>
+  Logo wasn't the first language I started with (that would be BASIC),
+  but it is one I have many fond memories of from childhood. I used
+  Logo later on to program microcontrollers used with Lego to build
+  simple robots and machines. One of my proudest moments was building
+  a functional prototype of a washing machine with selectable wash
+  cycles. It allowed me to begin understanding many of the things
+  which we find in the world that rely on small embedded electronics
+  to function.
+</p>
+<p>
+  I wish there were programs like this for children these days in
+  school. I know Scratch derived from Lego Logo and there's still
+  things like Lego Mindstorm, but I don't think there are many common
+  programs at least in the US to teach children programming and
+  prototyping using these simple mechanisms.
+</p>
+<!-- date: 2021-09-08 21:30:58 +0000 -->
+<!-- name: Sedat Kapanoglu -->
+<!-- url: https://github.com/ssg -->
+<p>
+  I remember reading about Seymour Papert's Logo back in the 80's and
+  getting blown away by how elegant and luxurious the language felt.
+  But, the need to start Logo environment first in order to run a
+  program kept me away from it so I kept working with BASIC and
+  Assembly. That kind of friction matters a lot.
+</p>
+<!-- date: 2021-09-08 22:33:59 +0000 -->
+<!-- name: Baliex -->
+<!-- source: https://news.ycombinator.com/item?id=28463793 -->
+<p>
+  "FD 100" was my introduction to programming too! This short post
+  just brought it all back!
+</p>
+<p>
+  I've remembered for years that there was some for-loop syntax that
+  I'd used as a kid. I knew it wasn't <code>for</code> so
+  seeing <code>REPEAT 360 [FD 1 RT 1]</code> was quite a revelation
+  for me just now! That's exactly what I was writing back then. I
+  think my first instinct at the time was <code>REPEAT 4 [FD 100 RT
+    90]</code> and from there went on to draw pentagons, hexagons, and
+  then at some point had a eureka moment and tried <code>REPEAT
+    360</code> &hellip; mind blown!
+</p>
+<p>
+  I was using
+  an <a href="https://en.wikipedia.org/wiki/Amstrad_PCW#PCW_8256_and_8512">Amstrad
+    PCW 8512</a> and would love to hear from anyone else who had a
+  similar experience.
+</p>
+<!-- source: https://news.ycombinator.com/item?id=28463307 -->
+<!-- date: 2021-09-09 08:02:16 +0000 -->
+<!-- name: Pedrow -->
+<!-- source: https://news.ycombinator.com/item?id=28467398 -->
+<p>
+  Baliex, I had an 8256. I read some code in a magazine showing how to
+  draw fractals recursively (they were Koch snowflakes actually) and I
+  had a lot of fun making more complex fractals using that basic
+  recipe. The PCWs had a monochrome screen that was quite hi-res,
+  certainly compared to what I was used to, which worked well for
+  turtle graphics.
+</p>
+<!-- date: 2021-09-09 02:33:16 +0000 -->
+<!-- name: Abbe -->
+<!-- source: https://lobste.rs/s/yz0bv2/fd_100#c_n99p1p -->
+<p>
+  That's exactly how I started programming too in 1994. :)
+</p>
+<!-- date: 2021-09-23 20:34:24 +0000 -->
+<!-- name: Sili -->
+<!-- source: https://news.ycombinator.com/item?id=28634954 -->
+<p>
+  As someone who hasn't done graphics programming (or anything like
+  this), it's amazing to me how simple directives can yield such
+  things. Is this type of logic still used in games/graphic
+  programming today?
+</p>
+<!-- date: 2021-09-23 20:59:40 +0000 -->
+<!-- name: MrLeap -->
+<!-- url: https://twitter.com/LeapJosh -->
+<p>
+  Sili, It can, and it does, sort of! There's a bit more boilerplate
+  in most environments designed for shipping things, but one of the
+  more high power/terseness activities is writing a shader that can
+  render signed distance fields. The article
+  at <a href="https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm">https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm</a>
+  compose a few of these together and you can manifest some pretty
+  nuts infinity fractals. Here's a video I made playing with the
+  functions
+  provided: <a href="https://twitter.com/LeapJosh/status/1439876813258256385">https://twitter.com/LeapJosh/status/1439876813258256385</a>.
+</p>
+<!-- date: 2021-09-23 21:09:28 +0000 -->
+<!-- name: Scohesc -->
+<!-- source: https://news.ycombinator.com/item?id=28635439 -->
+<p>
+  Sili, Sort of related to games/graphics programming - There's an
+  open source CAD program
+  called <a href="https://openscad.org/">OpenSCAD</a> that allows you
+  to create 3D models with code that can be simple, but gets complex
+  fast. I personally tried using it to create models for 3D printing,
+  but got overwhelmed and decided to go to other tools.
+</p>
+<!-- date: 2021-09-23 21:14:21 +0000 -->
+<!-- name: DrCode -->
+<!-- source: https://news.ycombinator.com/item?id=28635513 -->
+<p>
+  Lovely post, though it's weird to end in saying that this "gave me a
+  brief taste of functional programming". Turtle drawing is arguably
+  the most non-functional, stateful programming paradigm ever
+  invented.
+</p>
+<!-- date: 2021-09-23 21:44:00 +0000 -->
+<!-- name: Paul Naukata -->
+<!-- url: https://github.com/pmn -->
+<!-- source: https://news.ycombinator.com/item?id=28635920 -->
+<p>
+  This was a great blast from the past. A few friends of mine and I
+  would write down instructions to draw crude pictures in Logo; the
+  usual sorts of things you'd expect from kids.
+</p>
+<p>
+  I'm sure lots of other kids did the same thing; kind of a fun way to
+  sneak into writing programs&emdash;a low barrier to entry, and
+  immediate results you could tinker with.
+</p>
+<p>
+  Is there something popular like this today?
+</p>
+<!-- date: 2021-09-23 21:46:10 +0000 -->
+<!-- name: Jared Summers -->
+<!-- url: https://github.com/rabuf -->
+<!-- source: https://news.ycombinator.com/item?id=28635948 -->
+<p>
+  DrCode, Well, they say that <em>Logo</em> gave them a taste of
+  functional programming, which is a broader statement than turtle
+  drawing. Logo was strongly influenced by Lisp and, consequently, is
+  a multi-paradigm language including functional as one of its
+  paradigms.
+</p>
+<!-- date: 2021-09-23 21:55:58 +0000 -->
+<!-- name: Tim -->
+<!-- url: https://github.com/avianworld -->
+<!-- source: https://news.ycombinator.com/item?id=28636082 -->
+<p>
+  Paul, A lot of kids (middle and high schoolers) these days have pet
+  projects like making HTML-based website and writing a discord bot in
+  JavaScript. The fact that our district hands out Chromebooks
+  probably contributes to the trend.
+</p>
+<!-- date: 2021-09-23 22:26:17 +0000 -->
+<!-- name: JHBadger -->
+<!-- source: https://news.ycombinator.com/item?id=28636371 -->
+<p>
+  DrCode, Logo is more than the turtle. Brian Harvey wrote a whole
+  series of textbooks for Logo that really stressed the functional
+  aspect of the language:
+  <a href="http://people.eecs.berkeley.edu/~bh/v1-toc2.html">http://people.eecs.berkeley.edu/~bh/v1-toc2.html</a>.
+</p>
+<!-- date: 2021-09-23 22:36:15 +0000 -->
+<!-- name: Munchler -->
+<!-- source: https://news.ycombinator.com/item?id=28636448 -->
+<p>
+  DrCode, You can think of it that way, but you can also think of a
+  Logo program as a purely functional computation that follows the
+  monad laws. Here's a Haskell package that implements it:
+  <a href="https://github.com/aneilmac/worldturtle-haskell">https://github.com/aneilmac/worldturtle-haskell</a>.
+</p>
+<!-- date: 2021-09-23 23:51:42 +0000 -->
+<!-- name: Over -->
+<!-- source: https://news.ycombinator.com/item?id=28637052 -->
+<p>
+  This takes me back
+  to <a href="https://mitpress.mit.edu/books/turtle-geometry">https://mitpress.mit.edu/books/turtle-geometry</a>,
+  a great book by Harold Abelson and Andrea DiSessa. It uses turtle
+  geometry to explore college-level maths concepts and biological
+  phenomena such as predator-prey relationships.
+</p>
+<!-- date: 2021-09-24 00:53:17 +0000 -->
+<!-- name: Peter Burkimsher -->
+<!-- url: https://peterburk.github.io/ -->
+<!-- source: https://news.ycombinator.com/item?id=28637426 -->
+<p>
+  Last night I was chatting with my girlfriend (who works as a CAD
+  designer in textile industry) about Logo! Like the author of this
+  post, Logo was my first language, and I was really excited to draw
+  squares, cubes, and rocket ships, between the ages of 7 and 9. I had
+  a lot of fun experimenting with the audio frequency generation as
+  well, composing some basic songs (Ode to Joy, Au Clair De La Lune,
+  Fr&egrave;re Jacques).
+</p>
+<p>
+  Years later, when I was 26, I got to use Logo again! I wanted to
+  draw a time-proportional train map of Taiwan. The distance between
+  each point on the map corresponds to the time it takes a local train
+  to travel that far. It made more sense to do that in Logo than in
+  any other language. So I rewrote a basic Logo implementation in
+  JavaScript and called it
+  TurtleSheet: <a href="http://peterburk.github.io/tra/">http://peterburk.github.io/tra/</a>.
+</p>
+<p>
+  I hope that some teachers will see the potential of empowering kids,
+  by giving them real-world data like public transport times, and
+  getting some real designs out.
 </p>

@@ -28,8 +28,8 @@
     solution similar to one of the following ones:
   </p>
   <ul>
-    <li><code>ssh &lt;host&gt; cat file > file</code></li>
-    <li><code>ssh &lt;host&gt; tar cf - file | tar xf -</code></li>
+    <li><code>ssh HOST cat file > file</code></li>
+    <li><code>ssh HOST tar cf - file | tar xf -</code></li>
   </ul>
   <p>
     Note that these solutions and other similar solutions are not
@@ -53,7 +53,7 @@
       output to <code>tee</code> to write the entire session to a text
       file on the local system.
     </p>
-    <pre><code>ssh &lt;host&gt; | tee ssh.txt</code></pre>
+    <pre><code>ssh HOST | tee ssh.txt</code></pre>
     <p>
       This type of pipeline works as intended even while connecting to a
       remote system via a jumphost or an SSH gateway.
