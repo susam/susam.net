@@ -6,6 +6,12 @@ Very nice solution! It is quite interesting that this does not work for
 \( e^x. \) I wonder if there is any general way to tell for any
 function.
 </p>
+<!-- date: 2020-09-01 22:10:57 +0000 -->
+<!-- name: Hubryan -->
+<!-- source: https://www.reddit.com/r/math/comments/ikphsj/_/g3ndema/ -->
+<p>
+  Linear algebra, all powerful.
+</p>
 <!-- date: 2020-09-24 09:15:40 +0000 -->
 <!-- name: Eschborn -->
 <p>
@@ -52,4 +58,123 @@ looks like. The proof in this blog post is a good example of this. We
 know that the functions "exist" but have absolutely no clue about how
 they look like. It is also an open question whether describing them in
 any other way than "the function from this proof" is even possible.
+</p>
+<!-- date: 2020-10-24 12:56:34 +0000 -->
+<!-- name: Andi -->
+<!-- source: https://news.ycombinator.com/item?id=24878908 -->
+<p>
+  Jerry Bona said, "The axiom of choice is obviously true, the
+  well-ordering principle obviously false, and who can tell about
+  Zorn's lemma?"
+</p>
+<!-- date: 2020-10-24 15:37:35 +0000 -->
+<!-- name: MathematicsPadawan -->
+<!-- source: https://news.ycombinator.com/item?id=24879827 -->
+<blockquote>
+  The axiom of choice is allowed.
+</blockquote>
+<p>
+  Why does this need to be stated explicitly? Why does the axiom of
+  choice not enjoy the privilege of being a first-class axiom like
+  other axioms? Why do many proofs need to state the assumption of
+  this axiom explicitly before using it?
+</p>
+<!-- date: 2020-10-24 16:25:29 +0000 -->
+<!-- name: GenerationP -->
+<!-- source: https://news.ycombinator.com/item?id=24880138 -->
+<p>
+  MathematicsPadawan, Because it gets you applications like this (or
+  the Banach-Tarski paradox), which make you wonder how much it
+  deserves its place. To some extent this is more due to Tertium Non
+  Datur than to the axiom of choice, but my impression is ZF doesn't
+  know enough about infinite sets to get to the really
+  counter-intuitive stuff.
+</p>
+<!-- date: 2020-10-24 17:39:42 +0000 -->
+<!-- name: QSort -->
+<!-- source: https://news.ycombinator.com/item?id=24880708 -->
+<p>
+  MathematicsPadawan, Proofs (at least when they are written "the
+  usual" way) are human-to-human communication, not human-to-machine
+  encoding. A proof depending on the axiom of choice is a more
+  interesting fact than it depending on, say, the axiom schema of
+  specification, so it makes sense that the author might want to say
+  "hey, pay attention to that".
+</p>
+<!-- date: 2020-10-24 17:56:15 +0000 -->
+<!-- name: Hansvm -->
+<!-- source: https://news.ycombinator.com/item?id=24880798 -->
+<p>
+  GenerationP,
+</p>
+<p>
+  There are counter-intuitive results in ZF without choice too:
+</p>
+<ul>
+  <li>
+    Collection of non-empty sets with empty cartesian product.
+  </li>
+  <li>
+    Infinite set without a countable infinite subset.
+  </li>
+  <li>
+    There is a pair of sets such that neither is equinumerous with a
+    subset of the other.
+  </li>
+</ul>
+<p>
+  More or less, our intuition about seemingly obvious ideas is
+  completely thrown off without choice. Banach-Tarski at least has the
+  property that it probably doesn't directly apply to the real world
+  (if you can split an object into probably physically impossible sets
+  and then rejoin them correctly then you can double the volume of the
+  physical object) and so doesn't really violate our intuition &mdash;
+  the premise doesn't apply in the real world, so no conclusion really
+  matters. It's like claiming that every element of the empty set is a
+  leprechaun with a pot of gold &mdash; it's true, but it doesn't
+  matter in any meaningful sense.
+</p>
+<!-- date: 2020-10-24 18:28:20 +0000 -->
+<!-- name: Im3w1l -->
+<!-- source: https://news.ycombinator.com/item?id=24881003 -->
+<p>
+  Hansvm, If I understand correctly, your examples
+  are <em>undecidable</em> rather than true in ZF. That's why we can
+  add the axiom of choice without getting contradictions.
+</p>
+<!-- date: 2020-10-24 19:32:16 +0000 -->
+<!-- name: Hansvm -->
+<!-- source: https://news.ycombinator.com/item?id=24881393 -->
+<p>
+  Im3w1l, Well, sure. Without choice there exist models of ZF where
+  those properties hold. Adding choice precludes those models &mdash;
+  i.e., it restricts our axioms in a way which prevents certain kinds
+  of unexpected results.
+</p>
+<!-- date: 2020-10-24 20:12:12 +0000 -->
+<!-- name: LopsidedBrain -->
+<!-- source: https://news.ycombinator.com/item?id=24881651 -->
+<p>
+  MathematicsPadawan, It is partly historical notoriety. It allows one
+  to prove certain statements that seem counter-intuitive. So proofs
+  that employ it can often be viewed with some skepticism.
+</p>
+<p>
+  Moreover, this axiom is <em>independent</em> of the other axioms in
+  ZFC. It is in fact possible to have entirely self-consistent
+  "worlds" of mathematics, ones where the axiom of choice is true, and
+  ones where it is false.
+</p>
+<p>
+  More details and examples of alternate axioms are in the Wikipedia
+  article: <a href="https://en.wikipedia.org/wiki/Axiom_of_choice">Axiom
+  of choice</a>.
+</p>
+<p>
+  If it seems weird that mathematics can give you contradictory
+  results, remember that the difference only shows up when you deal
+  with some form of infinity (e.g., when performing an operation on an
+  infinitely large set). For any usage of mathematics in the real
+  world, the truth or falsity of this axiom won't give you
+  contradictory results.
 </p>
