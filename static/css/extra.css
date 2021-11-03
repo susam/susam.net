@@ -65,6 +65,11 @@ table.top td {
 table, thead, tr, th, td {
   border-color: #666;
 }
+noscript div {
+  border: medium double #900;
+  color: #900;
+  padding: 0 1em;
+}
 .email {
   border: thin solid #666;
   margin-top: 1em;

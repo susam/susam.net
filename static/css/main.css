@@ -103,11 +103,6 @@ nav a:last-child, footer a:last-child  {
   margin-left: auto;
   margin-right: auto;
 }
-noscript div {
-  border: medium double #900;
-  color: #900;
-  padding: 0 1em;
-}
 @media (prefers-color-scheme: dark) {
   body {
     background: #111;
