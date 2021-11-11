@@ -329,19 +329,24 @@ value, next-index."
 
 (defun head-html (import-header root)
   "Given the value of an import header, return HTML code for it."
-  (let ((tokens (uiop:split-string import-header))
+  (let ((names (uiop:split-string import-header))
         (fstr)
-        (result ""))
-    (dolist (token tokens)
-      (cond ((string-ends-with ".js" token)
-             (setf fstr "~a  <script src=\"~ajs/~a\"></script>~%"))
-            ((string-ends-with ".css" token)
-             (setf fstr "~a  <link rel=\"stylesheet\" href=\"~acss/~a\">~%"))
+        (result))
+    (dolist (name names)
+      (cond ((string-ends-with ".css" name)
+             (push (format nil "  <link rel=\"stylesheet\" href=\"~acss/~a\">~%"
+                           root name) result))
+            ((string-ends-with ".inc" name)
+             (push (read-file (format nil "layout/include/~a" name)) result))
+            ((string-ends-with ".js" name)
+             (push (format nil "  <script src=\"~ajs/~a\"></script>~%"
+                           root name) result))
             (t
-             (setf fstr "Unknown import type ~s in ~s")
-             (error (format nil fstr token import-header))))
-      (setf result (format nil fstr result root token)))
-    result))
+             (error (format nil "Unknown import type ~a in ~a"
+                            name import-header)))))
+    (if result
+        (format nil "~{~a~}" (reverse result))
+        "")))
 
 (defmacro add-imports (params)
   "Add head element imports to params if an import is specified."

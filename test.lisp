@@ -521,30 +521,36 @@
          (params (list (cons "var-x" "Bar") (cons "var-y" "Baz"))))
     (assert (string= (render template params) "Foo Bar"))))
 
-(test-case render-head-html-js
-  (assert (string= (head-html "foo.js" "")
-                   (format nil "  <script src=\"js/foo.js\"></script>~%"))))
-
 (test-case render-head-html-css
   (let ((s "  <link rel=\"stylesheet\" href=\"css/foo.css\">~%"))
     (assert (string= (head-html "foo.css" "")
                      (format nil s)))))
 
+(test-case render-head-html-js
+  (assert (string= (head-html "foo.js" "")
+                   (format nil "  <script src=\"js/foo.js\"></script>~%"))))
+
+(test-case render-head-html-inc
+  (assert (string= (head-html "test.inc" "")
+                   (format nil "  <!-- test include -->~%"))))
+
 (test-case render-head-html-js-root
-  (let ((s "  <script src=\"js/foo.js\"></script>~%"))
-    (assert (string= (head-html "foo.js" "") (format nil s)))))
+  (let ((s "  <script src=\"../js/foo.js\"></script>~%"))
+    (assert (string= (head-html "foo.js" "../") (format nil s)))))
 
 (test-case render-head-html-css-root
   (let ((s "  <link rel=\"stylesheet\" href=\"../css/foo.css\">~%"))
     (assert (string= (head-html "foo.css" "../") (format nil s)))))
 
-(test-case render-head-html-js-css
+(test-case render-head-html-js-css-inc
   (assert (string=
-           (head-html "foo.js bar.css baz.js qux.css" "")
-           "  <script src=\"js/foo.js\"></script>
-  <link rel=\"stylesheet\" href=\"css/bar.css\">
-  <script src=\"js/baz.js\"></script>
-  <link rel=\"stylesheet\" href=\"css/qux.css\">
+           (head-html "foo.css bar.js test.inc baz.css qux.js test.inc" "")
+           "  <link rel=\"stylesheet\" href=\"css/foo.css\">
+  <script src=\"js/bar.js\"></script>
+  <!-- test include -->
+  <link rel=\"stylesheet\" href=\"css/baz.css\">
+  <script src=\"js/qux.js\"></script>
+  <!-- test include -->
 ")))
 
 (test-case add-imports
@@ -760,25 +766,25 @@ yz
       (assert (eq next-index nil)))))
 
 (test-case read-comments-single
-  (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 -->
+  (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 07:08:09 +0000 -->
 <!-- name: Alice -->
 Foo")
   (multiple-value-bind (slug comments) (read-comments "test-tmp/comments.txt")
     (assert (string= slug "comments"))
     (assert (= (length comments) 1))
     (let ((comment1 (first comments)))
-      (assert (string= (get-value "date" comment1) "2020-06-01"))
+      (assert (string= (get-value "date" comment1) "2020-06-01 07:08:09 +0000"))
       (assert (string= (get-value "name" comment1) "Alice"))
       (assert (string= (get-value "body" comment1) "Foo")))))
 
 (test-case read-comments-multiple
-  (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 -->
+  (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 00:00:01 +0000 -->
 <!-- author: Alice -->
 X
-<!-- date: 2020-06-02 -->
+<!-- date: 2020-06-02 00:00:02 +0000 -->
 <!-- author: Bob -->
 Y
-<!-- date: 2020-06-03 -->
+<!-- date: 2020-06-03 00:00:03 +0000 -->
 <!-- author: Carol -->
 Z")
   (multiple-value-bind (slug comments) (read-comments "test-tmp/comments.txt")
@@ -787,13 +793,13 @@ Z")
     (let* ((comment1 (first comments))
            (comment2 (second comments))
            (comment3 (third comments)))
-      (assert (string= (get-value "date" comment1) "2020-06-03"))
+      (assert (string= (get-value "date" comment1) "2020-06-03 00:00:03 +0000"))
       (assert (string= (get-value "author" comment1) "Carol"))
       (assert (string= (get-value "body" comment1) (format nil "Z")))
-      (assert (string= (get-value "date" comment2) "2020-06-02"))
+      (assert (string= (get-value "date" comment2) "2020-06-02 00:00:02 +0000"))
       (assert (string= (get-value "author" comment2) "Bob"))
       (assert (string= (get-value "body" comment2) (format nil "Y~%")))
-      (assert (string= (get-value "date" comment3) "2020-06-01"))
+      (assert (string= (get-value "date" comment3) "2020-06-01 00:00:01 +0000"))
       (assert (string= (get-value "author" comment3) "Alice"))
       (assert (string= (get-value "body" comment3) (format nil "X~%"))))))
 
