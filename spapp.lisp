@@ -53,6 +53,7 @@
      (add-value "site-url" "https://susam.in/" ,params)
      (add-value "current-year" (nth-value 5 (get-decoded-time)) ,params)
      (add-value "import" "form.css" ,params)
+     (add-value "canonical-url" "" ,params)
      (add-imports ,params)))
 
 (defun comment-form-page (method post slug name url comment email)
