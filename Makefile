@@ -208,3 +208,14 @@ livechecks:
 	# Maze Xlog
 	curl -sSI https://susam.in/maze/paradox.html | grep '200 OK'
 	curl -sSI https://susam.in/maze/comments/paradox.html | grep '200 OK'
+
+appchecks:
+	curl https://susam.in/app/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
+	curl https://susam.in/app/subscribe/ -d email=foo-subscribe@example.com
+	curl https://susam.in/app/unsubscribe/ -d email=foo-unsubscribe@example.com
+	ls -l /opt/cache
+	cat /opt/cache/comment_foo_$$(date +"%Y-%m-%d")_*.txt
+	grep -h foo /opt/cache/*subscribe_$$(date +"%Y-%m-%d")_*.txt
+	ls -l /opt/cache/
+	sudo rm /opt/cache/comment_foo_$$(date +"%Y-%m-%d")_*.txt
+	grep -l foo /opt/cache/*subscribe_$$(date +"%Y-%m-%d")_*.txt | sudo xargs rm
