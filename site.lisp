@@ -287,24 +287,24 @@ value, next-index."
            (end-tag-index)
            (next-index 0))
       (loop
-        (setf begin-tag-index (search "<h" text :start2 next-index))
-        (unless begin-tag-index
-          (return))
-        (cond ((and (digit-char-p (char text (+ begin-tag-index 2)))
-                    (substring-at "id=\"" text (+ begin-tag-index 4)))
+         (setf begin-tag-index (search "<h" text :start2 next-index))
+         (unless begin-tag-index
+           (return))
+         (cond ((and (digit-char-p (char text (+ begin-tag-index 2)))
+                     (substring-at "id=\"" text (+ begin-tag-index 4)))
 
-               (setf end-id-index (search "\"" text
-                                          :start2 (+ begin-tag-index 8)))
-               (setf end-tag-index (search "</h" text
-                                           :start2 (+ end-id-index 2)))
-               (format s "~a" (subseq text next-index end-tag-index))
-               (format s "<a href=\"#~a\"></a></h"
-                       (subseq text (+ begin-tag-index 8) end-id-index))
-               (setf next-index (+ end-tag-index 3)))
-              (t
-               (format s "~a" (subseq text next-index (+ begin-tag-index 2)))
-               (setf next-index (+ begin-tag-index 2)))))
-      (format s (subseq text next-index)))))
+                (setf end-id-index (search "\"" text
+                                           :start2 (+ begin-tag-index 8)))
+                (setf end-tag-index (search "</h" text
+                                            :start2 (+ end-id-index 2)))
+                (format s "~a" (subseq text next-index end-tag-index))
+                (format s "<a href=\"#~a\"></a></h"
+                        (subseq text (+ begin-tag-index 8) end-id-index))
+                (setf next-index (+ end-tag-index 3)))
+               (t
+                (format s "~a" (subseq text next-index (+ begin-tag-index 2)))
+                (setf next-index (+ begin-tag-index 2)))))
+      (format s "~a" (subseq text next-index)))))
 
 
 ;;; Posts
