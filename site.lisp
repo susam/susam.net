@@ -650,7 +650,7 @@ value, next-index."
     (add-value "body" (join-strings tag-list) params)
     (add-value "toc" (join-strings toc-list) params)
     (add-value "title" "My Reading List" params)
-    (add-value "import" "reading.css tex.js" params)
+    (add-value "import" "reading.css math.inc" params)
     (add-imports params)
     (add-canonical-url dst-path params)
     ;; Render reading list.
