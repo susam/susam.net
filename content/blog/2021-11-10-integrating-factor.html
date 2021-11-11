@@ -110,14 +110,14 @@
   Consider once again the linear first-order differential equation
 
   \begin{equation}
-  \label{eq-diff}
+  \label{if-eq-diff}
   y' + yP(x) = Q(x).
   \end{equation}
 
   We first find the integrating factor
 
   \begin{equation}
-  \label{eq-integrating-factor}
+  \label{if-eq-integrating-factor}
   M(x) = e^{\int P(x)\, dx}.
   \end{equation}
 
@@ -125,12 +125,12 @@
   relationship:
 
   \begin{equation}
-  \label{eq-property}
+  \label{if-eq-property}
   M'(x) = M(x) P(x).
   \end{equation}
 
   We can prove this relationship easily by differentiating both sides
-  of \eqref{eq-integrating-factor} as follows:
+  of \eqref{if-eq-integrating-factor} as follows:
 
   \[
   M'(x) =
@@ -149,20 +149,20 @@
   \]
 
   This nice property of the exponential function leads to the
-  interesting relationship in \eqref{eq-property}.
+  interesting relationship in \eqref{if-eq-property}.
 </p>
 
 <h2 id="simplification-of-lhs">Simplification of LHS</h2>
 <p>
   Now let us multiply the integrating factor \( M(x) \) on both sides
-  of the differential equation \eqref{eq-diff}. By doing so, we get
+  of the differential equation \eqref{if-eq-diff}. By doing so, we get
 
   \[
   y' M(x) + y P(x) M(x) = Q(x) M(x).
   \]
 
-  But from \eqref{eq-property} we know that \( P(x) M(x) = M'(x), \)
-  so the above equation can be written as
+  But from \eqref{if-eq-property} we know that \( P(x) M(x) = M'(x),
+  \) so the above equation can be written as
 
   \[ y' M(x) + y M'(x) = Q(x) M(x). \]
 
@@ -189,7 +189,7 @@
   final solution looks like
 
   \begin{equation}
-  \label{eq-general-solution}
+  \label{if-eq-general-solution}
   y = \frac{1}{M(x)} \int Q(x) M(x) \, dx + \frac{C}{M(x)}.
   \end{equation}
 </p>
@@ -257,7 +257,7 @@
   lead to closed-form solutions. In such cases, we leave the result in
   the form of an expression that contains an unsolved integral. Such
   solutions may resemble the form shown in
-  \eqref{eq-general-solution}.
+  \eqref{if-eq-general-solution}.
 </p>
 <p>
   The method of using integrating factors to solve differential
