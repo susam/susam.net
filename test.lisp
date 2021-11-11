@@ -446,6 +446,9 @@
 <h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>
 <h2 id=\"bar\">Bar<a href=\"#bar\"></a></h2>")))
 
+(test-case extra-markup-format-control-in-text
+  (assert (string= (extra-markup "~a") "~a")))
+
 (test-case read-post
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- title: Foo Bar -->~%Baz Qux"))
