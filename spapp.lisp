@@ -4,48 +4,44 @@
 
 (setf *random-state* (make-random-state t))
 
-(defun current-utc-date-string ()
-  "Return current UTC date in yyyy-mm-dd format."
+(defun current-utc-time-string ()
+  "Return current UTC date and time in yyyy-mm-dd HH:MM:SS format."
   (multiple-value-bind (sec min hour date month year)
       (decode-universal-time (get-universal-time) 0)
-    (declare (ignore sec min hour))
-    (format nil "~4,'0d-~2,'0d-~2,'0d" year month date)))
+    (format nil "~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d:~2,'0d"
+            year month date hour min sec)))
 
-(defun current-utc-time-string ()
-  "Return current UTC time in hh:mm:ss format."
-  (multiple-value-bind (sec min hour)
-      (decode-universal-time (get-universal-time) 0)
-    (format nil "~2,'0d:~2,'0d:~2,'0d" hour min sec)))
+(defun time-based-filename (time-string)
+  "Convert UTC time string to a filename."
+  (string-replace ":" "-" (string-replace " " "_" time-string)))
 
 (defun write-comment (params)
   "Save comment to a file."
-  (let ((text (with-output-to-string (s)
-                (format s "post: ~a~%" (get-value "post" params))
-                (format s "user-agent: ~a~%" (hunchentoot:user-agent))
-                (format s "remote-addr: ~a~%" (hunchentoot:remote-addr*))
-                (format s "x-real-ip: ~a~%" (hunchentoot:header-in* :x-real-ip))
-                (format s "<!-- date: ~a ~a +0000 -->~%"
-                        (current-utc-date-string)
-                        (current-utc-time-string))
-                (format s "<!-- name: ~a -->~%" (get-value "name" params))
-                (when (string/= (get-value "url" params) "")
-                  (format s "<!-- url: ~a -->~%" (get-value "url" params)))
-                (format s "~a~%" (get-value "comment" params))))
-        (filename (format nil "/opt/cache/c_~a_~a_~a_~a.txt"
-                          (get-value "slug" params)
-                          (current-utc-date-string)
-                          (string-replace ":" "-" (current-utc-time-string))
-                          (random 1000000))))
+  (let* ((time-string (current-utc-time-string))
+         (text (with-output-to-string (s)
+                 (format s "post: ~a~%" (get-value "post" params))
+                 (format s "user-agent: ~a~%" (hunchentoot:user-agent))
+                 (format s "remote-addr: ~a~%" (hunchentoot:remote-addr*))
+                 (format s "x-real-ip: ~a~%" (hunchentoot:header-in* :x-real-ip))
+                 (format s "<!-- date: ~a +0000 -->~%" time-string)
+                 (format s "<!-- name: ~a -->~%" (get-value "name" params))
+                 (when (string/= (get-value "url" params) "")
+                   (format s "<!-- url: ~a -->~%" (get-value "url" params)))
+                 (format s "~a~%" (get-value "comment" params))))
+         (filename (format nil "/opt/cache/comment_~a_~a_~a.txt"
+                           (get-value "slug" params)
+                           (time-based-filename time-string)
+                           (random 1000000))))
     (write-file filename text)))
 
 (defun write-subscriber (email action)
   "Save subscriber/unsubscriber to a file."
-  (let ((text (format nil "~a~%" email))
-        (filename (format nil "/opt/cache/~a_~a_~a_~a.txt"
-                          action
-                          (current-utc-date-string)
-                          (string-replace ":" "-" (current-utc-time-string))
-                          (random 1000000))))
+  (let* ((time-string (current-utc-time-string))
+         (text (format nil "~a ~a~%" time-string email))
+         (filename (format nil "/opt/cache/~a_~a_~a.txt"
+                           action
+                           (time-based-filename time-string)
+                           (random 1000000))))
     (write-file filename text)))
 
 (defmacro add-page-params (params)
