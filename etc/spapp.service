@@ -5,10 +5,13 @@ After=network.target
 [Service]
 User=www-data
 WorkingDirectory=/opt/susam.in
-Environment=XDG_CACHE_HOME=/opt/cache
+Environment=XDG_CACHE_HOME=/opt/cache/lisp
 ExecStart=/usr/bin/sbcl --load /opt/quicklisp/setup.lisp --load spapp.lisp
 Restart=always
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
+
+# Note: ASDF (comes with Quicklisp) creates a 'common-lisp' directory
+# under the specified XDG_CACHE_HOME directory.
