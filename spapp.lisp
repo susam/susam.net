@@ -121,14 +121,13 @@
       ((eq method :get)
        (add-value "class" "" params)
        (add-value "email" "" params)
-       (add-value "readonly" "" params))
+       (add-value "status" "" params))
       ;; Handle POST request.
       ((eq method :post)
        (add-value "email" (or email "") params)
        (cond
          ((string= (get-value "email" params) "")
           (add-value "class" "error" params)
-          (add-value "readonly" "" params)
           (add-value "status" "<p>You must enter your email address!</p>" params))
          (t
           (add-value "class" "success" params)
