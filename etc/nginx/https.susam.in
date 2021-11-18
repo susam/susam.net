@@ -18,6 +18,7 @@ server {
     }
     rewrite /boot-sector-code/ /blog/writing-boot-sector-code.html permanent;
     rewrite /maze/fd-100.html /blog/fd-100.html permanent;
+    rewrite /maze/infinitely-nested-dictionary.html /blog/peculiar-self-references.html permanent;
     rewrite ^/blog/rss/$ /blog/rss.xml permanent;
     rewrite ^/blog/([^/]*)/$ /blog/$1.html permanent;
 }
