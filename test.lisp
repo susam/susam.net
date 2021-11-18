@@ -537,13 +537,13 @@
   (assert (string= (head-html "test.inc" "")
                    (format nil "  <!-- test include -->~%"))))
 
-(test-case render-head-html-js-root
-  (let ((s "  <script src=\"../js/foo.js\"></script>~%"))
-    (assert (string= (head-html "foo.js" "../") (format nil s)))))
-
 (test-case render-head-html-css-root
   (let ((s "  <link rel=\"stylesheet\" href=\"../css/foo.css\">~%"))
     (assert (string= (head-html "foo.css" "../") (format nil s)))))
+
+(test-case render-head-html-js-root
+  (let ((s "  <script src=\"../js/foo.js\"></script>~%"))
+    (assert (string= (head-html "foo.js" "../") (format nil s)))))
 
 (test-case render-head-html-js-css-inc
   (assert (string=
