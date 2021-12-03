@@ -1,0 +1,359 @@
+<!-- date: 2021-11-12 21:07:31 +0000 -->
+<!-- name: XG15 -->
+<!-- source: https://news.ycombinator.com/item?id=29204535 -->
+<p>
+  This is an interesting example that the internal models of two
+  programming languages can be quite different, even if they
+  ostensibly support the same features.
+</p>
+<p>
+  <code>a = a['k'] = {}</code> is also valid JavaScript syntax,
+  however running it throws an exception and generally works as OP
+  probably expected the statement to work. The reason is that in JS,
+  the statement is parsed as
+</p>
+<pre><code>a = (a['k'] = {})</code></pre>
+<p>
+  where <code>(a['k'] = {})</code> is executed first and also returns
+  the assigned value. Meanwhile in Python, apparently multi-assignment
+  is a grammar production of its own, so the above would be parsed as
+  sort of:
+</p>
+<pre><code>multi-assign(a, a['k']) = {}</code></pre>
+<p>
+  and therefore first assign to <code>a</code>, then
+  to <code>a['k']</code>.
+</p>
+<!-- date: 2021-11-12 22:57:42 +0000 -->
+<!-- name: JWMH -->
+<!-- source: https://news.ycombinator.com/item?id=29205493 -->
+<p>
+  In my opinion, it would make more sense to just treat assignments as
+  expressions, as is done in C-like languages. Maybe I'm just more
+  accustomed to C-like languages, though.
+</p>
+<p>
+  I think that one thing that makes the statement confusing is that
+  the first equals sign serves a purpose completely different from the
+  second equals sign, but both of them are represented by the same
+  character.
+</p>
+<!-- date: 2021-11-13 03:03:09 +0000 -->
+<!-- name: Oshiar -->
+<!-- source: https://news.ycombinator.com/item?id=29207020 -->
+<p>
+  XG15, Yet another reason is all the references in LHS expressions
+  are resolved before the inner expression is executed. Thus
+<p>
+<pre><code>a['k'] = a = {}</code></pre>
+<p>
+  won't still work.
+</p>
+<!-- date: 2021-11-13 16:35:25 +0000 -->
+<!-- name: O11C -->
+<!-- url: https://github.com/o11c -->
+<!-- source: https://www.reddit.com/r/Python/comments/qsy7u1/_/hkh0d8t/ -->
+<p>
+  Yeah, Python really messed up the order of multiple assignments.
+  This could be fixed by deprecating arbitrary multiple assignments.
+  Instead, only allow:
+</p>
+<ul>
+  <li>
+    any number of assignments to simple variable names (whether local,
+    nonlocal, or global - I'm pretty sure these all are safe), or
+  </li>
+  <li>
+    only one assignment to an arbitrary lvalue.
+  </li>
+</ul>
+<p>
+  Use of "or" rather than "and" is deliberate, to fix an obscure edge
+  case. We can't even limit the restriction to "assignments involving
+  a function call". Notably, <code>self.a = a = {}</code> is not
+  always the same as <code>a = self.a = {}</code>. Proof:
+</p>
+<pre>
+</code>#!/usr/bin/env python3
+
+class Foo:
+    def __init__(self):
+        self.get_a = lambda: a
+        a = 1
+        a = self.a = 2
+        a = 3
+        self.a = a = 4
+
+    def __setattr__(self, name, val):
+        if name != 'get_a':
+            print(self.get_a())
+        self.__dict__[name] = val
+
+if __name__ == '__main__':
+    Foo()</code>
+</pre>
+<!-- date: 2021-11-13 20:13:27 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+  For those who are wondering what the code in the previous comment
+  does, here is its output:
+</p>
+<pre>
+<samp>2
+3</samp>
+</pre>
+<p>
+  When <code>a = self.a = 2</code> is evaluated, the assignment
+  to <code>self.a</code> triggers the <code>__setattr__</code> call
+  which tells us that the <code>__init__</code> method's local
+  variable <code>a</code> has already been updated to <code>2</code>.
+  That's the first line of output.
+</p>
+<p>
+  When <code>self.a = a = 4</code> is evaluated, once again the
+  assignment to <code>self.a</code> triggers
+  the <code>__setattr__</code> call which tells us that the value of
+  local <code>a</code> is still <code>3</code>. It has not been
+  updated to <code>4</code> yet. It gets updated to <code>4</code>
+  after the assignment to <code>self.a</code> completes.
+</p>
+<p>
+  Both lines of output demonstrate the left-to-right assignment quite
+  clearly.
+</p>
+<!-- date: 2021-11-14 02:31:11 +0000 -->
+<!-- name: Kaushik Ghose -->
+<!-- url: https://kaushikghose.wordpress.com/ -->
+<!-- source: https://lobste.rs/s/nivexd/#c_8ars0e -->
+<p>
+  This is very neat, but I would like to approach it a bit
+  differently. Python allows self-referential objects and is able to
+  handle this gracefully while printing them.
+</p>
+<pre>
+<code>&gt;&gt;&gt; <kbd>a = {}</kbd>
+&gt;&gt;&gt; <kbd>a['self'] = a</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+{'self': {...}}
+&gt;&gt;&gt; <kbd>a['self']</kbd>
+{'self': {...}}
+&gt;&gt;&gt; <kbd>a['self']['self']</kbd>
+{'self': {...}}</code>
+</pre>
+<p>
+  Python also allows chained assignments.
+</p>
+<pre>
+<code>&gt;&gt;&gt; <kbd>a = b = c = d = 23.4567</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+23.4567
+&gt;&gt;&gt; <kbd>b</kbd>
+23.4567
+&gt;&gt;&gt; <kbd>c</kbd>
+23.4567
+&gt;&gt;&gt; <kbd>d</kbd>
+23.4567</code>
+</pre>
+<p>
+  Also, a dictionary has to be initialized before a key access.
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a['k'] = {}</kbd>
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in <module&gt;
+NameError: name 'a' is not defined</samp>
+</pre>
+<p>
+  So what the following example teaches us is how Python goes about
+  allocating things in a chained assignment.
+</p>
+<pre>
+<code>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+{'k': {...}}</code>
+</pre>
+<p>
+  Let's look at something else with recursion which is easier for me to illustrate
+</p>
+<pre>
+<code>&gt;&gt;&gt; <kbd>a = a[0] = [0, 1]</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+[[...], 1]</code>
+</pre>
+<pre>
+<code>&gt;&gt;&gt; <kbd>a = a[1] = [0, 1]</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+[0, [...]]</code></pre>
+<p>
+The operations look like following:
+</p>
+<pre>
+<code>[0, 1] &rarr; a
+a &rarr; a[0]</code>
+</pre>
+<p>
+  If we extend the chain (<code>a = b = c = d = ...</code>) what is
+  the pattern?
+</p>
+<p>
+  I couldn't think of a test that would let me dissociate if what is
+  happening is
+</p>
+<pre>
+<code>a = x
+b = a
+c = a
+d = a</code>
+</pre>
+or
+<pre>
+<code>a = x
+b = a
+c = b
+d = c</code>
+</pre>
+<p>
+  I might think of something tomorrow.
+</p>
+<!-- date: 2021-11-14 03:52:23 +0000 -->
+<!-- name: Carl M. Johnson -->
+<!-- url: https://github.com/carlmjohnson -->
+<!-- source: https://lobste.rs/s/nivexd/#c_nnkpwt -->
+<p>
+  Every Python object has an infinitely recursive set of attributes
+  because methods are functions and functions are objects and all
+  objects have methods. It's a fun way to hit a stack overflow chasing
+  them down.
+</p>
+<!-- date: 2021-11-14 07:02:21 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.in/ -->
+<p>
+  Carl, Yes, indeed!
+</p>
+<pre>
+<code>None.__eq__.__eq__.__eq__.__eq__.__eq__ # and so on ...</code>
+</pre>
+<!-- date: 2021-11-18 13:36:32 +0000 -->
+<!-- name: Blind Mathematician -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4a4m7/ -->
+<p>
+  This looks like a big oops in language design. Time to upgrade to
+  Python4 for a fix!
+</p>
+<!-- date: 2021-11-18 13:36:40 +0000 -->
+<!-- name: Knome -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4a56j/ -->
+<p>
+  Wow. That is surprising. It makes sense but strikes me as the exact
+  opposite of what I would expect looking at the code. I would
+  definitely have expected the binding order to be the more common
+  right-to-left and for the original code to generate a name error,
+  rather than the latter.
+</p>
+<!-- date: 2021-11-18 13:41:18 +0000 -->
+<!-- name: Knome -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4ap0d/ -->
+<pre>
+<code>a = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = {}</code>
+</pre>
+<p>
+  This is knowledge that should have remained hidden.
+</p>
+<!-- date: 2021-11-18 13:44:57 +0000 -->
+<!-- name: Ayra -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4b4kx/ -->
+<p>
+  <strong><sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a<sup>a</sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></sup></code></strong>
+</p>
+<!-- date: 2021-11-18 14:06:24 +0000 -->
+<!-- name: Shellac -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4dqhj/ -->
+<blockquote>
+  Knome: ... It makes sense ...
+</blockquote>
+<p>
+  Knome,
+</p>
+<p>
+  I think you are overstating that. It's not outright crazy or
+  inconsistent, but I quibble with it being sensible.
+</p>
+<!-- date: 2021-11-18 17:36:13 +0000 -->
+<!-- name: Piu Tevon -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl58b41/ -->
+<p>
+  The thing I learned today is that multiple assignments are evaluated
+  left-to-right. I assumed it would be the other way around.
+  Like <code>a[0] = a = [0]</code> would have been a lot less
+  surprising.
+</p>
+<!-- date: 2021-11-18 22:06:48 +0000 -->
+<!-- name: Anitil -->
+<!-- source: https://news.ycombinator.com/item?id=29271238 -->
+<p>
+  I'm amazed at how long I've been working in python and never known
+  that assignment works in this way. I suppose I just avoid parts of
+  the language that I don't understand.
+</p>
+<p>
+  Looking through the archives, it's a really interesting blog in
+  general.
+</p>
+<!-- date: 2021-11-18 22:24:35 +0000 -->
+<!-- name: Kache -->
+<!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl6fx8y/ -->
+<p>
+  I think it would be elegant to let assignments be expressions, and
+  from that simple core rule, your parsing naturally follows.
+</p>
+<p>
+  I find it irksome that Python makes a distinction between statements
+  and expressions, instead.
+</p>
+<!-- date: 2021-11-18 23:54:50 +0000 -->
+<!-- name: Oliver -->
+<!-- source: https://news.ycombinator.com/item?id=29272147 -->
+<p>
+  It's fallout of the fact that assignment must be a statement, and
+  cannot be an expression. For example, this is wrong in python, while
+  it would be allowed in c-like languages:
+</p>
+<pre><code>print(a = 5)</code></pre>
+<!-- date: 2021-11-18 23:57:41 +0000 -->
+<!-- name: Tom Forbes -->
+<!-- url: https://github.com/orf/ -->
+<p>
+  Oliver, It's possible now with the walrus operator though:
+</p>
+<pre><code>print(a := 5)</code></pre>
+<!-- date: 2021-11-19 01:20:56 +0000 -->
+<!-- name: Heavyset Go -->
+<!-- source: https://news.ycombinator.com/item?id=29272718 -->
+<p>
+  Some languages wear the things that make you go WTF on their
+  sleeves. In contrast, Python's surprises pop up slowly over time,
+  and in places where you'd least expect them.
+</p>
+<!-- date: 2021-11-19 05:22:18 +0000 -->
+<!-- name: Solar Fields -->
+<!-- source: https://news.ycombinator.com/item?id=29274097 -->
+<p>
+  Heavyset, I wonder if it's because of their subtlety. I assume you
+  are referencing JavaScript, where the warts are impossible to ignore
+  because you can't write an everyday program as a beginner without
+  running into them. This sort of thing from the article is just not
+  something I would typically be trying to do in the normal course of
+  shuffling data around.
+</p>
+<!-- date: 2021-11-20 22:41:56 +0000 -->
+<!-- name: Malf -->
+<!-- source: https://news.ycombinator.com/item?id=29292478 -->
+<p>
+  This is the first true "PHPism" I've seen in a "real language". (Is
+  there a name for "we didn't want the general thing (e.g., assignment
+  expressions) but we wanted one narrow subset of it (serial
+  assignment), so we implemented that, but with different semantics
+  for no good reason"?)
+</p>

@@ -142,6 +142,49 @@ any other way than "the function from this proof" is even possible.
   are <em>undecidable</em> rather than true in ZF. That's why we can
   add the axiom of choice without getting contradictions.
 </p>
+<!-- date: 2020-10-24 18:55:04 +0000 -->
+<!-- name: 6gvONxR4sf7o -->
+<!-- source: https://news.ycombinator.com/item?id=24881174 -->
+<p>
+  I seem to be missing something. I'm reading this as looking for
+  functions \( f \) and \( g \) from \( \mathbb{R} \) to \( \mathbb{R}
+  \), such that \( f(x) + g(x) = 1 \) and \( f(x + p) = f(x). \) If I
+  were reading that correctly, then for any periodic \( f(x) \), \(
+  g(x) = 1 - f(x) \) would do, meaning any old periodic function would
+  do. What am I missing?
+</p>
+<p>
+  Am I also reading it right that the author is saying the axiom of
+  choice is equivalent to the statement that every vector space has a
+  finite basis? I don't get how that allows infinite dimensional
+  vector spaces. If not, and it's just that every vector space has a
+  basis that maybe infinite, then what's the justification of the
+  Hamel basis being finite?
+</p>
+<p>
+  I feel like I'm missing a lot between the lines here.
+</p>
+<!-- date: 2020-10-24 18:57:10 +0000 -->
+<!-- name: Shakow -->
+<!-- source: https://news.ycombinator.com/item?id=24881188 -->
+<p>
+  6gvONxR4sf7o said:
+</p>
+<blockquote>
+  I'm reading this as looking for functions \( f \) and \( g \) from
+  \( \mathbb{R} \) to \( \mathbb{R} \), such that \( f(x) + g(x) = 1
+  \) &hellip; What am I missing?
+</blockquote>
+<p>
+  6gvONxR4sf7o, Identity function means that \( f(x) = x \), not \(
+  f(x) = 1. \)
+</p>
+<!-- date: 2020-10-24 18:59:13 +0000 -->
+<!-- name: 6gvONxR4sf7o -->
+<!-- source: https://news.ycombinator.com/item?id=24881174 -->
+<p>
+  Shakow, Doh. Thanks.
+</p>
 <!-- date: 2020-10-24 19:32:16 +0000 -->
 <!-- name: Hansvm -->
 <!-- source: https://news.ycombinator.com/item?id=24881393 -->
@@ -177,4 +220,22 @@ any other way than "the function from this proof" is even possible.
   infinitely large set). For any usage of mathematics in the real
   world, the truth or falsity of this axiom won't give you
   contradictory results.
+</p>
+<!-- date: 2020-10-24 22:09:31 +0000 -->
+<!-- name: Kevin Milner -->
+<!-- url: https://github.com/kmilner -->
+<!-- source: https://news.ycombinator.com/item?id=24882300 -->
+<p>
+  6gvONxR4sf7o said:
+</p>
+<blockquote>
+  Am I also reading it right that the author is saying the axiom of
+  choice is equivalent to the statement that every vector space has a
+  finite basis?
+</blockquote>
+<p>
+  6gvONxR4sf7o, Not quite. The axiom of choice is equivalent to saying
+  every vector space has a Hamel basis, which is to say every element
+  can be represented as a finite combination of elements of the Hamel
+  basis. It doesn't imply that the Hamel basis is finite itself.
 </p>
