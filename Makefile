@@ -197,13 +197,16 @@ livechecks:
 	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.in/blog/fd-100/'
 	curl -sSI http://susam.in/blog/fd-100.html | grep 'Location: https://susam.in/blog/fd-100.html'
 	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.in/blog/fd-100.html'
-	# Main Blog
+	# Main Xlog
 	curl -sSI https://susam.in/blog/infosys-tcs-or-wipro.html | grep '200 OK'
 	curl -sSI https://susam.in/blog/comments/infosys-tcs-or-wipro.html | grep '200 OK'
 	curl -sSI https://susam.in/blog/re-infosys-tcs-or-wipro.html | grep '200 OK'
 	curl -sSI https://susam.in/blog/comments/re-infosys-tcs-or-wipro.html | grep '200 OK'
-	# Maze to Blog redirects
+	# Main Blog redirects
+	curl -sSI https://susam.in/blog/universal-palindrome-day/ | grep 'Location: https://susam.in/blog/global-palindrome-day.html'
+	# Maze
 	curl -sSI https://susam.in/maze/c-quine.html | grep '200 OK'
+	# Maze to Blog redirects
 	curl -sSI https://susam.in/maze/fd-100.html | grep 'Location: https://susam.in/blog/fd-100.html'
 	# Maze Xlog
 	curl -sSI https://susam.in/maze/paradox.html | grep '200 OK'
