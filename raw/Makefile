@@ -3,8 +3,8 @@ setup: FORCE
 	sudo apt-get install python3-venv python3-tk
 
 venv: FORCE
-	python3 -m venv ~/.venv/susam.in
-	echo . ~/.venv/susam.in/bin/activate > venv
+	python3 -m venv ~/.venv/susam.net
+	echo . ~/.venv/susam.net/bin/activate > venv
 	. ./venv && pip install matplotlib
 
 clumsy-equations: clean

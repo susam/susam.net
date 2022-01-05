@@ -1,13 +1,10 @@
-# https://example.com/
+# http://example.com/
 server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
+    listen 80;
+    listen [::]:80;
     server_name susam.in susam;
 
-    ssl_certificate /etc/letsencrypt/live/susam.in/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/susam.in/privkey.pem;
-
-    root /var/www/susam.in;
+    root /var/www/susam.net;
     location /app/ {
         proxy_set_header HOST $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -24,20 +21,10 @@ server {
     rewrite /boot-sector-code/ /blog/writing-boot-sector-code.html permanent;
 }
 
-# https://www.example.com/ => https://example.com/
-server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
-    server_name www.susam.in;
-    ssl_certificate /etc/letsencrypt/live/susam.in/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/susam.in/privkey.pem;
-    return 301 https://susam.in$request_uri;
-}
-
-# http://example.com/, http://www.example.com/ => https://example.com/
+# http://www.example.com/ => http://example.com/
 server {
     listen 80;
     listen [::]:80;
-    server_name susam.in www.susam.in;
-    return 301 https://susam.in$request_uri;
+    server_name www.susam.net www.susam.in susam.in;
+    return 301 http://susam.net$request_uri;
 }
