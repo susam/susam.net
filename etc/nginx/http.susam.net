@@ -2,7 +2,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name susam.in susam;
+    server_name susam.net susam;
 
     root /var/www/susam.net;
     location /app/ {
