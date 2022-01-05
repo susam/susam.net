@@ -8,7 +8,7 @@ exploited to carry out cross site scripting attack.
 Researcher
 ----------
 
-Susam Pal <susam@susam.in>
+Susam Pal
 
 
 Type

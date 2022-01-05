@@ -8,7 +8,7 @@ and displays it. However, in doing so, it does not santize the input.
 Researcher
 ----------
 
-Susam Pal <susam@susam.in>
+Susam Pal
 
 
 Type
@@ -21,8 +21,8 @@ Timeline
 --------
 
 * 2007-06-26 - Discovered; reported to vendor
-* 2007-07-11 - Public disclosure; 
-             Vendor moved vulnerable script to another domain
+* 2007-07-11 - Public disclosure;
+               Vendor moved vulnerable script to another domain
 
 
 Description

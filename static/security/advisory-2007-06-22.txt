@@ -23,9 +23,9 @@ track of the re-authenticating user.
 Researchers
 -----------
 
-* Susam Pal <susam@susam.in>
-* Vipul Agarwal <vipul@nuttygeeks.com>
-* Gaurav Mogre <gaurav.mogre@gmail.com>
+* Susam Pal
+* Vipul Agarwal
+* Gaurav Mogre
 
 
 Type

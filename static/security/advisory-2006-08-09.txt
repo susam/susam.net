@@ -12,7 +12,7 @@ the scripts. This issue can be exploited on Windows operating systems.
 Researcher
 ----------
 
-Susam Pal <susam@susam.in>
+Susam Pal
 
 
 Type
