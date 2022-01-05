@@ -12,7 +12,7 @@ exploited by an attacker to bypass re-authentication.
 Researcher
 ----------
 
-Susam Pal <susam@susam.in>
+Susam Pal
 
 
 Type
@@ -44,7 +44,7 @@ On successful Orkut login, the following cookies are set:
     Cookie: LSID
 
 The security flaw associated with the first cookie has been explained at
-http://susam.in/security/advisory-2007-06-22.txt already.
+http://susam.net/security/advisory-2007-06-22.txt already.
 
 The second and the third cookies are responsible for another flaw which
 is described in this advisory. In the login page of Orkut, the login

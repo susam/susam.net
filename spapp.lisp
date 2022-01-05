@@ -50,7 +50,7 @@
      (add-value "index" "" ,params)
      (add-value "maze" "/maze/" ,params)
      (add-value "subtitle" " - Susam Pal" ,params)
-     (add-value "site-url" "https://susam.in/" ,params)
+     (add-value "site-url" "https://susam.net/" ,params)
      (add-value "current-year" (nth-value 5 (get-decoded-time)) ,params)
      (add-value "import" "form.css" ,params)
      (add-value "canonical-url" "" ,params)
