@@ -879,7 +879,7 @@ value, next-index."
   (let ((params (list (cons "root" "")
                       (cons "subtitle" " - Susam Pal")
                       (cons "author" "Susam Pal")
-                      (cons "site-url" "https://susam.in/")
+                      (cons "site-url" "https://susam.net/")
                       (cons "current-year"
                             (nth-value 5 (get-decoded-time)))
                       (cons "render" "yes")

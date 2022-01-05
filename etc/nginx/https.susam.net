@@ -1,0 +1,43 @@
+# https://example.com/
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name susam.net susam;
+
+    ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/susam.net/privkey.pem;
+
+    root /var/www/susam.net;
+    location /app/ {
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://127.0.0.1:4242;
+    }
+    location /files/ {
+        autoindex on;
+    }
+    rewrite ^/blog/universal-palindrome-day/$ /blog/global-palindrome-day.html permanent;
+    rewrite ^/blog/rss/$ /blog/rss.xml permanent;
+    rewrite ^/blog/([^/]*)/$ /blog/$1.html permanent;
+    rewrite ^/maze/fd-100.html$ /blog/fd-100.html permanent;
+    rewrite ^/maze/infinitely-nested-dictionary.html$ /blog/peculiar-self-references.html permanent;
+    rewrite /boot-sector-code/ /blog/writing-boot-sector-code.html permanent;
+}
+
+# https://www.example.com/ => https://example.com/
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name www.susam.net;
+    ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/susam.net/privkey.pem;
+    return 301 https://susam.net$request_uri;
+}
+
+# http://example.com/, http://www.example.com/ => https://example.com/
+server {
+    listen 80;
+    listen [::]:80;
+    server_name susam.net www.susam.net susam.in;
+    return 301 https://susam.net$request_uri;
+}

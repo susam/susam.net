@@ -1,13 +1,13 @@
 NAME = susam
-FQDN = $(NAME).in
-MAIL = $(NAME)@$(FQDN)
+FQDN = $(NAME).net
+MAIL = $(NAME).pal@gmail.com
 
 help:
 	@echo 'Usage: make [target]'
 	@echo
 	@echo 'Publish targets:'
 	@echo '  pub         Invoke all publish targets.'
-	@echo '  web         Publish website on susam.in.'
+	@echo '  web         Publish website on VPS.'
 	@echo '  gh          Publish website on GitHub Pages.'
 	@echo
 	@echo 'High-level targets:'
@@ -43,7 +43,7 @@ setup:
 https: http
 	@echo Setting up HTTPS website ...
 	certbot certonly -n --agree-tos -m '$(MAIL)' --webroot \
-	                 -w '/var/www/$(FQDN)' -d '$(FQDN),www.$(FQDN)'
+	                 -w '/var/www/$(FQDN)' -d '$(FQDN),www.$(FQDN),susam.in'
 	(crontab -l | sed '/::::/d'; cat etc/crontab) | crontab
 	ln -snf "$$PWD/etc/nginx/https.$(FQDN)" '/etc/nginx/sites-enabled/$(FQDN)'
 	systemctl reload nginx
@@ -61,7 +61,7 @@ spapp: FORCE
 	@echo Setting up spapp ...
 	mkdir -p /opt/cache
 	chown www-data:www-data /opt/cache
-	systemctl enable "/opt/susam.in/etc/spapp.service"
+	systemctl enable "/opt/susam/etc/spapp.service"
 	systemctl daemon-reload
 	systemctl start spapp
 	@echo Done; echo
@@ -99,7 +99,7 @@ site:
 
 dist:
 	@echo Generating distributable website ...
-	sbcl --eval '(defvar *params* (list (cons "index" "index.html") (cons "maze" "https://susam.in/maze/")))' --script site.lisp
+	sbcl --eval '(defvar *params* (list (cons "index" "index.html") (cons "maze" "https://susam.net/maze/")))' --script site.lisp
 	@echo Done; echo
 
 runapp:
@@ -135,14 +135,14 @@ push:
 	git push
 
 web:
-	ssh -t susam.in "cd /opt/susam.in; sudo git pull; sudo make live; sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/susam/; sudo git pull; sudo make live; sudo systemctl restart spapp"
 
 
 # GitHub Pages Mirror
 
 TMP_REV = /tmp/rev.txt
 CAT_REV = cat $(TMP_REV)
-GIT_SRC = https://github.com/susam/susam.in
+GIT_SRC = https://github.com/susam/susam.net
 GIT_DST = https://github.com/susam/susam.github.io
 WEB_URL = https://susam.github.io/
 TMP_GIT = /tmp/tmpgit
@@ -157,7 +157,7 @@ gh: site
 	echo Mirror of Susam\'s Blog >> $(README)
 	echo ====================== >> $(README)
 	echo >> $(README)
-	echo Automatically generated from [susam/susam.in][GIT_SRC] >> $(README)
+	echo Automatically generated from [susam/susam.net][GIT_SRC] >> $(README)
 	echo "([$$($(CAT_REV))][GIT_REV])". >> $(README)
 	echo >> $(README)
 	echo Visit $(WEB_URL) to view the the mirror. >> $(README)
@@ -169,7 +169,7 @@ gh: site
 	# Push mirror.
 	cd $(TMP_GIT) && git init
 	cd $(TMP_GIT) && git config user.name "Susam Pal"
-	cd $(TMP_GIT) && git config user.email susam@susam.in
+	cd $(TMP_GIT) && git config user.email susam@susam.net
 	cd $(TMP_GIT) && git add .
 	cd $(TMP_GIT) && git commit -m "Generated from $(GIT_SRC) - $$($(CAT_REV))"
 	cd $(TMP_GIT) && git remote add origin "$(GIT_DST).git"
@@ -186,36 +186,38 @@ checks:
 	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
-	# Ensure http.susam.in and https.susam.in are consistent.
-	sed -n '/location/,/^}/p' etc/nginx/http.susam.in > /tmp/http.susam.in
-	sed -n '/location/,/^}/p' etc/nginx/https.susam.in > /tmp/https.susam.in
-	diff -u /tmp/http.susam.in /tmp/https.susam.in
+	# Ensure http.susam.net and https.susam.net are consistent.
+	sed -n '/location/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '/location/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	@echo Done; echo
 
 livechecks:
 	# Blog legacy URL redirects
-	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.in/blog/fd-100/'
-	curl -sSI http://susam.in/blog/fd-100.html | grep 'Location: https://susam.in/blog/fd-100.html'
-	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.in/blog/fd-100.html'
+	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
+	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
+	curl -sSI http://susam.net/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
+	curl -sSI http://susam.net/blog/fd-100.html | grep 'Location: https://susam.net/blog/fd-100.html'
+	curl -sSI https://susam.net/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100.html'
 	# Main Xlog
-	curl -sSI https://susam.in/blog/infosys-tcs-or-wipro.html | grep '200 OK'
-	curl -sSI https://susam.in/blog/comments/infosys-tcs-or-wipro.html | grep '200 OK'
-	curl -sSI https://susam.in/blog/re-infosys-tcs-or-wipro.html | grep '200 OK'
-	curl -sSI https://susam.in/blog/comments/re-infosys-tcs-or-wipro.html | grep '200 OK'
+	curl -sSI https://susam.net/blog/infosys-tcs-or-wipro.html | grep '200 OK'
+	curl -sSI https://susam.net/blog/comments/infosys-tcs-or-wipro.html | grep '200 OK'
+	curl -sSI https://susam.net/blog/re-infosys-tcs-or-wipro.html | grep '200 OK'
+	curl -sSI https://susam.net/blog/comments/re-infosys-tcs-or-wipro.html | grep '200 OK'
 	# Main Blog redirects
-	curl -sSI https://susam.in/blog/universal-palindrome-day/ | grep 'Location: https://susam.in/blog/global-palindrome-day.html'
+	curl -sSI https://susam.net/blog/universal-palindrome-day/ | grep 'Location: https://susam.net/blog/global-palindrome-day.html'
 	# Maze
-	curl -sSI https://susam.in/maze/c-quine.html | grep '200 OK'
+	curl -sSI https://susam.net/maze/c-quine.html | grep '200 OK'
 	# Maze to Blog redirects
-	curl -sSI https://susam.in/maze/fd-100.html | grep 'Location: https://susam.in/blog/fd-100.html'
+	curl -sSI https://susam.net/maze/fd-100.html | grep 'Location: https://susam.net/blog/fd-100.html'
 	# Maze Xlog
-	curl -sSI https://susam.in/maze/paradox.html | grep '200 OK'
-	curl -sSI https://susam.in/maze/comments/paradox.html | grep '200 OK'
+	curl -sSI https://susam.net/maze/paradox.html | grep '200 OK'
+	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
 
 appchecks: checkroot
-	curl https://susam.in/app/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
-	curl https://susam.in/app/subscribe/ -d email=foo-subscribe@example.com
-	curl https://susam.in/app/unsubscribe/ -d email=foo-unsubscribe@example.com
+	curl https://susam.net/app/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
+	curl https://susam.net/app/subscribe/ -d email=foo-subscribe@example.com
+	curl https://susam.net/app/unsubscribe/ -d email=foo-unsubscribe@example.com
 	ls -l /opt/cache
 	cat /opt/cache/comment_foo_$$(date +"%Y-%m-%d")_*.txt
 	grep -h foo /opt/cache/*subscribe_$$(date +"%Y-%m-%d")_*.txt

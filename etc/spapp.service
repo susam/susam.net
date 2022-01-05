@@ -1,10 +1,10 @@
 [Unit]
-Description=Susam.in App
+Description=Website App
 After=network.target
 
 [Service]
 User=www-data
-WorkingDirectory=/opt/susam.in
+WorkingDirectory=/opt/susam
 Environment=XDG_CACHE_HOME=/opt/cache/lisp
 ExecStart=/usr/bin/sbcl --load /opt/quicklisp/setup.lisp --load spapp.lisp
 Restart=always
