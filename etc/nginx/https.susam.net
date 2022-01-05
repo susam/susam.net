@@ -28,7 +28,7 @@ server {
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name www.susam.net;
+    server_name www.susam.net susam.in;
     ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/susam.net/privkey.pem;
     return 301 https://susam.net$request_uri;
