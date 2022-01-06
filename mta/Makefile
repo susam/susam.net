@@ -25,11 +25,12 @@ smtp: checkroot checkpass rmsmtp
 	# --------------------------------------------------------------
 	# Setting aliases for email forwarding ...
 	# --------------------------------------------------------------
-	echo "$(SMTP_USER): $(SMTP_FWDS)" >> /etc/aliases
-	echo "$(SMTP_ROOT): $(SMTP_FWDS)" >> /etc/aliases
+	#echo "$(SMTP_USER): $(SMTP_FWDS)" >> /etc/aliases
+	#echo "$(SMTP_ROOT): $(SMTP_FWDS)" >> /etc/aliases
 	# --------------------------------------------------------------
 	# Enabling AUTH PLAIN ...
 	# --------------------------------------------------------------
+	cp /etc/exim4.conf.template /etc/exim4.conf.bkp
 	sed -e "/plain_server/,/endif/ s/# //" \
 	    /etc/exim4/exim4.conf.template > /tmp/exim4.conf.template
 	mv /tmp/exim4.conf.template /etc/exim4
