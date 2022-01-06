@@ -70,7 +70,7 @@ smtp: checkroot checkpass rmsmtp
 	# Sending test email ...
 	# --------------------------------------------------------------
 	echo hello, world -- Makefile | \
-	    mail -a "From: root@$FQDN" -s "hello, world" susam@susam.net
+	    mail -a "From: root@$(FQDN)" -s "hello, world" susam@susam.net
 	# --------------------------------------------------------------
 	# Generating DNS records ...
 	# --------------------------------------------------------------
