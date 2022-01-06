@@ -1,7 +1,7 @@
 FQDN = susam.in
 SMTP_ROOT = root
 SMTP_USER = susam
-SMTP_FWDS = susam.pal@gmail.com, susampal@protonmail.com
+SMTP_FWDS = foo@example.com, bar@example.com
 
 smtp: checkroot checkpass rmsmtp
 	# --------------------------------------------------------------
