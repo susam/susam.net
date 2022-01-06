@@ -30,7 +30,7 @@ smtp: checkroot checkpass rmsmtp
 	# --------------------------------------------------------------
 	# Enabling AUTH PLAIN ...
 	# --------------------------------------------------------------
-	cp /etc/exim4.conf.template /etc/exim4.conf.bkp
+	cp /etc/exim4/exim4.conf.template /etc/exim4/exim4.conf.bkp
 	sed -e "/plain_server/,/endif/ s/# //" \
 	    /etc/exim4/exim4.conf.template > /tmp/exim4.conf.template
 	mv /tmp/exim4.conf.template /etc/exim4
