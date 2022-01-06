@@ -14,7 +14,7 @@ smtp: checkroot checkpass rmsmtp
 	# --------------------------------------------------------------
 	cp /etc/exim4/update-exim4.conf.conf /etc/exim4/update-exim4.bkp
 	sed -e "s/\(dc_eximconfig_configtype\)=.*/\1='internet'/" \
-	    -e "s/\(dc_other_hostnames\)=.*/\1='$(FQDN),susam.in'/" \
+	    -e "s/\(dc_other_hostnames\)=.*/\1='$(FQDN);susam.in'/" \
 	    -e "s/\(dc_local_interfaces\)=.*/\1=''/" \
 	    /etc/exim4/update-exim4.conf.conf > /tmp/update-exim4.conf.conf
 	mv /tmp/update-exim4.conf.conf /etc/exim4
