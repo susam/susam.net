@@ -61,7 +61,7 @@ spapp: FORCE
 	@echo Setting up spapp ...
 	mkdir -p /opt/cache
 	chown www-data:www-data /opt/cache
-	systemctl enable "/opt/www/etc/spapp.service"
+	systemctl enable "/opt/blog/etc/spapp.service"
 	systemctl daemon-reload
 	systemctl start spapp
 	@echo Done; echo
@@ -135,7 +135,7 @@ push:
 	git push
 
 web:
-	ssh -t susam.net "cd /opt/www/; sudo git pull; sudo make live; sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/blog/; sudo git pull; sudo make live; sudo systemctl restart spapp"
 
 
 # GitHub Pages Mirror
