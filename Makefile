@@ -174,7 +174,7 @@ gh: site
 	cd $(TMP_GIT) && git commit -m "Generated from $(GIT_SRC) - $$($(CAT_REV))"
 	cd $(TMP_GIT) && git remote add origin "$(GIT_DST).git"
 	cd $(TMP_GIT) && git log
-	cd $(TMP_GIT) && git push -f origin master
+	cd $(TMP_GIT) && git push -f origin main
 
 # Checks
 test:
