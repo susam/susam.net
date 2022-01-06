@@ -1,4 +1,4 @@
-FQDN = susam.in
+FQDN = susam.net
 SMTP_ROOT = root
 SMTP_USER = susam
 SMTP_FWDS = foo@example.com, bar@example.com
@@ -12,8 +12,9 @@ smtp: checkroot checkpass rmsmtp
 	# --------------------------------------------------------------
 	# Editing configuration ...
 	# --------------------------------------------------------------
+	cp /etc/exim4/update-exim4.conf.conf /etc/exim4/update-exim4.bkp
 	sed -e "s/\(dc_eximconfig_configtype\)=.*/\1='internet'/" \
-	    -e "s/\(dc_other_hostnames\)=.*/\1='$(FQDN)'/" \
+	    -e "s/\(dc_other_hostnames\)=.*/\1='$(FQDN),susam.in'/" \
 	    -e "s/\(dc_local_interfaces\)=.*/\1=''/" \
 	    /etc/exim4/update-exim4.conf.conf > /tmp/update-exim4.conf.conf
 	mv /tmp/update-exim4.conf.conf /etc/exim4
@@ -64,7 +65,7 @@ smtp: checkroot checkpass rmsmtp
 	# Sending test email ...
 	# --------------------------------------------------------------
 	echo hello, world -- Makefile | \
-	    mail -a "From: root@susam.in" -s "hello, world" susam@susam.in
+	    mail -a "From: root@$FQDN" -s "hello, world" susam@susam.net
 	# --------------------------------------------------------------
 	# Generating DNS records ...
 	# --------------------------------------------------------------
