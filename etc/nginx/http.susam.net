@@ -15,6 +15,7 @@ server {
     }
     rewrite ^/blog/universal-palindrome-day/$ /blog/global-palindrome-day.html permanent;
     rewrite ^/blog/rss/$ /blog/rss.xml permanent;
+    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
     rewrite ^/blog/([^/]*)/$ /blog/$1.html permanent;
     rewrite ^/maze/fd-100.html$ /blog/fd-100.html permanent;
     rewrite ^/maze/infinitely-nested-dictionary.html$ /blog/peculiar-self-references.html permanent;
