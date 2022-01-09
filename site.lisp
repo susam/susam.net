@@ -1,6 +1,10 @@
 ;;;; Site Generator
 ;;;; ==============
 
+;;;; This site generator is inspired by and based on my lovely wife's
+;;;; <https://github.com/sunainapai/makesite/>.
+
+
 (require "uiop")
 
 

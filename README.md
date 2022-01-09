@@ -24,7 +24,8 @@ On 16 Feb 2019, I turned my blog into a static website generated with a
 modified version of [makesite.py][PYCODE].
 
 On 16 Aug 2021, I turned my blog into a static website generated with
-my own [Common Lisp][CLCODE] program.
+my own [Common Lisp][CLCODE] program. This program is inspired by and
+based on [makesite.py][PYCODE].
 
 On 06 Jan 2022, I moved my blog to [susam.net][WEBSITE].
 
