@@ -17,11 +17,17 @@ h1 {
 h1 + div, h2 + div {
   margin: 0.5em 0;
 }
-a:link, a:visited {
+a:link {
   color: #00e;
 }
-a:focus, a:hover, a:active {
+a:visited {
+  color: #518;
+}
+a:focus, a:hover {
   color: #03f;
+}
+a:active {
+  color: #e00;
 }
 a:empty:before {
   content: "#";
@@ -108,11 +114,17 @@ nav a:last-child, footer a:last-child  {
     background: #111;
     color: #bbb;
   }
-  a:link, a:visited {
+  a:link {
     color: #9bf;
   }
-  a:focus, a:hover, a:active {
+  a:visited {
+    color: #caf;
+  }
+  a:focus, a:hover {
     color: #9cf;
+  }
+  a:active {
+    color: #faa;
   }
   pre, code, samp, kbd {
     color: #6cf;
