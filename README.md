@@ -1,5 +1,5 @@
-susam.in
-========
+susam.net
+=========
 
 [susam.net][WEBSITE] is my personal website and blog.
 
