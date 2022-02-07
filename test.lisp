@@ -526,34 +526,39 @@
 
 (test-case render-head-html-css
   (let ((s "  <link rel=\"stylesheet\" href=\"css/foo.css\">~%"))
-    (assert (string= (head-html "foo.css" "")
+    (assert (string= (head-html "foo.css" "" '())
                      (format nil s)))))
 
 (test-case render-head-html-js
-  (assert (string= (head-html "foo.js" "")
+  (assert (string= (head-html "foo.js" "" '())
                    (format nil "  <script src=\"js/foo.js\"></script>~%"))))
 
 (test-case render-head-html-inc
-  (assert (string= (head-html "test.inc" "")
-                   (format nil "  <!-- test include -->~%"))))
+  (assert (string= (head-html "test.inc" "" '())
+                   (format nil "  <!-- {{ a }} test include -->~%"))))
+
+(test-case render-head-html-inc-params
+  (assert (string= (head-html "test.inc" "" '(("a" . "apple")))
+                   (format nil "  <!-- apple test include -->~%"))))
 
 (test-case render-head-html-css-root
   (let ((s "  <link rel=\"stylesheet\" href=\"../css/foo.css\">~%"))
-    (assert (string= (head-html "foo.css" "../") (format nil s)))))
+    (assert (string= (head-html "foo.css" "../" '()) (format nil s)))))
 
 (test-case render-head-html-js-root
   (let ((s "  <script src=\"../js/foo.js\"></script>~%"))
-    (assert (string= (head-html "foo.js" "../") (format nil s)))))
+    (assert (string= (head-html "foo.js" "../" '()) (format nil s)))))
 
 (test-case render-head-html-js-css-inc
   (assert (string=
-           (head-html "foo.css bar.js test.inc baz.css qux.js test.inc" "")
+           (head-html "foo.css bar.js test.inc baz.css qux.js test.inc" ""
+                      '(("a" . "apple")))
            "  <link rel=\"stylesheet\" href=\"css/foo.css\">
   <script src=\"js/bar.js\"></script>
-  <!-- test include -->
+  <!-- apple test include -->
   <link rel=\"stylesheet\" href=\"css/baz.css\">
   <script src=\"js/qux.js\"></script>
-  <!-- test include -->
+  <!-- apple test include -->
 ")))
 
 (test-case add-imports

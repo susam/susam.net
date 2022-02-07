@@ -1,1 +1,1 @@
-  <!-- test include -->
+  <!-- {{ a }} test include -->
