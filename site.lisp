@@ -905,8 +905,7 @@ value, next-index."
                    "content/comments/*.html" page-layout params)
     ;; Music, reading, and text directories.
     (make-music "content/music/*.html" page-layout params)
-    (make-reading "content/reading/*.html" page-layout params)
-    (make-text-directory "static/security/*.txt" page-layout params))
+    (make-reading "content/reading/*.html" page-layout params))
   t)
 
 (when *main-mode*

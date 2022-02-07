@@ -181,8 +181,12 @@ test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
 checks:
+	# Ensure every comment file has a post file.
+	ls -1 content/comments/ | while read -r f; do \
+		if ! [ -e "content/blog/$$f" ] && ! [ -e "content/xlog/$$f" ]; then \
+			echo No post file for comment file: "$$f"; exit 1; fi; done
 	# Ensure punctuation goes inside inline-math.
-	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</h[1-6]>|\)|:)'
+	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(th|-|</h[1-6]>|</em>|\)|:)'
 	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
