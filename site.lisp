@@ -331,7 +331,7 @@ value, next-index."
       (add-value "simple-date" (simple-date date) post))
     post))
 
-(defun head-html (import-header root)
+(defun head-html (import-header root params)
   "Given the value of an import header, return HTML code for it."
   (let ((names (uiop:split-string import-header))
         (fstr)
@@ -341,7 +341,8 @@ value, next-index."
              (push (format nil "  <link rel=\"stylesheet\" href=\"~acss/~a\">~%"
                            root name) result))
             ((string-ends-with ".inc" name)
-             (push (read-file (format nil "layout/include/~a" name)) result))
+             (push (render (read-file (format nil "layout/include/~a" name))
+                           params) result))
             ((string-ends-with ".js" name)
              (push (format nil "  <script src=\"~ajs/~a\"></script>~%"
                            root name) result))
@@ -356,7 +357,7 @@ value, next-index."
   "Add head element imports to params if an import is specified."
   `(let* ((import (get-value "import" ,params))
           (root (get-value "root" ,params)))
-     (add-value "imports" (head-html import root) ,params)))
+     (add-value "imports" (head-html import root ,params) ,params)))
 
 (defmacro add-canonical-url (dst-path params)
   "Given an output file path, set a canonical URL for that file."

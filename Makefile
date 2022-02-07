@@ -95,12 +95,25 @@ live: site
 site:
 	@echo Generating website ...
 	sbcl --script site.lisp
+	make mathjax
 	@echo Done; echo
 
 dist:
 	@echo Generating distributable website ...
 	sbcl --eval '(defvar *params* (list (cons "index" "index.html") (cons "maze" "https://susam.net/maze/")))' --script site.lisp
+	make mathjax
 	@echo Done; echo
+
+mathjax:
+	mkdir -p _cache/
+	if ! [ -e _cache/mathjax/ ]; then \
+	    echo Cloning MathJax ...; \
+	    git -C _cache/ clone -b 3.2.0 --depth 1 https://github.com/mathjax/mathjax.git; \
+	else \
+	    echo Using cached MathJax ...; \
+	fi
+	mkdir _site/js/
+	cp -R _cache/mathjax/ _site/js/mathjax/
 
 runapp:
 	sbcl --load spapp.lisp
