@@ -4,14 +4,14 @@
 <p>
   I recently completed reading the book <em>Introduction to Analytic
     Number Theory</em> written by Tom M. Apostol and publised in 1976.
-  It is a fantastic book that takes us through a breathtaking
-  journey of analytic number theory. It begins with simple
-  properties of divisibility and ends with integer partitions.
-  During this journey, we learn about several fascinating concepts
-  such as the M&ouml;bius function, Dirichlet multiplication,
-  Chebyshev's functions, Dirichlet characters, quadratic residues, the
-  Riemann zeta function, and the analytic proof of the prime number
-  theorem.
+    It is a fantastic book that takes us through a breathtaking
+    journey of analytic number theory. The journey begins with simple
+    properties of divisibility and ends with integer partitions.
+    During this journey, we learn about several fascinating concepts
+    such as the M&ouml;bius function, Dirichlet multiplication,
+    Chebyshev's functions, Dirichlet characters, quadratic residues,
+    the Riemann zeta function, etc. An analytic proof of the prime
+    number theorem is also presented in the book.
 </p>
 <p>
   One of the things about the book that caught my interest from the
@@ -36,13 +36,13 @@
   <em>Number the columns in the grid 0, 1, 2, and so on from left to
     right. Number the rows in the grid 0, 1, 2, and so on from bottom
     to top. Let \( (x, y) \) represent the cell at column \( x \) and
-    row \( y \). Then a box exists at \( (x, y) \) if and only if \(
+    row \( y. \) Then a box exists at \( (x, y) \) if and only if \(
     \gcd(x, y) \ne 1. \)</em>
 </div>
 <p>
   We define \( \gcd(x, y) \) to be a nonnegative common divisor of \(
   x \) and \( y \) such that every common divisor of \( x \) and \( y
-  \) also divides \( \gcd(x, y) \). Let us now see if we can explain
+  \) also divides \( \gcd(x, y). \) Let us now see if we can explain
   some of the interesting properties of this grid using the above
   rule:
 </p>
@@ -57,7 +57,7 @@
   </li>
   <li>
     <p>
-      The cell \( (0, 0) \) has a box because \( \gcd(0, 0) \ne 1 \).
+      The cell \( (0, 0) \) has a box because \( \gcd(0, 0) \ne 1. \)
       In fact, \( \gcd(0, 0) = 0. \) This follows from the definition
       of the \( \gcd \) function. We will discuss this in more detail
       later in this post.
@@ -89,26 +89,26 @@
 </ol>
 <p>
   Let us now elaborate the second point in the list above. If \(
-  \gcd(0, 0) \) is \( 0 \), then \( 0 \) must divide \( 0. \) Does \(
+  \gcd(0, 0) \) is \( 0, \) then \( 0 \) must divide \( 0. \) Does \(
   0 \) really divide \( 0? \) Isn't \( 0/0 \) undefined? Yes, even
-  though \( 0/0 \) is undefined, \( 0 \) divides \( 0 \). We say an
+  though \( 0/0 \) is undefined, \( 0 \) divides \( 0. \) We say an
   integer \( d \) divides an integer \( n \) when \( n = cd \) for
   some integer \( c. \) We have \( 0 = 0 \cdot 0, \) so indeed \( 0 \)
-  divides \( 0 \).
+  divides \( 0. \)
 </p>
 <p>
   We have shown that \( 0 \) divides \( 0 \) but we have not shown yet
   that \( \gcd(0, 0) = 0. \) Is \( \gcd(0, 0) \) really \( 0? \) Every
-  integer divides \( 0 \), e.g., \( 1 \) divdes \( 0, \) \( 2 \)
+  integer divides \( 0, \) e.g., \( 1 \) divdes \( 0, \) \( 2 \)
   divides \( 0, \) \( 3 \) divides \( 0, \) etc. There does not seem
   to be a greatest common divisor of \( 0 \) and \( 0. \) Shouldn't \(
   \gcd(0, 0) \) be called either infinity or undefined? No, we need to
   look at the definition of \( \gcd \) introduced earlier. As per the
   definition, every common divisor of integers \( x \) and \( y \)
   must also divide \( \gcd(x, y). \) With this requirement in mind, we
-  see that \( \gcd(0, 0) \) must be \( 0 \). This definition also
+  see that \( \gcd(0, 0) \) must be \( 0. \) This definition also
   makes \( \gcd(n, 0) = \gcd(0, n) = \lvert n \rvert \) for all
-  integers \( n \). Further, this definition makes B&eacute;zout's
+  integers \( n. \) Further, this definition makes B&eacute;zout's
   identity hold for all integers. B&eacute;zout's identity states that
   there exists integers \( m \) and \( n \) such that \( mx + ny =
   \gcd(x, y). \) Indeed if we have \( \gcd(0, 0) = 0, \) we get \( 0
@@ -120,7 +120,7 @@
   is even more fascinating. I found chapters 12 and 13 of the book to
   be the most interesting. In chapter 12, the book teaches how to
   prove that the Riemann zeta function \( \zeta(s) \) vanishes at
-  every negative even integer \( s \). Through several contour
+  every negative even integer \( s. \) Through several contour
   integrals and clever use of Cauchy's residue theorem, it shows in
   the end that \( \zeta(-2n) = 0 \) for \( n = 1, 2, 3, \dots. \) In
   chapter 13, the book shows us how to obtain zero-free regions where
