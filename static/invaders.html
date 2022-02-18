@@ -1,5 +1,5 @@
 <!--
-  Andromeda Invaders 0.1.0
+  Andromeda Invaders 0.2.0
   Copyright (c) 2022 Susam Pal
   Source: https://github.com/susam/invaders
   License: MIT
@@ -42,7 +42,7 @@
 
       // Metadata for info screen.
       const NAME = 'Andromeda Invaders'
-      const VERSION = '0.1.0'
+      const VERSION = '0.2.0'
       const COPYRIGHT = 'Copyright (c) 2022 Susam Pal'
       const SOURCE_URL = 'https://github.com/susam/invaders'
 
@@ -83,38 +83,42 @@
       const SHIP_BODY_HEIGHT = SHIP_HEIGHT - 2 * SHIP_ROOF_HEIGHT
       const SHIP_LANE_HEIGHT = 35
 
-      const CANON_WIDTH = 6
-      const CANON_HEIGHT = 6
-      const CANON_X_OFFSET = (SHIP_WIDTH - CANON_WIDTH) / 2
-      const CANON_Y_OFFSET = SHIP_HEIGHT - CANON_HEIGHT
+      const BOULDER_WIDTH = 6
+      const BOULDER_HEIGHT = 6
+      const BOULDER_X_OFFSET = (SHIP_WIDTH - BOULDER_WIDTH) / 2
+      const BOULDER_Y_OFFSET = SHIP_HEIGHT - BOULDER_HEIGHT
 
       // Color palettes.
       const SHIP_COLORS = ['#f60', '#c30', '#900']
       const PLAYER_COLORS = ['#0c0', '#390', '#660']
 
       // Audio parameters.
-      const BACKGROUND_VOLUME = 0.8
-      const HIT_VOLUME = 1.0
+      const BACKGROUND_VOLUME = 1
+      const HIT_VOLUME = 1
       const HIT_DURATION = 0.125
 
       // C major scale notes.
       const C2 = 65.41
-      const D2 = 73.42
       const E2 = 82.41
-      const F2 = 87.31
       const G2 = 98.00
       const A2 = 110.00
-      const B2 = 123.47
       const C3 = 130.81
+      const D3 = 146.83
       const E3 = 164.81
       const F3 = 174.61
       const G3 = 196.00
       const A3 = 220.00
       const B3 = 246.94
       const C4 = 261.63
-      const D4 = 293.66
+      const E4 = 329.63
       const F4 = 349.23
+      const G4 = 392.00
+      const A4 = 440.00
       const B4 = 493.88
+      const C5 = 523.25
+      const D5 = 587.33
+      const F5 = 698.46
+      const B5 = 987.77
 
       // Time intervals.
       const REFRESH_INTERVAL = 20
@@ -127,6 +131,7 @@
       let canvas
       let gCtx
       let aCtx
+      let compressor
       let gTimer
       let aTimer
       let scaledCanvasWidth
@@ -158,7 +163,7 @@
       const player = {}
       const pulse = {}
       let ships
-      let canons
+      let boulders
 
       // Utility functions.
       function log () {
@@ -183,6 +188,7 @@
         return Math.max(Math.min(x, max), min)
       }
 
+      // Game initialization.
       function init () {
         state = INITIALIZED
         initTime = Date.now()
@@ -221,6 +227,8 @@
           window.AudioContext = window.webkitAudioContext
         }
         aCtx = new window.AudioContext()
+        compressor = aCtx.createDynamicsCompressor()
+        compressor.connect(aCtx.destination)
       }
 
       function initEventListeners () {
@@ -249,6 +257,7 @@
         buttonMute.addEventListener('touchstart', actionMute)
       }
 
+      // Resize canvas and buttons on browser resize.
       function resizeUI () {
         document.body.style.padding = PADDING + 'px'
         if (window.innerWidth > window.innerHeight) {
@@ -295,13 +304,14 @@
         }
       }
 
+      // Functions to set/change game states.
       function resetGame () {
         player.score = 0
         level = 1
         resetPlayer()
         resetPulse()
         resetShips()
-        resetCanons()
+        resetBoulders()
         log('reset game')
       }
 
@@ -313,7 +323,7 @@
         }
         resetPulse()
         resetShips()
-        resetCanons()
+        resetBoulders()
         log('created game level', level)
       }
 
@@ -348,6 +358,7 @@
         log('restarted game')
       }
 
+      // Functions to reset game object states.
       function shipColor (ship) {
         return SHIP_COLORS[SHIP_COLORS.length - ship.health]
       }
@@ -377,7 +388,7 @@
       }
 
       function resetShips () {
-        const speed = bounded(level, 2, 20)
+        const shipSpeed = Math.min(Math.floor((level + 6) / 3), 8)
         shipsAlive = (level <= 2) ? (3 * level) : 10
         ships = []
         for (let i = 0; i < shipsAlive; i++) {
@@ -386,42 +397,43 @@
           ship.y = SCORE_Y + SCORE_PADDING + SHIP_LANE_HEIGHT * i
           ship.direction = random(0, 1) === 0 ? -1 : 1
           ship.health = SHIP_COLORS.length
-          ship.speed = speed
+          ship.speed = shipSpeed
           ship.repaired = 0
           ship.hit = false
           ships.push(ship)
           log('ship ' + i + '; x: ' + ship.x + '; y: ' + ship.y +
               '; height: ' + SHIP_HEIGHT)
         }
-        log('reset', shipsAlive, 'ships with speed', speed)
+        log('reset', shipsAlive, 'ships with speed', shipSpeed)
       }
 
-      function resetCanons () {
-        canons = []
+      function resetBoulders () {
+        boulders = []
         for (let i = 0; i < shipsAlive; i++) {
-          const canon = {}
-          resetCanon(canon, ships[i])
-          canons.push(canon)
+          const boulder = {}
+          resetBoulder(boulder, ships[i])
+          boulders.push(boulder)
         }
-        log('reset canons')
+        log('reset boulders')
       }
 
-      function resetCanon (canon, ship) {
-        const minSpeed = bounded(level - 2, 1, 10)
-        const maxSpeed = bounded(level + 1, 4, 15)
+      function resetBoulder (boulder, ship) {
+        const minSpeed = Math.min(Math.floor((level + 4) / 3), 8)
+        const maxSpeed = Math.min(Math.floor((level + 11) / 3), 10)
         if (ship.health > 0) {
           repairShip(ship)
-          canon.x = ship.x + CANON_X_OFFSET
-          canon.y = ship.y + CANON_Y_OFFSET
-          canon.color = shipColor(ship)
-          canon.speed = random(minSpeed, maxSpeed)
-          canon.hit = false
-          canon.live = true
+          boulder.x = ship.x + BOULDER_X_OFFSET
+          boulder.y = ship.y + BOULDER_Y_OFFSET
+          boulder.color = shipColor(ship)
+          boulder.speed = random(minSpeed, maxSpeed)
+          boulder.hit = false
+          boulder.live = true
         } else {
-          canon.live = false
+          boulder.live = false
         }
       }
 
+      // Health recovery rules.
       function repairPlayer () {
         const repairy = player.score - player.repairySinceScore
         if (player.health > 0 && player.health < PLAYER_COLORS.length &&
@@ -443,9 +455,10 @@
         }
       }
 
+      // Animation loop.
       function animate () {
         processShipHits()
-        processCanonHits()
+        processBoulderHits()
         processPlayerHit()
         if (shipsAlive === 0) {
           newGameLevel()
@@ -453,9 +466,9 @@
         repairPlayer()
         movePulse()
         moveShips()
-        moveCanons()
+        moveBoulders()
         checkShipHits()
-        checkCanonHits()
+        checkBoulderHits()
         checkPlayerHit()
         drawGame()
         if (player.health === 0) {
@@ -465,6 +478,7 @@
         gTimer = setTimeout(animate, REFRESH_INTERVAL)
       }
 
+      // Move game objects.
       function movePulse () {
         if (!pulse.live) {
           resetPulse()
@@ -499,22 +513,23 @@
         }
       }
 
-      function moveCanons () {
-        for (let i = 0; i < canons.length; i++) {
-          const canon = canons[i]
+      function moveBoulders () {
+        for (let i = 0; i < boulders.length; i++) {
+          const boulder = boulders[i]
           const ship = ships[i]
-          canon.y += canon.speed
-          if (!canon.live) {
-            resetCanon(canon, ship)
-          } else if (canon.y > CANVAS_HEIGHT) {
-            canon.live = false
+          boulder.y += boulder.speed
+          if (!boulder.live) {
+            resetBoulder(boulder, ship)
+          } else if (boulder.y > CANVAS_HEIGHT) {
+            boulder.live = false
           }
-          if (canon.y - ship.y <= 5 * CANON_HEIGHT) {
-            canon.x = ship.x + CANON_X_OFFSET
+          if (boulder.y - ship.y <= 5 * BOULDER_HEIGHT) {
+            boulder.x = ship.x + BOULDER_X_OFFSET
           }
         }
       }
 
+      // Render game state to canvas.
       function drawBackground () {
         gCtx.fillStyle = '#000'
         gCtx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -525,7 +540,7 @@
         drawScore()
         drawPlayer()
         drawShips()
-        drawCanons()
+        drawBoulders()
         drawPulse()
       }
 
@@ -559,6 +574,80 @@
         urlMaxY = textY + descent + 10
       }
 
+      function drawScore () {
+        const text = player.score + ' (L' + level + ')'
+        gCtx.font = '16px monospace'
+        gCtx.fillStyle = PLAYER_COLORS[0]
+        gCtx.fillText(text, PADDING, SCORE_Y)
+      }
+
+      function drawShips () {
+        for (let i = 0; i < ships.length; i++) {
+          const ship = ships[i]
+          if (ship.health === 0) {
+            continue
+          }
+          gCtx.fillStyle = shipColor(ship)
+          gCtx.fillRect(
+            ship.x + SHIP_ROOF_OFFSET,
+            ship.y,
+            SHIP_ROOF_WIDTH,
+            SHIP_ROOF_HEIGHT)
+          gCtx.fillRect(
+            ship.x,
+            ship.y + SHIP_ROOF_HEIGHT,
+            SHIP_WIDTH,
+            SHIP_BODY_HEIGHT)
+          gCtx.fillRect(
+            ship.x + SHIP_ROOF_OFFSET,
+            ship.y + SHIP_ROOF_HEIGHT + SHIP_BODY_HEIGHT,
+            SHIP_ROOF_WIDTH,
+            SHIP_ROOF_HEIGHT)
+        }
+      }
+
+      function drawBoulders () {
+        for (let i = 0; i < boulders.length; i++) {
+          const boulder = boulders[i]
+          if (!boulder.live) {
+            continue
+          }
+          gCtx.fillStyle = boulder.color
+          gCtx.fillRect(boulder.x, boulder.y, BOULDER_WIDTH, BOULDER_HEIGHT)
+        }
+      }
+
+      function drawPlayer () {
+        if (player.health === 0) {
+          return
+        }
+        gCtx.fillStyle = playerColor()
+        gCtx.fillRect(
+          player.x + 2 * PLAYER_HEAD_SIZE,
+          player.y,
+          PLAYER_HEAD_SIZE,
+          PLAYER_HEAD_SIZE)
+        gCtx.fillRect(
+          player.x + PLAYER_HEAD_SIZE,
+          player.y + PLAYER_HEAD_SIZE,
+          PLAYER_WIDTH - 2 * PLAYER_HEAD_SIZE,
+          PLAYER_HEAD_SIZE)
+        gCtx.fillRect(
+          player.x,
+          player.y + 2 * PLAYER_HEAD_SIZE,
+          PLAYER_WIDTH,
+          PLAYER_HEAD_SIZE)
+      }
+
+      function drawPulse () {
+        if (!pulse.live) {
+          return
+        }
+        gCtx.fillStyle = pulse.color
+        gCtx.fillRect(pulse.x, pulse.y, 4, 30)
+      }
+
+      // Info screen displayed when a game ends.
       function infoCursor (e) {
         const cursorY = e.offsetY * CANVAS_HEIGHT / scaledCanvasHeight
         if (cursorY >= urlMinY && cursorY <= urlMaxY) {
@@ -601,85 +690,13 @@
         return Math.ceil(textY + height * 2)
       }
 
-      function drawScore () {
-        const text = player.score + ' (L' + level + ')'
-        gCtx.font = '16px monospace'
-        gCtx.fillStyle = PLAYER_COLORS[0]
-        gCtx.fillText(text, PADDING, SCORE_Y)
-      }
-
-      function drawShips () {
-        for (let i = 0; i < ships.length; i++) {
-          const ship = ships[i]
-          if (ship.health === 0) {
-            continue
-          }
-          gCtx.fillStyle = shipColor(ship)
-          gCtx.fillRect(
-            ship.x + SHIP_ROOF_OFFSET,
-            ship.y,
-            SHIP_ROOF_WIDTH,
-            SHIP_ROOF_HEIGHT)
-          gCtx.fillRect(
-            ship.x,
-            ship.y + SHIP_ROOF_HEIGHT,
-            SHIP_WIDTH,
-            SHIP_BODY_HEIGHT)
-          gCtx.fillRect(
-            ship.x + SHIP_ROOF_OFFSET,
-            ship.y + SHIP_ROOF_HEIGHT + SHIP_BODY_HEIGHT,
-            SHIP_ROOF_WIDTH,
-            SHIP_ROOF_HEIGHT)
-        }
-      }
-
-      function drawCanons () {
-        for (let i = 0; i < canons.length; i++) {
-          const canon = canons[i]
-          if (!canon.live) {
-            continue
-          }
-          gCtx.fillStyle = canon.color
-          gCtx.fillRect(canon.x, canon.y, CANON_WIDTH, CANON_HEIGHT)
-        }
-      }
-
-      function drawPlayer () {
-        if (player.health === 0) {
-          return
-        }
-        gCtx.fillStyle = playerColor()
-        gCtx.fillRect(
-          player.x + 2 * PLAYER_HEAD_SIZE,
-          player.y,
-          PLAYER_HEAD_SIZE,
-          PLAYER_HEAD_SIZE)
-        gCtx.fillRect(
-          player.x + PLAYER_HEAD_SIZE,
-          player.y + PLAYER_HEAD_SIZE,
-          PLAYER_WIDTH - 2 * PLAYER_HEAD_SIZE,
-          PLAYER_HEAD_SIZE)
-        gCtx.fillRect(
-          player.x,
-          player.y + 2 * PLAYER_HEAD_SIZE,
-          PLAYER_WIDTH,
-          PLAYER_HEAD_SIZE)
-      }
-
-      function drawPulse () {
-        if (!pulse.live) {
-          return
-        }
-        gCtx.fillStyle = pulse.color
-        gCtx.fillRect(pulse.x, pulse.y, 4, 30)
-      }
-
+      // Audio
       function music () {
         const chords = [
-          [A2, E2, C3], // A minor
-          [G2, B2, E3], // E minor
-          [D2, F2, A3], // D minor
-          [B2, D2, G3] // G major
+          [C2, C3, A3, E3, C4], // A minor
+          [E2, E3, G3, B3, E4], // E minor
+          [A2, D3, A3, F3, A4], // D minor
+          [G2, G3, B3, D3, G4] // G major
         ]
         const interval = 1 / bounded(level, 2, 12)
         if (aCtx.state === 'suspended') {
@@ -697,15 +714,14 @@
 
       function playChord (frequencies, delay, duration, volume) {
         const gain = aCtx.createGain()
-        const timeConstant = duration / 3
+        const timeConstant = Math.min(duration, 0.200) / 3
         const startTime = aCtx.currentTime + delay
         const stopTime = startTime + 10 * timeConstant
-        gain.connect(aCtx.destination)
+        gain.connect(compressor)
         for (let i = 0; i < frequencies.length; i++) {
           const oscillator = aCtx.createOscillator()
-          const scaledVolume = muted ? 0 : volume / frequencies.length
           oscillator.frequency.value = frequencies[i]
-          gain.gain.setValueAtTime(scaledVolume, startTime)
+          gain.gain.setValueAtTime(muted ? 0 : volume, startTime)
           gain.gain.setTargetAtTime(0, startTime, timeConstant)
           oscillator.connect(gain)
           oscillator.start(startTime)
@@ -722,6 +738,7 @@
                y1 + h1 > y2 && y1 < y2 + h2
       }
 
+      // Collision detection.
       function checkShipHits () {
         for (let i = 0; i < ships.length; i++) {
           const ship = ships[i]
@@ -736,61 +753,61 @@
             ship.x, ship.y + SHIP_ROOF_HEIGHT, SHIP_WIDTH, SHIP_BODY_HEIGHT)
           if (hitBetweenRoofs || hitBetweenWings) {
             // F major
-            playChord([F2, C3, F3, A3, F4], 0, HIT_DURATION, HIT_VOLUME)
+            playChord([F3, C4, F4, A4, F5], 0, HIT_DURATION, HIT_VOLUME)
             ship.hit = true
             log('ship', i, 'is hit')
           }
         }
       }
 
-      function checkCanonHits () {
-        for (let i = 0; i < canons.length; i++) {
-          const canon = canons[i]
-          if (!canon.live) {
+      function checkBoulderHits () {
+        for (let i = 0; i < boulders.length; i++) {
+          const boulder = boulders[i]
+          if (!boulder.live) {
             continue
           }
           const hit = overlap(
             pulse.x, pulse.y, PULSE_WIDTH, PULSE_HEIGHT,
-            canon.x, canon.y, CANON_WIDTH, CANON_HEIGHT)
+            boulder.x, boulder.y, BOULDER_WIDTH, BOULDER_HEIGHT)
           if (hit) {
             // C major
-            playChord([C2, C3, E3, G3, C4], 0, HIT_DURATION, HIT_VOLUME)
-            canon.hit = true
-            log('canon', i, 'is hit')
+            playChord([C3, C4, E4, G4, C5], 0, HIT_DURATION, HIT_VOLUME)
+            boulder.hit = true
+            log('boulder', i, 'is hit')
           }
         }
       }
 
       function checkPlayerHit () {
-        for (let i = 0; i < canons.length; i++) {
-          const canon = canons[i]
-          if (!canon.live) {
+        for (let i = 0; i < boulders.length; i++) {
+          const boulder = boulders[i]
+          if (!boulder.live) {
             continue
           }
           const headHit = overlap(
-            canon.x, canon.y, CANON_WIDTH, CANON_HEIGHT,
+            boulder.x, boulder.y, BOULDER_WIDTH, BOULDER_HEIGHT,
             player.x + 2 * PLAYER_HEAD_SIZE,
             player.y,
             PLAYER_HEAD_SIZE,
             PLAYER_HEAD_SIZE)
           const bodyHit = overlap(
-            canon.x, canon.y, CANON_WIDTH, CANON_HEIGHT,
+            boulder.x, boulder.y, BOULDER_WIDTH, BOULDER_HEIGHT,
             player.x + PLAYER_HEAD_SIZE,
             player.y + PLAYER_HEAD_SIZE,
             PLAYER_WIDTH - 2 * PLAYER_HEAD_SIZE,
             PLAYER_HEAD_SIZE)
           const baseHit = overlap(
-            canon.x, canon.y, CANON_WIDTH, CANON_HEIGHT,
+            boulder.x, boulder.y, BOULDER_WIDTH, BOULDER_HEIGHT,
             player.x,
             player.y + 2 * PLAYER_HEAD_SIZE,
             PLAYER_WIDTH,
             PLAYER_HEAD_SIZE)
           if (headHit || bodyHit || baseHit) {
             // B diminished
-            playChord([B2, B3, D4, F4, B4], 0, 4 * HIT_DURATION, HIT_VOLUME)
-            canon.hit = true
+            playChord([B3, B4, D5, F5, B5], 0, 4 * HIT_DURATION, HIT_VOLUME)
+            boulder.hit = true
             player.hit = true
-            log('player hit by canon', i)
+            log('player hit by boulder', i)
           }
         }
       }
@@ -815,18 +832,18 @@
         }
       }
 
-      function processCanonHits () {
-        for (let i = 0; i < canons.length; i++) {
-          const canon = canons[i]
-          if (!canon.live) {
+      function processBoulderHits () {
+        for (let i = 0; i < boulders.length; i++) {
+          const boulder = boulders[i]
+          if (!boulder.live) {
             continue
           }
-          if (canon.hit) {
-            canon.hit = false
+          if (boulder.hit) {
+            boulder.hit = false
             pulse.live = false
-            canon.live = false
+            boulder.live = false
             player.score++
-            log('canon hit processed')
+            log('boulder hit processed')
           }
         }
       }
@@ -840,6 +857,7 @@
         }
       }
 
+      // User input handling.
       function readKeyDown (e) {
         if (e.code === 'KeyA' || e.code === 'ArrowLeft') {
           startLeft(e)
@@ -895,6 +913,7 @@
       function moveLeft () {
         if (state === INITIALIZED) {
           startGame()
+          return
         } else if (state !== PLAYING || player.x === PADDING) {
           return
         }
@@ -976,7 +995,7 @@
         --><button id="right" title="Move Right">&rarr;</button>
       </div><div id="more">
         <button id="enter" title="Restart">&crarr;</button><!--
-        --><button id="pause" title="Play/Pause">&#x25b6;&#x2016;</button><!--
+        --><button id="pause" title="Play/Pause">&#x25ba;&#x2551;</button><!--
         --><button id="mute" title="Mute/Unmute">&#x266b;</button>
       </div>
     </div>
