@@ -199,7 +199,7 @@ checks:
 		if ! [ -e "content/blog/$$f" ] && ! [ -e "content/xlog/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
 	# Ensure punctuation goes inside inline-math.
-	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(s|th|-|</h[1-6]>|</em>|</li>\)|:)'
+	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(s|th|-|</h[1-6]>|</em>|</li>|\)|:)'
 	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
