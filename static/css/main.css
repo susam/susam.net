@@ -95,6 +95,9 @@ ul.blog {
 ul.blog li {
   margin: 1em 0;
 }
+footer {
+  text-align: center;
+}
 nav a, footer a {
   margin-right: 1.5em;
   line-height: 2.5;
