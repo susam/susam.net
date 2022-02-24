@@ -1,6 +1,7 @@
 <!-- title: Import Readline -->
 <!-- tag: technology programming python -->
 <!-- import: extra.css -->
+<h2 id="toy-repl">Toy REPL</h2>
 <p>
   Let us first first write a tiny Python program to create a toy
   read-eval-print-loop (REPL) that does only one thing: add all
@@ -37,16 +38,21 @@
   It shows the keys typed literally rather than bringing up previous
   input like most other interactive programs with a command-line
   interface do. The other programs that do bring up the previous input
-  are able to do so because they provide line-editing capabilities,
-  often with the help of a line-editing and history library like GNU
-  Readline (libreadline) or BSD Editline (libedit).
+  are able to do so because they provide line editing and history
+  capability, often with the help of a line editing and history
+  library like GNU Readline (libreadline) or BSD Editline (libedit).
 </p>
 <p>
-  Can we have a similar line-editing capability for our toy REPL?
-  After all, the Python REPL itself offers such a line-editing
-  facility. Surely there must be a way to have this facility for our
-  own programs too. Indeed there is! We just need to add <code>import
-  readline</code> to our program. Here is how our program would look:
+  Can we have a similar line editing and history capability for our
+  toy REPL? After all, the Python REPL itself offers such a line
+  editing facility. Surely there must be a way to have this facility
+  for our own programs too. Indeed there is!
+</p>
+<h2 id="line editing-and-history">Line Editing and History</h2>
+<p>
+  To enable, line editing and history in our toy REPL, we just need to
+  add <code>import readline</code> to our program. Here is how our
+  program would look:
 </p>
 <pre>
 <code>import readline
@@ -75,15 +81,16 @@ while True:
 <p>
   The last line of input in the example above is obtained by typing
   either <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>. In fact,
-  all of the line-editing keys like <kbd>ctrl</kbd>+<kbd>a</kbd> to go
+  all of the line editing keys like <kbd>ctrl</kbd>+<kbd>a</kbd> to go
   to the beginning of the line, <kbd>ctrl</kbd>+<kbd>k</kbd> to kill
   the line after the cursor, etc. work as expected. The exact list of
   default key-bindings supported depends on the underlying
-  line-editing library being used by the <code>readline</code> module.
+  line editing library being used by the <code>readline</code> module.
   The underlying library may be either the GNU Readline library or the
   BSD Editline library. There are some minor differences regarding the
   list of default key-bindings between these two libraries.
 </p>
+<h2 id="history-file">History File</h2>
 <p>
   What we have done so far achieves the goal of bringing up previous
   inputs from the history. However, it does not bring back inputs from
@@ -118,14 +125,18 @@ while True:
 <p>
   For more information on how to use this module, see the
   Python <a href="https://docs.python.org/3/library/readline.html">readline
-  documentation</a>. At this point, it is worth mentioning that there
-  are many interactive CLI tools that do not have line-editing
+    documentation</a>.
+</p>
+<h2 id="rlwrap">Readline Wrapper</h2>
+<p>
+  At this point, it is worth mentioning that there are many
+  interactive CLI tools that do not have line editing and history
   capabilities. They behave like our first toy REPL example in this
   post. Fortunately, there is the wonderful readline wrapper utility
-  known as <code>rlwrap</code> that can be used to enable line-editing
-  and history in such tools. This utility can often be easily
-  installed from package repositories of various operating systems.
-  Here is a demonstration of this tool:
+  known as <code>rlwrap</code> that can be used to enable line editing
+  and history in such tools. This utility can often be
+  easily installed from package repositories of various operating
+  systems. Here is a demonstration of this tool:
 </p>
 <pre>
 <samp>$ <kbd>rlwrap cat</kbd>
@@ -142,6 +153,7 @@ world
   to <code>~/.cat_history</code>, so it is possible to bring back
   inputs from a previous invocation of the command.
 </p>
+<h2 id="obligatory-joke">Obligatory Joke</h2>
 <p>
   Finally, an obligatory XKCD comic to conclude this post:
 </p>
@@ -156,6 +168,6 @@ world
 <p>
   While the days of achieving air flight with a
   single <code>import</code> statement might still be a few decades
-  away, we do have the luxury to enable line-editing capabilities in
+  away, we do have the luxury to enable line editing and history in
   our REPLs with a single such statement right now.
 </p>
