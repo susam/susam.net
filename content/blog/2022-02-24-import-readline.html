@@ -28,7 +28,7 @@
 &gt; </samp>
 </pre>
 <p>
-  However, if we type <kbd>&uarr;</kbd> (the up arrow key)
+  If we now type <kbd>&uarr;</kbd> (the up arrow key)
   or <kbd>ctrl</kbd>+<kbd>p</kbd> to bring back the previous input, we
   see something like the following instead:
 </p>
@@ -73,8 +73,8 @@ while True:
 > <kbd>40 50 60</kbd></samp>
 </pre>
 <p>
-  The last line in the example above is obtained by
-  typing <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>. In fact,
+  The last line of input in the example above is obtained by typing
+  either <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>. In fact,
   all of the line-editing keys like <kbd>ctrl</kbd>+<kbd>a</kbd> to go
   to the beginning of the line, <kbd>ctrl</kbd>+<kbd>k</kbd> to kill
   the line after the cursor, etc. work as expected. The exact list of
@@ -118,8 +118,32 @@ while True:
 <p>
   For more information on how to use this module, see the
   Python <a href="https://docs.python.org/3/library/readline.html">readline
-  documentation</a>. Finally, an obligatory XKCD comic to conclude
-  this post:
+  documentation</a>. At this point, it is worth mentioning that there
+  are many interactive CLI tools that do not have line-editing
+  capabilities. They behave like our first toy REPL example in this
+  post. Fortunately, there is the wonderful readline wrapper utility
+  known as <code>rlwrap</code> that can be used to enable line-editing
+  and history in such tools. This utility can often be easily
+  installed from package repositories of various operating systems.
+  Here is a demonstration of this tool:
+</p>
+<pre>
+<samp>$ <kbd>rlwrap cat</kbd>
+<kbd>hello</kbd>
+hello
+<kbd>world</kbd>
+world
+<kbd>world</kbd></samp>
+</pre>
+<p>
+  The last line of input in the example above is obtained by typing
+  either <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>. In the
+  above example, the input history is automatically saved
+  to <code>~/.cat_history</code>, so it is possible to bring back
+  inputs from a previous invocation of the command.
+</p>
+<p>
+  Finally, an obligatory XKCD comic to conclude this post:
 </p>
 <figure class="soft">
   <img src="../files/blog/xkcd-353-python.png" alt="XKCD comic on Python"
