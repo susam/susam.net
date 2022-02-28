@@ -122,6 +122,10 @@
   "Join strings into a single string."
   (format nil "~{~a~}" strings))
 
+(defun repeat-string (count string)
+  "Repeat string count number of times."
+  (format nil "~v{~a~:*~}" count (list string)))
+
 (defmacro add-value (key value alist)
   "Add key-value pair to alist."
   `(push (cons ,key ,value) ,alist))
@@ -833,7 +837,7 @@ value, next-index."
          (item-layout (read-file "layout/textdir/item.html"))
          (dst-path)
          (posts))
-    (setf list-layout (render page-layout(list (cons "body" list-layout))))
+    (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (add-value "root" "../" params)
     (add-value "title" title params)
     (add-value "dirname" dirname params)
@@ -873,6 +877,74 @@ value, next-index."
     (make-post-list posts "_site/music/index.html"
                     list-layout item-layout params)))
 
+(defun format-size (size)
+  "Convert size in bytes to human-readable size."
+  (let ((powers (list (cons (expt 2 30) "G")
+                      (cons (expt 2 20) "M")
+                      (cons (expt 2 10) "K")
+                      (cons (expt 2  0) "B")))
+        (chosen-power)
+        (chosen-suffix))
+    (dolist (entry powers)
+      (setf chosen-power (car entry))
+      (setf chosen-suffix (cdr entry))
+      (when (<= chosen-power size)
+        (return)))
+    (format nil "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
+
+(defun render-directory (apex-path current-path paths-and-sizes page-layout params)
+  "Render the index pages for the given current directory."
+  (let* ((relative-current-path (enough-namestring current-path apex-path))
+         (nesting-depth (count #\/ relative-current-path))
+         (index1-path (enough-namestring (merge-pathnames "index.html" current-path)))
+         (index2-path (enough-namestring (merge-pathnames "ls.html" current-path)))
+         (list-layout (read-file "layout/tree/list.html"))
+         (item-layout (read-file "layout/tree/item.html"))
+         (rendered-rows))
+    (setf list-layout (render page-layout (list (cons "body" list-layout))))
+
+    (setf paths-and-sizes (sort paths-and-sizes
+                                (lambda (x y) (string> (car x) (car y)))))
+    (dolist (entry paths-and-sizes)
+      (add-value "path" (car entry) params)
+      (add-value "size" (cdr entry) params)
+      (push (render item-layout params) rendered-rows))
+    (add-value "root" (repeat-string nesting-depth "../") params)
+    (add-value "title" (format nil "Index of /~a" relative-current-path) params)
+    (add-value "rows" (join-strings rendered-rows) params)
+    (unless (probe-file index1-path)
+      (add-canonical-url index1-path params)
+      (write-file index1-path (render list-layout params)))
+    (unless (probe-file index2-path)
+      (add-canonical-url index2-path params)
+      (write-file index2-path (render list-layout params)))))
+
+(defun visit-directory (apex-path current-path page-layout params)
+  "Make index pages for the given current directory and its subdirectories."
+  (let ((total-size 0)
+        (paths-and-sizes)
+        (size))
+    ;; Collect subdirectories.
+    (dolist (path (uiop:subdirectories current-path))
+      (setf size (visit-directory apex-path path page-layout params))
+      (push (cons (directory-basename path) (format-size size)) paths-and-sizes)
+      (incf total-size size))
+    ;; Collect files.
+    (dolist (path (uiop:directory-files current-path))
+      (setf size (with-open-file (stream path) (file-length stream)))
+      (push (cons (file-namestring path) (format-size size)) paths-and-sizes)
+      (incf total-size size))
+    ;; Render tree.
+    (unless (equal apex-path current-path)
+      (push (cons "../" "-") paths-and-sizes))
+    (render-directory apex-path current-path paths-and-sizes page-layout params)
+    ;; Return total size of current directory tree to caller.
+    total-size))
+
+(defun make-directory-lists (path page-layout &optional params)
+  "Make index pages for each site directory."
+  (visit-directory (truename path) (truename path) page-layout params))
+
 (defvar *params* nil
   "Global parameters that may be provided externally to override any
   default local parameters.")
@@ -906,7 +978,9 @@ value, next-index."
                    "content/comments/*.html" page-layout params)
     ;; Music, reading, and text directories.
     (make-music "content/music/*.html" page-layout params)
-    (make-reading "content/reading/*.html" page-layout params))
+    (make-reading "content/reading/*.html" page-layout params)
+    ;; Directory index pages.
+    (make-directory-lists "_site/" page-layout params))
   t)
 
 (when *main-mode*
