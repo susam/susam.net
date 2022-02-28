@@ -149,10 +149,10 @@ push:
 	git push
 
 web:
-	ssh -t susam.net "cd /opt/susam.net/; sudo git pull && sudo make live && sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart spapp"
 
 webreset:
-	ssh -t susam.net "cd /opt/susam.net/; sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart spapp"
 
 # GitHub Pages Mirror
 
