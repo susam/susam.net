@@ -109,6 +109,7 @@ mathjax:
 	if ! [ -e _cache/mathjax/ ]; then \
 	    echo Cloning MathJax ...; \
 	    git -C _cache/ clone -b 3.2.0 --depth 1 https://github.com/mathjax/mathjax.git; \
+	    rm -rf _cache/mathjax/.git; \
 	else \
 	    echo Using cached MathJax ...; \
 	fi
@@ -148,8 +149,10 @@ push:
 	git push
 
 web:
-	ssh -t susam.net "cd /opt/susam.net/; sudo git pull; sudo make live; sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/susam.net/; sudo git pull && sudo make live && sudo systemctl restart spapp"
 
+webreset:
+	ssh -t susam.net "cd /opt/susam.net/; sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart spapp"
 
 # GitHub Pages Mirror
 
@@ -162,7 +165,6 @@ TMP_GIT = /tmp/tmpgit
 README  = $(TMP_GIT)/README.md
 
 gh: site
-	#
 	# Create mirror.
 	rm -rf $(TMP_GIT)
 	mv _site $(TMP_GIT)
@@ -178,7 +180,6 @@ gh: site
 	echo [GIT_SRC]: $(GIT_SRC) >> $(README)
 	echo [WEB_URL]: $(WEB_URL) >> $(README)
 	echo [GIT_REV]: $(GIT_SRC)/commit/$$($(CAT_REV)) >> $(README)
-	#
 	# Push mirror.
 	cd $(TMP_GIT) && git init
 	cd $(TMP_GIT) && git config user.name "Susam Pal"
