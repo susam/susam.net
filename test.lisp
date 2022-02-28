@@ -227,6 +227,16 @@
   (assert (string= (join-strings '("foo" "bar")) "foobar"))
   (assert (string= (join-strings '("foo" "bar" "baz")) "foobarbaz")))
 
+(test-case repeat-string
+  (assert (string= (repeat-string 0 "") ""))
+  (assert (string= (repeat-string 1 "") ""))
+  (assert (string= (repeat-string 2 "") ""))
+  (assert (string= (repeat-string 3 "") ""))
+  (assert (string= (repeat-string 0 "foo") ""))
+  (assert (string= (repeat-string 1 "foo") "foo"))
+  (assert (string= (repeat-string 2 "foo") "foofoo"))
+  (assert (string= (repeat-string 3 "foo") "foofoofoo")))
+
 
 ;;; Test Cases for Tool Definitions
 ;;; -------------------------------
