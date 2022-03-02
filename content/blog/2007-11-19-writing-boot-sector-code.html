@@ -1,34 +1,29 @@
 <!-- title: Writing Boot Sector Code -->
 <!-- tag: asm programming technology -->
 <!-- import: extra.css -->
-
 <h2 id="introduction">Introduction</h2>
-
 <p>
-In this article, we discuss how to write our own
-<code>"hello, world"</code> program into the boot sector. At the time of
-this writing, most such code examples available on the web were meant
-for the Netwide Assembler (NASM). Very little material was available
-that could be tried with the readily available GNU tools like the GNU
-assembler (as) and the GNU linker (ld). This article is an effort to
-fill this gap.
+  In this article, we discuss how to write our own
+  <code>"hello, world"</code> program into the boot sector. At the
+  time of this writing, most such code examples available on the web
+  were meant for the Netwide Assembler (NASM). Very little material
+  was available that could be tried with the readily available GNU
+  tools like the GNU assembler (as) and the GNU linker (ld). This
+  article is an effort to fill this gap.
 </p>
-
-
 <h2 id="boot-sector">Boot Sector</h2>
-
 <p>
-When the computer starts, the processor starts executing instructions
-at the memory address 0xfff0. This is usually a location in the BIOS
-ROM. Thus the BIOS code is executed by the processor. It checks
-several things, does many tests including POST (power-on self test), and
-then finds the boot device. It loads the code from its boot sector into
-the memory and executes it. From here, the code in the boot sector takes
-control. In IBM-compatible PCs, the boot sector is the first sector of a
-data storage device. This is 512 bytes in length. The following table
-shows what the boot sector contains.
+  When the computer starts, the processor starts executing
+  instructions at the memory address 0xfff0. This is usually a
+  location in the BIOS ROM. Thus the BIOS code is executed by the
+  processor. It checks several things, does many tests including POST
+  (power-on self test), and then finds the boot device. It loads the
+  code from its boot sector into the memory and executes it. From
+  here, the code in the boot sector takes control. In IBM-compatible
+  PCs, the boot sector is the first sector of a data storage device.
+  This is 512 bytes in length. The following table shows what the boot
+  sector contains.
 </p>
-
 <table class="grid center textcenter">
   <tr>
     <th colspan="2">Address</th>
@@ -55,42 +50,34 @@ shows what the boot sector contains.
     <td>1fe</td><td>510</td><td>0xaa55</td><td>2</td>
   </tr>
 </table>
-
 <p>
-This type of boot sector found in IBM-compatible PCs is also known as
-master boot record (MBR). The next two sections explain how to write
-executable code into the boot sector. Two programs are discussed in the
-these two sections: one that merely prints a character and another that
-prints a string.
+  This type of boot sector found in IBM-compatible PCs is also known
+  as master boot record (MBR). The next two sections explain how to
+  write executable code into the boot sector. Two programs are
+  discussed in the these two sections: one that merely prints a
+  character and another that prints a string.
 </p>
-
 <p>
-The reader is expected to have a working knowledge of x86 assembly
-language programming using GNU assembler. The details of assembly
-language won't be discussed here. Only how to write code for boot sector
-will be discussed.
+  The reader is expected to have a working knowledge of x86 assembly
+  language programming using GNU assembler. The details of assembly
+  language won't be discussed here. Only how to write code for boot
+  sector will be discussed.
 </p>
-
 <p>
-The code examples were verified by using the following tools while
-writing this article:
+  The code examples were verified by using the following tools while
+  writing this article:
 </p>
-
 <ol>
   <li>GNU assembler (GNU Binutils for Debian) 2.18</li>
   <li>GNU ld (GNU Binutils for Debian) 2.18</li>
   <li>dd (coreutils) 5.97</li>
   <li>DOSBox 0.72</li>
 </ol>
-
-
 <h2 id="print-character">Print Character</h2>
-
 <p>
-The following code prints a single character in yellow color on a blue
-background:
+  The following code prints a single character in yellow color on a
+  blue background:
 </p>
-
 <pre>
 <code>.code16
 .section .text
@@ -103,116 +90,124 @@ _start:
 idle:
   jmp idle</code>
 </pre>
-
 <p>
-We save the above code in a file, say <code>char.s</code>, then assemble
-and link this code with the following commands:
+  We save the above code in a file, say <code>char.s</code>, then
+  assemble and link this code with the following commands:
 </p>
-
 <pre>
-as -o char.o char.s
-ld --oformat binary -o char.com char.o
+<code>as -o char.o char.s
+ld --oformat binary -o char.com char.o</code>
 </pre>
-
 <p>
-The <code>.code16</code> directive tells the assembler that this code is
-meant for 16-bit mode. The <code>_start</code> label is meant to tell
-the linker that this is the entry point in the program.
+  The <code>.code16</code> directive tells the assembler that this
+  code is meant for 16-bit mode. The <code>_start</code> label is
+  meant to tell the linker that this is the entry point in the
+  program.
 </p>
-
 <p>
-The video memory of the VGA is mapped to various segments between 0xa000
-and 0xc000 in the main memory. The color text mode is mapped to the
-segment 0xb800. The first two instructions move 0xb800 into the data
-segment register, so that any data offsets specified is an offset in this
-segment. Then, the code for the character 'A' (usually 0x41 or 65) is
-moved into the first location in this segment and the attribute (0x1e)
-of this character to the second location. The higher nibble (0x1) is the
-attribute for background color and the lower nibble (0xe) is that of the
-foreground color. The highest bit of each nibble is the intensifier bit.
-The other three bits represent red, green, and blue. This is represented
-in a tabular form below.
+  The video memory of the VGA is mapped to various segments between
+  0xa000 and 0xc000 in the main memory. The color text mode is mapped
+  to the segment 0xb800. The first two instructions move 0xb800 into
+  the data segment register, so that any data offsets specified is an
+  offset in this segment. Then, the code for the character 'A'
+  (usually 0x41 or 65) is moved into the first location in this
+  segment and the attribute (0x1e) of this character to the second
+  location. The higher nibble (0x1) is the attribute for background
+  color and the lower nibble (0xe) is that of the foreground color.
+  The highest bit of each nibble is the intensifier bit. The other
+  three bits represent red, green, and blue. This is represented in a
+  tabular form below.
 </p>
-
 <table class="grid center textcenter">
-  <tr><td colspan="8">Attribute</td></tr>
-  <tr><td colspan="4">Background</td><td colspan="4">Foreground</td></tr>
-  <tr><td>I</td><td>R</td><td>G</td><td>B</td>
-      <td>I</td><td>R</td><td>G</td><td>B</td></tr>
-  <tr><td>0</td><td>0</td><td>0</td><td>1</td>
-      <td>1</td><td>1</td><td>1</td><td>0</td></tr>
-  <tr><td colspan="4">0x1</td><td colspan="4">0xe</td></tr>
+  <tr>
+    <td colspan="8">Attribute</td>
+  </tr>
+  <tr>
+    <td colspan="4">Background</td>
+    <td colspan="4">Foreground</td>
+  </tr>
+  <tr>
+    <td>I</td>
+    <td>R</td>
+    <td>G</td>
+    <td>B</td>
+    <td>I</td>
+    <td>R</td>
+    <td>G</td>
+    <td>B</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>1</td>
+    <td>1</td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td colspan="4">0x1</td>
+    <td colspan="4">0xe</td>
+  </tr>
 </table>
-
 <p>
-We can be see from the table that the background color is dark blue and
-the foreground color is bright yellow. We compile and link the code with
-the <code>as</code> and <code>ld</code> commands mentioned earlier and
-generate an executable binary consisting of machine code.
+  We can be see from the table that the background color is dark blue
+  and the foreground color is bright yellow. We compile and link the
+  code with the <code>as</code> and <code>ld</code> commands mentioned
+  earlier and generate an executable binary consisting of machine
+  code.
 </p>
-
 <p>
-Before writing the executable binary into the boot sector, we might want
-to verify whether the code works correctly with an emulator. DOSBox is a
-pretty good emulator for this purpose. It is available as the
-<code>dosbox</code> package in Debian. Rename the binary file to
-<code>char.com</code> and then run it with DOSBox with the following
-commands:
+  Before writing the executable binary into the boot sector, we might want
+  to verify whether the code works correctly with an emulator. DOSBox is a
+  pretty good emulator for this purpose. It is available as the
+  <code>dosbox</code> package in Debian. Rename the binary file to
+  <code>char.com</code> and then run it with DOSBox with the following
+  commands:
 </p>
-
+<pre><code>dosbox -c cls char.com</code></pre>
+<p>
+  The letter <code>A</code> printed in yellow on a blue foreground
+  should appear in the first column of the first row of the screen.
+</p>
+<p>
+  In the <code>ld</code> command earlier to generate the executable
+  binary, we used the extension name <code>com</code> for the binary
+  file to make DOSBox believe that it is a DOS COM file, i.e., merely
+  machine code and data with no headers. In fact, the <code>--oformat
+  binary</code> option in the <code>ld</code> command was meant for
+  generating a binary with merely machine code and data without any
+  headers. This is why we are able to run the binary with DOSBox for
+  verification. If we do not use DOSBOX, any extension name or no
+  extension name for the binary would suffice.
+</p>
+<p>
+  Once we are satisfied with the output of <code>char.com</code>
+  running in DOSBox,we write the binary and the MBR signature into the
+  boot sector with these commands:
+</p>
 <pre>
-dosbox -c cls char.com
+<code>dd if=char of=/dev/sdb
+printf '\x55\xaa' | dd seek=510 bs=1 of=/dev/sdb</code>
 </pre>
-
 <p>
-The letter <code>A</code> printed in yellow on a blue foreground should
-appear in the first column of the first row of the screen.
+  <em>
+    Caution: One needs to be absolutely sure of the device path of the
+    device being written to. The device path <code>/dev/sdb</code> is
+    only an example here. If the <code>dd</code> command is used to
+    write to the wrong device, access to the data on it would be lost.
+  </em>
 </p>
-
-</pre>
-In the <code>ld</code> command earlier to generate the executable
-binary, we used the extension name <code>com</code> for the binary file
-to make DOSBox believe that it is a DOS COM file, i.e., merely machine
-code and data with no headers. In fact, the <code>--oformat
-binary</code> option in the <code>ld</code> command was meant for
-generating a binary with merely machine code and data without any
-headers. This is why we are able to run the binary with DOSBox for
-verification. If we do not use DOSBOX, any extension name or no
-extension name for the binary would suffice.
-</p>
-
 <p>
-Once we are satisfied with the output of <code>char.com</code> running
-in DOSBox,we write the binary and the MBR signature into the boot
-sector with these commands:
+  Now booting the computer with this device should show display the letter
+  <code>A</code> in yellow on a blue background.
 </p>
-
-<pre>
-dd if=char of=/dev/sdb
-printf '\x55\xaa' | dd seek=510 bs=1 of=/dev/sdb
-</pre>
-
-<p>
-<em>
-Caution: One needs to be absolutely sure of the device path of the
-device being written to. The device path <code>/dev/sdb</code> is only
-an example here. If the <code>dd</code> command is used to write to the
-wrong device, access to the data on it would be lost.
-</em>
-</p>
-
-<p>
-Now booting the computer with this device should show display the letter
-<code>A</code> in yellow on a blue background.
-</p>
-
-
 <h2 id="print-string">Print String</h2>
-
 <p>
-The following code prints a string in yellow color on a blue background:
+  The following code prints a string in yellow color on a blue
+  background:
 </p>
-
 <pre>
 <code>.code16
 
@@ -241,59 +236,52 @@ idle:
   inc %si
   jmp move</code>
 </pre>
-
 <p>
-There are two sections in this code. The data section has the
-null-terminated string to be displayed. The text section has the code.
-The code moves the first byte of the string to the location,
-0xb800:0x0000, its attribute to 0xb800:0x0001, the second byte of the
-string to 0xb800:0x0002, its attribute to 0xb800:0x0003 and so on until
-the string terminates which is detected by the null byte in the end. The
-statement <code>movb %cs:(%si), %dl</code> moves one character from the
-string indexed by the SI register in the code segment into the DL
-register. The reason why we are reading the characters from code segment
-will become clear after understanding the the linker commands discussed
-below.
+  There are two sections in this code. The data section has the
+  null-terminated string to be displayed. The text section has the
+  code. The code moves the first byte of the string to the location,
+  0xb800:0x0000, its attribute to 0xb800:0x0001, the second byte of
+  the string to 0xb800:0x0002, its attribute to 0xb800:0x0003 and so
+  on until the string terminates which is detected by the null byte in
+  the end. The statement <code>movb %cs:(%si), %dl</code> moves one
+  character from the string indexed by the SI register in the code
+  segment into the DL register. The reason why we are reading the
+  characters from code segment will become clear after understanding
+  the the linker commands discussed below.
 </p>
-
 <p>
-While booting, the BIOS reads the code from the first sector of the boot
-device into the memory at physical address 0x7c00 and jumps to that
-address. However, while testing with DOSBox, things are a little
-different. In DOS, the text section is loaded at an offset 0x100 in the
-code segment. This should be specified to the linker while linking so
-that it can correctly resolve the value of the label named
-<code>message</code>. Therefore the object file has to be linked twice:
-once for testing it with DOSBox and once again before writing it into
-the boot sector.
+  While booting, the BIOS reads the code from the first sector of the boot
+  device into the memory at physical address 0x7c00 and jumps to that
+  address. However, while testing with DOSBox, things are a little
+  different. In DOS, the text section is loaded at an offset 0x100 in the
+  code segment. This should be specified to the linker while linking so
+  that it can correctly resolve the value of the label named
+  <code>message</code>. Therefore the object file has to be linked
+  twice: once for testing it with DOSBox and once again before writing
+  it into the boot sector.
 </p>
-
 <p>
-To understand the offset at which the data section can be put, it is
-worth looking at how the binary code looks like with a trial linking
-with the following command:
+  To understand the offset at which the data section can be put, it is
+  worth looking at how the binary code looks like with a trial linking
+  with the following command:
 </p>
-
 <pre>
 <code>as -o string.o string.s
 ld --oformat binary -Ttext 0 -Tdata 100 -o string.com string.o
 objdump -bbinary -mi8086 -D string.com
 xxd -g1 string.com</code>
 </pre>
-
 <p>
-The <code>-Ttext 0</code> option tells the linker to assume that the
-text section should be loaded at offset 0x0 in the code segment.
-Similarly, the <code>-Tdata 100</code> tells the linker to assume that
-the data section is at offset 0x100.
+  The <code>-Ttext 0</code> option tells the linker to assume that the
+  text section should be loaded at offset 0x0 in the code segment.
+  Similarly, the <code>-Tdata 100</code> tells the linker to assume
+  that the data section is at offset 0x100.
 </p>
-
 <p>
-The <code>objdump</code> command is used to disassemble the file. This
-shows where the text section and data section are placed. Let us take a
-close look at this portion of the output:
+  The <code>objdump</code> command is used to disassemble the file.
+  This shows where the text section and data section are placed. Let
+  us take a close look at this portion of the output:
 </p>
-
 <pre>
 <code>  1b:   47                      inc    %di
   1c:   46                      inc    %si
@@ -303,18 +291,15 @@ close look at this portion of the output:
  102:   6c                      insb   (%dx),%es:(%di)
  103:   6c                      insb   (%dx),%es:(%di)</code>
 </pre>
-
 <pr>
-This portion shows the end of the text section and beginning of the data
-section.
+  This portion shows the end of the text section and beginning of the
+  data section.
 </p>
-
 <p>
-The output of the <code>xxd</code> command mentioned above looks like
-this (repeated sequence of zeros have been replaced with
-<code>...</code> by me for the sake of brevity):
+  The output of the <code>xxd</code> command mentioned above looks
+  like this (repeated sequence of zeros have been replaced with
+  <code>...</code> by me for the sake of brevity):
 </p>
-
 <pre>
 <code>00000000: 90 31 ff b8 00 b8 8e d8 be 00 01 31 d2 2e 8a 14  .1.........1....
 00000010: 80 fa 00 74 fe 88 15 47 c6 05 1e 47 46 eb ec 00  ...t...G...GF...
@@ -324,54 +309,51 @@ this (repeated sequence of zeros have been replaced with
 000000f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000100: 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64 00           hello, world.</code>
 </pre>
-
 <p>
-Both outputs above show that the text section occupies the first 0x1e
-bytes (30 bytes). The data section is 0xd bytes (13 bytes) in length. We
-have 0x1bc bytes (440 bytes) in the boot sector where we can put our
-binary. To fit the entire binary into the first 440 bytes, let us create
-a binary where the region from offset 0x0 to offset 0x1e contains the
-text section and the region from offset 0x20 to offset 0x2c contains the
-data section. The byte at offset 0x1f is going to remain unused. The
-total length of the binary would then be 0x2d bytes (45 bytes). We will
-create a new binary as per this plan.
+  Both outputs above show that the text section occupies the first
+  0x1e bytes (30 bytes). The data section is 0xd bytes (13 bytes) in
+  length. We have 0x1bc bytes (440 bytes) in the boot sector where we
+  can put our binary. To fit the entire binary into the first 440
+  bytes, let us create a binary where the region from offset 0x0 to
+  offset 0x1e contains the text section and the region from offset
+  0x20 to offset 0x2c contains the data section. The byte at offset
+  0x1f is going to remain unused. The total length of the binary would
+  then be 0x2d bytes (45 bytes). We will create a new binary as per
+  this plan.
 </p>
-
 <p>
-However while creating the new binary, we should remember that DOS would
-load the binary at offset 0x100, so we need to tell the linker to assume
-0x100 as the offset of the text section and 0x120 as the offset of the
-data section, so that it resolves the value of the label named
-<code>message</code> accordingly. We create a new binary in this manner
-and test it with DOSBox with these commands:
+  However while creating the new binary, we should remember that DOS
+  would load the binary at offset 0x100, so we need to tell the linker
+  to assume 0x100 as the offset of the text section and 0x120 as the
+  offset of the data section, so that it resolves the value of the
+  label named
+  <code>message</code> accordingly. We create a new binary in this manner
+  and test it with DOSBox with these commands:
 </p>
-
 <pre>
 <code>ld --oformat binary -Ttext 100 -Tdata 120 -o string.com string.o
 dosbox -c cls string.com</code>
 </pre>
-
 <p>
-If everything looks fine, we link it once again for boot sector and write it
-to the boot sector of our device.
-
+  If everything looks fine, we link it once again for boot sector and
+  write it to the boot sector of our device.
+</p>
 <pre>
 <code>ld --oformat binary -Ttext 7c00 -Tdata 7c20 -o string string.o
 dd if=string of=/dev/sdb
 printf '\x55\xaa' | dd seek=510 bs=1 of=/dev/sdb</code>
 </pre>
-
 <p>
-<em>
-Caution: Again, one needs to be very careful with the <code>dd</code>
-commands here. The device path <code>/dev/sdb</code> is only an example.
-This path must be changed to the path of the actual device one wants to
-write the boot sector binary to.
-</em>
+  <em>
+    Caution: Again, one needs to be very careful with
+    the <code>dd</code> commands here. The device
+    path <code>/dev/sdb</code> is only an example. This path must be
+    changed to the path of the actual device one wants to write the
+    boot sector binary to.
+  </em>
 </p>
-
 <p>
-Once written to the device successfully, the computer may be booted with
-this device to display the <code>"hello, world"</code> string on the
-screen.
+  Once written to the device successfully, the computer may be booted
+  with this device to display the <code>"hello, world"</code> string
+  on the screen.
 </p>
