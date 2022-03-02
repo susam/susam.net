@@ -13,6 +13,7 @@ server {
     location /files/ {
         autoindex on;
     }
+    rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
     rewrite ^/blog/universal-palindrome-day/$ /blog/global-palindrome-day.html permanent;
     rewrite ^/blog/rss/$ /blog/rss.xml permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;

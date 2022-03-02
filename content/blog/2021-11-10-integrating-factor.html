@@ -5,8 +5,8 @@
 <p>
   One of the many techniques for solving ordinary differential
   equations involves using an <em>integrating factor</em>. An
-  integrating factor is a function that we multiply a differential
-  equation with to simplify it and make it integrable. It almost
+  integrating factor is a function that a differential equation is
+  multiplied by to simplify it and make it integrable. It almost
   appears to work like magic!
 </p>
 
@@ -19,7 +19,7 @@
   \[ \frac{dy}{dx} + y P(x) = Q(x) \]
 
   to discuss, reason about, and illustrate this method. We will also
-  often use the Leibniz's notation \( \frac{dy}{dx} \) and the
+  often use the Leibniz's notation \( dy/dx \) and the
   Lagrange's notation \( y'(x) \) or simply \( y' \) interchangeably
   as is typical in calculus. They all mean the same thing: the
   derivative of the function \( y \) with respect to \( x. \) Thus the
@@ -32,7 +32,7 @@
 
   \[ M(x) = e^{\int P(x) \, dx}. \]
 
-  Then we multiply both sides of the differential equation with this
+  Then we multiply both sides of the differential equation by this
   integrating factor. Now remarkably, the left-hand side (LHS) reduces
   to a single term consisting only of a derivative. As a result, we
   can get rid of that derivative by integrating both sides of the
@@ -60,7 +60,7 @@
   = x e^x.
   \]
 
-  Now we multiply both sides of the differential equation with this
+  Now we multiply both sides of the differential equation by this
   integrating factor and get
 
   \[
@@ -100,9 +100,9 @@
   sides of the given differential equation by the integrating factor,
   the differential equation becomes significantly simpler and
   integrable. In fact, after multiplying both sides of the given
-  differential equation with the integrating factor, the LHS always
-  becomes the derivative of the the function \( y \) and the
-  integrating factor. We will now see why this is so.
+  differential equation by the integrating factor, the LHS always
+  becomes the derivative of the product of the function \( y \) and
+  the integrating factor. We will now see why this is so.
 </p>
 
 <h2 id="interesting-relationship">An Interesting Relationship</h2>
@@ -154,8 +154,9 @@
 
 <h2 id="simplification-of-lhs">Simplification of LHS</h2>
 <p>
-  Now let us multiply the integrating factor \( M(x) \) on both sides
-  of the differential equation \eqref{if-eq-diff}. By doing so, we get
+  Now let us multiply both sides of the differential equation
+  \eqref{if-eq-diff} by the integrating factor \( M(x) \). By doing
+  so, we get
 
   \[
   y' M(x) + y P(x) M(x) = Q(x) M(x).
@@ -216,8 +217,8 @@
   = x.
   \]
 
-  Then we multiply the integrating factor on both sides of the
-  differential equation to get
+  Then we multiply both sides of the differential equation by the
+  integrating factor to get
 
   \[
   y'x + y = x^2.
@@ -252,7 +253,7 @@
 
 <h2 id="conclusion">Conclusion</h2>
 <p>
-  In this post, I used very simple and convenient differential
+  In this post, we used very simple and convenient differential
   equations that led to nice closed-form solutions. In practice,
   differential equations can be quite complicated and may not always
   lead to closed-form solutions. In such cases, we leave the result in

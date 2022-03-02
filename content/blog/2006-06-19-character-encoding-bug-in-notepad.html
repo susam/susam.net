@@ -2,65 +2,60 @@
 <!-- tag: technology -->
 <h2 id="symptoms-of-the-bug">Symptoms of the Bug</h2>
 <p>
-I came across an interesting bug in Notepad last week. I have verified
-that this bug is reproducible in Windows XP. Older versions might be
-affected as well. Here are the steps to reproduce the issue:
+  I came across an interesting bug in Notepad last week. I have
+  verified that this bug is reproducible in Windows XP. Older versions
+  might be affected as well. Here are the steps to reproduce the
+  issue:
 </p>
-
 <ol>
-  <li>Open Notepad.</li>
+  <li>
+    Open Notepad.
+  </li>
   <li>
     Enter the following text exactly as shown here:
     <pre><samp>this app can break</samp></pre>
   </li>
-  <li>Save the file.</li>
-  <li>Close Notepad.</li>
-  <li>Open the file again with Notepad.</li>
+  <li>
+    Save the file.
+  </li>
+  <li>
+    Close Notepad.
+  </li>
+  <li>
+    Open the file again with Notepad.
+  </li>
 </ol>
-
 <p>
-Some users may find Chinese characters instead of the English text that
-was entered. Others may find 9 boxes instead.
+  Some users may find Chinese characters instead of the English text
+  that was entered. Others may find 9 boxes instead.
 </p>
-
 <p>
-A similar issue happens with other strings like the following ones:
+  A similar issue happens with other strings like the following ones:
 </p>
-
 <pre><samp>Bush hid the facts</samp></pre>
 <pre><samp>Bill hid the facts</samp></pre>
 <pre><samp>aa aaa aaa</samp></pre>
 <pre><samp>bb bbb bbb</samp></pre>
-
 <p>
-We can craft many more such strings that trigger this bug if we
-understand what causes this bug.
+  We can craft many more such strings that trigger this bug if we
+  understand what causes this bug.
 </p>
-
-
 <h2 id="cause-of-the-bug">Cause of the Bug</h2>
 <p>
-Let us take the following text as an example and try to understand
-what is going on:
+  Let us take the following text as an example and try to understand
+  what is going on:
 </p>
-
 <pre><samp>this app can break</samp></pre>
-
 <p>
-Here are the hexadecimal codes for the characters in the string:
+  Here are the hexadecimal codes for the characters in the string:
 </p>
-
-<pre>
-<samp>74 68 69 73 20 61 70 70 20 63 61 6e 20 62 72 65 61 6b</samp>
-</pre>
-
+<pre> <samp>74 68 69 73 20 61 70 70 20 63 61 6e 20 62 72 65 61 6b</samp></pre>
 <p>
-Now let us try to interpret these 18 bytes as if they represent UTF-16LE
-encoded characters. After rearranging them to represent UTF-16LE encoded
-characters, we get 9 UTF-16LE encoded characters with the following code
-points:
+  Now let us try to interpret these 18 bytes as if they represent
+  UTF-16LE encoded characters. After rearranging them to represent
+  UTF-16LE encoded characters, we get 9 UTF-16LE encoded characters
+  with the following code points:
 </p>
-
 <pre>
 <samp><a href="https://www.fileformat.info/info/unicode/char/6874/">6874</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/7369/">7369</a> <!--
@@ -72,48 +67,41 @@ points:
 --><a href="https://www.fileformat.info/info/unicode/char/6572/">6572</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/6b61/">6b61</a></samp>
 </pre>
-
 <p>
-Click the codes above to see what the characters they represent look
-like. Each code represents a CJK ideograph. CJK stands for Chinese,
-Japanese, and Korean.
+  Click the codes above to see what the characters they represent look
+  like. Each code represents a CJK ideograph. CJK stands for Chinese,
+  Japanese, and Korean.
 </p>
-
 <p>
-We can see now that the 18 bytes entered into Notepad also happen to
-represent 9 valid CJK ideographs when encoded using UTF-16LE. When
-Notepad opens a text file, it finds that the bytes in the file happen to
-be valid UTF-16LE characters, so it attempts to display them as the
-corresponding UTF-16LE characters. Those who do not have CJK fonts
-installed on their systems see them appear as boxes.
+  We can see now that the 18 bytes entered into Notepad also happen to
+  represent 9 valid CJK ideographs when encoded using UTF-16LE. When
+  Notepad opens a text file, it finds that the bytes in the file
+  happen to be valid UTF-16LE characters, so it attempts to display
+  them as the corresponding UTF-16LE characters. Those who do not have
+  CJK fonts installed on their systems see them appear as boxes.
 </p>
-
-
 <h2 id="rewriting-the-file">Rewriting the File</h2>
 <p>
-One of my friends, after playing a little with this bug, asked me,
-"When I create that file for the first time, I see 9 boxes. But if I
-open the same file, delete everything, type the same thing again, close
-it, and open it again, I don't see 9 boxes any more. I can read the
-English text without issues now. Does it mean that for some reason this
-time Notepad can interpret them as ASCII encoded characters?"
+  One of my friends, after playing a little with this bug, asked me,
+  "When I create that file for the first time, I see 9 boxes. But if I
+  open the same file, delete everything, type the same thing again,
+  close it, and open it again, I don't see 9 boxes any more. I can
+  read the English text without issues now. Does it mean that for some
+  reason this time Notepad can interpret them as ASCII encoded
+  characters?"
 </p>
-
 <p>
-The answer is: No! In fact it is just the opposite. This time Notepad
-correctly saves them as UTF-16LE encoded characters.
+  The answer is: No! In fact it is just the opposite. This time
+  Notepad correctly saves them as UTF-16LE encoded characters.
 </p>
-
 <p>
-The first time Notepad saves the data in ASCII encoding. The next time
-it saves it as UTF-16LE encoded characters.
+  The first time Notepad saves the data in ASCII encoding. The next
+  time it saves it as UTF-16LE encoded characters.
 </p>
-
 <p>
-Let us create the file for the first time and see what each byte looks
-like using the <samp>debug</samp> program of DOS.
+  Let us create the file for the first time and see what each byte
+  looks like using the <samp>debug</samp> program of DOS.
 </p>
-
 <pre>
 <samp>C:\&gt;<kbd>debug foo.txt</kbd>
 -<kbd>r ip</kbd>
@@ -124,17 +112,15 @@ IP 0100
 0B66:0110  61 6B BC 00 72 16 03 D3-13 C8 E8 B3 34 00 55 0B  ak..r.......4.U.
 -</samp>
 </pre>
-
 <p>
-When we open this file using Notepad and edit, Notepad considers the
-text to be in UTF-16LE encoding due to reasons explained earlier in
-this post. Therefore it displays the text as CJK ideographs or boxes (if
-CJK fonts are missing). Now when we erase the text and write the same
-English text again, the English text is saved in UTF-16LE encoding (not
-ASCII encoding like the first time). This can be confirmed with the
-<samp>debug</samp> command.
+  When we open this file using Notepad and edit, Notepad considers the
+  text to be in UTF-16LE encoding due to reasons explained earlier in
+  this post. Therefore it displays the text as CJK ideographs or boxes
+  (if CJK fonts are missing). Now when we erase the text and write the
+  same English text again, the English text is saved in UTF-16LE
+  encoding (not ASCII encoding like the first time). This can be
+  confirmed with the <samp>debug</samp> command.
 </p>
-
 <pre>
 <samp>C:\&gt;<kbd>debug a.txt</kbd>
 -<kbd>r ip</kbd>
@@ -145,9 +131,8 @@ IP 0100
 0B66:0110  70 00 20 00 63 00 61 00-6E 00 20 00 62 00 72 00   p. .c.a.n.  .b.r.
 -</samp>
 </pre>
-
 <p>
-The two bytes <samp>FF</samp> and <samp>EE</samp> in the beginning is
-the byte order mark (BOM) for UTF-16LE encoding. The remaining bytes are
-the characters of the text in UTF-16LE encoding.
+  The two bytes <samp>FF</samp> and <samp>EE</samp> in the beginning is
+  the byte order mark (BOM) for UTF-16LE encoding. The remaining bytes are
+  the characters of the text in UTF-16LE encoding.
 </p>
