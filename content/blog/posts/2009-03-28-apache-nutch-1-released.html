@@ -1,0 +1,91 @@
+<!-- title: Apache Nutch 1.0 Released -->
+<!-- tag: Technology -->
+<p>
+  Today, we received
+  <a href="http://www.mail-archive.com/nutch-dev@lucene.apache.org/msg09511.html">an
+    announcement</a> from the Nutch committer,
+  <a href="http://people.apache.org/%7Esiren/">Sami Siren</a> that
+  <a href="http://nutch.apache.org/">Apache Nutch</a> 1.0 has been
+  released. An extract from the announcement:
+</p>
+<blockquote>
+  <p>
+    Apache Nutch, a subproject of Apache Lucene, is open source
+    web-search software. It builds on Lucene Java, adding
+    web-specifics, such as a crawler, a link-graph database, parsers
+    for HTML and other document formats.
+  </p>
+  <p>
+    Apache Nutch 1.0 contains a number of bug fixes and improvements
+    such as Solr Integration, new indexing framework and new scoring
+    framework just to mention a few. Details can be found in the
+    changes file:
+  </p>
+  <p>
+    <a href="http://svn.apache.org/repos/asf/nutch/tags/release-1.0/CHANGES.txt">http://svn.apache.org/repos/asf/nutch/tags/release-1.0/CHANGES.txt</a>
+  </p>
+  <p>
+    Apache Nutch is available for download from the following download
+    page:
+    <a href="http://www.apache.org/dyn/closer.cgi/nutch/">http://www.apache.org/dyn/closer.cgi/nutch/</a>
+  </p>
+</blockquote>
+<p>
+  I have been waiting for this release for a long time as I made some
+  contributions to this project and I wanted them to be available in
+  official release so that I didn't have to maintain a separate set of
+  patches for myself. These contributions were also my first major
+  contributions to an open source project. Let me list my
+  contributions from
+  the <a href="http://svn.apache.org/repos/asf/nutch/tags/release-1.0/CHANGES.txt">CHANGES.txt</a>
+  file and then describe how I got involved in this project.
+</p>
+<pre>
+<code>62. NUTCH-559 - NTLM, Basic and Digest Authentication schemes for web/proxy
+    server. (Susam Pal via dogacan)
+
+77. NUTCH-44 - Too many search results, limits max results returned from a
+    single search. (Emilijan Mirceski and Susam Pal via kubes)
+
+80. NUTCH-612 - URL filtering was disabled in Generator when invoked
+    from Crawl (Susam Pal via ab)
+
+81. NUTCH-601 - Recrawling on existing crawl directory (Susam Pal via ab)</code>
+</pre>
+<p>
+  In 2007, while playing with the search engine, I found that there
+  was no way for Nutch to authenticate itself to intranet sites
+  requiring HTTP authentication. I modified the module that deals with the
+  HTTP protocol so that it could authenticate itself with configured
+  credentials when challenged with authentication. With this change, Nutch
+  now supports NTLM, Basic and Digest authentication schemes. More details
+  on this can be found on the Nutch JIRA at
+  <a href="https://issues.apache.org/jira/browse/NUTCH-559">NUTCH-559</a>.
+  and at the Nutch Wiki entry
+  on <a href="http://wiki.apache.org/nutch/HttpAuthenticationSchemes">HTTP
+  authentication schemes</a>.
+</p>
+<p>
+  <a href="https://issues.apache.org/jira/browse/NUTCH-44">NUTCH-44</a>
+  and <a href="https://issues.apache.org/jira/browse/NUTCH-612">NUTCH-612</a>
+  were bug fixes.
+  <a href="https://issues.apache.org/jira/browse/NUTCH-601">NUTCH-601</a>
+  now allows Nutch to perform deeper crawls using a live index. In the
+  days of Nutch 0.9, the crawler complained if a directory with the
+  name 'crawl' already existed in the current directory. As a result,
+  before beginning a re-crawl using the <code>bin/nutch crawl</code>
+  command, we had to move the existing crawl directory to another
+  location. After a discussion in the community, we agreed that it was
+  better to avoid shuffling the crawl directories by allowing
+  re-crawls on the same directory.
+</p>
+<p>
+  Nutch users' mailing list has often received emails from users who
+  wanted to know how they could enable support for authentication
+  schemes in Nutch 0.9 by applying the
+  <a href="https://issues.apache.org/jira/secure/attachment/12370428/NUTCH-559v0.5.patch">NUTCH-559
+    patch</a>. Patching Nutch 0.9 was a little cumbersome as the patch
+  was generated against the trunk. With this release, the users can
+  now simply download Nutch 1.0 and configure the authentication
+  schemes.
+</p>

@@ -1,9 +1,13 @@
+# General configuration.
+types {
+    text/plain c cc lisp md py yaml yml;
+}
+
 # http://example.com/
 server {
     listen 80;
     listen [::]:80;
     server_name susam.net susam;
-
     root /var/www/susam.net;
     location /app/ {
         proxy_set_header HOST $host;
@@ -13,14 +17,15 @@ server {
     location /files/ {
         autoindex on;
     }
+    rewrite ^/blog/rss/$ /blog/feed.xml permanent;
+    rewrite ^/blog/rss.xml$ /blog/feed.xml permanent;
     rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
-    rewrite ^/blog/universal-palindrome-day/$ /blog/global-palindrome-day.html permanent;
-    rewrite ^/blog/rss/$ /blog/rss.xml permanent;
+    rewrite ^/blog/infosys-tcs-or-wipro/$ /blog/infosys-tcs-or-wipro.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
-    rewrite ^/blog/([^/]*)/$ /blog/$1.html permanent;
-    rewrite ^/maze/fd-100.html$ /blog/fd-100.html permanent;
-    rewrite ^/maze/infinitely-nested-dictionary.html$ /blog/peculiar-self-references.html permanent;
-    rewrite /boot-sector-code/ /blog/writing-boot-sector-code.html permanent;
+    rewrite ^/maze/rss.xml$ /maze/feed.xml permanent;
+    rewrite ^/maze/simplicity-of-irc.html /maze/wall/simplicity-of-irc.html permanent;
+    rewrite ^/maze/paredit-slurp-and-barf-mnemonics.html /maze/wall/paredit-slurp-and-barf-mnemonics.html permanent;
+    rewrite ^/maze/cafe/(.*)$ /maze/wall/$1 permanent;
 }
 
 # http://www.example.com/ => http://example.com/

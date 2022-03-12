@@ -1,0 +1,71 @@
+<!-- title: C Standard Terms for Behaviour -->
+<!-- tag: C Programming -->
+<p>
+  Here are some excerpts from the final drafts of the C99 and C11
+  standards <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf">n1256.pdf</a>
+  and <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf">n1570.pdf</a>,
+  respectively.
+</p>
+<ul>
+  <li>
+    <p>
+      <strong>§3.4.0: behavior:</strong> external appearance or action
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>§3.4.1: implementation-defined behavior:</strong>
+      unspecified behavior where each implementation documents how the
+      choice is made.
+    </p>
+    <p>
+      EXAMPLE: An example of implementation-defined behavior is the
+      propagation of the high-order bit when a signed integer is
+      shifted right.
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>§3.4.2: locale-specific behavior:</strong> behavior that
+      depends on local conventions of nationality, culture, and
+      language that each implementation documents.
+    </p>
+    <p>
+      EXAMPLE: An example of locale-specific behavior is whether the
+      <code>islower</code> function returns true for characters other
+      than the 26 lowercase Latin letters.
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>§3.4.3: undefined behavior:</strong> behavior, upon use
+      of a nonportable or erroneous program construct or of erroneous
+      data, for which this International Standard imposes no
+      requirements.
+    </p>
+    <p>
+      NOTE: Possible undefined behavior ranges from ignoring the
+      situation completely with unpredictable results, to behaving
+      during translation or program execution in a documented manner
+      characteristic of the environment (with or without the issuance
+      of a diagnostic message), to terminating a translation or
+      execution (with the issuance of a diagnostic message).
+    </p>
+    <p>
+      EXAMPLE: An example of undefined behavior is the behavior on
+      integer overflow.
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>§3.4.4: unspecified behavior:</strong> use of an
+      unspecified value, or other behavior where this International
+      Standard provides two or more possibilities and imposes no
+      further requirements on which is chosen in any instance.
+    </p>
+    <p>
+      EXAMPLE: An example of unspecified behavior is the order in
+      which the arguments to a function are evaluated.
+    </p>
+  </li>
+</ul>

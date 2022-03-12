@@ -1,0 +1,115 @@
+<!-- date: 2022-01-22 15:23:31 +0000 -->
+<!-- name: Phoebos -->
+<!-- url: https://bvnf.space -->
+<p>
+  Nice! I like the systematic approach.
+</p>
+<p>
+  The problem occurs if there are many words that differ from the
+  target word by only one letter, e.g., bears, fears, gears, pears,
+  tears, wears, years - in this case, it would be most useful to
+  create a word using as many of those first letters as possible - for
+  example, "befit" with b,f,t - so that only one guess is used up to
+  find what the first letter is.
+</p>
+<!-- date: 2022-01-23 10:27:16 +0000 -->
+<!-- name: Jana -->
+<p>
+  I solved them with Awk.
+</p>
+<p>Wordle #217:</p>
+<pre>
+<samp>$ <kbd>alias words='awk '/^[a-z][a-z][a-z][a-z][a-z]$/' /usr/share/dict/words'</kbd>
+$ <kbd>words | awk '/^....e/ && !/[aros]/' | head -n 5</kbd>
+beige
+belie
+belle
+bible
+bilge
+$ <kbd>words | awk '/[^e][^e][^ie][^e]e/ && /i/ && !/[arosbg]/' | head -n 5</kbd>
+fiche
+indue
+lithe
+mince
+niche
+$ <kbd>words | awk '/[^e]i[^iec][^e]e/ && /c/ && !/[arosbgfh]/' | head -n 5</kbd>
+mince
+wince
+$ <kbd>words | awk '/[^e]ince/ && !/[arosbgfhm]/' | head -n 5</kbd>
+wince</samp>
+</pre>
+<p>Wordle #218:</p>
+<pre>
+<samp>$ <kbd>words | awk '/.r.../ && !/[aose]/' | head -n 5</kbd>
+brick
+bring
+brink
+briny
+bruin
+$ <kbd>words | awk '/.ri[^c]./ && /c/ && !/[aosebk]/' | head -n 5</kbd>
+crimp</samp>
+</pre>
+<p>Wordle #219:</p>
+<pre>
+<samp>$ <kbd>words | awk '/..o../ && !/[arse]/' | head -n 5</kbd>
+block
+blond
+blood
+bloom
+blown
+$ <kbd>words | awk '/.[^l]o.[^k]/ && /l/ && /k/ && !/[arsebc]/' | head -n 5</kbd>
+knoll</samp>
+</pre>
+<!-- date: 2022-01-23 14:26:21 +0000 -->
+<!-- name: Fillon -->
+<blockquote>
+  Also, the letter 'e' does not occur anywhere apart from the fifth
+  place.
+</blockquote>
+<p>
+  There can be repeated letters!
+</p>
+<!-- date: 2022-01-23 23:25:51 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  Fillon,
+</p>
+<p>
+  I am aware that there can be repeated letters. In
+  fact, <a href="../wordle-with-grep.html#wordle-219">Wordle #219</a>
+  ("knoll") does indeed have repeated letters. However,
+  in <a href="../wordle-with-grep.html#wordle-217">Wordle #217</a> we
+  can be sure that there is no repeated letter 'e'.
+</p>
+  In Wordle #217, after we enter the word "beige" as the second guess,
+  the result has the letter 'e' in a green tile and another occurrence
+  of the letter 'e' in a gray tile. The gray tile containing 'e'
+  confirms that there is no repeated letter 'e'. Here is how the
+  second result looks:
+</p>
+<p style="font-family: monospace; font-weight: bold; color: #ddd">
+  <span style="background: #333; padding: 0.5em">B</span>
+  <span style="background: #333; padding: 0.5em">E</span>
+  <span style="background: #b93; padding: 0.5em">I</span>
+  <span style="background: #333; padding: 0.5em">G</span>
+  <span style="background: #585; padding: 0.5em">E</span>
+</p>
+<p>
+  If there were no occurrence of 'e' in an unsolved tile in the result
+  above or if there were another 'e' in a yellow tile, then a repeated
+  'e' could have been present. But in the result above, we have
+  another 'e' in a gray tile. This gray tile guarantees that the
+  letter 'e' does not repeat in the solution.
+</p>
+<!-- date: 2022-01-25 08:08:57 +0000 -->
+<!-- name: Fillon -->
+<p>
+  Susam,
+</p>
+<p>
+  Thanks for the explanation. I did not notice earlier that the result
+  has an extra 'e' in a gray tile. You are right. Since the extra 'e'
+  has been evaluated and marked gray, it cannot occur as a repeated
+  letter.
+</p>

@@ -4,28 +4,20 @@
   <h1>About Me</h1>
   <p>
     Hi! I am Susam Pal. Welcome to my website. This page provides a
-    brief introduction about me.
+    brief introduction about me and this website.
   </p>
-
-  <h2 id="work">Work</h2>
   <p>
-    I am a security software developer. I currently work as a Senior
-    Architect in Walmart Labs. In the past, I have worked in the
-    software development teams of Oracle Database Security, RSA
-    Security, and Finacle e-Banking Security. For more details, see my
-    <a href="cv.html#professional">professional work details</a>.
-  </p>
-
-  <h2 id="hobby">Hobby</h2>
-  <p>
-    I have a keen interest in free and open source software. I have been a
-    <a href="https://issues.apache.org/jira/browse/NUTCH-559">contributor
-      of security features</a> to
-    <a href="http://nutch.apache.org/">Apache Nutch</a>, an open source
-    search engine. I also develop and maintain a few open source
-    projects of my own at <a href="https://github.com/susam">GitHub</a>.
-    For more details, see my <a href="cv.html#opensource">open source
-      work details</a>.
+    I am a software engineer by profession. I have a keen interest in
+    free and open source software. My first non-trivial contribution
+    to open source was
+    <a href="https://issues.apache.org/jira/browse/NUTCH-559">NUTCH-559</a>
+    that added support for various authentication schemes to Apache
+    Nutch, an open source web crawler. I have remained active in the
+    open source communities since then. I also develop and maintain a
+    few open source projects of my own
+    at <a href="https://github.com/susam">github.com/susam</a>. For a
+    list of my projects, see my <a href="cv.html#opensource">open
+    source work details</a>.
   </p>
   <p>
     When not involved with technology, I like
@@ -51,53 +43,74 @@
   <p>
     I hang out on Twitter
     as <a href="https://twitter.com/susam">@susam</a>. I tweet, quite
-    infrequently, about technology, programming, and mathematics there.
-    Please feel free to follow me there if you are interested in these
-    topics.
-  </p>
-  <p>
-    This website hosts my primary blog. I also have a secondary blog
-    named <a href="{{ maze }}">Maze</a> where I take notes, share
-    puzzles, thoughts, and experiments without worrying too much about
-    polishing each post.
+    infrequently, about technology, programming, and mathematics
+    there. Please feel free to follow me there if you are interested
+    in these topics.
   </p>
 
   <h2 id="website">Website</h2>
   <p>
     This website is generated using a Common Lisp program. Most of
-    this website is static in nature.
+    this website is static in nature. The blogs named
+    <a href="blog/{{ index }}">Blog</a> and
+    <a href="maze/{{ index }}">Maze</a> available on this website are
+    also generated statically using this Common Lisp program. The next
+    couple of sections have more information about these blogs.
+  </p>
+  <p>
     The <a href="https://susam.net/app/comment/?post=about">comment</a>
-    and <a href="https://susam.net/app/subscribe">subscription</a>
-    forms are served dynamically using a tiny web server program
-    written in Common Lisp.
+    and <a href="https://susam.net/app/subscribe/">subscription</a>
+    forms on this website are served dynamically using a tiny web
+    server program written in Common Lisp.
     See <a href="https://github.com/susam/susam.net">github.com/susam/susam.net</a>
     for the source code of this website.
   </p>
   <p>
+    Every line of HTML and CSS that makes this website is handcrafted.
     The primary copy of this website is hosted
-    at <a href="https://susam.net/">susam.net</a>. A mirror of the website
-    is hosted at <a href="https://susam.github.io/">susam.github.io</a>.
+    at <a href="https://susam.net/">susam.net</a>. A mirror of the
+    website is hosted
+    at <a href="https://susam.github.io/">susam.github.io</a>.
+  </p>
+
+  <h2 id="blog">Blog</h2>
+  <p>
+    My primary blog is hosted at <a href="blog/{{ index }}">blog/</a>
+    and mirrored at
+    <a href="https://susam.github.io/blog/">susam.github.io/blog/</a>.
+    I have been maintaining this blog since 2006. The posts on my
+    primary blog tend to be long-form, involved, and detailed. They
+    sometimes take considerable time to write and publish. As a
+    result, I don't update my primary blog very often.
+  </p>
+
+  <h2 id="maze">Maze</h2>
+  <p>
+    I have a digital garden hosted at
+    <a href="maze/{{ index }}">maze/</a> and mirrored at
+    <a href="https://susam.github.io/maze/">susam.github.io/maze/</a>.
+    This is a place where I archive notes, code, and various
+    miscellaneous files. The name <em>maze</em> refers to the first
+    toy, a ball-in-a-maze puzzle, I had received as a four-year-old
+    kid.
   </p>
   <p>
-    This website supports both light color theme and dark color theme.
-    The information box below shows which color theme is selected right
-    now.
-  </p>
-  <p class="light highlight">
-    This website is currently displayed with <strong>light color
-      theme</strong>. Note that this is the default color scheme when your
-    web browser does not indicate what color theme it prefers.
-  </p>
-  <p class="dark highlight">
-    This website is currently displayed with <strong>dark color
-      theme</strong> because your web browser is currently indicating
-    that it prefers a dark color theme.
+    This digital garden also contains my secondary blog
+    at <a href="maze/wall/{{ index }}">maze/wall/</a>. It is a relaxed
+    place where I do not worry too much about polishing each post. Due
+    to the casual nature of this secondary blog, the posts here are
+    less thorough than the ones in my primary blog. This allows me to
+    update this blog more often.
   </p>
   <p>
-    If you would like to browse this website using the opposite color
-    theme, please check if your operating system or web browser supports
-    changing the preferred color theme. Most modern operating systems do
-    support it.
+    Maze is a descendant of an intranet server named <code>maze</code>
+    that I used to run for my fellow students in our university's
+    computer network during my engineering study days back in
+    2001-2005. The server used to host an FTP server and an HTTP
+    portal for mathematics puzzles, free software downloads, and
+    audio/video streaming. While that intranet portal and its source
+    code written in Classic ASP are now long gone, some of its content
+    still survives on this website.
   </p>
 
   <h2 id="fun-pages">Fun</h2>
@@ -113,10 +126,37 @@
       1980s-arcade-style invaders game.
     </li>
     <li>
+      <a href="phi.txt">phi.txt</a> &mdash; One million and one digits
+      of \( \varphi \) followed by a newline.
+    </li>
+    <li>
       <a href="pi.txt">pi.txt</a> &mdash; One million and one digits
       of \( \pi \) followed by a newline.
     </li>
   </ul>
+
+  <h2 id="colours">Colours</h2>
+  <p>
+    This website supports both light and dark colour schemes. The
+    information box below shows the colour scheme selected right now.
+  </p>
+  <p class="light highlight">
+    This website is currently displayed with <strong>light colour
+      scheme</strong>. Note that this is the default color scheme when
+      your web browser does not indicate what colour scheme it
+      prefers.
+  </p>
+  <p class="dark highlight">
+    This website is currently displayed with <strong>dark colour
+      scheme</strong> because your web browser is currently indicating
+      that it prefers a dark colour scheme.
+  </p>
+  <p>
+    If you would like to browse this website using the opposite colour
+    scheme, please check if your operating system or web browser
+    supports changing the preferred colour scheme. Most modern
+    operating systems do support it.
+  </p>
 
   <h2 id="name">Name</h2>
   <p>

@@ -1,0 +1,140 @@
+body {
+  color: {{ light-body-color }};
+  font-family: georgia, serif;
+  font-size: large;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 40em;
+  padding: 0 1em;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.25em 0 0.5em 0;
+  line-height: 1.2;
+}
+h1 {
+  margin-bottom: 0.25em;
+}
+h1 + div, h2 + div {
+  margin: 0.5em 0;
+}
+a:link {
+  color: {{ light-link-color }};
+}
+a:visited {
+  color: {{ light-visited-color }};
+}
+a:focus, a:hover {
+  color: {{ light-hover-color }};
+}
+a:active {
+  color: {{ light-active-color }};
+}
+a:empty:before {
+  content: "#";
+}
+a:empty {
+  visibility: hidden;
+  padding-left: 0.25em;
+}
+:hover > a:empty {
+  visibility: visible;
+}
+blockquote, pre, p kbd, .highlight {
+  background: {{ light-fill-color }};
+}
+blockquote {
+  border-left: medium solid {{ light-shade-color }};
+  margin-right: 0;
+  margin-left: 0;
+}
+pre {
+  overflow: auto;
+}
+blockquote, pre, .highlight {
+  padding: 0.5em;
+}
+blockquote *:first-child, div.highlight *:first-child {
+  margin-top: 0;
+}
+blockquote *:last-child, div.highlight *:last-child {
+  margin-bottom: 0;
+}
+pre, code, samp, kbd {
+  font-family: monospace,monospace;
+  color: {{ light-code-color }};
+}
+pre code, pre samp {
+  font-size: 0.9em;
+}
+pre .cursor {
+  border-bottom: 0.2em solid;
+}
+pre kbd {
+  color: {{ light-kbd-color }};
+}
+p kbd {
+  border: thin solid {{ light-shade-color }};
+  box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
+  border-radius: 0.2em;
+  padding: 0.1em 0.2em;
+}
+ul.blog {
+  margin-top: 1.5em;
+  list-style-type: none;
+  padding: 0;
+}
+ul.blog li {
+  margin: 1em 0;
+}
+hr {
+  margin: 1.5em auto;
+  border: 0;
+  border-bottom: thin dotted {{ light-line-color }};
+}
+footer {
+  text-align: center;
+}
+nav a, footer a {
+  margin-right: 1.5em;
+  line-height: 2.5;
+}
+nav a:last-child, footer a:last-child  {
+  margin-right: 0;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: {{ dark-background-color }};
+    color: {{ dark-body-color }};
+  }
+  a:link {
+    color: {{ dark-link-color }};
+  }
+  a:visited {
+    color: {{ dark-visited-color }};
+  }
+  a:focus, a:hover {
+    color: {{ dark-hover-color }};
+  }
+  a:active {
+    color: {{ dark-active-color }};
+  }
+  blockquote, pre, p kbd, .highlight {
+    background: {{ dark-fill-color }};
+  }
+  blockquote {
+    border-left-color: {{ dark-shade-color }};
+  }
+  pre, code, samp, kbd {
+    color: {{ dark-code-color }};
+  }
+  pre kbd {
+    color: {{ dark-kbd-color }};
+  }
+  p kbd {
+    border-color: {{ dark-shade-color }};
+    box-shadow: 0 0.15em 0.15em {{ dark-shade-color }};
+  }
+  hr {
+    border-bottom-color: {{ dark-line-color }};
+  }
+}

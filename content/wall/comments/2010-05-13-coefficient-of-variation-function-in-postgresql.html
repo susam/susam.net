@@ -1,0 +1,18 @@
+<!-- date: 2011-03-23 12:34:00 +0000 -->
+<!-- name: Philipp Rautenberg -->
+<p>
+  What exactly is <code>float8_accum</code> doing?
+</p>
+<!-- date: 2011-03-23 19:03:00 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  The <code>float8_accum</code> is the aggregate state transition
+  function which maintains an internal state which changes for every
+  new <code>float8</code> input value.
+</p>
+  It requires a three-element array, not just two elements, because it
+  accumulates the sum of squares as well as the sum and count of the
+  inputs. This is so that it can be used for some other aggregates
+  besides <code>avg</code>.
+</p>

@@ -1,0 +1,22 @@
+<!-- date: 2011-07-06 05:07:00 +0000 -->
+<!-- name: Ryan Batterman -->
+<p>
+  Let \( f(x, y) = x + y + xy. \) It can be rewritten as \( f(x, y) = (x +
+  1)(y + 1) - 1. \) Now, consider an arbitrary set of integers \( A = \{a_1,
+  a_2, \dots, a_n\}. \)  Applying the algorithm mentioned in the problem
+  statement to two integers \( a_i \) and \( a_j \) chosen randomly from the
+  set such that \( i \ne j, \) we obtain, \( f(a_i, a_j) = (a_i + 1)(b_i + 1)
+  - 1. \) When this expression is used in subsequent calls to \( f(x, y), \) the
+  \( -1 \) drops, the new number is included in the product and the \( -1 \)
+  gets added again. For instance, using this result and a different number
+  \( a_k \) chosen randomly from the set, we obtain \( f\bigl((a_i + 1)(a_j +
+  1) - 1, a_k\bigr) = (a_i + 1)(a_j + 1)(a_k + 1) - 1. \) Inductively, this
+  pattern holds, and the algorithm returns a product of all integers in
+  the set minus \( 1. \)
+</p>
+<p>
+  Therefore, the result of the algorithm, when applied to the set \( A \) is
+  \( \prod_{i=1}^n (a_i + 1) - 1. \) If \( A = \{1, 2, \dots, 9\}, \) on
+  applying the algorithm, we obtain \( (1 + 1)(2 + 1) \dots (9 + 1) - 1 = 10!
+  - 1 = 3628799. \)
+</p>

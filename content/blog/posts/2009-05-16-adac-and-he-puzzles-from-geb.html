@@ -1,0 +1,166 @@
+<!-- title: ADAC and HE Puzzles from GEB -->
+<!-- tag: Miscellaneous Book -->
+<p>
+  I have been reading
+  <em><a href="http://en.wikipedia.org/wiki/G%C3%B6del,_Escher,_Bach"
+         class="title">G&ouml;del, Escher, Bach: An Eternal Golden
+      Braid</a></em>
+  by Douglas R. Hofstadter for a few weeks. The
+  book follows an interesting format of alternating between
+  chapters and dialogues between imaginary charaters. In the
+  words of the author:
+</p>
+<blockquote>
+  The long and the short of it is that I eventually decided - but this
+  took many months - that the optimal structure would be a strict
+  alternation between chapters and dialogues. Once that was clear,
+  then I had the joyous task of trying to pinpoint the most crucial
+  ideas that I wanted to get across to my readers and then somehow
+  embodying them in both the form and the content of fanciful, often
+  punning dialogues between Achilles and the Tortoise (plus a few new
+  friends).
+</blockquote>
+<p>
+  After the second chapter (Chapter II: Meaning and Form in Mathematics)
+  there is a dialogue between Achilles and the Tortoise on telephone. The
+  title of the dialogue is <em>Sonata for Unaccompanied
+    Achilles</em>. The text shows the transcript of only one end of the
+  call, only what Achilles speaks. The Tortoise is at the far end of the
+  call. The sentences spoken by the Tortoise at the other end are not
+  present in the text. This makes the reading experience very interesting
+  as we keep guessing about what is going on at the other end.
+</p>
+<p>
+  It starts in this manner:
+</p>
+<blockquote>
+  <em>Achilles:</em>
+  Hello, this is Achilles.<br>
+  <em>Achilles:</em>
+  Oh, hello, Mr. T. How are you?<br>
+  <em>Achilles:</em>
+  A torticollis? Oh, I'm sorry to hear it. Do you have any idea what
+  caused it?
+</blockquote>
+<p>
+  As the dialogue proceeds, they share a few puzzles. Here is the
+  first one from the Tortoise.
+</p>
+<blockquote>
+  <em>Achilles:</em>
+  A word with the letters 'A', 'D', 'A', 'C' consecutively inside it
+  &hellip; Hmm &hellip; What about "abracadabra"?<br>
+  <em>Achilles:</em>
+  True, "ADAC" occurs backwards, not forwards, in that word.<br>
+  <em>Achilles:</em>
+  Hours and hours? It sounds like I'm in for a long puzzle, then.
+  Where did you hear this infernal riddle?
+</blockquote>
+<p>
+  Here is the second puzzle from Achilles:
+</p>
+<blockquote>
+  <em>Achilles:</em>
+  Say, I once heard a word puzzle a little bit like this one. Do you
+  want to hear it? Or would it just drive you further into
+  distraction?<br>
+  <em>Achilles:</em>
+  I agree - can't do any harm. here it is: What's a word that begins
+  with the letters "HE" and also ends with "HE"?<br>
+  <em>Achilles:</em>
+  Very ingenious - but that's almost cheating. It's certainly not what
+  I meant!<br>
+  <em>Achilles:</em>
+  Of course you're right - it fulfills the conditions, but it's a sort
+  of "degenerate" solution. There's another solution which I had in
+  mind.<br>
+  <em>Achilles:</em>
+  That's exactly it! How did you come up with it so fast?<br>
+  <em>Achilles:</em>
+  So here's a case where having a headache actually might have helped
+  you, rather than hindering you. Excellent! But I'm still in the dark
+  on your "ADAC" puzzle.
+</blockquote>
+<p>
+  <em>
+    If you want to think about these puzzles, this is a good time to
+    pause and think about them. There are spoilers ahead.
+  </em>
+</p>
+<p>
+  It didn't take much time for me to solve the puzzle because I
+  cheated with the word list file available on Linux distributions.
+  Here is what I found with my Debian 5.0 (lenny) system:
+</p>
+<pre>
+<samp>$ <kbd>grep 'adac' /usr/share/dict/words</kbd>
+headache
+headache's
+headaches
+$ <kbd>grep '^he.*he$' /usr/share/dict/words</kbd>
+headache
+heartache</samp>
+</pre>
+<p>
+  The answers to both puzzles seem to be "HEADACHE". Take another look
+  at the last sentence in the dialogue above. It makes sense now as
+  Achilles says that having a <em>headache</em> might have helped the
+  Tortoise.
+</p>
+<p>
+  Later in the dialogue the Tortoise offers <em>figure</em> and
+  <em>ground</em> as hints to the "ADAC" puzzle.
+</p>
+<blockquote>
+  <em>Achilles:</em>
+  Well, normally I don't like hints, but all right. What's your
+  hint?<br>
+  <em>Achilles:</em>
+  I don't know what you mean by "figure" and "ground" in this
+  case.<br>
+  <em>Achilles:</em>
+  Certainly I know Mosaic II! I know ALL of Escher's works. After all,
+  he's my favorite artist. In any case, I've got a print of Mosaic II
+  hanging on my wall, in plain view from here.<br>
+  <em>Achilles:</em>
+  Yes, I see all the black animals.<br>
+  <em>Achilles:</em>
+  Yes, I also see how their "negative" space - what's left out -
+  defines the white animals.<br>
+  <em>Achilles:</em>
+  So THAT's what you mean by "figure" and "ground". But what does that
+  have to do with the "ADAC" puzzle?<br>
+  <em>Achilles:</em>
+  Oh, this is too tricky to me. I think I'M starting to get a
+  headache.
+</blockquote>
+<p>
+  The famous painting discussed in the dialogue can be found here:
+  <a href="https://www.wikiart.org/en/m-c-escher/mosaic-ii">https://www.wikiart.org/en/m-c-escher/mosaic-ii</a>.
+    We can see how the black animals form the <em>figure</em> (the
+    positive space) and how the background or <em>ground</em> (the
+    negative space) beautifully fits all the white animals.
+</p>
+<p>
+  The <em>figure</em> and <em>ground</em> in hints make sense now. The
+  first puzzle has "ADAC" in the question. Let us consider "ADAC" as
+  the figure or the positive space. If we remove "ADAC" from
+  "HEADACHE", we are left with the ground or negative space, which
+  consists of "HE" and "HE" at the beginning and the end of the word.
+  The <em>figure</em> is used in the first puzzle and
+  the <em>ground</em> is used in the second puzzle
+</p>
+<p>
+  By the way, what is the first answer from the Tortoise that Achilles
+  finds very ingenious but degenerate? I believe, it is "HE" as this
+  word both begins and ends with "HE".
+</p>
+<p>
+  The funny thing about this dialogue is that both of them asked two
+  puzzles to each other without knowing that the answers to them were
+  the same. A similar thing happened to me when a colleague of mine
+  and I challenged each other with combinatorics puzzles. See this
+  blog post for the
+  story: <a href="combinatorics-coincidence.html">Combinatorics
+  Coincidence</a>.
+</p>

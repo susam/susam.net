@@ -298,7 +298,7 @@
 (test-case read-sections-none
   (assert (not (read-sections "Foo"))))
 
-(test-case! read-sections-single
+(test-case read-sections-single
   (let* ((body (format nil "<!-- foo -->~%Foo"))
          (result (read-sections body)))
     (assert (equal (get-value "foo" result) (list "Foo")))))
@@ -571,34 +571,39 @@
   <!-- apple test include -->
 ")))
 
-(test-case add-imports
-  (let ((params (list (cons "import" "foo.js") (cons "root" ""))))
-    (add-imports params)
-    (assert (string= (get-value "imports" params)
-                     "  <script src=\"js/foo.js\"></script>
-"))))
+(test-case add-head-params-imports
+  (let ((params (list (cons "import" "foo.js")))
+        (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
+    (add-head-params "_site/" params)
+    (assert (string= (get-value "imports" params) (format nil result "")))
+    (add-head-params "_site/foo.html" params)
+    (assert (string= (get-value "imports" params) (format nil result "")))
+    (add-head-params "_site/foo/" params)
+    (assert (string= (get-value "imports" params) (format nil result "../")))
+    (add-head-params "_site/foo/bar.html" params)
+    (assert (string= (get-value "imports" params) (format nil result "../")))))
 
-(test-case add-canonical-url
+(test-case add-head-params-canonical-url
   (let ((params (list (cons "site-url" "https://example.com/"))))
-    (add-canonical-url "_site/" params)
+    (add-head-params "_site/" params)
     (assert (string= (get-value "canonical-url" params)
                      "https://example.com/"))
-    (add-canonical-url "_site/foo/" params)
+    (add-head-params "_site/foo/" params)
     (assert (string= (get-value "canonical-url" params)
                      "https://example.com/foo/"))
-    (add-canonical-url "_site/foo/bar/" params)
+    (add-head-params "_site/foo/bar/" params)
     (assert (string= (get-value "canonical-url" params)
                      "https://example.com/foo/bar/"))))
 
-(test-case add-canonical-url-remove-index
+(test-case add-head-params-canonical-url-index
   (let ((params (list (cons "site-url" "https://example.com/"))))
-    (add-canonical-url "_site/index.html" params)
+    (add-head-params "_site/index.html" params)
     (assert (string= (get-value "canonical-url" params)
                      "https://example.com/"))
-    (add-canonical-url "_site/foo/index.html" params)
+    (add-head-params "_site/foo/index.html" params)
     (assert (string= (get-value "canonical-url" params)
                      "https://example.com/foo/"))
-    (add-canonical-url "_site/foo/bar/index.html" params)
+    (add-head-params "_site/foo/bar/index.html" params)
     (assert (string= (get-value "canonical-url" params)
                      "https://example.com/foo/bar/"))))
 
@@ -695,7 +700,7 @@
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
               (list (cons "import" "foo.css") (cons "root" "")))
-  (let ((s "[  <link rel=\"stylesheet\" href=\"css/foo.css\">
+  (let ((s "[  <link rel=\"stylesheet\" href=\"../../css/foo.css\">
 foo]"))
     (assert (string= (read-file "test-tmp/output/foo.txt") s)))
 )
@@ -705,9 +710,9 @@ foo]"))
   (make-posts "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
-              (list (cons "import" "foo.js") (cons "root" "")))
+              (list (cons "import" "foo.js")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
-                   "[  <script src=\"js/foo.js\"></script>
+                   "[  <script src=\"../../js/foo.js\"></script>
 foo]")))
 
 (test-case make-post-list
@@ -854,7 +859,7 @@ Z")
                      (list (cons "root" "")))
   (assert
    (string= (read-file "test-tmp/comments.html")
-            "[  <link rel=\"stylesheet\" href=\"css/comment.css\">
+            "[  <link rel=\"stylesheet\" href=\"../css/comment.css\">
 ]")))
 
 (test-case make-comment-none

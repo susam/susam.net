@@ -1,0 +1,60 @@
+input, textarea, button {
+  font-size: 1em;
+  border: thin solid {{ light-line-color }};
+}
+label {
+  margin-top: 1em;
+  display: block;
+}
+textarea {
+    min-height: 10em;
+}
+#name, #url, #comment, #email {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5em;
+}
+#submit {
+  min-width: 75%;
+  min-height: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 1em;
+}
+.status {
+  display: none;
+}
+.status p {
+  margin: 1em 1em;
+}
+.error .status, .success .status {
+  display: block;
+  border-width: medium;
+  border-style: double;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.error .status {
+  color: {{ light-warn-color }};
+  border-color: {{ light-warn-color }};
+}
+.success .status {
+  color: {{ light-okay-color }};
+  border-color: {{ light-okay-color }};
+}
+@media (prefers-color-scheme: dark) {
+  input, textarea, button {
+    background: {{ dark-fill-color }};
+    color: {{ dark-body-color }};
+    border-color: {{ dark-line-color }};
+  }
+  .error .status {
+    color: {{ dark-warn-color }};
+    border-color: {{ dark-warn-color }};
+  }
+  .success .status {
+    color: {{ dark-okay-color }};
+    border-color: {{ dark-okay-color }};
+  }
+}
