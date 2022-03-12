@@ -49,7 +49,7 @@ https: http
 	systemctl reload nginx
 	@echo Done; echo
 
-http: rm live spapp
+http: rm live form
 	@echo Setting up HTTP website ...
 	ln -snf "$$PWD/_live" '/var/www/$(FQDN)'
 	ln -snf "$$PWD/etc/nginx/http.$(FQDN)" '/etc/nginx/sites-enabled/$(FQDN)'
@@ -57,13 +57,13 @@ http: rm live spapp
 	echo 127.0.0.1 '$(NAME)' >> /etc/hosts
 	@echo Done; echo
 
-spapp: FORCE
-	@echo Setting up spapp ...
+form: FORCE
+	@echo Setting up form ...
 	mkdir -p /opt/cache
 	chown www-data:www-data /opt/cache
-	systemctl enable "/opt/susam.net/etc/spapp.service"
+	systemctl enable "/opt/susam.net/etc/form.service"
 	systemctl daemon-reload
-	systemctl start spapp
+	systemctl start form
 	@echo Done; echo
 
 update: pull live
@@ -75,9 +75,9 @@ rm: checkroot
 	systemctl reload nginx
 	sed -i '/$(NAME)/d' /etc/hosts
 	#
-	@echo Removing spapp ...
-	-systemctl stop spapp
-	-systemctl disable spapp
+	@echo Removing form ...
+	-systemctl stop form
+	-systemctl disable form
 	systemctl daemon-reload
 	#
 	# Following crontab entries left intact:
@@ -114,8 +114,8 @@ mathjax:
 run:
 	cd _site && python3 -m http.server
 
-runapp:
-	sbcl --load spapp.lisp
+runform:
+	sbcl --load form.lisp
 
 loop:
 	while true; do make dist; sleep 5; done
@@ -147,10 +147,10 @@ push:
 	git push
 
 web:
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart nginx spapp && sudo systemctl --no-pager status nginx spapp"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
 webreset:
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx spapp && sudo systemctl --no-pager status nginx spapp"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
 # GitHub Pages Mirror
 
@@ -242,10 +242,10 @@ checklive:
 	curl -sSI https://susam.net/maze/paradox.html | grep '200 OK'
 	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
 
-checkapp: checkroot
-	curl https://susam.net/app/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
-	curl https://susam.net/app/subscribe/ -d email=foo-subscribe@example.com
-	curl https://susam.net/app/unsubscribe/ -d email=foo-unsubscribe@example.com
+checkform: checkroot
+	curl https://susam.net/form/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
+	curl https://susam.net/form/subscribe/ -d email=foo-subscribe@example.com
+	curl https://susam.net/form/unsubscribe/ -d email=foo-unsubscribe@example.com
 	ls -l /opt/cache
 	cat /opt/cache/comment_foo_$$(date +"%Y-%m-%d")_*.txt
 	grep -h foo /opt/cache/*subscribe_$$(date +"%Y-%m-%d")_*.txt
