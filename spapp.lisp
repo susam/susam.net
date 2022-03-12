@@ -48,13 +48,15 @@
   `(progn
      (add-value "root" "../../" ,params)
      (add-value "index" "" ,params)
-     (add-value "maze" "/maze/" ,params)
      (add-value "subtitle" " - Susam Pal" ,params)
      (add-value "site-url" "https://susam.net/" ,params)
+     (add-value "zone-title" "Blog" ,params)
+     (add-value "zone-path" "blog/" ,params)
+     (add-value "initial-year" 2006 ,params)
      (add-value "current-year" (nth-value 5 (get-decoded-time)) ,params)
-     (add-value "import" "form.css" ,params)
      (add-value "canonical-url" "" ,params)
-     (add-imports ,params)))
+     (add-value "heads" (head-html "main.css" ,params) ,params)
+     (add-value "imports" (head-html "form.css" ,params) ,params)))
 
 (defun comment-form-page (method post slug name url comment email)
   "Return HTML response to the request handler for comments."

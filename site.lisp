@@ -335,42 +335,48 @@ value, next-index."
       (add-value "simple-date" (simple-date date) post))
     post))
 
-(defun head-html (import-header root params)
+(defun head-css-html (name root)
+  (format nil "  <link rel=\"stylesheet\" href=\"~acss/~a\">~%" root name))
+
+(defun head-js-html (name root)
+  (format nil "  <script src=\"~ajs/~a\"></script>~%" root name))
+
+(defun head-inc-html (name params)
+  (render (read-file (format nil "layout/include/~a" name)) params))
+
+(defun head-html (import-header params)
   "Given the value of an import header, return HTML code for it."
   (let ((names (uiop:split-string import-header))
-        (fstr)
-        (result))
+        (root (get-value "root" params))
+        (snippets))
     (dolist (name names)
       (cond ((string-ends-with ".css" name)
-             (push (format nil "  <link rel=\"stylesheet\" href=\"~acss/~a\">~%"
-                           root name) result))
-            ((string-ends-with ".inc" name)
-             (push (render (read-file (format nil "layout/include/~a" name))
-                           params) result))
+             (push (head-css-html name root) snippets))
             ((string-ends-with ".js" name)
-             (push (format nil "  <script src=\"~ajs/~a\"></script>~%"
-                           root name) result))
+             (push (head-js-html name root) snippets))
+            ((string-ends-with ".inc" name)
+             (push (head-inc-html name params) snippets))
             (t
              (error (format nil "Unknown import type ~a in ~a"
                             name import-header)))))
-    (if result
-        (format nil "~{~a~}" (reverse result))
-        "")))
+    (if snippets (format nil "~{~a~}" (reverse snippets)) "")))
 
-(defmacro add-imports (params)
-  "Add head element imports to params if an import is specified."
-  `(let* ((import (get-value "import" ,params))
-          (root (get-value "root" ,params)))
-     (add-value "imports" (head-html import root ,params) ,params)))
+(defun relative-root-path (dst-path)
+  (repeat-string (count #\/ (string-replace "_site/" "" dst-path)) "../"))
 
-(defmacro add-canonical-url (dst-path params)
+(defun neat-url-path (dst-path)
+  (string-replace "index.html" "" (string-replace "_site/" "" dst-path)))
+
+(defun neat-url (dst-path params)
+  (format nil "~a~a" (get-value "site-url" params) (neat-url-path dst-path)))
+
+(defmacro add-head-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
-  `(let ((neat-url ,dst-path)
-         (site-url (get-value "site-url" ,params)))
-     (setf neat-url (string-replace "_site/" "" neat-url))
-     (setf neat-url (string-replace "index.html" "" neat-url))
-     (setf neat-url (format nil "~a~a" site-url neat-url))
-     (add-value "canonical-url" neat-url ,params)))
+  `(progn
+     (add-value "root" (relative-root-path ,dst-path) ,params)
+     (add-value "canonical-url" (neat-url ,dst-path ,params) ,params)
+     (add-value "heads" (head-html (get-value "head" ,params) ,params) ,params)
+     (add-value "imports" (head-html (get-value "import" ,params) ,params) ,params)))
 
 (defmacro invoke-callback (params)
   "Run callback and add the parameters returned by it to params."
@@ -380,56 +386,54 @@ value, next-index."
        (setf callback-params (funcall callback ,params))
        (setf ,params (append callback-params ,params)))))
 
+(defun make-post (src-path dst layout params)
+  "Generate page from post or content file."
+  (let* ((post (read-post src-path))
+         (page (append post params))
+         (body))
+    ;; Read post and merge its parameters with call parameters.
+    (invoke-callback page)
+    ;; Render placeholder in post body if requested.
+    (when (string= (get-value "render" page) "yes")
+      (setf body (render (get-value "body" page) page))
+      (add-value "body" body post)
+      (add-value "body" body page))
+    (setf dst (render dst page))
+    (add-head-params dst page)
+    ;; Render the post using the layout.
+    (write-log "Rendering ~a => ~a ..." (get-value "slug" page) dst)
+    (write-file dst (extra-markup (render layout page)))
+    ;; Return the post.
+    post))
+
 (defun make-posts (src dst layout &optional params)
-  "Generate pages from post files."
-  (let ((post)           ; Parameters read from post.
-        (page)           ; Parameters for current page.
-        (body)           ; Post body.
-        (posts)          ; List of post parameters.
-        (dst-path)       ; Destination path to write rendered page to.
-        (render))        ; Render flag in post parameters.
+  "Generate pages from post or content files."
+  (let ((posts))
     (dolist (src-path (directory src))
-      ;; Read post and merge its parameters with call parameters.
-      (setf post (read-post src-path))
-      (setf page (append post params post))
-      (invoke-callback page)
-      (add-imports page)
-      ;; Render placeholder in post body if requested.
-      (setf render (get-value "render" page))
-      (when (string= render "yes")
-        (setf body (render (get-value "body" page) page))
-        (add-value "body" body post)
-        (add-value "body" body page))
-      (push post posts)
-      ;; Determine destination path and URL.
-      (setf dst-path (render dst page))
-      (add-canonical-url dst-path page)
-      ;; Render the post using the layout.
-      (write-log "Rendering ~a => ~a ..." (get-value "slug" page) dst-path)
-      (write-file dst-path (extra-markup (render layout page))))
-    ;; Sort the posts in chronological order.
-    (sort posts #'(lambda (x y) (string< (get-value "date" x)
-                                         (get-value "date" y))))))
+      (push (make-post src-path dst layout params) posts))
+    (sort posts (lambda (x y) (string< (get-value "date" x)
+                                       (get-value "date" y))))))
 
 (defun make-post-list (posts dst list-layout item-layout
                        &optional params)
   "Generate list page for a list of posts."
-  (let ((count (length posts))
+  (let ((count 0)
         (rendered-posts)
         (dst-path))
     ;; Render each post.
     (dolist (post posts)
-      (setf post (append post params))
-      (invoke-callback post)
-      (push (render item-layout post) rendered-posts))
+      (unless (string= (get-value "unlist" post) "yes")
+        (setf post (append post params))
+        (invoke-callback post)
+        (push (render item-layout post) rendered-posts)
+        (incf count)))
     ;; Add list parameters.
     (add-value "body" (join-strings rendered-posts) params)
     (add-value "count" count params)
     (add-value "post-label" (if (= count 1) "post" "posts") params)
-    (add-imports params)
     ;; Determine destination path and URL.
     (setf dst-path (render dst params))
-    (add-canonical-url dst-path params)
+    (add-head-params dst-path params)
     ;; Render the post using list layout.
     (write-log "Rendering list => ~a ..." dst-path)
     (write-file dst-path (extra-markup (render list-layout params)))))
@@ -441,6 +445,7 @@ value, next-index."
 (defun read-comment (text start-index)
   "Read a single comment from a comment file."
   (let ((start-token "<!-- ") ; Header prefix.
+        (date)                ; Date.
         (commenter)           ; Rendered commenter display name.
         (url)                 ; URL of commenter.
         (comment)             ; Parsed comment parameters.
@@ -452,8 +457,10 @@ value, next-index."
     (when url
       (setf commenter (format nil "<a href=\"~a\">~a</a>" url commenter)))
     (add-value "commenter" commenter comment)
-    ;; Human-readable date.
-    (add-value "simple-date" (simple-date (get-value "date" comment)) comment)
+    ;; Formatted dates.
+    (setf date (get-value "date" comment))
+    (add-value "rss-date" date comment)
+    (add-value "simple-date" date comment)
     ;; Select content until next header or end-of-text as body.
     (setf next-index (search start-token text :start2 start-index))
     (add-value "body" (subseq text start-index next-index) comment)
@@ -469,9 +476,7 @@ value, next-index."
     (loop
        (setf (values comment next-index) (read-comment text next-index))
        ;; Comment date must end with " +0000".
-       (unless (string-ends-with " +0000" (get-value "date" comment))
-         (error (format nil "Time zone missing in comment date ~a in ~a"
-                        (get-value "date" comment) filename)))
+
        ;; Current comment date must be more recent than the previous comment.
        (when (and (consp comments) (string< (get-value "date" comment)
                                             (get-value "date" (car comments))))
@@ -480,7 +485,13 @@ value, next-index."
        (push comment comments)
        (unless next-index
          (return)))
-    (values slug comments)))
+    (values comments slug)))
+
+(defun check-comment-date (comment)
+  (unless (string-ends-with " +0000" (get-value "date" comment))
+    (error (format nil "Time zone missing in comment date ~a in ~a"
+                   (get-value "date" comment)
+                   (get-value "slug" comment)))))
 
 (defun make-comment-list (post comments dst list-layout item-layout
                           &optional params)
@@ -490,8 +501,7 @@ value, next-index."
          (post-import (get-value "import" post))
          (count (length comments))
          (comment-label (if (= count 1) "comment" "comments"))
-         (rendered-comments)
-         (dst-path))
+         (rendered-comments))
     ;; Add comment item parameters.
     (add-value "slug" post-slug params)
     (add-value "title" (format nil "Comments on ~a" post-title) params)
@@ -502,6 +512,7 @@ value, next-index."
     (loop for index from count downto 1
           for comment in comments
           do (setf comment (append comment params))
+             (check-comment-date comment)
              (add-value "index" index comment)
              (add-value "commenter-type"
                         (if (string= (get-value "name" comment)
@@ -513,30 +524,28 @@ value, next-index."
         (setf post-import (format nil "comment.css ~a" post-import))
         (setf post-import "comment.css"))
     (add-value "import" post-import params)
-    (add-imports params)
     ;; Determine destination path and URL.
     (add-value "body" (join-strings rendered-comments) params)
-    (setf dst-path (render dst params))
-    (add-canonical-url dst-path params)
+    (setf dst (render dst params))
+    (add-head-params dst params)
     ;; Render comment list.
-    (write-log "Rendering ~a => ~a ..." post-slug dst-path)
-    (write-file dst-path (render list-layout params))))
+    (write-log "Rendering ~a => ~a ..." post-slug dst)
+    (write-file dst (render list-layout params))))
 
 (defun make-comment-none (post dst none-layout &optional params)
   "Generate a comment page with no comments."
   (let* ((post-slug (get-value "slug" post))
-         (post-title (get-value "title" post))
-         (dst-path))
+         (post-title (get-value "title" post)))
     ;; Set list parameters.
     (add-value "slug" post-slug params)
     (add-value "title" (format nil "Comments on ~a" post-title) params )
     (add-value "post-title" post-title params)
     ;; Determine destination path and URL.
-    (setf dst-path (render dst params))
-    (add-canonical-url dst-path params)
+    (setf dst (render dst params))
+    (add-head-params dst params)
     ;; Render comment list.
-    (write-log "Rendering ~a => ~a ..." post-slug dst-path)
-    (write-file dst-path (render none-layout params))))
+    (write-log "Rendering ~a => ~a ..." post-slug dst)
+    (write-file dst (render none-layout params))))
 
 (defun links-html (post)
   "Generate HTML for reference links in reading post."
@@ -625,9 +634,8 @@ value, next-index."
              (toc-items)
              (tag-items))
         ;; Sort posts under current tag in reverse chronological order.
-        (setf posts (sort posts #'(lambda (x y)
-                                    (string< (get-value "date" x)
-                                             (get-value "date" y)))))
+        (setf posts (sort posts (lambda (x y) (string< (get-value "date" x)
+                                                       (get-value "date" y)))))
         ;; Ensure the post list under the current tag is not empty.
         (unless (zerop count)
           ;; Add parameters for rendering tag list for current tag.
@@ -655,43 +663,17 @@ value, next-index."
           (add-value "body" (join-strings tag-items) tag-params)
           (push (render tagl-layout tag-params) tag-list))))
     ;; Add parameters for reading list page.
-    (add-value "root" "" params)
     (add-value "body" (join-strings tag-list) params)
     (add-value "toc" (join-strings toc-list) params)
     (add-value "title" "My Reading List" params)
     (add-value "import" "reading.css math.inc" params)
-    (add-imports params)
-    (add-canonical-url dst-path params)
+    (add-head-params dst-path params)
     ;; Render reading list.
     (write-file dst-path (extra-markup (render read-layout params)))))
 
 
-;;; Text Files
-;;; ----------
-
-(defun read-text-files (src)
-  "Read all posts into a list."
-  (let* ((posts))
-    (dolist (src-path (directory src))
-      (let* ((post (read-post src-path))
-             (body (get-value "body" post))
-             (newline-index (position #\newline body)))
-        (add-value "basename" (file-namestring src-path) post)
-        (add-value "title" (subseq body 0 newline-index) post)
-        (push post posts)))
-    (sort posts #'(lambda (x y) (string< (get-value "basename" x)
-                                         (get-value "basename" y))))))
-
-
 ;;; Site
 ;;; ----
-
-(defun capitalize-tag (tag)
-  "Capitalized tag name found in a post file's content header."
-  (let ((tag-defs '(("asm" . "ASM")
-                    ("opensource" . "OpenSource"))))
-    (or (get-value tag tag-defs)
-        (string-capitalize tag))))
 
 (defun collect-tags (posts)
   "Group post by tags and return an alist of tag and post list."
@@ -701,15 +683,15 @@ value, next-index."
         (add-list-value tag post tags)))
     ;; Sort posts in chronological order under each tag.
     (dolist (tag tags)
-      (setf (cdr tag) (sort (cdr tag) #'(lambda (x y)
-                                          (string< (get-value "date" x)
-                                                   (get-value "date" y))))))
+      (setf (cdr tag) (sort (cdr tag) (lambda (x y)
+                                        (string< (get-value "date" x)
+                                                 (get-value "date" y))))))
     ;; Sort tags in ascending order of post count.
-    (sort tags #'(lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
+    (sort tags (lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
 
 (defun tag-list-html (tags &optional params)
   "Render tag list as HTML."
-  (let ((item-layout (read-file "layout/tag/item.html"))
+  (let ((item-layout (read-file "layout/blog/tag.html"))
         (tag)
         (count)
         (rendered-tags))
@@ -717,89 +699,77 @@ value, next-index."
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
       (setf count (length (cdr tag-entry)))
-      (add-value "tag" tag params)
+      (add-value "tag-slug" (string-downcase tag) params)
+      (add-value "tag-title" tag params)
       (add-value "count" count params)
       (add-value "post-label" (if (= count 1) "post" "posts") params)
-      (add-value "tag-title" (capitalize-tag tag) params)
+
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
 
-(defun make-tag-blog (tags page-layout &optional params)
+(defun make-tag-blog (tags dst page-layout &optional params)
   "Generate blog for a specific tag"
   (let ((list-layout (read-file "layout/tag/list.html"))
-        (item-layout (read-file "layout/blog/item.html"))
+        (item-layout (read-file "layout/tag/item.html"))
         (feed-xml (read-file "layout/blog/feed.xml"))
         (item-xml (read-file "layout/blog/item.xml"))
-        (list-path "_site/blog/tag/{{ tag }}.html")
-        (feed-path "_site/blog/tag/{{ tag }}.xml")
+        (list-dst (namestring (merge-pathnames "{{ tag-slug }}.html" dst)))
+        (feed-dst (namestring (merge-pathnames "{{ tag-slug }}.xml" dst)))
         (tag)
-        (posts))
+        (posts)
+        (title))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
       (setf posts (cdr tag-entry))
-      (add-value "tag" tag params)
-      (add-value "tag-title" (capitalize-tag tag) params)
+      (add-value "tag-slug" (string-downcase tag) params)
+      (add-value "tag-title" tag params)
       (add-value "count" (length posts) params)
       (add-value "post-label" (if (= (length posts) 1) "post" "posts") params)
-      (add-value "title" (render "Susam's {{ tag-title }} Blog" params) params)
-      (make-post-list posts (render list-path params)
-                      list-layout item-layout params)
-      (make-post-list posts (render feed-path params)
-                      feed-xml item-xml params))))
+      (setf title (render "Susam's {{ tag-title }} {{ zone-title }}" params))
+      (add-value "title" title params)
+      (make-post-list posts list-dst list-layout item-layout params)
+      (make-post-list posts feed-dst feed-xml item-xml params))))
 
-(defun make-xlog (src page-layout &optional params)
-  "Generate unlisted posts."
-  (let ((post-layout (read-file "layout/blog/post.html")))
-    ;; Combine layouts to form final layouts.
-    (setf post-layout (render page-layout (list (cons "body" post-layout))))
-    ;; Add parameters for blog rendering.
-    (add-value "root" "../" params)
-    (add-value "blog" "blog" params)
-    (add-value "render" "yes" params)
-    ;; Read and render all posts.
-    (make-posts src "_site/blog/{{ slug }}.html" post-layout params)))
+(defun make-home (posts page-layout &optional params)
+  "Generate home page."
+  (let ((home-layout (read-file "layout/home/list.html"))
+        (item-layout (read-file "layout/home/item.html")))
+    (setf home-layout (render page-layout (list (cons "body" home-layout))))
+    (add-value "title" "Susam Pal" params)
+    (add-value "subtitle" "" params)
+    (make-post-list posts "_site/index.html" home-layout item-layout params)))
 
 (defun make-blog (src page-layout &optional params)
   "Generate blog."
-  (let ((home-layout (read-file "layout/home.html"))
-        (post-layout (read-file "layout/blog/post.html"))
+  (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
         (feed-xml (read-file "layout/blog/feed.xml"))
         (item-xml (read-file "layout/blog/item.xml"))
+        (post-dst (render "_site/{{ zone-path }}{{ slug }}.html" params))
+        (list-dst (render "_site/{{ zone-path }}index.html" params))
+        (feed-dst (render "_site/{{ zone-path }}feed.xml" params))
+        (tags-dst (render "_site/{{ zone-path }}tag/" params))
         (posts)
         (tags))
     ;; Combine layouts to form final layouts.
-    (setf home-layout (render page-layout (list (cons "body" home-layout))))
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
-    ;; Add parameters for blog rendering.
-    (add-value "root" "../" params)
-    (add-value "blog" "blog" params)
-    (add-value "render" "yes" params)
     ;; Read and render all posts.
-    (setf posts (make-posts src "_site/blog/{{ slug }}.html"
-                            post-layout params))
+    (setf posts (make-posts src post-dst post-layout params))
     (setf tags (collect-tags posts))
-    ;; Create home page with the list of blog posts.
-    (add-value "root" "./" params)
-    (add-value "blog" "blog" params)
-    (add-value "title" "Susam Pal" params)
-    (add-value "subtitle" "" params)
-    (make-post-list posts "_site/index.html" home-layout item-layout params)
     ;; Create blog list page.
-    (add-value "root" "../" params)
-    (add-value "title" "Susam's Blog" params)
+    (add-value "title" (render "Susam's {{ zone-title }}" params) params)
+    (add-value "subtitle" "" params)
     (add-value "tag-list" (tag-list-html tags params) params)
     (add-value "tag-count" (length tags) params)
     (add-value "tag-label" (if (= (length tags) 1) "tag" "tags") params)
-    (make-post-list posts "_site/blog/index.html" list-layout item-layout params)
+    (make-post-list posts list-dst list-layout item-layout params)
     ;; Create RSS feed.
-    (make-post-list posts "_site/blog/rss.xml" feed-xml item-xml params)
+    (make-post-list posts feed-dst feed-xml item-xml params)
     ;; Create blog list page for each tag.
-    (add-value "root" "../../" params)
-    (make-tag-blog tags page-layout params)
+    (make-tag-blog tags tags-dst page-layout params)
     posts))
 
 (defun make-comments (posts src page-layout &optional params)
@@ -807,44 +777,25 @@ value, next-index."
   (let ((none-layout (read-file "layout/comments/none.html"))
         (list-layout (read-file "layout/comments/list.html"))
         (item-layout (read-file "layout/comments/item.html"))
-        (dst "_site/{{ blog }}/comments/{{ slug }}.html")
+        (comment-dst (render "_site/{{ zone-path }}comments/{{ slug }}.html"
+                             params))
         (comment-map))
     ;; Combine layouts to form final layouts.
     (setf none-layout (render page-layout (list (cons "body" none-layout))))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     ;; Read all comments.
     (dolist (src-path (directory src))
-      (multiple-value-bind (slug comments) (read-comments src-path)
+      (multiple-value-bind (comments slug) (read-comments src-path)
         (add-value slug comments comment-map)))
     ;; Add parameters for comment list rendering.
-    (add-value "root" "../../" params)
-    (add-value "blog" "blog" params)
     ;; For each post, render its comment list page.
     (dolist (post posts)
       (let* ((slug (get-value "slug" post))
              (comments (get-value slug comment-map)))
         (if (get-value slug comment-map)
-            (make-comment-list post comments dst
+            (make-comment-list post comments comment-dst
                                list-layout item-layout params)
-            (make-comment-none post dst none-layout params))))))
-
-(defun make-text-directory (src page-layout &optional params)
-  "Generate index for a directory of text files."
-  (let* ((dirname (directory-basename src))
-         (topic (car (last (pathname-directory dirname))))
-         (title (format nil "~a Files" (string-capitalize topic)))
-         (list-layout (read-file "layout/textdir/list.html"))
-         (item-layout (read-file "layout/textdir/item.html"))
-         (dst-path)
-         (posts))
-    (setf list-layout (render page-layout (list (cons "body" list-layout))))
-    (add-value "root" "../" params)
-    (add-value "title" title params)
-    (add-value "dirname" dirname params)
-    (add-value "import" "extra.css" params)
-    (setf posts (read-text-files src))
-    (setf dst-path (format nil "_site/~a/index.html" topic))
-    (make-post-list posts dst-path list-layout item-layout params)))
+            (make-comment-none post comment-dst none-layout params))))))
 
 (defun make-music (src page-layout &optional params)
   "Generate music list page."
@@ -857,22 +808,18 @@ value, next-index."
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
     ;; Callback function to be passed as a parameter to renderer.
-    (defun make-widget (post)
+    (defun make-widget-callback (post)
       "Callback function to render music player widget."
       (let* ((widget-params (append post params))
              (rendered-widget (render widget-layout widget-params)))
         (list (cons "widget" rendered-widget))))
     ;; Add parameters for music post rendering.
     (add-value "import" "extra.css music.css" params)
-    (add-value "root" "../" params)
-    (add-value "blog" "music" params)
-    (add-value "render" "yes" params)
-    (add-value "callback" #'make-widget params)
+    (add-value "callback" #'make-widget-callback params)
     ;; Render all music posts.
     (setf posts (make-posts src "_site/music/{{ slug }}.html"
                             post-layout params))
     ;; Generate music list page.
-    (add-value "root" "../" params)
     (add-value "title" "Music" params)
     (make-post-list posts "_site/music/index.html"
                     list-layout item-layout params)))
@@ -892,95 +839,239 @@ value, next-index."
         (return)))
     (format nil "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun render-directory (apex-path current-path paths-and-sizes page-layout params)
-  "Render the index pages for the given current directory."
-  (let* ((relative-current-path (enough-namestring current-path apex-path))
-         (nesting-depth (count #\/ relative-current-path))
-         (index1-path (enough-namestring (merge-pathnames "index.html" current-path)))
-         (index2-path (enough-namestring (merge-pathnames "ls.html" current-path)))
-         (list-layout (read-file "layout/tree/list.html"))
-         (item-layout (read-file "layout/tree/item.html"))
+(defun render-directory-index (apex-pathname current-pathname paths-and-sizes
+                               page-layout params)
+  "Render index pages for the given current directory."
+  (let* ((url-path (enough-namestring current-pathname apex-pathname))
+         (index1-path (enough-namestring (merge-pathnames "index.html" current-pathname)))
+         (index2-path (enough-namestring (merge-pathnames "ls.html" current-pathname)))
+         (list-layout (read-file "layout/index/list.html"))
+         (item-layout (read-file "layout/index/item.html"))
          (rendered-rows))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
-
     (setf paths-and-sizes (sort paths-and-sizes
                                 (lambda (x y) (string> (car x) (car y)))))
     (dolist (entry paths-and-sizes)
       (add-value "path" (car entry) params)
       (add-value "size" (cdr entry) params)
       (push (render item-layout params) rendered-rows))
-    (add-value "root" (repeat-string nesting-depth "../") params)
-    (add-value "title" (format nil "Index of /~a" relative-current-path) params)
+    (add-value "title" (format nil "Index of /~a" url-path) params)
     (add-value "rows" (join-strings rendered-rows) params)
-    (unless (probe-file index1-path)
-      (add-canonical-url index1-path params)
-      (write-file index1-path (render list-layout params)))
-    (unless (probe-file index2-path)
-      (add-canonical-url index2-path params)
-      (write-file index2-path (render list-layout params)))))
+    (dolist (dst-path (list index1-path index2-path))
+      (unless (probe-file dst-path)
+        (add-head-params dst-path params)
+        (write-file dst-path (render list-layout params))))))
 
-(defun visit-directory (apex-path current-path page-layout params)
+(defun visit-directory (apex-pathname current-pathname page-layout params)
   "Make index pages for the given current directory and its subdirectories."
   (let ((total-size 0)
         (paths-and-sizes)
         (size))
     ;; Collect subdirectories.
-    (dolist (path (uiop:subdirectories current-path))
-      (setf size (visit-directory apex-path path page-layout params))
+    (dolist (path (uiop:subdirectories current-pathname))
+      (setf size (visit-directory apex-pathname path page-layout params))
       (push (cons (directory-basename path) (format-size size)) paths-and-sizes)
       (incf total-size size))
     ;; Collect files.
-    (dolist (path (uiop:directory-files current-path))
+    (dolist (path (uiop:directory-files current-pathname))
       (setf size (with-open-file (stream path) (file-length stream)))
       (push (cons (file-namestring path) (format-size size)) paths-and-sizes)
       (incf total-size size))
     ;; Render tree.
-    (unless (equal apex-path current-path)
+    (unless (equal apex-pathname current-pathname)
       (push (cons "../" "-") paths-and-sizes))
-    (render-directory apex-path current-path paths-and-sizes page-layout params)
+    (render-directory-index apex-pathname current-pathname paths-and-sizes
+                            page-layout params)
     ;; Return total size of current directory tree to caller.
     total-size))
 
-(defun make-directory-lists (path page-layout &optional params)
+(defun make-directory-indexes (path page-layout &optional params)
   "Make index pages for each site directory."
-  (visit-directory (truename path) (truename path) page-layout params))
+  (visit-directory (truename "_site/") (truename path) page-layout params))
+
+(defun updated-date-callback (post)
+  (let ((updated (get-value "updated" post))
+        (last-updated ""))
+    (when updated
+      (setf last-updated
+            (format nil "&nbsp;&bull;&nbsp;(last updated on ~a)" (simple-date updated))))
+    (list (cons "last-updated" last-updated))))
+
+(defun visit-maze-directory (src dst page-layout post-layout params)
+  "Copy directory from a directory path to a directory path"
+  (make-directory dst)
+  (add-value "callback" #'updated-date-callback params)
+  (dolist (pathname (uiop:directory-files src))
+    (let* ((basename (file-namestring pathname))
+           (destpath (namestring (merge-pathnames basename dst))))
+      (cond ((string-ends-with ".skip.html" basename))
+            ((string-ends-with ".page.html" basename)
+             (setf destpath (string-replace ".page.html" ".html" destpath))
+             (add-head-params destpath params)
+             (make-post pathname destpath page-layout params))
+            ((string-ends-with ".post.html" basename)
+             (setf destpath (string-replace ".post.html" ".html" destpath))
+             (add-head-params destpath params)
+             (make-post pathname destpath post-layout params))
+            (t
+             (uiop:copy-file pathname destpath)))))
+  (dolist (pathname (uiop:subdirectories src))
+    (let* ((basename (directory-basename pathname))
+           (destpath (merge-pathnames basename dst)))
+      (make-directory destpath)
+      (visit-maze-directory pathname destpath page-layout post-layout params))))
+
+(defun make-maze (path page-layout &optional params)
+  "Copy and render files for Maze."
+  (let ((post-layout (read-file "layout/maze/post.html")))
+    (setf post-layout (render page-layout (list (cons "body" post-layout))))
+    (visit-maze-directory path "_site/maze/" page-layout post-layout params)))
+
+(defun make-zone-feed (src page-layout params)
+  "Make changelog page and feed for Maze."
+  (add-value "slug" "feed" params)
+  (add-value "title" (render "{{ zone-title }} Feed" params) params)
+  (let ((posts (read-comments src))
+        (list-layout (read-file "layout/maze/list.html"))
+        (item-layout (read-file "layout/maze/item.html"))
+        (feed-xml (read-file "layout/blog/feed.xml"))
+        (item-xml (read-file "layout/maze/item.xml"))
+        (list-dst "_site/{{ zone-path }}{{ slug }}.html")
+        (feed-dst "_site/{{ zone-path }}{{ slug }}.xml"))
+    (setf list-layout (render page-layout (list (cons "body" list-layout))))
+    (setf posts (sort posts (lambda (x y) (string< (get-value "date" x)
+                                                   (get-value "date" y)))))
+
+    (make-post-list posts list-dst list-layout item-layout params)
+    (make-post-list posts feed-dst feed-xml item-xml params)))
+
+(defun visit-tree-directory (apex-pathname current-pathname page-layout params)
+  "Collect paths from the given directory and its subdirectories."
+  (let ((paths))
+    ;; Collect subdirectories.
+    (dolist (path (uiop:subdirectories current-pathname))
+      (push (enough-namestring path apex-pathname) paths)
+      (setf paths (append (visit-tree-directory apex-pathname path
+                                                page-layout params) paths)))
+    ;; Collect files.
+    (dolist (path (uiop:directory-files current-pathname))
+      (push (enough-namestring path apex-pathname) paths))
+    paths))
+
+(defun render-tree-directory (paths dst-path page-layout params)
+  "Render all paths found in a directory tree."
+  (let* ((list-layout (read-file "layout/tree/list.html"))
+         (item-layout (read-file "layout/tree/item.html"))
+         (rendered-items))
+    (setf list-layout (render page-layout (list (cons "body" list-layout))))
+    (dolist (path (sort paths #'string>))
+      (add-value "path" path params)
+      (push (render item-layout params) rendered-items))
+    (add-value "title" "Maze Tree" params)
+    (add-value "items" (join-strings rendered-items) params)
+    (add-head-params (namestring dst-path) params)
+    (write-file dst-path (render list-layout params))))
+
+(defun make-directory-tree (path page-layout params)
+  "Generate a complete tree listing of the given directory."
+  (let ((paths (visit-tree-directory (truename path) (truename path)
+                                     page-layout params))
+        (dst-path (merge-pathnames "TREE.html" path)))
+    (render-tree-directory paths dst-path page-layout params)))
 
 (defvar *params* nil
   "Global parameters that may be provided externally to override any
   default local parameters.")
 
+(defun main-color-scheme ()
+  "Return primary color scheme for the website."
+  (list
+   ;; Light color scheme.
+   (cons "light-body-color" "#333")
+   (cons "light-link-color" "#00e")
+   (cons "light-visited-color" "#518")
+   (cons "light-hover-color" "#03f")
+   (cons "light-active-color" "#e00")
+   (cons "light-fill-color" "#eee")
+   (cons "light-shade-color" "#ccc")
+   (cons "light-code-color" "#006")
+   (cons "light-kbd-color" "#050")
+   (cons "light-line-color" "#999")
+   (cons "light-okay-color" "#060")
+   (cons "light-warn-color" "#900")
+   ;; Dark color scheme.
+   (cons "dark-background-color" "#111")
+   (cons "dark-body-color" "#bbb")
+   (cons "dark-link-color" "#9bf")
+   (cons "dark-visited-color" "#a9f")
+   (cons "dark-hover-color" "#9cf")
+   (cons "dark-active-color" "#faa")
+   (cons "dark-fill-color" "#000")
+   (cons "dark-shade-color" "#333")
+   (cons "dark-code-color" "#6cf")
+   (cons "dark-kbd-color" "#9c6")
+   (cons "dark-line-color" "#666")
+   (cons "dark-okay-color" "#3c6")
+   (cons "dark-warn-color" "#f99")))
+
+(defun make-main-css ()
+  "Generate stylesheets for the main website."
+  (dolist (filename (list "comment.css" "extra.css" "form.css"
+                          "main.css" "music.css" "reading.css"))
+    (let ((css-layout (read-file (format nil "layout/css/~a" filename)))
+          (css-path (format nil "_site/css/~a" filename)))
+      (write-file css-path (render css-layout (main-color-scheme))))))
+
 (defun main ()
-  ;; Create a new site directory from scratch.
+  "Generate entire website."
   (remove-directory "_site/")
-  (copy-directory "static/" "_site/")
-  (let ((params (list (cons "root" "")
-                      (cons "subtitle" " - Susam Pal")
-                      (cons "author" "Susam Pal")
+  (let ((params (list (cons "author" "Susam Pal")
                       (cons "site-url" "https://susam.net/")
-                      (cons "current-year"
-                            (nth-value 5 (get-decoded-time)))
+                      (cons "current-year" (nth-value 5 (get-decoded-time)))
                       (cons "render" "yes")
+                      (cons "heads" "")
                       (cons "imports" "")
-                      (cons "index" "")
-                      (cons "maze" "/maze/")))
+                      (cons "index" "")))
         (page-layout (read-file "layout/page.html"))
-        (hidden-posts)
-        (listed-posts))
+        (posts))
     ;; If *params* exists, merge it with local params.
     (when *params*
       (setf params (append *params* params)))
-    ;; Top-level pages.
-    (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
-    ;; Hidden blog posts, listed blog posts, and comments.
-    (setf hidden-posts (make-xlog "content/xlog/*.html" page-layout params))
-    (setf listed-posts (make-blog "content/blog/*.html" page-layout params))
-    (make-comments (append hidden-posts listed-posts)
-                   "content/comments/*.html" page-layout params)
-    ;; Music, reading, and text directories.
+    ;; Static files.
+    (copy-directory "static/" "_site/")
+    (copy-directory "_cache/mathjax/" "_site/js/mathjax/")
+    ;; Stylesheet.
+    (make-main-css)
+    (add-value "head" "main.css" params)
+    ;; Wall.
+    (add-value "subtitle" " - Susam's Wall" params)
+    (add-value "initial-year" 2001 params)
+    (add-value "zone-path" "maze/wall/" params)
+    (add-value "zone-title" "Wall" params)
+    (setf posts (make-blog "content/wall/posts/*.html" page-layout params))
+    (make-comments posts "content/wall/comments/*.html" page-layout params)
+    (make-directory-indexes "_site/maze/wall/" page-layout params)
+    ;; Maze.
+    (add-value "subtitle" " - Susam's Maze" params)
+    (add-value "initial-year" 2001 params)
+    (add-value "zone-path" "maze/" params)
+    (add-value "zone-title" "Maze" params)
+    (make-maze "content/maze/" page-layout params)
+    (make-zone-feed "content/maze/feed.skip.html" page-layout params)
+    (make-directory-tree "_site/maze/" page-layout params)
+    (make-directory-indexes "_site/maze/" page-layout params)
+    ;; Blog, music, reading, top-level pages.
+    (add-value "subtitle" " - Susam Pal" params)
+    (add-value "initial-year" 2006 params)
+    (add-value "zone-path" "blog/" params)
+    (add-value "zone-title" "Blog" params)
+    (setf posts (make-blog "content/blog/posts/*.html" page-layout params))
+    (make-comments posts "content/blog/comments/*.html" page-layout params)
+    (make-home posts page-layout params)
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)
-    ;; Directory index pages.
-    (make-directory-lists "_site/" page-layout params))
+    (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
+    (make-directory-indexes "_site/" page-layout params))
   t)
 
 (when *main-mode*

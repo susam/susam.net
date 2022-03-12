@@ -1,0 +1,198 @@
+<!-- date: 2021-05-08 15:27:28 +0000 -->
+<!-- name: Mr. Long Long -->
+<!-- source: https://news.ycombinator.com/item?id=27087983 -->
+<p>
+  Wonderful! I could have done with this trick the number of times
+  I've been caught out with this one. Noted with thanks.
+</p>
+<!-- date: 2021-10-30 16:58:05 +0000 -->
+<!-- name: CRMD -->
+<!-- source: https://news.ycombinator.com/item?id=29050281 -->
+<p>
+  20+ years of using Unix and vi, and still learning tricks. Love it!
+</p>
+<!-- date: 2021-10-30 20:06:53 +0000 -->
+<!-- name: LP -->
+<p>
+  The quotes around the percent sign are unnecessary. The
+    command <code>:w ! sudo tee %</code> works just fine. I use it
+    everytime!
+</p>
+<!-- date: 2021-10-30 23:00:37 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  LP,
+</p>
+<p>
+  Like I explained in my blog post, the quotes around the percent sign
+  are necessary to keep the filename as a single argument when the
+  filename contains whitespace. If there is no whitespace in the
+  filename, then the quotes are not necessary.
+</p>
+<p>
+  Here is an experiment that demonstrates the purpose of quotes:
+</p>
+<ol>
+  <li>
+    <p>
+      Enter the following command to create a filename with a space in
+      it and then open it with Vim:
+    </p>
+    <pre><code>sudo touch "foo bar.txt"
+vim "foo bar.txt"</code></pre>
+  </li>
+  <li>
+    <p>
+      In Vim, insert some text with the following key sequence:
+      <kbd>i</kbd> <kbd>hello</kbd> <kbd>&lt;esc&gt;</kbd>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now enter the following command in Vim to save the file:
+    </p>
+    <pre><code>:w !sudo tee %</code></pre>
+  </li>
+  <li>
+    <p>
+      In another instance of the terminal, enter the following command
+      to check the content of the file:
+    </p>
+    <pre><code>cat "foo bar.txt"</code></pre>
+    <p>
+      The file still appears empty. Nothing was saved to this file.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now enter the following commands:
+    </p>
+    <pre><code>cat foo
+cat bar.txt</code></pre>
+    <p>
+      Both files contain the text <code>hello</code> in them.
+    </p>
+  </li>
+</ol>
+<p>
+  This experiment shows that due to the lack of quotes
+  around <code>%</code>, the command <code>tee %</code> expands
+  to <code>tee foo bar.txt</code> which ends up writing the content of
+  the buffer to both files <code>foo</code> and <code>bar.txt</code>
+  but not to <code>"foo bar.txt"</code> as we desire.
+</p>
+<p>
+  This is why we need to write <code>tee "%"</code> so that it expands
+  to <code>tee "foo bar.txt"</code> and the content of the buffer is
+  written to the file named <code>"foo bar.txt"</code>.
+</p>
+<!-- date: 2021-10-30 23:41:28 +0000 -->
+<!-- name: Oars -->
+<!-- source: https://news.ycombinator.com/item?id=29053175 -->
+<p>
+  Very useful, thanks for sharing.
+</p>
+<!-- date: 2021-10-31 01:56:09 +0000 -->
+<!-- name: RGovostes -->
+<!-- source: https://news.ycombinator.com/item?id=29053852 -->
+<p>
+  I have often wished there were something equivalent for nano. Of
+  course you can just save to another file and <code>sudo mv</code> it
+  into place.
+</p>
+<p>
+  In the spirit of this trick, you could set the <code>SPELL</code>
+  environment variable to a script that does
+</p>
+<pre>
+<code>#!/bin/sh
+read -p "Path: " FILENAME
+cat "$1" | sudo tee "$FILENAME"</code>
+</pre>
+<p>
+  and then invoke it with <code>^T</code> from nano. Bonus points:
+  Extract the destination filename automatically from <code>ps -p
+  $PPID -o command=</code> (somewhat portable) or
+  from <code>/proc</code> (Linux).
+</p>
+<!-- date: 2021-10-31 05:31:11 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  RGovostes, Thanks for the interesting idea to make this trick work
+  with nano. Based on your comment, I wrote this script to
+  automatically detect the destination filename when invoked
+  with <code>^T</code> from nano.
+</p>
+<pre>
+<code>#!/bin/sh
+set -e
+COMMAND=$(ps -p $PPID -o args=)
+FILENAME=${COMMAND#*nano }
+printf "Write to $FILENAME? (y/n) "
+read ANSWER
+[ "$ANSWER" = y ] && sudo tee "$FILENAME" < "$1" > /dev/null</code>
+</pre>
+<p>
+  After saving this file to,
+  say, <code>/usr/local/bin/sudowrite</code>, it can be set up for
+  usage like this:
+</p>
+<pre>
+<code>sudo chmod u+x /usr/local/bin/sudowrite
+export SPELL=/usr/local/bin/sudowrite</code>
+</pre>
+<p>
+  Here is how to test it:
+</p>
+<pre>
+<code>sudo touch foo.txt
+nano foo.txt</code>
+</pre>
+<p>
+  Now write some text and try to save it by
+  typing <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>o</kbd> followed
+  by <kbd>enter</kbd>. The following error should appear:
+</p>
+<pre><samp>[ Error writing foo.txt: Permission denied ]</samp></pre>
+<p>
+  Now type <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>t</kbd> followed
+  by <kbd>y</kbd> and <kbd>enter</kbd> to save the file successfully
+  using the script we wrote above.
+</p>
+<!-- date: 2021-12-11 11:41:30 +0000 -->
+<!-- name: Kevin Cox -->
+<!-- url: https://github.com/kevincox -->
+<!-- source: https://lobste.rs/s/ozidc1/#c_lipzyk -->
+<p>
+  I just
+  use <a href="https://github.com/tpope/vim-eunuch">vim-eunuch</a>
+  which includes a <code>:SudoWrite</code> in its list of goodies.
+</p>
+<p>
+  Everything in the plugin is pretty easy to live without but in my
+  mind the simple plugin to have everything on-hand is worth it.
+</p>
+<!-- date: 2021-12-11 15:19:38 +0000 -->
+<!-- name: Jen -->
+<p>
+  I have got this in my ~/.vimrc now:
+</p>
+<pre><code>command W w !sudo tee "%" > /dev/null</code></pre>
+<!-- date: 2021-12-11 18:35:16 +0000 -->
+<!-- name: Mario -->
+<p>
+  This is a nice tip! I ended up adding this to my ~/.vimrc:
+</p>
+<pre>
+<code>command W execute 'silent write !sudo tee "%" > /dev/null' | edit!</code>
+</pre>
+<!-- date: 2021-12-12 21:18:58 +0000 -->
+<!-- name: Toby -->
+<p>
+  Thanks for the tip! Adding this to my Vim configuration:
+</p>
+<pre>
+<code>com W exe 'sil w !sudo tee "%" > /dev/null' | e!</code>
+</pre>

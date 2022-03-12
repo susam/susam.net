@@ -1,13 +1,11 @@
 <main>
-  <h1>{{ title }}</h1>
-  <div>({{ count }} {{ post-label }})</div>
-  <ul class="blog">
-    {{ body }}
-  </ul>
-
-  <h2 id="feeds">Feeds</h2>
-  <ul class="blog">
-    <li><a href="{{ tag }}.xml">Feed for {{ tag-title }} Blog</a></li>
-    <li><a href="../rss.xml">Feed for Complete Blog</a></li>
-  </ul>
+<h1>{{ title }}</h1>
+<div>({{ count }} {{ post-label }})</div>
+<ul class="blog">
+{{ body }}</ul>
+<h2 id="feeds">Feeds</h2>
+<ul class="blog">
+  <li><a href="{{ tag-slug }}.xml">Feed for {{ tag-title }} {{ zone-title }}</a></li>
+  <li><a href="../feed.xml">Feed for Complete {{ zone-title }}</a></li>
+</ul>
 </main>

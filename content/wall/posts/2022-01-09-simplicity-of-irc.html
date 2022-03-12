@@ -1,0 +1,211 @@
+<!-- title: Simplicity of IRC -->
+<!-- tag: IRC Networking Protocol Technology Retrospective -->
+<p>
+  During discussions with my friends and colleagues, whenever the
+  topic of chat protocols comes up, I often remark how simple the
+  Internet Relay Chat (IRC) protocol is and how this simplicity has
+  fostered creativity in the lives of many young computer hobbyists
+  growing up in the late 1990s and early 2000s. For many of us who
+  were introduced to the Internet during that time, writing an IRC bot
+  turned out to be one of our first few non-trivial hobby programming
+  projects that involved network sockets, did something meaningful,
+  and served actual users.
+</p>
+
+<h2 id="simplicity">Simplicity</h2>
+<p>
+  The underlying payloads that IRC servers and clients exchange during
+  an IRC session are quite simple to read manually and understand.
+  While implementing IRC servers still involves significant work to
+  keep track of users, channels, and exchanging network state and
+  messages between servers, implementing IRC clients can often be
+  quite simple. With a convenient programming language, one can
+  develop all kinds of fun tools and bots pretty quickly. Only
+  creativity is the limit!
+</p>
+<p>
+  In the early days of IRC, it was quite common for someone with basic
+  programming skills to write a simple IRC bot within a matter of
+  hours. Such IRC bots typically responded to requests from users,
+  answered frequently asked questions, hosted live quiz contests in a
+  channel, etc. The simplicity of the protocol made it very enticing
+  to write programs that could talk to IRC servers directly. In fact,
+  many people chose to write the code to parse and create IRC payloads
+  from scratch. Observing the TCP/IP packets with a packet analyzer
+  such as Wireshark or Tcpdump was all one needed to learn about the
+  various payload formats.
+  Additionally, <a href="https://datatracker.ietf.org/doc/html/rfc1459">RFC
+  1459</a> served as a good reference to learn the IRC specification.
+</p>
+<p>
+  As a result of the simplicity of the IRC protocol, sometimes when I
+  would find myself needing to join an IRC channel, say to seek some
+  technical help, from a system without an IRC client installed, I
+  could often just start a <code>telnet</code>, <code>nc</code>,
+  or <code>openssl</code> connection directly to my favourite IRC
+  network and then type out IRC protocol commands by hand to join the
+  channel I need and talk to channel users.
+</p>
+
+<h2 id="session">Session</h2>
+<p>
+  To illustrate how simple the IRC protocol is, here is an example of
+  a minimal IRC session that involves joining a channel and posting a
+  message:
+</p>
+<pre>
+<samp>$ <kbd>nc irc.libera.chat 6667</kbd>
+:strontium.libera.chat NOTICE * :*** Checking Ident
+:strontium.libera.chat NOTICE * :*** Looking up your hostname...
+:strontium.libera.chat NOTICE * :*** Couldn't look up your hostname
+:strontium.libera.chat NOTICE * :*** No Ident response
+<kbd>NICK humpty</kbd>
+<kbd>USER humpty humpty irc.libera.chat :Humpty Dumpty</kbd>
+:strontium.libera.chat 001 humpty :Welcome to the Libera.Chat Internet Relay Chat Network humpty
+:strontium.libera.chat 002 humpty :Your host is strontium.libera.chat[204.225.96.123/6667], running version solanum-1.0-dev
+:strontium.libera.chat 003 humpty :This server was created Sat Oct 30 2021 at 17:56:22 UTC
+:strontium.libera.chat 004 humpty strontium.libera.chat solanum-1.0-dev DGQRSZaghilopsuwz CFILMPQSTbcefgijklmnopqrstuvz bkloveqjfI
+:strontium.libera.chat 005 humpty MONITOR=100 CALLERID=g WHOX FNC ETRACE KNOCK SAFELIST ELIST=CMNTU CHANTYPES=# EXCEPTS INVEX CHANMODES=eIbq,k,flj,CFLMPQSTcgimnprstuz :are supported by this server
+:strontium.libera.chat 005 humpty CHANLIMIT=#:250 PREFIX=(ov)@+ MAXLIST=bqeI:100 MODES=4 NETWORK=Libera.Chat STATUSMSG=@+ CASEMAPPING=rfc1459 NICKLEN=16 MAXNICKLEN=16 CHANNELLEN=50 TOPICLEN=390 DEAF=D :are supported by this server
+:strontium.libera.chat 005 humpty TARGMAX=NAMES:1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: EXTBAN=$,ajrxz :are supported by this server
+:strontium.libera.chat 251 humpty :There are 66 users and 48644 invisible on 25 servers
+:strontium.libera.chat 252 humpty 35 :IRC Operators online
+:strontium.libera.chat 253 humpty 11 :unknown connection(s)
+:strontium.libera.chat 254 humpty 21561 :channels formed
+:strontium.libera.chat 255 humpty :I have 3117 clients and 1 servers
+:strontium.libera.chat 265 humpty 3117 4559 :Current local users 3117, max 4559
+:strontium.libera.chat 266 humpty 48710 50463 :Current global users 48710, max 50463
+:strontium.libera.chat 250 humpty :Highest connection count: 4560 (4559 clients) (301752 connections received)
+:strontium.libera.chat 375 humpty :- strontium.libera.chat Message of the Day -
+:strontium.libera.chat 372 humpty :- Welcome to Libera Chat, the IRC network for
+:strontium.libera.chat 372 humpty :- free & open-source software and peer directed projects.
+:strontium.libera.chat 372 humpty :-
+:strontium.libera.chat 372 humpty :- Use of Libera Chat is governed by our network policies.
+:strontium.libera.chat 372 humpty :-
+:strontium.libera.chat 372 humpty :- To reduce network abuses we perform open proxy checks
+:strontium.libera.chat 372 humpty :- on hosts at connection time.
+:strontium.libera.chat 372 humpty :-
+:strontium.libera.chat 372 humpty :- Please visit us in #libera for questions and support.
+:strontium.libera.chat 372 humpty :-
+:strontium.libera.chat 372 humpty :- Website and documentation:  https://libera.chat
+:strontium.libera.chat 372 humpty :- Webchat:                    https://web.libera.chat
+:strontium.libera.chat 372 humpty :- Network policies:           https://libera.chat/policies
+:strontium.libera.chat 372 humpty :- Email:                      support@libera.chat
+:strontium.libera.chat 376 humpty :End of /MOTD command.
+:humpty MODE humpty :+iw
+<kbd>JOIN #test</kbd>
+:humpty!~humpty@49.207.204.32 JOIN #test
+:strontium.libera.chat 353 humpty = #test :humpty susam coolnickname ptl-tab edcragg
+:strontium.libera.chat 366 humpty #test :End of /NAMES list.
+<kbd>PRIVMSG #test :Hello, World!</kbd>
+:susam!~susam@user/susam PRIVMSG #test :Hello, Humpty!
+<kbd>PART #test</kbd>
+:humpty!~humpty@49.207.204.32 PART #test
+<kbd>QUIT</kbd>
+:humpty!~humpty@49.207.204.32 QUIT :Client Quit
+ERROR :Closing Link: 49.207.204.32 (Client Quit)</samp>
+</pre>
+<p>
+  In the above session, the user connects to the Libera Chat network
+  with the nickname <code>humpty</code>, joins a channel
+  named <code>#test</code>, and posts a message.
+</p>
+<p>
+  Note that the above session is not encrypted. By convention, IRC
+  port 6667 is used for cleartext connections. A separate port, such
+  as port 6697, is available for encrypted connections. Here is an
+  example of an encrypted IRC session established with the OpenSSL
+  command line tool:
+</p>
+<pre>
+<samp>$ <kbd>openssl s_client -quiet -connect irc.libera.chat:6697 2> /dev/null</kbd>
+:strontium.libera.chat NOTICE * :*** Checking Ident
+:strontium.libera.chat NOTICE * :*** Looking up your hostname...
+:strontium.libera.chat NOTICE * :*** Couldn't look up your hostname
+:strontium.libera.chat NOTICE * :*** No Ident response
+NICK humpty
+USER humpty humpty irc.libera.chat :Humpty Dumpty
+:strontium.libera.chat 001 humpty :Welcome to the Libera.Chat Internet Relay Chat Network humpty
+...</samp>
+</pre>
+<p>
+  The ellipsis denotes lines omitted for the sake of brevity. The
+  remainder of the session is quite similar to the first example in
+  this post.
+</p>
+<p>
+  It is worth noting here that although the payload format of IRC
+  protocol is quite simple, as one starts writing IRC clients, one
+  would stumble upon several tiny details about the protocol that
+  needs to be taken care of, e.g., authenticating to the network,
+  responding to <code>PING</code> messages from the server to avoid
+  ping timeouts, splitting messages into shorter messages so that the
+  overall payload does not exceed the message length limit of 512
+  characters, etc. For a serious IRC client, relying on a suitable
+  library that already solves these problems and implements the IRC
+  specification accurately is of course going to be useful. But for a
+  hobbyist who wants to understand the protocol and write some tools
+  for fun, the textual nature of the IRC protocol and its simplicity
+  offers a fertile ground for experimentation and creativity.
+</p>
+
+<h2 id="join">Join</h2>
+<p>
+  In case you have never used IRC but this post has piqued your
+  interest and you want to try it out, you probably don't want to be
+  typing out IRC payloads by hand. You probably want a good IRC client
+  instead. Let me share some convenient ways to connect to the Libera
+  Chat network. Say, you want to join the <code>#python</code> channel
+  on Libera Chat network. Here are some ways to do it:
+</p>
+<ul>
+  <li>
+    <p>
+      Join via web
+      interface: <a href="https://web.libera.chat/#python">web.libera.chat/#python</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Join via Matrix
+      bridge: <a href="https://app.element.io/#/room/#python:libera.chat">#python:libera.chat</a>
+    </p>
+  </li>
+  <li>
+    <p>
+      Join using Irssi: On macOS, run <code>brew install irssi</code>
+      to install it. On Debian, Ubuntu, or a Debian-based Linux
+      system, run <code>sudo apt-get install irssi</code>. Then
+      enter <code>irssi -c irc.libera.chat</code> to connect to Libera
+      Chat. Then within Irssi, type <code>/join #python</code>.
+    </p>
+  </li>
+</ul>
+<p>
+  There are numerous other ways to join IRC networks. There are GUI
+  desktop clients, web browser plugins, Emacs plugins, web-based
+  services, bouncers, etc. that let users connect to IRC networks in
+  various ways. On Libera Chat, there are various channels for open
+  source projects (<code>#emacs</code>, <code>#linux</code>, etc.),
+  communities around specific subjects
+  (<code>##math</code>, <code>#physics</code>, etc.), programming
+  languages
+  (<code>#c</code>, <code>#c++</code>, <code>#commonlisp</code>,
+  etc.). Type the <code>/join</code> command followed by a space and
+  the channel name to join a channel and start posting and reading
+  messages there. It is also possible to search for channels by
+  channel names. For example, on Libera Chat, to search for all
+  channels with "club" in its name, enter the IRC command: <code>/msg
+  alis list club</code>.
+</p>
+<p>
+  Although I have used Libera Chat in the examples above, there are
+  plenty of other IRC networks too such as EFNet, DALNet, OFTC, etc.
+  Libera Chat happens to be one of the very popular and active
+  networks for open source projects and topic based communities. I use
+  it everyday, so I chose it for the examples here. There are many
+  tight-knit communities on Libera Chat. Some of my favourite ones
+  are <code>#commonlisp</code>, <code>#emacs</code>, <code>#python</code>,
+  etc. All of these have very nice and active communities with great
+  attitudes towards beginners.
+</p>

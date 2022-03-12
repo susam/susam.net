@@ -1,0 +1,199 @@
+<!-- title: Lucene Java Example -->
+<!-- tag: Java Programming Technology -->
+<p>
+  Here is a simple program I wrote that makes use of Lucene Java
+  3.0.1:
+</p>
+
+<pre>
+<code>package in.susam;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.util.Version;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+
+public class LuceneDemo
+{
+    static final String INDEX_DIR = "index1";
+
+    public static void main(String[] args) throws Exception {
+        write();
+        search("content", "integer");
+        search("tags", "rhyme");
+    }
+
+    static void write() throws IOException {
+        // Create index
+        IndexWriter writer = new IndexWriter(
+                FSDirectory.open(new File(INDEX_DIR)),
+                new StandardAnalyzer(Version.LUCENE_30),
+                true,
+                IndexWriter.MaxFieldLength.UNLIMITED);
+
+        Document doc;
+        String field;
+        String text;
+
+        // Add first document
+        doc = new Document();
+
+        field = "title";
+        text = "Humpty Dumpty sat on a wall";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "content";
+        text = "Humpty Dumpty sat on a wall.\n" +
+               "Humpty Dumpty had a great fall;\n" +
+               "All the King's horses and all the King's men,\n" +
+               "Couldn't put Humpty together again.";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "tags";
+        text = "rhyme";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        writer.addDocument(doc);
+
+        // Add second document
+        doc = new Document();
+
+        field = "title";
+        text = "Jack and Jill went up the hill";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "content";
+        text = "Jack and Jill went up the hill\n" +
+               "To fetch a pail of water.\n" +
+               "Jack fell down and broke his crown,\n" +
+               "And Jill came tumbling after.\n";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "tags";
+        text = "rhyme";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        writer.addDocument(doc);
+
+        // Add third document
+        doc = new Document();
+
+        field = "title";
+        text = "Fermat's Last Theorem";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "content";
+        text = "In number theory, Fermat's Last Theorem states that no " +
+               "three positive integers a, b, and c can satisfy the " +
+               "equation for a^n + b^n = c^n for any integer value of n " +
+               "greater than two.";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "tags";
+        text = "math, theorem";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        writer.addDocument(doc);
+
+        // Add fourth document
+        doc = new Document();
+
+        field = "title";
+        text = "Euler's theorem";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "content";
+        text = "Euler's theorem states that if n is a positive integer and " +
+               "a is a positive integer coprime to n, then a^phi(n) = 1 " +
+               "(mod n) where phi(n) is Euler's totient function.";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        field = "tags";
+        text = "math, theorem";
+        doc.add(new Field(field, text, Field.Store.YES, Field.Index.ANALYZED));
+
+        writer.addDocument(doc);
+
+        writer.close();
+    }
+
+    static void search(String field, String query) throws IOException,
+                                                          ParseException {
+        IndexSearcher searcher = new IndexSearcher(
+                FSDirectory.open(new File(INDEX_DIR)), true);
+        QueryParser parser = new QueryParser(
+                Version.LUCENE_30, field,
+                new StandardAnalyzer(Version.LUCENE_30));
+        TopDocs docs = searcher.search(parser.parse(query), 10);
+        System.out.println("Query: '" + query + "' in '" + field + "'");
+        System.out.println("Total hits: " + docs.totalHits);
+        System.out.println("");
+        for (int i = 0; i < docs.scoreDocs.length; i++) {
+            ScoreDoc hit = docs.scoreDocs[i];
+            Document doc = searcher.doc(hit.doc);
+            System.out.println("#" + i);
+            System.out.println("title: " + doc.get("title"));
+            System.out.println("content: " + doc.get("content"));
+            System.out.println("tags: " + doc.get("tags"));
+            System.out.println("id: " + hit.doc);
+            System.out.println("score: " + hit.score);
+            System.out.println();
+        }
+    }
+}</code>
+</pre>
+<p>
+  Here is the output when the above code is compiled and run:
+</p>
+<pre>
+<samp>Query: 'integer' in 'content'
+Total hits: 2
+
+#0
+title: Euler's theorem
+content: Euler's theorem states that if n is a positive integer and a is a positive integer coprime to n, then a^phi(n) = 1 (mod n) where phi(n) is Euler's totient function.
+tags: math, theorem
+id: 3
+score: 0.34144828
+
+#1
+title: Fermat's Last Theorem
+content: In number theory, Fermat's Last Theorem states that no three positive integers a, b, and c can satisfy the equation for a^n + b^n = c^n for any integer value of n greater than two.
+tags: math, theorem
+id: 2
+score: 0.24144039
+
+Query: 'rhyme' in 'tags'
+Total hits: 2
+
+#0
+title: Humpty Dumpty sat on a wall
+content: Humpty Dumpty sat on a wall.
+Humpty Dumpty had a great fall;
+All the King's horses and all the King's men,
+Couldn't put Humpty together again.
+tags: rhyme
+id: 0
+score: 1.287682
+
+#1
+title: Jack and Jill went up the hill
+content: Jack and Jill went up the hill
+To fetch a pail of water.
+Jack fell down and broke his crown,
+And Jill came tumbling after.
+
+tags: rhyme
+id: 1
+score: 1.287682
+</samp></pre>

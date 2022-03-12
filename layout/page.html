@@ -7,23 +7,20 @@
   <meta name="theme-color" content="#333">
   <link rel="canonical" href="{{ canonical-url }}">
   <link rel="icon" type="image/png" href="{{ root }}favicon.png">
-  <link rel="stylesheet" href="{{ root }}css/main.css">
-{{ imports }}</head>
+{{ heads }}{{ imports }}</head>
 <body>
-{{ body }}
-<footer>
+{{ body }}<footer>
   <hr>
   <div>
-    <a href="{{ root }}./{{ index }}">Home</a>
-    <a href="{{ root }}blog/{{ index }}">Blog</a>
-    <a href="{{ root }}blog/rss.xml">Feed</a>
+    <a href="{{ root }}{{ index }}">Home</a>
+    <a href="{{ root }}{{ zone-path }}{{ index }}">{{ zone-title }}</a>
+    <a href="{{ root }}{{ zone-path }}feed.xml">Feed</a>
     <a href="{{ site-url }}app/subscribe/">Subscribe</a>
     <a href="{{ root }}about.html">About</a>
-    <a href="{{ maze }}">Maze</a>
     <a href="https://github.com/susam">GitHub</a>
     <a href="https://twitter.com/susam">Twitter</a>
   </div>
-  <p>&copy; 2006&ndash;{{ current-year }} Susam Pal</p>
+  <p>&copy; {{ initial-year }}&ndash;{{ current-year }} Susam Pal</p>
 </footer>
 </body>
 </html>

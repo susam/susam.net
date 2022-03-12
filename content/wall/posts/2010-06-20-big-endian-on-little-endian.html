@@ -1,0 +1,77 @@
+<!-- title: Big-Endian on Little-Endian -->
+<p>
+  In this post, I will share how I set up big-endian emulation on my
+  little-endian Intel machine to tets a program for byte order related
+  issues. I used the QEMU PowerPC emulator to set up the big-endian
+  emulation. The steps to do so are documented in the list below.
+</p>
+<ol>
+  <li>
+    <p>
+      Install QEMU.
+    </p>
+    <pre><code>apt-get update &amp;&amp; apt-get install qemu</code></pre>
+  </li>
+  <li>
+    <p>
+      Download <code>mol-0.9.72.1.tar.bz2</code> from
+      <a href="http://sourceforge.net/projects/mac-on-linux/files/">http://sourceforge.net/projects/mac-on-linux/files/</a>
+      and copy the file named <code>video.x</code> from the downloaded
+      tarball to
+      <code>/usr/share/qemu/</code>. This is necessary to
+      prevent <code>qemu-system-ppc</code> from complaining about it.
+    </p>
+    <pre>
+<code>wget https://sourceforge.net/projects/mac-on-linux/files/mac-on-linux/mol-0.9.72.1/mol-0.9.72.1.tar.bz2
+tar -xjf mol-0.9.72.1.tar.bz2
+sudo cp mol-0.9.72.1/mollib/drivers/video.x /usr/share/qemu/</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Create a QEMU hard disk image.
+    </p>
+    <pre><code>qemu-img create powerpc.img 2G</code></pre>
+  </li>
+  <li>
+    <p>
+      Download Debian for PowerPC and install it on the QEMU hard disk
+      image.
+    </p>
+    <pre>
+<code>wget http://cdimage.debian.org/debian-cd/5.0.4/powerpc/iso-cd/debian-504-powerpc-CD-1.iso
+qemu-system-ppc -m 512 -boot d -hda powerpc.img -cdrom debian-504-powerpc-CD-1.iso</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Boot the QEMU PowerPC emulator with the new hard disk image.
+    </p>
+    <pre><code>qemu-system-ppc -m 512 -hda powerpc.img</code></pre>
+  </li>
+  <li>
+    <p>
+      Write a small program inside the new Debian system,
+      say, <code>endian.c</code> like this:
+    </p>
+    <pre>
+<code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int n = 1;
+    printf(*((char *) &amp;n) ? "little-endian\n" : "big-endian\n");
+    return 0;
+}</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Compile and execute the C program.
+    </p>
+    <pre>
+<code>$ <kbd>gcc endian.c && ./a.out</kbd>
+big-endian</code>
+</pre>
+  </li>
+</ol>

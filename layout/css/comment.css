@@ -1,0 +1,24 @@
+main > div {
+  margin: 1.5em 0;
+}
+.comment h2 {
+  font-size: 1em;
+  margin-top: 0;
+}
+.comment {
+  border: thin solid {{ light-line-color }};
+  padding: 0.625em;
+  margin: 1em 0;
+}
+.comment :last-child {
+  margin-bottom: 0;
+}
+.comment.author {
+  border-width: medium;
+  border-style: double;
+}
+@media (prefers-color-scheme: dark) {
+  .comment {
+    border-color: {{ dark-line-color }};
+  }
+}

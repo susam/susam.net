@@ -88,20 +88,17 @@ live: site
 	@echo Setting up live directory ...
 	mv _live _gone || :
 	mv _site _live
-	ln -snf /opt/maze/_live _live/maze
 	rm -rf _gone
 	@echo Done; echo
 
-site:
+site: mathjax
 	@echo Generating website ...
-	sbcl --script site.lisp
-	make mathjax
+	sbcl --load site.lisp --quit
 	@echo Done; echo
 
-dist:
+dist: mathjax
 	@echo Generating distributable website ...
-	sbcl --eval '(defvar *params* (list (cons "index" "index.html") (cons "maze" "https://susam.net/maze/")))' --script site.lisp
-	make mathjax
+	sbcl --eval '(defvar *params* (list (cons "index" "index.html")))' --load site.lisp --quit
 	@echo Done; echo
 
 mathjax:
@@ -111,10 +108,11 @@ mathjax:
 	    git -C _cache/ clone -b 3.2.0 --depth 1 https://github.com/mathjax/mathjax.git; \
 	    rm -rf _cache/mathjax/.git; \
 	else \
-	    echo Using cached MathJax ...; \
+	    echo MathJax is already cached.; \
 	fi
-	mkdir _site/js/
-	cp -R _cache/mathjax/ _site/js/mathjax/
+
+run:
+	cd _site && python3 -m http.server
 
 runapp:
 	sbcl --load spapp.lisp
@@ -149,10 +147,10 @@ push:
 	git push
 
 web:
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart nginx spapp && sudo systemctl --no-pager status nginx spapp"
 
 webreset:
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart spapp"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx spapp && sudo systemctl --no-pager status nginx spapp"
 
 # GitHub Pages Mirror
 
@@ -194,10 +192,15 @@ gh: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks:
+checkdev:
 	# Ensure every comment file has a post file.
-	ls -1 content/comments/ | while read -r f; do \
-		if ! [ -e "content/blog/$$f" ] && ! [ -e "content/xlog/$$f" ]; then \
+	ls -1 content/blog/comments/ | while read -r f; do \
+	    echo Checking post file for "$$f"; \
+		if ! [ -e "content/blog/posts/$$f" ]; then \
+			echo No post file for comment file: "$$f"; exit 1; fi; done
+	ls -1 content/cafe/comments/ | while read -r f; do \
+	    echo Checking post file for "$$f"; \
+		if ! [ -e "content/cafe/posts/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
 	# Ensure punctuation goes inside inline-math.
 	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(s|th|-|</h[1-6]>|</em>|</li>|\)|:)'
@@ -205,12 +208,19 @@ checks:
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
 	# Ensure http.susam.net and https.susam.net are consistent.
+	sed -n '/types/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '/types/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	sed -n '/location/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
 	sed -n '/location/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	@echo Done; echo
 
-livechecks:
+checklinks:
+	-wget -r -l 0 --spider -nd -nv http://localhost:8000/ -o run.log
+	grep -B1 broken run.log
+
+checklive:
 	# Blog legacy URL redirects
 	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
 	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
@@ -232,7 +242,7 @@ livechecks:
 	curl -sSI https://susam.net/maze/paradox.html | grep '200 OK'
 	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
 
-appchecks: checkroot
+checkapp: checkroot
 	curl https://susam.net/app/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
 	curl https://susam.net/app/subscribe/ -d email=foo-subscribe@example.com
 	curl https://susam.net/app/unsubscribe/ -d email=foo-unsubscribe@example.com

@@ -36,6 +36,20 @@ On 06 Jan 2022, I moved my blog to [susam.net][WEBSITE].
 [CLCODE]: site.lisp
 
 
+Maze
+----
+
+During my engineering study days back in 2001-2005, I used to run an
+intranet server named `maze` for my fellow students in our
+university's computer network. The server used to host an FTP server
+and an HTTP portal for mathematics puzzles, free software downloads,
+and audio/video streaming. While that intranet portal and its source
+code written in Classic ASP are now long gone, some of its content
+still survives on my current website at [susam.net/maze/][MAZE].
+
+[MAZE]: https://susam.net/maze/
+
+
 Copyright
 ---------
 

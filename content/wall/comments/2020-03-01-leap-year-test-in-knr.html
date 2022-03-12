@@ -1,0 +1,15 @@
+<!-- date: 2020-03-01 22:30:36 +0000 -->
+<!-- name: Thaumasiotes -->
+<!-- source: https://news.ycombinator.com/item?id=22459836 -->
+<p>
+  For those who were curious why these could both work, note that
+  <code>(A &amp;&amp; B) || C</code> differs from <code>A &amp;&amp;
+  (B || C)</code> in two cases: when <code>A</code> is
+  false, <code>C</code> is true, and <code>B</code> is any value.
+</ol>
+<p>
+  But in this case in particular, those differences would create a bug
+  when <code>A</code> is false (the year is not divisible by 4) at the
+  same time that <code>C</code> is true (the year <em>is</em>
+  divisible by 400). Since that can't happen, the bug cannot occur.
+</p>
