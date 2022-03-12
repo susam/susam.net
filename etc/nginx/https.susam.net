@@ -10,7 +10,7 @@ server {
     ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/susam.net/privkey.pem;
     root /var/www/susam.net;
-    location /app/ {
+    location /form/ {
         proxy_set_header HOST $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_pass http://127.0.0.1:4242;
