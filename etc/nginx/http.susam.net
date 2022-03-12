@@ -9,7 +9,7 @@ server {
     listen [::]:80;
     server_name susam.net susam;
     root /var/www/susam.net;
-    location /app/ {
+    location /form/ {
         proxy_set_header HOST $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_pass http://127.0.0.1:4242;
