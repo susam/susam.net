@@ -459,8 +459,8 @@ value, next-index."
     (add-value "commenter" commenter comment)
     ;; Formatted dates.
     (setf date (get-value "date" comment))
-    (add-value "rss-date" date comment)
-    (add-value "simple-date" date comment)
+    (add-value "rss-date" (rss-date date) comment)
+    (add-value "simple-date" (simple-date date) comment)
     ;; Select content until next header or end-of-text as body.
     (setf next-index (search start-token text :start2 start-index))
     (add-value "body" (subseq text start-index next-index) comment)
@@ -487,11 +487,13 @@ value, next-index."
          (return)))
     (values comments slug)))
 
-(defun check-comment-date (comment)
-  (unless (string-ends-with " +0000" (get-value "date" comment))
-    (error (format nil "Time zone missing in comment date ~a in ~a"
-                   (get-value "date" comment)
-                   (get-value "slug" comment)))))
+(defun check-comment-dates (comments)
+  "Ensure that every comment on this site includes UTC timezone."
+  (dolist (comment comments)
+    (unless (string-ends-with " +0000" (get-value "date" comment))
+      (error (format nil "Time zone missing in comment date ~a in ~a"
+                     (get-value "date" comment)
+                     (get-value "slug" comment))))))
 
 (defun make-comment-list (post comments dst list-layout item-layout
                           &optional params)
@@ -512,7 +514,6 @@ value, next-index."
     (loop for index from count downto 1
           for comment in comments
           do (setf comment (append comment params))
-             (check-comment-date comment)
              (add-value "index" index comment)
              (add-value "commenter-type"
                         (if (string= (get-value "name" comment)
@@ -786,6 +787,7 @@ value, next-index."
     ;; Read all comments.
     (dolist (src-path (directory src))
       (multiple-value-bind (comments slug) (read-comments src-path)
+        (check-comment-dates comments)
         (add-value slug comments comment-map)))
     ;; Add parameters for comment list rendering.
     ;; For each post, render its comment list page.
