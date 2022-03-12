@@ -536,33 +536,35 @@
 
 (test-case render-head-html-css
   (let ((s "  <link rel=\"stylesheet\" href=\"css/foo.css\">~%"))
-    (assert (string= (head-html "foo.css" "" '())
+    (assert (string= (head-html "foo.css" '(("root" . "")))
                      (format nil s)))))
 
 (test-case render-head-html-js
-  (assert (string= (head-html "foo.js" "" '())
+  (assert (string= (head-html "foo.js" '(("root" . "")))
                    (format nil "  <script src=\"js/foo.js\"></script>~%"))))
 
 (test-case render-head-html-inc
-  (assert (string= (head-html "test.inc" "" '())
+  (assert (string= (head-html "test.inc" '())
                    (format nil "  <!-- {{ a }} test include -->~%"))))
 
 (test-case render-head-html-inc-params
-  (assert (string= (head-html "test.inc" "" '(("a" . "apple")))
+  (assert (string= (head-html "test.inc" '(("a" . "apple")))
                    (format nil "  <!-- apple test include -->~%"))))
 
 (test-case render-head-html-css-root
   (let ((s "  <link rel=\"stylesheet\" href=\"../css/foo.css\">~%"))
-    (assert (string= (head-html "foo.css" "../" '()) (format nil s)))))
+    (assert (string= (head-html "foo.css" '(("root" . "../")))
+                     (format nil s)))))
 
 (test-case render-head-html-js-root
   (let ((s "  <script src=\"../js/foo.js\"></script>~%"))
-    (assert (string= (head-html "foo.js" "../" '()) (format nil s)))))
+    (assert (string= (head-html "foo.js" '(("root" . "../")))
+                     (format nil s)))))
 
 (test-case render-head-html-js-css-inc
   (assert (string=
-           (head-html "foo.css bar.js test.inc baz.css qux.js test.inc" ""
-                      '(("a" . "apple")))
+           (head-html "foo.css bar.js test.inc baz.css qux.js test.inc"
+                      '(("root" . "") ("a" . "apple")))
            "  <link rel=\"stylesheet\" href=\"css/foo.css\">
   <script src=\"js/bar.js\"></script>
   <!-- apple test include -->
@@ -792,7 +794,7 @@ yz
   (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 07:08:09 +0000 -->
 <!-- name: Alice -->
 Foo")
-  (multiple-value-bind (slug comments) (read-comments "test-tmp/comments.txt")
+  (multiple-value-bind (comments slug) (read-comments "test-tmp/comments.txt")
     (assert (string= slug "comments"))
     (assert (= (length comments) 1))
     (let ((comment1 (first comments)))
@@ -810,7 +812,7 @@ Y
 <!-- date: 2020-06-03 00:00:03 +0000 -->
 <!-- author: Carol -->
 Z")
-  (multiple-value-bind (slug comments) (read-comments "test-tmp/comments.txt")
+  (multiple-value-bind (comments slug) (read-comments "test-tmp/comments.txt")
     (assert (string= slug "comments"))
     (assert (= (length comments) 3))
     (let* ((comment1 (first comments))
@@ -869,27 +871,6 @@ Z")
                      (list (cons "a" "apple")))
   (assert (string= (read-file "test-tmp/foo.html")
                    "[Comments on Foo Foo apple]")))
-
-(test-case read-text-files
-  (let ((foo-text (format nil "Foo~%Body~%"))
-        (bar-text (format nil "Bar~%Body~%"))
-        (baz-text (format nil "Baz~%Body~%")))
-    (write-file "test-tmp/foo/foo.txt" foo-text)
-    (write-file "test-tmp/foo/bar.txt" bar-text)
-    (write-file "test-tmp/foo/baz.txt" baz-text)
-    (let ((posts (read-text-files "test-tmp/foo/*.txt")))
-      (let ((post (first posts)))
-        (assert (string= (get-value "basename" post) "bar.txt"))
-        (assert (string= (get-value "title" post) "Bar"))
-        (assert (string= (get-value "body" post) bar-text)))
-      (let ((post (second posts)))
-        (assert (string= (get-value "basename" post) "baz.txt"))
-        (assert (string= (get-value "title" post) "Baz"))
-        (assert (string= (get-value "body" post) baz-text)))
-      (let ((post (third posts)))
-        (assert (string= (get-value "basename" post) "foo.txt"))
-        (assert (string= (get-value "title" post) "Foo"))
-        (assert (string= (get-value "body" post) foo-text))))))
 
 (test-case links-html-single
   (assert (string= (links-html (list (cons "pdf" "foo.pdf")))
