@@ -58,10 +58,20 @@
      (add-value "heads" (head-html "main.css" ,params) ,params)
      (add-value "imports" (head-html "form.css" ,params) ,params)))
 
+(defun form-index-page ()
+  "Return HTML response for form index page."
+  (let ((page-layout (read-file "layout/page.html"))
+        (index-layout (read-file "layout/form/index.html"))
+        (params))
+    (setf index-layout (render page-layout (list (cons "body" index-layout))))
+    (add-page-params params)
+    (add-value "title" "Forms" params)
+    (render index-layout params)))
+
 (defun comment-form-page (method post slug name url comment email)
   "Return HTML response to the request handler for comments."
   (let ((page-layout (read-file "layout/page.html"))
-        (form-layout (read-file "layout/forms/comment.html"))
+        (form-layout (read-file "layout/form/comment.html"))
         (success-lines '("Comment was submitted successfully."
                          "It may be published after review."))
         (error-lines)
@@ -113,10 +123,10 @@
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
 
-(defun comment-subscribe-page (method email action)
+(defun subscribe-form-page (method email action)
   "Return HTML response to the request handler for subscribe/unsubscribe form."
   (let ((page-layout (read-file "layout/page.html"))
-        (form-layout (read-file (format nil "layout/forms/~a.html" action)))
+        (form-layout (read-file (format nil "layout/form/~a.html" action)))
         (params))
     (cond
       ;; Handle GET request.
@@ -143,7 +153,10 @@
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
 
-(hunchentoot:define-easy-handler (comment :uri "/app/comment/")
+(hunchentoot:define-easy-handler (index :uri "/form/") ()
+  (form-index-page))
+
+(hunchentoot:define-easy-handler (comment :uri "/form/comment/")
     ((post :request-type :get)
      (slug :request-type :post)
      (name :request-type :post)
@@ -154,20 +167,20 @@
     (when (member method '(:head :get :post))
       (comment-form-page method post slug name url comment email))))
 
-(hunchentoot:define-easy-handler (subscribe :uri "/app/subscribe/")
+(hunchentoot:define-easy-handler (subscribe :uri "/form/subscribe/")
     ((email :request-type :post))
   (let ((method (hunchentoot:request-method*)))
     (when (member method '(:head :get :post))
-      (comment-subscribe-page method email "subscribe"))))
+      (subscribe-form-page method email "subscribe"))))
 
-(hunchentoot:define-easy-handler (unsubscribe :uri "/app/unsubscribe/")
+(hunchentoot:define-easy-handler (unsubscribe :uri "/form/unsubscribe/")
     ((email :request-type :post))
   (let ((method (hunchentoot:request-method*)))
     (when (member method '(:head :get :post))
-      (comment-subscribe-page method email "unsubscribe"))))
+      (subscribe-form-page method email "unsubscribe"))))
 
 (defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor
                                   :address "127.0.0.1" :port 4242))
-(setf (hunchentoot:acceptor-document-root *acceptor*) #p"static/")
+(setf (hunchentoot:acceptor-document-root *acceptor*) #p"_site/")
 (hunchentoot:start *acceptor*)
 (sleep most-positive-fixnum)
