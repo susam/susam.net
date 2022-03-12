@@ -774,9 +774,9 @@ value, next-index."
 
 (defun make-comments (posts src page-layout &optional params)
   "Generate comment list pages or no comments pages for all posts."
-  (let ((none-layout (read-file "layout/comments/none.html"))
-        (list-layout (read-file "layout/comments/list.html"))
-        (item-layout (read-file "layout/comments/item.html"))
+  (let ((none-layout (read-file "layout/comment/none.html"))
+        (list-layout (read-file "layout/comment/list.html"))
+        (item-layout (read-file "layout/comment/item.html"))
         (comment-dst (render "_site/{{ zone-path }}comments/{{ slug }}.html"
                              params))
         (comment-map))
