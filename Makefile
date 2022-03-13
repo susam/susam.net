@@ -246,11 +246,12 @@ checklive:
 	# Maze Xlog
 	curl -sSI https://susam.net/maze/paradox.html | grep '200 OK'
 	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
+	@echo Done; echo
 
-checkform443: checkroot
+checkformweb: checkroot
 	make checkform URL=https://susam.net/ SLEEP=15
 
-checkform4242:
+checkformlocal:
 	make checkform URL=http://localhost:4242/ SLEEP=0
 
 checkform:
@@ -377,3 +378,4 @@ checkform:
 	sleep $(SLEEP)
 	curl -sS '$(URL)form/unsubscribe/' -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
 	! ls -l /opt/cache/unsubscribe_*
+	@echo Done; echo
