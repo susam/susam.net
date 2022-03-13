@@ -68,15 +68,25 @@
     (add-value "title" "Forms" params)
     (render index-layout params)))
 
+(defun format-status-lines (lines)
+  "Format status lines for display in form response."
+  (setf lines (loop for x in lines collect (format nil "<li>~a</li>~%" x)))
+  (setf lines (join-strings lines))
+  (setf lines (format nil "<ul>~%~a</ul>~%" lines)))
+
 (defun comment-form-page (method post slug name url comment email)
   "Return HTML response to the request handler for comments."
   (let ((page-layout (read-file "layout/page.html"))
         (form-layout (read-file "layout/form/comment.html"))
-        (success-lines '("Comment was submitted successfully."
-                         "It may be published after review."))
+        (success-lines
+          '("Comment was submitted successfully."
+            "It is now awaiting review and it may be published after review."
+            "Your input has been left intact below in case you want to
+            copy it, or edit it and resubmit it."))
         (error-lines)
         (status-lines)
         (params))
+    (add-value "title" "Post Comment" params)
     (cond
       ;; Handle GET request.
       ((eq method :get)
@@ -108,17 +118,13 @@
               (add-value "class" "error" params)
               (setf status-lines error-lines))
              (t
+              (add-value "title" "Comment Submitted" params)
               (add-value "class" "success" params)
               (setf status-lines success-lines)
-              (write-comment params)))
-       (setf status-lines (loop for x in status-lines
-                                collect (format nil "<li>~a</li>~%" x)))
-       (setf status-lines (join-strings status-lines))
-       (setf status-lines (format nil "<ul>~%~a</ul>~%" status-lines))
-       (add-value "status" status-lines params)))
+              (write-comment params)))))
     ;; Add page parameters.
     (add-page-params params)
-    (add-value "title" "Post Comment" params)
+    (add-value "status" (format-status-lines status-lines) params)
     ;; Render form layout.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
@@ -127,7 +133,15 @@
   "Return HTML response to the request handler for subscribe/unsubscribe form."
   (let ((page-layout (read-file "layout/page.html"))
         (form-layout (read-file (format nil "layout/form/~a.html" action)))
+        (success-lines
+          (list (format nil "Successfully ~ad!" action)
+                "Your input has been left intact below in case you
+                want to copy it, or edit it and resubmit it."))
+        (error-lines
+          (list "You must enter your email address."))
+        (status-lines)
         (params))
+    (add-value "title" (string-capitalize action) params)
     (cond
       ;; Handle GET request.
       ((eq method :get)
@@ -140,15 +154,16 @@
        (cond
          ((string= (get-value "email" params) "")
           (add-value "class" "error" params)
-          (add-value "status" "<p>You must enter your email address!</p>" params))
+          (setf status-lines error-lines))
          (t
+          (add-value "title" (format nil "Successfully ~ad"
+                                     (string-capitalize action)) params)
           (add-value "class" "success" params)
-          (add-value "readonly" "readonly" params)
-          (add-value "status" (format nil "<p>Successfully ~ad!</p>" action) params)
+          (setf status-lines success-lines)
           (write-subscriber email action)))))
     ;; Add page parameters.
     (add-page-params params)
-    (add-value "title" (string-capitalize action) params)
+    (add-value "status" (format-status-lines status-lines) params)
     ;; Render form layout.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))

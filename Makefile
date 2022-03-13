@@ -114,7 +114,7 @@ mathjax:
 run:
 	cd _site && python3 -m http.server
 
-runform:
+runform: site
 	sbcl --load form.lisp
 
 loop:

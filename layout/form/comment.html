@@ -1,6 +1,10 @@
-<main>
+<main class="{{ class }}">
   <h1>{{ title }}</h1>
-  <form method="post" action="?post={{ post }}" class="{{ class }}">
+  <!-- Success or error messages -->
+  <div class="status">
+    {{ status }}
+  </div>
+  <form method="post" action="?post={{ post }}">
     <!-- Name -->
     <label for="name">Name:</label>
     <input id="name" name="name" value="{{ name }}" required>
@@ -13,10 +17,6 @@
     <!-- Hidden fields -->
     <input type="hidden" name="slug" value="{{ slug }}">
     <input type="hidden" name="email" value="">
-    <!-- Success or error messages -->
-    <div class="status">
-      {{ status }}
-    </div>
     <!-- Submit button -->
     <input type="submit" id="submit" name="submit" value="Submit Comment">
   </form>
