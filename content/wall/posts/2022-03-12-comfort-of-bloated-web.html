@@ -16,13 +16,13 @@
   Most of this website is made of handcrafted HTML. The blog posts and
   other content files are handcrafted HTML pages. A Common Lisp
   program adds common headers and footers to these pages and generates
-  the HTML pages that are served as static files via Nginx. The
-  comment form, however, is a dynamic web application served via
-  another Common Lisp program that makes use of the Hunchentoot web
-  server to serve the form, accept the input submitted by the user,
-  and then process it. This comment form is a very simple application
-  that fulfills the modest requirements of this modest website pretty
-  well.
+  the HTML pages that are served as static files via Nginx running on
+  a Debian system. The comment form, however, is a dynamic web
+  application served via another Common Lisp program that makes use of
+  the Hunchentoot web server to serve the form, accept the input
+  submitted by the user, and then process it. This comment form is a
+  very simple, minimal, and stateless application that fulfills the
+  modest requirements of this modest website pretty well.
 </p>
 <p>
   However, often I see multiple copies of the same comment being saved
@@ -174,9 +174,9 @@
   another additional link or button to be able to do these things.
   Therefore, heeding some of the other advice I have received, I have
   now made two tiny changes to the comment form application that is
-  consistent with its original spirit of simplicity and minimalism: I
-  have moved the success and error messages to the top of the page. I
-  have also added an additional lines in the success message that
-  says, "Your input has been left intact below in case you want to
-  copy it, or edit it and resubmit it."
+  consistent with its original spirit of simplicity, minimalism, and
+  statelessness. I have moved the success message to the top of the
+  response page. I have also added additional text in the success
+  message that explains the submitted input has been left intact in
+  case the submitter wants to copy it, or edit it and resubmit it.
 </p>
