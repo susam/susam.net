@@ -146,10 +146,15 @@ pub: push web gh
 push:
 	git push
 
+force-pub: force-push force-web gh
+
+force-push:
+	git push --force
+
 web:
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
-webreset:
+force-web:
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
 # GitHub Pages Mirror
@@ -242,13 +247,120 @@ checklive:
 	curl -sSI https://susam.net/maze/paradox.html | grep '200 OK'
 	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
 
-checkform: checkroot
-	curl https://susam.net/form/comment/?post=foo -d slug=foo -d name=alice -d email= -d comment=body
-	curl https://susam.net/form/subscribe/ -d email=foo-subscribe@example.com
-	curl https://susam.net/form/unsubscribe/ -d email=foo-unsubscribe@example.com
-	ls -l /opt/cache
-	cat /opt/cache/comment_foo_$$(date +"%Y-%m-%d")_*.txt
-	grep -h foo /opt/cache/*subscribe_$$(date +"%Y-%m-%d")_*.txt
-	rm /opt/cache/comment_foo_$$(date +"%Y-%m-%d")_*.txt
-	grep -l foo /opt/cache/*subscribe_$$(date +"%Y-%m-%d")_*.txt | xargs rm
-	ls -l /opt/cache/
+check443: checkroot
+	make checkform URL=https://susam.net/
+
+check4242:
+	make checkform URL=http://localhost:4242/
+
+checkform:
+	rm -f /opt/cache/comment_* /opt/cache/subscribe_* /opt/cache/unsubscribe_*
+	#
+	# Comment: Successful submission with URL.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d url=example.net -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	ls -l /opt/cache/comment_*
+	grep 'foo' /opt/cache/comment_*
+	grep 'alice' /opt/cache/comment_*
+	grep 'example\.net' /opt/cache/comment_*
+	grep 'body' /opt/cache/comment_*
+	rm -f /opt/cache/comment_*
+	#
+	# Comment: Successful submission with empty URL.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d url= -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	ls -l /opt/cache/comment_*
+	grep 'foo' /opt/cache/comment_*
+	grep 'alice' /opt/cache/comment_*
+	grep -v 'url:' /opt/cache/comment_*
+	grep 'body' /opt/cache/comment_*
+	rm -f /opt/cache/comment_*
+	#
+	# Comment: Successful submission with missing URL.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	ls -l /opt/cache/comment_*
+	grep 'foo' /opt/cache/comment_*
+	grep 'alice' /opt/cache/comment_*
+	grep -v 'url:' /opt/cache/comment_*
+	grep 'body' /opt/cache/comment_*
+	rm -f /opt/cache/comment_*
+	#
+	# Comment: Post key missing in query.
+	curl -sS '$(URL)form/comment/' -d slug=foo -d name=alice -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'Invalid'
+	! ls -l /opt/cache/comment_*
+	#
+	# Comment: Post key empty in query.
+	curl -sS '$(URL)form/comment/?post=' -d slug=foo -d name=alice -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'Invalid'
+	! ls -l /opt/cache/comment_*
+	#
+	# Comment: Name key missing.
+	rm -f /opt/cache/comment_*
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'Invalid'
+	#
+	# Comment: Name key empty.
+	rm -f /opt/cache/comment_*
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name= -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'Invalid'
+	#
+	# Comment: Comment key missing.
+	rm -f /opt/cache/comment_*
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
+	#
+	# Comment: Comment key empty.
+	rm -f /opt/cache/comment_*
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d meta= -d hash= -d comment= | grep '<li>' | grep 'Invalid'
+	#
+	# Comment: Slug mismatch.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=bar -d name=alice -d email= -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	! ls -l /opt/cache/comment_*
+	#
+	# Comment: Info key missing.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	! ls -l /opt/cache/comment_*
+	#
+	# Comment: Meta key missing.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	! ls -l /opt/cache/comment_*
+	#
+	# Comment: Hash key missing.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email -d meta= -d comment=body | grep '<li>' | grep 'successful'
+	! ls -l /opt/cache/comment_*
+	#
+	# Comment: Info key mismatch.
+	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email=mailme -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
+	! ls -l /opt/cache/comment_*
+	#
+	# Subscribe: Successful submission.
+	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment= -d meta= -d hash= | grep '<li>' | grep 'Successful'
+	grep 'foo' /opt/cache/subscribe_*
+	rm -f /opt/cache/subscribe_*
+	#
+	# Subscribe: Email key missing.
+	curl -sS '$(URL)form/subscribe/' -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
+	! ls -l /opt/cache/subscribe_*
+	#
+	# Subscribe: Email key empty.
+	curl -sS '$(URL)form/subscribe/' -d email= -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
+	! ls -l /opt/cache/subscribe_*
+	#
+	# Subscribe: Info key missing.
+	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d meta= -d hash= | grep '<li>' | grep 'Successful'
+	! ls -l /opt/cache/subscribe_*
+	#
+	# Subscribe: Meta key missing.
+	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment= -d hash= | grep '<li>' | grep 'Successful'
+	! ls -l /opt/cache/subscribe_*
+	#
+	# Subscribe: Hash key missing.
+	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment= -d meta= | grep '<li>' | grep 'Successful'
+	! ls -l /opt/cache/subscribe_*
+	#
+	# Subscribe: Info key mismatch.
+	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment=foo -d meta= -d hash= | grep '<li>' | grep 'Successful'
+	! ls -l /opt/cache/subscribe_*
+	#
+	# Unsubscribe: Successful submission.
+	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com -d comment= -d meta= -d hash= | grep '<li>' | grep 'Successful'
+	grep 'foo' /opt/cache/unsubscribe_*
+	rm -f /opt/cache/unsubscribe_*
+	#
+	# Unsubscribe: Email key missing.
+	curl -sS '$(URL)form/unsubscribe/' -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
+	! ls -l /opt/cache/unsubscribe_*
