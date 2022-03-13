@@ -213,8 +213,8 @@ checkdev:
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
 	# Ensure http.susam.net and https.susam.net are consistent.
-	sed -n '/types/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
-	sed -n '/types/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	sed -n '/types/,/limit/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '/types/,/limit/p' etc/nginx/https.susam.net > /tmp/https.susam.net
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	sed -n '/location/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
 	sed -n '/location/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
@@ -247,11 +247,11 @@ checklive:
 	curl -sSI https://susam.net/maze/paradox.html | grep '200 OK'
 	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
 
-check443: checkroot
-	make checkform URL=https://susam.net/
+checkform443: checkroot
+	make checkform URL=https://susam.net/ SLEEP=15
 
-check4242:
-	make checkform URL=http://localhost:4242/
+checkform4242:
+	make checkform URL=http://localhost:4242/ SLEEP=0
 
 checkform:
 	rm -f /opt/cache/comment_* /opt/cache/subscribe_* /opt/cache/unsubscribe_*
@@ -312,55 +312,68 @@ checkform:
 	! ls -l /opt/cache/comment_*
 	#
 	# Comment: Info key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
 	! ls -l /opt/cache/comment_*
 	#
 	# Comment: Meta key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d hash= -d comment=body | grep '<li>' | grep 'successful'
 	! ls -l /opt/cache/comment_*
 	#
 	# Comment: Hash key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email -d meta= -d comment=body | grep '<li>' | grep 'successful'
 	! ls -l /opt/cache/comment_*
 	#
 	# Comment: Info key mismatch.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email=mailme -d meta= -d hash= -d comment=body | grep '<li>' | grep 'successful'
 	! ls -l /opt/cache/comment_*
 	#
 	# Subscribe: Successful submission.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment= -d meta= -d hash= | grep '<li>' | grep 'Successful'
 	grep 'foo' /opt/cache/subscribe_*
 	rm -f /opt/cache/subscribe_*
 	#
 	# Subscribe: Email key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
 	! ls -l /opt/cache/subscribe_*
 	#
 	# Subscribe: Email key empty.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d email= -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
 	! ls -l /opt/cache/subscribe_*
 	#
 	# Subscribe: Info key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d meta= -d hash= | grep '<li>' | grep 'Successful'
 	! ls -l /opt/cache/subscribe_*
 	#
 	# Subscribe: Meta key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment= -d hash= | grep '<li>' | grep 'Successful'
 	! ls -l /opt/cache/subscribe_*
 	#
 	# Subscribe: Hash key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment= -d meta= | grep '<li>' | grep 'Successful'
 	! ls -l /opt/cache/subscribe_*
 	#
 	# Subscribe: Info key mismatch.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d comment=foo -d meta= -d hash= | grep '<li>' | grep 'Successful'
 	! ls -l /opt/cache/subscribe_*
 	#
 	# Unsubscribe: Successful submission.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com -d comment= -d meta= -d hash= | grep '<li>' | grep 'Successful'
 	grep 'foo' /opt/cache/unsubscribe_*
 	rm -f /opt/cache/unsubscribe_*
 	#
 	# Unsubscribe: Email key missing.
+	sleep $(SLEEP)
 	curl -sS '$(URL)form/unsubscribe/' -d comment= -d meta= -d hash= | grep '<li>' | grep 'Invalid'
 	! ls -l /opt/cache/unsubscribe_*
