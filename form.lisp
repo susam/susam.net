@@ -15,21 +15,34 @@
   "Convert UTC time string to a filename."
   (string-replace ":" "-" (string-replace " " "_" time-string)))
 
+(defun x-real-ip ()
+  "Return the real remote address passed on by the reverse proxy."
+  (let ((real-ip (hunchentoot:header-in* :x-real-ip)))
+    (if real-ip real-ip (format nil "Found to be ~a" real-ip))))
+
+(defun from-get (name)
+  "Get the value of a GET parameter."
+  (hunchentoot:get-parameter name))
+
+(defun from-post (name)
+  "Get the value of a POST parameter."
+  (hunchentoot:post-parameter name))
+
 (defun write-comment (params)
   "Save comment to a file."
   (let* ((time-string (current-utc-time-string))
          (text (with-output-to-string (s)
-                 (format s "post: ~a~%" (get-value "post" params))
+                 (format s "post: ~a~%" (get-value "post-value" params))
                  (format s "user-agent: ~a~%" (hunchentoot:user-agent))
                  (format s "remote-addr: ~a~%" (hunchentoot:remote-addr*))
-                 (format s "x-real-ip: ~a~%" (hunchentoot:header-in* :x-real-ip))
+                 (format s "x-real-ip: ~a~%" (x-real-ip))
                  (format s "<!-- date: ~a +0000 -->~%" time-string)
-                 (format s "<!-- name: ~a -->~%" (get-value "name" params))
-                 (when (string/= (get-value "url" params) "")
-                   (format s "<!-- url: ~a -->~%" (get-value "url" params)))
-                 (format s "~a~%" (get-value "comment" params))))
+                 (format s "<!-- name: ~a -->~%" (get-value "name-value" params))
+                 (when (string/= (get-value "url-value" params) "")
+                   (format s "<!-- url: ~a -->~%" (get-value "url-value" params)))
+                 (format s "~a~%" (get-value "comment-value" params))))
          (filename (format nil "/opt/cache/comment_~a_~a_~a.txt"
-                           (get-value "slug" params)
+                           (get-value "slug-value" params)
                            (time-based-filename time-string)
                            (random 1000000))))
     (write-file filename text)))
@@ -45,6 +58,7 @@
     (write-file filename text)))
 
 (defmacro add-page-params (params)
+  "Add common parameters necessary for page rendering."
   `(progn
      (add-value "root" "../../" ,params)
      (add-value "index" "" ,params)
@@ -68,131 +82,185 @@
     (add-value "title" "Forms" params)
     (render index-layout params)))
 
-(defun format-status-lines (lines)
+(defun format-status (lines)
   "Format status lines for display in form response."
   (setf lines (loop for x in lines collect (format nil "<li>~a</li>~%" x)))
   (setf lines (join-strings lines))
   (setf lines (format nil "<ul>~%~a</ul>~%" lines)))
 
-(defun comment-form-page (method post slug name url comment email)
+(defvar *input-info-line*
+  "Your input has been left intact below in case you want to copy,
+edit, or resubmit it.")
+
+(defvar *comment-success-lines*
+  (list "Comment was submitted successfully."
+        "It is now awaiting review and it may be published after review."
+        *input-info-line*))
+
+(defun comment-form ()
   "Return HTML response to the request handler for comments."
-  (let ((page-layout (read-file "layout/page.html"))
-        (form-layout (read-file "layout/form/comment.html"))
-        (success-lines
-          '("Comment was submitted successfully."
-            "It is now awaiting review and it may be published after review."
-            "Your input has been left intact below in case you want to
-            copy it, or edit it and resubmit it."))
-        (error-lines)
-        (status-lines)
-        (params))
-    (add-value "title" "Post Comment" params)
-    (cond
-      ;; Handle GET request.
-      ((eq method :get)
-       ;; Set empty form.
-       (add-value "post" (or post "") params)
-       (add-value "slug" (or post "") params)
-       (add-value "name" "" params)
-       (add-value "url" "" params)
-       (add-value "comment" "" params)
-       (add-value "email" "" params)
-       (add-value "class" "" params)
-       (add-value "status" "" params))
-      ;; Handle POST request.
-      ((eq method :post)
-       ;; Preserve posted form data.
-       (add-value "post" (or post "") params)
-       (add-value "slug" (or post "") params)
-       (add-value "name" (or name "") params)
-       (add-value "url" (or url "") params)
-       (add-value "comment" (or comment "") params)
-       ;; Validate post data.
-       (when (or (string= post "") (string/= slug post) (string/= email ""))
-         (push "Invalid request." error-lines))
-       (when (string= (get-value "name" params) "")
-         (push "You must mention your name." error-lines))
-       (when (string= (get-value "comment" params) "")
-         (push "You must write a comment message." error-lines))
-       (cond (error-lines
-              (add-value "class" "error" params)
-              (setf status-lines error-lines))
-             (t
-              (add-value "title" "Comment Submitted" params)
-              (add-value "class" "success" params)
-              (setf status-lines success-lines)
-              (write-comment params)))))
-    ;; Add page parameters.
+  (let* ((page-layout (read-file "layout/page.html"))
+         (form-layout (read-file "layout/form/comment.html"))
+         (post-key "post")
+         (name-key "name")
+         (url-key "url")
+         (comment-key "comment")
+         (slug-key "slug")
+         (info-key "email")
+         (meta-key "meta")
+         (hash-key "hash")
+         (method (hunchentoot:request-method*))
+         (error-lines)
+         (info-lines)
+         (success-lines)
+         (params))
+    ;; Common parameters for page.
     (add-page-params params)
-    (add-value "status" (format-status-lines status-lines) params)
-    ;; Render form layout.
+    ;; Static values for form.
+    (add-value "post-key" post-key params)
+    (add-value "name-key" name-key params)
+    (add-value "url-key" url-key params)
+    (add-value "comment-key" comment-key params)
+    (add-value "slug-key" slug-key params)
+    (add-value "info-key" info-key params)
+    (add-value "meta-key" meta-key params)
+    (add-value "hash-key" hash-key params)
+    (add-value "post-value" (or (from-get post-key) "") params)
+    (add-value "slug-value" (or (from-get post-key) "") params)
+    (add-value "info-value" "" params)
+    (add-value "meta-value" "" params)
+    (add-value "hash-value" "" params)
+    (add-value "submit-value" "Submit Comment" params)
+    ;; Preserve submitted values, if any.
+    (add-value "name-value" (or (from-post name-key) "") params)
+    (add-value "url-value" (or (from-post url-key) "") params)
+    (add-value "comment-value" (or (from-post comment-key) "") params)
+    ;; Handle request.
+    (when (eq method :post)
+      ;; If required fields are missing, reject the request.
+      (when (or (string= (get-value "post-value" params) "")
+                (string= (get-value "name-value" params) "")
+                (string= (get-value "comment-value" params) ""))
+        (push "Invalid request." error-lines))
+      ;; Check metadata.
+      (when (or (string/= (from-post slug-key) (from-get post-key))
+                (string/= (from-post info-key) "")
+                (string/= (from-post meta-key) "")
+                (string/= (from-post hash-key) ""))
+        (push "Some metadata is missing." info-lines))
+      ;; If no error, set success message.
+      (unless error-lines
+        (setf success-lines *comment-success-lines*)))
+    ;; Create response.
+    (cond
+      (error-lines
+       (add-value "title" "Post Comment" params)
+       (add-value "class" "error" params)
+       (add-value "status" (format-status error-lines) params))
+      (info-lines
+       (add-value "title" "Comment Submitted" params)
+       (add-value "class" "success" params)
+       (add-value "status" (format-status success-lines) params))
+      (success-lines
+       (write-comment params)
+       (add-value "title" "Comment Submitted" params)
+       (add-value "class" "success" params)
+       (add-value "status" (format-status success-lines) params))
+      (t
+       (add-value "title" "Post Comment" params)
+       (add-value "class" "" params)
+       (add-value "status" "" params)))
+    ;; Render response.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
 
-(defun subscribe-form-page (method email action)
+(defun subscribe-form (action)
   "Return HTML response to the request handler for subscribe/unsubscribe form."
   (let ((page-layout (read-file "layout/page.html"))
-        (form-layout (read-file (format nil "layout/form/~a.html" action)))
-        (success-lines
-          (list (format nil "Successfully ~ad!" action)
-                "Your input has been left intact below in case you
-                want to copy it, or edit it and resubmit it."))
-        (error-lines
-          (list "You must enter your email address."))
-        (status-lines)
+        (form-layout (read-file (format nil "layout/form/subscribe.html")))
+        (subscribers 132)
+        (email-key "email")
+        (info-key "comment")
+        (meta-key "meta")
+        (hash-key "hash")
+        (method (hunchentoot:request-method*))
+        (success-line (format nil "Successfully ~ad." action))
+        (error-lines)
+        (info-lines)
+        (success-lines)
         (params))
-    (add-value "title" (string-capitalize action) params)
-    (cond
-      ;; Handle GET request.
-      ((eq method :get)
-       (add-value "class" "" params)
-       (add-value "email" "" params)
-       (add-value "status" "" params))
-      ;; Handle POST request.
-      ((eq method :post)
-       (add-value "email" (or email "") params)
-       (cond
-         ((string= (get-value "email" params) "")
-          (add-value "class" "error" params)
-          (setf status-lines error-lines))
-         (t
-          (add-value "title" (format nil "Successfully ~ad"
-                                     (string-capitalize action)) params)
-          (add-value "class" "success" params)
-          (setf status-lines success-lines)
-          (write-subscriber email action)))))
-    ;; Add page parameters.
+    ;; Common parameters for page.
     (add-page-params params)
-    (add-value "status" (format-status-lines status-lines) params)
-    ;; Render form layout.
+    ;; Static values for form.
+    (add-value "email-key" email-key params)
+    (add-value "info-key" info-key params)
+    (add-value "meta-key" meta-key params)
+    (add-value "hash-key" hash-key params)
+    (add-value "info-value" "" params)
+    (add-value "meta-value" "" params)
+    (add-value "hash-value" "" params)
+    ;; Separate values for subscribe and unsubscribe forms.
+    (cond
+      ((string= action "subscribe")
+       (add-value "purpose" (format nil "join ~a other subscribers and receive"
+                                    subscribers) params)
+       (add-value "submit-value" "Subscribe Now!" params))
+      (t
+       (add-value "purpose" "stop receiving" params)
+       (add-value "submit-value" "Unsubscribe" params)))
+    ;; Preserve submitted values, if any.
+    (add-value "email-value" (or (from-post email-key) "") params)
+    ;; Handle request.
+    (when (eq method :post)
+      ;; If required fields are missing, reject the request.
+      (when (string= (get-value "email-value" params) "")
+        (push "Invalid request." error-lines))
+      ;; Check metadata.
+      (when (or (string/= (from-post info-key) "")
+                (string/= (from-post meta-key) "")
+                (string/= (from-post hash-key) ""))
+        (push "Some metdata is missing." info-lines))
+      ;; If no error, set success message.
+      (unless error-lines
+        (setf success-lines (list success-line *input-info-line*))))
+    ;; Create response.
+    (cond
+      (error-lines
+       (add-value "title" (string-capitalize action) params)
+       (add-value "class" "error" params)
+       (add-value "status" (format-status error-lines) params))
+      (info-lines
+       (add-value "title" (string-capitalize success-line) params)
+       (add-value "class" "success" params)
+       (add-value "status" (format-status success-lines) params))
+      (success-lines
+       (write-subscriber (get-value "email-value" params) action)
+       (add-value "title" (string-capitalize success-line) params)
+       (add-value "class" "success" params)
+       (add-value "status" (format-status success-lines) params))
+      (t
+       (add-value "title" (string-capitalize action) params)
+       (add-value "class" "" params)
+       (add-value "status" "" params)))
+    ;; Render response.
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (render form-layout params)))
 
 (hunchentoot:define-easy-handler (index :uri "/form/") ()
-  (form-index-page))
+  (when (member (hunchentoot:request-method*) '(:head :get))
+    (form-index-page)))
 
-(hunchentoot:define-easy-handler (comment :uri "/form/comment/")
-    ((post :request-type :get)
-     (slug :request-type :post)
-     (name :request-type :post)
-     (url :request-type :post)
-     (comment :request-type :post)
-     (email :request-type :post))
-  (let ((method (hunchentoot:request-method*)))
-    (when (member method '(:head :get :post))
-      (comment-form-page method post slug name url comment email))))
+(hunchentoot:define-easy-handler (comment :uri "/form/comment/") ()
+  (when (member (hunchentoot:request-method*) '(:head :get :post))
+    (comment-form)))
 
-(hunchentoot:define-easy-handler (subscribe :uri "/form/subscribe/")
-    ((email :request-type :post))
-  (let ((method (hunchentoot:request-method*)))
-    (when (member method '(:head :get :post))
-      (subscribe-form-page method email "subscribe"))))
+(hunchentoot:define-easy-handler (subscribe :uri "/form/subscribe/") ()
+  (when (member (hunchentoot:request-method*) '(:head :get :post))
+    (subscribe-form "subscribe")))
 
-(hunchentoot:define-easy-handler (unsubscribe :uri "/form/unsubscribe/")
-    ((email :request-type :post))
-  (let ((method (hunchentoot:request-method*)))
-    (when (member method '(:head :get :post))
-      (subscribe-form-page method email "unsubscribe"))))
+(hunchentoot:define-easy-handler (unsubscribe :uri "/form/unsubscribe/") ()
+  (when (member (hunchentoot:request-method*) '(:head :get :post))
+    (subscribe-form "unsubscribe")))
 
 (defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor
                                   :address "127.0.0.1" :port 4242))

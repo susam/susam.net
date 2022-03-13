@@ -4,12 +4,15 @@
     {{ status }}
   </div>
   <p>
-    Enter your email address below to join 132 other subscribers and
-    receive newsletters from this website.
+    Enter your email address below to {{ purpose }}
+    newsletters from this website.
   </p>
   <form method="post" action="">
-    <input type="email" id="email" name="email" value="{{ email }}"
+    <input type="email" id="email" name="{{ email-key }}" value="{{ email-value }}"
            placeholder="Your email address" required>
-    <input type="submit" id="submit" name="submit" value="Subscribe Now!">
+    <input type="hidden" name="{{ info-key }}" value="{{ info-value }}">
+    <input type="hidden" name="{{ meta-key }}" value="{{ meta-value }}">
+    <input type="hidden" name="{{ hash-key }}" value="{{ hash-value }}">
+    <input type="submit" id="submit" name="submit" value="{{ submit-value }}">
   </form>
 </main>
