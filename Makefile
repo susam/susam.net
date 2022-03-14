@@ -248,6 +248,12 @@ checklive:
 	curl -sSI https://susam.net/maze/comments/paradox.html | grep '200 OK'
 	@echo Done; echo
 
+checkformrate:
+	n=0; while [ $$n -le 60 ]; do printf "$$n $$(date +%H:%M:%S) "; \
+	curl -sSI https://susam.net/form/ | head -n 1; n=$$(( $$n + 1 )); \
+	sleep 1; done
+	@echo Done; echo
+
 checkformweb: checkroot
 	make checkform URL=https://susam.net/ SLEEP=15
 
