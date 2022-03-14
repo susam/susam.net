@@ -66,8 +66,8 @@ table, thead, tr, th, td {
   border-color: {{ light-line-color }};
 }
 noscript div {
-  border: medium double {{ light-warn-color }};
-  color: {{ light-warn-color }};
+  border: medium double {{ light-error-color }};
+  color: {{ light-error-color }};
   padding: 0 1em;
 }
 .email {

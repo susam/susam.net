@@ -178,7 +178,7 @@ edit, or resubmit it.")
   "Return HTML response to the request handler for subscribe/unsubscribe form."
   (let ((page-layout (read-file "layout/page.html"))
         (form-layout (read-file (format nil "layout/form/subscribe.html")))
-        (subscribers 132)
+        (subscribers (+ 232 27))
         (email-key "email")
         (info-key "comment")
         (meta-key "meta")

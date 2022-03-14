@@ -985,9 +985,11 @@ value, next-index."
   "Global parameters that may be provided externally to override any
   default local parameters.")
 
-(defun main-color-scheme ()
-  "Return primary color scheme for the website."
+(defun main-style ()
+  "Return primary style and color scheme for the website."
   (list
+   ;; HTML elements.
+   (cons "font-family" "georgia, serif")
    ;; Light color scheme.
    (cons "light-body-color" "#333")
    (cons "light-link-color" "#00e")
@@ -999,8 +1001,8 @@ value, next-index."
    (cons "light-code-color" "#006")
    (cons "light-kbd-color" "#050")
    (cons "light-line-color" "#999")
-   (cons "light-okay-color" "#060")
-   (cons "light-warn-color" "#900")
+   (cons "light-success-color" "#060")
+   (cons "light-error-color" "#900")
    ;; Dark color scheme.
    (cons "dark-background-color" "#111")
    (cons "dark-body-color" "#bbb")
@@ -1013,8 +1015,8 @@ value, next-index."
    (cons "dark-code-color" "#6cf")
    (cons "dark-kbd-color" "#9c6")
    (cons "dark-line-color" "#666")
-   (cons "dark-okay-color" "#3c6")
-   (cons "dark-warn-color" "#f99")))
+   (cons "dark-success-color" "#3c6")
+   (cons "dark-error-color" "#f99")))
 
 (defun make-main-css ()
   "Generate stylesheets for the main website."
@@ -1022,7 +1024,7 @@ value, next-index."
                           "main.css" "music.css" "reading.css"))
     (let ((css-layout (read-file (format nil "layout/css/~a" filename)))
           (css-path (format nil "_site/css/~a" filename)))
-      (write-file css-path (render css-layout (main-color-scheme))))))
+      (write-file css-path (render css-layout (main-style))))))
 
 (defun main ()
   "Generate entire website."
