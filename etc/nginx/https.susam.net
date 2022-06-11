@@ -24,6 +24,7 @@ server {
     rewrite ^/blog/rss.xml$ /blog/feed.xml permanent;
     rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
     rewrite ^/blog/infosys-tcs-or-wipro/$ /blog/infosys-tcs-or-wipro.html permanent;
+    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /blog/lisp-in-vim.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
     rewrite ^/maze/rss.xml$ /maze/feed.xml permanent;
     rewrite ^/maze/simplicity-of-irc.html /maze/wall/simplicity-of-irc.html permanent;
