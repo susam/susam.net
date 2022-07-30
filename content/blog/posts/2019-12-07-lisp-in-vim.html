@@ -494,6 +494,15 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
       This is the integrated REPL. It is now alive and ready for
       interactive programming.
     </p>
+    <p>
+      Note: The steps above assume that Slimv is using the default
+      Slimv leader key <kbd>,</kbd>. If you have overridden the Vim
+      leader key, then the Slimv leader key might be same as the Vim
+      leader key. Enter the command <code>:echo g:slimv_leader</code>
+      in Vim command-line mode to find the leader key being used by
+      Slimv. Enter <code>:echo g:slimv_leader</code> for more details
+      about this.
+    </p>
   </li>
 
   <li>
@@ -946,7 +955,7 @@ Paredit:
       <kbd>d</kbd><kbd>d</kbd> to do so. The result looks like this:
     </p>
 <pre>
-<code>(defun foo (x)
+<code>(defun square (x)
   <span class="cursor">)</span></code>
 </pre>
     <p>
@@ -956,6 +965,60 @@ Paredit:
     </p>
   </li>
 
+  <li>
+    <p>
+      Now type <kbd>d</kbd><kbd>a</kbd><kbd>(</kbd> to delete the
+      entire <code>defun</code> expression. The buffer should look
+      now.
+    </p>
+    <pre><code><span class="cursor"> </span></code></pre>
+  </li>
+
+  <li>
+    <p>
+      Type <kbd>i</kbd> to enter insert mode and type out the
+      following code:
+    </p>
+    <pre><code>(list (* 10 20) (+ 30 40))<span class="cursor"> </span></code></pre>
+  </li>
+
+  <li>
+    <p>
+      Type <kbd>esc</kbd> to return to normal mode.
+      Type <kbd>h</kbd><kbd>(</kbd><kbd>h</kbd><kbd>h</kbd> to place
+      the cursor on the closing parenthesis of the first expression.
+    </p>
+    <pre><code>(list (* 10 20<span class="cursor">)</span> (+ 30 40))</code></pre>
+    <p>
+      Now type <kbd>,</kbd><kbd>&gt;</kbd>. The closing parenthesis of
+      the first expression moves right to <em>slurp</em> the next
+      expression. The buffer looks like this:
+    </p>
+    <pre><code>(list (* 10 20 (+ 30 40)<span class="cursor">)</span>)</code></pre>
+    <p>
+      Note: This step and the next one assume that Paredit is using
+      the default Paredit leader key <kbd>,</kbd>. If you have
+      overridden the Vim leader key, then the Paredit leader key might
+      be same as the Vim leader key. Enter the command <code>:echo
+      g:paredit_leader</code> in Vim command-line mode to find the
+      leader key being used by Paredit. Enter <code>:echo
+      g:paredit_leader</code> for more details about this.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now type <kbd>,</kbd><kbd>&lt;</kbd>. The closing parenthesis of
+      the outer expression moves left to <em>barf</em> the inner
+      expression out. The buffer looks like this again:
+    </p>
+    <pre><code>(list (* 10 20<span class="cursor">)</span> (+ 30 40))</code></pre>
+    <p>
+      While the cursor is on a parenthesis, the normal mode
+      commands <code>,&lt;</code> or <code>,&gt;</code> can be used in
+      this manner to move the parenthesis left or right, respectively,
+      thereby slurping or barfing expressions.
+    </p>
+  </li>
 </ol>
 
 <p>
