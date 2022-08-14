@@ -31,8 +31,8 @@
   keeping its five least significant bits, and discarding the rest to
   get the control code 9 (binary 1001) which is the code of the tab
   character. In other words, we get the control code by performing a
-  bitwise AND operation on the modified character with binary code of
-  31 (binary 0011111).
+  bitwise AND operation on the code of the character being modified
+  with binary code of 31 (binary 0011111).
 </p>
 <p>
   In case you are wondering, if we get the same result if we choose
@@ -286,13 +286,12 @@ echo baz</code>
   prompt.
 </p>
 <p>
-  What if we went back in the input history too much and want to go
-  forward now. There is a good news and there is some bad news. The
-  good news is that both Bash and Zsh support forward search using
+  What if we went too far back in the input history and now want to go
+  forward? There is a good news and there is some bad news. The good
+  news is that both Bash and Zsh support forward search using
   the <kbd>ctrl</kbd>+<kbd>s</kbd> key sequence. The bad news is that
-  this key sequence may not reach the shell. Most terminal emulaors
-  consume this key sequence and interprets it as the control code
-  XOFF.
+  this key sequence may not reach the shell. Most terminal emulators
+  consume this key sequence and interpret it as the control code XOFF.
 </p>
 
 <h2 id="conflict">The Conflict</h2>
@@ -320,7 +319,7 @@ echo baz</code>
 </p>
 
 
-<h2 id="Reclaim-forward-search">Reclaim Forward Search</h2>
+<h2 id="Reclaim-forward-incremental search">Reclaim Forward Incremental Search</h2>
 <p>
   We can forfeit the usage of control codes XON/XOFF to reclaim
   forward incremental search. Here is the command to disable XON/XOFF
@@ -378,5 +377,5 @@ echo baz</code>
   -ixon</code> to their <code>~/.bash_profile</code>
   or <code>~/.zshrc</code>, so that the <kbd>ctrl</kbd>+<kbd>s</kbd>
   key sequence can be used for forward incremental search. Forfeit
-  XON/XOFF to reclaim forward search!
+  XON/XOFF to reclaim forward incremental search!
 </p>
