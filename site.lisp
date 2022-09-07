@@ -972,7 +972,7 @@ value, next-index."
     (add-head-params (namestring dst-path) params)
     (write-file dst-path (render list-layout params))))
 
-(defun make-directory-tree (path page-layout params)
+(defun make-tree-list (path page-layout params)
   "Generate a complete tree listing of the given directory."
   (let ((paths (visit-tree-directory (truename path) (truename path)
                                      page-layout params))
