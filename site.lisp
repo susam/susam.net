@@ -1024,6 +1024,10 @@ value, next-index."
           (css-path (format nil "_site/css/~a" filename)))
       (write-file css-path (render css-layout (main-style))))))
 
+(defun more-links (params)
+  "Generate HTML for more navigation links for a blog listing page."
+  (render "  <a href=\"tree/{{ index }}\">Tree</a>" params))
+
 (defun main ()
   "Generate entire website."
   (remove-directory "_site/")
@@ -1050,6 +1054,7 @@ value, next-index."
     (add-value "initial-year" 2001 params)
     (add-value "zone-path" "maze/" params)
     (add-value "zone-title" "Maze" params)
+    (add-value "more" (more-links params) params)
     (setf posts (make-blog "content/maze/posts/*.html" page-layout params))
     (make-comments posts "content/maze/comments/*.html" page-layout params)
     (make-indexes "_site/maze/" page-layout params)
@@ -1062,6 +1067,7 @@ value, next-index."
     (add-value "initial-year" 2006 params)
     (add-value "zone-path" "blog/" params)
     (add-value "zone-title" "Blog" params)
+    (add-value "more" "" params)
     (setf posts (make-blog "content/blog/posts/*.html" page-layout params))
     (make-comments posts "content/blog/comments/*.html" page-layout params)
     (make-home posts page-layout params)
