@@ -887,7 +887,7 @@ value, next-index."
     ;; Return total size of current directory tree to caller.
     total-size))
 
-(defun make-directory-indexes (path page-layout &optional params)
+(defun make-indexes (path page-layout &optional params)
   "Make index pages for each site directory."
   (visit-directory (truename "_site/") (truename path) page-layout params))
 
@@ -906,8 +906,7 @@ value, next-index."
   (dolist (pathname (uiop:directory-files src))
     (let* ((basename (file-namestring pathname))
            (destpath (namestring (merge-pathnames basename dst))))
-      (cond ((string-ends-with ".skip.html" basename))
-            ((string-ends-with ".page.html" basename)
+      (cond ((string-ends-with ".page.html" basename)
              (setf destpath (string-replace ".page.html" ".html" destpath))
              (add-head-params destpath params)
              (make-post pathname destpath page-layout params))
@@ -923,11 +922,11 @@ value, next-index."
       (make-directory destpath)
       (visit-maze-directory pathname destpath page-layout post-layout params))))
 
-(defun make-maze (path page-layout &optional params)
+(defun make-tree (path page-layout &optional params)
   "Copy and render files for Maze."
   (let ((post-layout (read-file "layout/maze/post.html")))
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
-    (visit-maze-directory path "_site/maze/" page-layout post-layout params)))
+    (visit-maze-directory path "_site/maze/tree/" page-layout post-layout params)))
 
 (defun make-zone-feed (src page-layout params)
   "Make changelog page and feed for Maze."
@@ -943,7 +942,6 @@ value, next-index."
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (setf posts (sort posts (lambda (x y) (string< (get-value "date" x)
                                                    (get-value "date" y)))))
-
     (make-post-list posts list-dst list-layout item-layout params)
     (make-post-list posts feed-dst feed-xml item-xml params)))
 
@@ -1018,7 +1016,7 @@ value, next-index."
    (cons "dark-success-color" "#3c6")
    (cons "dark-error-color" "#f99")))
 
-(defun make-main-css ()
+(defun make-css ()
   "Generate stylesheets for the main website."
   (dolist (filename (list "comment.css" "extra.css" "form.css"
                           "main.css" "music.css" "reading.css"))
@@ -1045,25 +1043,20 @@ value, next-index."
     (copy-directory "static/" "_site/")
     (copy-directory "_cache/mathjax/" "_site/js/mathjax/")
     ;; Stylesheet.
-    (make-main-css)
+    (make-css)
     (add-value "head" "main.css" params)
-    ;; Wall.
-    (add-value "subtitle" " - Susam's Wall" params)
-    (add-value "initial-year" 2001 params)
-    (add-value "zone-path" "maze/wall/" params)
-    (add-value "zone-title" "Wall" params)
-    (setf posts (make-blog "content/wall/posts/*.html" page-layout params))
-    (make-comments posts "content/wall/comments/*.html" page-layout params)
-    (make-directory-indexes "_site/maze/wall/" page-layout params)
     ;; Maze.
     (add-value "subtitle" " - Susam's Maze" params)
     (add-value "initial-year" 2001 params)
     (add-value "zone-path" "maze/" params)
     (add-value "zone-title" "Maze" params)
-    (make-maze "content/maze/" page-layout params)
-    (make-zone-feed "content/maze/feed.skip.html" page-layout params)
-    (make-directory-tree "_site/maze/" page-layout params)
-    (make-directory-indexes "_site/maze/" page-layout params)
+    (setf posts (make-blog "content/maze/posts/*.html" page-layout params))
+    (make-comments posts "content/maze/comments/*.html" page-layout params)
+    (make-indexes "_site/maze/" page-layout params)
+    ;; Tree.
+    (make-tree "content/maze/tree/" page-layout params)
+    (make-tree-list "_site/maze/tree/" page-layout params)
+    (make-indexes "_site/maze/tree/" page-layout params)
     ;; Blog, music, reading, top-level pages.
     (add-value "subtitle" " - Susam Pal" params)
     (add-value "initial-year" 2006 params)
@@ -1075,7 +1068,7 @@ value, next-index."
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)
     (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
-    (make-directory-indexes "_site/" page-layout params))
+    (make-indexes "_site/" page-layout params))
   t)
 
 (when *main-mode*
