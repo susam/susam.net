@@ -1,47 +1,38 @@
 <!-- title: Test Page -->
 <!-- import: extra.css music.css form.css comment.css math.inc -->
-<main>
-  <h1>Lorem Ipsum</h1>
-  <div>By <b>Samual</b> on 01 Jan 1970</div>
+<h1>Lorem Ipsum</h1>
+<div>By <b>Samual</b> on 01 Jan 1970</div>
+<p>
+  Lorem ipsum <a href=".">dolor sit amet</a>, consectetur adipiscing elit.
+  Donec nulla magna, semper nec eros sed, pulvinar bibendum lacus. Vivamus
+  nisi mi, imperdiet ac volutpat et, dapibus eu mauris. Vestibulum at
+  lacinia sem, in vestibulum velit.
+</p>
+<p>
+  Phasellus varius porttitor lacus sed dapibus. Donec
+  auctor varius libero non tincidunt. Morbi diam nulla, posuere quis
+  varius tempus, consectetur eu purus.
+</p>
+<h2 id="musicorum-et-typus">Musicorum et Typus</h2>
+<p>
+  Nullam dictum tortor quis justo finibus, eget tempor arcu varius. Proin
+  tristique augue et felis vulputate, nec dictum orci mollis. Integer arcu
+  metus, eleifend a ipsum sed, blandit euismod neque.
+</p>
+<div class="music">
+  <div class="widget">
+    <audio controls preload="none">
+      <source src="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.mp3" type="audio/mpeg">
+    </audio>
 
-  <p>
-    Lorem ipsum <a href=".">dolor sit amet</a>, consectetur adipiscing elit.
-    Donec nulla magna, semper nec eros sed, pulvinar bibendum lacus. Vivamus
-    nisi mi, imperdiet ac volutpat et, dapibus eu mauris. Vestibulum at
-    lacinia sem, in vestibulum velit.
-  </p>
-
-  <p>
-    Phasellus varius porttitor lacus sed dapibus. Donec
-    auctor varius libero non tincidunt. Morbi diam nulla, posuere quis
-    varius tempus, consectetur eu purus.
-  </p>
-
-
-  <h2 id="musicorum-et-typus">Musicorum et Typus</h2>
-
-  <p>
-    Nullam dictum tortor quis justo finibus, eget tempor arcu varius. Proin
-    tristique augue et felis vulputate, nec dictum orci mollis. Integer arcu
-    metus, eleifend a ipsum sed, blandit euismod neque.
-  </p>
-
-  <div class="music">
-    <div class="widget">
-      <audio controls preload="none">
-        <source src="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.mp3" type="audio/mpeg">
-      </audio>
-
-      <div class="links">
-        <a href="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.mp3">MP3</a>
-        <a href="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.pdf">Score</a>
-        <a href="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.ly">Lilypond</a>
-        <a href="music/twinkle-twinkle-little-star/{{ index }}">Details</a>
-</span>
+    <div class="links">
+      <a href="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.mp3">MP3</a>
+      <a href="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.pdf">Score</a>
+      <a href="files/music/twinkle-twinkle-little-star/twinkle-twinkle-little-star.ly">Lilypond</a>
+      <a href="music/twinkle-twinkle-little-star/{{ index }}">Details</a>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-
 <p>
   Quisque eget libero pharetra, bibendum sem vel, elementum turpis. Duis
   mollis, sem vel volutpat dapibus, mauris nisl sagittis mauris, ut tempor
@@ -49,14 +40,12 @@
   augue tincidunt risus, in placerat sem urna a nunc. Maecenas ut aliquet
   justo, sed tempor nisl.
 </p>
-
 <figure class="soft">
   <img src="files/blog/clumsy-equations-1.png" alt="Graph">
   <figcaption>
     Graph of the function \( f(t) = -t \ln t + (1 - t) \ln (1 - t) \)
   </figcaption>
 </figure>
-
 <p>
   Aliquam lacinia placerat iaculis. In et metus risus. Sed bibendum lorem
   quis turpis semper volutpat. Donec vel nulla a tellus cursus pharetra.
@@ -65,51 +54,38 @@
   \[
   e^{i \pi} + 1 = 0.
   \]
-</p>
 
-<p>
   Etiam rhoncus in velit et facilisis. Nam turpis
   nulla, eleifend at erat malesuada, vehicula blandit sapien. Morbi nec
   ultrices sem.
 </p>
-
-
 <h2 id="lex">Lex</h2>
-
 <p>
   <code>Nullam</code> <samp>euismod</samp> <kbd>velit</kbd> eget augue
   porttitor, ut ultrices dolor efficitur.
 </p>
-
 <pre>
 /etc/hosts
 </pre>
-
 <pre>
 <code>foo:
   - bar
   - baz</code>
 </pre>
-
 <pre>
 <samp>$ <kbd>uname</kbd>
   Darwin</samp>
 </pre>
-
 <p>
   <kbd>ctrl</kbd>+<kbd>c</kbd>,
   <kbd>ctrl</kbd>+<kbd>v</kbd>
 </p>
-
-
 <h2 id="quisque-ornare-ipsum">Quisque Ornare Ipsum</h2>
-
 <blockquote>
   In volutpat mattis ante, ac auctor purus varius eget. Ut ac lorem non ex
   eleifend ornare in in purus. Praesent justo lorem, dictum vitae nibh
   eget, fringilla ornare dolor.
 </blockquote>
-
 <blockquote>
   <p>
     Pellentesque ut purus et justo placerat sagittis ac id est. Nam non
@@ -129,14 +105,11 @@
     fringilla justo commodo.
   </p>
 </blockquote>
-
 <div class="highlight">
   Suspendisse nec faucibus magna, quis vestibulum purus. Ut eleifend
   euismod purus, vitae convallis magna vestibulum sed.
 </div>
-
 <hr>
-
 <div class="highlight">
   <p>
     Ut volutpat feugiat dui sit amet porttitor. Aenean posuere eros eu est
@@ -151,9 +124,7 @@
     Quisque ut rhoncus justo.
   </p>
 </div>
-
 <hr>
-
 <section>
   <h2 id="sed-malesuada">Sed Malesuada</h2>
   <div class="meta">By <b>Samual</b> on 01 Jan 1970</div>
@@ -164,7 +135,6 @@
   </p>
   <div class="links"><a href=".">Lege Plus</a></div>
 </section>
-
 <section>
   <h2 id="in-bibendum">In Bibendum</h2>
   <div class="meta">By <b>Samual</b> on 01 Jan 1970</div>
@@ -175,9 +145,7 @@
   </p>
   <div class="links"><a href=".">Lege Plus</a></div>
 </section>
-
 <hr>
-
 <ul class="posts">
   <li>
     <a href="#sed-malesuada">Sed Malesuada</a>
@@ -192,12 +160,8 @@
     <span class="meta">(01 Jan 1970)</span>
   </li>
 </ul>
-
 <hr>
-
-
 <h2 id="praesent-suscipit">Praesent Suscipit</h2>
-
 <section id="1" class="comment guest">
   <h2>Adrie dixit:</h2>
   <div class="meta">
@@ -219,7 +183,6 @@
     ullamcorper.
   </p>
 </section>
-
 <section id="2" class="comment author">
   <h2><a href="#2">Samual</a> dixit:</h2>
   <div class="meta">
@@ -233,10 +196,7 @@
     dolor vel ligula commodo suscipit at in leo.
   </p>
 </section>
-
-
 <h2 id="mensa">Mensa</h2>
-
 <table>
   <tr>
     <th>Duis</th>
@@ -259,7 +219,6 @@
     <td>Turpis</td>
   </tr>
 </table>
-
 <table class="grid">
   <tr>
     <th>Duis</th>
@@ -282,7 +241,6 @@
     <td>Turpis</td>
   </tr>
 </table>
-
 <table class="ruled">
   <tr>
     <th>Duis</th>
@@ -305,10 +263,7 @@
     <td>Turpis</td>
   </tr>
 </table>
-
-
 <h2 id="nuntiis">Nuntiis</h2>
-
 <!-- Email 1 -->
 <div class="email">
   <div class="header">
@@ -319,7 +274,6 @@
       <b>Subject:</b> Donec poseure
     </p>
   </div>
-
   <div class="body">
     <p>
       Donec posuere molestie erat, in dapibus ipsum sollicitudin sed. Morbi
@@ -335,7 +289,6 @@
     </p>
   </div>
 </div>
-
 <!-- Email 2 -->
 <div class="email">
   <div class="header">
@@ -346,7 +299,6 @@
       <b>Subject:</b> Re: Donec poseure
     </p>
   </div>
-
   <div class="body">
     <p>
       Duis consectetur, ante lacinia pellentesque hendrerit, lorem ipsum
@@ -355,10 +307,7 @@
     </p>
   </div>
 </div>
-
-
 <h2 id="mitte-comment">Mitte Comment</h2>
-
 <form>
   <input id="name" name="name" value="" required placeholder="Name">
   <input id="url" type="url" name="url" value="" placeholder="URL">
@@ -380,4 +329,3 @@
   </div>
   <button>Submit Comment</button>
 </form>
-</main>
