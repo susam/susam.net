@@ -28,19 +28,19 @@ button {
 .status {
   display: none;
 }
-.error .status, .success .status {
+.status.success, .status.error {
   display: block;
   border-width: medium;
   border-style: double;
   margin: 1em 0;
 }
-.error .status {
-  color: {{ light-error-color }};
-  border-color: {{ light-error-color }};
-}
-.success .status {
+.status.success {
   color: {{ light-success-color }};
   border-color: {{ light-success-color }};
+}
+.status.error {
+  color: {{ light-error-color }};
+  border-color: {{ light-error-color }};
 }
 @media (prefers-color-scheme: dark) {
   input, textarea, button {
@@ -51,11 +51,11 @@ button {
   button:active {
     background: {{ dark-shade-color }};
   }
-  .error .status {
+  .status.error {
     color: {{ dark-error-color }};
     border-color: {{ dark-error-color }};
   }
-  .success .status {
+  .status.success {
     color: {{ dark-success-color }};
     border-color: {{ dark-success-color }};
   }

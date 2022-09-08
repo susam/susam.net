@@ -1,16 +1,16 @@
-.reading section {
+.reading {
   border: thin dotted {{ light-line-color }};
   padding: 0.625em;
   margin: 1em 0;
 }
-.reading section h3 {
+.reading h3 {
   margin-top: 0;
 }
-.reading section :last-child {
+.reading :last-child {
   margin-bottom: 0;
 }
 @media (prefers-color-scheme: dark) {
-  .reading section {
+  .reading {
     border-color: {{ dark-line-color }};
   }
 }

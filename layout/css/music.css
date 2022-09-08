@@ -2,15 +2,11 @@
 .widget a {
   margin-right: 1.5em;
 }
-.widget a:last-child {
-  margin-right: 0;
-}
-/* Music post */
-.music .widget {
+.widget {
   text-align: center;
 }
-.music a:last-child {
-  display: none; /* Hide 'details' link in music post */
+.widget a:last-child {
+  display: none;
 }
 /* Music list */
 .musiclist h2 {
@@ -19,6 +15,7 @@
 .musiclist section {
   margin: 2.5em 0;
 }
-.musiclist .music a:last-child {
+.musiclist .widget a:last-child {
   display: inline;
+  margin-right: 0;
 }
