@@ -841,37 +841,41 @@ value, next-index."
         (return)))
     (format nil "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun render-directory-index (apex-pathname current-pathname paths-and-sizes
-                               page-layout params)
+(defun render-directory-index (current-pathname paths-and-sizes
+                               dst-filenames page-layout params)
   "Render index pages for the given current directory."
-  (let* ((url-path (enough-namestring current-pathname apex-pathname))
-         (index1-path (enough-namestring (merge-pathnames "index.html" current-pathname)))
-         (index2-path (enough-namestring (merge-pathnames "ls.html" current-pathname)))
-         (list-layout (read-file "layout/index/list.html"))
+  (let* ((list-layout (read-file "layout/index/list.html"))
          (item-layout (read-file "layout/index/item.html"))
          (rendered-rows))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (setf paths-and-sizes (sort paths-and-sizes
                                 (lambda (x y) (string> (car x) (car y)))))
     (dolist (entry paths-and-sizes)
-      (add-value "path" (car entry) params)
-      (add-value "size" (cdr entry) params)
-      (push (render item-layout params) rendered-rows))
-    (add-value "title" (format nil "Index of /~a" url-path) params)
+      (let ((item-params params))
+        (add-value "path" (car entry) item-params)
+        (add-value "size" (cdr entry) item-params)
+        (if (string-ends-with "/" (car entry))
+            (add-value "index" (get-value "index" params) item-params)
+            (add-value "index" "" item-params))
+        (push (render item-layout item-params) rendered-rows)))
     (add-value "rows" (join-strings rendered-rows) params)
-    (dolist (dst-path (list index1-path index2-path))
+    (dolist (dst-path dst-filenames)
+      (setf dst-path (enough-namestring (merge-pathnames dst-path current-pathname)))
       (unless (probe-file dst-path)
         (add-head-params dst-path params)
         (write-file dst-path (render list-layout params))))))
 
-(defun visit-directory (apex-pathname current-pathname page-layout params)
+(defun visit-directory (apex-pathname current-pathname dst-filenames title
+                        page-layout params max-render-depth)
   "Make index pages for the given current directory and its subdirectories."
-  (let ((total-size 0)
+  (let ((url-path (enough-namestring current-pathname apex-pathname))
+        (total-size 0)
         (paths-and-sizes)
         (size))
     ;; Collect subdirectories.
     (dolist (path (uiop:subdirectories current-pathname))
-      (setf size (visit-directory apex-pathname path page-layout params))
+      (setf size (visit-directory apex-pathname path dst-filenames title
+                                  page-layout params (1- max-render-depth)))
       (push (cons (directory-basename path) (format-size size)) paths-and-sizes)
       (incf total-size size))
     ;; Collect files.
@@ -882,14 +886,26 @@ value, next-index."
     ;; Render tree.
     (unless (equal apex-pathname current-pathname)
       (push (cons "../" "-") paths-and-sizes))
-    (render-directory-index apex-pathname current-pathname paths-and-sizes
-                            page-layout params)
+    (push (cons "./" (format-size total-size)) paths-and-sizes)
+    (add-value "url-path" url-path params)
+    (add-value "title" (render title params) params)
+    (when (plusp max-render-depth)
+      (render-directory-index current-pathname paths-and-sizes dst-filenames
+                              page-layout params))
     ;; Return total size of current directory tree to caller.
     total-size))
 
-(defun make-indexes (path page-layout &optional params)
+(defun make-directory-lists (path page-layout &optional params)
   "Make index pages for each site directory."
-  (visit-directory (truename "_site/") (truename path) page-layout params))
+  (visit-directory (truename "_site/") (truename path)
+                   '("index.html" "ls.html") "Index of {{ url-path }}"
+                   page-layout params 100))
+
+(defun make-more-list (path page-layout &optional params)
+  "Make index pages for each site directory."
+  (visit-directory (truename "_site/") (truename path)
+                   '("more.html") "More From Maze"
+                   page-layout params 1))
 
 (defun updated-date-callback (post)
   (let ((updated (get-value "updated" post))
@@ -899,7 +915,7 @@ value, next-index."
             (format nil "&nbsp;&bull;&nbsp;(last updated on ~a)" (simple-date updated))))
     (list (cons "last-updated" last-updated))))
 
-(defun visit-maze-directory (src dst page-layout post-layout params)
+(defun visit-tree (src dst page-layout post-layout params)
   "Copy directory from a directory path to a directory path"
   (make-directory dst)
   (add-value "callback" #'updated-date-callback params)
@@ -920,13 +936,13 @@ value, next-index."
     (let* ((basename (directory-basename pathname))
            (destpath (merge-pathnames basename dst)))
       (make-directory destpath)
-      (visit-maze-directory pathname destpath page-layout post-layout params))))
+      (visit-tree pathname destpath page-layout post-layout params))))
 
 (defun make-tree (path page-layout &optional params)
   "Copy and render files for Maze."
   (let ((post-layout (read-file "layout/maze/post.html")))
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
-    (visit-maze-directory path "_site/maze/tree/" page-layout post-layout params)))
+    (visit-tree path "_site/maze/" page-layout post-layout params)))
 
 (defun make-zone-feed (src page-layout params)
   "Make changelog page and feed for Maze."
@@ -958,15 +974,19 @@ value, next-index."
       (push (enough-namestring path apex-pathname) paths))
     paths))
 
-(defun render-tree-directory (paths dst-path page-layout params)
+(defun render-tree-list (paths dst-path page-layout params)
   "Render all paths found in a directory tree."
   (let* ((list-layout (read-file "layout/tree/list.html"))
          (item-layout (read-file "layout/tree/item.html"))
          (rendered-items))
     (setf list-layout (render page-layout (list (cons "body" list-layout))))
     (dolist (path (sort paths #'string>))
-      (add-value "path" path params)
-      (push (render item-layout params) rendered-items))
+      (let ((item-params params))
+        (add-value "path" path item-params)
+        (if (string-ends-with "/" path)
+            (add-value "index" (get-value "index" params) item-params)
+            (add-value "index" "" item-params))
+        (push (render item-layout item-params) rendered-items)))
     (add-value "title" "Maze Tree" params)
     (add-value "items" (join-strings rendered-items) params)
     (add-head-params (namestring dst-path) params)
@@ -977,7 +997,7 @@ value, next-index."
   (let ((paths (visit-tree-directory (truename path) (truename path)
                                      page-layout params))
         (dst-path (merge-pathnames "TREE.html" path)))
-    (render-tree-directory paths dst-path page-layout params)))
+    (render-tree-list paths dst-path page-layout params)))
 
 (defvar *params* nil
   "Global parameters that may be provided externally to override any
@@ -1026,7 +1046,7 @@ value, next-index."
 
 (defun more-links (params)
   "Generate HTML for more navigation links for a blog listing page."
-  (render "  <a href=\"tree/{{ index }}\">Tree</a>" params))
+  (render "  <a href=\"more.html\">More</a>" params))
 
 (defun main ()
   "Generate entire website."
@@ -1054,14 +1074,14 @@ value, next-index."
     (add-value "initial-year" 2001 params)
     (add-value "zone-path" "maze/" params)
     (add-value "zone-title" "Maze" params)
+    (make-tree "content/maze/tree/" page-layout params)
+    (make-tree-list "_site/maze/" page-layout params)
+    (make-more-list "_site/maze/" page-layout params)
+    ;; Tree.
     (add-value "more" (more-links params) params)
     (setf posts (make-blog "content/maze/posts/*.html" page-layout params))
     (make-comments posts "content/maze/comments/*.html" page-layout params)
-    (make-indexes "_site/maze/" page-layout params)
-    ;; Tree.
-    (make-tree "content/maze/tree/" page-layout params)
-    (make-tree-list "_site/maze/tree/" page-layout params)
-    (make-indexes "_site/maze/tree/" page-layout params)
+    (make-directory-lists "_site/maze/" page-layout params)
     ;; Blog, music, reading, top-level pages.
     (add-value "subtitle" " - Susam Pal" params)
     (add-value "initial-year" 2006 params)
@@ -1074,7 +1094,7 @@ value, next-index."
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)
     (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
-    (make-indexes "_site/" page-layout params))
+    (make-directory-lists "_site/" page-layout params))
   t)
 
 (when *main-mode*
