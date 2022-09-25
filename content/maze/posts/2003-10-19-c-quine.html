@@ -1,25 +1,15 @@
 <!-- title: C Quine -->
 <!-- tag: C Programming Technology Puzzle -->
 <p>
-  I have been running a mailing list
-  named <a href="mailto:ncoders@yahoogroups.com">ncoders</a> for the
-  last several months now. This mailing list is meant for university
-  students interested in computers, programming, and network
-  protocols.
-</p>
-<p>
-  A few weeks ago, Vikram Agrawal, a very knowledgeable member of this
-  mailing list introduced us to an interesting type of computer
-  program called <em>quine</em>. A quine is a computer program that
-  produces an exact copy of its own source code as its output. It must
-  not consume any input, so tricks involving reading its own source
-  code and printing it are not permitted.
+  A quine is a computer program that produces an exact copy of its own
+  source code as its output. It must not consume any input, so tricks
+  involving reading its own source code and printing it are not
+  permitted.
 </p>
 
 <h2 id="classic-quine">The Classic Quine</h2>
 <p>
-  Here is a classic quine Vikram shared with us while explaining the
-  concept of quine:
+  Here is a classic quine I came across a few days ago:
 </p>
 <pre>
 <code>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</code>
