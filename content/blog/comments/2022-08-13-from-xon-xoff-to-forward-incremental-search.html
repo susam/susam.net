@@ -1,0 +1,113 @@
+<!-- date: 2022-08-14 07:33:12 +0000 -->
+<!-- name: Loomx -->
+<p>
+  As an alternative, use <kbd>ctrl</kbd>+<kbd>f</kbd> for
+  "forward-inc-search"; it's easier to remember (mnemonic) and means
+  you can still use <kbd>ctrl</kbd>+<kbd>s</kbd>
+  or <kbd>ctrl</kbd>+<kbd>q</kbd> for flow control as normal. For
+  example, in Bash:
+</p>
+<pre><code>bind '"\C-f": forward-search-history'</code></pre>
+<!-- date: 2022-08-14 16:47:04 +0000 -->
+<!-- name: Peter -->
+<pre>
+<code># bash: a small cantrip to disable ixon before readline and
+# turning it on again afterwards during command execution
+# (assuming trap DEBUG not in use)
+#
+# inspired by and to extend the article on ixon on
+# susam.net/blog/from-xon-xoff-to-forward-incremental-search.html
+
+unset _IXON
+# before readline, issue stty -ixon to permit use of ^s for
+# incremental search, then reenable it for the next command
+PROMPT_COMMAND="$PROMPT_COMMAND; : _IXONOFF"
+function _TRAP_DEBUG {
+   if [ "$BASH_COMMAND" = ": _IXONOFF" ]; then
+      # about to enter readline, thus turn off ixon
+      stty -ixon
+      # and reenable it for the command from readline
+      _IXON=1
+   elif [ "$_IXON" = "1" ]; then
+      # readline finished, we are about to run its input as command
+      stty ixon
+      unset _IXON
+   fi
+}
+trap _TRAP_DEBUG DEBUG
+
+echo "test it by ^s/^q the output during the run of the next command"
+echo "(use ^c to end)"
+find / -xdev 2&gt;/dev/null
+
+echo test ^s incremental search during readline:
+: ...
+
+: enjoy,
+: Peter</code></pre>
+<!-- date: 2022-08-14 17:03:11 +0000 -->
+<!-- name: Peter -->
+<p>
+  With respect to the cantrip, the below line
+  in <code>~/.inputrc</code> might be preferable, as it remaps
+  (forward) i-search to <kbd>ctrl</kbd>+<kbd>^</kbd> for all programs
+  using GNU-readline.
+</p>
+<pre><code>"\C-^": forward-search-history</code></pre>
+<p>
+  And if you edit <code>~/.inputrc</code>, consider adding a mapping
+  for <code>kill-region</code>, in my case using an en-US keymap, its
+  <kbd>esc</kbd> <kbd>ctrl</kbd>+<kbd>@</kbd>, and permits to
+  move/copy/erase character regions together
+  with <kbd>ctrl</kbd>+<kbd>y</kbd>
+  and <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>ctrl</kbd>+<kbd>x</kbd>.
+</p>
+<pre><code>"\e\C-@": kill-region</code></pre>
+<p>
+  'nough said,<br>
+  Peter
+</p>
+<!-- date: 2022-09-25 10:52:00 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  Thank you, Peter, for your comments. It took a few changes to get
+  your Bash script to work properly in my shell. Since I do not
+  have <code>PROMPT_COMMAND</code> set in my shell, the evaluation of
+  the following prompt command
+</p>
+<pre><code>PROMPT_COMMAND="$PROMPT_COMMAND; : _IXONOFF"</code></pre>
+<p>
+  was causing this error:
+</p>
+<pre>
+<samp>bash: PROMPT_COMMAND: line 0: syntax error near unexpected token `;'
+bash: PROMPT_COMMAND: line 0: `; : _IXONOFF'</samp>
+</pre>
+<p>
+  Here is how I modified your script to check
+  if <code>PROMPT_COMMAND</code> is set before expanding it. If it is
+  not set we use the null command <code>:</code> before the semicolon
+  separator.
+</p>
+<pre>
+<code>unset _IXON
+PROMPT_COMMAND="${PROMPT_COMMAND:-:}; : _IXONOFF"
+function _TRAP_DEBUG {
+   if [ "$BASH_COMMAND" = ": _IXONOFF" ]; then
+      stty -ixon
+      _IXON=1
+   elif [ "$_IXON" = "1" ]; then
+      stty ixon
+      unset _IXON
+   fi
+}
+trap _TRAP_DEBUG DEBUG</code>
+</pre>
+<p>
+  To test this, we can add the above script to <code>~/.bashrc</code>,
+  then run something like <code>ping localhost</code> and confirm
+  that <kbd>ctrl</kbd>+<kbd>s</kbd> pauses the output, whereas in the
+  shell <kbd>ctrl</kbd>+<kbd>s</kbd> performs forward incremental
+  search.
+</p>
