@@ -2,23 +2,27 @@ types {
     text/plain c cc lisp md py yaml yml;
 }
 limit_req_zone $binary_remote_addr zone=formlimit:10m rate=4r/m;
+limit_req_status 429;
 
-# https://example.com/
+# https://susam.net/
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name susam.net susam;
     ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/susam.net/privkey.pem;
+    server_name susam.net susam;
     root /var/www/susam.net;
     location /form/ {
         limit_req zone=formlimit burst=10 nodelay;
-        proxy_set_header HOST $host;
-        proxy_set_header X-Real-IP $remote_addr;
         proxy_pass http://127.0.0.1:4242;
-    }
-    location /files/ {
-        autoindex on;
+        proxy_pass_request_headers off;
+        proxy_set_header Accept $http_accept;
+        proxy_set_header Content-Length $http_content_length;
+        proxy_set_header Content-Type $http_content_type;
+        proxy_set_header If-Modified-Since $http_if_modified_since;
+        proxy_set_header Referer $http_referer;
+        proxy_set_header User-Agent $http_user_agent;
+        proxy_set_header X-Forwarded-For $remote_addr;
     }
     rewrite ^/blog/rss/$ /blog/feed.xml permanent;
     rewrite ^/blog/rss.xml$ /blog/feed.xml permanent;
@@ -32,7 +36,7 @@ server {
     rewrite ^/maze/cafe/(.*)$ /maze/wall/$1 permanent;
 }
 
-# https://www.example.com/ => https://example.com/
+# https://(www.susam.net|susam.in)/ => https://susam.net/
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
@@ -42,10 +46,10 @@ server {
     return 301 https://susam.net$request_uri;
 }
 
-# http://example.com/, http://www.example.com/ => https://example.com/
+# http://(susam.net|www.susam.net|susam.in)/ => https://susam.net/
 server {
     listen 80;
     listen [::]:80;
-    server_name susam.net www.susam.net susam.in;
+    server_name www.susam.net susam.net susam.in;
     return 301 https://susam.net$request_uri;
 }

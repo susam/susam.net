@@ -159,11 +159,11 @@ check-files:
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
 	# Ensure http.susam.net and https.susam.net are consistent.
-	sed -n '/types/,/limit/p' etc/nginx/http.susam.net > /tmp/http.susam.net
-	sed -n '/types/,/limit/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	sed -n '1,/limit_req_status/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '1,/limit_req_status/p' etc/nginx/https.susam.net > /tmp/https.susam.net
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
-	sed -n '/location/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
-	sed -n '/location/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	sed -n '/server_name [^w]/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '/server_name [^w]/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	@echo Done; echo
 
