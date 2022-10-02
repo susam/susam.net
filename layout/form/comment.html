@@ -2,16 +2,14 @@
 <div class="status {{ class }}">
   {{ status }}
 </div>
-<form method="post" action="?{{ post-key }}={{ post-value }}">
-  <input id="name" name="{{ name-key }}" value="{{ name-value }}" required
+<form method="post" action="?post={{ post }}">
+  <input id="name" name="name" value="{{ name }}" required
          placeholder="Your name">
-  <input type="url" id="url" name="{{ url-key }}" value="{{ url-value }}"
+  <input type="url" id="url" name="url" value="{{ url }}"
          placeholder="Link to your website or profile on Twitter, Github, etc. (Optional)">
-  <textarea id="comment" name="{{ comment-key }}" required
-            placeholder="Your comment">{{ comment-value }}</textarea>
-  <input type="hidden" name="{{ slug-key }}" value="{{ slug-value }}">
-  <input type="hidden" name="{{ info-key }}" value="{{ info-value }}">
-  <input type="hidden" name="{{ meta-key }}" value="{{ meta-value }}">
-  <input type="hidden" name="{{ hash-key }}" value="{{ hash-value }}">
-  <button>{{ submit-value }}</button>
+  <textarea id="comment" name="comment" required
+            placeholder="Your comment">{{ comment }}</textarea>
+  <input type="hidden" name="slug" value="{{ slug }}">
+  <input type="hidden" name="{{ xkey }}" value="{{ xval }}">
+  <button>Submit Comment</button>
 </form>
