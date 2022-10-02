@@ -68,7 +68,7 @@ http: rm live form
 form:
 	@echo Setting up form ...
 	mkdir -p /opt/cache
-	chown www-data:www-data /opt/cache
+	chown -R www-data:www-data /opt/cache
 	systemctl enable "/opt/susam.net/etc/form.service"
 	systemctl daemon-reload
 	systemctl start form
