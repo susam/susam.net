@@ -11,6 +11,8 @@ help:
 	@echo '  http              Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  rm                Uninstall live website.'
 	@echo '  check-form-live   Check forms work correctly on live website.'
+	@echo '  follow-log        Follow logs on live server.'
+	@echo '  follow-post       Follow form post logs on live server.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -94,6 +96,12 @@ checkroot:
 	@echo Checking if current user is root ...
 	[ $$(id -u) = 0 ]
 	@echo Done; echo
+
+follow-log:
+	sudo tail -f /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|xml)|tt-rss|bot|netnewswire"
+
+follow-post:
+	sudo journalctl -fu form | grep POST
 
 
 # Low-Level Targets
