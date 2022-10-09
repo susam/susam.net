@@ -72,6 +72,9 @@ pre .cursor {
 pre kbd {
   color: {{ light-kbd-color }};
 }
+pre .hl {
+  color: {{ light-hl-color }};
+}
 p kbd, td kbd {
   border: thin solid {{ light-shade-color }};
   box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
@@ -129,6 +132,9 @@ nav a:last-child, footer a:last-child  {
   }
   pre kbd {
     color: {{ dark-kbd-color }};
+  }
+  pre .hl {
+    color: {{ dark-hl-color }};
   }
   p kbd, td kbd {
     border-color: {{ dark-shade-color }};
