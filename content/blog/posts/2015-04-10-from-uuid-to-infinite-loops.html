@@ -38,15 +38,11 @@
   This leads to some fun results. For example, the following piece of
   Python code is an infinite loop:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>while str(uuid.uuid4())[14] == '4': pass</kbd></samp>
-</pre>
+<pre><code>while str(uuid.uuid4())[14] == '4': pass</code></pre>
 <p>
   So is this:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>while str(uuid.uuid4())[19] in ['8', '9', 'a', 'b']: pass</kbd></samp>
-</pre>
+<pre><code>while str(uuid.uuid4())[19] in ['8', '9', 'a', 'b']: pass</code></pre>
 <p>
   The above infinite loops show that the hexademical digit at index 14
   must always be 4. Similarly, the hexadecimal digit at index 19 must
