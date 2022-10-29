@@ -395,15 +395,12 @@
   (hunchentoot:define-easy-handler (index :uri "/form/") ()
     (when (member (hunchentoot:request-method*) '(:head :get))
       (form-index-page)))
-
   (hunchentoot:define-easy-handler (comment :uri "/form/comment/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
       (comment-form)))
-
   (hunchentoot:define-easy-handler (subscribe :uri "/form/subscribe/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
       (subscriber-form "subscribe")))
-
   (hunchentoot:define-easy-handler (unsubscribe :uri "/form/unsubscribe/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
       (subscriber-form "unsubscribe"))))
@@ -424,7 +421,6 @@
   (define-handlers)
   (start-server)
   (sleep most-positive-fixnum))
-
 
 (when *form-mode*
   (serve-form))

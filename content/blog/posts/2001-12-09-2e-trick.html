@@ -1,18 +1,17 @@
 <!-- title: %2E Trick -->
 <!-- tag: Windows Technology -->
 <p>
-  There are two interesting vulnerabilities in Microsoft IIS 3.0 that
-  allow remote attackers to view the source code of dynamic web pages
-  written using ASP. Both are related and both are due to improper
-  input validation by IIS 3.0.
+  There are two interesting issues in Microsoft IIS 3.0 that allow
+  remote clients to view the source code of dynamic web pages written
+  using ASP. Both are related and both are due to improper input
+  validation by IIS 3.0.
 </p>
 
 <h2 id="appending-dot">Appending Dot</h2>
 <p>
-  The first vulnerability allows the client to retrieve the source
-  code of an ASP script by simply appending a dot
-  (i.e., <code>.</code>) to the end of the URL. For example, while an
-  URL like
+  The first issue allows the client to retrieve the source code of an
+  ASP script by simply appending a dot (i.e., <code>.</code>) to the
+  end of the URL. For example, while an URL like
 </p>
 <pre><code>http://example.com/foo.asp</code></pre>
 <p>
@@ -29,10 +28,10 @@
 
 <h2 id="replacing-dit-with-2e">Replacing Dot With %2E</h2>
 <p>
-  The second vulnerability, discovered by Weld Pond, is an issue that
-  was introduced when the first issue was fixed by Microsoft. This
-  vulnerability allows a client to retrieve the source code of an ASP
-  script by changing the dot in the filename with its URL-encoding,
+  The second issue, discovered by Weld Pond, is an issue that was
+  introduced when the first issue was fixed by Microsoft. This issue
+  allows a client to retrieve the source code of an ASP script by
+  changing the dot in the filename with its URL-encoding,
   i.e., <code>%2e</code>. For example, while an URL like
 </p>
 <pre><code>http://example.com/foo.asp</code></pre>
@@ -60,7 +59,7 @@ int main()
 </pre>
 Here is the output:
 <pre>
-<samp>$ cc foo.c && ./a.out
+<samp>$ <kbd>cc foo.c && ./a.out</kbd>
 '.', 46, 0x2e</samp>
 </pre>
 <p>

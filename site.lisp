@@ -1054,6 +1054,7 @@ value, next-index."
   (remove-directory "_site/")
   (let ((params (list (cons "author" "Susam Pal")
                       (cons "site-url" "https://susam.net/")
+                      (cons "initial-year" 2001)
                       (cons "current-year" (nth-value 5 (get-decoded-time)))
                       (cons "render" "yes")
                       (cons "heads" "")
@@ -1072,7 +1073,6 @@ value, next-index."
     (add-value "head" "main.css" params)
     ;; Maze.
     (add-value "subtitle" " - Susam's Maze" params)
-    (add-value "initial-year" 2001 params)
     (add-value "zone-path" "maze/" params)
     (add-value "zone-title" "Maze" params)
     (make-tree "content/maze/tree/" page-layout params)
@@ -1085,7 +1085,6 @@ value, next-index."
     (make-directory-lists "_site/maze/" page-layout params)
     ;; Blog, music, reading, top-level pages.
     (add-value "subtitle" " - Susam Pal" params)
-    (add-value "initial-year" 2006 params)
     (add-value "zone-path" "blog/" params)
     (add-value "zone-title" "Blog" params)
     (add-value "more" "" params)
