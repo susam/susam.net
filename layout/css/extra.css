@@ -9,6 +9,9 @@ figure {
 figure img, figure video {
   max-width: 100%;
 }
+figure.stretch img {
+  width: 100%;
+}
 figure.soft img {
   opacity: 0.8; /* (0xff - 0x33) / 0xff */
 }
