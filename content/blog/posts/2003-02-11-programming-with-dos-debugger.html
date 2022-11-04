@@ -15,35 +15,34 @@
 <p>
   In this post, we see how we can use this debugger program to
   assemble a few minimal programs that print some characters to
-  standard output. We first create a 10-byte program that prints a
-  single character. Then we create a 28-byte program that prints the
+  standard output. We first create a 7-byte program that prints a
+  single character. Then we create a 23-byte program that prints the
   "hello, world" string. All the steps provided in this post work well
   with Windows 98 too.
 </p>
 <h2 id="print-character">Print Character</h2>
 <p>
-  Let us first see how to create a tiny 10-byte program that prints
-  the character <code>A</code> to standard output. The
+  Let us first see how to create a tiny 7-byte program that prints the
+  character <code>A</code> to standard output. The
   following <code>DEBUG.EXE</code> session shows how we do it.
 </p>
 <pre>
 <samp>C:\&gt;DEBUG
 -<kbd>A</kbd>
-1165:0100 MOV AH, 2
-1165:0102 MOV DL, 41
-1165:0104 INT 21
-1165:0106 MOV AH, 0
-1165:0108 INT 21
-1165:010A
+1165:0100 <kbd>MOV AH, 2</kbd>
+1165:0102 <kbd>MOV DL, 41</kbd>
+1165:0104 <kbd>INT 21</kbd>
+1165:0106 <kbd>RET</kbd>
+1165:0107
 -<kbd>G</kbd>
 A
 Program terminated normally
 -<kbd>N A.COM</kbd>
 -<kbd>R CX</kbd>
 CX 0000
-:<kbd>A</kbd>
+:<kbd>7</kbd>
 -<kbd>W</kbd>
-Writing 0000A bytes
+Writing 00007 bytes
 -<kbd>Q</kbd>
 
 C:\&gt;</samp>
@@ -57,19 +56,16 @@ A
 C:\&gt;</samp>
 </pre>
 <p>
-  The command <code>A</code> creates machine executable code from
-  assembly language instructions. The machine code created is written
-  to the main memory at address CS:0100 by default. The first three
-  instructions generate the software interrupt 0x21 (decimal 33) with
-  AH set to 2 and DL set to 0x41 (decimal 65) which happens to be the
-  ASCII code of the character <code>A</code>. Interrupt 0x21 supports
-  a wide variety of functions. We will see a few more examples of this
-  interrupt in this post soon. Setting AH to 2 tells this interrupt to
-  invoke the function that prints a single character to standard
-  output. This function expects DL to be set to the ASCII code of the
-  character we want to print. The last two instructions set AH to 0
-  and generates software interrupt 0x21 again. Doing so terminates the
-  program.
+  The debugger command <code>A</code> creates machine executable code
+  from assembly language instructions. The machine code created is
+  written to the main memory at address CS:0100 by default. The first
+  three instructions generate the software interrupt 0x21 (decimal 33)
+  with AH set to 2 and DL set to 0x41 (decimal 65) which happens to be
+  the ASCII code of the character <code>A</code>. Interrupt 0x21
+  supports a wide variety of functions. Setting AH to 2 tells this
+  interrupt to invoke the function that prints a single character to
+  standard output. This function expects DL to be set to the ASCII
+  code of the character we want to print.
 </p>
 <p>
   The command <code>G</code> executes the program in memory from the
@@ -83,10 +79,10 @@ C:\&gt;</samp>
   file. The command <code>W</code> is used to write the machine code
   to the file. This command expects the registers BX and CX to contain
   the number of bytes to be written to the file. When the DOS debugger
-  starts, it already initializes BX to 0 automatically, so we only set
-  the register CX to 0xA (decimal 10) with the <code>R CX</code>
-  command. Finally, we use the command <code>Q</code> to quit the
-  Debug program and return to MS-DOS.
+  starts, BX is already initialized to 0, so we only set the register
+  CX to 7 with the <code>R CX</code> command. Finally, we use the
+  command <code>Q</code> to quit the debugger and return to
+  MS-DOS.
 </p>
 <h2 id="hello-world">Hello, World</h2>
 <p>
@@ -96,14 +92,12 @@ C:\&gt;</samp>
 <pre>
 <samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>A</kbd>
-1165:0100 JMP 111
-1165:0102 DB 'hello, world', d, A, '$'
-1165:0111 MOV AH, 9
-1165:0113 MOV DX, 102
-1165:0116 INT 21
-1165:0118 MOV AH, 0
-1165:011A INT 21
-1165:011C
+1165:0100 <kbd>MOV AH, 9</kbd>
+1165:0102 <kbd>MOV DX, 108</kbd>
+1165:0105 <kbd>INT 21</kbd>
+1165:0107 <kbd>RET</kbd>
+1165:0108 <kbd>DB 'hello, world', D, A, '$'</kbd>
+1165:0117
 -<kbd>G</kbd>
 hello, world
 
@@ -111,15 +105,15 @@ Program terminated normally
 -<kbd>N HELLO.COM</kbd>
 -<kbd>R CX</kbd>
 CX 0000
-:<kbd>1C</kbd>
+:<kbd>17</kbd>
 -<kbd>W</kbd>
-Writing 0001C bytes
+Writing 00017 bytes
 -<kbd>Q</kbd>
 
 C:\&gt;</samp>
 </pre>
 <p>
-  Now we can execute this 28-byte program like this:
+  Now we can execute this 23-byte program like this:
 </p>
 <p>
 <pre>
@@ -152,11 +146,11 @@ C:\&gt;</samp>
   in the previous section. We started the debugger program, typed some
   commands, and typed assembly language instructions to create our
   program. It is also possible to prepare a separate input file with
-  all the debugger commands and assembly language instructions that we
-  then feed to the debugger program. This can be useful while writing
-  more complex programs where we cannot afford to lose our assembly
-  language source code if we inadvertently crash the debugger by
-  executing an illegal instruction.
+  all the debugger commands and assembly language instructions in it.
+  We then feed this file to the debugger program. This can be useful
+  while writing more complex programs where we cannot afford to lose
+  our assembly language source code if we inadvertently crash the
+  debugger by executing an illegal instruction.
 </p>
 <p>
   To create a separate input file that can be fed to the debugger, we
@@ -166,17 +160,15 @@ C:\&gt;</samp>
 </p>
 <pre>
 <code>A
-JMP 111
-DB 'hello, world', D, A, '$'
 MOV AH, 9
-MOV DX, 102
+MOV DX, 108
 INT 21
-MOV AH, 0
-INT 21
+RET
+DB 'hello, world', D, A, '$'
 
 N HELLO.COM
 R CX
-1C
+17
 W
 Q</code>
 </pre>
@@ -196,20 +188,18 @@ Q</code>
 <pre>
 <samp>C:\&gt; <kbd>DEBUG &lt; HELLO.TXT</kbd>
 -A
-1165:0100 JMP 111
-1165:0102 DB 'hello, world', d, A, '$'
-1165:0111 MOV AH, 9
-1165:0113 MOV DX, 102
-1165:0116 INT 21
-1165:0118 MOV AH, 0
-1165:011A INT 21
-1165:011C
+1165:0100 MOV AH, 9
+1165:0102 MOV DX, 108
+1165:0105 INT 21
+1165:0107 RET
+1165:0108 DB 'hello, world', D, A, '$'
+1165:0117
 -N HELLO.COM
 -R CX
 CX 0000
-:1C
+:17
 -W
-Writing 0001C bytes
+Writing 00017 bytes
 -Q
 
 C:\&gt;</samp>
@@ -221,51 +211,48 @@ C:\&gt;</samp>
 <h2 id="disassembly">Disassembly</h2>
 <p>
   Now that we have seen how to assemble simple programs into binary
-  executable files using the Debug program, we will now briefly see
-  how to disassemble the binary executable files. This could be useful
-  when we want to debug an existing program.
+  executable files using the debugger, we will now briefly see how to
+  disassemble the binary executable files. This could be useful when
+  we want to debug an existing program.
 </p>
 <pre>
 <samp>C:\&gt;<kbd>DEBUG A.COM</kbd>
--<kbd>U 100 109</kbd>
+-<kbd>U 100 106</kbd>
 117C:0100 B402          MOV     AH,02
 117C:0102 B241          MOV     DL,41
 117C:0104 CD21          INT     21
-117C:0106 B400          MOV     AH,00
-117C:0108 CD21          INT     21</samp>
+117C:0106 C3            RET</samp>
 </pre>
 <p>
   The debugger command <code>U</code> (unassemble) is used to
   translate the binary machine code to assembly language mnemonics.
 </p>
 <pre>
-<samp>C:\&gt;<kbd>DEBUG HELLO.COM</kbd>
--<kbd>U 100 11B</kbd>
-117C:0100 EB0F          JMP     0111
-117C:0102 68            DB      68
-117C:0103 65            DB      65
-117C:0104 6C            DB      6C
-117C:0105 6C            DB      6C
-117C:0106 6F            DB      6F
-117C:0107 2C20          SUB     AL,20
-117C:0109 776F          JA      017A
-117C:010B 726C          JB      0179
-117C:010D 64            DB      64
-117C:010E 0D0A24        OR      AX,240A
-117C:0111 B409          MOV     AH,09
-117C:0113 BA0201        MOV     DX,0102
-117C:0116 CD21          INT     21
-117C:0118 B400          MOV     AH,00
-117C:011A CD21          INT     21
--<kbd>D 100 11B</kbd>
-117C:0100  EB 0F 68 65 6C 6C 6F 2C-20 77 6F 72 6C 64 0D 0A   ..hello, world..
-117C:0110  24 B4 09 BA 02 01 CD 21-B4 00 CD 21               $......!...!</samp>
+<samp>C:\&gt;debug HELLO.COM
+-<kbd>U 100 116</kbd>
+117C:0100 B409          MOV     AH,09
+117C:0102 BA0801        MOV     DX,0108
+117C:0105 CD21          INT     21
+117C:0107 C3            RET
+117C:0108 68            DB      68
+117C:0109 65            DB      65
+117C:010A 6C            DB      6C
+117C:010B 6C            DB      6C
+117C:010C 6F            DB      6F
+117C:010D 2C20          SUB     AL,20
+117C:010F 776F          JA      0180
+117C:0111 726C          JB      017F
+117C:0113 64            DB      64
+117C:0114 0D0A24        OR      AX,240A
+-<kbd>D 100 116</kbd>
+117C:0100  B4 09 BA 08 01 CD 21 C3-68 65 6C 6C 6F 2C 20 77   ......!.hello, w
+117C:0110  6F 72 6C 64 0D 0A 24                              orld..$</samp>
 </pre>
 <h2 id="conclusion">Conclusion</h2>
 <p>
   Although the DOS debugger is very limited in features in comparison
   with sophisticated assemblers like NASM, MASM, etc., this humble
-  program can perform most of the basic operations involved in working
+  program can perform some of the basic operations involved in working
   with assembly language and machine code. It can read and write
   binary executable files, examine memory, execute machine
   instructions in memory, modify registers, edit binary files, etc.
