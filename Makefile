@@ -390,4 +390,4 @@ mirror: site
 	cd $(TMP_GIT) && git log
 	cd $(TMP_GIT) && git push -f origin main
 	@echo
-	@dcho Done
+	@echo Done
