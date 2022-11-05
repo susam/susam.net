@@ -1,0 +1,17 @@
+; Equivalent DEBUG.EXE instructions for printing 'A'
+; Alternative to writing-boot-sector-code.html
+A
+MOV AX, B800
+MOV DS, AX
+MOV AX, 1E41
+XOR DI, DI
+MOV [DI], AX
+HLT
+JZ 10C
+
+N A.COM
+R CX
+F
+W
+Q
+

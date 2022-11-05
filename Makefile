@@ -98,7 +98,7 @@ checkroot:
 	@echo Done; echo
 
 follow-log:
-	sudo tail -f /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|xml)|tt-rss|bot|netnewswire"
+	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|xml)|tt-rss|bot|netnewswire"
 
 follow-post:
 	sudo journalctl -fu form | grep POST
