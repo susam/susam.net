@@ -61,10 +61,15 @@ blockquote *:last-child, div.highlight *:last-child {
 }
 pre, code, samp, kbd {
   font-family: monospace,monospace;
+}
+pre code, pre samp, p code, p samp, p kbd {
+  font-size: 0.9em;
+}
+code, pre kbd {
   color: {{ light-code-color }};
 }
-pre code, pre samp {
-  font-size: 0.9em;
+samp {
+  color: {{ light-samp-color }};
 }
 pre .cursor {
   border-bottom: 0.2em solid;
@@ -75,7 +80,7 @@ pre kbd {
 pre .hl {
   color: {{ light-hl-color }};
 }
-p kbd, td kbd {
+p kbd {
   border: thin solid {{ light-shade-color }};
   box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
   border-radius: 0.2em;
@@ -127,16 +132,16 @@ nav a:last-child, footer a:last-child  {
   blockquote {
     border-left-color: {{ dark-shade-color }};
   }
-  pre, code, samp, kbd {
+  code, pre kbd {
     color: {{ dark-code-color }};
   }
-  pre kbd {
-    color: {{ dark-kbd-color }};
+  samp {
+    color: {{ dark-samp-color }};
   }
   pre .hl {
     color: {{ dark-hl-color }};
   }
-  p kbd, td kbd {
+  p kbd {
     border-color: {{ dark-shade-color }};
     box-shadow: 0 0.15em 0.15em {{ dark-shade-color }};
   }
