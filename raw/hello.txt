@@ -1,0 +1,24 @@
+; Equivalent DEBUG.EXE instructions for printing "hello, world"
+; Alternative to writing-boot-sector-code.html
+A
+MOV AX, B800
+MOV DS, AX
+XOR DI, DI
+MOV SI, 11C
+MOV AH, 1E
+CS: MOV AL, [SI]
+MOV [DI], AX
+INC SI
+INC DI
+INC DI
+CMP DI, 18
+JNZ 10C
+HLT
+JZ 119
+DB 'hello, world'
+
+N HELLO.COM
+R CX
+28
+W
+Q

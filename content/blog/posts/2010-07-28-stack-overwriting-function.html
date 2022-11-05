@@ -106,7 +106,7 @@ Disassembly of section .text:
 0000000000000000 &lt;f&gt;:
    0:   55                      push   %rbp
    1:   48 89 e5                mov    %rsp,%rbp
-   <em style="color: olive">4:   c6 45 ff 07             movb   $0x7,-0x1(%rbp)</em>
+   <span class="hl">4:   c6 45 ff 07             movb   $0x7,-0x1(%rbp)</span>
    8:   c9                      leaveq
    9:   c3                      retq
 
@@ -117,8 +117,8 @@ Disassembly of section .text:
   13:   e8 00 00 00 00          callq  18 &lt;main+0xe&gt;
   18:   b8 00 00 00 00          mov    $0x0,%eax
   1d:   e8 00 00 00 00          callq  22 &lt;main+0x18&gt;
-  <em style="color: orangered">22:   bf 00 00 00 00          mov    $0x0,%edi
-  27:   e8 00 00 00 00          callq  2c &lt;main+0x22&gt;</em>
+  <span class="hl">22:   bf 00 00 00 00          mov    $0x0,%edi
+  27:   e8 00 00 00 00          callq  2c &lt;main+0x22&gt;</span>
   2c:   bf 00 00 00 00          mov    $0x0,%edi
   31:   e8 00 00 00 00          callq  36 &lt;main+0x2c&gt;
   36:   b8 00 00 00 00          mov    $0x0,%eax
@@ -137,12 +137,11 @@ Disassembly of section .text:
   <samp>22</samp> would be present at runtime.
 </p>
 <p>
-  The instructions at offsets <samp>22</samp> and <samp>27</samp>
-  highlighted in orange are the instructions for the
-  <code>printf("2\n")</code> call. These are the instructions we want
-  to skip over. In other words, we want to modify the return address
-  in the stack from the address of the instruction at
-  offset <samp>22</samp> to that of the instruction at
+  The instructions at offsets <samp>22</samp> and <samp>27</samp> are
+  the instructions for the <code>printf("2\n")</code> call. These are
+  the instructions we want to skip over. In other words, we want to
+  modify the return address in the stack from the address of the
+  instruction at offset <samp>22</samp> to that of the instruction at
   offset <samp>2c</samp>. This is equivalent to skipping 10 bytes
   (0x2c - 0x22 = 10) of machine code or adding 10 to the return
   address saved in the stack.
@@ -151,9 +150,8 @@ Disassembly of section .text:
   Now how do we get hold of the return address saved in the stack when
   <code>f()</code> is being executed? This is where the variable
   <code>a</code> we defined in <code>f()</code> helps. The instruction
-  at offset <samp>4</samp> highlighted in olive is the instruction
-  generated for assigning <code>7</code> to the
-  variable <code>a</code>.
+  at offset <samp>4</samp> is the instruction generated for
+  assigning <code>7</code> to the variable <code>a</code>.
 </p>
 <p>
   From the knowledge of how microprocessor works and from the machine
@@ -296,7 +294,7 @@ _f:
   00000000: 55                 push        ebp
   00000001: 8B EC              mov         ebp,esp
   00000003: 51                 push        ecx
-  <em style="color: olive">00000004: C6 45 FF 07        mov         byte ptr [ebp-1],7</em>
+  <span class="hl">00000004: C6 45 FF 07        mov         byte ptr [ebp-1],7</span>
   00000008: 8B E5              mov         esp,ebp
   0000000A: 5D                 pop         ebp
   0000000B: C3                 ret
@@ -311,9 +309,9 @@ _main:
   00000018: E8 00 00 00 00     call        _printf
   0000001D: 83 C4 04           add         esp,4
   00000020: E8 00 00 00 00     call        _f
-  <em style="color: orangered">00000025: 68 00 00 00 00     push        offset $SG2225
+  <span class="hl">00000025: 68 00 00 00 00     push        offset $SG2225
   0000002A: E8 00 00 00 00     call        _printf
-  0000002F: 83 C4 04           add         esp,4</em>
+  0000002F: 83 C4 04           add         esp,4</span>
   00000032: 68 00 00 00 00     push        offset $SG2226
   00000037: E8 00 00 00 00     call        _printf
   0000003C: 83 C4 04           add         esp,4
@@ -330,15 +328,13 @@ _main:
 </pre>
 <p>
   Just like in the previous <code>objdump</code> listing, in this
-  listing too, the instruction at offset <code>4</code> highlighted in
-  olive shows where the variable <code>a</code> is allocated and the
-  instructions at offsets <code>25</code>, <code>2A</code>,
-  and <code>2F</code> highlighted in orange show the instructions we
-  want to skip, i.e., instead of returning to the instruction at
-  offset <code>25</code>, we want the microprocessor to return to the
-  instruction at offset
-  <code>32</code>. This involves skipping 13 bytes (0x32 - 0x25 = 13) of
-  machine code.
+  listing too, the instruction at offset <code>4</code> shows where
+  the variable <code>a</code> is allocated and the instructions at
+  offsets <code>25</code>, <code>2A</code>, and <code>2F</code> show
+  the instructions we want to skip, i.e., instead of returning to the
+  instruction at offset <code>25</code>, we want the microprocessor to
+  return to the instruction at offset <code>32</code>. This involves
+  skipping 13 bytes (0x32 - 0x25 = 13) of machine code.
 </p>
 <p>
   Unlike the previous <code>objdump</code> listing, in this listing we
