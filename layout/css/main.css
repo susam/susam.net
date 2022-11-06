@@ -74,9 +74,6 @@ samp {
 pre .cursor {
   border-bottom: 0.2em solid;
 }
-pre kbd {
-  color: {{ light-kbd-color }};
-}
 pre .hl {
   color: {{ light-hl-color }};
 }
