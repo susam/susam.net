@@ -344,15 +344,18 @@ check-form:
 
 pub: web mirror
 
-force-pub: force-web mirror
-
 web:
-	git push
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
+	git push origin main
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo git checkout main && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
 force-web:
-	git push -f
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
+	git push -f origin main
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout main && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
+
+cu-web:
+	git push -f origin cu
+	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout cu && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
+
 
 TMP_REV = /tmp/rev.txt
 CAT_REV = cat $(TMP_REV)
