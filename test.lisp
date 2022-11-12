@@ -395,7 +395,8 @@
 (test-case add-value
   (let ((alist))
     (add-value "a" "apple" alist)
-    (string= (get-value "a" alist) "apple")))
+    (string= (get-value "a" alist) "apple")
+    (assert (not (get-value "b" alist)))))
 
 (test-case add-value-multiple
   (let ((alist))

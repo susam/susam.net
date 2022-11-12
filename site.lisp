@@ -413,10 +413,14 @@ value, next-index."
     (sort posts (lambda (x y) (string< (get-value "date" x)
                                        (get-value "date" y))))))
 
+(defun count-listed-posts (posts)
+  "Count the number of posts that are allowed to be listed in a post list."
+  (loop for post in posts count (string/= (get-value "unlist" post) "yes")))
+
 (defun make-post-list (posts dst list-layout item-layout
                        &optional params)
   "Generate list page for a list of posts."
-  (let ((count 0)
+  (let ((count (count-listed-posts posts))
         (rendered-posts)
         (dst-path))
     ;; Render each post.
@@ -424,8 +428,7 @@ value, next-index."
       (unless (string= (get-value "unlist" post) "yes")
         (setf post (append post params))
         (invoke-callback post)
-        (push (render item-layout post) rendered-posts)
-        (incf count)))
+        (push (render item-layout post) rendered-posts)))
     ;; Add list parameters.
     (add-value "body" (join-strings rendered-posts) params)
     (add-value "count" count params)
@@ -693,17 +696,18 @@ value, next-index."
   "Render tag list as HTML."
   (let ((item-layout (read-file "layout/blog/tag.html"))
         (tag)
+        (posts)
         (count)
         (rendered-tags))
     ;; Render each tag-map entry.
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
-      (setf count (length (cdr tag-entry)))
+      (setf posts (cdr tag-entry))
+      (setf count (count-listed-posts posts))
       (add-value "tag-slug" (string-downcase tag) params)
       (add-value "tag-title" tag params)
       (add-value "count" count params)
       (add-value "post-label" (if (= count 1) "post" "posts") params)
-
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
 
@@ -724,8 +728,6 @@ value, next-index."
       (setf posts (cdr tag-entry))
       (add-value "tag-slug" (string-downcase tag) params)
       (add-value "tag-title" tag params)
-      (add-value "count" (length posts) params)
-      (add-value "post-label" (if (= (length posts) 1) "post" "posts") params)
       (setf title (render "Susam's {{ tag-title }} {{ zone-title }}" params))
       (add-value "title" title params)
       (make-post-list posts list-dst list-layout item-layout params)
