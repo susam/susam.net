@@ -11,8 +11,10 @@ help:
 	@echo '  http              Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  rm                Uninstall live website.'
 	@echo '  check-form-live   Check forms work correctly on live website.'
-	@echo '  follow-log        Follow logs on live server.'
+	@echo '  follow-log        Follow access logs on live server.'
 	@echo '  follow-post       Follow form post logs on live server.'
+	@echo '  post-log          Filter form post logs to find all successful posts.'
+	@echo '  top-get-log       Filter access logs to find most popular paths.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -33,6 +35,7 @@ help:
 	@echo '  pub               Publish updated website on live server and mirror.'
 	@echo '  force-pub         Publish website on live server after reset, and mirror.'
 	@echo '  mirror            Publish website on mirror only.'
+	@echo '  pull-backup       Pull a backup of cache from live server.'
 	@echo
 	@echo 'Default target:'
 	@echo '  help       Show this help message.'
@@ -370,6 +373,10 @@ cu-web:
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout cu && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
+pull-backup:
+	mkdir -p ~/bkp/
+	ssh susam.net "tar -czf - -C /opt/cache/ form/" > ~/bkp/form-$$(date "+%Y-%m-%d_%H-%M-%S").tgz
+	ls -lh ~/bkp/
 
 TMP_REV = /tmp/rev.txt
 CAT_REV = cat $(TMP_REV)
