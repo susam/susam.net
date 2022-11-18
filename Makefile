@@ -20,6 +20,7 @@ help:
 	@echo '  dist              Generate website for distribution as zip/tarball.'
 	@echo
 	@echo 'Development targets:'
+	@echo '  opt               Create directories at /opt for testing.'
 	@echo '  loop              Run a loop to create website directory repeatedly.'
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
@@ -28,7 +29,7 @@ help:
 	@echo '  check-links       Check broken links in a locally running website.'
 	@echo '  check-paths       Check live website paths and redirects.'
 	@echo '  check-form-rate   Check rate-limiting of form.'
-	@echo '  check-form-local  Check forms work correctly on local website.'
+	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
 	@echo '  pub               Publish updated website on live server and mirror.'
 	@echo '  force-pub         Publish website on live server after reset, and mirror.'
 	@echo '  mirror            Publish website on mirror only.'
@@ -69,8 +70,8 @@ http: rm live form
 
 form:
 	@echo Setting up form ...
-	mkdir -p /opt/cache
-	chown -R www-data:www-data /opt/cache
+	mkdir -p /opt/cache/form/ /opt/log/form/
+	chown -R www-data:www-data /opt/cache/ /opt/log/form/
 	systemctl enable "/opt/susam.net/etc/form.service"
 	systemctl daemon-reload
 	systemctl start form
@@ -138,6 +139,11 @@ mathjax:
 # Development Targets
 # -------------------
 
+opt:
+	sudo mkdir -p /opt/cache/form/ /opt/log/form/
+	sudo cp meta/opt.lisp /opt/cache/form/opt.lisp
+	sudo chown -R "$$USER" /opt/cache/form/ /opt/log/form/
+
 loop:
 	while true; do make dist; sleep 5; done
 
@@ -203,142 +209,142 @@ check-form-rate:
 check-form-live: checkroot
 	make check-form URL=https://susam.net/ SLEEP=15
 
-check-form-local:
+check-form-dev:
 	make check-form URL=http://localhost:4242/ SLEEP=0
 
 check-form:
-	rm -f /opt/cache/comment_* /opt/cache/subscribe_* /opt/cache/unsubscribe_*
+	rm -f /opt/cache/form/comment_* /opt/cache/form/subscribe_* /opt/cache/form/unsubscribe_*
 	# Comment checks
 	# --------------
 	@echo
 	@echo 'Checking successful comment submission with URL ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d url=example.net -d email= -d comment=body | grep '<li>' | grep 'Successfully'
-	ls -l /opt/cache/comment_*
-	grep 'foo' /opt/cache/comment_*
-	grep 'alice' /opt/cache/comment_*
-	grep 'example\.net' /opt/cache/comment_*
-	grep 'body' /opt/cache/comment_*
-	rm -f /opt/cache/comment_*
+	ls -l /opt/cache/form/comment_*
+	grep 'foo' /opt/cache/form/comment_*
+	grep 'alice' /opt/cache/form/comment_*
+	grep 'example\.net' /opt/cache/form/comment_*
+	grep 'body' /opt/cache/form/comment_*
+	rm -f /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking successful comment submission with empty URL ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d url= -d email= -d comment=body | grep '<li>' | grep 'Successfully'
-	ls -l /opt/cache/comment_*
-	grep 'foo' /opt/cache/comment_*
-	grep 'alice' /opt/cache/comment_*
-	grep -v 'url:' /opt/cache/comment_*
-	grep 'body' /opt/cache/comment_*
-	rm -f /opt/cache/comment_*
+	ls -l /opt/cache/form/comment_*
+	grep 'foo' /opt/cache/form/comment_*
+	grep 'alice' /opt/cache/form/comment_*
+	grep -v 'url:' /opt/cache/form/comment_*
+	grep 'body' /opt/cache/form/comment_*
+	rm -f /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking successful comment submission with missing URL ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d comment=body | grep '<li>' | grep 'Successfully'
-	ls -l /opt/cache/comment_*
-	grep 'foo' /opt/cache/comment_*
-	grep 'alice' /opt/cache/comment_*
-	grep -v 'url:' /opt/cache/comment_*
-	grep 'body' /opt/cache/comment_*
-	rm -f /opt/cache/comment_*
+	ls -l /opt/cache/form/comment_*
+	grep 'foo' /opt/cache/form/comment_*
+	grep 'alice' /opt/cache/form/comment_*
+	grep -v 'url:' /opt/cache/form/comment_*
+	grep 'body' /opt/cache/form/comment_*
+	rm -f /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment failure due to empty post ...'
 	curl -sS '$(URL)form/comment/?post=' -d slug=foo -d name=alice -d email= -d comment=body | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment failure due to missing post ...'
 	curl -sS '$(URL)form/comment/' -d slug=foo -d name=alice -d email= -d comment=body | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment failure due to empty name ...'
-	rm -f /opt/cache/comment_*
+	rm -f /opt/cache/form/comment_*
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name= -d email= -d comment=body | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment failure due to missing name ...'
-	rm -f /opt/cache/comment_*
+	rm -f /opt/cache/form/comment_*
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d email= -d comment=body | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment failure due to empty comment ...'
-	rm -f /opt/cache/comment_*
+	rm -f /opt/cache/form/comment_*
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= -d comment= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment failure due to missing comment ...'
-	rm -f /opt/cache/comment_*
+	rm -f /opt/cache/form/comment_*
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	@echo
 	@echo 'Checking comment ignore due to post-slug mismatch ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=bar -d name=alice -d email= -d comment=body | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking comment ignore due to invalid key ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d email=foo@example.com -d comment=body | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Check comment ignore with missing xkey ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d url=example.net -d comment=body | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/comment_*
+	! ls -l /opt/cache/form/comment_*
 	sleep $(SLEEP)
 	# Subscribe Checks
 	# ----------------
 	@echo
 	@echo 'Checking successful subscribe ...'
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d name= | grep '<li>' | grep 'Successfully'
-	grep 'foo' /opt/cache/subscribe_*
-	rm -f /opt/cache/subscribe_*
+	grep 'foo' /opt/cache/form/subscribe_*
+	rm -f /opt/cache/form/subscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking subscribe failure due to empty email ...'
 	curl -sS '$(URL)form/subscribe/' -d email= -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/subscribe_*
+	! ls -l /opt/cache/form/subscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking subscribe failure due to missing email ...'
 	curl -sS '$(URL)form/subscribe/' -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/subscribe_*
+	! ls -l /opt/cache/form/subscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking subscribe ignore due to invalid key ...'
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d name=foo | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/subscribe_*
+	! ls -l /opt/cache/form/subscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking subscribe ignore due to missing key ...'
 	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/subscribe_*
+	! ls -l /opt/cache/form/subscribe_*
 	sleep $(SLEEP)
 	# Unsubscribe Checks
 	# ----------------
 	@echo
 	@echo 'Checking successful unsubscribe ...'
 	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com -d name= | grep '<li>' | grep 'Successfully'
-	grep 'foo' /opt/cache/unsubscribe_*
-	rm -f /opt/cache/unsubscribe_*
+	grep 'foo' /opt/cache/form/unsubscribe_*
+	rm -f /opt/cache/form/unsubscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking unsubscribe failure due to empty email ...'
 	curl -sS '$(URL)form/unsubscribe/' -d email= -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/unsubscribe_*
+	! ls -l /opt/cache/form/unsubscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking unsubscribe failure due to missing email ...'
 	curl -sS '$(URL)form/unsubscribe/' -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/cache/unsubscribe_*
+	! ls -l /opt/cache/form/unsubscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking unsubscribe ignore due to invalid key ...'
 	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com -d name=foo | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/unsubscribe_*
+	! ls -l /opt/cache/form/unsubscribe_*
 	sleep $(SLEEP)
 	@echo
 	@echo 'Checking subscribe ignore due to missing key ...'
 	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/cache/subscribe_*
+	! ls -l /opt/cache/form/subscribe_*
 	sleep $(SLEEP)
 	# Done
 	# ----
-	ls -l /opt/cache/
+	ls -l /opt/cache/form/
 	@echo
 	@echo Done
 
