@@ -14,6 +14,12 @@
 ;;; Tool Definitions
 ;;; ----------------
 
+(defvar *cache-directory* "/opt/cache/form/"
+  "Directory where post files and data are written to and read from.")
+
+(defvar *log-directory* "/opt/log/form/"
+  "Directory where log files are written to.")
+
 (defun universal-time-string (universal-time-seconds)
   "Return given universal time in yyyy-mm-dd HH:MM:SS +0000 format."
   (multiple-value-bind (sec min hour date month year)
@@ -25,26 +31,40 @@
   "Return current UTC date and time in yyyy-mm-dd HH:MM:SS +0000 format."
   (universal-time-string (get-universal-time)))
 
-(defun time-based-filename (time-string)
-  "Convert UTC time string to a filename."
-  (setf time-string (string-replace ":" "-" time-string))
-  (setf time-string (string-replace " " "_" time-string))
-  (setf time-string (string-replace "+" "" time-string)))
+(defun log-file-path ()
+  "Return path to the log file."
+  (format nil "~aform.log" *log-directory*))
+
+(defun append-file (filename text)
+  "Append text to file and close the file."
+  (make-directory filename)
+  (with-open-file (f filename :direction :output
+                              :if-exists :append
+                              :if-does-not-exist :create)
+    (write-sequence text f)))
 
 (defun real-ip ()
   "Return address of the remote client (not of the local reverse-proxy)."
   (hunchentoot:real-remote-addr))
 
-(defun write-log (fmt &rest args)
+(defun write-form-log (fmt &rest args)
   "Log message with specified arguments."
   (when *log-mode*
-    (format t "~a - [~a] \"~a ~a\" "
-            (real-ip)
-            (current-utc-time-string)
-            (hunchentoot:request-method*)
-            (hunchentoot:request-uri*))
-    (apply #'format t fmt args)
-    (terpri)))
+    (append-file (log-file-path)
+     (with-output-to-string (s)
+       (format s "~a - [~a] \"~a ~a\" "
+               (real-ip)
+               (current-utc-time-string)
+               (hunchentoot:request-method*)
+               (hunchentoot:request-uri*))
+       (apply #'format s fmt args)
+       (terpri s)))))
+
+(defun time-based-filename (time-string)
+  "Convert UTC time string to a filename."
+  (setf time-string (string-replace ":" "-" time-string))
+  (setf time-string (string-replace " " "_" time-string))
+  (setf time-string (string-replace "+" "" time-string)))
 
 (defun from-get (name)
   "Get the value of a GET parameter."
@@ -54,7 +74,7 @@
   "Get the value of a POST parameter."
   (hunchentoot:post-parameter name))
 
-(defun write-comment (ip current-time params)
+(defun write-comment (directory ip current-time params)
   "Save comment to a file."
   (let* ((time-string (universal-time-string current-time))
          (text (with-output-to-string (s)
@@ -67,18 +87,17 @@
                  (when (string/= (get-value "url" params) "")
                    (format s "<!-- url: ~a -->~%" (get-value "url" params)))
                  (format s "~a~%" (get-value "comment" params))))
-         (filename (format nil "/opt/cache/comment_~a_~a_~a.txt"
+         (filename (format nil "~acomment_~a_~a_~a.txt" directory
                            (get-value "slug" params)
                            (time-based-filename time-string)
                            (random 1000000))))
     (write-file filename text)))
 
-(defun write-subscriber (ip current-time email action)
+(defun write-subscriber (directory ip current-time email action)
   "Save subscriber/unsubscriber to a file."
   (let* ((time-string (universal-time-string current-time))
          (text (format nil "~a ~a (~a)~%" time-string email ip))
-         (filename (format nil "/opt/cache/~a_~a_~a.txt"
-                           action
+         (filename (format nil "~a~a_~a_~a.txt" directory action
                            (time-based-filename time-string)
                            (random 1000000))))
     (write-file filename text)))
@@ -114,9 +133,9 @@
   (setf lines (join-strings lines))
   (setf lines (format nil "<ul>~%~a</ul>~%" lines)))
 
-(defun read-options ()
+(defun read-options (directory)
   "Read options file."
-  (let ((path "/opt/cache/opt.lisp"))
+  (let ((path (merge-pathnames "opt.lisp" directory)))
     (when (probe-file path)
       (read-from-string (read-file path)))))
 
@@ -145,12 +164,12 @@
 
 (defun client-flood-p (options ip current-time flood-table)
   "Compute number of seconds client must wait to avoid client flooding."
-  (let ((post-interval (or (getf options :client-post-interval) 60)))
+  (let ((post-interval (or (getf options :client-post-interval) 0)))
     (maphash #'(lambda (key value)
                  (when (>= current-time (+ value post-interval))
                    (remhash key flood-table)))
              flood-table)
-    (write-log "Flood table size is ~a" (hash-table-count flood-table))
+    (write-form-log "Flood table size is ~a" (hash-table-count flood-table))
     (let* ((last-post-time (gethash ip flood-table 0))
            (wait-time (- (+ last-post-time post-interval) current-time)))
       (when (plusp wait-time)
@@ -204,26 +223,26 @@
       (push (format nil "Wait for ~a s before resubmitting." result) errors))
     (reverse errors)))
 
-(defun dodgy-comment-p (xkey xval params)
+(defun dodgy-comment-p (params)
   "Check if post content has invalid fields."
   (or (string/= (get-value "post" params) (get-value "slug" params))
-      (string/= (from-post xkey) xval)))
+      (string/= (from-post (get-value "xkey" params)) (get-value "xval" params))))
 
-(defun reject-comment (layout errors xkey params)
+(defun reject-comment (layout errors params)
   "Reject post with error messages."
-  (write-log "Comment rejected:~{ ~a~}" errors)
+  (write-form-log "Comment rejected:~{ ~a~}" errors)
   (add-value "title" "Post Comment" params)
   (add-value "class" "error" params)
   (add-value "status" (format-status errors) params)
   (render layout params))
 
-(defun accept-comment (layout ip current-time xkey xval params)
+(defun accept-comment (directory layout ip current-time params)
   "Update flood data and save post."
-  (if (dodgy-comment-p xkey xval params)
-      (write-log "Dodgy comment")
+  (if (dodgy-comment-p params)
+      (write-form-log "Dodgy comment")
       (progn
-        (write-log "Written comment")
-        (write-comment ip current-time params)))
+        (write-form-log "Written comment")
+        (write-comment directory ip current-time params)))
   (set-flood-data ip current-time *last-post-time* *flood-table*)
   (add-value "title" "Comment Submitted" params)
   (add-value "class" "success" params)
@@ -233,7 +252,7 @@
     (add-value "status" (format-status lines) params))
   (render layout params))
 
-(defun comment-form-post (layout options xkey xval params)
+(defun comment-form-post (directory layout options params)
   "Return processed form page."
   (let ((ip (real-ip))
         (current-time (get-universal-time))
@@ -242,10 +261,10 @@
     (dolist (key (list "slug" "name" "url" "comment"))
       (add-value key (or (from-post key) "") params))
     (if (setf errors (reject-comment-p options ip current-time params))
-        (reject-comment layout errors xkey params)
-        (accept-comment layout ip current-time xkey xval params))))
+        (reject-comment layout errors params)
+        (accept-comment directory layout ip current-time params))))
 
-(defun comment-form-get (layout xkey xval params)
+(defun comment-form-get (layout params)
   "Return empty form page."
   (add-value "title" "Post Comment" params)
   (add-value "class" "" params)
@@ -257,12 +276,12 @@
   (add-value "comment" "" params)
   (render layout params))
 
-(defun comment-form ()
+(defun comment-form (directory)
   "Comment form application."
   (let* ((page-layout (read-file "layout/page.html"))
          (form-layout (read-file "layout/form/comment.html"))
          (method (hunchentoot:request-method*))
-         (options (read-options))
+         (options (read-options directory))
          (xkey (getf options :xkey "k"))
          (xval (getf options :xval "v"))
          (params))
@@ -271,8 +290,8 @@
     (add-value "xkey" xkey params)
     (add-value "xval" xval params)
     (if (eq method :post)
-        (comment-form-post form-layout options xkey xval params)
-        (comment-form-get form-layout xkey xval params))))
+        (comment-form-post directory form-layout options params)
+        (comment-form-get form-layout params))))
 
 
 ;;; Subscriber Form
@@ -321,26 +340,26 @@
       (push (format nil "Wait for ~a s before resubmitting." result) errors))
     (reverse errors)))
 
-(defun dodgy-subscriber-p (ykey yval)
+(defun dodgy-subscriber-p (params)
   "Check if subscriber has invalid fields."
-  (string/= (from-post ykey) yval))
+  (string/= (from-post (get-value "ykey" params)) (get-value "yval" params)))
 
-(defun reject-subscriber (layout errors action ykey params)
+(defun reject-subscriber (layout errors action params)
   "Reject subscriber with error messages."
-  (write-log "Subscriber rejected:~{ ~a~}" errors)
+  (write-form-log "Subscriber rejected:~{ ~a~}" errors)
   (add-value "title" (string-capitalize action) params)
   (add-value "class" "error" params)
   (add-value "status" (format-status errors) params)
   (render layout params))
 
-(defun accept-subscriber (layout ip current-time action ykey yval params)
+(defun accept-subscriber (directory layout ip current-time action params)
   "Update flood data and save subscriber."
   (let ((email (get-value "email" params)))
-    (if (dodgy-subscriber-p ykey yval)
-        (write-log "Dodgy ~ar: ~a" action email)
+    (if (dodgy-subscriber-p params)
+        (write-form-log "Dodgy ~ar: ~a" action email)
         (progn
-          (write-log "Written ~ar: ~a" action email)
-          (write-subscriber ip current-time email action))))
+          (write-form-log "Written ~ar: ~a" action email)
+          (write-subscriber directory ip current-time email action))))
   (set-flood-data ip current-time *last-post-time* *flood-table*)
   (add-value "title" (format nil "Successfully ~@(~a~)d" action) params)
   (add-value "class" "success" params)
@@ -349,17 +368,17 @@
     (add-value "status" (format-status lines) params))
   (render layout params))
 
-(defun subscriber-form-post (layout options action ykey yval params)
+(defun subscriber-form-post (directory layout options action params)
   "Return processed subscriber form page."
   (add-value "email" (or (from-post "email") "") params)
   (let ((ip (real-ip))
         (current-time (get-universal-time))
         (errors))
     (if (setf errors (reject-subscriber-p options ip current-time params))
-        (reject-subscriber layout errors action ykey params)
-        (accept-subscriber layout ip current-time action ykey yval params))))
+        (reject-subscriber layout errors action params)
+        (accept-subscriber directory layout ip current-time action params))))
 
-(defun subscriber-form-get (layout action ykey yval params)
+(defun subscriber-form-get (layout action params)
   "Return empty subscriber form page."
   (add-value "title" (string-capitalize action) params)
   (add-value "class" "" params)
@@ -367,12 +386,12 @@
   (add-value "email" "" params)
   (render layout params))
 
-(defun subscriber-form (action)
+(defun subscriber-form (directory action)
   "Subscriber form application."
   (let* ((page-layout (read-file "layout/page.html"))
          (form-layout (read-file "layout/form/subscribe.html"))
          (method (hunchentoot:request-method*))
-         (options (read-options))
+         (options (read-options directory))
          (ykey (getf options :ykey "k"))
          (yval (getf options :yval "v"))
          (params))
@@ -383,8 +402,8 @@
     (add-value "ykey" ykey params)
     (add-value "yval" yval params)
     (if (eq method :post)
-        (subscriber-form-post form-layout options action ykey yval params)
-        (subscriber-form-get form-layout action ykey yval params))))
+        (subscriber-form-post directory form-layout options action params)
+        (subscriber-form-get form-layout action params))))
 
 
 ;;; HTTP Request Handlers
@@ -397,13 +416,13 @@
       (form-index-page)))
   (hunchentoot:define-easy-handler (comment :uri "/form/comment/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
-      (comment-form)))
+      (comment-form *cache-directory*)))
   (hunchentoot:define-easy-handler (subscribe :uri "/form/subscribe/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
-      (subscriber-form "subscribe")))
+      (subscriber-form *cache-directory* "subscribe")))
   (hunchentoot:define-easy-handler (unsubscribe :uri "/form/unsubscribe/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
-      (subscriber-form "unsubscribe"))))
+      (subscriber-form *cache-directory* "unsubscribe"))))
 
 
 ;;; HTTP Server
@@ -412,7 +431,9 @@
 (defun start-server ()
   "Start HTTP server."
   (let ((acceptor (make-instance 'hunchentoot:easy-acceptor
-                                 :address "127.0.0.1" :port 4242)))
+                                 :address "127.0.0.1"
+                                 :port 4242
+                                 :access-log-destination (log-file-path))))
     (setf (hunchentoot:acceptor-document-root acceptor) #p"_site/")
     (hunchentoot:start acceptor)))
 
