@@ -104,7 +104,13 @@ follow-log:
 	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|woff|xml)|tt-rss|bot|netnewswire"
 
 follow-post:
-	sudo journalctl -fu form | grep POST
+	tail -F /opt/log/form/form.log | grep POST
+
+post-log:
+	tail -F /opt/log/form/form.log | grep written
+
+top-get-log:
+	sudo zgrep ' 200 ' /var/log/nginx/access.log* | grep -o 'GET /[^ ]*' | sort | uniq -c | sort -nr | nl | less
 
 
 # Low-Level Targets
