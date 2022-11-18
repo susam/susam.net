@@ -64,6 +64,7 @@ http: rm live form
 	@echo Setting up HTTP website ...
 	ln -snf "$$PWD/_live" '/var/www/$(FQDN)'
 	ln -snf "$$PWD/etc/nginx/http.$(FQDN)" '/etc/nginx/sites-enabled/$(FQDN)'
+	ln -snf "$$PWD/etc/logrotate" /etc/logrotate.d/mathb
 	systemctl reload nginx
 	echo 127.0.0.1 '$(NAME)' >> /etc/hosts
 	@echo Done; echo
@@ -79,17 +80,18 @@ form:
 
 rm: checkroot
 	@echo Removing website ...
+	rm -f /etc/logrotate/form
 	rm -f '/etc/nginx/sites-enabled/$(FQDN)'
 	rm -f '/var/www/$(FQDN)'
 	systemctl reload nginx
 	sed -i '/$(NAME)/d' /etc/hosts
-	#
+	@echo
 	@echo Removing form ...
 	-systemctl stop form
 	-systemctl disable form
 	systemctl daemon-reload
-	#
-	# Following crontab entries left intact:
+	@echo
+	@echo Following crontab entries left intact:
 	crontab -l | grep -v "^#" || :
 	@echo Done; echo
 
