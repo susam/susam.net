@@ -939,8 +939,8 @@ value, next-index."
       (make-directory destpath)
       (visit-tree pathname destpath page-layout post-layout params))))
 
-(defun make-tree (path page-layout &optional params)
-  "Copy and render files for Maze."
+(defun make-maze-tree (path page-layout &optional params)
+  "Copy and render files found recursively in the given path."
   (let ((post-layout (read-file "layout/maze/post.html")))
     (setf post-layout (render page-layout (list (cons "body" post-layout))))
     (visit-tree path "_site/maze/" page-layout post-layout params)))
@@ -976,7 +976,7 @@ value, next-index."
     paths))
 
 (defun render-tree-list (paths dst-path page-layout params)
-  "Render all paths found in a directory tree."
+  "Render the given list of paths into a page with a flat HTML list."
   (let* ((list-layout (read-file "layout/tree/list.html"))
          (item-layout (read-file "layout/tree/item.html"))
          (rendered-items))
@@ -994,7 +994,7 @@ value, next-index."
     (write-file dst-path (render list-layout params))))
 
 (defun make-tree-list (path page-layout params)
-  "Generate a complete tree listing of the given directory."
+  "Generate a flat tree listing of the given directory."
   (let ((paths (visit-tree-directory (truename path) (truename path)
                                      page-layout params))
         (dst-path (merge-pathnames "TREE.html" path)))
@@ -1047,10 +1047,6 @@ value, next-index."
           (css-path (format nil "_site/css/~a" filename)))
       (write-file css-path (render css-layout (main-style))))))
 
-(defun more-links (params)
-  "Generate HTML for more navigation links for a blog listing page."
-  (render "  <a href=\"more.html\">More</a>" params))
-
 (defun main ()
   "Generate entire website."
   (remove-directory "_site/")
@@ -1073,15 +1069,15 @@ value, next-index."
     ;; Stylesheet.
     (make-css)
     (add-value "head" "main.css" params)
-    ;; Maze.
+    ;; Maze tree.
     (add-value "subtitle" " - Susam's Maze" params)
     (add-value "zone-path" "maze/" params)
     (add-value "zone-title" "Maze" params)
-    (make-tree "content/maze/tree/" page-layout params)
+    (make-maze-tree "content/maze/tree/" page-layout params)
     (make-tree-list "_site/maze/" page-layout params)
     (make-more-list "_site/maze/" page-layout params)
-    ;; Tree.
-    (add-value "more" (more-links params) params)
+    ;; Maze blog.
+    (add-value "more" (format nil "  <a href=\"more.html\">More</a>~%") params)
     (setf posts (make-blog "content/maze/posts/*.html" page-layout params))
     (make-comments posts "content/maze/comments/*.html" page-layout params)
     (make-directory-lists "_site/maze/" page-layout params)
