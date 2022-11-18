@@ -64,7 +64,7 @@ http: rm live form
 	@echo Setting up HTTP website ...
 	ln -snf "$$PWD/_live" '/var/www/$(FQDN)'
 	ln -snf "$$PWD/etc/nginx/http.$(FQDN)" '/etc/nginx/sites-enabled/$(FQDN)'
-	ln -snf "$$PWD/etc/logrotate" /etc/logrotate.d/mathb
+	ln -snf "$$PWD/etc/logrotate" /etc/logrotate.d/form
 	systemctl reload nginx
 	echo 127.0.0.1 '$(NAME)' >> /etc/hosts
 	@echo Done; echo
