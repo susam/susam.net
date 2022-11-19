@@ -14,7 +14,7 @@
 ;;; Tool Definitions
 ;;; ----------------
 
-(defvar *cache-directory* "/opt/cache/form/"
+(defvar *cache-directory* "/opt/data/form/"
   "Directory where post files and data are written to and read from.")
 
 (defvar *log-directory* "/opt/log/form/"
