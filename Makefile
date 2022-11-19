@@ -74,7 +74,7 @@ http: rm live form
 
 form:
 	@echo Setting up form ...
-	mkdir -p /opt/data/ /opt/data/form/ /opt/log/form/
+	mkdir -p /opt/cache/ /opt/data/form/ /opt/log/form/
 	chown -R www-data:www-data /opt/cache/ /opt/data/form/ /opt/log/form/
 	systemctl enable "/opt/susam.net/etc/form.service"
 	systemctl daemon-reload
