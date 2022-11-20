@@ -230,7 +230,7 @@ check-form-dev:
 	make check-form URL=http://localhost:4242/ SLEEP=0
 
 check-form:
-	rm -f /opt/data/form/comment_* /opt/data/form/subscribe_* /opt/data/form/unsubscribe_*
+	rm -f /opt/data/form/comment_*
 	# Comment checks
 	# --------------
 	@echo
@@ -302,62 +302,6 @@ check-form:
 	@echo 'Check comment ignore with missing xkey ...'
 	curl -sS '$(URL)form/comment/?post=foo' -d slug=foo -d name=alice -d url=example.net -d comment=body | grep '<li>' | grep 'Successfully'
 	! ls -l /opt/data/form/comment_*
-	sleep $(SLEEP)
-	# Subscribe Checks
-	# ----------------
-	@echo
-	@echo 'Checking successful subscribe ...'
-	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d name= | grep '<li>' | grep 'Successfully'
-	grep 'foo' /opt/data/form/subscribe_*
-	rm -f /opt/data/form/subscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking subscribe failure due to empty email ...'
-	curl -sS '$(URL)form/subscribe/' -d email= -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/data/form/subscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking subscribe failure due to missing email ...'
-	curl -sS '$(URL)form/subscribe/' -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/data/form/subscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking subscribe ignore due to invalid key ...'
-	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com -d name=foo | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/data/form/subscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking subscribe ignore due to missing key ...'
-	curl -sS '$(URL)form/subscribe/' -d email=foo@example.com | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/data/form/subscribe_*
-	sleep $(SLEEP)
-	# Unsubscribe Checks
-	# ----------------
-	@echo
-	@echo 'Checking successful unsubscribe ...'
-	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com -d name= | grep '<li>' | grep 'Successfully'
-	grep 'foo' /opt/data/form/unsubscribe_*
-	rm -f /opt/data/form/unsubscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking unsubscribe failure due to empty email ...'
-	curl -sS '$(URL)form/unsubscribe/' -d email= -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/data/form/unsubscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking unsubscribe failure due to missing email ...'
-	curl -sS '$(URL)form/unsubscribe/' -d name= | grep '<li>' | grep 'Invalid'
-	! ls -l /opt/data/form/unsubscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking unsubscribe ignore due to invalid key ...'
-	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com -d name=foo | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/data/form/unsubscribe_*
-	sleep $(SLEEP)
-	@echo
-	@echo 'Checking subscribe ignore due to missing key ...'
-	curl -sS '$(URL)form/unsubscribe/' -d email=foo@example.com | grep '<li>' | grep 'Successfully'
-	! ls -l /opt/data/form/subscribe_*
 	sleep $(SLEEP)
 	# Done
 	# ----
