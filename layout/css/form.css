@@ -25,6 +25,9 @@ button {
   margin-right: auto;
   display: block;
 }
+.privacy {
+  text-align: center;
+}
 .status {
   display: none;
 }
