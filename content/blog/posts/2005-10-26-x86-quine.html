@@ -1,0 +1,499 @@
+<!-- title: x86 Quine -->
+<!-- tag: ASM Programming DOS Technology -->
+<p>
+  I wrote a tiny 12-byte program composed of pure x86 machine code
+  that writes itself to standard output when executed in a DOS
+  environment:
+</p>
+<pre><code>fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3</code></pre>
+<p>
+  We can write these bytes to a file with the .COM extension and
+  execute it in DOS. It runs successfully in MS-DOS 6.22, Windows 98,
+  as well as in DOSBox and writes a copy of itself to standard output.
+</p>
+<h2 id="demo">Demo</h2>
+<p>
+  On a Unix or Linux system, the following commands demonstrate this
+  program with the help of DOSBox:
+</p>
+<pre>
+<code>echo fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3 | xxd -r -p &gt; quine.com
+dosbox -c 'MOUNT C .' -c 'C:\QUINE &gt; C:\OUT.COM' -c 'EXIT'
+diff quine.com OUT.COM</code>
+</pre>
+<p>
+  The <code>diff</code> command should produce no output confirming
+  that the output of the program is identical to the program itself.
+  On an actual MS-DOS 6.22 system or a Windows 98 system, we can
+  demonstrate this program in the following manner:
+</p>
+<pre>
+<samp>C:\&gt;<kbd>DEBUG</kbd>
+-<kbd>E</kbd> 100 fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3
+-<kbd>N</kbd> QUINE.COM
+-<kbd>R CX</kbd>
+CX 0000
+:<kbd>C</kbd>
+-<kbd>W</kbd>
+Writing 0000C bytes
+-<kbd>Q</kbd>
+
+C:\&gt;<kbd>QUINE &gt; OUT.COM</kbd>
+
+C:\&gt;<kbd>FC QUINE.COM OUT.COM</kbd>
+Comparing files QUINE.COM and OUT.COM
+FC: no differences encountered</samp>
+</pre>
+<p>
+  In the <code>DEBUG</code> session shown above, we use the debugger
+  command <code>E</code> to enter the machine code at offset 0x100 of
+  the code segment. Then we use the <code>N</code> command to name the
+  file we want to write this machine code to. The command <code>R
+  CX</code> is used to specify that we want to write 0xC (decimal 12)
+  bytes to this file. The <code>W</code> command writes the 12 bytes
+  entered at offset 0x100. The <code>Q</code> command quits the
+  debugger. Then we run the new <code>QUINE.COM</code> program while
+  redirecting its output to <code>OUT.COM</code>. Finally, we use
+  the <code>FC</code> command to compare the two files and confirm
+  that they are exactly the same.
+</p>
+<h2 id="disassembly">Disassembly</h2>
+<p>
+  In the previous section, we entered the entire program in
+  hexadecimal format. In this section we disassemble the program to
+  see what it does. The output below is generated using the Netwide
+  Disassembler (NDISASM), a tool that comes with Netwide Assembler
+  (NASM):
+</p>
+<pre>
+<samp>$ <kbd>ndisasm -o 0x100 quine.com</kbd>
+00000100  B10C              mov cl,0xc
+00000102  FC                cld
+00000103  AC                lodsb
+00000104  92                xchg ax,dx
+00000105  B402              mov ah,0x2
+00000107  CD21              int 0x21
+00000109  E2F8              loop 0x103
+0000010B  C3                ret</samp>
+</pre>
+<p>
+  When DOS executes a program in .COM file, it loads the machine code
+  in the file at offset 0x100 of the code segment chosen by DOS. That
+  is why we ask the disassembler to assume a load address of 0x100
+  with the <code>-o 0x100</code> command line arguments. The first
+  instruction clears the direction flag. The purpose of this
+  instruction is explained later. The next instruction sets the
+  register CL to 0xc (decimal 12). The register CH is already set to 0
+  by default when a .COM program starts. Thus setting the register CL
+  to 0 effectively sets the entire register CX to 0xc. The register CX
+  is used as a loop counter for the <code>loop 0x103</code>
+  instruction that comes later. Everytime this loop instruction
+  executes, it decrements CX and makes a near jump to offset 0x103 if
+  CX is not 0. This results in 12 iterations of the loop.
+</p>
+<p>
+  In each iteration of the loop, the instructions from offset 0x103 to
+  offset 0x109 are executed. The <code>lodsb</code> instruction loads
+  a byte from address DS:SI into AL. When DOS starts executing this
+  program, DS and SI are set to CS and 0x100 by default, so at the
+  beginning DS:SI points to the first byte of the program.
+  The <code>xchg</code> instruction exchanges the values in AX and DX.
+  Thus the byte we just loaded into AL ends up in DL. Then we set AH
+  to 2 and generate the software interrupt 0x21 (decimal 33) to write
+  the byte in DL to standard output. This is how each iteration reads
+  a byte of this program and writes it to standard output. program is
+<p>
+  The <code>lodsb</code> instruction increments or decrements SI
+  depending on the state of the direction flag (DF). When DF is
+  cleared, it increments SI. If DF is set, it decrements SI. We use
+  the <code>cld</code> instruction at the beginning to clear DF, so
+  that in each iteration of the loop, SI moves forward to point to the
+  next byte of the program. This is how the 12 iterations of the loop
+  writes 12 bytes of the program to standard output. In many DOS
+  environments, the DF flag is already in cleared state when a .COM
+  program starts, so the CLD instruction could be omitted in such
+  environments. However, there are some environments where DF may not
+  be in cleared state when our program starts, so it is a best
+  practice to clear DF before relying on it.
+</p>
+<p>
+  Finally, when the loop terminates, we execute the <code>RET</code>
+  instruction to terminate the program.
+</p>
+<h2 id="quine-conundrums">Quine Conundrums</h2>
+<p>
+  While reading the description of the self-printing program presented
+  earlier, one might feel suspicious if it really is a proper quine.
+  While there is no standardized definition of the
+  term <em>quine</em>, it is generally accepted that a quine is a
+  computer program that takes no input and produces an exact copy of
+  its own source code as its output. Since a quine cannot take any
+  input, tricks involving reading its own source code or evaluating
+  itself are ruled out.
+</p>
+<p>
+  For example, this shell script is a valid quine:
+</p>
+<pre><code>s='s=\47%s\47;printf "$s" "$s"\n';printf "$s" "$s"</code></pre>
+<p>
+  However, the following shell script is not considered a proper
+  quine:
+</p>
+<pre><code>cat $0</code></pre>
+<p>
+  The shell script above reads its own source code which is considered
+  cheating. Improper quines like this are often called <em>cheating
+  quines</em>.
+</p>
+<p>
+  Is our 12-byte x86 program a proper quine or not? It turns out that
+  we have a conundrum. First, there is no notion of source code in
+  this program. There would have been one if we had written out the
+  source code of this program in assembly language and in that case we
+  would first need to choose an assembler and a proper quine would
+  need to produce an exact copy of the assembly language source code
+  (not the machine code bytes) for the chosen assembler. But we are
+  not doing that here. We want the machine code to produce an exact
+  copy of itself. There is no source code involved. We only have
+  machine code. So we could argue that the whole notion of machine
+  code quine is nonsense. No machine code quine can exist because
+  there is no source code to produce as output.
+</p>
+<p>
+  However, we could also argue that the machine code is the source
+  code for the CPU that the CPU fetches, decodes, and converts to a
+  sequence of state changes in the CPU. If we define a machine code
+  quine to be a machine code program that writes its own bytes, then
+  we could say that we have a machine code quine here.
+</p>
+<p>
+  Let us now entertain the thought that our 12-byte program is indeed
+  a machine code quine. Now we have a new conundrum. Is it a proper
+  quine? This program reads its own bytes from memory and writes them.
+  Does that make it a cheating quine? What would a proper quine
+  written in pure machine code even look like? If we look at the shell
+  script quine above, we see that it contains parts of the executable
+  part of the script code embedded in a string as data. Then we format
+  the string cleverly to produce a new string that looks exactly like
+  the entire shell script. It is a common pattern followed in many
+  quines. The quine does not read its own code but it reads some data
+  defined by the code and formats that data to look like its own code.
+  However, in a pure machine code like this the lines between data and
+  code are blurred. Even if we try to keep the bytes we want to read
+  at a separate place in the memory and treat it like data, they would
+  look exactly like machine instructions, so one might wonder if there
+  is any point in trying to make a machine quine that does not read
+  its own bytes. Nevertheless the next section shows how to accomplish
+  this.
+</p>
+<h2 id="proper-quines">Proper Quines</h2>
+<p>
+  If the thought of a machine code quine program reading its own bytes
+  from the memory makes you uncomfortable, here is an adapation of the
+  previous program that keeps the machine instructions to be executed
+  separate from the data bytes to be read by the program.
+</p>
+<pre>
+<code>b3 02 fc b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3 b3
+02 fc b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3</code>
+</pre>
+<p>
+  Here is how we can demonstrate this 40-byte program:
+</p>
+<pre>
+<code>echo b3 02 fc b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3 | xxd -r -p &gt; quine.com
+echo b3 02 fc b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3 | xxd -r -p &gt;&gt; quine.com
+dosbox -c 'MOUNT C .' -c 'C:\QUINE &gt; C:\OUT.COM' -c 'EXIT'
+diff quine.com OUT.COM</code>
+</pre>
+<p>
+  Here is the disassembly:
+</p>
+<pre>
+<samp>$ <kbd>ndisasm -o 0x100 quine.com</kbd>
+00000100  B302              mov bl,0x2
+00000102  FC                cld
+00000103  B114              mov cl,0x14
+00000105  BE1401            mov si,0x114
+00000108  AC                lodsb
+00000109  92                xchg ax,dx
+0000010A  B402              mov ah,0x2
+0000010C  CD21              int 0x21
+0000010E  E2F8              loop 0x108
+00000110  4B                dec bx
+00000111  75F0              jnz 0x103
+00000113  C3                ret
+00000114  B302              mov bl,0x2
+00000116  FC                cld
+00000117  B114              mov cl,0x14
+00000119  BE1401            mov si,0x114
+0000011C  AC                lodsb
+0000011D  92                xchg ax,dx
+0000011E  B402              mov ah,0x2
+00000120  CD21              int 0x21
+00000122  E2F8              loop 0x11c
+00000124  4B                dec bx
+00000125  75F0              jnz 0x117
+00000127  C3                ret</samp>
+</pre>
+<p>
+  The first 20 bytes is the executable part of the program. The next
+  20 bytes is the data read by the program. The executable bytes are
+  identical to the data bytes. The executable part of the program has
+  an outer loop that iterates twice. In each iteration, it reads the
+  data bytes and writes them to standard output. Therefore, in two
+  iterations of the outer loop, it writes the data bytes twice. In
+  this manner, the output is identical to the program itself.
+</p>
+<p>
+  Here is another simpler 32-byte quine based on this approach:
+</p>
+<pre>
+<code>b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3
+b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3</code>
+</pre>
+<p>
+  Here are the commands to demostrate this quine:
+</p>
+<pre>
+<code>echo b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3 | xxd -r -p &gt; quine.com
+echo b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3 | xxd -r -p &gt;&gt; quine.com
+dosbox -c 'MOUNT C .' -c 'C:\QUINE &gt; C:\OUT.COM' -c 'EXIT'
+diff quine.com OUT.COM</code>
+</pre>
+<p>
+  Here is the disassembly:
+</p>
+<pre>
+<samp>$ <kbd>ndisasm -o 0x100 quine.com</kbd>
+00000100  B82309            mov ax,0x923
+00000103  FEC0              inc al
+00000105  A22001            mov [0x120],al
+00000108  BA1001            mov dx,0x110
+0000010B  CD21              int 0x21
+0000010D  CD21              int 0x21
+0000010F  C3                ret
+00000110  B82309            mov ax,0x923
+00000113  FEC0              inc al
+00000115  A22001            mov [0x120],al
+00000118  BA1001            mov dx,0x110
+0000011B  CD21              int 0x21
+0000011D  CD21              int 0x21
+0000011F  C3                ret</samp>
+</pre>
+<p>
+  This example too has two parts. The first half has the executable
+  bytes and the second half has the data bytes. Both parts are
+  identical. This example sets AH to 9 in the first instruction and
+  then later uses <code>int 0x21</code> to invoke the DOS service that
+  prints a dollar-terminated string beginning at address specifed in
+  DS:SI. When a .COM program starts, DS already points to the current
+  code segment, so we don't have to set it explicitly. The dollar
+  symbol has an ASCII code of 0x24 (decimal 36). We need to be careful
+  about not having this value anywhere within the the data bytes or
+  this DOS function would prematurely stop printing our data bytes as
+  soon as it encounters this value. That is why we set AL to 0x23 in
+  the first instruction, then increment it to 0x24 in the second
+  instruction, and then copy this value to the end of the data bytes
+  in the third instruction. Finally, we execute <code>int 0x21</code>
+  twice to write the data bytes twice to standard output, so that the
+  output matches the program itself.
+</p>
+<p>
+  While both these programs take care not to read the same memory
+  region that is being executed by the CPU, the data bytes they read
+  look exactly like the executable bytes. This is what I meant when I
+  mentioned earlier that the lines between code and data are blurred
+  in an exercise like this. This is why I don't really see a point in
+  keeping the executable bytes separate from the data bytes while
+  writing machine code quines.
+</p>
+<h2 id="a-note-on-dos-services">A Note On DOS Services</h2>
+<p>
+  The self-printing programs presented above use <code>int 0x21</code>
+  which offers DOS services that support various input/output
+  functions. We select the function to write a character to standard
+  output by setting AH to 2 before invoking this software interrupt.
+</p>
+<p>
+  The <code>ret</code> instruction in the end too relies on DOS
+  services. When a .COM program starts, the register SP contains
+  0xfffe. The stack memory locations at offset 0xfffe and 0xffff
+  contain 0x00 and 0x00, respectively. Further, the memory address at
+  offset 0x0000 contains the instruction <code>int 0x20</code> which
+  is a DOS service that terminates the program. As a result, executing
+  the <code>ret</code> instruction pops 0x0000 off the stack at 0xfffe
+  and loads it into IP. This results in the instruction <code>int
+  0x20</code> at offset 0x0000 getting executed. This instruction
+  terminates the program and returns to DOS.
+</p>
+<p>
+  Relying on DOS services gives us a comfortable environment to work
+  with. In particular, DOS implements the notion of <em>standard
+  output</em> which lets us redirect standard output to a file. This
+  lets us conveniently compare the original program file and the
+  output file with the <code>FC</code> command and confirm that they
+  are identical.
+</p>
+<p>
+  But one might wonder if we could avoid relying on DOS services
+  completely and still write a program that prints its own bytes to
+  screen. We definitely can. We could write directly to video memory
+  at address 0xb800:0x0000 and show the bytes of the program on
+  screen. The next section shows how to do this.
+</p>
+<h2 id="writing-to-video-memory-directly">Writing to Video Memory Directly</h2>
+<p>
+  Here is an example of an 18-byte self-printing program that writes
+  directly to the video memory at address 0xb800:0x0000.
+</p>
+<pre><code>fc b4 b8 8e c0 31 ff b1 12 b4 0a ac ab e2 fc f4 eb fd</code></pre>
+<p>
+  Here are the commands to create and run this program:
+</p>
+<pre>
+<code>echo fc b4 b8 8e c0 31 ff b1 12 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p &gt; quine.com
+dosbox quine.com</code>
+</pre>
+<p>
+  With the default code page active, i.e., with code page 437 active,
+  the program should display an output that looks approximately like
+  the following and halt:
+</p>
+<pre><samp>&#x207F;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x2592;&#x2195;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x2320;&#x3B4;&#xB2;</samp></pre>
+<p>
+  Now of course this type of output looks gibberish but there is a
+  quick and dirty way to confirm that this output indeed represents
+  the bytes of our program. We can use the <code>TYPE</code> command
+  of DOS to print the program and check if the characters that appear
+  in its output seem consistent with the output above. Here is an
+  example:
+</p>
+<pre>
+<samp>C:\&gt;<kbd>TYPE QUINE.COM</kbd>
+&#x207F;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x2592;&#x2195;&#x2524;
+          &#xBC;&#xBD;&#x393;&#x207F;&#x2320;&#x3B4;&#xB2;
+C:\&gt;</samp>
+</pre>
+<p>
+  This output looks very similar to the previous one except that the
+  byte value 0x0a is rendered as a line break in this output whereas
+  in the previous output this byte value is represented as a circle in
+  a box. This method would not have worked if there were any control
+  characters such as backspace or carriage return that result in
+  characters being erased in the displayed output.
+</p>
+<p>
+  A proper way to verify that the output of the program represents the
+  bytes of the program would be to find each symbol in the output in a
+  chart for code page 437 and confirm that each byte value that occurs
+  in the chart for each symbol matches each byte value in the program.
+  Here is one such chart that approximates the symbols in code page
+  437 with Unicode symbols: <a href="../maze/cp437/cp437.html">cp437.html</a>.
+</p>
+<p>
+  Here is the disassembly of the above program:
+</p>
+<pre>
+<samp>$ <kbd>ndisasm -o 0x100 quine.com</kbd>
+00000100  FC                cld
+00000101  B4B8              mov ah,0xb8
+00000103  8EC0              mov es,ax
+00000105  31FF              xor di,di
+00000107  B112              mov cl,0x12
+00000109  B40A              mov ah,0xa
+0000010B  AC                lodsb
+0000010C  AB                stosw
+0000010D  E2FC              loop 0x10b
+0000010F  F4                hlt
+00000110  EBFD              jmp short 0x10f</samp>
+</pre>
+<p>
+  This program sets ES to 0xb800 and DI to 0. Thus ES:DI points to the
+  video memory at 0xb800:0x0000. DS:SI points to the first instruction
+  of this program by default. Further AH is set to 0xa. This is used
+  to specify the colour attribute of the text to be displayed on
+  screen. Each iteration of the loop in this program loads a byte of
+  the program and writes it along with the colour attribute to video
+  memory. The <code>lodsb</code> instruction loads a byte of the
+  program from the memory address specified by DS:SI into AL and
+  increments SI by 1. AH is already set to 0xa. The value 0xa (binary
+  00001010) here specifies black as the background colour and bright
+  green as the foreground colour. The <code>stosw</code> instruction
+  stores a word from AX to the memory address specified by ES:DI and
+  increments DI by 2. In this manner, the byte in AL and its colour
+  attribute in AH gets copied to the video memory.
+</p>
+<p>
+  Once again, if you are not happy about the program reading its own
+  executable bytes, we can keep the bytes we read separate from the
+  bytes the CPU executes. Here is a 54-byte program that does this:
+</p>
+<pre>
+<code>fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4
+0a ac ab e2 fc 4b 75 f1 f4 eb fd fc b3 02 b4 b8
+8e c0 31 ff be 1b 01 b9 1b 00 b4 0a ac ab e2 fc
+4b 75 f1 f4 eb fd</code>
+</pre>
+<p>
+  Here is how we can create and run this program:
+</p>
+<pre>
+<code>echo fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4 | xxd -r -p > quine.com
+echo 0a ac ab e2 fc 4b 75 f1 f4 eb fd fc b3 02 b4 b8 | xxd -r -p >> quine.com
+echo 8e c0 31 ff be 1b 01 b9 1b 00 b4 0a ac ab e2 fc | xxd -r -p >> quine.com
+echo 4b 75 f1 f4 eb fd | xxd -r -p >> quine.com
+dosbox quine.com</code>
+</pre>
+<p>
+  With code page 437 active, the output should look approximately like this:
+</p>
+<pre><samp>&#x207F;&#x2502;&#x263B;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x255B;&#x2190;&#x263A;&#x2563;&#x2190;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x4B;&#x75;&#xB1;&#x2320;&#x3B4;&#xB2;&#x207F;&#x2502;&#x263B;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x255B;&#x2190;&#x263A;&#x2563;&#x2190;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x4B;&#x75;&#xB1;&#x2320;&#x3B4;&#xB2;</samp></pre>
+<p>
+  We can clearly see in this output that the first 27 bytes of output
+  are identical to the next 27 bytes of the output. Like the proper
+  quines discussed earlier, this one too has two halves that are
+  identical to each other. The executable code in the first half reads
+  the data bytes from the second half and prints the data bytes twice
+  so that the output bytes is an exact copy of all 54 bytes in the
+  program. Here is the disassembly:
+</p>
+<pre>
+<samp>$ <kbd>ndisasm -o 0x100 quine.com</kbd>
+00000100  FC                cld
+00000101  B302              mov bl,0x2
+00000103  B4B8              mov ah,0xb8
+00000105  8EC0              mov es,ax
+00000107  31FF              xor di,di
+00000109  BE1B01            mov si,0x11b
+0000010C  B91B00            mov cx,0x1b
+0000010F  B40A              mov ah,0xa
+00000111  AC                lodsb
+00000112  AB                stosw
+00000113  E2FC              loop 0x111
+00000115  4B                dec bx
+00000116  75F1              jnz 0x109
+00000118  F4                hlt
+00000119  EBFD              jmp short 0x118
+0000011B  FC                cld
+0000011C  B302              mov bl,0x2
+0000011E  B4B8              mov ah,0xb8
+00000120  8EC0              mov es,ax
+00000122  31FF              xor di,di
+00000124  BE1B01            mov si,0x11b
+00000127  B91B00            mov cx,0x1b
+0000012A  B40A              mov ah,0xa
+0000012C  AC                lodsb
+0000012D  AB                stosw
+0000012E  E2FC              loop 0x12c
+00000130  4B                dec bx
+00000131  75F1              jnz 0x124
+00000133  F4                hlt
+00000134  EBFD              jmp short 0x133</samp>
+</pre>
+<p>
+  This disassembly is rather long but we can clearly see that the
+  bytes from offset 0x100 to offset 0x11a are identical to the bytes
+  from offset 0x11b to 0x135. These are the bytes we see in the output
+  of the program too.
+</p>
