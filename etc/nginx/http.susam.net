@@ -28,6 +28,7 @@ server {
     rewrite ^/blog/infosys-tcs-or-wipro/$ /blog/infosys-tcs-or-wipro.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /blog/lisp-in-vim.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
+    rewrite ^/blog/x86-quine.html$ /blog/self-printing-machine-code.html permanent;
     rewrite ^/maze/rss.xml$ /maze/feed.xml permanent;
 }
 

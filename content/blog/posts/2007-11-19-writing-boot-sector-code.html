@@ -1,5 +1,5 @@
 <!-- title: Writing Boot Sector Code -->
-<!-- tag: ASM Programming Technology -->
+<!-- tag: Assembly Programming Linux Technology -->
 <!-- import: extra.css -->
 <h2 id="introduction">Introduction</h2>
 <p>
@@ -165,7 +165,7 @@ ld --oformat binary -o a.com a.o</code>
 </table>
 <p>
   We can be see from the table that the background color is dark blue
-  and the foreground color is bright yellow. We compile and link the
+  and the foreground color is bright yellow. We assemble and link the
   code with the <code>as</code> and <code>ld</code> commands mentioned
   earlier and generate an executable binary consisting of machine
   code.
@@ -200,7 +200,7 @@ ld --oformat binary -o a.com a.o</code>
 </p>
 <pre>
 <code>cp a.com a.img
-printf '\x55\xaa' | dd seek=510 bs=1 of=a.img</code>
+echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code>
 </pre>
 <p>
   This boot image can be tested with DOSBox using the following
@@ -247,6 +247,8 @@ printf '\x55\xaa' | dd seek=510 bs=1 of=a.img</code>
 .section .text
 .globl _start
 _start:
+  ljmp $0, $start
+start:
   mov $0xb800, %ax
   mov %ax, %ds
   xor %di, %di
@@ -259,7 +261,7 @@ print:
   inc %di
   inc %di
   cmp $24, %di
-  jnz print
+  jne print
 idle:
   hlt
   jmp idle
@@ -268,6 +270,35 @@ idle:
 message:
   .ascii "hello, world"</code>
 </pre>
+<p>
+  The BIOS reads the code from the first sector of the boot device
+  into the memory at physical address 0x7c00 and jumps to that
+  address. While most BIOS implementations jump to 0x0000:0x7c00
+  (CS:IP) to execute the boot sector code loaded at this address,
+  unfortunately there are some BIOS implementations that jump to
+  0x07c0:0x0000 instead to reach this address. We will soon see that
+  we are going to use offsets relative to the code segment to locate
+  our string and copy it to video memory. While the physical address
+  of the string is always going to be the same regardless of which of
+  the two types of BIOS implementations run our program, the offset of
+  the string is going to differ based on the BIOS implementation. If
+  the register CS is set to 0 and the register IP is set to 0x7c00
+  when the BIOS jumps to our program, the offset of the string is
+  going to be greater than 0x7c00. But if CS and IP are set to 0x07c0
+  and 0, respectively, when the BIOS jumps to our program, the offset
+  of the string is going to be much smaller.
+</p>
+<p>
+  We cannot know in advance which type of BIOS implementation is going
+  to load our program into memory, so we need to prepare our program
+  to handle both scenarios: one in which the BIOS executes our program
+  by jumping to 0x0000:0x7c00 as well as the other in which the BIOS
+  jumps to 0x07c0:0x0000 to execute our program. We do this by using a
+  very popular technique of setting the register CS to 0 ourselves by
+  executing a far jump instruction to the code segment 0. The very
+  first instruction in this program that performs <code>ljmp $0,
+  $start</code> accomplishes this.
+</p>
 <p>
   There are two sections in this code. The text section has the
   executable instructions. The data section has the string we want to
@@ -278,20 +309,18 @@ message:
   written 24 bytes for the 12 characters we need to print. The
   instruction <code>movb %cs:(%si), %al</code> copies one character
   from the string indexed by the SI register in the code segment into
-  the AL register. The reason why we are reading the characters from
-  code segment will become clear after understanding the linker
-  commands discussed below.
+  the AL register. We are reading the characters from the code segment
+  because we will place the string in the code segment using the
+  linker commands discussed later.
 </p>
 <p>
-  While booting, the BIOS reads the code from the first sector of the
-  boot device into the memory at physical address 0x7c00 and jumps to
-  that address. However, while testing with DOSBox, things are a
-  little different. In DOS, the text section is loaded at an offset
-  0x0100 in the code segment. This should be specified to the linker
-  while linking so that it can correctly resolve the value of the
-  label named <code>message</code>. Therefore we will link the object
-  twice: once for testing it with DOSBox and once again for creating
-  the boot image.
+  However, while testing with DOSBox, things are a little different.
+  In DOS, the text section is loaded at an offset 0x0100 in the code
+  segment. This should be specified to the linker while linking so
+  that it can correctly resolve the value of the label
+  named <code>message</code>. Therefore we will assemble and link our
+  program twice: once for testing it with DOSBox and once again for
+  creating the boot image.
 </p>
 <p>
   To understand the offset at which the data section can be put, it is
@@ -323,29 +352,32 @@ hello.com:     file format binary
 
 Disassembly of section .data:
 
-00000000 <.data>:
-   0:   b8 00 b8                mov    $0xb800,%ax
-   3:   8e d8                   mov    %ax,%ds
-   5:   31 ff                   xor    %di,%di
-   7:   be 40 00                mov    $0x40,%si
-   a:   b4 1e                   mov    $0x1e,%ah
-   c:   2e 8a 04                mov    %cs:(%si),%al
-   f:   89 05                   mov    %ax,(%di)
-  11:   46                      inc    %si
-  12:   47                      inc    %di
-  13:   47                      inc    %di
-  14:   83 ff 18                cmp    $0x18,%di
-  17:   75 f3                   jne    0xc
-  19:   f4                      hlt
-  1a:   eb fd                   jmp    0x19
+00000000 &lt;.data&gt;:
+   0:   ea 05 00 00 00          ljmp   $0x0,$0x5
+   5:   b8 00 b8                mov    $0xb800,%ax
+   8:   8e d8                   mov    %ax,%ds
+   a:   31 ff                   xor    %di,%di
+   c:   be 40 00                mov    $0x40,%si
+   f:   b4 1e                   mov    $0x1e,%ah
+  11:   2e 8a 04                mov    %cs:(%si),%al
+  14:   89 05                   mov    %ax,(%di)
+  16:   46                      inc    %si
+  17:   47                      inc    %di
+  18:   47                      inc    %di
+  19:   83 ff 18                cmp    $0x18,%di
+  1c:   75 f3                   jne    0x11
+  1e:   f4                      hlt
+  1f:   eb fd                   jmp    0x1e
         ...
-  40:   68 65 6c                push   $0x6c65
+  3d:   00 00                   add    %al,(%bx,%si)
+  3f:   00 68 65                add    %ch,0x65(%bx,%si)
+  42:   6c                      insb   (%dx),%es:(%di)
   43:   6c                      insb   (%dx),%es:(%di)
   44:   6f                      outsw  %ds:(%si),(%dx)
   45:   2c 20                   sub    $0x20,%al
   47:   77 6f                   ja     0xb8
   49:   72 6c                   jb     0xb7
-  4b:   64</samp>
+  4b:   64                      fs</samp>
 </pre>
 <p>
   Note that the <samp>...</samp> above indicates zero bytes skipped
@@ -355,41 +387,49 @@ Disassembly of section .data:
 </p>
 <pre>
 <samp>$ <kbd>xxd -g1 hello.com</kbd>
-00000000: b8 00 b8 8e d8 31 ff be 40 00 b4 1e 2e 8a 04 89  .....1..@.......
-00000010: 05 46 47 47 83 ff 18 75 f3 f4 eb fd 00 00 00 00  .FGG...u........
-00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000000: ea 05 00 00 00 b8 00 b8 8e d8 31 ff be 40 00 b4  ..........1..@..
+00000010: 1e 2e 8a 04 89 05 46 47 47 83 ff 18 75 f3 f4 eb  ......FGG...u...
+00000020: fd 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000040: 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64              hello, world</samp>
 </pre>
 <p>
   Both outputs above show that the text section occupies the first
-  0x1c bytes (28 bytes). The data section is 0xc bytes (12 bytes) in
-  length. We have 0x1bc bytes (440 bytes) in the boot sector where we
-  can put our binary. Let us create a binary where the region from
-  offset 0x0 to offset 0x1b contains the text section and the region
-  from offset 0x1c to offset 0x27 contains the data section. The total
-  length of the binary would then be 0x28 bytes (40 bytes). We will
-  create a new binary as per this plan.
+  0x21 bytes (33 bytes). The data section is 0xc bytes (12 bytes) in
+  length. Let us create a binary where the region from offset 0x0 to
+  offset 0x20 contains the text section and the region from offset
+  0x21 to offset 0x2c contains the data section. The total length of
+  the binary would then be 0x2d bytes (45 bytes). We will create a new
+  binary as per this plan.
 </p>
 <p>
   However while creating the new binary, we should remember that DOS
   would load the binary at offset 0x100, so we need to tell the linker
-  to assume 0x100 as the offset of the text section and 0x11c as the
+  to assume 0x100 as the offset of the text section and 0x121 as the
   offset of the data section, so that it resolves the value of the
-  label named <code>message</code> accordingly. We create a new binary
-  in this manner and test it with DOSBox with these commands:
+  label named <code>message</code> accordingly. Moreover while testing
+  with DOS, we must remove the far jump instruction at the top of our
+  program because DOS does not load our program at physical address
+  0x7c00 of the memory. We create a new binary in this manner and test
+  it with DOSBox with these commands:
 </p>
 <pre>
-<code>ld --oformat binary -Ttext 100 -Tdata 11c -o hello.com hello.o
-dosbox -c cls hello.com</code>
+<code>grep -v ljmp hello.s > dos-hello.s
+as -o hello.o dos-hello.s
+ld --oformat binary -Ttext 100 -Tdata 121 -o hello.com hello.o</code>
 </pre>
 <p>
-  If everything looks fine, we link it once again for boot sector and
-  create a boot image with these commands:
+  Now we can test this program with DOSBox with the following command:
+</p>
+<pre><code>dosbox -c cls hello.com</code></pre>
+<p>
+  If everything looks fine, we assemble and link our program once
+  again for boot sector and create a boot image with these commands:
 </p>
 <pre>
-<code>ld --oformat binary -Ttext 7c00 -Tdata 7c1c -o hello.img hello.o
-printf '\x55\xaa' | dd seek=510 bs=1 of=hello.img</code>
+<code>as -o hello.o hello.s
+ld --oformat binary -Ttext 7c00 -Tdata 7c21 -o hello.img hello.o
+echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code>
 </pre>
 <p>
   Now we can test this image with DOSBox like this:
@@ -405,7 +445,7 @@ printf '\x55\xaa' | dd seek=510 bs=1 of=hello.img</code>
 <pre><code>cp hello.img /dev/sdx</code></pre>
 <p>
   <em>
-    Caution: Again, one needs to be very careful with the the commands
+    CAUTION: Again, one needs to be very careful with the commands
     here. The device path <code>/dev/sdx</code> is only an example.
     This path must be changed to the path of the actual device one
     wants to write the boot sector binary to.

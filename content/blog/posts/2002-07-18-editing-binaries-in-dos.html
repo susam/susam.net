@@ -1,5 +1,5 @@
 <!-- title: Editing Binaries in DOS -->
-<!-- tag: Technology -->
+<!-- tag: Assembly Programming DOS Technology -->
 <p>
   Both MS-DOS and Windows 98 come with a debugger program
   named <code>DEBUG.EXE</code> that make it possible to edit binary
@@ -9,67 +9,92 @@
   in this post. The first example edits a string of bytes in an
   executable file. The second one edits machine instructions to alter
   the behaviour of the program. Both examples provided in the next two
-  sections can be reproduced on MS-DOS version 6.22.
+  sections can be reproduced on MS-DOS version 6.22. These examples
+  can be performed on Windows 98 too after minor adjustments.
 </p>
 <h2 id="editing-data">Editing Data</h2>
 <p>
-  Let us first see we edit an error message produced
-  by <code>COMMAND.COM</code>. This is the DOS command interpreter
-  that prints the DOS prompt, reads the commands we type at the
-  prompt, interprets our commands, and executes them. Normally, when
-  we enter an unavailable command in DOS, it prints an error message
-  like this:
+  Let us first see an example of editing an error message produced by
+  the <code>MODE</code> command. This DOS command is used for
+  displaying and reconfiguring system settings. For example, the
+  following command sets the display to show 40 characters per line:
+</p>
+<pre><samp>C:\&gt;<kbd>MODE 40</kbd></samp></pre>
+<p>
+  The following command reverts the display to show 80 characters per
+  line:
+</p>
+<pre><samp>C:\&gt;<kbd>MODE 80</kbd></samp></pre>
+<p>
+  Here is another example of this command that shows the current
+  settings for serial port COM1:
 </p>
 <pre>
-<samp>C:\&gt;<kbd>FOO</kbd>
-Bad command or file name</samp>
+<samp>C:\&gt;<kbd>MODE COM1</kbd>
+
+Status for device COM1:
+-----------------------
+Retry=NONE
+
+C:\&gt;</samp>
+</pre>
+<p>
+  An invalid parameter leads to an error like this:
+</p>
+<pre>
+<samp>C:\&gt;<kbd>MODE 0</kbd>
+
+Invalid parameter - 0
+
+C:\&gt;</samp>
 </pre>
 <p>
   We will edit this error message to be slightly more helpful. The
   following debugger session shows how.
 </p>
 <pre>
-<samp>C:\&gt;<kbd>DEBUG COMMAND.COM</kbd>
--<kbd>S 0 FFFF 'Bad command'</kbd>
-117C:94D6
--<kbd>D 94D0 94FF</kbd>
-117C:94D0  69 6C 65 0D 0A 1A 42 61-64 20 63 6F 6D 6D 61 6E   ile...Bad comman
-117C:94E0  64 20 6F 72 20 66 69 6C-65 20 6E 61 6D 65 0D 0A   d or file name..
-117C:94F0  10 41 63 63 65 73 73 20-64 65 6E 69 65 64 20 0D   .Access denied .
--<kbd>E 94D5 12 'No soup for you!' D A</kbd>
--<kbd>D 94D0 94FF</kbd>
-117C:94D0  69 6C 65 0D 0A 12 4E 6F-20 73 6F 75 70 20 66 6F   ile...No soup fo
-117C:94E0  72 20 79 6F 75 21 0D 0A-65 20 6E 61 6D 65 0D 0A   r you!..e name..
-117C:94F0  10 41 63 63 65 73 73 20-64 65 6E 69 65 64 20 0D   .Access denied .
+<samp>C:\&gt;<kbd>DEBUG C:\DOS\MODE.COM</kbd>
+-<kbd>S 0 FFFF 'Invalid parameter'</kbd>
+117C:19D1
+-<kbd>D 19D0 19FF</kbd>
+117C:19D0  13 49 6E 76 61 6C 69 64-20 70 61 72 61 6D 65 74   .Invalid paramet
+117C:19E0  65 72 0D 0A 20 0D 0A 49-6E 76 61 6C 69 64 20 6E   er.. ..Invalid n
+117C:19F0  75 6D 62 65 72 20 6F 66-20 70 61 72 61 6D 65 74   umber of paramet
+-<kbd>E 19D0 12 'No soup for you!' D A</kbd>
+-<kbd>D 19D0 19FF</kbd>
+117C:19D0  12 4E 6F 20 73 6F 75 70-20 66 6F 72 20 79 6F 75   .No soup for you
+117C:19E0  21 0D 0A 0A 20 0D 0A 49-6E 76 61 6C 69 64 20 6E   !... ..Invalid n
+117C:19F0  75 6D 62 65 72 20 6F 66-20 70 61 72 61 6D 65 74   umber of paramet
 -<kbd>N SOUP.COM</kbd>
 -<kbd>W</kbd>
-Writing 0D575 bytes
+Writing 05C11 bytes
 -<kbd>Q</kbd>
 
-C:&gt;</samp>
+C:\&gt;</samp>
 </pre>
 <p>
-  We first open the command interpreter program with the debugger.
-  When we do so, the entire program is loaded into offset 0x100 of the
-  code segment (CS). Then we use the <code>S</code> debugger command
-  to search for the string "Bad command". This prints the offset at
+  We first open <code>MODE.COM</code> with the debugger. When we do
+  so, the entire program is loaded into offset 0x100 of the code
+  segment (CS). Then we use the <code>S</code> debugger command to
+  search for the string "Invalid parameter". This prints the offset at
   which this string occurs in memory.
 </p>
 <p>
   We use the <code>D</code> command to dump the bytes around that
-  offset. In the first row of the output, the byte value 1A (decimal
-  26) represents the length of the string that follows it. Indeed
-  there are 26 bytes in the string composed of the text <code>"Bad
-  command or file name"</code> and the following carriage return (CR)
-  and line feed (LF) characters. The CR and LF characters have ASCII
-  codes 0xD (decimal 13) and 0xA (decimal 10). These values can be
-  seen at the end of the second row of output.
+  offset. In the first row of the output, the byte value 13 (decimal
+  19) represents the length of the string that follows it. Indeed
+  there are 19 bytes in the string composed of the text <code>"Invalid
+  parameter"</code> and the following carriage return (CR) and line
+  feed (LF) characters. The CR and LF characters have ASCII codes 0xD
+  (decimal 13) and 0xA (decimal 10). These values can be seen at the
+  third and fourth places of the second row of the output of this
+  command.
 </p>
 <p>
   Then we use the <code>E</code> command to enter a new string length
   followed by a new string to replace the existing error message. Note
   that we enter a string length of 0x12 (decimal 18) which is indeed
-  the the length of the string that follows it. After entering the new
+  the length of the string that follows it. After entering the new
   string, we dump the memory again with <code>D</code> to verify that
   the new string is now present in memory.
 </p>
@@ -80,131 +105,125 @@ C:&gt;</samp>
   from offset 0x100 to the named file. It reads the number of bytes to
   be written to the file from the BX and CX registers. These registers
   are already initialized to the length of the file when we load a
-  file in debugger. Since we have not modified these registers
-  ourselves, we don't need to set them again. In case, you do need to
+  file in the debugger. Since we have not modified these registers
+  ourselves, we don't need to set them again. In case you do need to
   set the BX and CX registers in a different situation, the commands
   to do so are <code>R BX</code> and <code>R CX</code>, respectively.
 </p>
 <p>
   Finally, the <code>W</code> command writes the file and
   the <code>Q</code> command quits the debugger. Now we can test the
-  new command interpreter as follows:
+  new program as follows:
 </p>
 <pre>
-<samp>C:\&gt;<kbd>SOUP.COM</kbd>
+<samp>
+C:\&gt;<kbd>SOUP 0</kbd>
 
-
-Microsoft(R) MS-DOS(R) Version 6.22
-             (C)Copyright Microsoft Corp 1981-1994.
-
-C:\&gt;<kbd>ECHO Hello!</kbd>
-Hello!
-
-C:\&gt;<kbd>FOO</kbd>
-No soup for you!
-
-C:\&gt;<kbd>EXIT</kbd>
+No soup for you! - 0
 
 C:\&gt;</samp>
 </pre>
-<p>
-  The <code>EXIT</code> command in the end exits our new command
-  interpreter and returns to the original DOS command interpreter.
-</p>
 <h2 id="editing-machine-instructions">Editing Machine Instructions</h2>
 <p>
-  Now we will see how to edit the binary we created in the previous
-  section further to add our own machine instructions to print a
-  welcome message when the program starts. Here is an example debugger
-  session that shows how to do it.
+  In this section, we will see how to edit the binary we created in
+  the previous section further to add our own machine instructions to
+  print a welcome message when the program starts. Here is an example
+  debugger session that shows how to do it.
 </p>
 <pre>
 <samp>C:\&gt;<kbd>DEBUG SOUP.COM</kbd>
 -<kbd>U</kbd>
-13B3:0100 E96D15        JMP     1670
-13B3:0103 66            DB      66
-13B3:0104 8815          MOV     [DI],DL
-13B3:0106 0000          ADD     [BX+SI],AL
-13B3:0108 C70F0000      MOV     WORD PTR [BX],0000
-13B3:010C 850E0000      TEST    CX,[0000]
-13B3:0110 95            XCHG    BP,AX
-13B3:0111 1200          ADC     AL,[BX+SI]
-13B3:0113 0000          ADD     [BX+SI],AL
-13B3:0115 0000          ADD     [BX+SI],AL
-13B3:0117 0000          ADD     [BX+SI],AL
-13B3:0119 0000          ADD     [BX+SI],AL
-13B3:011B 0000          ADD     [BX+SI],AL
-13B3:011D 0000          ADD     [BX+SI],AL
-13B3:011F 0000          ADD     [BX+SI],AL
--<kbd>D</kbd>
-13B3:0100  E9 6D 15 66 88 15 00 00-C7 0F 00 00 85 0E 00 00   .m.f............
-13B3:0110  95 12 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
-13B3:0120  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
-13B3:0130  00 00 00 00 00 E8 64 00-1E 0E 2E FF 2E 04 01 FB   ......d.........
-13B3:0140  E8 59 00 1E 0E 2E FF 2E-08 01 FB E8 4E 00 1E 0E   .Y..........N...
-13B3:0150  2E FF 2E 0C 01 FB E8 43-00 1E 0E 2E FF 2E 10 01   .......C........
-13B3:0160  E8 39 00 1E 0E 2E FF 2E-14 01 E8 2F 00 1E 0E 2E   .9........./....
-13B3:0170  FF 2E 18 01 E8 25 00 1E-0E 2E FF 2E 1C 01 E8 1B   .....%..........
+117C:0100 E99521        JMP     2298
+117C:0103 51            PUSH    CX
+117C:0104 8ACA          MOV     CL,DL
+117C:0106 D0E1          SHL     CL,1
+117C:0108 32ED          XOR     CH,CH
+117C:010A 80CD03        OR      CH,03
+117C:010D D2E5          SHL     CH,CL
+117C:010F 2E            CS:
+117C:0110 222E7D01      AND     CH,[017D]
+117C:0114 2E            CS:
+117C:0115 890E6402      MOV     [0264],CX
+117C:0119 59            POP     CX
+117C:011A 7505          JNZ     0121
+117C:011C EA39E700F0    JMP     F000:E739
+-<kbd>D 300</kbd>
+117C:0300  07 1F C3 18 18 18 18 18-00 00 00 00 00 00 00 00   ................
+117C:0310  00 00 FF 00 00 00 00 00-FF 00 00 00 00 00 00 00   ................
+117C:0320  00 00 00 00 00 00 00 00-00 00 FF FF 90 00 40 00   ..............@.
+117C:0330  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
+117C:0340  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
+117C:0350  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
+117C:0360  00 00 00 FF 00 00 00 00-00 00 00 00 00 00 00 00   ................
+117C:0370  02 00 2B C0 8E C0 A0 71-03 A2 BA 07 A2 BC 07 3C   ..+....q.......<
 -<kbd>A</kbd>
-13B3:0100 JMP 112
-13B3:0102
--<kbd>A 112</kbd>
-13B3:0112 MOV AH, 9
-13B3:0114 MOV DX, 11C
-13B3:0117 INT 21
-13B3:0119 JMP 1670
-13B3:011C DB 'Welcome to Soup Kitchen!$'
-13B3:0135
--<kbd>N SOUP.COM</kbd>
+117C:0100 JMP 330
+117C:0103
+-<kbd>A 330</kbd>
+117C:0330 MOV AH, 9
+117C:0332 MOV DX, 33A
+117C:0335 INT 21
+117C:0337 JMP 2298
+117C:033A DB 'Welcome to Soup Kitchen!', D, A, '$'
+117C:0355
 -<kbd>W</kbd>
-Writing 0D575 bytes
+Writing 05C11 bytes
 -<kbd>Q</kbd>
 
-C:\&gt;</samp>
+C:\&gt;
 </pre>
 <p>
   At the beginning, we use the debugger command <code>U</code> to
   unassemble (disassemble) some bytes at the top of the program to see
   what they look like. We see that the very first instruction is a
-  jump to offset 0x1670. We also notice that there is a contiguous
-  sequence of zero bytes starting at offset 0x112. The debugger
-  command <code>D</code> shows that there are 35 contiguous zero bytes
-  from offset 0x112 to offset 0x134. What we do next is to replace the
-  jump instruction at the top with a jump instruction to offset 0x112
-  where we then place the machine code for our welcome message. This
-  new machine code prints the welcome message and then jumps to offset
-  0x1670 allowing the remainder of the command interpreter program to
-  execute as usual.
+  jump to offset 0x2298. The debugger command <code>D 300</code> shows
+  that there are contiguous zero bytes around offset 0x330. We replace
+  some of these zero bytes with new machine instructions that print
+  our welcome message. To do this, we first replace the jump
+  instruction at the top with a jump instruction to offset 0x330 where
+  we then place the machine code for our welcome message. This new
+  machine code prints the welcome message and then jumps to offset
+  0x2298 allowing the remainder of the program to execute as usual.
 </p>
 <p>
   The debugger command <code>A</code> is used to assemble the machine
   code for the altered jump instruction at the top. By default it
   writes the assembled machine code to CS:0100 which is the address at
   which DOS loads executable programs. Then we use the debugger
-  command <code>A 112</code> to add new machine code at offset 0x112.
-  We try not to go beyond offset 0x134 while writing our machine
-  instructions. Fortunately for us, our entire code for the welcome
-  message fits exactly where the 35 bytes of zeroes were present and
-  the last byte of our code lands at offset 0x134.
+  command <code>A 330</code> to add new machine code at offset 0x330.
+  We try not to go beyond the region with contiguous zeroes while
+  writing our machine instructions. Fortunately for us, our entire
+  code for the welcome message occupies 37 bytes and and the last byte
+  of our code lands at offset 0x354.
 </p>
 <p>
   Finally, we write the updated program in memory back to the file
-  named <code>SOUP.COM</code>. Now we can execute it as follows:
+  named <code>SOUP.COM</code>. Since the debugger was used to load the
+  file named <code>SOUP.COM</code>, we do not need to use
+  the <code>N</code> command to specify the name of the file again.
+  When a file has just been loaded into the debugger, by default
+  the <code>W</code> command writes the program in memory back to the
+  same file that was loaded into the memory.
+</p>
+<p>
+  Now our updated program should behave as shown below:
 </p>
 <pre>
-<samp>C:\&gt;<kbd>SOUP</kbd>
+<samp>C:\&gt;<kbd>SOUP COM1</kbd>
 Welcome to Soup Kitchen!
 
-Microsoft(R) MS-DOS(R) Version 6.22
-             (C)Copyright Microsoft Corp 1981-1994.
+Status for device COM1:
+-----------------------
+Retry=NONE
 
-C:\&gt;<kbd>FOO</kbd>
-No soup for you!
+C:\><kbd>SOUP 0</kbd>
+Welcome to Soup Kitchen!
+
+No soup for you! - 0
 
 C:\&gt;</samp>
 </pre>
 <p>
-  That's our modified command interpreter that prints a welcome
-  message and our own error message created with the humble DOS
-  debugger.
+  That's our modified program that prints a welcome message and our
+  own error message created with the humble DOS debugger.
 </p>

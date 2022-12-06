@@ -1,5 +1,5 @@
 <!-- title: Shell Eval -->
-<!-- tag: Shell Technology -->
+<!-- tag: Unix Shell Technology -->
 <p>
   In this post, we will perform a few experiments to see the
   usefulness of the <code>eval</code> command for a particular
@@ -8,8 +8,8 @@
   follows:
 </p>
 <pre>
-<code>$ <kbd>echo lorem ipsum &gt; "foo bar"</kbd>
-$ <kbd>cmd='cat "foo bar"'</kbd></code>
+<samp>$ <kbd>echo lorem ipsum &gt; "foo bar"</kbd>
+$ <kbd>cmd='cat "foo bar"'</kbd></samp>
 </pre>
 <p>
   We will use this file and the variable in the experiments below. All
@@ -59,13 +59,13 @@ cat: 'bar"': No such file or directory</samp>
   an example command to verify this:
 </p>
 <pre>
-<code>$ <kbd>printf "$IFS" | od -tcx1</kbd>
+<samp>$ <kbd>printf "$IFS" | od -tcx1</kbd>
 0000000      \t  \n
          20  09  0a
-0000003</code>
+0000003</samp>
 </pre>
 <p>
-  The hexadecimal code <code>20</code> in the output confirms that the
+  The hexadecimal code <samp>20</samp> in the output confirms that the
   space character is present in the value of <code>IFS</code>.
   Therefore, as per the POSIX specification, <code>$cmd</code> first
   expands to <code>cat "foo bar"</code>, then it is split into three

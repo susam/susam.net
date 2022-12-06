@@ -1,10 +1,10 @@
 <!-- title: Programming With DOS Debugger -->
-<!-- tag: ASM Programming Technology -->
+<!-- tag: Assembly Programming DOS Technology -->
 <h2 id="introduction">Introduction</h2>
 <p>
   MS-DOS as well as Windows 98 come with a debugger program
   named <code>DEBUG.EXE</code> that can be used to work with assembly
-  language instructions and machine code. In MS-DOS Version 6.22, this
+  language instructions and machine code. In MS-DOS version 6.22, this
   program is named <code>DEBUG.EXE</code> and it is typically present
   at <code>C:\DOS\DEBUG.EXE</code>. On Windows 98, this program is
   usually present at <code>C:\Windows\Command\Debug.exe</code>. It is
@@ -62,7 +62,7 @@ C:\&gt;</samp>
   three instructions generate the software interrupt 0x21 (decimal 33)
   with AH set to 2 and DL set to 0x41 (decimal 65) which happens to be
   the ASCII code of the character <code>A</code>. Interrupt 0x21
-  supports a wide variety of functions. Setting AH to 2 tells this
+  offers a wide variety of DOS services. Setting AH to 2 tells this
   interrupt to invoke the function that prints a single character to
   standard output. This function expects DL to be set to the ASCII
   code of the character we want to print.
@@ -248,6 +248,56 @@ C:\&gt;</samp>
 117C:0100  B4 09 BA 08 01 CD 21 C3-68 65 6C 6C 6F 2C 20 77   ......!.hello, w
 117C:0110  6F 72 6C 64 0D 0A 24                              orld..$</samp>
 </pre>
+<h2 id="int-20-vs-ret">INT 20 vs. RET</h2>
+<p>
+  Another way to terminate a .COM program is to simply use the
+  instruction <code>INT 20</code>. This consumes two bytes in the
+  machine code: <code>CD 20</code>. While producing the smallest
+  possible executables was not really the goal of this post, the code
+  examples above indulge in a little bit of size reduction by using
+  the <code>RET</code> instruction to terminate the program. This
+  consumes only one byte: <code>C3</code>. This works because when a
+  .COM file starts, the register SP contains FFFE. The stack memory
+  locations at offset FFFE and FFFF contain 00 and 00, respectively.
+  Further, the memory address offset 0000 contains the
+  instruction <code>INT 20</code>. Here is a demonstration of these
+  facts using the debugger program:
+</p>
+<pre>
+<samp>C:\&gt;<kbd>DEBUG HELLO.COM</kbd>
+-<kbd>R SP</kbd>
+SP FFFE
+:
+-<kbd>D FFFE</kbd>
+117C:FFF0                                            00 00
+-<kbd>U 0 1</kbd>
+117C:0000 CD20          INT     20</samp>
+</pre>
+<p>
+  As a result, executing the <code>RET</code> instruction pops 0000
+  off the stack at FFFE and loads it into IP. This results in the
+  instruction <code>INT 20</code> at offset 0000 getting executed
+  which leads to program termination.
+</p>
+<p>
+  While both <code>INT 20</code> and <code>RET</code> lead to
+  successful program termination both in DOS as well as while
+  debugging with <code>DEBUG.EXE</code>, there is some difference
+  between them which affects the debugging experience. Terminating the
+  program with <code>INT 20</code> allows us to run the program
+  repeatedly within the debugger by repeated applications of
+  the <code>G</code> debugger command. But when we terminate the
+  program with <code>RET</code>, we cannot run the program repeatedly
+  in this manner. The program runs and terminates successfully the
+  first time we run it in the debugger but the stack does not get
+  reinitialized with zeros to prepare it for another execution of the
+  program within the debugger. Therefore when we try to run the
+  program the second time using the <code>G</code> command, the
+  program does not terminate successfully. It hangs instead. It is
+  possible to work around this by reinitializing the stack with the
+  debugger command <code>E FFFE 0 0</code> before
+  running <code>G</code> again.
+</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>
   Although the DOS debugger is very limited in features in comparison

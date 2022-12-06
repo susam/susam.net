@@ -1,11 +1,11 @@
-# These quines read the executable bytes.
+# Cheating quines.
 loop jne string:
 	make _x86quine_test NAME=$@
 
 b800:
 	make _x86quine_run NAME=$@
 
-# Proper quines that do not read executable bytes.
+# Proper quines.
 ploop pjne pstring:
 	make _x86quine_test NAME=$@
 

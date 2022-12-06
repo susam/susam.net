@@ -33,7 +33,8 @@ help:
 	@echo '  check-form-rate   Check rate-limiting of form.'
 	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
 	@echo '  pub               Publish updated website on live server and mirror.'
-	@echo '  force-pub         Publish website on live server after reset, and mirror.'
+	@echo '  web               Publish website on primary server only.'
+	@echo '  cu                Publish content updates on primary server only.'
 	@echo '  mirror            Publish website on mirror only.'
 	@echo '  pull-backup       Pull a backup of cache from live server.'
 	@echo
@@ -312,14 +313,10 @@ check-form:
 pub: web mirror
 
 web:
-	git push origin main
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git pull && sudo git checkout main && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
-
-force-web:
 	git push -f origin main
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout main && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
-cu-web:
+cu:
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout cu && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
