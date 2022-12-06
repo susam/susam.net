@@ -6,14 +6,12 @@
   involving reading its own source code and printing it are not
   permitted.
 </p>
-
 <h2 id="classic-quine">The Classic Quine</h2>
 <p>
-  Here is a classic quine I came across a few days ago:
+  Here is a classic quine I came across a few days ago in a mailing
+  list:
 </p>
-<pre>
-<code>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</code>
-</pre>
+<pre><code>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</code></pre>
 <p>
   This program is written in K&amp;R C. The current version of GCC
   compiles it fine. It is a valid quine on ASCII machines because this
@@ -27,19 +25,18 @@
   Here are some commands that demonstrate the quine:
 </p>
 <pre>
-$ <kbd>echo -n 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}' > quine.c</kbd>
-$ <kbd>cc quine.c</kbd>
-$ <kbd>./a.out > out.txt</kbd>
-$ <kbd>diff quine.c out.txt</kbd>
-$ <kbd>./a.out</kbd>
+<samp>$ <kbd>printf '%s' 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}' &gt; quine.c</kbd>
+$ <kbd>cc quine.c && ./a.out &gt; out.txt && diff quine.c out.txt</kbd>
+$ <kbd>cat quine.c; echo</kbd>
 main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}
+$ <kbd>./a.out</kbd>
+main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</samp>
 </pre>
 <p>
   The source code of this quine does not end with a newline.
   The <code>-n</code> option of GNU echo ensures that the source code
   file is created without a terminating newline.
 </p>
-
 <h2 id="close-look-at-classic-quine">Close Look at the Classic Quine</h2>
 <p>
   Let us take a close look at how the quine introduced in the previous
@@ -117,7 +114,6 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}
   This output matches the source code of the program thus confirming
   that our program is a quine.
 </p>
-
 <h2 id="classic-quine-with-terminating-newline">Classic Quine With Terminating Newline</h2>
 <p>
   The source code of the classic quine presented above does not
@@ -126,9 +122,7 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}
   newline at the end. So I decided to modify that quine a little to
   ensure that it always ends with a newline. This is the quine I arrived at:
 </p>
-<pre>
-<samp>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}</samp>
-</pre>
+<pre><samp>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}</samp></pre>
 <p>
   Compared to the quine in the previous sections, this one has an
   additional <code>%c</code> at the end of the formal string and the
@@ -137,10 +131,35 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}
   quine:
 </p>
 <pre>
-$ <kbd>echo 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}' > quine.c</kbd>
-$ <kbd>cc quine.c</kbd>
-$ <kbd>./a.out > out.txt</kbd>
-$ <kbd>diff quine.c out.txt</kbd>
-$ <kbd>./a.out</kbd>
+<samp>$ <kbd>echo 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}' &gt; quine.c</kbd>
+$ <kbd>cc quine.c && ./a.out &gt; out.txt && diff quine.c out.txt</kbd>
+$ <kbd>cat quine.c</kbd>
 main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}
+$ <kbd>./a.out</kbd>
+main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}</samp>
+</pre>
+<h2 id="c89-quine">C89 Quine</h2>
+<p>
+  The classic C quines presented above are written in K&amp;C. They do
+  not conform to the C standard. However, with some modifications to
+  the quines presented above, we can get a quine that conforms to the
+  C89 standard:
+</p>
+<pre>
+<code>#include &lt;stdio.h&gt;
+int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}</code>
+</pre>
+<p>
+  Here is a demonstration of this quine:
+</p>
+<pre>
+<samp>$ <kbd>echo '#include &lt;stdio.h&gt;
+int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}' &gt; quine.c</kbd>
+$ <kbd>cc -std=c89 -Wall -Wextra -pedantic quine.c && ./a.out &gt; out.txt && diff quine.c out.txt</kbd>
+$ <kbd>cat quine.c</kbd>
+#include &lt;stdio.h&gt;
+int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}
+$ <kbd>./a.out</kbd>
+#include &lt;stdio.h&gt;
+int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}</samp>
 </pre>

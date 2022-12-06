@@ -104,8 +104,8 @@ time_total: 0.982326</samp>
   numbers for <code>time_appconnect</code>
   and <code>time_connect</code> time tells us how much time is spent
   in SSL/TLS handshake. For a cleartext connection without SSL/TLS,
-  this number is reported as zero. Here is an example output that
-  demonstrates this:
+  <code>time_appconnect</code> is reported as zero. Here is an example
+  output that demonstrates this:
 </p>
 <pre>
 <samp>$ <kbd>curl -L -w "time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_appconnect: %{time_appconnect}\ntime_pretransfer: %{time_pretransfer}\ntime_redirect: %{time_redirect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n" http://example.com/</kbd>
