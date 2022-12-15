@@ -1,14 +1,9 @@
 <h1>{{ title }}</h1>
 <nav>
-  <a href="#posts">Posts</a>
-  <a href="#tags">Tags</a>
+  <a href="tag/{{ index }}">Tags</a>
   <a href="feed.xml">Feed</a>
-{{ more }}</nav>
+</nav>
 <h2 id="posts">All Posts</h2>
 <div>({{ count }} {{ post-label }})</div>
 <ul class="blog">
 {{ body }}</ul>
-<h2 id="tags">All Tags</h2>
-<div>({{ tag-count }} {{ tag-label }})</div>
-<ul class="blog">
-{{ tag-list }}</ul>

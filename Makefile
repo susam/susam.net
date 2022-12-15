@@ -200,8 +200,14 @@ check-files:
 	@echo Done; echo
 
 check-links:
+	@echo "NOTE: Ensure 'make run-site' is running before running this target"; echo
 	-wget -r -l 0 --spider -nd -nv http://localhost:8000/ -o run.log
 	grep -B1 broken run.log
+	@echo Done; echo
+
+check-rendering:
+	grep -r '{{' _site | grep '\.html$$' | head
+	@echo Done; echo
 
 check-paths:
 	# Blog legacy URL redirects

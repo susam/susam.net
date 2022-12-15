@@ -1,0 +1,25 @@
+<h1>{{ title }}</h1>
+<table class="grid">
+  <tr>
+    <th>#</th>
+    <th>Date</th>
+    <th>Duration</th>
+    <th>Participants</th>
+    <th>Topic</th>
+  </tr>
+  {{ rows }}
+</table>
+<h2 id="summary">Summary of Past Meetings</h2>
+<ul>
+  <li>{{ total-count }} {{ meeting-label }}</li>
+  <li>{{ total-minutes }} minutes ({{ total-hours }} hours)</li>
+  <li>{{ average-minutes }} minutes per meeting on an average</li>
+  <li>{{ average-members }} participants per meeting on an average</li>
+</ul>
+<h2 id="tracks">{{ other-title }}</h2>
+<p>
+  The following list contains meeting logs for {{ other }} tracks:
+</p>
+<ul>
+  {{ tracks }}
+</ul>
