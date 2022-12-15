@@ -1,11 +1,11 @@
 <item>
 <title>{{ title }}</title>
-<link>{{ site-url }}{{ zone-path }}{{ slug }}.html</link>
-<guid>{{ site-url }}{{ zone-path }}{{ slug }}.html</guid>
+<link>{{ site-url }}{{ zone-slug }}/{{ slug }}.html</link>
+<guid>{{ site-url }}{{ zone-slug }}/{{ slug }}.html</guid>
 <description>
 <![CDATA[
 {{ body }}
-<p><a href="{{ site-url }}{{ zone-path }}{{ slug }}.html">Read on website</a></p>
+<p><a href="{{ site-url }}{{ zone-slug }}/{{ slug }}.html">Read on website</a></p>
 ]]>
 </description>
 <pubDate>{{ rss-date }}</pubDate>

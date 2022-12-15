@@ -1,0 +1,145 @@
+<!-- title: IANT Meetings Ending Today -->
+<!-- tag: IANT -->
+<!-- import: math.inc -->
+<h2 id="introduction">Introduction</h2>
+<p>
+  We have been reading the book <em>Introduction to Analytic Number
+  Theory</em> (Apostol, 1976) since March 2021. It has been going
+  consistently since then and the previous few posts on this blog
+  provide an account of how this journey has been so far. After about
+  seven months of reading this book together, we are having our final
+  meeting for this book club today. This is going to be
+  the <a href="meets/iant.html#120">120th meeting</a> of our book
+  club. The meeting notes from all previous reading sessions are
+  archived at
+  <a href="iant/{{ index }}">iant/</a>. We will discuss the final two
+  pages of this book today and complete reading this book.
+</p>
+<p>
+  In the meeting today, we will look at some applications of the
+  recursion formula related to partition functions that we learnt
+  earlier. Here is an excerpt from the book that shows a specific
+  example that demonstrates the richness and beauty of concepts one
+  can discover while studying analytic number theory:
+</p>
+<blockquote>
+  Equation (24) becomes
+
+  \[
+  np(n) = \sum_{k=1}^n \sigma(k) p(n - k).
+  \]
+
+  a remarkable relation connecting a function of multiplicative number
+  theory with one of additive number theory.
+</blockquote>
+<p>
+  Now what equation (24) contains is not important for this post. Of
+  course, you can refer to the book if you really want to know what
+  equation (24) is. We learnt to prove that equation in the
+  penultimate meeting for this subject yesterday. In this post, I will
+  emphasize how indeed this equation is remarkable.
+</p>
+
+<h2 id="divisor-sum-function">The Divisor Sum Function</h2>
+<p>
+  Tthe divisor sum function \( \sigma(n) \) represents the sum of all
+  positive divisors of \( n \). Here are some examples:
+
+  \begin{align*}
+  \sigma(1) &= 1, \\
+  \sigma(2) &= 1 + 2 = 3, \\
+  \sigma(3) &= 1 + 3 = 4, \\
+  \sigma(4) &= 1 + 2 + 4 = 7, \\
+  \sigma(5) &= 1 + 5 = 6.
+  \end{align*}
+
+  We have spent a good amount of time with this function in the
+  initial chapters of the book. However, for the purpose of this blog
+  post, the definition and the examples above are good enough.
+</p>
+
+<h2 id="unrestricted-partition-function">The Unrestricted Partition Function</h2>
+<p>
+  The \( p(n) \) function is the unrestricted partition function. It
+  represents the number of ways \( n \) can be written as a sum of
+  positive integers \( \le n \). Further, we let \( p(0) = 1 \). Here
+  are some examples:
+
+  \begin{align*}
+  p(1) &= 1, \\
+  p(2) &= 2, \\
+  p(3) &= 3, \\
+  p(4) &= 4, \\
+  p(5) &= 7.
+  \end{align*}
+
+  Let me illustration the last value. The integer \( 5 \) can be
+  represented as a sum of positive integers \( \le 5 \) in 7 different
+  ways. They are: \( 5, \) \( 4 + 1 \), \( 3 + 2 \), \( 3 + 1 + 1 \),
+  \( 2 + 2 + 1 \), \( 2 + 1 + 1 + 1 \), and \( 1 + 1 + 1 + 1 + 1 \).
+  Thus \( p(n) = 5 \).
+</p>
+
+<h2 id="linkage-of-two-theorems">The Linkage of Two Theories</h2>
+<p>
+  The divisor sum function comes from multiplicative number theory.
+  The partition function comes from additive number theory. Yet these
+  two very different things get linked together in the formula
+  mentioned in the excerpt included above. Here is the formula once
+  again:
+
+  \[
+  np(n) = \sum_{k=1}^n \sigma(k) p(n - k).
+  \]
+
+  How beautiful! How nicely the divisor sum function and the
+  unrestricted partition function appear together elegantly in a
+  single equation! Further, this equation provides a recursion formula
+  for the partition function.
+
+  Here is an illustration of this equation with \( n = 5 \):
+
+  $$
+  5 \cdot p(5) = 5 \cdot 7 = 35.
+  $$
+
+  \begin{align*}
+  \sum_{k=1}^5 \sigma(k) p(5 - k)
+  &= \sigma(1) p(4) + \sigma(2) p(3) + \sigma(3) p(2) + \sigma(4) p(1) + \sigma(5) p(0) \\
+  &= (1)(5) + (3)(3) + (4)(2) + (7)(1) + (6)(1) \\
+  &= 5 + 9 + 8 + 7 + 6 \\
+  &= 35.
+  \end{align*}
+
+  We will go through this topic once more in the meeting today, so if
+  you are interested to see this formula worked out in a step-by-step
+  manner, do join our final meeting for this book.
+</p>
+
+<h2 id="final-meeting">The Final Meeting</h2>
+<p>
+  The final meeting is coming up at 17:00 UTC today. Visit
+  the <a href="iant/{{ index }}">analytic number theory book club
+  page</a> to get the meeting link. This is not going to be the final
+  meeting for our overall computation club though. This is going to be
+  the finally meeting for only the analytic number theory book club.
+  We will resume book club meetings for another book after a long
+  break.
+</p>
+<p>
+  The meeting today is going to be a lightweight session. The last two
+  pages that we will discuss today contain some examples of recursion
+  formulas and some commentary about Ramanujan's partition identities.
+  Most of it should make sense even to those who have not been part of
+  our book club meetings earlier, so everyone is welcome to join this
+  meeting today, even if only to lurk. You can also join our
+  computation club by joining our IRC channel where we will publish
+  updates about future meetings. Our channel details are available in
+  the <a href="./{{ index }}#join">club's main page here</a>.
+</p>
+<h2 id="thanks">Thanks!</h2>
+<p>
+  A big thank you to the Hacker News community and the Libera IRC
+  mathematics and algorithms communities who showed interest in this
+  book club, joined the meetings, and made this book club successful.
+</p>

@@ -574,6 +574,14 @@
   <!-- apple test include -->
 ")))
 
+(test-case set-nested-template
+  (let ((layout "{{ foo }}"))
+    (set-nested-template layout "{{ foo }}{{ body }}{{ baz }}")
+    (assert (string= layout "{{ foo }}{{ foo }}{{ baz }}")))
+  (let ((layout "foo"))
+    (set-nested-template layout "foo {{ body }} bar")
+    (assert (string= layout "foo foo bar"))))
+
 (test-case add-head-params-imports
   (let ((params (list (cons "import" "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
@@ -612,18 +620,16 @@
 
 (test-case make-posts-single
   (write-file "test-tmp/content/foo.txt" "foo")
-  (make-posts "test-tmp/content/foo.txt"
-              "test-tmp/output/out.txt"
-              "[{{ body }}]")
+  (make-posts "test-tmp/content/foo.txt" "test-tmp/output/out.txt"
+              "[{{ body }}]" nil)
   (assert (string= (read-file "test-tmp/output/out.txt") "[foo]")))
 
 (test-case make-posts-multiple
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
   (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (make-posts "test-tmp/content/*.txt"
-              "test-tmp/output/{{ slug }}.txt"
-              "[{{ body }}]")
+  (make-posts "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
+              "[{{ body }}]" nil)
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo]"))
   (assert (string= (read-file "test-tmp/output/bar.txt") "[bar]"))
   (assert (string= (read-file "test-tmp/output/baz.txt") "[baz]")))
@@ -634,7 +640,7 @@
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
   (let ((posts (make-posts "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]")))
+                           "[{{ body }}]" nil)))
     (assert (= (length posts) 3))
     (assert (string= (get-value "date" (first posts)) "2020-06-01"))
     (assert (string= (get-value "date" (second posts)) "2020-06-02"))
@@ -642,9 +648,8 @@
 
 (test-case make-posts-filename-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (make-posts "test-tmp/content/*.txt"
-              "test-tmp/output/{{ slug }}.txt"
-              "[{{ date }} {{ slug }} {{ body }}]")
+  (make-posts "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
+              "[{{ date }} {{ slug }} {{ body }}]" nil)
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[2020-06-01 foo foo]")))
 
@@ -727,7 +732,7 @@ foo]")))
                            "[{{ body }}]" nil)))
     (make-post-list posts "test-tmp/list.html"
                     "[{{ count }} {{ post-label }} {{ body }}]"
-                    "[{{ body }}]"))
+                    "[{{ body }}]" nil))
   (assert (string= (read-file "test-tmp/list.html")
                    "[3 posts [baz][bar][foo]]")))
 
@@ -844,7 +849,7 @@ Z")
                (cons "body" "Baz")))
    "test-tmp/{{ slug }}.html"
    "[{{ title }} {{ count }} {{ comment-label }} {{ post-title }} {{ body }}]"
-   "[{{ date }} {{ author }} {{ body }} {{ index }}]")
+   "[{{ date }} {{ author }} {{ body }} {{ index }}]" nil)
   (assert(string= (read-file "test-tmp/foo.html")
                   (join-strings '("[Comments on Foo 3 comments Foo "
                                   "[2020-06-03 Carol Baz 1]"

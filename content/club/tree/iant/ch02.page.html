@@ -1,0 +1,361 @@
+<!-- title: Notes on Chapter 2 -->
+<!-- import: math.inc -->
+<h1>{{ title }}</h1>
+<div>Arithmetical Functions and Dirichlet Multiplication</div>
+
+<!-- Section 2.11 -->
+<h2 id="2.11">&sect; 2.11: The inverse of a completely multiplicative function</h2>
+<h3 id="completely-multiplicative-function">Completely Multiplicative Function</h4>
+<p>
+  \[ f(mn) = f(m) f(n) \text{ for all } m, n. \]
+</p>
+<h3 id="identity-function-dirichlet-product">Identity function (Dirichlet product)</h4>
+<p>
+  \[
+    I(n) =
+    \begin{cases}
+    1 & \text{ if } n = 1, \\
+    0 & \text{ if } n > 1.
+    \end{cases}
+  \]
+</p>
+<p>
+  \begin{align*}
+    f(n)I(n)
+    & =
+    \begin{cases}
+      1 \cdot 1    & \text{ if } n = 1, \\
+      f(n) \cdot 0 & \text{ if } n > 1.
+    \end{cases} \\
+    & = \begin{cases}
+      1 & \text{ if } n = 1, \\
+      0 & \text{ if } n > 1.
+    \end{cases} \\
+    & = I(n).
+  \end{align*}
+</p>
+<h3 id="mobius-function-for-prime-powers">M&ouml;bius function for prime powers</h3>
+<p>
+  \[
+    \mu(1) = 1, \qquad
+    \mu(p) = -1, \qquad
+    \mu(p^2) = \mu(p^3) = \dots = 0.
+  \]
+</p>
+<h3 id="third-equation-in-proof-of-theorem-2.17">Third equation in proof of Theorem 2.17</h3>
+<p>
+  \begin{align*}
+    \sum_{d \mid p^a} \mu(d) f(d) f\left(\frac{p^a}{d}\right)
+    & = \sum_{d = 1, p, p^2, \dots, p^a} \mu(d) f(d) f\left(\frac{p^a}{d}\right) \\
+    & = \begin{aligned}[t]
+           & \mu(1) f(1) f\left( \frac{p^a}{1} \right) +
+             \mu(p) f(p) f\left( \frac{p^a}{p} \right) \\
+           & + \underbrace{\mu(p^2) f(p^2) f\left( \frac{p^a}{p^2} \right) + \dots +
+                           \mu(p^a) f(p^a) f\left( \frac{p^a}{p^a} \right)}_{= 0}
+        \end{aligned} \\
+    & = \mu(1) f(1) f(p^a) + \mu(p) f(p) f(p^{a - 1}) \\
+    & = f(p^a) - f(p) f(p^{a - 1}).
+  \end{align*}
+</p>
+<h3 id="final-step-in-proof-of-theorem-2.17">Final step in proof of Theorem 2.17</h3>
+<p>
+  \begin{align*}
+    f(p^a)
+    & = f(p)f(p^{a - 1}) \\
+    & = f(p)f(p)f(p^{a - 2}) \\
+    & = \dots \\
+    & = \underbrace{f(p)f(p)f(p) \dots f(p)}_{a \text{ times}} \\
+    & = \left( f(p) \right)^a.
+  \end{align*}
+</p>
+<h3 id="how-the-completely-multiplicative-property-works-for-prime-powers">How the completely multiplicative property works for prime powers</h3>
+<p>
+  \[
+    f(mn) = f(m)f(n) \text{ whenever } (m, n) = 1.
+  \]
+</p>
+<p>
+  \[
+    f(p_1^{\alpha_1} p_2^{\alpha_2} \dots p_k^{\alpha_k})
+    = f(p_1^{\alpha_1}) f(p_2^{\alpha_2}) \dots f(p_k^{\alpha_k}).
+  \]
+</p>
+<h3 id="euler-totient-function-as-dirichlet-product">Euler totient function as Dirichlet product</h3>
+<p>
+  \[
+    \varphi(n)
+    = \sum_{d \mid n} \mu(d) \frac{n}{d}
+    = \sum_{d \mid n} \mu(d) N\left(\frac{n}{d}\right)
+    = (\mu * N)(n).
+  \]
+</p>
+<h3 id="proof-of-theorem-2.18">Proof of Theorem 2.18</h3>
+<p>
+  Let \( f \) be multiplicative. We want to show that
+
+  \[
+    \sum_{d \mid n} \mu(d) f(d) = \prod_{p \mid n} (1 - f(p)).
+  \]
+
+  Note the following:
+
+  \[
+    g(n)
+    = \sum_{d \mid n} \mu(d) f(d)
+    = \sum_{d \mid n} (\mu f) (d)
+    u\left( \frac{n}{d} \right)
+    = (\mu f) * u.
+  \]
+
+  The functions \( \mu \) and \( f \) are multiplicative. Thus \( \mu
+  f \) is multiplicative. Thus \( (\mu f) * u \) is multiplicative.
+  Therefore
+
+  \[
+    g(n) = g(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k}) =
+    g(p_1^{a_1}) g(p_2^{a_2}) \dots g(p_k^{a_k}).
+  \]
+
+  But
+
+  \begin{align*}
+    g(p_i^{a_i})
+    & = \sum_{d \mid p_i^{a_i}} \mu(d) f(d) \\
+    & = \mu(1) f(1) + \mu(p_i) f(p_i) +
+        \underbrace{\mu(p_i^2) f(p_i^2) + \dots + \mu(p_i^{a_i}) f(p_i^{a_i})}_{= 0} \\
+    & = 1 - f(p).
+  \end{align*}
+
+  From the two equations above, we get
+
+  \begin{align*}
+    g(n)
+    & = g(p_1^{a_1}) g(p_2^{a_2}) \dots g(p_k^{a_k}) \\
+    & = (1 - f(p_1)) (1 - f(p_2)) \dots (1 - f(p_k)) \\
+    & = \prod_{p \mid n} (1 - f(p)).
+  \end{align*}
+</p>
+
+<!-- Section 2.15 -->
+<h2 id="2.15">&sect; 2.15: Formal power series</h2>
+
+<h3 id="product-of-formal-power-series">Product of formal power series</h3>
+<p>
+  \begin{align*}
+    A(x)B(x)
+    & = \left( \sum_{n=0}^{\infty} a(n) x^n \right) \left( \sum_{n=0}^{\infty} b(n) x^n \right) \\
+    & = \left( a(0) + a(1)x + a(2)x^2 + \dots \right)
+        \left( b(0) + b(1)x + b(2)x^2 + \dots \right) \\
+    & = a(0)b(0) +
+        \Bigl( a(0)b(1) + a(1)b(0) \Bigr) x +
+        \Bigl( a(0)b(2) + a(1)b(1) + a(2)b(0) \Bigr) x^2 + \dots \\
+    & = \sum_{k=0}^0 a(k)b(n - k) + \sum_{k=0}^1 a(k)b(1 - k)x + \sum_{k=0}^2 a(k)b(2 - k)x^2 + \dots \\
+    & = \sum_{n=0}^{\infty} \sum_{k=0}^n a(k)b(n - k).
+  \end{align*}
+</p>
+<h3 id="commutativity-of-product-of-formal-power-series">Commutativity of product of formal power series</h3>
+<p>
+  \[
+    A(x)B(x)
+    = \sum_{n=0}^{\infty} \underbrace{\left\{ \sum_{k=0}^{n} a(k) b(n - k) \right\}}_{c(n)} x^n.
+  \]
+  \[
+    B(x)A(x)
+    = \sum_{n=0}^{\infty} \underbrace{\left\{ \sum_{k=0}^{n} a(n - k) b(k) \right\}}_{c'(n)} x^n.
+  \]
+  \[
+    c(3) = a(0)b(3) + a(1)b(2) + a(2)b(1) + a(3)b(0).
+  \]
+  \[
+    c'(3) = a(3)b(0) + a(2)b(1) + a(1)b(2) + a(0)b(3).
+  \]
+</p>
+<h3 id="distributivity-of-multiplication-over-addition-in-formal-power-series">Distributivity of multiplication over addition in formal power series</h3>
+<p>
+  \[
+    A(x)\Bigl(B(x) + C(x)\Bigr) = A(x)B(x) + A(x)C(x).
+  \]
+  \[
+    \Bigl(B(x) + C(x)\Bigr)A(x) = B(x)A(x) + C(x)A(x).
+  \]
+
+  \begin{align*}
+    A(x)\Bigl(B(x) + C(x)\Bigr)
+    & = \left( \sum_{n=0}^{\infty} a(n) x^n \right)
+        \left( \sum_{n=0}^{\infty} \Bigl( b(n) + c(n) \Bigr) x^n \right) \\
+    & = \sum_{n=0}^{\infty} \Bigl\{ \sum_{k=0}^{n} a(k) \Bigl( b(n - k) + c(n - k) \Bigr) \Bigr\} x^n.
+  \end{align*}
+
+  \[
+    A(x)B(x) + A(x)C(x)
+    = \sum_{n=0}^{\infty} \sum_{k=0}^n a(k) b(n - k) x^n +
+    \sum_{n=0}^{\infty} \sum_{k=0}^n a(k) c(n - k) x^n.
+  \]
+</p>
+<h3 id="determining-coefficients-of-inverse-of-power-series">Determining coefficients of inverse of power series</h3>
+<p>
+  \begin{align*}
+    A(x)B(x)
+    & = \sum_{n=0}^{\infty} \Bigl( \sum_{k=0}^{n} a(k) b(n - k) \Bigr) x^n \\
+    & = \Bigl( a(0) b(0) \Bigr) x^0 +
+        \Bigl( a(0) b(1) + a(1) b(0) \Bigr) x^1 +
+        \Bigl( a(0) b(2) + a(1) b(1) + a(2) b(0) \Bigr) x^2 +
+        \dots \\
+    & = 1.
+  \end{align*}
+</p>
+<h3 id="inverse-of-geometric-series">Inverse of geometric series</h3>
+<p>
+  \begin{align*}
+    A(x) & = 1 + ax + (ax)^2 + (ax)^3 + \dots, \\
+    B(x) & = 1 - ax.
+  \end{align*}
+
+  \begin{align*}
+    A(x) B(x)
+    & = \Bigl( 1 + ax + (ax)^2 + (ax)^3 + \dots \Bigr) (1 - ax) \\
+    & = \Bigl( 1 + ax + (ax)^2 + (ax)^3 + \dots \Bigr) -
+        \Bigl( (ax) - (ax)^2 - (ax)^3 - \dots \Bigr)
+    = 1.
+  \end{align*}
+</p>
+
+<!-- Section 2.16 -->
+<h2 id="2.16">&sect; 2.16: The Bell series of an arithmetical function</h2>
+<h3 id="bell-series-of-f-modulo-p">Bell series of \( f \) modulo \( p \)</h3>
+<p>
+  \[
+    f_p(x)
+    = \sum_{n=0}^{\infty} f(p^n) x^n
+    = f(1) + f(p) x + f(p^2) x^2 + f(p^3) x^3 + \dots
+  \]
+</p>
+<h3 id="theorem-2.24-uniqueness-theorem">Theorem 2.24: Uniqueness theorem</h3>
+<p>
+  \begin{align*}
+    f(n)
+    & = f(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k})
+    = f(p_1^{a_1}) f(p_2^{a_2}) \dots f(p_k^{a_k}), \\ \\
+
+    g(n)
+    & = g(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k})
+    = g(p_1^{a_1}) g(p_2^{a_2}) \dots g(p_k^{a_k}). \\
+  \end{align*}
+</p>
+<h3 id="example-1-mobius-funcion">Example 1: Möbius function</h3>
+<p>
+  \begin{align*}
+    \mu_p(x) = \sum_{n=0}^{\infty} \mu(p^n) x^n
+    & = \mu(1) + \mu(p) x + \mu(p^2) x^2 + \mu(p^3) x^3 + \dots \\
+    & = 1 - x + 0 + 0 + \dots \\
+    & = 1 - x.
+  \end{align*}
+</p>
+
+<!-- Section 2.17 -->
+<h2 id="2.17">&sect 2.17: Bell series and Dirichlet multiplication</h2>
+<h3 id="power-series-multiplication">Power series multiplication</h3>
+<p>
+  \[
+    A(x) = \sum_{n=0}^{\infty} a(n) x^n, \quad
+    B(x) = \sum_{n=0}^{\infty} b(n) x^n, \quad
+    A(x) B(x) = \sum_{n=0}^{\infty} \underbrace{\sum_{k=0}^n a(k) b(n - k)}_{c(n)} x^n.
+  \]
+</p>
+<h3 id="relationship-with-dirichlet-multiplication">Relationship with Dirichlet multiplication</h3>
+<p>
+  \[
+    (f * g)_p(x) = f_p(x) g_p(x).
+  \]
+
+  \[
+    f_p(x) = \sum_{n=0}^{\infty} f(p^n) x^n, \quad
+    g_p(x) = \sum_{n=0}^{\infty} g(p^n) x^n, \quad
+    f_p(x) g_p(x) = \sum_{n=0}^{\infty} \sum_{k=0}^n f(p^k) g(p^{n-k}) x^n.
+  \]
+
+  \[
+    h = f * g = \sum_{d \mid n} f(d) g\left( \frac{n}{d} \right).
+  \]
+
+  \[
+    h_p(x)
+    = \sum_{n=0}^{\infty} h(p^n) x^n
+    = \sum_{n=0}^{\infty} \sum_{d \mid p^n} f(d) g\left( \frac{p^n}{d} \right) x^n
+    = \sum_{n=0}^{\infty} \sum_{k=0}^{n} f(p^k) g(p^{n-k}) x^n.
+  \]
+</p>
+<p>
+  Some steps of Example 1:
+
+  \[
+    I(n)= \mu^2(n) * \lambda(n)
+    \implies I_p(x) = \mu_p^2(x) \lambda_p(x)
+  \]
+
+  \[
+    I_p(x) = \mu_p^2(x) \lambda_p(x)
+    \iff 1 = \mu_p^2(x) \cdot \frac{1}{1 + x}
+    \iff \mu_p^2(x) = 1 + x.
+  \]
+</p>
+<p>
+  Some steps of Example 2:
+
+  \begin{align*}
+    \frac{1}{1 - p^{\alpha}} \cdot \frac{1}{1 - x}
+    & = \frac{1}{1 - x - p^{\alpha}x + p^{\alpha}x^2} \\
+    & = \frac{1}{1 - (1 + p^{\alpha})x + p^{\alpha}x^2} \\
+    & = \frac{1}{1 - \sigma_{\alpha}(p)x + p^{\alpha}x^2}.
+  \end{align*}
+
+  Note that \( \sigma_{\alpha}(n) = \sum_{d\,\mid\,n} d^{\alpha}, \) so
+
+  \[
+    \sigma_{\alpha}(p)
+    = \sum_{d\,\mid\,p} d^{\alpha}
+    = 1^{\alpha} + p^{\alpha}
+    = 1 + p^{\alpha}.
+  \]
+</p>
+<p>
+  Some steps of Example 3: Showing That \( f(n) = 2^{\nu(n)} \) is
+  multiplicative:
+
+  \[
+    f(n) = 2^{\nu(n)}.
+  \]
+
+  \[
+    f(p_1^{\alpha_1} p_2^{\alpha_2} \dots p_k^{\alpha_k})
+    = 2^{\nu(p_1^{\alpha_1} p_2^{\alpha_2} \dots p_k^{\alpha_k})} = 2^k.
+  \]
+
+  \[
+    f(p_1^{\alpha_1}) f(p_2^{\alpha_2}) \dots f(p_k^{\alpha_k})
+    = 2^{\nu(p_1^{\alpha_1})} 2^{\nu(p_2^{\alpha_2})} \dots 2^{\nu(p_k^{\alpha_k})}
+    = \underbrace{2 \cdot 2 \cdot \dots \cdot 2}_{k \text{ times}}.
+    = 2^k.
+  \]
+</p>
+
+<!-- Section 2.18 -->
+<h2 id="2.18">&sect; 2.18: Derivatives of arithmetical functions</h2>
+<h3 id="ordinary-derivative">Ordinary derivative</h3>
+<p>
+  \[ (f + g)' = f' + g'. \]
+
+  \[ (fg)' = f'g + fg'. \]
+
+  \[ \left( f^{-1} \right)' = \frac{-f'}{f^2} = -f' \cdot (f \cdot f)^{-1}. \]
+</p>
+<h3 id="similarities-in-special-derivative">Similarities in special derivative</h3>
+<p>
+  \[ f'(n) = f(n) \log n. \]
+
+  \[ (f + g)' = f' + g'. \]
+
+  \[ (f * g)' = f' * g + f * g'. \]
+
+  \[ \left( f^{-1} \right)' = -f' * (f * f)^{-1}. \]
+</p>
