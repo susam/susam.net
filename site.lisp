@@ -895,7 +895,7 @@ value, next-index."
   (add-value "class" (if (future-p meet) "future" "past") params)
   (add-value "date" (format-meet-date (getf meet :date)) params)
   (add-value "duration" (getf meet :duration) params)
-  (add-value "members" (getf meet :members) params)
+  (add-value "members" (if (future-p meet) "-" (getf meet :members)) params)
   (add-value "topic" (getf meet :topic) params)
   (render layout params))
 

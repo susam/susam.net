@@ -593,8 +593,18 @@
   :topic "Sections 14.9-14.10; Pages 321-322; Consequences of Jacobi's identity, Logarithmic differentiation of generationf functions"
   :duration 40
   :members 5)
- (:date "2021-10-01 17:00"
-  :slug "iant"
-  :topic "Sections 14.10-14.11; Pages 323-324; Recursion formula for \\( p_{A,f}(n) \\), The partition identities of Ramanujan"
-  :duration 35
-  :members 7))
+ (:date "2021-12-16 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 1: Pages 1-18"
+  :duration 40
+  :members -1)
+ (:date "2021-12-17 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 2: Pages 19-29"
+  :duration 40
+  :members -1)
+ (:date "2021-12-18 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 2: Pages 30-39"
+  :duration 40
+  :members -1))
