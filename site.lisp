@@ -906,17 +906,19 @@ value, next-index."
          for meet in meets
          collect (meet-row-html meet index layout params))))
 
-(defun meet-tracks-html (slugs)
+(defun meet-tracks-html (slug slugs)
   "Create HTML to list all club tracks."
+  (setf slugs (remove-if (lambda (x) (or (not (car x))
+                                         (string= (car x) slug))) slugs))
   (join-strings
-   (loop for (slug track) in slugs
+   (loop for (slug track) in (reverse slugs)
          collect (fstr "<li><a href=\"~a.html\">~a</a></li>~%" slug track))))
 
 (defun select-meets (slug meets)
   "Filter meets to select the ones with the specified slug."
   (remove-if-not (lambda (x) (string= (getf x :slug) slug)) meets))
 
-(defun make-meet-log (meets slug track dst list-layout item-layout params)
+(defun make-meet-log (meets slug slugs track dst list-layout item-layout params)
   "Create meeting log page for the given list of meets."
   (setf meets (if slug (select-meets slug meets) meets))
   (let* ((title (fstr "~a Meeting Log" (if slug track "Club")))
@@ -938,6 +940,7 @@ value, next-index."
     (add-value "meeting-label" (if (= past-count 1) "meeting" "meetings") params)
     (add-value "total-minutes" minutes params)
     (add-value "total-hours" (fstr "~,1f" (/ minutes 60)) params)
+    (add-value "tracks" (meet-tracks-html slug slugs) params)
     ;; Avoid division-by-zero with a fake count.
     (when (zerop past-count)
       (setf past-count 1))
@@ -964,11 +967,10 @@ value, next-index."
         (dst "_site/club/meets/{{ slug }}.html"))
     (set-nested-template list-layout page-layout)
     (check-meets-dates meets)
-    (add-value "tracks" (meet-tracks-html slugs) params)
     ;; Add meeting log for entire club.
     (push (list nil nil) slugs)
     (loop for (slug track) in slugs
-          do (make-meet-log meets slug track dst
+          do (make-meet-log meets slug slugs track dst
                             list-layout item-layout params))))
 
 (defun make-club (page-layout params)
