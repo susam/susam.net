@@ -929,7 +929,7 @@ value, next-index."
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members)))))
     (add-value "head" head params)
     (add-value "title" title params)
-    (add-value "subtitle" "Computation Club" params)
+    (add-value "subtitle" " - Computation Club" params)
     (add-value "zone-slug" "club" params)
     (add-value "zone-name" "Club" params)
     (add-value "other-title" (if slug "Other Tracks" "Individual Tracks") params)
