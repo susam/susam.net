@@ -15,6 +15,7 @@ help:
 	@echo '  follow-post       Follow form post logs on live server.'
 	@echo '  post-log          Filter form post logs to find all successful posts.'
 	@echo '  top-get-log       Filter access logs to find most popular paths.'
+	@echo '  count-log         Count hits in each access log file.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -29,6 +30,7 @@ help:
 	@echo '  run-form          Run form application locally.'
 	@echo '  check-files       Check that content and config files are well-formed.'
 	@echo '  check-links       Check broken links in a locally running website.'
+	@echo '  check-rendering   Check that all template variables have been rendered.'
 	@echo '  check-paths       Check live website paths and redirects.'
 	@echo '  check-form-rate   Check rate-limiting of form.'
 	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
@@ -122,6 +124,8 @@ post-log:
 top-get-log:
 	sudo zgrep ' 200 ' /var/log/nginx/access.log* | grep -o 'GET /[^ ]*' | sort | uniq -c | sort -nr | nl | less
 
+count-log:
+	sudo zgrep -c . /var/log/nginx/access.log* | awk -F : '{printf "%10s  %s\n", $$2, $$1}'
 
 # Low-Level Targets
 # -----------------
