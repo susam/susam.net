@@ -848,9 +848,7 @@ value, next-index."
     (cond ((string= zone-slug "blog")
            author-name)
           ((string= zone-slug "maze")
-           (fstr "~a's ~a" author-nick zone-name))
-          ((string= zone-slug "club")
-           (fstr "~a's Computation ~a" author-nick zone-name)))))
+           (fstr "~a's ~a" author-nick zone-name)))))
 
 (defun make-zone (zone-slug page-layout params)
   "Create a complete zone with blog, tags, and tree."
@@ -907,7 +905,7 @@ value, next-index."
          collect (meet-row-html meet index layout params))))
 
 (defun meet-tracks-html (slug slugs)
-  "Create HTML to list all club tracks."
+  "Create HTML to list all meeting tracks."
   (setf slugs (remove-if (lambda (x) (or (not (car x))
                                          (string= (car x) slug))) slugs))
   (join-strings
@@ -921,7 +919,7 @@ value, next-index."
 (defun make-meet-log (meets slug slugs track dst list-layout item-layout params)
   "Create meeting log page for the given list of meets."
   (setf meets (if slug (select-meets slug meets) meets))
-  (let* ((title (fstr "~a Meeting Log" (if slug track "Club")))
+  (let* ((title (fstr "~a Meeting Log" (if slug track "Full")))
          (head (fstr "~a extra.css meets.inc math.inc" (get-value "head" params)))
          (past-meets (loop for m in meets when (not (future-p m)) collect m))
          (past-count (length past-meets))
@@ -929,9 +927,9 @@ value, next-index."
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members)))))
     (add-value "head" head params)
     (add-value "title" title params)
-    (add-value "subtitle" " - Computation Club" params)
-    (add-value "zone-slug" "club" params)
-    (add-value "zone-name" "Club" params)
+    (add-value "subtitle" "" params)
+    (add-value "zone-slug" "maze" params)
+    (add-value "zone-name" "Maze" params)
     (add-value "other-title" (if slug "Other Tracks" "Individual Tracks") params)
     (add-value "other" (if slug "other" "individual") params)
     (add-value "slug" (if slug slug "index") params)
@@ -959,24 +957,18 @@ value, next-index."
       (setf prev-date curr-date))))
 
 (defun make-meets (page-layout params)
-  "Create meeting log pages for the club and all its tracks."
-  (let ((meets (read-from-string (read-file "content/club/meets.lisp")))
-        (slugs (read-from-string (read-file "content/club/slugs.lisp")))
+  "Create meeting log pages for all tracks."
+  (let ((meets (read-from-string (read-file "content/maze/meets.lisp")))
+        (slugs (read-from-string (read-file "content/maze/slugs.lisp")))
         (list-layout (read-file "layout/meets/list.html"))
         (item-layout (read-file "layout/meets/item.html"))
-        (dst "_site/club/meets/{{ slug }}.html"))
+        (dst "_site/maze/meets/{{ slug }}.html"))
     (set-nested-template list-layout page-layout)
     (check-meets-dates meets)
-    ;; Add meeting log for entire club.
     (push (list nil nil) slugs)
     (loop for (slug track) in slugs
           do (make-meet-log meets slug slugs track dst
                             list-layout item-layout params))))
-
-(defun make-club (page-layout params)
-  "Make the club section of the website."
-  (make-posts "content/club/*.html" "_site/club/{{ slug }}.html" page-layout params)
-  (make-meets page-layout params))
 
 
 ;;; CSS
@@ -1227,7 +1219,6 @@ value, next-index."
     (make-css)
     (add-value "head" "main.css" params)
     (make-zone "maze" page-layout params)
-    (make-zone "club" page-layout params)
     (make-meets page-layout params)
     (setf posts (make-zone "blog" page-layout params))
     (make-home posts page-layout params)
