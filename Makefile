@@ -24,6 +24,7 @@ help:
 	@echo
 	@echo 'Development targets:'
 	@echo '  opt               Create directories at /opt for testing.'
+	@echo '  comment           Create comment file for filename in FILE macro.'
 	@echo '  loop              Run a loop to create website directory repeatedly.'
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
@@ -165,6 +166,10 @@ opt:
 	sudo mkdir -p /opt/data/form/ /opt/log/form/
 	sudo cp raw/opt.lisp /opt/data/form/opt.lisp
 	sudo chown -R "$$USER" /opt/data/form/ /opt/log/form/
+
+comment:
+	[ -n "$(FILE)" ]
+	touch $$(echo "$(FILE)" | sed 's/\/posts\//\/comments\//')
 
 loop:
 	while true; do make dist; sleep 5; done
