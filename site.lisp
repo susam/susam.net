@@ -920,7 +920,7 @@ value, next-index."
   "Create meeting log page for the given list of meets."
   (setf meets (if slug (select-meets slug meets) meets))
   (let* ((title (fstr "~a Meeting Log" (if slug track "Full")))
-         (head (fstr "~a extra.css meets.inc math.inc" (get-value "head" params)))
+         (head (fstr "~a extra.css meets.css math.inc" (get-value "head" params)))
          (past-meets (loop for m in meets when (not (future-p m)) collect m))
          (past-count (length past-meets))
          (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
@@ -1011,11 +1011,8 @@ value, next-index."
 
 (defun make-css ()
   "Generate stylesheets for the main website."
-  (dolist (filename (list "comment.css" "extra.css" "form.css"
-                          "main.css" "music.css" "reading.css"))
-    (let ((css-layout (read-file (fstr "layout/css/~a" filename)))
-          (css-path (fstr "_site/css/~a" filename)))
-      (write-file css-path (render css-layout (main-style))))))
+  (make-posts "layout/css/*.css" "_site/css/{{ slug }}.css" "{{ body }}"
+              (append (main-style) (list (cons "render" "yes")))))
 
 
 ;;; Reading
