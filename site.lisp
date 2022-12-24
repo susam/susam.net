@@ -541,7 +541,7 @@ value, next-index."
     (loop for index from count downto 1
           for comment in comments
           do (setf comment (append comment params))
-             (add-value "index" index comment)
+             (add-value "comment-id" index comment)
              (add-value "commenter-type"
                         (if (string= (get-value "name" comment)
                                      (get-value "author" params))
@@ -887,22 +887,22 @@ value, next-index."
   "Whether the given meeting entry is scheduled for future."
   (minusp (getf meet :members)))
 
-(defun meet-row-html (meet index layout params)
+(defun meet-row-html (meet track row-id layout params)
   "Create HTML to represent a single row of meeting entry."
-  (add-value "index" index params)
+  (add-value "row-id" row-id params)
   (add-value "class" (if (future-p meet) "future" "past") params)
   (add-value "date" (format-meet-date (getf meet :date)) params)
   (add-value "duration" (getf meet :duration) params)
   (add-value "members" (if (future-p meet) "-" (getf meet :members)) params)
-  (add-value "topic" (getf meet :topic) params)
+  (add-value "topic" (fstr "~a: ~a" track (getf meet :topic)) params)
   (render layout params))
 
-(defun meet-rows-html (meets layout params)
+(defun meet-rows-html (meets track layout params)
   "Create HTML to represent all rows of meeting entries"
   (join-strings
-   (loop for index from 1 to (length meets)
+   (loop for row-id from 1 to (length meets)
          for meet in meets
-         collect (meet-row-html meet index layout params))))
+         collect (meet-row-html meet track row-id layout params))))
 
 (defun meet-tracks-html (slug slugs)
   "Create HTML to list all meeting tracks."
@@ -929,14 +929,14 @@ value, next-index."
     (add-value "subtitle" "" params)
     (add-value "zone-slug" "maze" params)
     (add-value "zone-name" "Maze" params)
-    (add-value "slug" (if slug slug "index") params)
+    (add-value "slug" (if slug slug "index") params) ; Needed by next call.
     (add-value "track-path"
                (render (if slug "../{{ slug }}/{{ index }}" "../cc.html")
                        params) params)
     (add-value "track-name" (if slug track "club") params)
     (add-value "other-title" (if slug "Other Tracks" "Individual Tracks") params)
     (add-value "other" (if slug "other" "individual") params)
-    (add-value "rows" (meet-rows-html meets item-layout params) params)
+    (add-value "rows" (meet-rows-html meets track item-layout params) params)
     (add-value "total-count" past-count params)
     (add-value "meeting-label" (if (= past-count 1) "meeting" "meetings") params)
     (add-value "total-minutes" minutes params)
