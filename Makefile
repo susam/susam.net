@@ -215,7 +215,7 @@ check-links:
 	@echo Done; echo
 
 check-rendering:
-	grep -r '{{' _site | grep '\.html$$' | head
+	grep -r --include '*.html' '{{' _site | head
 	@echo Done; echo
 
 check-paths:

@@ -1211,7 +1211,9 @@ value, next-index."
                       (cons "render" "yes")
                       (cons "heads" "")
                       (cons "imports" "")
-                      (cons "index" "")))
+                      (cons "index" "")
+                      (cons "zone-slug" "blog")
+                      (cons "zone-name" "Blog")))
         (page-layout (read-file "layout/page.html"))
         (posts))
     ;; If params file exists, merge it with local params.
