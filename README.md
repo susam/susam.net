@@ -54,3 +54,9 @@ Copyright
 
 Copyright (c) 2006-2022 Susam Pal\
 All Rights Reserved.
+
+The Common Lisp source code files [site.lisp](site.lisp) and
+[test.lisp](test.lisp) are available under the terms of the MIT
+License.
+
+See [COPYRIGHT.md](COPYRIGHT.md) for more details.
