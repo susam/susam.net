@@ -1,6 +1,15 @@
 ;;;; Tests
 ;;;; =====
 
+;;;; Copyright (c) 2021-2022 Susam Pal
+;;;;
+;;;; You can use, copy, modify, merge, publish, distribute,
+;;;; sublicense, and/or sell copies of it, under the terms of the MIT
+;;;; License. See COPYRIGHT.md for complete details.
+;;;;
+;;;; This software is provided "AS IS", WITHOUT WARRANTY OF ANY KIND,
+;;;; express or implied. See COPYRIGHT.md for complete details.
+
 (require "uiop")
 
 
