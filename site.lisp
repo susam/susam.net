@@ -70,6 +70,10 @@
   "Read file and close the file."
   (uiop:read-file-string filename))
 
+(defun read-list (filename)
+  "Read Lisp file."
+  (read-from-string (read-file filename)))
+
 (defun write-file (filename text)
   "Write text to file and close the file."
   (make-directory filename)
@@ -820,7 +824,7 @@ value, next-index."
       (setf posts (cdr tag-entry))
       (add-value "tag-slug" (string-downcase tag) params)
       (add-value "tag-title" tag params)
-      (setf title (render "Susam's {{ tag-title }} {{ zone-name }}" params))
+      (setf title (render "{{ nick }}'s {{ tag-title }} {{ zone-name }}" params))
       (add-value "title" title params)
       (make-post-list posts list-dst list-layout item-layout params)
       (make-post-list posts feed-dst feed-xml item-xml params))))
@@ -842,19 +846,17 @@ value, next-index."
 ;;; Complete Zone
 ;;; -------------
 
-(defun zone-title (zone-slug zone-name author-name)
+(defun zone-title (zone-slug zone-name params)
   "Map slug to title of the zone's blog."
-  (let* ((author-nick (first-word author-name)))
-    (cond ((string= zone-slug "blog")
-           author-name)
-          ((string= zone-slug "maze")
-           (fstr "~a's ~a" author-nick zone-name)))))
+  (cond ((string= zone-slug "blog")
+         (get-value "author" params))
+        ((string= zone-slug "maze")
+         (fstr "~a's ~a" (get-value "nick" params) zone-name))))
 
 (defun make-zone (zone-slug page-layout params)
   "Create a complete zone with blog, tags, and tree."
-  (let* ((author-name (get-value "author" params))
-         (zone-name (string-capitalize zone-slug))
-         (zone-title (zone-title zone-slug zone-name author-name))
+  (let* ((zone-name (string-capitalize zone-slug))
+         (zone-title (zone-title zone-slug zone-name params))
          (dst-dir (fstr "_site/~a/" zone-slug))
          (tags-dst "_site/{{ zone-slug }}/tag/")
          (posts)
@@ -961,8 +963,8 @@ value, next-index."
 
 (defun make-meets (page-layout params)
   "Create meeting log pages for all tracks."
-  (let ((meets (read-from-string (read-file "content/maze/meets.lisp")))
-        (slugs (read-from-string (read-file "content/maze/slugs.lisp")))
+  (let ((meets (read-list "content/maze/meets.lisp"))
+        (slugs (read-list "content/maze/slugs.lisp"))
         (list-layout (read-file "layout/meets/list.html"))
         (item-layout (read-file "layout/meets/item.html"))
         (dst "_site/maze/meets/{{ slug }}.html"))
@@ -1181,7 +1183,7 @@ value, next-index."
     (set-nested-template home-layout page-layout)
     (add-value "zone-name" "Blog" params)
     (add-value "zone-slug" "blog" params)
-    (add-value "title" "Susam Pal" params)
+    (add-value "title" (get-value "author" params) params)
     (add-value "subtitle" "" params)
     (make-post-list posts "_site/index.html" home-layout item-layout params)))
 
@@ -1196,19 +1198,16 @@ value, next-index."
 (defun main ()
   "Generate entire website."
   (remove-directory "_site/")
-  (let ((params (list (cons "author" "Susam Pal")
-                      (cons "subtitle" " - Susam Pal")
-                      (cons "zone-slug" "blog")
-                      (cons "zone-name" "Blog")
-                      (cons "site-url" "https://susam.net/")
-                      (cons "initial-year" 2001)
-                      (cons "current-year" (nth-value 5 (get-decoded-time)))
+  (let ((params (list (cons "current-year" (nth-value 5 (get-decoded-time)))
                       (cons "render" "yes")
                       (cons "heads" "")
                       (cons "imports" "")
                       (cons "index" "")))
         (page-layout (read-file "layout/page.html"))
         (posts))
+    ;; If params file exists, merge it with local params.
+    (when (probe-file "params.lisp")
+      (setf params (append (read-list "params.lisp") params)))
     ;; If *params* exists, merge it with local params.
     (when *params*
       (setf params (append *params* params)))
@@ -1217,11 +1216,15 @@ value, next-index."
     (copy-directory "_cache/mathjax/" "_site/js/mathjax/")
     ;; Stylesheet.
     (make-css)
+    ;; Zones.
+    (add-value "nick" (first-word (get-value "author" params)) params)
     (add-value "head" "main.css" params)
     (make-zone "maze" page-layout params)
     (make-meets page-layout params)
     (setf posts (make-zone "blog" page-layout params))
+    ;; Home page.
     (make-home posts page-layout params)
+    ;; Other sections.
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)
     (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
