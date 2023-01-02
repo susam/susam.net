@@ -1228,7 +1228,6 @@ value, next-index."
     ;; Stylesheet.
     (make-css)
     ;; Zones.
-    (add-value "nick" (first-word (get-value "author" params)) params)
     (add-value "head" "main.css" params)
     (make-zone "maze" page-layout params)
     (make-meets page-layout params)
