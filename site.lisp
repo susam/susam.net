@@ -898,42 +898,54 @@ value, next-index."
   "Whether the given meeting entry is scheduled for future."
   (minusp (getf meet :members)))
 
-(defun meet-row-html (meet track row-id layout params)
+(defun find-meet-track (slug slugs)
+  (second (first (remove-if-not (lambda (x) (string= (first x) slug)) slugs))))
+
+(defun meet-row-html (meet slugs row-id layout params)
   "Create HTML to represent a single row of meeting entry."
   (add-value "row-id" row-id params)
   (add-value "class" (if (future-p meet) "future" "past") params)
   (add-value "date" (format-meet-date (getf meet :date)) params)
   (add-value "duration" (getf meet :duration) params)
   (add-value "members" (if (future-p meet) "-" (getf meet :members)) params)
-  (add-value "topic" (fstr "~a: ~a" track (getf meet :topic)) params)
+  (add-value "topic" (fstr "~a: ~a"
+                           (find-meet-track (getf meet :slug) slugs)
+                           (getf meet :topic)) params)
   (render layout params))
 
-(defun meet-rows-html (meets track layout params)
+(defun meet-rows-html (meets slugs layout params)
   "Create HTML to represent all rows of meeting entries"
   (join-strings
    (loop for row-id from 1 to (length meets)
          for meet in meets
-         collect (meet-row-html meet track row-id layout params))))
+         collect (meet-row-html meet slugs row-id layout params))))
 
-(defun meet-tracks-html (slug slugs)
+(defun meet-log-path (current-slug other-slug)
+  "Return relative path to meeting track log page."
+  (let* ((prefix (if current-slug "../" ""))
+         (middle (if other-slug (fstr "~a/" other-slug) "")))
+    (fstr "~a~alog.html" prefix middle)))
+
+(defun meet-tracks-html (current-slug slugs)
   "Create HTML to list all meeting tracks."
-  (setf slugs (remove-if (lambda (x) (or (not (car x))
-                                         (string= (car x) slug))) slugs))
-  (join-strings
-   (loop for (slug track) in (reverse slugs)
-         collect (fstr "<li><a href=\"~a.html\">~a</a></li>~%" slug track))))
+  (join-strings (loop for (slug track) in (reverse slugs)
+                      collect (fstr "<li><a href=\"~a\">~a</a></li>~%"
+                                    (meet-log-path current-slug slug)
+                                    (if track track "All Meetings")))))
 
 (defun select-meets (slug meets)
   "Filter meets to select the ones with the specified slug."
   (remove-if-not (lambda (x) (string= (getf x :slug) slug)) meets))
 
-(defun make-meet-log (meets slug slugs track dst list-layout item-layout params)
+(defun make-meet-log (meets slug slugs track list-layout item-layout params)
   "Create meeting log page for the given list of meets."
   (setf meets (if slug (select-meets slug meets) meets))
   (let* ((past-meets (loop for m in meets when (not (future-p m)) collect m))
          (past-count (length past-meets))
          (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
-         (members (reduce #'+ (loop for m in past-meets collect (getf m :members)))))
+         (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
+         (dst (if slug "_site/maze/meet/{{ slug }}/log.html"
+                  "_site/maze/meet/log.html")))
     (add-value "head" (fstr "~a extra.css meets.css math.inc"
                             (get-value "head" params)) params)
     (add-value "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
@@ -942,12 +954,12 @@ value, next-index."
     (add-value "zone-name" "Maze" params)
     (add-value "slug" (if slug slug "index") params) ; Needed by next call.
     (add-value "track-path"
-               (render (if slug "../{{ slug }}/{{ index }}" "../cc.html")
+               (render (if slug "../{{ slug }}/{{ index }}" "../{{ index }}")
                        params) params)
-    (add-value "track-name" (if slug track "club") params)
+    (add-value "track-name" (if track track "club") params)
     (add-value "other-title" (if slug "Other Tracks" "Individual Tracks") params)
     (add-value "other" (if slug "other" "individual") params)
-    (add-value "rows" (meet-rows-html meets track item-layout params) params)
+    (add-value "rows" (meet-rows-html meets slugs item-layout params) params)
     (add-value "total-count" past-count params)
     (add-value "meeting-label" (if (= past-count 1) "meeting" "meetings") params)
     (add-value "total-minutes" minutes params)
@@ -975,13 +987,12 @@ value, next-index."
   (let ((meets (read-list "content/maze/meets.lisp"))
         (slugs (read-list "content/maze/slugs.lisp"))
         (list-layout (read-file "layout/meets/list.html"))
-        (item-layout (read-file "layout/meets/item.html"))
-        (dst "_site/maze/meets/{{ slug }}.html"))
+        (item-layout (read-file "layout/meets/item.html")))
     (set-nested-template list-layout page-layout)
     (check-meets-dates meets)
     (push (list nil nil) slugs)
     (loop for (slug track) in slugs
-          do (make-meet-log meets slug slugs track dst
+          do (make-meet-log meets slug slugs track
                             list-layout item-layout params))))
 
 
@@ -1230,6 +1241,7 @@ value, next-index."
     ;; Zones.
     (add-value "head" "main.css" params)
     (make-zone "maze" page-layout params)
+    ;; Meetup logs.
     (make-meets page-layout params)
     (setf posts (make-zone "blog" page-layout params))
     ;; Home page.

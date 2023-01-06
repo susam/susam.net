@@ -32,7 +32,8 @@ server {
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
     rewrite ^/blog/x86-quine.html$ /blog/self-printing-machine-code.html permanent;
     rewrite ^/maze/rss.xml$ /maze/feed.xml permanent;
-    rewrite ^/club/(.*)$ /maze/$1 redirect;
+    rewrite ^/club/(.*)/$ /maze/meet/$1/ redirect;
+    rewrite ^/maze/mastering-emacs/$ /maze/meet/mastering-emacs/ redirect;
 }
 
 # https://(www.susam.net|susam.in)/ => https://susam.net/
