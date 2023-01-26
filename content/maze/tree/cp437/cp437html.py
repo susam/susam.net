@@ -25,8 +25,8 @@ with open('cp437.txt') as f:
 rows = ''
 for i in range(256):
     c = s[i]
-    rows += ('      <tr><td>{}</td><td>0x{:02X}</td><td>&#x{:02X};</td><td>{:04X}</td></tr>\n'
-             .format(i, i, ord(c) if c != '\0' else 32, ord(c)))
+    rows += ('      <tr><td>{}</td><td>0x{:02X}</td><td>&#x{:X};</td><td>{:04X}</td></tr>\n'
+             .format(i, i, ord(c), ord(c)))
 
 with open('cp437.html', 'w') as f:
     html = template.replace('{{ rows }}', rows)
