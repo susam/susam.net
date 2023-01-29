@@ -1,7 +1,6 @@
-<!-- title: Notes on Chapter 2 -->
+<!-- title: Notes on Chapter 2: Arithmetical Functions and Dirichlet Multiplication -->
+<!-- date: 2021-03-26 -->
 <!-- import: math.inc -->
-<h1>{{ title }}</h1>
-<div>Arithmetical Functions and Dirichlet Multiplication</div>
 
 <!-- Section 2.11 -->
 <h2 id="2.11">&sect; 2.11: The inverse of a completely multiplicative function</h2>
@@ -42,7 +41,7 @@
     \mu(p^2) = \mu(p^3) = \dots = 0.
   \]
 </p>
-<h3 id="third-equation-in-proof-of-theorem-2.17">Third equation in proof of Theorem 2.17</h3>
+<h3 id="third-equation-in-the-proof-of-theorem-2.17">Third equation in the proof of Theorem 2.17</h3>
 <p>
   \begin{align*}
     \sum_{d \mid p^a} \mu(d) f(d) f\left(\frac{p^a}{d}\right)
@@ -51,13 +50,13 @@
            & \mu(1) f(1) f\left( \frac{p^a}{1} \right) +
              \mu(p) f(p) f\left( \frac{p^a}{p} \right) \\
            & + \underbrace{\mu(p^2) f(p^2) f\left( \frac{p^a}{p^2} \right) + \dots +
-                           \mu(p^a) f(p^a) f\left( \frac{p^a}{p^a} \right)}_{= 0}
+                           \mu(p^a) f(p^a) f\left( \frac{p^a}{p^a} \right)}_{=\,0}
         \end{aligned} \\
     & = \mu(1) f(1) f(p^a) + \mu(p) f(p) f(p^{a - 1}) \\
     & = f(p^a) - f(p) f(p^{a - 1}).
   \end{align*}
 </p>
-<h3 id="final-step-in-proof-of-theorem-2.17">Final step in proof of Theorem 2.17</h3>
+<h3 id="final-step-in-the-proof-of-theorem-2.17">Final step in the proof of Theorem 2.17</h3>
 <p>
   \begin{align*}
     f(p^a)
@@ -122,7 +121,7 @@
     g(p_i^{a_i})
     & = \sum_{d \mid p_i^{a_i}} \mu(d) f(d) \\
     & = \mu(1) f(1) + \mu(p_i) f(p_i) +
-        \underbrace{\mu(p_i^2) f(p_i^2) + \dots + \mu(p_i^{a_i}) f(p_i^{a_i})}_{= 0} \\
+        \underbrace{\mu(p_i^2) f(p_i^2) + \dots + \mu(p_i^{a_i}) f(p_i^{a_i})}_{=\,0} \\
     & = 1 - f(p).
   \end{align*}
 

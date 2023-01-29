@@ -1,0 +1,204 @@
+<!-- title: Notes on Chapter 3 -->
+<!-- import: math.inc -->
+<h1>{{ title }}</h1>
+<div>Averages of Arithmetical Functions</div>
+
+<!-- Section 3.3 -->
+<h2 id="3.3">&sect; 3.3: Euler's summation formula</h2>
+<h3 id="main-idea-behind-the-proof-of-eulers-summation-formula">Main idea behind the proof of Euler's summation formula</h3>
+<p>
+  Important numbers in the proof:
+
+  \[
+    0, \quad
+    \underbrace{[y]}_{=\,m}, \quad
+    y, \quad
+    \underbrace{[y] + 1}_{=\,m + 1}, \quad
+    \underbrace{[x]}_{=\,k}, \quad
+    x.
+  \]
+
+  Splitting the definite integral:
+
+  \[
+    \int_y^x f(t)\,dt
+    = \int_{y}^{[y] + 1} f(t)\,dt
+    + \underbrace{\int_{[y] + 1}^{[y] + 2} f(t)\,dt + \dots
+    + \int_{[x] - 1}^{[x]} f(t)\,dt}_{=\,\int_{[y] + 1}^{[x]} f(t)\, dt}
+    + \int_{[x]}^{x} f(t)\,dt.
+  \]
+
+  Using the more convenient variables \( m \) and \( k \), we get:
+
+  \[
+    \int_y^x f(t)\,dt
+    = \int_m^{m + 1} f(t)\,dt
+    + \underbrace{\int_{m + 1}^{m + 2} f(t)\,dt + \dots
+    + \int_{k - 1}^{k} f(t)\,dt}_{=\,\int_{m + 1}^{k} f(t)\, dt}
+    + \int_{k}^{x} f(t)\,dt.
+  \]
+</p>
+<h3 id="sum-of-integrals-in-the-proof-of-eulers-summation-formula">Sum of integrals in the proof Euler's summation formula</h3>
+<p>
+  \begin{align*}
+    \int_{m + 1}^{k} [t] f'(t) dt
+    & = \int_{m + 1}^{m + 2} [t] f'(t) dt
+    + \int_{m + 2}^{m + 3} [t] f'(t) dt + \dots
+    + \int_{k - 1}^{k} [t] f'(t) dt \\
+    & =
+    \begin{aligned}[t]
+      & (m + 2) f(m + 2) - (m + 1) f(m + 1) - f(m + 2) \\
+    + & (m + 3) f(m + 3) - (m + 2) f(m + 2) - f(m + 3) \\
+      & \dots \\
+    + & (k) f(k) - (k - 1) f(k - 1) - f(k)
+    \end{aligned} \\
+    & = kf(k) - (m + 1)f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
+    & = kf(k) - mf(m + 1) - f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
+    & = kf(k) - mf(m + 1) - \sum_{n=m + 1}^{k} f(n) \\
+    & = kf(k) - mf(m + 1) - \sum_{y &lt; n \le x} f(n).
+  \end{align*}
+</p>
+<h3 id="equation-6-in-the-proof-of-eulers-summation-formula">Equation (6) in the proof of Euler's summation formula</h3>
+<p>
+  \begin{align*}
+    \sum_{y &lt; n \le x} f(n)
+    & = - \int_{m + 1}^k [t] f'(t) \, dt + k f(k) - m f(m + 1) \\
+    & = \begin{aligned}[t]
+          & \left( - \int_y^{m + 1} [t] f'(t) \, dt
+                   - \int_{m + 1}^k [t] f'(t) \, dt
+                   - \int_k^x [t] f'(t) \, dt \right) \\
+          & + f(k) - m f(m + 1)
+            + \int_y^{m + 1} [t] f'(t) \, dt
+            + \int_k^x [t] f'(t) \, dt
+        \end{aligned} \\
+    & = - \int_y^x [t] f'(t) \, dt + k f(k) - m f(m + 1)
+        + \int_y^{m + 1} m f'(t) \, dt + \int_k^x k f'(t) \, dt \\
+    & = - \int_y^x [t] f'(t) \, dt + k f(k) - m f(m + 1)
+        + \biggl( m f(m + 1) - m f(y) \biggr) + \biggl( k f(x) - k f(k) \biggr) \\
+    & = - \int_y^x [t] f'(t) \, dt + k f(x) - m f(y).
+  \end{align*}
+</p>
+<h3 id="using-integration-by-parts-in-the-proof-of-eulers-summation-formula">Using integration by parts in the proof of Euler's summation formula</h3>
+<p>
+  Integration by parts:
+
+  \[
+    \int uv \, dt = u \int v \, dt - \int u' \left( \int v \, dt \right) \, dt.
+  \]
+
+  \[
+    \int_y^x t f'(t) \, dt
+    = \left. \left( t f(t) - \int f(t) \, dt \right) \right|_y^x
+    = x f(x) - y f(y) - \int_y^x f(t) \, dt.
+  \]
+
+  Final step of the proof:
+
+  \begin{align*}
+    \sum_{y &lt; n \le x} f(n)
+    & = -\int_y^x [t] f'(t) \, dt + k f(x) - m f(y) \\
+    & = \begin{aligned}[t]
+          & -\int_y^x [t] f'(t) \, dt + [x] f(x) - [y] f(y) \\
+          & + \underbrace{
+            \left( \int_y^x t f'(t) \, dt - x f(x) + y f(y)
+                   + \int_y^x f(t) \, dt \right)}_{0 \text{ by above definite integral}}
+        \end{aligned} \\
+    & = \int_y^x f(t) \, dt + \int_y^x (t - [t]) f'(t) \, dt
+        + f(x)([x] - x) - f(y)([y] - y).
+  \end{align*}
+</p>
+
+<!-- Section 3.4 -->
+<h2 id="3.4">&sect; 3.3: Some elementary asymptotic formulas</h2>
+<h3 id="splitting-integral-in-the-proof-of-theorem-3.2">Splitting integral in the proof of Theorem 3.2</h3>
+<p>
+  Splitting definite integral:
+
+  \begin{align*}
+    & \int_1^{\infty} f(t) \, dt = \int_1^{x} f(t) \, dt + \int_x^{\infty} f(t) \, dt \\
+    & \iff
+    \int_1^{\infty} f(t) \, dt - \int_x^{\infty} f(t) \, dt = \int_1^x f(t) \, dt.
+  \end{align*}
+
+  Solving improper integral:
+
+  \[
+    \int_x^{\infty} \frac{1}{t^2} \, dt
+    = \lim_{b \to \infty} \int_x^b \frac{1}{t^2} dt
+    = \lim_{b \to \infty} \frac{-1}{t} \Biggr|_x^b
+    = \left( \lim_{b \to \infty} \frac{-1}{b} \right) + \frac{1}{x}
+    = 0 + \frac{1}{x} = \frac{1}{x}.
+  \]
+</p>
+<h3 id="eulers-constant-in-the-proof-of-theorem-3.2-a">Euler's constant in the proof of Theorem 3.2 (a)</h3>
+<p>
+  Definition of Euler's constant:
+
+  \[
+    C = \lim_{n \to \infty}
+        \left( 1 + \frac{1}{2} + \frac{1}{3} + \dots + \frac{1}{n} - \log n \right)
+      = \lim_{x \to \infty} \left( \sum_{n \le x} \frac{1}{n} - \log x \right).
+  \]
+
+  We begin with
+
+  \[
+    \sum_{n \le x} \frac{1}{n}
+    = \log x
+    + \underbrace{1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt}_{\text{We will show below that this is \( C \)}}
+    + O\left( \frac{1}{x} \right).
+  \]
+
+  Rearranging the terms, we get
+
+  \[
+    \sum_{n \le x} \frac{1}{n} - \log x
+    = 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt
+    + O\left( \frac{1}{x} \right).
+  \]
+
+  Using the definition of \( C \), we get
+
+  \begin{align*}
+    C
+    & = \lim_{x \to \infty}
+        \left( \sum_{n \le x} \frac{1}{n} - \log x \right) \\
+    & = \lim_{x \to \infty}
+        \left( 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt
+                 + O\left( \frac{1}{x} \right) \right) \\
+    & = 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt.
+  \end{align*}
+</p>
+<h3 id="some-integrals-in-the-proof-of-theorem-3.2-b">Some integrals in the proof of Theorem 3.2 (b)</h3>
+<p>
+  \[
+    \int_1^x \frac{dt}{t^s}
+    = \frac{t^{-s + 1}}{-s + 1} \Biggr|_1^x
+    = \frac{t^{1 - s}}{1 - s} \Biggr|_1^x
+    = \frac{x^{1 - s}}{1 - s} - \frac{1}{1 - s}.
+  \]
+
+  \[
+    \int_1^x \frac{t - [t]}{t^{s + 1}} \, dt
+    =   \int_1^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt
+      - \int_x^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt
+    = \int_1^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt
+    + \underbrace{\frac{1}{s} O\left( x^{-s}\right)}_{\text{explained below}}.
+  \]
+
+  \[
+    0
+    \le \int_x^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt
+    \le \int_x^{\infty} \frac{1}{t^{s + 1}} \, dt
+    = \frac{-1}{st^s} \Biggr|_x^\infty = \frac{1}{sx^s} = \frac{1}{s} x^{-s}.
+  \]
+
+  \begin{align*}
+    \sum_{n \le x} \frac{1}{n^s}
+    & = \int_1^x \frac{dt}{t^s}
+        - s \int_1^x \frac{t - [t]}{t^{s + 1}} + 1
+        - \frac{x - [x]}{x^s} \, dt \\
+    & = \frac{x^{1 - s}}{1 - s} - \frac{1}{1 - s}
+        - s \int_1^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt + 1 + O(x^{-s}).
+  \end{align*}
+</p>
