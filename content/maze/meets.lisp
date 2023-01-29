@@ -590,21 +590,147 @@
   :members 6)
  (:date "2021-09-30 17:00"
   :slug "iant"
-  :topic "Sections 14.9-14.10; Pages 321-322; Consequences of Jacobi's identity, Logarithmic differentiation of generationf functions"
+  :topic "Sections 14.9-14.10; Pages 321-322; Consequences of Jacobi's identity, Logarithmic differentiation of generation functions"
   :duration 40
   :members 5)
- (:date "2021-12-16 20:00"
+ (:date "2021-10-01 17:00"
+  :slug "iant"
+  :topic "Sections 14.10-14.11; Pages 323-324; Recursion formula for \( p_{A,f}(n) \), The partition identities of Ramanujan"
+  :duration 35
+  :members 7)
+ (:date "2022-12-16 20:00"
   :slug "mastering-emacs"
-  :topic "Chapter 1: Pages 1-18"
+  :topic "Chapter 1; Pages 1-18; Introduction"
+  :duration 45
+  :members 11)
+ (:date "2022-12-17 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 2: Pages 19-29; The Way of Emacs: Guiding Philosophy, Lisp, Extensibility"
+  :duration 45
+  :members 9)
+ (:date "2022-12-18 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 2: Pages 30-39; The Way of Emacs: Buffer, Window, Frame, Modeline, Echo Area, Minibuffer, Point, Mark, Major Modes, Minor Modes"
+  :duration 60
+  :members 10)
+ (:date "2022-12-23 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 40-47: First Steps: Starting Emacs, Emacs Client-Server"
+  :duration 40
+  :members 11)
+ (:date "2022-12-24 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 48-52: First Steps: The Emacs Interface, Keys"
+  :duration 45
+  :members 9)
+ (:date "2022-12-25 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 52-56: First Steps: Keys, Caps Lock as Control, M-x: Execute Extended Command"
+  :duration 45
+  :members 9)
+ (:date "2022-12-30 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 56-62: First Steps: M-S-x: Execute Extended Command for Buffer, Universal Arguments, Discovering and Remembering Keys"
+  :duration 50
+  :members 8)
+ (:date "2022-12-31 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 63-70: First Steps: Configuring Emacs, The Customize Interface"
+  :duration 50
+  :members 6)
+ (:date "2023-01-01 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 70-74: First Steps: Evaluating Elisp Code, The Package Manager, Custom Color Themes"
+  :duration 45
+  :members 8)
+ (:date "2023-01-06 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 74-80: First Steps: The Info Manual, Apropos"
+  :duration 45
+  :members 8)
+ (:date "2023-01-07 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 3: Pages 80-83: First Steps: The Describe System"
+  :duration 45
+  :members 6)
+ (:date "2023-01-08 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 84-91: The Theory of Movement: The Basics, Find File, Major mode load order"
+  :duration 55
+  :members 6)
+ (:date "2023-01-13 22:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 91-97: The Theory of Movement: Coding Systems, Line Endings, Save Buffer, Exit Emacs, Switch Buffer, Buffer Switching Alternatives"
+  :duration 50
+  :members 10)
+ (:date "2023-01-14 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 97-103: The Theory of Movement: Kill Buffer, Keyboard Escape, Undo"
+  :duration 45
+  :members 8)
+ (:date "2023-01-15 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 103-107: The Theory of Movement: Window Management, Working with Other Windows, Frame Management"
+  :duration 40
+  :members 7)
+ (:date "2023-01-20 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 108-113: The Theory of Movement: Tab Bars and Tab Lines, Tab Bar Mode, Tab Line Mode"
+  :duration 40
+  :members 8)
+ (:date "2023-01-21 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 113-120: The Theory of Movement: Navigation Keys, Moving by Character, Moving by Line"
+  :duration 45
+  :members 5)
+ (:date "2023-01-22 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 120-126: The Theory of Movement: Moving by Word"
+  :duration 40
+  :members 7)
+ (:date "2023-01-27 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 126-131: The Theory of Movement: Moving by S-Expressions"
+  :duration 40
+  :members 7)
+ (:date "2023-01-28 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 132-136: The Theory of Movement: Other Movement Commands: Moving by Paragraph, Moving by Sentence, Moving by Defun, Moving by Pages"
+  :duration 45
+  :members 6)
+ (:date "2023-01-29 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 136-139: The Theory of Movement: Scrolling"
+  :duration 25
+  :members 5)
+ (:date "2023-02-03 22:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 140-143: The Theory of Movement: Bookmarks and Registers"
   :duration 40
   :members -1)
- (:date "2021-12-17 10:00"
+ (:date "2023-02-04 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 2: Pages 19-29"
+  :topic "Chapter 4: Pages 143-147: The Theory of Movement: Selections and Regions"
   :duration 40
   :members -1)
- (:date "2021-12-18 10:00"
+ (:date "2023-02-05 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 2: Pages 30-39"
+  :topic "Chapter 4: Pages 147-152: The Theory of Movement: Selection Compatibility Modes, Setting the Mark"
   :duration 40
-  :members -1))
+  :members -1)
+ (:date "2023-02-10 22:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 152-161: The Theory of Movement: Searching and Indexing"
+  :duration 40
+  :members -1)
+ (:date "2023-02-11 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 162-167: The Theory of Movement: Occur: Print and edit lines matching an expression, Imenu: Jump to Definitions"
+  :duration 40
+  :members -1)
+ (:date "2023-02-12 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 167-72: Helm: Incremental Completion and Search"
+  :duration 40
+  :members -1)
+ )

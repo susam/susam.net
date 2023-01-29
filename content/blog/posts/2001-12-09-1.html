@@ -13,8 +13,8 @@
   \]
 
   Intuitively, it may feel like the number \( 0.999\ldots \) gets
-  closer and closer to \( 1 \) without ever reaching \( 1 \), however,
-  such a feeling is misleading. When analyzed rigorously, we find that
+  closer and closer to \( 1 \) without ever reaching \( 1 \). When
+  analyzed rigorously, we find that
 
   \[
   0.999\ldots = 1.
@@ -46,11 +46,11 @@
 </p>
 <h2 id="another-algebraic-demonstration-2">Another Algebric Demonstration</h2>
 <p>
-  Let us see another similar demonstration. We let \( x = 0.999\dots
+  Let us see another similar demonstration. We let \( x = 0.999\ldots
   \) and obtain
 
   \[
-  10x = 9.999\dots = 9 + 0.999\dots = 9 + x.
+  10x = 9.999\ldots = 9 + 0.999\ldots = 9 + x.
   \]
 
   Subtracting \( x \) from both sides, we get
@@ -65,12 +65,7 @@
   x = 1.
   \]
 
-  Thus \( 0.999\dots = 1. \)
-  The above equation can be rewritten as
-
-  \[
-  10 \times 0.999\ldots = 0.999\ldots + 9.
-  \]
+  Thus \( 0.999\ldots = 1. \)
 </p>
 <p>
   Now it is worth noting here that these algebraic demonstrations are
@@ -84,7 +79,14 @@
 </p>
 <h2 id="infinite-geometric-series">Infinite Geometric Series</h2>
 <p>
-  From the study of real analysis, we know that
+  Let us denote \( 0.999\ldots \) as
+
+  \[
+  0.999\ldots = \frac{9}{10} + \frac{9}{100} + \frac{9}{1000} + \ldots
+  \]
+
+  Note that the RHS is an infinite geometric series. From the study of
+  real analysis, we know that
 
   \[
   a + ar + ar^2 + \dots = \frac{a}{1 - r}
@@ -94,7 +96,8 @@
   &lt; 1. \) Now let \( a = 9/10 \) and \( r = 1/10 \) to get
 
   \[
-  \frac{9}{10} + \frac{9}{100} + \dots = \frac{\frac{9}{10}}{1 - \frac{1}{10}}.
+  \frac{9}{10} + \frac{9}{100} + \frac{9}{1000} + \dots
+  = \frac{\frac{9}{10}}{1 - \frac{1}{10}}.
   \]
 
   The LHS is \( 0.999\ldots \) and the RHS is \( 1 \), so we get
@@ -104,14 +107,71 @@
   \]
 
   Now one might argue that here too we did not prove the formula for
-  geometric series. That is true but the point of this post is not to
-  establish the basic theorems of real analysis but instead to show
+  geometric series. That is true but the point of this article is not
+  to establish the basic theorems of real analysis but instead to show
   that we can use known theorems to convince ourselves beyond any
-  doubt that \( 0.999\dots \) is indeed exactly equal to \( 1. \)
+  doubt that \( 0.999\ldots \) is indeed exactly equal to \( 1. \)
   Relying on the formula for geometric series provides us a convenient
   starting point without compromising on rigour. In particular, this
   analytic proof depends on the convergence of the geometric series
-  when \( \lvert r \rvert &lt; 1 \) the proof of which can be found in
-  any introductory book on real analysis. There are several other
-  proofs too but this is one of the very approachable ones.
+  when \( \lvert r \rvert &lt; 1 \). The proof of convergence can be
+  found in any introductory book on real analysis.
 </p>
+<h2 id="avoiding-infinity">Avoiding Infinity</h2>
+<p>
+  In this section, we will take a close look at the LHS above. The LHS
+  seems to have a sum of an infinite number of terms but we cannot
+  literally add infinite terms together, can we? What does the LHS
+  mean then?
+</p>
+<p>
+  Adding infinite number of terms is not a valid operation. Infinity
+  is not a <em>number</em>. It is a <em>notion</em>, a notion that we
+  can better understand, in this context, using limits. When we write
+
+  \[
+  \frac{9}{10} + \frac{9}{100} + \dots = 1
+  \]
+
+  what we really mean can be expressed formally as follows:
+
+  \[
+  \lim_{n \to \infty} \sum_{k=1}^n \frac{9}{10^k} = 1.
+  \]
+
+  By the definition of limit of sequence, what the above equation
+  means is that for every real \( \epsilon &gt; 0, \) there exists a
+  positive integer \( N \) such that for all \( n \ge N, \) we have
+
+  \[
+  \left\lvert 1 - \sum_{k=1}^n \frac{9}{10^k} \right\rvert &lt; \epsilon.
+  \]
+
+  In simpler words, we can say that no matter how small a positive
+  real number we choose for \( \epsilon \), we can find large enough
+  threshold for \( n \) such that for all values of \( n \) equal to
+  or above that threshold, the difference between \( 1 \) and \(
+  \sum_{k=1}^n \frac{9}{10^k} \) becomes smaller than \( \epsilon \).
+  To summarize, we have shown using the definition of limit of a
+  sequence that
+
+  \[
+  0.999\ldots = \lim_{n \to \infty} \sum_{k=1}^n \frac{9}{10^k} = 1.
+  \]
+
+  This is one way of several ways to show that \( 0.999\ldots = 1. \)
+  There are several other proofs too but this is one of the very
+  approachable ones.
+</p>
+<h2 id="limiting-joke">Limiting Joke</h2>
+<p>
+  Finally, an adaptation of a popular joke involving limits to end
+  this article:
+</p>
+<blockquote>
+  An infinite number of mathematicians walk into a bar. The first
+  says, "Give me nine tenths of a beer." The second says, "I'll have
+  nine hundredths of a beer." The third says, "Nine thousandths of a
+  beer, please." The bartender pours one beer and says, "Come on,
+  people. Know your limits."
+</blockquote>

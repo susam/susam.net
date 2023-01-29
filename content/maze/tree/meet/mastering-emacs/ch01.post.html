@@ -1,0 +1,113 @@
+<!-- title: Notes on Chapter 1: Introduction -->
+<!-- date: 2022-12-16 -->
+<p>
+  The following notes were taken while
+  <a href="./{{ index }}">discussing</a> Chapter 1 of the
+  book <em>Mastering Emacs</em> (written by Mickey Petersen).
+</p>
+<h2 id="notes">Notes</h2>
+<p>
+  The following notes are related to the content of the chapter.
+</p>
+<h3 id="describe-system">Describe System</h3>
+<p>
+  To get a glimpse of the powerful describe system available in Emacs,
+  type the following key sequence: <code>C-h C-k C-p</code>. This
+  shows the documentation associated with the keys
+  sequence <code>C-p</code> that invokes the command
+  named <code>previous-line</code> to move the cursor to the previous
+  line. The documentation mentions that this command is defined in a
+  file named <code>simple.el</code>. Click on the file name to jump
+  straight into the source code of <code>simple.el</code> where this
+  command is defined. With Emacs, the source code of Emacs is not
+  hidden from the user. The describe system is discussed in Chapter 3
+  of the book.
+</p>
+<h3 id="language-servers">Language Servers</h3>
+<p>
+  The two popular language server implementations for Emacs are LSP
+  Mode and Eglot. Since Emacs 29, Eglot is part of Emacs core and does
+  not require installing a separate package. It can be run with the
+  key sequence <code>M-x eglot RET</code>.
+</p>
+<h3 id="baroque-terminology">Baroque Terminology</h3>
+<p>
+  Some examples are:
+</p>
+<ul>
+  <li>
+    The term <em>point</em> to refer to the cursor.
+  </li>
+  <li>
+    The term <em>yank</em> to paste text. What can be especially
+    confusing for users with prior Vim experience is that Vim uses the
+    term <em>yank</em> to mean copying text but Emacs uses this term
+    to mean pasting text.
+  </li>
+  <li>
+    An OS-level or desktop-environment-level window is known
+    as <em>frame</em> in Emacs. We can split an Emacs frame into
+    multiple panes and these panes are called <em>windows</em> in
+    Emacs.
+  </li>
+</ul>
+<p>
+  There are many more such examples. The above examples illustrate the
+  kind of surprises one should be ready for while reading Emacs
+  documentation. Fortunately, it is often possible to understand the
+  meaning of these terms from the context.
+</p>
+<h3 id="active-friendly-community">Active, Friendly Community</h3>
+<p>
+  There are three good places to hang out with other Emacs users, seek
+  help, or help others with Emacs:
+</p>
+<ul>
+  <li>
+    Reddit <a href="https://www.reddit.com/r/emacs/">r/emacs</a>
+    community.
+  </li>
+  <li>
+    Libera <a href="https://web.libera.chat/#emacs">#emacs</a>
+    channel.
+  </li>
+  <li>
+    Matrix <a href="https://app.element.io/#/room/#emacs:matrix.org">#emacs</a>
+    room.
+  </li>
+</ul>
+<p>
+  All three places appear to be quite friendly to beginners to Emacs!
+</p>
+<h3 id="vim-emulation-layer">Vim Emulation Layer</h3>
+<p>
+  The most popular Vim emulation layer these days is Evil Mode. It is
+  often said that the best implementation of Vim is written in Emacs
+  Lisp. Some people also claim that Evil Mode is a better Vim than Vim
+  itself. In fact, the next chapter, i.e., Chapter 3, says the
+  following:
+</p>
+<blockquote>
+  Vim users are migrating to Emacs because, well, Emacs is often a
+  better Vim than Vim.
+</blockquote>
+<h2 id="links">Links</h2>
+<p>
+  The following list includes some links that were discussed during
+  the book discussion group meetings:
+</p>
+<ul>
+  <li>
+    <a href="https://github.com/Wilfred/helpful">Helpful</a> is an
+    alternative to the built-in Emacs help that provides much more
+    contextual information.
+  </li>
+  <li>
+    <a href="https://github.com/xuchunyang/elisp-demos">Elisp API
+    Demos</a> injects Elisp demo examples in <code>*Help*</code>
+    buffers.
+  </li>
+  <li>
+    <a href="https://planet.emacslife.com/">Planet Emacslife</a> is a
+    feed aggregrator for Emacs-related blogs.
+</ul>
