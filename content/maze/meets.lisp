@@ -706,31 +706,46 @@
  (:date "2023-02-03 22:00"
   :slug "mastering-emacs"
   :topic "Chapter 4: Pages 140-143: The Theory of Movement: Bookmarks and Registers"
-  :duration 40
-  :members -1)
+  :duration 35
+  :members 8)
  (:date "2023-02-04 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 4: Pages 143-147: The Theory of Movement: Selections and Regions"
   :duration 40
-  :members -1)
+  :members 8)
  (:date "2023-02-05 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 4: Pages 147-152: The Theory of Movement: Selection Compatibility Modes, Setting the Mark"
   :duration 40
-  :members -1)
+  :members 3)
  (:date "2023-02-10 22:00"
   :slug "mastering-emacs"
-  :topic "Chapter 4: Pages 152-161: The Theory of Movement: Searching and Indexing"
-  :duration 40
-  :members -1)
+  :topic "Chapter 4: Pages 152-156: The Theory of Movement: Searching and Indexing"
+  :duration 45
+  :members 6)
  (:date "2023-02-11 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 4: Pages 162-167: The Theory of Movement: Occur: Print and edit lines matching an expression, Imenu: Jump to Definitions"
-  :duration 40
-  :members -1)
+  :topic "Chapter 4: Pages 157-160: The Theory of Movement: Searching and Indexing"
+  :duration 50
+  :members 3)
  (:date "2023-02-12 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 4: Pages 167-72: Helm: Incremental Completion and Search"
+  :topic "Chapter 4: Pages 160-161: The Theory of Movement: Searching and Indexing"
+  :duration 45
+  :members 4)
+ (:date "2023-02-17 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 162-167: The Theory of Movement: Occur: Print and edit lines matching an expression, Imenu: Jump to Definitions"
+  :duration 50
+  :members 8)
+ (:date "2023-02-18 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 167-172: Helm: Incremental Completion and Search"
+  :duration 45
+  :members 5)
+ (:date "2023-02-19 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 173-175: IDO: Interactively DO Things"
   :duration 40
-  :members -1)
- )
+  :members 5)
+)
