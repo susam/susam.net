@@ -2,8 +2,13 @@
 <!-- date: 2022-12-18 -->
 <p>
   The following notes were taken while discussing Chapter 2 of the
-  book <em>Petersen, Mastering Emacs</em> in
+  book <em>Mastering Emacs,</em> 2022 edition (written by Mickey
+  Petersen) in
   <a href="./{{ index }}">book discussion group meetings</a>.
+</p>
+<p>
+  An index of notes for all chapters are available
+  at <a href="notes.html">notes.html</a>.
 </p>
 <h2 id="notes">Notes</h2>
 <p>
@@ -16,21 +21,22 @@
 </p>
 <ul>
   <li>
-    <code>M-x zone</code>: Zone out, completely; a built-in screensaver.
+    <code>M-x zone RET</code>: Zone out, completely; a built-in screensaver.
   </li>
   <li>
-    <code>M-x dunnet</code>: Dungeon text adventure game.
+    <code>M-x dunnet RET</code>: Dungeon text adventure game.
   </li>
   <li>
-    <code>M-x tetris</code>: Tetris clone.
+    <code>M-x tetris RET</code>: Tetris clone.
   </li>
   <li>
-    <code>M-x lunar-phases</code>: Lunar phases calendar.
+    <code>M-x lunar-phases RET</code>: Lunar phases calendar.
   </li>
   <li>
-    <code>M-x doctor</code>: ELIZA chatterbot.
+    <code>M-x doctor RET</code>: ELIZA chatterbot.
   </li>
 </ul>
+
 <h3 id="cornerstore-of-emacs">Cornerstone of Emacs</h3>
 <p>
   The chapter mentions the Elisp interpreter as the cornerstone of
@@ -64,33 +70,32 @@
 <h3 id="point-and-mark">Point and Mark</h3>
 <p>
   To try out point and mark quickly, first open a buffer with some
-  text in it. For example, you could open a file,
-  say, <code>foo.txt</code> using the key sequence <code>C-x C-f
-    foo.txt RET</code>. Make sure there are a few lines of text in the
-  buffer. If it is a new buffer, type some lines of text into it. Then
-  move the point (cursor) to any arbitrary place within the text. You
-  can use the motion keys
+  text in it. For example, open a file, say, <code>foo.txt</code>
+  using the key sequence <code>C-x C-f foo.txt RET</code>. Make sure
+  there are a few lines of text in the buffer. If it is a new buffer,
+  type some lines of text into it. Then move the point (cursor) to any
+  arbitrary place within the text. The motion keys
   like <code>C-p</code>, <code>C-n</code>, <code>C-b</code>, <code>C-f</code>,
   etc. or simply <code>&lt;up&gt;</code>, <code>&lt;down&gt;</code>,
-  <code>&lt;left&gt;</code>, <code>&lt;right&gt;</code>, etc. to do
-  this.
+  <code>&lt;left&gt;</code>, <code>&lt;right&gt;</code>, etc. may be
+  used to do this.
 </p>
 <p>
   Then type <code>C-SPC</code>
   (i.e., <kbd>ctrl</kbd>+<kbd>space</kbd>) to set the mark at the
-  current position of the point. Then move the point around. You
-  should see the region between the mark (set earlier) and the point
-  getting highlighted. You can then type <code>M-w</code>
+  current position of the point. Then move the point around. Emacs
+  should now be highlighting the region between the mark (set earlier)
+  and the point. Then type <code>M-w</code>
   (i.e., <kbd>alt</kbd>+<kbd>w</kbd>) to copy the text in the selected
-  region. If you want to cut the text, type <code>C-w</code> instead.
-  Finally, move the point around again and type <code>C-y</code> to
-  paste the copied/cut text.
+  region or type <code>C-w</code> to cut the text instead. Finally,
+  move the point around again and type <code>C-y</code> to paste the
+  copied/cut text.
 </p>
 <h3 id="returning-to-mark">Returning to Mark</h3>
 <p>
   Marks can also be used to remember a position in the buffer to which
-  you may wish to return to later. To try it out, first move the point
-  to some place in the buffer where you want to set a mark. Then
+  we may wish to return to later. To try it out, first move the point
+  to some place in the buffer where a mark needs to be set. Then
   type <code>C-SPC C-SPC</code> to set the mark without activating it
   (activating a mark causes Emacs to highlight the region as explained
   in the previous section). Then move the point to some other place in

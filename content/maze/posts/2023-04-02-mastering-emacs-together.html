@@ -1,10 +1,9 @@
 <!-- title: Mastering Emacs Together -->
 <!-- tag: Emacs Computation Meet -->
-<h2 id="meetings">Meetings</h2>
+<h2 id="tiny-book-club">Tiny Book Club</h2>
 <p>
-  Some of us from the <code>#emacs</code> channels on Libera IRC and
-  Matrix began <a href="meet/mastering-emacs/{{ index }}">meeting</a>
-  every weekend over web meetings to read and discuss the
+  We have a <a href="meet/mastering-emacs/{{ index }}">tiny book
+  club</a> that meets every weekend to read and discuss the
   book <em><a href="https://www.masteringemacs.org/">Mastering
   Emacs</a></em>, 2022 edition written by Mickey Petersen. We go
   through a few pages of the book every time we meet, do some demos,
@@ -17,41 +16,44 @@
   this post, I'll share what the journey has been like so far and a
   few interesting things we have learnt.
 </p>
-<h2 id="timeline">Timeline</h2>
 <p>
-  I am the host of the book discussion group meetings. This is the
-  second series of such meetings I have been hosting. The first one
-  was about
-  <a href="meet/iant/{{ index }}">analytic number theory</a>
-  which <a href="final-iant-meeting.html">concluded</a> in October
-  2021 after 120 meetings that occurred in a span of seven months.
-  After completing that series of meetings, I took a break from
-  hosting such meetings. After a year long break, I chose Emacs as the
-  topic for the next series of meetings. The book <em>Mastering
-  Emacs</em> by Mickey Petersen seemed like a great choice for these
-  meetings.
+  A big thanks to Mickey Petersen who very graciously granted me the
+  permission to share his book on screen while we discuss the lessons
+  from the book and try out the examples on the editor.
 </p>
 <p>
-  The new series of meetings began in December 2022. We have been
-  meeting over Jitsi during the weekends. Each meeting is
+  This is the second series of such meetings I have been hosting. The
+  first one was about
+  <a href="meet/iant/{{ index }}">analytic number theory</a> that
+  began in March 2021. It ran for seven months and
+  finally <a href="final-iant-meeting.html">concluded</a> in October
+  2021 after 120 meetings. I chose Emacs as the topic for the next
+  series. The book <em>Mastering Emacs</em> by Mickey Petersen seemed
+  like a great choice for it.
+</p>
+<p>
+  Our new discussion group for Emacs began on 16 Dec 2022. We have
+  been meeting over Jitsi during the weekends. Each meeting is
   approximately 40 minutes long. With my desktop shared via Jitsi, I
   demonstrate all the concepts we find in the book in my Emacs editor.
-  On an average, we see about 7 participants in the meetings. Some
+  On an average, we see about 7 participants in each meeting. Some
   participants are regulars who join the meetings every weekend,
   follow the lessons, share their comments, etc. It has been a fun
   experience so far.
 </p>
 <h2 id="variety-of-professions">Variety of Professions</h2>
 <p>
-  An interesting thing I noticed in the Emacs book discussion group
-  meetings is that the participants of these meetings have a very good
-  mix of diverse backgrounds. In the previous serious of meetings on
-  analytic number theory, almost every participant had a career in
-  software engineering. But in this discussion group about Emacs, we
-  have had members who have professions in the field of physics,
-  molecular biology, finance, literature, etc. It is interesting how
-  we had software engineers in a mathematics discussion group but a
-  variety of professionals in a software discussion group!
+  Most members of our discussion group come from
+  the <code>#emacs</code> channels of Libera and Matrix networks. An
+  interesting thing I noticed in our Emacs book discussion group is
+  that we have a good mix of members from diverse backgrounds. In the
+  previous series of meetings on analytic number theory, almost every
+  participant had a career in software engineering. But in this
+  discussion group about Emacs, we have members from various types of
+  professions such as physics, molecular biology, finance, literature,
+  etc. It is interesting how we had mostly software engineers in a
+  mathematics discussion group but a variety of professionals in a
+  software discussion group!
 </p>
 <p>
   Some participants of our meetings have several years of experience
@@ -64,13 +66,13 @@
 </p>
 <h2 id="lunar-phases">Lunar Phases</h2>
 <p>
-  Yes, we can see lunar phases calendar right within Emacs! I don't
-  know if this was interesting to other participants of our meetings,
-  so I can only speak for myself here. As someone who has been
-  interested in astronomy <a href="dark-night-skies.html">since my
-  childhood days</a>, I found this very exciting. Type <code>M-x
-  lunar-phases RET</code> in your Emacs and a new buffer appears with
-  an output like this:
+  Yes, we can see the lunar phases calendar right within Emacs! I
+  don't know if this was interesting to other members of our group, so
+  I can only speak for myself here. As someone who has been interested
+  in astronomy <a href="dark-night-skies.html">since my childhood
+  days</a>, I found this very exciting. Type <code>M-x lunar-phases
+  RET</code> in your Emacs and a new buffer appears with an output
+  like this:
 </p>
 <pre>
 <code>Tuesday, March 7, 2023: Full Moon 12:39pm (UTC)
@@ -87,24 +89,24 @@ Friday, May 19, 2023: New Moon 3:56pm (UTC)
 Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 </pre>
 <p>
-  It also shows the upcoming eclipses! Isn't this nice? I knew that
-  Emacs has all sorts of fun stuff like <code>M-x zone RET</code> to
-  zone out with a built-in screensaver, <code>M-x tetris RET</code> to
-  play a clone of the famous puzzle game, <code>M-: (animate-string
-  "hello" 0) RET</code> to display a string in a fun manner starting
-  off as scattered pieces spread randomly across the buffer that then
-  slide and come together to join and form the string. But to have
-  something as obscure as lunar phases and eclipses available within
-  the editor was a nice surprise! Thanks to the book, I now use this
-  function often.
+  It also shows the upcoming eclipses! In fact, there is one coming up
+  this month! Isn't this nice? I knew that Emacs has all sorts of fun
+  stuff like <code>M-x zone RET</code> to zone out with a built-in
+  screensaver, <code>M-x tetris RET</code> to play a clone of the
+  famous puzzle game, <code>M-: (animate-string "hello" 0) RET</code>
+  to display a string in a fun manner starting off as scattered pieces
+  spread randomly across the buffer that then slide and come together
+  to join and form the string. But to have something as obscure as
+  lunar phases and eclipses available within the editor was a nice
+  surprise! Thanks to the book, I now use this function often.
 </p>
 <p>
-  For people who are not used to Emacs notation for key binding, note
-  that <code>M-x lunar-phases RET</code> means
+  For people who are not familiar with Emacs notation for key binding,
+  note that <code>M-x lunar-phases RET</code> means
   typing <kbd>alt</kbd>+<kbd>x</kbd> followed by
   typing <code>lunar-phases</code> and then pressing <kbd>enter</kbd>.
-  The meta modifier key represented with <code>M-</code> is mapped to
-  <kbd>alt</kbd> in modern systems.
+  The notation <code>M-</code> represents the meta modifier key which
+  is mapped to <kbd>alt</kbd> on modern systems.
 </p>
 <h2 id="returning-to-mark">Returning to Mark</h2>
 <p>
@@ -122,18 +124,18 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   around with motion keys, the text between the mark and the current
   position of the cursor (known as <em>point</em> in Emacs) becomes a
   highlighted region in modern Emacs. This highlighted region can be
-  annoying while regular editing text. So how do we use the mark as a
+  annoying while browsing some code. So how do we use the mark as a
   place to return to? Barring unusual workarounds like
   disabling <code>transient-mark-mode</code>, is there a simple way?
   Yes, there is a simple trick. Type <code>C-SPC C-SPC</code> to set
-  the mark! Typing <code>C-SPC</code> the first time, sets the mark
-  and activates the region. Typing it the second time deactivates the
+  the mark! Typing <code>C-SPC</code> the first time sets the mark and
+  activates the region. Typing it the second time deactivates the
   region. But Emacs remembers the mark that was set. Now continue with
   normal editing. Finally, type <code>C-u C-SPC</code> to return to
   mark.
 </p>
 <p>
-  The key sequences are pretty convenient too. Typing <code>C-SPC
+  The key sequences involved are pretty convenient. Typing <code>C-SPC
   C-SPC</code> involves holding down the <kbd>ctrl</kbd> key, then
   typing <kbd>space</kbd> twice, and finally releasing
   the <kbd>ctrl</kbd> key. Similarly, typing <code>C-u C-SPC</code>
@@ -142,14 +144,14 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   Three keystrokes for each command. They become muscle memory in no
   time!
 </p>
-<h2 id="working-with-other-windows">Working with Other Windows</h2>
+<h2 id="working-with-other-windows">Working With Other Windows</h2>
 <p>
   In Chapter 4, <em>The Theory of Movement</em>, there is a section
   about working with other windows. There are a number of key bindings
   available under the prefix key <code>C-x 4</code> that perform
   operations on another window instead of the current window. For
-  example, <code>C-x 4 C-f</code> opens a file in another new window.
-  This could be a faster alternative to splitting the current window
+  example, <code>C-x 4 C-f</code> opens a file in another window. This
+  could be a faster alternative to splitting the current window
   with <code>C-x 2</code> or <code>C-x 3</code> and then opening a
   file with <code>C-x C-f</code>. The single key sequence <code>C-x 4
   C-f</code> takes care of splitting the current window into two if
@@ -160,21 +162,22 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 <p>
   To see all the commands under the <code>C-x 4</code> prefix key,
   type <code>C-x 4 C-h</code>. Yet another such command that I found
-  quite convenient is <code>C-x 4 d</code> which opens dired in
+  quite convenient is <code>C-x 4 d</code> which opens Dired in
   another window. This can be useful when we need to browse a
   directory without hiding the current buffer.
 </p>
 <h2 id="tab-bars">Tab Bars</h2>
 <p>
-  One of many Emacs features that most of us did not bother paying
-  attention to earlier was the tab bar mode. Turns out it is pretty
-  useful in managing multiple window configurations side-by-side. Each
-  tab can be used as a workspace with a specific arrangement of
-  windows that suits our workflow in that workspace. For example, we
-  could arrange one tab to have three windows to display source code,
-  a debugger, and the current directory in dired mode. Then we could
-  have another tab with two windows beside each other, perhaps one to
-  display some source code and another to run the terminal.
+  One of the many features of Emacs that most of us did not bother
+  paying attention to earlier was the tab bar mode. Turns out it is
+  pretty useful in managing multiple window configurations
+  side-by-side. Each tab can be used as a workspace with a specific
+  arrangement of windows that suits our workflow in that workspace.
+  For example, we could arrange one tab to have three windows to
+  display source code, a debugger, and the current directory in Dired
+  mode. Then we could have another tab with two windows beside each
+  other, perhaps one to display some source code and another to run
+  the terminal.
 </p>
 <p>
   The tab management commands are very similar to window management
@@ -201,32 +204,95 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   Let us say we set a mark somewhere with <code>C-SPC</code> and then
   move around to select a region. However, then we get distracted,
   possibly by some typo in our buffer and we begin fixing that. At
-  this point, the highlighted region would disappear. Say after fixing
-  that typo, we want to resume with the region selection again. What
-  do we do now? Do we go back to set the mark and begin selecting the
-  region again? Not really. There is an easier way. We can just
+  this point, the highlighted region disappears. Say after fixing that
+  typo, we want to resume with the region selection again. What do we
+  do now? Do we go back to set the mark and begin selecting the region
+  again? Not really. There is an easier way. We can just
   type <code>C-x C-x</code> to exchange the point and the mark and
   highlight the region in between. This has the effect of reactivating
   the region.
 </p>
+<p>
+  Note that <code>C-x C-x</code> <em>exchanges</em> the point and the
+  mark, so although it conveniently reactivates the region, the point
+  jumps to where the mark was set earlier. This could be quite far
+  from where we want the cursor to be right now. If you don't like
+  that the cursor moves far way to the mark, just type <code>C-x
+  C-x</code> once again to exchange the point and mark one more time.
+  This has the effect of returning the cursor back to wherever it was
+  while keeping the region activated.
+</p>
 <h2 id="search-toggles">Search Toggles</h2>
 <p>
-  Say, we begin an incremental search the literal
+  Say, we begin an incremental search of the literal
   string <code>f..</code> in the current buffer with <code>C-s
   f..</code> but then we change our mind and decide that we want to
-  perform a regex-based search using the regular
+  perform a regular-expression-based search using the regular
   expression <code>f..</code>? Do we cancel the incremental search and
-  begin a new regex-based search using <code>C-M-s</code>? That's not
-  necessary. Instead we can toggle the currently ongoing incremental
-  search into a regular-expression-based search using the toggle
-  key <code>M-s r</code>.
+  begin a new regular-expression-based search
+  using <code>C-M-s</code>? That's not necessary. Instead we can
+  toggle the currently ongoing incremental search into a
+  regular-expression-based search using the toggle key <code>M-s
+  r</code>.
+</p>
+<p>
+  Another such nice toggle is <code>M-%</code>. You are likely aware
+  of the global key binding <code>M-%</code> used to invoke
+  the <code>query-replace</code> command that performs
+  search-and-replace operation. However, when typed during an ongoing
+  incremental search, <code>M-%</code> converts the ongoing
+  incremental search to a search-and-replace operation. This is really
+  useful sometimes. If we are searching for a complicated string, say,
+  <code>C-s std::vector&lt;int&gt;</code> but then we suddenly realize
+  that we want to perform a search-and-replace operation instead with
+  the same string, we don't really have to quit the current
+  incremental search and start a new search-and-replace operation.
+  Instead we can simply change the current incremental search to a
+  search-and-replace operation by typing <code>M-%</code>.
 </p>
 <p>
   Similarly, we can toggle the case-sensitivity of the search
-  using <code>M-s c</code>. There are a number of other toggles
-  available. Chapter 4 has a pretty long subsection on incremental
-  search. That section discusses these toggles among many other
-  things.
+  using <code>M-s c</code>. If we type our search string in all
+  lowercase (e.g., <code>C-s foo</code>), then Emacs performs a
+  case-sensitive search by default. I think this is a reasonable
+  default behaviour. This is what we want most of the time. When we do
+  want case-sensitive search for a lowercase string, we can switch
+  from the currently ongoing case-insensitive search to a
+  case-sensitive search with the <code>M-s c</code> toggle.
+</p>
+<p>
+  The moment we introduce an uppercase character in our search string
+  (e.g., <code>C-s Foo</code>), Emacs switches to case-sensitive mode.
+  Although this behaviour may appear peculiar at first, it makes sense
+  if you think about it. If we have bothered to type an uppercase
+  character in our search string, we probably care about the case, so
+  Emacs switches to case-sensitive search in this case. Once again, if
+  this is not what we want, it is trivial to change the case-sensitive
+  search to a case-insensitive one using the <code>M-s c</code>
+  toggle.
+</p>
+<p>
+ There are a number of other toggles available. Chapter 4 has a pretty
+ long subsection on incremental search. That section discusses these
+ toggles among many other things.
+</p>
+<h2 id="word-sequence-search">Word Search Mode</h2>
+<p>
+  Say, we start searching for the string <code>web_server</code> in
+  some code buffer with the key sequence <code>C-s web_server</code>.
+  But we soon realize that the code has the words <code>web</code>
+  and <code>server</code> written together in all kinds of notation
+  like <code>web-&gt;server</code>, <code>web::server</code>,
+  <code>web-server</code>, and even <code>web server</code> (perhaps
+  in inline comments). We now decide that we want to match all of
+  them. In most other editors, we'll probably have to cancel the
+  current search and resort to a clever regular-expression-based
+  search. In Emacs, thanks to the toggles available in incremental
+  search, we can type <code>M-s w</code> and the currently ongoing
+  incremental search will change itself to word search mode where it
+  now matches all these other ways those two words are written. In
+  word search mode, Emacs searches for a sequence of words while
+  ignoring any delimiters in between.
 </p>
 <h2 id="occur-mode">Occur Mode</h2>
 <p>
@@ -260,7 +326,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 </p>
 <p>
   After completing the sections on occur mode and Imenu, I remember
-  multiple members of our group mentioning that they would now adopt
+  multiple members of our group mentioning that they now want to adopt
   occur mode and Imenu into their workflow. In fact, it may make sense
   to bind Imenu to a convenient key binding. The author of the book
   recommends binding it to <code>M-i</code>. However, I do
@@ -268,11 +334,10 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   tab-stop column, so I'll suggest a different key binding that is
   more consistent with
   Emacs <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">key
-  binding conventions</a>. These conventions suggest that a key
-  bindings of the form <code>C-c <em>letter</em></code> are reserved
-  for the users. Therefore, I suggest the key binding <code>C-c
-  i</code> to invoke Imenu. Here is some Elisp code to create this key
-  binding:
+  binding conventions</a>. These conventions suggest that key bindings
+  of the form <code>C-c <em>letter</em></code> are reserved for the
+  users. Therefore, I suggest the key binding <code>C-c i</code> to
+  invoke Imenu. Here is some Elisp code to create this key binding:
 </p>
 <pre><code>(global-set-key (kbd "C-c i") 'imenu)</code></pre>
 <h2 id="helm">Helm</h2>
@@ -287,24 +352,24 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   initialization file. Once enabled, <code>C-x c i</code> runs
   the <code>helm-imenu</code> command which provides an interactive
   interface with all options laid out in a vertical format. We can use
-  the motion keys to select an option, type <kbd>enter</kbd> to
-  activate the selection, and jump to the chosen place in the buffer.
+  the motion keys to select an option. We can then
+  type <kbd>enter</kbd> to activate the selection and jump to the
+  corresponding place in the buffer.
 </p>
 <p>
   Helm also provides a nice interface for occur mode in the form
   of <code>helm-occur</code> command. The key sequence for it
-  is <code>C-x c M-s o</code> which one might argue is not a very
+  is <code>C-x c M-s o</code>, which one might argue is not a very
   convenient key binding. Nevertheless, the user interface to navigate
   the matches is pretty good.
 </p>
 <h2 id="appending-kills">Appending Kills</h2>
 <p>
-  There is a very useful command to append kills that I discovered
-  through this book. The key sequence <code>C-M-w</code> is used to
-  ensure that if the next command happens to be a kill command, then
-  the killed text is appended to the last stretch of text in the kill
-  ring. This key sequence prevents the next kill from creating a new
-  entry in the kill ring.
+  The key sequence <code>C-M-w</code> is used to ensure that if the
+  next command happens to be a kill command, then the killed text is
+  appended to the last stretch of text in the kill ring. This key
+  sequence prevents the next kill from creating a new entry in the
+  kill ring.
 </p>
 <p>
   To understand what this command does we must first understand that
@@ -321,12 +386,13 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 </p>
 <p>
   However, the moment a non-kill command is used, it seals the current
-  entry in the kill ring. Any subsequent kill command begins a new
-  stretch of text. For example, <code>M-d M-d M-d C-p M-d M-d C-p C-p
-  C-y</code> kills 3 words at first but then it moves to the previous
-  line sealing that kill entry consisting of 3 words. Then it kills 2
-  more words and adds them to a new entry in the kill ring. Therefore,
-  the final yank command pastes only those 2 words from the kill ring.
+  entry in the kill ring. Any subsequent kill command creates a new
+  entry in the kill ring. For example, <code>M-d M-d M-d C-p M-d M-d
+  C-p C-p C-y</code> kills 3 words at first but then it moves to the
+  previous line sealing that kill entry consisting of 3 words. Then it
+  kills 2 more words and adds them to a new entry in the kill ring.
+  Therefore, the final yank command pastes only those 2 words from the
+  kill ring.
 </p>
 <p>
   This can be a problem if we want to kill text from various parts of
@@ -349,13 +415,13 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   after all! We can keep killing text as we edit text and all killed
   text gets added to the kill ring. Now <code>C-y</code> always yanks
   the newest kill in the kill ring and pastes it in the buffer? Can we
-  recall an older kill? Yes, and that's where the <code>M-y</code> key
-  sequence comes useful. This key sequence invokes
-  the <code>yank-pop</code> command that replaces a just-yanked
-  stretch of killed text with an older kill. It takes a little bit of
-  getting used to but once this becomes muscle memory, the kill ring
-  becomes a very powerful feature where we can keep dumping text to
-  and keep recalling text from. The following exercise shows
+  recall an older kill? Yes, using the <code>M-y</code> key sequence.
+  This key sequence invokes the <code>yank-pop</code> command that
+  replaces a just-yanked stretch of killed text with an older kill. It
+  takes a little bit of getting used to but once this becomes muscle
+  memory, the kill ring becomes a very powerful tool. We can keep
+  dumping text to the kill ring and keep recalling text from it while
+  performing our editing activities. The following exercise shows
   how <code>C-y</code> and <code>M-y</code> can be used together.
 </p>
 <ol>

@@ -740,12 +740,91 @@
   :members 8)
  (:date "2023-02-18 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 4: Pages 167-172: Helm: Incremental Completion and Search"
+  :topic "Chapter 4: Pages 167-172: The Theory of Movement: Helm: Incremental Completion and Search"
   :duration 45
   :members 5)
  (:date "2023-02-19 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 4: Pages 173-175: IDO: Interactively DO Things"
+  :topic "Chapter 4: Pages 173-176: The Theory of Movement: IDO: Interactively DO Things"
   :duration 40
   :members 5)
-)
+ (:date "2023-03-24 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 176-181: The Theory of Movement: Grep: Searching the file system"
+  :duration 40
+  :members 7)
+ (:date "2023-03-25 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 4: Pages 181-184: The Theory of Movement: Other Movement Commands, Conclusion"
+  :duration 40
+  :members 5)
+ (:date "2023-03-26 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 185-188: The Theory of Editing: Killing and Yanking Text"
+  :duration 35
+  :members 5)
+ (:date "2023-03-31 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 188-193: The Theory of Editing: Killing versus Deleting, Killing Lines"
+  :duration 45
+  :members 6)
+ (:date "2023-04-01 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 192-194: The Theory of Editing: Yanking Text, Transposing Text"
+  :duration 35
+  :members 4)
+ (:date "2023-04-02 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 194-200: The Theory of Editing: Transpose Characters, Transpose Words, Tranpose S-expressions, Other Transpose Commands"
+  :duration 45
+  :members 4)
+ (:date "2023-04-21 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 200-204: The Theory of Editing: Filling and Commenting"
+  :duration 45
+  :members 5)
+ (:date "2023-04-22 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 204-207: The Theory of Editing: Search and Replace, Case Folding"
+  :duration 35
+  :members 4)
+ (:date "2023-04-23 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 207-208: The Theory of Editing: Regular Expressions: Backslashed Constructs"
+  :duration 40
+  :members 6)
+ (:date "2023-04-28 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 208-211: The Theory of Editing: Regular Expressions: Emacs-Only Features"
+  :duration 50
+  :members 9)
+ (:date "2023-05-05 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 211-213: The Theory of Editing: Regular Expressions: Capturing Groups, Invoking Elisp"
+  :duration 40
+  :members -1)
+ (:date "2023-05-06 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 213-216: The Theory of Editing: Changing Case"
+  :duration 40
+  :members -1)
+ (:date "2023-05-07 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 216-218: The Theory of Editing: Counting Things, Text Manipulation, Editable Occur, Deleting Duplicates"
+  :duration 40
+  :members -1)
+ (:date "2023-05-26 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 219-222: The Theory of Editing: Flushing and Keeping Lines, Copying and Killing Matching Lines, Joining and Splitting Lines"
+  :duration 40
+  :members -1)
+ (:date "2023-05-27 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 223-225: The Theory of Editing: Whitespace Commands"
+  :duration 40
+  :members -1)
+ (:date "2023-05-28 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 225-228: The Theory of Editing: Keyboard Macros: Basic Commands"
+  :duration 40
+  :members -1))
