@@ -1,0 +1,881 @@
+<!-- title: Notes on Chapter 3: First Steps -->
+<!-- date: 2022-12-18 -->
+<p>
+  The following notes were taken while discussing Chapter 3 of the
+  book <em>Mastering Emacs</em>, 2022 edition (written by Mickey
+  Petersen) in
+  <a href="./{{ index }}">book discussion group meetings</a>.
+</p>
+<p>
+  An index of notes for all chapters are available
+  at <a href="notes.html">notes.html</a>.
+</p>
+<h2 id="notes">Notes</h2>
+<p>
+  The following notes are related to the content of the chapter.
+</p>
+<h3 id="starting-emacs">Starting Emacs</h3>
+<p>
+  Here are some frequently used commands to start Emacs:
+</p>
+<ul>
+  <li>
+    <code>emacs -nw</code>: Tell Emacs not to create a graphical
+    frame, i.e., run Emacs within a terminal instead.
+  </li>
+  <li>
+    <code>emacs -q</code>: Do not load an init file, i.e., do not
+    load <code>~/.emacs</code>, <code>~/.emacs.d/init.el</code>, etc.
+  </li>
+  <li>
+    <code>emacs -Q</code>: Do not load init file, site-wide startup
+    file, or X resources.
+  </li>
+</ul>
+<h3 id="emacs-client-server">Emacs Client-Server</h3>
+<p>
+  The key sequence <code>M-x server-start RET</code> turns the current
+  instance of Emacs into a server. If we kill this instance of Emacs,
+  it kills the server too.
+</p>
+<p>
+  Another way to start an Emacs server is to enter the
+  command <code>emacs --daemon</code>. This too internally
+  invokes <code>server-start</code> to start an Emacs server but this
+  command ensures that Emacs runs in background mode. Therefore,
+  killing any particular instance of Emacs window does not end up
+  killing the Emacs server.
+</p>
+<p>
+  To open files, say <code>foo.txt</code> and <code>bar.txt</code> in
+  an already running Emacs server, enter the command <code>emacsclient
+  foo.txt bar.txt</code>. This command blocks the terminal and waits
+  for us to finish editing the files. While editing the files, we need
+  to type <code>C-x #</code> to tell Emacs that we are done editing
+  the current file. Emacs then switches to the next file we are
+  editing. When we are done editing all the files
+  opened, <code>emacsclient</code> quits and returns control to the
+  terminal.
+</p>
+<p>
+  The book does not mention how to stop an Emacs daemon. One of the
+  several ways to stop an Emacs daemon is the
+  command <code>emacsclient -e '(kill-emacs)'</code>.
+</p>
+<p>
+  Here are some commands to run <code>emacsclient</code>:
+</p>
+<ul>
+  <li>
+    <code>emacsclient -c</code>: Create a frame. A graphical frame is
+    created if graphics is available, otherwise a terminal frame is
+    created.
+  </li>
+  <li>
+    <code>emacsclient -nw</code>: Create a terminal frame.
+  </li>
+  <li>
+    <code>emacsclient -n</code>: Client returns immediately without
+    waiting for us to finish editing the file.
+  </li>
+</ul>
+<h3 id="the-emacs-interface">The Emacs Interface</h3>
+<p>
+  The book mentions that many Emacs users disable the menu bar, tool
+  bar, and the splash screen. The following Elisp code shows how these
+  UI elements can be disabled:
+</p>
+<pre>
+<code>(menu-bar-mode 0)
+(when (display-graphic-p)
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0))
+(setq inhibit-startup-screen t)</code>
+</pre>
+<p>
+  After saving the code in the initialization file (such
+  as <code>~/.emacs</code>, <code>~/.emacs.d/init.el</code>, etc.) and
+  restarting Emacs, these UI elements disappear.
+</p>
+<p>
+  It is worth mentioning here that disabling the menu bar may not be a
+  good idea, especially, for beginners to Emacs. The menu bar contains
+  a lot of helpful shortcuts that could be useful to beginners.
+  Further, the menu bar often displays certain menus that are specific
+  to the current buffer. Therefore, it may be a good idea to leave the
+  menu bar enabled.
+</p>
+<p>
+  Regardless of whether the menu bar is enabled or disabled, the menu
+  bar can accessed easily by typing <kbd>F10</kbd>.
+</p>
+<h3 id="keys">Keys</h3>
+<p>
+  The book mentions the following notation for modifier keys:
+</p>
+<ul>
+  <li><code>C-</code>: Control</li>
+  <li><code>M-</code>: Meta</li>
+  <li><code>S-</code>: Shift</li>
+  <li><code>s-</code>: Super</li>
+  <li><code>H-</code>: Hyper</li>
+  <li><code>A-</code>: Alt</li>
+</ul>
+<p>
+  Although not mentioned in the book, here is a quick way to test out
+  all of these modifier keys:
+</p>
+<pre>
+<code>(global-set-key (kbd "C-j") (lambda () (interactive) (message "You typed C-j")))
+(global-set-key (kbd "M-j") (lambda () (interactive) (message "You typed M-j")))
+(global-set-key (kbd "C-S-j") (lambda () (interactive) (message "You typed C-S-j")))
+(global-set-key (kbd "s-j") (lambda () (interactive) (message "You typed s-j")))
+(global-set-key (kbd "H-j") (lambda () (interactive) (message "You typed H-j")))
+(global-set-key (kbd "A-j") (lambda () (interactive) (message "You typed A-j")))</code>
+</pre>
+<p>
+  Go to some buffer, say, the scratch buffer with
+  <code>C-x b *scratch* RET</code>, then copy the above code to it,
+  then place the cursor at the end of each line of code and
+  type <code>C-x e</code> to evaluate each line.
+</p>
+<p>
+  Then open a new buffer, say with <code>C-x b foo RET</code> and
+  type <kbd>ctrl</kbd>+<kbd>j</kbd>, <kbd>alt</kbd>+<kbd>j</kbd>,
+  and <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>j</kbd> to test the first
+  three key bindings.
+</p>
+<p>
+  The fourth key-binding <code>s-j</code> can usually be invoked by
+  typing <kbd>command</kbd>+<kbd>j</kbd>
+  or <kbd>win</kbd>+<kbd>j</kbd> depending on the type of keyboard you
+  have.
+</p>
+<p>
+  The <code>H-</code> and <code>A-</code> modifier keys are generally
+  not mapped to any actual key in modern systems. However, it is
+  possible to invoke the <code>H-j</code> and <code>A-j</code> key
+  bindings with the key sequences <code>C-x @ h j</code> and <code>C-x
+  @ a j</code>, respectively,
+  i.e., <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>h</kbd> <kbd>j</kbd>
+  and <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>a</kbd> <kbd>j</kbd>,
+  respectively.
+</p>
+<p>
+  In fact, similarly, <code>s-j</code> too can be invoked
+  with <code>C-x @ s j</code>,
+  i.e., <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>s</kbd> <kbd>j</kbd>
+  but that is rarely necessary because <code>s-</code> is often bound
+  to a GUI key like the <kbd>command</kbd> key on Apple keyboards and
+  the <kbd>win</kbd> key on Windows keyboards.
+</p>
+<p>
+  A practical example of a real and useful <code>s-</code> key binding
+  from vanilla Emacs is <code>s-u</code> to invoke
+  the <code>revert-buffer</code> command that reloads a file from the
+  disk.
+</p>
+<h3 id="terminal-limitations">Terminal Limitations</h3>
+<p>
+  The book mentions that there are some key bindings that we cannot
+  use if we are running Emacs in the terminal. That is because a
+  terminal supports a very limited set of key bindings. An example
+  is <code>C-/</code> that invokes the <code>undo</code> command in
+  GUI Emacs. The terminal does not recognize that key sequence.
+  However, the <code>undo</code> command is also bound
+  to <code>C-_</code> and <code>C-x u</code>, so one of these key
+  sequences can be used to undo changes in terminal Emacs.
+</p>
+<h3 id="definitions-for-key-sequences">Definitions for Key Sequences</h3>
+<p>
+  The book provides a few definitions of key sequences that can be
+  summarized as follows:
+</p>
+<ul>
+  <li>
+    <em>Key sequence</em> (or just <em>key</em>): A sequence of
+    keyboard or mouse actions,
+    e.g., <code>C-d</code>, <code>C-M-d</code>, <code>C-x
+    C-f</code>, <code>C-x 8 P</code>, <code>C-x</code>, <code>C-x
+    8</code>, etc.
+  </li>
+  <li>
+    <em>Complete key</em>: A key sequence that invokes a command,
+    e.g., <code>C-d</code>, <code>C-M-d</code>, <code>C-x
+    C-f</code>, <code>C-x 8 P</code>, etc.
+  </li>
+  <li>
+    <em>Prefix key</em>: A key sequence that is not a complete key,
+    e.g., <code>C-x</code>, <code>C-x 8</code>, etc.
+  </li>
+</ul>
+<h3 id="key-examples">Key Examples</h3>
+<p>
+  The section <em>Keys</em> presents the following examples of key
+  sequences:
+</p>
+<ul>
+  <li>
+    <code>C-d</code>: Calls <code>delete-char</code> which deletes the
+    following character.
+  </li>
+  <li>
+    <code>C-M-d</code>: Calls <code>down-list</code> which moves
+    forward down one level of parentheses.
+  </li>
+  <li>
+    <code>C-x C-f</code>: Calls <code>find-file</code> which is used
+    for editing a file.
+  </li>
+  <li>
+    <code>C-x 8 P</code>: Insersts pilcrow, i.e., the symbol &para;,
+    also known as the paragraph symbol. Here both <code>C-x</code>
+    and <code>8</code> are prefix keys. There are many more key
+    bindings available under the <code>C-x 8</code> prefix. For
+    example, <code>C-x 8 C</code> inserts the copyright symbol, i.e.,
+    the symbol &copy;. A set of keys like this that belong to a
+    particular prefix key is called a <em>key map</em>.
+  </li>
+  <li>
+    <code>C-M-%</code>: Calls <code>query-replace-regexp</code> to
+    replace text with regula-expression based matching. Since the
+    key <kbd>%</kbd> is normally typed
+    as <kbd>shift</kbd>+<kbd>5</kbd>, this key sequence involves
+    holding down 4 keys together,
+    i.e., <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>shift</kbd>+<kbd>5</kbd>.
+    Annoyingly, this happens to be an example of a key sequence that
+    does not work in terminal Emacs due to terminal limitations.
+  </li>
+  <li>
+    <code>TAB</code>: Calls <code>indent-for-tab-command</code> that
+    either indents the current line or region, or inserts a tab,
+    depending on the context.
+  </li>
+  <li>
+    <code>&lt;f1&gt;</code>, <code>&lt;f2&gt;</code>,
+    ..., <code>&lt;f10&gt;</code>: Functions keys that invoke various
+    functions. Some of these are prefix keys while others are complete
+    key sequence. For example, <code>&lt;f1&gt;</code> is a prefix key
+    that is available as an alternative to the <code>C-h</code> prefix
+    key. The key sequence <code>C-h m</code> shows help for the
+    current major and minor modes, and so does <code>&lt;f1&gt;
+    m</code>. However, <code>&lt;f10&gt;</code> is a complete key
+    sequence that calls the command <code>menu-bar-open</code> that
+    shows the menu bar.
+  </li>
+</ul>
+<h3 id="ctrl-g">C-g: Universal Bail Me Out</h3>
+<p>
+  The key sequence <code>C-g</code> is used to cancel a partially
+  completed command. For example, normally, the key sequence <code>M-x
+  whitespace-mode RET</code> toggles the visibility of whitespace in
+  the curreng buffer. However, let us say, we type the partial key
+  sequence <code>M-x white</code> and then we change our mind about it
+  and want to cancel the entering the command any further, we can
+  simply type <code>C-g</code> to run <code>keyboard-quit</code> that
+  signals a quit condition and cancels the input.
+</p>
+<p>
+  Similarly, say, we type <code>C-x</code> and then we change our mind
+  about it and want to cancel this partially entered key sequence, we
+  can simply type <code>C-g</code>. The following message appears in
+  the echo area but this is by design:
+</p>
+<pre><code>C-x C-g is undefined</code></pre>
+<p>
+  Don't let that message make you feel that you did something wrong by
+  entering an undefined key sequence. Key sequences ending
+  with <code>C-g</code> have been intentionally left undefined, so
+  that it can be used reliably as the universal <em>bail me out</em>
+  key sequence.
+</p>
+<p>
+  Now of course, nothing stops us from binding <code>C-x C-g</code> to
+  a command of our choice. For example, the following Elisp code binds
+  it to a command that prints a message:
+</p>
+<pre><code>(global-set-key (kbd "C-x C-g") (lambda () (interactive) (message "You typed C-x C-g")))</code></pre>
+<p>
+  However, a key binding like the above one is a very bad idea because
+  such a key binding flies against Emacs conventions. If we were to
+  create a key binding like the above one, we can longer rely
+  on <code>C-g</code> to be our universal bail out command. Key
+  sequences ending with <code>C-g</code> are best left undefined.
+</p>
+<h3 id="caps-lock-as-control">Caps Lock as Control</h3>
+<p>
+  The book recommends configuring our operating system to make
+  the <kbd>caps lock</kbd> key behave like <kbd>ctrl</kbd>. Many
+  people do find this type of remapping very convenient. Many
+  discussions can be found online where people have claimed that this
+  remapping has helped with overcoming repetitive strain injury (RSI).
+  However, the
+  article <a href="https://www.emacswiki.org/emacs/MovingTheCtrlKey">Moving
+  the Ctrl Key</a> on Emacs Wiki claims that for some people this
+  remapping <em>causes</em> RSI.
+</p>
+<p>
+  I use the original <kbd>ctrl</kbd> keys as they come with the
+  keyboard. Most keyboards have two <kbd>ctrl</kbd> keys on either
+  side of the keyboard which I find very convenient. I touch type
+  while editing text, so the two <kbd>ctrl</kbd> keys on either side
+  of the keyboard turn out to be really useful. For example, when I
+  need to type <kbd>ctrl</kbd>+a</kbd>, I can hold
+  down <kbd>ctrl</kbd> with the little finger of the right hand and
+  type <kbd>a</kbd> with the little finger of the left hand.
+  Similarly, if I need to type <kbd>ctrl</kbd>+<kbd>p</kbd>, I can
+  hold down <kbd>ctrl</kbd> with the little finger of the left hand
+  and type <kbd>p</kbd> with the little finger of the right hand.
+  Using the original <kbd>ctrl</kbd> keys offers this advantage of
+  distributing the usage of the <kbd>ctrl</kbd> to both hands.
+  However, some Apple keyboards provide only a single <kbd>ctrl</kbd>
+  key on the left hand side which can be quite annoying to touch
+  typists. In such keyboards, remapping the <kbd>caps lock</kbd> key
+  to behave like <kbd>ctrl</kbd> key can indeed be more convenient.
+</p>
+<h3 id="M-x-execute-extended-command">M-x: Execute Extended Command</h3>
+<p>
+  The key sequence <code>M-x</code> is pronounced <em>mex</em>, <em>M
+  x</em>, or <em>meta x</em>. It invokes the
+  command <code>execute-extended-command</code> that brings up a
+  minibuffer to read a command name and execute it.
+</p>
+<p>
+  When <code>M-x</code> key sequences are presented in written form,
+  often they may be written in a precise manner that includes
+  the <code>M-x</code> key sequence, then the command name, and
+  finally the <code>RET</code> key in the end, e.g., <code>M-x
+  lunar-phases RET</code>. But sometimes they may also be written
+  without the <code>RET</code> key, e.g., <code>M-x
+  lunar-phases</code>. The <code>RET</code> key is automatically
+  implied in the latter form.
+</p>
+<h3 id="interactive-commands">Interactive Commands</h3>
+<p>
+  The following function written in Elisp is interactive:
+</p>
+<pre>
+<code>(defun hello ()
+  (interactive)
+  (message "hello"))</code>
+</pre>
+<p>
+  However, the following function is not interactive:
+</p>
+<pre>
+<code>(defun hola ()
+  (message "hola"))</code>
+</pre>
+<p>
+  The <code>(interactive)</code> expression declares a function as
+  interactive which allows it to be called interactively
+  using <code>M-x</code>.
+</p>
+<p>
+  To see the difference between the two functions, copy both functions
+  to some buffer, say, the scratch buffer, and then put the cursor
+  after the closing parentheses of each function and type <code>C-x
+  C-e</code> to evaluate the <code>defun</code> expressions thus
+  defining the functions. After doing so, <code>M-x hello RET</code>
+  executes the <code>hello</code> function and produces the "hello"
+  message in the echo area. However, typing <code>M-x hola RET</code>
+  produces no match for a function named <code>hola</code>.
+</p>
+<h3 id="m-x-execute-extended-command-for-buffer">M-X: Execute Extended Command for Buffer</h3>
+<p>
+  Emacs 28 introduces <code>M-X</code> that runs the
+  command <code>execute-extended-command-for-buffer</code>. The book
+  mentions this key binding as <code>M-S-x</code> which is technically
+  the same thing as <code>M-x</code>. After
+  all, <kbd>shift</kbd>+<kbd>x</kbd> produces the
+  character <code>X</code>. In these notes, we'll
+  write <code>M-X</code> for simplicity and also for consistency with
+  the output of <code>describe-key</code> (i.e., the output
+  of <code>C-h k M-S-x</code> shows the key as <code>M-X</code>,
+  not <code>M-S-x</code>).
+</p>
+<p>
+  To see how this function works, first open a file,
+  say, <code>foo.el</code> with <code>C-x C-f foo.el RET</code>, then
+  type <code>M-x e RET</code>. A large list of function names
+  beginning with the letter "e" as choices appears. Now type <code>M-X
+  e RET</code>. A much smaller list of choices that are relevant for
+  the current Elisp buffer appears.
+</p>
+<h3 id="universal-arguments">Universal Arguments</h3>
+<p>
+  Universal arguments are also called <em>prefix arguments</em>. The
+  list below presents some examples of complete key sequences where we
+  apply various prefix arguments to the key sequence <code>C-n</code>.
+</p>
+<ul>
+  <li><code>C-u C-n</code>: Move cursor down 4 lines.</li>
+  <li><code>C-u C-u C-n</code>: Move cursor down 16 lines.</li>
+  <li><code>C-u C-u C-u C-n</code>: Move cursor down 64 lines.</li>
+  <li><code>C-u 5 C-n</code>: Move cursor down 5 lines.</li>
+  <li><code>C-u 15 C-n</code>: Move cursor down 15 lines.</li>
+  <li><code>C-5 C-n</code>: Move cursor down 5 lines.</li>
+  <li><code>C-1 C-5 C-n</code>: Move cursor down 15 lines.</li>
+  <li><code>C-- C-n</code>: Move cursor up 1 line.</li>
+  <li><code>C-- C-5 C-n</code>: Move cursor up 5 lines.</li>
+  <li><code>C-- C-1 C-5 C-n</code>: Move cursor up 15 lines.</li>
+</ul>
+<p>
+  Note that negative arguments (the last three examples above)
+  reverses the direction of operation. The digit arguments of the
+  form <code>C-&lt;digit&gt;</code> can also be entered
+  using <code>M-&lt;digit&gt;</code>
+  or <code>C-M-&lt;digit&gt;</code>. Here are some examples:
+</p>
+<ul>
+  <li><code>M-5 C-n</code>: Move cursor down 5 lines.</li>
+  <li><code>C-M-5 C-n</code>: Move cursor down 5 lines.</li>
+  <li><code>M-1 M-5 C-n</code>: Move cursor down 15 lines.</li>
+  <li><code>C-M-1 C-M-5 C-n</code>: Move cursor down 15 lines.</li>
+  <li><code>M-- C-n</code>: Move cursor up 1 line.</li>
+  <li><code>M-- M-5 C-n</code>: Move cursor up 5 lines.</li>
+  <li><code>M-- M-1 M-5 C-n</code>: Move cursor up 15 lines.</li>
+  <li><code>C-M-- C-n</code>: Move cursor up 1 line.</li>
+  <li><code>C-M-- C-M-5 C-n</code>: Move cursor up 5 lines.</li>
+  <li><code>C-M-- C-M-1 C-M-5 C-n</code>: Move cursor up 15 lines.</li>
+</ul>
+<p>
+  While entering multiple digits in a digit argument, we can also mix
+  and match modifier keys as shown below, however doing so would be
+  pointless and unwieldy:
+</p>
+<ul>
+  <li><code>C-1 M-5 C-n</code>: Move cursor down 15 lines.</li>
+  <li><code>C-1 C-M-5 C-n</code>: Move cursor down 15 lines.</li>
+</ul>
+<p>
+  The reason why Emacs supports entering digit arguments or negative
+  arguments with all three modifier
+  combinations <code>C-</code>, <code>M-</code>, <code>C-M-</code>, is
+  so that we can choose a modifier that is convenient. Usually, this
+  would be the modifier we anticipate that we'll use next for the
+  command we are prefixing with the digit or negative argument. For
+  example, if we are going to move forward by 5 words, then <code>M-5
+  M-f</code> is going to be more convenient than <code>C-5 M-f</code>
+  or <code>C-M-5 M-f</code>. To type <code>M-5 M-f</code>, we can
+  simply press and hold down <kbd>alt</kbd>, then type <kbd>5</code>
+  followed by <kbd>f</code>, and finally release <kbd>alt</kbd>.
+  Similarly, if we are going to move forward by 5 expressions,
+  then <code>C-M-5 C-M-f</code> is going to be more convenient than
+  using any other modifier for the digit argument.
+</p>
+<p>
+  Choosing the modifier combination for a universal argument such that
+  it matches the modifier combination for the key sequence coming up
+  next helps maintain good <em>tempo</em> while typing the key
+  sequences. The book often puts emphasis on the subject of tempo in
+  various chapters.
+</p>
+<p>
+  While discussing tempo, the book presents the example of <code>M--
+  M-d</code> which can be used to kill the previous word. Note
+  that <code>M-d</code> kills one word forward, so <code>M--
+  M-d</code> reverses the direction of the operation and kills one
+  word backward. The book notes that <code>M-- M-d</code> maintains
+  tempo while <code>C-- M-d</code> which does exactly the same thing
+  disrupts tempo.
+</p>
+<p>
+  Another example that the section <em>Univeral Arguments</em> briefly
+  alludes to but does not provide a concrete example of is changing
+  the case of a word that we just typed. Here are some concrete
+  examples for it:
+</p>
+<ul>
+  <li>
+    <code>M-l</code>: Convert the text from the point to the end of
+    the current or next word to lower case.
+  </li>
+  <li>
+    <code>M-u</code>: Convert the text from the point to the end of
+    the current or next word to upper case.
+  </li>
+  <li>
+    <code>M-c</code>: Capitalize the text from the point to the end of
+    the current or next word. Capitalization involves changing only
+    the first letter to upper case.
+  </li>
+  <li>
+    <code>M- M-l</code>: Convert the text from the point to the beginning
+    of the current or previous word to upper case.
+    case.
+  </li>
+  <li>
+    <code>M- M-u</code>: Convert the text from the point to the
+    beginning of the current or previous word to upper case.
+  </li>
+  <li>
+    <code>M- M-c</code>: Capitalize the text from the point to the
+    beginning of the current or previous word.
+  </li>
+</ul>
+<h3 id="discovering-and-remembering-keys">Discovering and Remembering Keys</h3>
+<p>
+  To get help for a prefix key, type the prefix key followed
+  by <code>C-h</code>. Here are some examples:
+</p>
+<ul>
+  <li><code>C-x C-h</code></li>
+  <li><code>C-x 8 C-h</code></li>
+  <li><code>C-x 8 " C-h</code></li>
+  <li><code>C-x 8 ' C-h</code></li>
+  <li><code>C-x 8 * C-h</code></li>
+</ul>
+<p>
+  Getting help for a prefix key in this manner shows an automatically
+  generated list of all keys that belong to the key map associated
+  with the prefix key. Note that a key map for a prefix key may itself
+  contain more prefix keys. For example, in the above examples, we see
+  that the key map for <code>C-x 8</code> contains prefix
+  keys <code>C-x 8 "</code>, <code>C-x 8 '</code>, etc. Such nested
+  prefix keys are clearly marked in the output as "Prefix Command".
+</p>
+<h3 id="true-color">True Color</h3>
+<p>
+  There is a note with the title <em>Supported colors</em> in the
+  section <em>The Customize Interface</em> that introduces the
+  following commands:
+</p>
+<ul>
+  <li>
+    <code>M-x list-color-display RET</code>: Display names of defined
+    colors and show what they look like.
+  </li>
+  <li>
+    <code>M-x info-apropos RET Colors on a TTY RET</code>: Find an
+    info page on the subject of using colours on a TTY.
+  </li>
+</ul>
+<p>
+  Since Emacs 28, we can easily enable 24-bit color in terminal Emacs
+  by setting the environment
+  variable <code>COLORTERM=truecolor</code>. To quickly test it out,
+  first enter the following command in the terminal:
+</p>
+<pre><code>COLORTERM=truecolor emacs -nw</code></pre>
+<p>
+  Then type the following in Emacs:
+</p>
+<pre><code>M-x list-color-display RET</code></pre>
+<h3 id="the-customize-interface">The Customize Interface</h3>
+<p>
+  The customize interface allows us to customize two things: faces and
+  options. Here are some steps to get started with the customize
+  interface:
+</p>
+<ol>
+  <li>
+    <p>
+      Type <code>C-x 2</code> to split the current window into two.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x C-f foo.el RET</code> to open a new Elisp file.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type some code into the file such that it contains at least one
+      string, for example:
+    </p>
+    <pre><code>(message "hello")</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x o</code> to go to the other window.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x customize RET</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Move the cursor to the editable text area. This can be done with
+      motion key sequences or with the mouse.
+    </p>
+  </li>
+  <li>
+    <p>
+      Then type <code>font-lock-string-face</code> and
+      press <kbd>enter</kbd>. The customization interface for the
+      chosen face now appears in the buffer. The message next to the
+      "State" button shows "STANDARD." which indicates that the face
+      is set to its default value.
+    </p>
+  </li>
+  <li>
+    <p>
+      Then move the cursor to the editable text area next to the
+      "Foreground:" label, type <code>blue</code>. At this point, a
+      preview of blue text is shown next to the "Choose" button.
+      However, the string in the Elisp buffer still appears in its
+      previous colour. The message next to the "State" button shows
+      "EDITED, shown value does not take effect until you set or save
+      it."
+    </p>
+  </li>
+  <li>
+    <p>
+      Now click the "Apply" button to apply the new string colour.
+      Alternatively, move the cursor over to "Apply" and
+      press <kbd>enter</kbd>. As soon as this button is clicked, the
+      string in the Elisp buffer appears blue. The message next to the
+      "State" button says "Set for current session only."
+    </p>
+  </li>
+  <li>
+    <p>
+      Now click the "Revert..." button and then click "Revert This
+      Session's Customizations" to revert the customization.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now change the string color to blue again and click "Apply and
+      Save". The message next to the "State" button now changes to
+      "SAVED and set." Then check Emacs initialization file (such
+      as <code>~/.emacs</code>, <code>~/.emacs.d/init.el</code>, etc.)
+      and there should be a <code>custom-set-faces</code> call added
+      to the initialization file to set the string colour to blue.
+    </p>
+  </li>
+  <li>
+    <p>
+      To erase the customization from the initialization file, click
+      "Revert ..." and then click "Erase Customizations". At this
+      point, the customization is no longer present in the
+      initialization file. However, the customize interface shows a
+      confusing message next to the "State" button, "EDITED, shown
+      value does not take effect until you set or save it." Further,
+      the face is set to "-- Empty face --" in the customization
+      interface. To add to the confusion, the "Apply and Save" button
+      is enabled! Beware though! If "Apply and Save" is clicked now,
+      it'll set a `nil` as the value for the face which will cause the
+      face to appear black or white (not the default colour).
+    </p>
+  </li>
+  <li>
+    <p>
+      To get rid of the confusing state of the customization buffer
+      discussed in the previous point and restore the customization
+      buffer to a sane state, click "Revert ..." and then click either
+      "Undo Edits in Customization Buffer" or click "Revert This
+      Session's Customizations". Doing so would end up showing the
+      default colour of the face in the customize interface. The
+      message next to the "State" button shows "STANDARD." again.
+    </p>
+  </li>
+</ol>
+<h3 id="customize-commands">Customize Commands</h3>
+<p>
+  Here are some examples of complete key sequences that invoke various
+  customize commands:
+</p>
+<ul>
+  <li>
+    <code>M-x customize RET</code>: Display customize interface. We
+    can reach a specific item to be customized by navigating the
+    groups presented and the subgroups within them. For example, to
+    customize <code>font-lock-string-face</code>, we can naviage to
+    Faces &gt; Font Lock &gt; Font Lock Faces &gt; Font Lock String
+    Face.
+  </li>
+  <li>
+    <code>M-x customize-browse RET</code>: Create a tree browser for
+    the customize hierarchy.
+  </li>
+  <li>
+    <code>M-x customize-option RET global-display-line-numbers
+    RET</code>: Customize a specific option.
+  </li>
+  <li>
+    <code>M-x customize-face RET font-lock-string-face RET</code>:
+    Customize a specific face.
+  </li>
+  <li>
+    <code>M-x customize-group RET faces RET</code>: Customize a
+    specific group.
+  </li>
+  <li>
+    <code>M-x customize-group RET font-lock-faces RET</code>: Another
+    example similar to the previous one. This one customizes
+    the <em>Font Lock Faces</em> subgroup within the <em>Faces</em>
+    group.
+  </li>
+  <li>
+    <code>M-x customize-mode RET</code>: Customize the major mode of
+    the current buffer.
+  </li>
+  <li>
+    <code>M-x customize-mode RET python-mode RET</code>: Customize a
+    specific mode. After the first <code>RET</code>, a prompt to enter
+    the mode appears only if the current major mode has no known
+    customize group.
+  </li>
+  <li>
+    <code>C-u M-x customize-mode RET python-mode RET</code>: Yet
+    another way to customize a specific mode. Using the prefix
+    argument ensures that we are always prompted for the mode name.
+    This can be useful when we want to customize a minor mode, or a
+    major mode that is different from the current major mode.
+  </li>
+  <li>
+    <code>M-x customize-themes RET</code>: Display a selectable list
+    of custom themes.
+  </li>
+  <li>
+    <code>M-x customize-customized RET</code>: Customize all
+    customizations set in the session but not saved. This is very
+    useful to see all unsaved customizations together at one place.
+  </li>
+  <li>
+    <code>M-x customize-saved RET</code>: Customize all saved
+    customizations. This is very useful to see all saved
+    customizations together at one place.
+  </li>
+  <li>
+    <code>M-x customize-changed RET</code>: Customize all settings
+    whose meanings have changed since the previous major Emacs
+    release.
+  </li>
+  <li>
+    <code>M-x customize-changed RET 26.1 RET</code>: Customize all
+    settings whose meanings have changed since a particular previous
+    major Emacs release.
+  </li>
+</ul>
+<p>
+  One thing worth keeping in mind is that when we apply, save, or
+  revert customizations, only the customizations shown in the current
+  buffer are applied, saved, or reverted. Here is an experiment that
+  demonstrates what this means:
+</p>
+<ol>
+  <li>
+    <p>
+      Type <code>C-x 2</code> followed by <code>C-x C-f foo.el
+      RET</code> to split the current window into two and load an
+      Elisp file in one window. Then insert the following code:
+    </p>
+    <pre><code>(defun foo () (message "hello")) ;; Demo</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x customize RET</code>, search
+      for <code>font-lock-keyword-face</code>, set its colour
+      to <code>red</code> and click "Apply".
+    </p>
+  </li>
+  <li>
+    <p>
+      Then search for <code>font-lock-function-name-face</code>, set
+      its colour to <code>green</code> and click "Apply". At this
+      point the macro name <code>defun</code> is coloured red and the
+      function name <code>foo</code> is coloured green in the Elisp
+      buffer.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now click "Revert ..." and then click "Revert This Sessions's
+      Customizations". Only the colour of the function name reverts to
+      the default colour. The colour of the macro name remains red in
+      the Elisp buffer. This confirms that the revert operation takes
+      only the customizations in the buffer into account.
+    </p>
+  </li>
+  <li>
+    <p>
+      Search for <code>font-lock-string-face</code>, set its colour
+      to <code>blue</code> and click "Apply and Save".
+    </p>
+  </li>
+  <li>
+    <p>
+      Search for <code>font-lock-comment-face</code>, set its colour
+      to <code>magenta</code> and click "Apply and Save". Inspecting
+      the Emacs initialization file shows that only the customizations
+      for the string and comment faces have been saved to the file.
+      This confirms that only the customizations shown in the current
+      buffer are saved.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x customize-customized RET</code>. A new buffer
+      appears and shows the customization for keyword because it was
+      customized and applied but not saved.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x customize-saved RET</code>. A new buffer appears
+      and shows the customizations for string and comment because they
+      were customized and saved.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now search for <code>font-lock-comment-face</code> so that the
+      customize buffer contains only the customization entry for
+      comment. Click "Revert ..." and then click "Erase
+      customizations". Inspecting the Emacs initialization file shows
+      that the customization for comment is removed but the
+      customization for string is still intact. This confirms that
+      only the customization shown in the current buffer is erased.
+    </p>
+  </li>
+</ol>
+<h3 id="evaluating-elisp-code">Evaluating Elisp Code</h3>
+<p>
+  The chapter introduces two commands:
+</p>
+<ul>
+  <li>
+    <code>M-x eval-buffer RET</code>: Evaluate the entire buffer.
+  </li>
+  <li>
+    <code>M-x eval-region RET</code>: Evaluates only the marked
+    region.
+  </li>
+</ul>
+<p>
+  Here are some additional key sequences that I find very useful:
+</p>
+<ul>
+  <li>
+    <code>C-x C-e</code>: Evaluate the expression before the cursor.
+    This key binding is available in `global-map`, so this key
+    sequence works in any buffer.
+  </li>
+  <li>
+    <code>C-M-x</code>: Evaluate the top-level expression on the
+    cursor. This key binding is not available in the global map.
+    Therefore this key sequence works only in those major modes that
+    support it. For example, this key sequence works in Elisp buffers
+    because this key binding is available in `emacs-lisp-mode-map`.
+  </li>
+</ul>
+<h2 id="links">Links</h2>
+<p>
+  The following list includes some links that were discussed during
+  the book discussion group meetings:
+</p>
+<ul>
+  <li>
+    <a href="https://commons.wikimedia.org/wiki/File:Space-cadet.jpg">Picture
+      of the space-cadet keyboard with Hyper, Super, and Meta keys</a>
+  </li>
+  <li>
+    <a href="https://www.emacswiki.org/emacs/MovingTheCtrlKey">Moving
+    the Ctrl Key</a>
+  </li>
+</ul>
