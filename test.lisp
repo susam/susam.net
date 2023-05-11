@@ -591,13 +591,23 @@
     (set-nested-template layout "foo {{ body }} bar")
     (assert (string= layout "foo foo bar"))))
 
+(test-case relative-root-path
+  (assert (string= (relative-root-path "_site/") "./"))
+  (assert (string= (relative-root-path "_site/index.html") "./"))
+  (assert (string= (relative-root-path "_site/foo") "./"))
+  (assert (string= (relative-root-path "_site/foo/") "../"))
+  (assert (string= (relative-root-path "_site/foo/index.html") "../"))
+  (assert (string= (relative-root-path "_site/foo/bar") "../"))
+  (assert (string= (relative-root-path "_site/foo/bar/") "../../"))
+  (assert (string= (relative-root-path "_site/foo/bar/index.html") "../../")))
+
 (test-case add-head-params-imports
   (let ((params (list (cons "import" "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
     (add-head-params "_site/" params)
-    (assert (string= (get-value "imports" params) (format nil result "")))
+    (assert (string= (get-value "imports" params) (format nil result "./")))
     (add-head-params "_site/foo.html" params)
-    (assert (string= (get-value "imports" params) (format nil result "")))
+    (assert (string= (get-value "imports" params) (format nil result "./")))
     (add-head-params "_site/foo/" params)
     (assert (string= (get-value "imports" params) (format nil result "../")))
     (add-head-params "_site/foo/bar.html" params)
@@ -858,7 +868,7 @@ Z")
                (cons "body" "Baz")))
    "test-tmp/{{ slug }}.html"
    "[{{ title }} {{ count }} {{ comment-label }} {{ post-title }} {{ body }}]"
-   "[{{ date }} {{ author }} {{ body }} {{ index }}]" nil)
+   "[{{ date }} {{ author }} {{ body }} {{ comment-id }}]" nil)
   (assert(string= (read-file "test-tmp/foo.html")
                   (join-strings '("[Comments on Foo 3 comments Foo "
                                   "[2020-06-03 Carol Baz 1]"
