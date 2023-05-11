@@ -337,7 +337,8 @@ value, next-index."
 
 (defun relative-root-path (path)
   "Return relative path to web root from the given rendered file path."
-  (repeat-string (count #\/ (string-replace "_site/" "" path)) "../"))
+  (let ((depth (count #\/ (string-replace "_site/" "" path))))
+    (if (zerop depth) "./" (repeat-string depth "../"))))
 
 (defun neat-url-path (path)
   "Create canonical path component of the URL for the given rendered file path."
