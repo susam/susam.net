@@ -1,0 +1,98 @@
+<!-- title: Against URL-Based Content Rendering -->
+<!-- tag: Technology -->
+<p>
+  Today I received a nice pull request to my project
+  named <a href="https://github.com/susam/muboard">Muboard</a>. It is
+  a shame I am not going to merge this pull request. Muboard is a
+  simple web-based tool that can be used as a virtual chalkboard. You
+  can type in text with LaTeX snippets in it and Muboard renders your
+  input as you type it. Muboard is quite useful to me when I host
+  online mathematics book club meetings. Muboard can also be used to
+  create distributable self-rendering HTML documents. See the
+  preceding link to see demo link, screenshots, usage notes, etc.
+</p>
+<p>
+  The <a href="https://github.com/susam/muboard/pull/4">pull
+  request</a> I received adds the ability to create a shareable link
+  to a Muboard instance. I am hosting mine
+  at <a href="https://muboard.net">muboard.net</a>. The shareable link
+  encodes the entire content in the URL itself. When someone visits
+  the shareable link, it loads Muboard which then looks at the encoded
+  content in the URL, and renders the content. It is a nifty idea. An
+  idea, I have thought of myself while developing Muboard but then
+  decided not to implement. If there is anything that
+  running <a href="https://github.com/susam/mathb">MathB.in</a> for
+  ten years has taught me, it is that allowing arbitrary users to
+  render content that appears on a domain name I have registered is
+  going to end up as a huge time sink for me. I would be spending a
+  significant portion of my leisure time moderating content, keeping
+  regulatory authorities happy, and ensuring that no bad content
+  appears on my website. Here is a copy of my complete response on
+  this matter from the pull request:
+</p>
+<blockquote>
+  <p>
+    Thank you for the comment and the pull request. The ability to
+    share URLs with the content encoded in the URL query parameter or
+    fragment identifier has crossed my mind earlier. It is a very
+    useful feature indeed. However, I decided against implementing
+    such a feature because such features are often abused to display
+    spam content or illegitimate content.
+  </p>
+  <p>
+    Now one might wonder why I, as someone who is merely hosting the
+    Muboard tool on a website, should care about what kind of content
+    one chooses to display on Muboard. After all, the content is
+    rendered on the client side, so I am not responsible for the
+    content. Unfortunately, the regulatory authorities do not see it
+    that way.
+  </p>
+  <p>
+    From my experience of running MathB.in (another project that
+    offers a pastebin for mathematics) for the last 10 years, I have
+    learnt that as long as such bad content is displayed on a domain
+    name I am the registrant of, the regulatory authorities are going
+    to contact me and ask me to ensure that such content is not
+    displayed on my website. They do not care whether that content is
+    rendered on the server side or client side. Further, they usually
+    provide only a week's notice. If no measures are taken to prevent
+    such content from being rendered on the website, the regulatory
+    authorities go ahead and force the cloud provider, hosting
+    provider, etc. to take down the website completely.
+  </p>
+  <p>
+    With something like MathB.in which stores the content on the
+    server side, I can at least remove the content from its data
+    store. However, if the content is rendered entirely on the client
+    side on the basis of the encoded content in the URL query
+    parameter or fragment identifier, it becomes more difficult to
+    know what content is being displayed on the website and block bad
+    content from being rendered, say, with some JavaScript code that
+    looks for patterns in the content and refuse to render the content
+    if it appears to contain bad content. This is not a problem I want
+    to solve in Muboard because my prior experience with MathB.in
+    shows that it takes considerable time and effort to keep track of
+    all possible bad content and to fine tune the patterns to match,
+    on a regular basis.
+  </p>
+  <p>
+    Your pull request has a very useful feature and it's a shame I
+    cannot add it to the copy of Muboard.net I am running. I do not
+    have the time to get involved in maintaining pattern-based content
+    blocklisting. If you are really interested in this feature and
+    have the risk appetite to allow arbitrary content from users to be
+    rendered on your website, I would recommend hosting a clone of
+    Muboard.net with this feature on a separate URL that you own. I
+    would be happy to link to your clone from the README of this
+    project.
+  </p>
+</blockquote>
+<p>
+  Encoding content in the URL and then rendering that content is fine
+  as long as the content is composed from an allowed set of
+  tokens. Examples include virtual pianos, online synthesizers, and
+  fun games like <a href="https://tixy.land/">Tixy</a>. However, for
+  something like Muboard that shows arbitrary text content from users,
+  quite unfortunately, I have to decline any pull request that renders
+  arbitrary content encoded in the URLs!
+</p>
