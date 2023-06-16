@@ -39,7 +39,7 @@ a:empty {
 :hover > a:empty {
   visibility: visible;
 }
-blockquote, pre, p kbd, .highlight {
+blockquote, pre, kbd, .highlight {
   background: {{ light-fill-color }};
 }
 blockquote {
@@ -59,13 +59,11 @@ blockquote *:first-child, div.highlight *:first-child {
 blockquote *:last-child, div.highlight *:last-child {
   margin-bottom: 0;
 }
-pre, code, samp, kbd {
+pre, code, samp, kbd, .mono {
   font-family: monospace,monospace;
+  font-size: 1rem;
 }
-pre code, pre samp, p code, p samp, p kbd {
-  font-size: 0.9em;
-}
-code, pre kbd {
+code, samp kbd {
   color: {{ light-code-color }};
 }
 samp {
@@ -77,11 +75,15 @@ pre .cursor {
 pre .hl {
   color: {{ light-hl-color }};
 }
-p kbd {
+kbd {
   border: thin solid {{ light-shade-color }};
   box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
   border-radius: 0.2em;
   padding: 0.1em 0.2em;
+}
+samp kbd {
+  border: none;
+  box-shadow: none;
 }
 ul.blog {
   margin-top: 1.5em;
@@ -123,7 +125,7 @@ nav a:last-child, footer a:last-child  {
   a:active {
     color: {{ dark-active-color }};
   }
-  blockquote, pre, p kbd, .highlight {
+  blockquote, pre, kbd, .highlight {
     background: {{ dark-fill-color }};
   }
   blockquote {
@@ -138,7 +140,7 @@ nav a:last-child, footer a:last-child  {
   pre .hl {
     color: {{ dark-hl-color }};
   }
-  p kbd {
+  kbd {
     border-color: {{ dark-shade-color }};
     box-shadow: 0 0.15em 0.15em {{ dark-shade-color }};
   }
