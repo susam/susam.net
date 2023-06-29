@@ -3,23 +3,27 @@
 <!-- import: extra.css -->
 <h2 id="terminal-tricks">Terminal Tricks</h2>
 <p>
-  Open a Unix or Linux terminal emulator. If you are using
-  Terminal.app on macOS, ensure that the "Use Option as Meta Key"
-  option is enabled in its "Preferences" section. Now type <code>foo
-  bar baz</code> followed by <kbd>meta</kbd>+<kbd>b</kbd>
+  Open a Unix or Linux terminal emulator. If you have Terminal.app on
+  macOS, ensure that the "Use Option as Meta Key" option is enabled in
+  its "Preferences" section. Now type <code>foo bar baz</code>
+  followed by <kbd>meta</kbd>+<kbd>b</kbd>
   (<kbd>alt</kbd>+<kbd>b</kbd> or <kbd>option</kbd>+<kbd>b</kbd> on
-  modern keyboards). In a modern shell like Bash, Zsh, etc., the
-  cursor should move backward by one word. Now
+  modern keyboards). In a typical desktop environment with a typical
+  and modern terminal emulator running a modern shell like Bash, Zsh,
+  etc., the cursor should move backward by one word. Now
   type <kbd>esc</kbd> <kbd>b</kbd>. The cursor should move back again
   by one word. Finally type <kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>b</kbd>
   and the same thing should happen again. How are we able to perform
   the same operation in three different ways?
 </p>
 <p>
-  To understand why these three key sequences yield the same result,
-  it might be a good exercise to run the command <code>cat</code> and
-  type the three key sequences again. The three key sequences we are
-  talking about are:
+  Note that if the desktop environment or the terminal emulator or the
+  set of shell key bindings is configured differently, the results may
+  vary. But we will assume that the typical defaults are in effect in
+  the remainder of this post. To understand why these three key
+  sequences yield the same result, it might be a good exercise to run
+  the command <code>cat</code> and type the three key sequences again.
+  The three key sequences we are talking about are:
 </p>
 <ul>
   <li>
@@ -35,7 +39,7 @@
 </ul>
 <p>
   When we run <code>cat</code> and type the three key sequences
-  mentioned above, the following output appears:
+  mentioned above, the following output may appear:
 </p>
 <pre>
 <samp>$ <kbd>cat
@@ -164,19 +168,29 @@
 </table>
 <p>
   This explains why typing <kbd>ctrl</kbd>+<kbd>g</kbd> in a modern
-  terminal emulator produces a beep, why <kbd>ctrl</kbd>+<kbd>h</kbd>
-  erases a character, and so on. This also explains why we can
-  type <kbd>ctrl</kbd>+<kbd>[</kbd> in Vim to escape from insert mode
-  to normal mode. While we can type <em>escape</em> with
-  the <kbd>esc</kbd> key on the keyboard, we can do so with
-  the <kbd>ctrl</kbd>+<kbd>[</kbd> key too within the terminal.
+  terminal emulator produces an audible beep or a visual flash,
+  why <kbd>ctrl</kbd>+<kbd>h</kbd> erases a character, and so on. This
+  also explains why we can type <kbd>ctrl</kbd>+<kbd>[</kbd> in Vim to
+  escape from insert mode to normal mode. While we can
+  type <em>escape</em> with the <kbd>esc</kbd> key on the keyboard, we
+  can do so with the <kbd>ctrl</kbd>+<kbd>[</kbd> key too within the
+  terminal.
 </p>
 <p>
   The keen eyed may notice that the table above has lowercase letters
   in the first column but the second and third columns use the code of
-  the corresponding uppercase letters. This discrepancy does not
-  matter much because the bitwise operation mentioned earlier provides
-  the same result irrespective of the case we choose for the letters.
+  the corresponding uppercase letters. The lowercase letters in the
+  first column is merely a notation I am using in this post to
+  identify the keys on a keyboard. They don't actually mean lowercase
+  characters. In fact, the very early keyboards only had uppercase
+  letters and they simply toggled the 7th least significant bit of the
+  modified character to obtain the control code.
+</p>
+<p>
+  By the way, an interesting thing worth noting here is that even if
+  we do consider the code of the lowercase character and pick only its
+  five least significant bits, we get the same control code as we
+  would get if we started with the corresponding uppercase character.
   For example, consider the key sequence
   <kbd>ctrl</kbd>+<kbd>g</kbd>. The uppercase character <code>G</code>
   has the code 71 (decimal 1000111) and the lowercase
@@ -187,10 +201,14 @@
   character. This is due to the fact that the five least significant
   bits of the code of a lowercase character is exactly the same as
   that of the corresponding uppercase character. They differ only in
-  their sixth least significant bit.
+  their sixth least significant bit. This is only an interesting
+  observation. It is of little significance though because like I
+  mentioned earlier, the early keyboards only flipped a bit in the
+  code of the uppercase characters when the <kbd>ctrl</kbd> modifier
+  was applied.
 </p>
 <p>
-  In addition to what we have discussed so far, many terminal
+  In addition to what we have discussed so far, some terminal
   emulators also implement a few special rules such as the following:
 </p>
 <table class="grid">
@@ -236,16 +254,22 @@
   code, so it is not really a special case. That is a fair point.
   However, in the history of computing, different systems have
   implemented slightly different methods to compute the resulting
-  control codes from our input. Turning off only the the 6th and the
-  7th least significant bits has been one method. Subtracting 64 from
-  the character code has been another one. These different methods
-  produce identical results for the first table but not so for the
-  second table. For example, while turning off the 6th and 7th bits of
-  32 (the code of the <em>space</em> character) does give us 0,
-  subtracting 64 from it does not. The second entry above is clearly a
-  special rule because we neither turn off bits nor subtract 64.
-  Instead, we turn on the 7th least significant bit which amounts to
-  adding 64 to the code of the modified character.
+  control codes from our input. Flipping the 7th least significant bit
+  was one of the early methods. Turning off only the the 6th and the
+  7th least significant bits has been another method. Subtracting 64
+  from the character code has been yet another one. These different
+  methods produce identical results for the first table but not so for
+  the second table. For example, while turning off the 6th and 7th
+  bits of 32 (the code of the <em>space</em> character) does give us 0
+  but merely flipping its 7th bit does not. Further, note that
+  allowing <kbd>ctrl</kbd>+<kbd>space</kbd> to produce the null
+  character is a bit redundant because <kbd>ctrl</kbd>+<kbd>@</kbd>
+  already did that right from the days of very early keyboards. The
+  second entry above is also a special rule because we neither turn
+  off bits nor subtract 64. Instead, we flip the 7th least significant
+  bit which amounts to adding 64 to the code of the modified
+  character. It is also the only control code that has its 6th and 7th
+  least significant bits turned on.
 </p>
 <h2 id="meta-key-sequences">Meta Key Sequences</h2>
 <p>
@@ -258,11 +282,9 @@
   or <kbd>option</kbd>+<kbd>b</kbd>. In fact, the <code>cat</code>
   and <code>od</code> experiments mentioned earlier show that when we
   type the modern alternative for the <kbd>meta</kbd> key along with
-  another key, what the terminal really sends to the underlying
+  another key, what most terminals really send to the underlying
   program is an <em>escape</em> control code (27) followed by the code
-  of the modified character. This means that the key sequences in each
-  row of the following table are equivalent to each other in a
-  terminal emulator.
+  of the modified character.
 </p>
 <table class="grid mono">
   <thead>
@@ -295,28 +317,39 @@
     </tr>
   </tbody>
 </table>
+<p>
+  There are several layers of software involved between the keyboard
+  input and the application running in the terminal and the exact
+  behaviour of the <kbd>alt</kbd> or <kbd>option</kbd> key may vary
+  depending on the configuration of each of these layers. Terminal
+  configuration alone is a complex topic that can be discussed
+  extensively. However, the behaviour described here is one of the
+  popular defaults. Alternative behaviours exist but they generally
+  produce similar effects for the user.
+</p>
 <h2 id="awkward-vim-tricks">Awkward Vim Tricks</h2>
 <p>
-  Many Vim users know that we can go from insert mode to command-line
-  mode by typing either <kbd>esc</kbd> <kbd>:</kbd>
-  or <kbd>C-[</kbd> <kbd>:</kbd>. But what some people may find
-  surprising is that we can also go from insert mode to command-line
-  mode by simply typing <kbd>meta</kbd>+<kbd>:</kbd>. Yes, this can be
-  verified by running Vim in a terminal emulator. While insert mode is
-  active, type <kbd>alt</kbd>+<kbd>:</kbd>
-  or <kbd>option</kbd>+<kbd>:</kbd> and the current mode should
-  instantly switch to the command-line mode with the colon
-  (<code>:</code>) prompt waiting for our input. This works only in a
-  terminal emulator. It may not work in the graphical version of Vim.
-  The table above illustrates why this works in a terminal emulator.
+  Most Vim users know that we can go from insert mode to command-line
+  mode and search for patterns by typing
+  either <kbd>esc</kbd> <kbd>/</kbd> or <kbd>C-[</kbd> <kbd>/</kbd>.
+  But what some people may find surprising is that we can also go from
+  insert mode to searching patterns simply by typing
+  <kbd>meta</kbd>+<kbd>/</kbd>. Yes, this can be verified by running
+  Vim in a terminal emulator. While insert mode is active,
+  type <kbd>alt</kbd>+<kbd>/</kbd> or <kbd>option</kbd>+<kbd>/</kbd>
+  and the current mode should instantly switch to the command-line
+  mode with the forward-slash (<code>/</code>) prompt waiting for our
+  search pattern. This works only in a terminal emulator. It may not
+  work in the graphical version of Vim. The table above illustrates
+  why this works in a terminal emulator.
 </p>
 <p>
   Similarly, in a Vim instance running within a terminal emulator, we
-  can type <kbd>meta</kbd>+<kbd>/</kbd> to go directly from insert
-  mode to search command. We can type <kbd>meta</kbd>+<kbd>0</kbd> to
-  go directly from insert mode to the first character of a line, or
-  type <kbd>meta</kbd>+<kbd>$</kbd> to go to the end of the line, and
-  so on. These are equivalent to
+  can type <kbd>meta</kbd>+<kbd>:</kbd> to go directly from insert
+  mode to command-line mode and enter Ex commands. We can
+  type <kbd>meta</kbd>+<kbd>0</kbd> to go directly from insert mode to
+  the first character of a line, or type <kbd>meta</kbd>+<kbd>$</kbd>
+  to go to the end of the line, and so on. These are equivalent to
   typing <kbd>esc</kbd> <kbd>0</kbd>, <kbd>esc</kbd> <kbd>$</kbd>,
   etc.
 </p>
@@ -328,9 +361,10 @@
   current line while staying in insert mode! Since the Vim
   commands <kbd>O</kbd>, <kbd>A</kbd>, <kbd>I</kbd>, and <kbd>S</kbd>
   leave us back in insert mode, we are able to perform an editing
-  operation that involves leaving the insert mode and returning to
-  insert mode instantly using the the <kbd>meta</kbd> key combination.
-  The following table summarizes these observations:
+  operation that involves leaving the insert mode, doing something
+  interesting, and returning to insert mode instantly using the
+  the <kbd>meta</kbd> key combination. The following table summarizes
+  these observations:
 </p>
 <table class="grid mono">
   <thead>
@@ -345,6 +379,13 @@
   <tbody>
     <tr>
       <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>/</kbd></td>
+      <td><kbd>esc</kbd> <kbd>/</kbd></td>
+      <td>Enter command-line mode to search a pattern</td>
+      <td>Command-line</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
       <td><kbd>meta</kbd>+<kbd>:</kbd></td>
       <td><kbd>esc</kbd> <kbd>:</kbd></td>
       <td>Enter command-line mode to enter Ex command</td>
@@ -352,16 +393,9 @@
     </tr>
     <tr>
       <td>Insert</td>
-      <td><kbd>meta</kbd>+<kbd>/</kbd></td>
-      <td><kbd>esc</kbd> <kbd>/</kbd></td>
-      <td>Search forward for a pattern</td>
-      <td>Search</td>
-    </tr>
-    <tr>
-      <td>Insert</td>
       <td><kbd>meta</kbd>+<kbd>0</kbd></td>
       <td><kbd>esc</kbd> <kbd>0</kbd></td>
-      <td>Move to the first character of line</td>
+      <td>Move to the first character of the line</td>
       <td>Normal</td>
     </tr>
     <tr>

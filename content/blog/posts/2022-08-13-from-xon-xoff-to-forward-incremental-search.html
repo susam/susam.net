@@ -48,8 +48,11 @@
   character. They differ only in their sixth least significant bit.
   That bit is on for the lowercase character but off for the
   corresponding uppercase character. This is just an interesting
-  observation as far as this post is concerned. We are not going to
-  use the code of lowercase characters in the rest of this post.
+  observation as far as this post is concerned. The very early
+  keyboards did not have lowercase letters. They only had uppercase
+  letters and when the <kbd>ctrl</kbd> key is pressed together with a
+  letter on such keyboards, the 7th bit of the character code was
+  flipped to get the control code.
 </p>
 <p>
   The bitwise operation mentioned earlier explains why
@@ -57,10 +60,10 @@
   typing <kbd>ctrl</kbd>+<kbd>j</kbd> sends a newline, and
   typing <kbd>ctrl</kbd>+<kbd>g</kbd> plays a bell. In modern terminal
   emulators these days, the bell often manifests in the form of an
-  audible beep. Here is a table that summarizes these control codes
-  and a few more:
+  audible beep or a visual flash. Here is a table that summarizes
+  these control codes and a few more:
 </p>
-<table class="grid">
+<table class="grid mono">
   <thead>
     <tr>
       <th rowspan="2">Key</th>
@@ -76,7 +79,7 @@
       <th>Character</th>
     </tr>
   </thead>
-  <tbody style="font-family: monospace, monospace">
+  <tbody>
     <tr>
       <td><kbd>ctrl</kbd>+<kbd>@</kbd></td>
       <td>1000000</td>
@@ -145,17 +148,18 @@
 <p>
   The last row in the table above explains why we can also
   type <kbd>ctrl</kbd>+<kbd>[</kbd> in Vim to escape from insert mode
-  to normal mode. This is infact one of the convenient ways for
+  to normal mode. This is, in fact, one of the convenient ways for
   touch-typists to return to normal mode in Vim instead of clumsily
-  stretching the left hand fingers out to reach the <code>esc</code>
-  key which is usually poorly located at the corner of most keyboards.
+  stretching the left hand fingers out to reach the <kbd>esc</kbd> key
+  which is usually poorly located at the corner of most keyboards.
 </p>
 <p>
   There is a bit of oversimplication in the description above.
   Throughout the history of computing, different systems have used
   slightly different methods to compute the resulting control code
-  when the <kbd>ctrl</kbd> modifier key is held. Turning off both the
-  6th and 7th least significant bits is one method. Subtracting 64
+  when the <kbd>ctrl</kbd> modifier key is held. Toggling the 7th
+  least significant bit was an early method. Turning off both the 6th
+  and 7th least significant bits is another method. Subtracting 64
   from the character code is yet another method. These are
   implementation details and these various implementation methods lead
   to the same results for the examples in the table above. Then there
@@ -163,7 +167,8 @@
   special rule to make <kbd>ctrl</kbd>+<kbd>space</kbd> behave the
   same as <kbd>ctrl</kbd>+<kbd>@</kbd> thus producing the null
   character. Further <kbd>ctrl</kbd>+<kbd>?</kbd> produces the delete
-  character. These special rules are summarized in the table below.
+  character in some terminals. These special rules are summarized in
+  the table below.
 </p>
 <table class="grid mono">
   <thead>
@@ -279,7 +284,7 @@ echo baz</code>
   automatically complete the partial command <code>echo</code>
   to <code>echo baz</code>. Type <kbd>ctrl</kbd>+<kbd>r</kbd> again to
   move back in the input history and autocomplete the command
-  to <code>echo bar</code>. We can type <code>enter</code> anytime we
+  to <code>echo bar</code>. We can type <kbd>enter</kbd> anytime we
   use the reverse search feature to execute the automatically
   completed command. Typing <kbd>ctrl</kbd>+<kbd>r</kbd> yet another
   time should bring the <code>echo foo</code> command at the shell

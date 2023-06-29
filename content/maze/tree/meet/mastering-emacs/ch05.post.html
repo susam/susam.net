@@ -1,5 +1,6 @@
 <!-- title: Notes on Chapter 5: The Theory of Editing -->
 <!-- date: 2022-03-31 -->
+<!-- import: extra.css -->
 <p>
   The following notes were taken while discussing Chapter 5 of the
   book <em>Mastering Emacs</em>, 2022 edition (written by Mickey
@@ -404,7 +405,7 @@
     <code>C-x C-;</code>: Comment out or uncomment the current line.
   </li>
   <li>
-    <code>M-x comment-box RET</code>: Comments a region by drawing a
+    <code>M-x comment-box RET</code>: Comment a region by drawing a
     box made of comment characters around the selected region. Running
     this command repeatedly on the same region creates multiple nested
     comment boxes.
@@ -618,8 +619,8 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s ba\{3,5\}r</code>: Search for the
-    letter <code>b</code> followed by 3 to 5 repetitions
-    of <code>a</code> followed by the letter <code>r</code>.
+    letter <code>b</code> followed by 3 to 5 repetitions of the
+    letter <code>a</code> followed by the letter <code>r</code>.
   </li>
   <li>
     <code>C-M-s port-[0-9]+</code>: Search for the
@@ -635,7 +636,7 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s port-[[:upper:][:digit:]-]+</code>: Search for the
-    string <code>foo-</code> followed by consecutive sequence of one
+    string <code>port-</code> followed by consecutive sequence of one
     or more upper-case letters, digits, or hyphen.
   </li>
   <li>
@@ -709,7 +710,9 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s \Sw</code>: Search for character that is not a word
-    constituent.
+    constituent. The pattern <code>\S</code> matches any character
+    whose syntax code is not the given syntax code (<code>w</code> in
+    this example).
   </li>
 </ul>
 <p>
@@ -731,8 +734,8 @@ web-server-port-HTTP-80
   class of the character.
 </p>
 <p>
-  Here are some more complete key sequences that demonstrate regular
-  expressions in search-and-replace operations:
+  Here are some complete key sequences that demonstrate various
+  search-and-replace features:
 </p>
 <ul>
   <li>
@@ -777,10 +780,8 @@ web-server-port-HTTP-80
   <li>
     <code>C-M-% [0-9]+ RET \,(+ 1000 \#&amp;)</code>: Search for
     numbers and add 1000 to each match. The
-    backreference <code>\#&amp;</code> is like <code>\&amp;</code>
-    (i.e., it represents the whole match) except
-    that <code>\#&amp;</code> refers to the match as a number within
-    Elisp expressions.
+    backreference <code>\#&amp;</code> refers to the whole match as a
+    number within the Elisp expression.
   </li>
   <li>
     <code>C-M-% \(\sw+\)-\(\sw+\) RET \,(upcase \2)-\1 RET</code>:
@@ -793,7 +794,466 @@ web-server-port-HTTP-80
     <code>C-M-% port-\([0-9]+\) RET port-\,(+ 1000 \#1) RET</code>:
     Search for the string <code>port-</code> followed by a number and
     add 1000 to the number. The backreference <code>\#1</code> refers
-    to teh string matched by the first capturing group as a string
+    to the string matched by the first capturing group as a string
     within the Elisp expression.
   </li>
 </ul>
+<h3 id="changing-case">Changing Case</h3>
+<p>
+  Here are some commands to change case of text:
+</p>
+<ul>
+  <li>
+    <code>M-l</code>: Convert string from point to the end of word to
+    lowercase.
+  </li>
+  <li>
+    <code>M-u</code>: Convert string from point to the end of word to
+    uppercase.
+  </li>
+  <li>
+    <code>M-c</code>: Capitalize string from point to the end of word.
+  </li>
+  <li>
+    <code>C-x C-l</code>: Convert region to lower case.
+  </li>
+  <li>
+    <code>C-x C-u</code>: Convert region to upper case.
+  </li>
+  <li>
+    <code>M-x upcase-initials-region RET</code>: Capitalize region.
+  </li>
+</ul>
+<p>
+  Note that the commands <code>C-x C-l</code>
+  (<code>downcase-region</code>) and <code>C-x C-u</code>
+  (<code>upcase-region</code>) are disabled by default. Follow the
+  prompts to try it or enable it. A quick way to try it is to
+  type <code>SPC</code>. Also, adding the following to the Emacs
+  initialization file permanently enables it.
+</p>
+<pre>
+<code>(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)</code>
+</pre>
+<h3 id="counting">Counting</h3>
+<p>
+  Here are some commands to count lines, words, characters, patterns, etc:
+</p>
+<ul>
+  <li>
+    <code>M-=</code>: Count lines, words, and characters in region.
+  </li>
+  <li>
+    <code>M-x count-words-region RET</code>: Same as above.
+  </li>
+  <li>
+    <code>M-x count-words RET</code>: Similar to above. If no region
+    is selected, then counts in the entire buffer.
+  </li>
+  <li>
+    <code>M-x how-many RET f.. RET</code>: Show the number of matches
+    for the regular expression <code>f..</code> following point. If
+    region is selected, then show the number of matches in the region.
+  </li>
+  <li>
+    <code>M-x count-matches RET f.. RET</code>: Same as above.
+  </li>
+</ul>
+<h3 id="deleting-and-keeping-lines">Deleting and Keeping Lines</h3>
+<p>
+  The commands that are presented in this section can be tested with a
+  buffer like this:
+</p>
+<pre>
+<code>foo
+bar
+
+foo
+bar
+
+foo
+foo
+
+bar
+foo
+
+
+
+baz
+baz
+baz</code>
+</pre>
+<p>
+  Here are the commands:
+</p>
+<ul>
+  <li>
+    <code>M-x delete-duplicate-lines RET</code>: Delete all but one
+    copy of duplicate lines in region. When executed on the whole of
+    the example buffer presented above, it leaves us with three
+    non-empty lines and one blank line. When duplicate lines are
+    encountered, the first instance of each line is kept intact and
+    the others are deleted.
+  </li>
+  <li>
+    <code>C-u M-x delete-duplicate-lines RET</code>: Like the previous
+    command but search backwards. Thus effectively, the last instance
+    of each repeated line is left intact while the other duplicates
+    are deleted.
+  </li>
+  <li>
+    <code>C-u C-u M-x delete-duplicate-lines RET</code>: Delete only
+    those duplicate lines that are adjacent to each other. In every
+    contiguous group of duplicate lines, the first one is left intact
+    and the rest are deleted.
+  </li>
+  <li>
+    <code>C-u C-u C-u M-x delete-duplicate-lines RET</code>: Like the
+    first command in this list but repeated blank lines are left
+    intact. When executed on the whole of the example buffer presented
+    above, it leaves us with three non-empty lines and six blank
+    lines.
+  </li>
+  <li>
+    <code>M-x flush-lines RET b.. RET</code>: Delete lines in region
+    that match the regular expression <code>b..</code>. If no region
+    is active, then delete matching lines between the point and end of
+    buffer. The deleted lines are not copied to kill ring.
+  </li>
+  <li>
+    <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
+    match the regular expression <code>b..</code> and delete the rest.
+    If no region is active, then keep matching lines between the point
+    and end of buffer and delete the rest. The deleted lines are not
+    copied to kill ring.
+  </li>
+  <li>
+    <code>M-x copy-matching-lines RET b.. RET</code>: Copy lines in
+    region that match the regular expression <code>b..</code> to the
+    kill ring. If no region is active, then copy matching lines
+    between the point and end of buffer. (Available since Emacs 28.1)
+  </li>
+  <li>
+    <code>M-x kill-matching-lines RET b.. RET</code>: Kill lines in
+    region that match the regular expression <code>b..</code> to the
+    kill ring. If no region is active, then kill matching lines
+    between the point and end of buffer. (Available since Emacs 28.1)
+  </li>
+</ul>
+<p>
+  To try each command on the entire buffer, first type <code>C-x
+  h</code> to select the entire buffer as the region and then type a
+  command mentioned above.
+</p>
+<h3 id="splitting-and-joining-lines">Splitting and Joining Lines</h3>
+<p>
+  Here is a list of commands that help with splitting and joining
+  lines:
+</p>
+<ul>
+  <li>
+    <code>C-o</code>: Insert a newline after the point but do not move
+    the point.
+  </li>
+  <li>
+    <code>C-x C-o</code>: On blank line, delete all surrounding blank
+    lines, leaving just one. On isolated blank line, delete the blank
+    line. On non-blank line, delete all consecutive blank lines that
+    follow the non-blank lines. While deleting blank lines it also
+    deletes lines that consist only of whitespaces.
+  </li>
+  <li>
+    <code>C-M-o</code>: Split current line at the next non-whitespace
+    character after the point while maintaining its indentation.
+    Everything from the next non-whitespace character after the point
+    to the end of the line moves down by one line but the new line is
+    indented so that the column numbers of all the characters that
+    moved down remain the same. If a fill-prefix has been set, say
+    with <code>C-x .</code>, then the fill-prefix is inserted in the
+    new line.
+  </li>
+  <li>
+    <code>M-^</code>: Join current line with previous line and leave
+    exactly one space between the joined lines. If a fill-prefix is
+    set, say with <code>C-x .</code>, then the fill-prefix is removed while joining lines.
+  </li>
+</ul>
+<p>
+  The key sequence <code>C-x C-o</code> is very useful for removing
+  spurious blank lines between paragraphs.
+</p>
+<p>
+  Note that <code>M-^</code> also works on a region. When a region is
+  active, it joins all lines in the region.
+</p>
+<h3 id="examining-and-fixing-whitespace-issues">Examining and Fixing Whitespace Issues</h3>
+<p>
+  Here is a list of commands that are useful in examining whitespace
+  in the current buffer:
+</p>
+<ul>
+  <li>
+    <code>M-x whitespace-mode RET</code>: Toggle visualization of
+    spaces, tabs, newlines, and lines longer
+    than <code>whitespace-line-column</code> number of columns (80 by
+    default) with special glyphs and colour.
+  </li>
+  <li>
+    <code>M-x whitespace-newline-mode RET</code>: Toggle visualization
+    of newlines.
+  </li>
+  <li>
+    <code>M-x whitespace-toggle-options RET</code>: Toggle local
+    options for <code>whitespace-mode</code>.
+  </li>
+</ul>
+<p>
+  After typing <code>M-x whitespace-toggle-options RET</code>, type a
+  key to tell it what to do. For example, type <code>N</code> and it
+  will start or restart <code>whitespace-mode</code> with the
+  visualization of newline toggled. Type <code>?</code> to see the
+  list of all key inputs it supports.
+</p>
+<p>
+  The key sequence <code>M-x whitespace-toggle-options RET</code> may
+  be typed anytime regardless of whether <code>whitespace-mode</code>
+  is currently enabled or not. If <code>whitespace-mode</code> is not
+  enabled, running <code>whitespace-toggle-options</code>
+  automatically enables it. If <code>whitespace-mode</code> is already
+  enabled, then running <code>whitespace-toggle-options</code> and
+  toggling an option, restarts local <code>whitespace-mode</code> with
+  the updated option setting.
+</p>
+<p>
+  Here are some commands to report and clean up whitespace issues:
+</p>
+<ul>
+  <li>
+    <code>M-x whitespace-report RET</code>: Shows a report of
+    whitespace issues. The "Current setting" column on left shows the
+    current settings found in the
+    variable <code>whitespace-style</code>. The "Whitespace Problem"
+    column on the right shows the whitespace problems found in the buffer.
+  </li>
+  <li>
+    <code>M-x whitespace-report-region RET</code>: Like the previous
+    command but reports problems in a region.
+  </li>
+  <li>
+    <code>M-x whitespace-cleanup RET</code>: Cleans up whitespace
+    issues in the buffer. This command checks
+    the <code>whitespace-style</code> variable to decide which issues
+    to fix. See <code>C-h f whitespace-cleanup RET</code> for complete
+    details.
+  </li>
+  <li>
+    <code>M-x whitespace-cleanup-region RET</code>: Cleans up
+    whitespace issues in a region. Unlike the previous command, this
+    command does not fix empty lines at the beginning or end of
+    buffer. See <code>C-h f whitespace-cleanup-region RET</code> for
+    complete details.
+  </li>
+</ul>
+<p>
+  As mentioned in the list above, the whitespace cleanup functions
+  read the variable <code>whitespace-style</code> to decide which
+  whitespace issues to fix. Say, we do not want to fix trailing
+  whitespace issue but do want to fix other whitespace issues selected
+  by default (e.g., empty lines at the beginning or end of buffer,
+  spaces before tab, etc.), then we need to update
+  the <code>whitespace-style</code> variable as follows:
+</p>
+<pre>
+<code>(setq whitespace-style (delete 'trailing whitespace-style))</code>
+</pre>
+<p>
+  Now running <code>whitespace-cleanup</code>
+  or <code>whitespace-cleanup-region</code> is going to skip fixing
+  trailing spaces but it will perform the other cleanups determined by
+  the value of <code>whitespace-style</code>.
+</p>
+<h3 id="keyboard-macros">Keyboard Macros</h3>
+<p>
+  The behaviour of keyboard macro key sequences depend on the current
+  context. So they are presented as table below.
+</p>
+<table class="grid">
+  <tr>
+    <th>
+      Key
+    </th>
+    <th>
+      Command
+    </th>
+    <th>
+      While not recording
+    </th>
+    <th>
+      While recording
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <code>F3</code>
+    </td>
+    <td>
+      <code>kmacro-start-macro-or-insert-counter</code>
+    </td>
+    <td>
+      Start recording
+    </td>
+    <td>
+      Insert counter
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>F4</code>
+    </td>
+    <td>
+      <code>kmacro-end-or-call-macro</code>
+    </td>
+    <td>
+      Call macro
+    </td>
+    <td>
+      End recording
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>C-x&nbsp;(</code>
+    </td>
+    <td>
+      <code>kmacro-start-macro</code>
+    </td>
+    <td>
+      Start recording
+    </td>
+    <td>
+      Do nothing
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>C-x&nbsp;)</code>
+    </td>
+    <td>
+      <code>kmacro-end-macro</code>
+    </td>
+    <td>
+      End recording
+    </td>
+    <td>
+      Do nothing
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>C-x&nbsp;e</code>
+    </td>
+    <td>
+      <code>kmacro-end-and-call-macro</code>
+    </td>
+    <td>
+      Call macro
+    </td>
+    <td>
+      End recording and call macro
+    </td>
+  </tr>
+</table>
+<p>
+  The key sequences in the table above can be divided into three
+  groups:
+</p>
+<ul>
+  <li>
+    <code>C-x (</code> and <code>C-x )</code>: These invoke simple
+    commands that start and stop macro recording.
+  </li>
+  <li>
+    <code>F3</code> and <code>F3</code>: These are wrappers around the
+    simple commands.
+  </li>
+  <li>
+    <code>C-x e</code>: This is a slightly high level command too that
+    wraps around simpler macro commands and functions that end
+    recording and calls a macro.
+  </li>
+</ul>
+<p>
+  Given these details, there are broadly two ways these macro key
+  sequences can be used. They are shown in the table below.
+</p>
+<table class="grid">
+  <tr>
+    <th>Operation</th>
+    <th>Using Function Keys</th>
+    <th>Using Control Keys</th>
+  </tr>
+  <tr>
+    <td>Start recording</td>
+    <td><code>F3</code></td>
+    <td><code>C-x (</code></td>
+  </tr>
+  <tr>
+    <td>Stop recording</td>
+    <td><code>F4</code></td>
+    <td><code>C-x )</code></td>
+  </tr>
+  <tr>
+    <td>Call macro</td>
+    <td><code>F4</code></td>
+    <td><code>C-x e</code></td>
+  </tr>
+  <tr>
+    <td>Stop recording and call macro</td>
+    <td><code>F4 F4</code></td>
+    <td><code>C-x e</code></td>
+  </tr>
+  <tr>
+    <td>Repeat call macro</td>
+    <td><code>F4</code></td>
+    <td><code>e</code></td>
+</table>
+<p>
+  If you are comfortable using function keys, you might want to follow
+  the second column in the table above. Otherwise, you might want to
+  follow the third column in the table above.
+</p>
+<p>
+  The last row is not mentioned in the book but the fact
+  that <code>e</code> may be used to repeat a macro call performed
+  with <code>C-x e</code> is documented in the Emacs
+  manual: <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html">Keyboard
+  Macros: Basic Use</a>.
+</p>
+<p>
+  Note that <code>F3</code> inserts a counter value and increments the
+  counter value by 1 or by the number specified via a digit argument.
+  Here is an example key sequence that may be typed in a buffer with
+  multiple lines to demonstrate this:
+</p>
+<ol>
+  <li>
+    Type <code>C-x (</code> to start macro recording.
+  </li>
+  <li>
+    Type <code>C-a F3 . SPC M-c C-n</code> to insert macro counter
+    which <code>0</code> by default, followed by dot and space at the
+    beginning of the line, capitalize the first word, and move to the
+    next line.
+  </li>
+  <li>
+    Type <code>C-x e</code> to stop macro recording and call the
+    recorded macro. Now <code>1</code>, dot, and space is inserted at
+    the beginning of the line, the first word of the current line is
+    capitalized, and the cursor moves to the next line.
+  </li>
+  <li>
+    Type <code>e</code> to repeat the macro call. Keep
+    typing <code>e</code> to repeat the macro call.
+  </li>
+</ol>

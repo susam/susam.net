@@ -802,29 +802,30 @@
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 211-213: The Theory of Editing: Regular Expressions: Capturing Groups, Invoking Elisp"
   :duration 40
-  :members -1)
+  :members 9)
  (:date "2023-05-06 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 5: Pages 213-216: The Theory of Editing: Changing Case"
-  :duration 40
-  :members -1)
+  :topic "Chapter 5: Pages 213-217: The Theory of Editing: Changing Case, Counting Things"
+  :duration 35
+  :members 8)
  (:date "2023-05-07 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 5: Pages 216-218: The Theory of Editing: Counting Things, Text Manipulation, Editable Occur, Deleting Duplicates"
-  :duration 40
-  :members -1)
+  :topic "Chapter 5: Pages 217-220: The Theory of Editing: Editable Occur, Deleting Duplicates, Flushing and Keeping Lines, Copying and Killing Matching Lines"
+  :duration 30
+  :members 5)
  (:date "2023-05-26 20:00"
   :slug "mastering-emacs"
-  :topic "Chapter 5: Pages 219-222: The Theory of Editing: Flushing and Keeping Lines, Copying and Killing Matching Lines, Joining and Splitting Lines"
+  :topic "Chapter 5: Pages 220-222: The Theory of Editing: Joining and Splitting Lines"
   :duration 40
-  :members -1)
+  :members 6)
  (:date "2023-05-27 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 223-225: The Theory of Editing: Whitespace Commands"
-  :duration 40
-  :members -1)
+  :duration 30
+  :members 5)
  (:date "2023-05-28 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 225-228: The Theory of Editing: Keyboard Macros: Basic Commands"
   :duration 40
-  :members -1))
+  :members 6)
+ )
