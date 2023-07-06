@@ -14,7 +14,7 @@
 ;;; Tool Definitions
 ;;; ----------------
 
-(defvar *cache-directory* "/opt/data/form/"
+(defvar *data-directory* "/opt/data/form/"
   "Directory where post files and data are written to and read from.")
 
 (defvar *log-directory* "/opt/log/form/"
@@ -93,20 +93,28 @@
                            (random 1000000))))
     (write-file filename text)))
 
+(defun write-subscriber (directory ip current-time email action)
+  "Save subscriber/unsubscriber to a file."
+  (let* ((time-string (universal-time-string current-time))
+         (text (format nil "~a ~a (~a)~%" time-string email ip))
+         (filename (format nil "~a~a_~a_~a.txt" directory action
+                           (time-based-filename time-string)
+                           (random 1000000))))
+    (write-file filename text)))
+
 (defmacro add-page-params (params)
   "Add common parameters necessary for page rendering."
   `(progn
      (add-value "root" "../../" ,params)
      (add-value "index" "" ,params)
-     (add-value "subtitle" " - Susam Pal" ,params)
-     (add-value "site-url" "https://susam.net/" ,params)
      (add-value "zone-slug" "blog" ,params)
      (add-value "zone-name" "Blog" ,params)
-     (add-value "initial-year" 2006 ,params)
      (add-value "current-year" (nth-value 5 (get-decoded-time)) ,params)
      (add-value "canonical-url" "" ,params)
      (add-value "heads" (head-html "main.css" ,params) ,params)
-     (add-value "imports" (head-html "form.css" ,params) ,params)))
+     (add-value "imports" (head-html "form.css" ,params) ,params)
+     (when (probe-file "params.lisp")
+       (setf params (append (read-list "params.lisp") params)))))
 
 (defun form-index-page ()
   "Return HTML response for form index page."
@@ -285,6 +293,118 @@
         (comment-form-get form-layout params))))
 
 
+;;; Subscriber Form
+;;; ---------------
+
+(defun subscriber-form-get (layout params ykey yval)
+  "Return empty form page."
+  (add-value "title" "Post Comment" params)
+  (add-value "class" "" params)
+  (add-value "status" "" params)
+  (add-value "post" (or (from-get "post") "") params)
+  (add-value "slug" (or (from-get "post") "") params)
+  (add-value "name" "" params)
+  (add-value "url" "" params)
+  (add-value "comment" "" params)
+  (add-value "ykey" ykey params)
+  (add-value "yval" yval params)
+  (render layout params))
+
+(defun subscriber-purpose (action)
+  "Return purpose phrase for subscriber form."
+  (let ((subscribers (+ 232 27)))
+    (if (string= action "subscribe")
+        (format nil "join ~a other subscribers and receive" subscribers)
+        (format nil "stop receiving"))))
+
+(defun subscriber-button (action)
+  "Return text for the subscriber form submit button."
+  (if (string= action "subscribe") "Subscribe Now" "Unsubscribe Now"))
+
+(defun reject-subscriber-p (options ip current-time params)
+  (let ((max-email-length 100)
+        (result)
+        (errors))
+    (when (string= (get-value "email" params) "")
+      (push "Invalid request." errors))
+    (when (getf options :read-only)
+      (push "New requests have been disabled temporarily." errors))
+    (when (> (length (get-value "email" params)) max-email-length)
+      (push "Email exceeds ~a characters." max-email-length) errors)
+    (when (setf result (dodgy-ip-p options ip))
+      (push (format nil "IP address ~a is banned." result) errors))
+    (when (setf result (global-flood-p options current-time *last-post-time*))
+      (push (format nil "Wait for ~a s before submitting." result) errors))
+    (when (setf result (client-flood-p options ip current-time *flood-table*))
+      (push (format nil "Wait for ~a s before resubmitting." result) errors))
+    (reverse errors)))
+
+(defun dodgy-subscriber-p (params)
+  "Check if subscriber has invalid fields."
+  (string/= (from-post (get-value "ykey" params)) (get-value "yval" params)))
+
+(defun reject-subscriber (layout errors action params)
+  "Reject subscriber with error messages."
+  (write-form-log "Subscriber rejected:~{ ~a~}" errors)
+  (add-value "title" (string-capitalize action) params)
+  (add-value "class" "error" params)
+  (add-value "status" (format-status errors) params) 
+  (render layout params))
+
+(defun accept-subscriber (directory layout ip current-time action params)
+  "Update flood data and save subscriber."
+  (let ((email (get-value "email" params)))
+    (if (dodgy-subscriber-p params)
+        (write-form-log "Dodgy ~ar: ~a" action email)
+        (progn
+          (write-form-log "Written ~ar: ~a" action email)
+          (write-subscriber directory ip current-time email action))))
+  (set-flood-data ip current-time *last-post-time* *flood-table*)
+  (add-value "title" (format nil "Successfully ~@(~a~)d" action) params)
+  (add-value "class" "success" params)
+  (let ((lines (list (format nil "Successfully ~ad." action)
+                     (input-intact-message))))
+    (add-value "status" (format-status lines) params))
+  (render layout params))
+
+(defun subscriber-form-post (directory layout options action params)
+  "Return processed subscriber form page."
+  (add-value "email" (or (from-post "email") "") params)
+  (let ((ip (real-ip))
+        (current-time (get-universal-time))
+        (errors))
+    (if (setf errors (reject-subscriber-p options ip current-time params))
+        (reject-subscriber layout errors action params)
+        (accept-subscriber directory layout ip current-time action params))))
+
+(defun subscriber-form-get (layout action params)
+  "Return empty subscriber form page."
+  (add-value "title" (string-capitalize action) params)
+  (add-value "class" "" params)
+  (add-value "status" "" params)
+  (add-value "email" "" params)
+  (render layout params))
+
+(defun subscriber-form (directory action)
+  "Subscriber form application."
+  (let* ((page-layout (read-file "layout/page.html"))
+         (form-layout (read-file "layout/form/subscribe.html"))
+         (method (hunchentoot:request-method*))
+         (options (read-options directory))
+         (ykey (getf options :ykey "k"))
+         (yval (getf options :yval "v"))
+         (params))
+    (setf form-layout (render page-layout (list (cons "body" form-layout))))
+    (add-page-params params)
+    (add-value "purpose" (subscriber-purpose action) params)
+    (add-value "submit" (subscriber-button action) params)
+    (add-value "ykey" ykey params)
+    (add-value "yval" yval params)
+    (if (eq method :post)
+        (subscriber-form-post directory form-layout options action params)
+        (subscriber-form-get form-layout action params))))
+
+
 ;;; HTTP Request Handlers
 ;;; ---------------------
 
@@ -295,7 +415,13 @@
       (form-index-page)))
   (hunchentoot:define-easy-handler (comment :uri "/form/comment/") ()
     (when (member (hunchentoot:request-method*) '(:head :get :post))
-      (comment-form *cache-directory*))))
+      (comment-form *data-directory*)))
+  (hunchentoot:define-easy-handler (subscribe :uri "/form/subscribe/") ()
+    (when (member (hunchentoot:request-method*) '(:head :get :post))
+      (subscriber-form *data-directory* "subscribe")))
+  (hunchentoot:define-easy-handler (unsubscribe :uri "/form/unsubscribe/") ()
+    (when (member (hunchentoot:request-method*) '(:head :get :post))
+      (subscriber-form *data-directory* "unsubscribe"))))
 
 
 ;;; HTTP Server
