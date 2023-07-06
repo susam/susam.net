@@ -310,8 +310,8 @@
   (add-value "yval" yval params)
   (render layout params))
 
-(defun subscriber-purpose (action)
-  "Return purpose phrase for subscriber form."
+(defun subscriber-intention (action)
+  "Return intention phrase for subscriber form."
   (let ((subscribers (+ 232 27)))
     (if (string= action "subscribe")
         (format nil "join ~a other subscribers and receive" subscribers)
@@ -320,6 +320,10 @@
 (defun subscriber-button (action)
   "Return text for the subscriber form submit button."
   (if (string= action "subscribe") "Subscribe Now" "Unsubscribe Now"))
+
+(defun subscriber-purpose (action)
+  "Return purpose phrase for subscriber form."
+  (if (string= action "subscribe") "added to a" "removed from the"))
 
 (defun reject-subscriber-p (options ip current-time params)
   (let ((max-email-length 100)
@@ -396,8 +400,9 @@
          (params))
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (add-page-params params)
-    (add-value "purpose" (subscriber-purpose action) params)
+    (add-value "intention" (subscriber-intention action) params)
     (add-value "submit" (subscriber-button action) params)
+    (add-value "purpose" (subscriber-purpose action) params)
     (add-value "ykey" ykey params)
     (add-value "yval" yval params)
     (if (eq method :post)
