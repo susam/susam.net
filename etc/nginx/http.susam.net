@@ -22,6 +22,9 @@ server {
         proxy_set_header User-Agent $http_user_agent;
         proxy_set_header X-Forwarded-For $remote_addr;
     }
+    location ~ /Makefile$ {
+        default_type text/plain;
+    }
     rewrite ^/blog/rss/$ /blog/feed.xml permanent;
     rewrite ^/blog/rss.xml$ /blog/feed.xml permanent;
     rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
