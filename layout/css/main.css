@@ -61,7 +61,10 @@ blockquote *:last-child, div.highlight *:last-child {
 }
 pre, code, samp, kbd, .mono {
   font-family: monospace,monospace;
-  font-size: 1rem;
+  font-size: 0.9em;
+}
+pre code, pre samp, pre kbd, .mono kbd {
+  font-size: 1.0em;
 }
 code, samp kbd {
   color: {{ light-code-color }};
