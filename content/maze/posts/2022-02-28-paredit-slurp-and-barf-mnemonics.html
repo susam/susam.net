@@ -28,20 +28,20 @@
 <p>
   Say, we have the following Lisp expressions in our editor:
 </p>
-<pre><code>(* 10 20) (+ 30 40)</code></pre>
+<pre><code>(* 10 20) (+ 30 40)<span class="cursor"> <span></code></pre>
 <p>
-  Let us now bring the expression <code>(+ 30 40)</code> inside the
-  expression <code>(* 10 20)</code>. To do so, we first place the
-  cursor somewhere inside the first expression, say, as shown below:
+  The block above shows where the cursor is placed. Let us now bring
+  the expression <code>(+ 30 40)</code> inside the expression <code>(*
+  10 20)</code>. To do so, we first place the cursor somewhere inside
+  the first expression, say, as shown below:
 </p>
 <pre><code>(* 10 20<span class="cursor">)</span> (+ 30 40)</code></pre>
 <p>
-  The underbar above shows where the cursor is placed. Now
-  type <code>C-)</code> and the closing parenthesis of the first
+  Now type <code>C-)</code> and the closing parenthesis of the first
   expression moves forward to <em>slurp</em> the next expression. The
   result looks like this:
 </p>
-<pre><code>(* 10 20 (+ 30 40))</code></pre>
+<pre><code>(* 10 20<span class="cursor"> </span>(+ 30 40))</code></pre>
 <p>
   The key sequence <code>C-)</code> invokes
   the <code>paredit-forward-slurp-sexp</code> command that adds the
@@ -58,7 +58,7 @@
 <p>
   Say, we have the following Lisp expression in our editor:
 </p>
-<pre><code>(* 10 20 (+ 30 40))</code></pre>
+<pre><code>(* 10 20 (+ 30 40))<span class="cursor"> <span></code></pre>
 <p>
   We now want to move <code>(+ 30 40)</code> out of the first
   expression. To do so, we first place the cursor somewhere inside the
@@ -71,7 +71,7 @@
   expression moves behind to <em>barf</em> the inner expression out.
   The result looks like this:
 </p>
-<pre><code>(* 10 20) (+ 30 40)</code></pre>
+<pre><code>(* 10 20) <span class="cursor">(</span>+ 30 40)</code></pre>
 <p>
   The key sequence <code>C-}</code> invokes
   the <code>paredit-forward-barf-sexp</code> command that removes the
