@@ -112,6 +112,9 @@ nav a, footer a {
 nav a:last-child, footer a:last-child  {
   margin-right: 0;
 }
+.sep {
+  margin: 0 0.25em;
+}
 @media (prefers-color-scheme: dark) {
   body {
     background: {{ dark-background-color }};
