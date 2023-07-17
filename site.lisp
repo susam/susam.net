@@ -421,6 +421,14 @@ value, next-index."
   "Return the first word from the given string."
   (first (uiop:split-string s)))
 
+(defun format-tag-links (post)
+  "Create HTML to display tags for the given post."
+  (let ((html ""))
+    (dolist (tag (uiop:split-string (get-value "tag" post)))
+      (setf tag (string-downcase tag))
+      (setf html (fstr "~a~%  <span class=\"sep\">&bull;</span> " html))
+      (setf html (fstr "~a<a href=\"tag/~a.html\">#~a</a>" html tag tag)))
+    html))
 
 ;;; Posts
 ;;; -----
@@ -448,6 +456,7 @@ value, next-index."
          (body))
     ;; Read post and merge its parameters with call parameters.
     (setf params (append post params))
+    (add-value "tags" (format-tag-links post) params)
     (invoke-callback params)
     ;; Render placeholder in post body if requested.
     (when (string= (get-value "render" params) "yes")
