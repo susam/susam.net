@@ -73,7 +73,8 @@ samp {
   color: {{ light-samp-color }};
 }
 pre .cursor {
-  border-bottom: 0.2em solid;
+  background: {{ light-samp-color }};
+  color: {{ light-fill-color }};
 }
 pre .hl {
   color: {{ light-hl-color }};
@@ -139,6 +140,10 @@ nav a:last-child, footer a:last-child  {
   }
   samp {
     color: {{ dark-samp-color }};
+  }
+  pre .cursor {
+    background: {{ dark-samp-color }};
+    color: {{ dark-fill-color }};
   }
   pre .hl {
     color: {{ dark-hl-color }};
