@@ -1,0 +1,531 @@
+<!-- title: Emacs Keyboard Macros -->
+<!-- tag: Emacs Technology -->
+<p>
+  If you are a beginning Emacs user, or maybe even an experienced one,
+  but have never used Emacs keyboard macros earlier, learning this one
+  feature will change the way you use Emacs forever. I know because I
+  was a beginner once. As a beginner, I often used to rely on writing
+  clever regular-expressions-based search-and-replace commands to
+  perform complex editing tasks.
+</p>
+<p>
+  Once I learnt keyboard macros, it changed the way I performed those
+  routine and repetitive editing tasks. I would no longer resort to
+  writing regular expressions to solve most editing problems. Keyboard
+  macros let you solve problems the <em>dumb</em> way. Just carry on
+  with your editing tasks and ask Emacs to remember and replay them
+  when you want to repeat them. The following famous quote about
+  regular expressions is quite relevant in this context:
+</p>
+<blockquote>
+  Some people, when confronted with a problem, think "I know, I'll use
+  regular expressions." Now they have two problems.
+</blockquote>
+<p>
+  Keyboard macros avoid the second problem. They let you focus on your
+  original problem: the complex editing task you want to perform.
+</p>
+<p>
+  While learning keyboard macros can change the way you use Emacs,
+  there's more! Learning how to <em>name</em> keyboard macros is going
+  to change the way you use Emacs for a second time. Once you know how
+  to name macros, you can invoke them like ordinary Emacs commands
+  with <code>M-x</code>. Yes, you can start creating your own Emacs
+  commands without having to write a single line of Emacs Lisp (Elisp)
+  yourself! Emacs will generate the Elisp code necessary to define the
+  new commands for your keyboard macros.
+</p>
+<p>
+  In this post, we will take a look at these features. We will start
+  with the basics of keyboard macros, how to define them, how to
+  execute them, how to edit them, etc. Then we will see how to name
+  them, create key bindings for them, how to create Emacs commands out
+  of them. All of this information is available in the Emacs manual
+  too (see section
+  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html">Keyboard
+  Macros</a>) but I am hoping that this post and especially the demos
+  presented here will make it more comfortable to learn about and
+  start using keyboard macros in Emacs.
+</p>
+<p>
+  The sections below are arranged in such a manner that if you decide
+  to stop at some section and step away, you would have still learnt
+  some useful techniques that you can adopt in your day-to-day Emacs
+  life. You can always come back later to read the other sections.
+</p>
+<h2 id="record-and-replay">Record and Replay</h2>
+<p>
+  From here on, some familiarity with Emacs is expected. For example,
+  it is assumed that you know that the key sequence notation <code>C-x
+  e</code> means typing <kbd>ctrl</kbd>+<kbd>x</kbd> followed
+  by <kbd>e</kbd>. Similarly, the key sequence <code>M-x</code> means
+  typing <kbd>alt</kbd>+<kbd>x</kbd> or <kbd>option</kbd>+<kbd>x</kbd>
+  depending on the type of keyboard you have. The key <kbd>RET</kbd>
+  represents the <code>return</code> or <code>enter</code> key. The
+  notation <kbd>SPC</kbd> represents a space character. We will use
+  the notation <code>&lt;f3&gt;</code> and <code>&lt;f4&gt;</code> to
+  represent the function keys <kbd>F3</kbd> and <kbd>F4</kbd>,
+  respectively.
+</p>
+<p>
+  Let us record a keyboard macro. We will perform a very simple task
+  of adding a prefix and a suffix to the current line. The prefix is
+  going to be <code>[[[[</code>. The suffix is going to
+  be <code>]]]]</code>. This editing example is intentionally too
+  trivial and silly, so that we can focus on how to work with keyboard
+  macros rather than getting lost in the details of a particular
+  editing task. Let us assume the buffer initially looks like this and
+  the cursor is at the first line:
+</p>
+<pre>
+<code><span class="cursor">E</span>macs is the advanced, extensible,
+customizable, self-documenting editor.
+GNU Emacs is free software. Everyone is
+free to use it and free to redistribute
+it under certain conditions.</code>
+</pre>
+<p>
+  The block shows where the cursor is. Now perform the following
+  steps:
+</p>
+<ol>
+  <li>
+    <p>
+      Type <code>&lt;f3&gt;</code> to start recording a keyboard
+      macro. Note how the modeline displays <code>Def</code> in the
+      list of minor modes. This is an indicator that the minor mode
+      named <code>defining-kbd-macro</code> is now active. Any
+      subsequent keyboard input is going to be recorded as a keyboard
+      macro.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-a</code> to go to the beginning of the line. Do
+      this even if the cursor is already at the beginning of the
+      line. Doing this ensures that when we replay the keyboard
+      macro, the cursor always moves to the beginning of the line,
+      so we can later replay the keyboard macro on any line
+      irrespective of where the cursor is on that line.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>[[[[</code> to insert our chosen prefix.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-e</code> to go to the end of the line.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>]]]]</code> to insert our chosen suffix.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-n</code> to move to the cursor to the next line.
+      This may seem like an odd thing to do but the usefulness of this
+      will become apparent when we replay the keyboard macro multiple
+      times. After executing the keyboard macro once, the cursor will
+      automatically move to the next line so that merely repeating the
+      keyboard macro call would repeat the same operation on the next
+      line. This step ensures that the cursor is left at a good place
+      when the keyboard macro call ends, so that it can be repeated
+      conveniently.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>&lt;f4&gt;</code> to complete recording the keyboard
+      macro. You could also type <code>C-x )</code> instead. The
+      buffer should look like this now:
+    </p>
+<pre>
+<code>[[[[Emacs is the advanced, extensible,]]]]
+customizable, self-documenting editor.<span class="cursor"> </span>
+GNU Emacs is free software. Everyone is
+free to use it and free to redistribute
+it under certain conditions.</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      The keyboard macro is now ready. Type <code>&lt;f4&gt;</code>
+      once to replay the keyboard macro. The buffer looks like this
+      now:
+    </p>
+<pre>
+<code>[[[[Emacs is the advanced, extensible,]]]]
+[[[[customizable, self-documenting editor.]]]]
+GNU Emacs is free software. Everyone is<span class="cursor"> </span>
+free to use it and free to redistribute
+it under certain conditions.</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Notice how the cursor has moved to the next line automatically.
+      This is a result of recording <code>C-n</code> too as part of
+      the keyboard macro in step 6 earlier. As a result, we can simply
+      repeat this keyboard macro by typing <code>&lt;f4&gt;</code>
+      over and over again. Type <code>&lt;f4&gt;</code> twice now and
+      the buffer looks like this:
+    </p>
+  </li>
+<pre>
+<code>[[[[Emacs is the advanced, extensible,]]]]
+[[[[customizable, self-documenting editor.]]]]
+[[[[GNU Emacs is free software. Everyone is]]]]
+[[[[free to use it and free to redistribute]]]]
+it under certain conditions.<span class="cursor"> </span></code>
+</pre>
+</ol>
+<p>
+  Note that instead of using <code>&lt;f3&gt;</code>
+  and <code>&lt;f4&gt;</code> we can also use <code>C-x (</code>
+  and <code>C-x )</code>, respectively, to start and stop recording a
+  keyboard macro. This can be useful if you want to avoid function
+  keys which can be clumsy to type on some keyboards. Similarly,
+  instead of typing <code>&lt;f4&gt;</code> to replay a keyboard
+  macro, we can type <code>C-x e</code> instead.
+</p>
+<p>
+  We could have solved this simple editing task with a
+  regular-expression based search-and-replace operation using the key
+  sequence <code>C-M-% .* RET [[[[\&amp;]]]] RET</code>. However, for
+  more involved editing tasks where writing a regular expression may
+  be unwieldy, keyboard macros may turn out to be very useful.
+</p>
+<h2 id="moving-back-and-forth">Moving Back and Forth</h2>
+<p>
+  Soon after you adopt recording and playing keyboard macros in your
+  day-to-day editing tasks, you will soon realize
+  that <code>&lt;f4&gt;</code> or <code>C-x e</code> replays the last
+  keyboard macro. But sometimes you may want to replay an older
+  keyboard macro. The keyboard macros that we record goes into a data
+  structure known as the keyboard macro ring. We can go back and forth
+  in this ring using the following key sequences:
+</p>
+<ul>
+  <li>
+    <code>C-x C-k C-p</code>: Go back to the previous keyboard macro.
+  </li>
+  <li>
+    <code>C-x C-k C-n</code>: Go forward to the next keyboard macro.
+  </li>
+</ul>
+<p>
+  Every time we navigate the keyboard macro ring in this manner, the
+  selected keyboard macro is displayed in the echo area at the bottom
+  of the Emacs frame. Once we are happy with the keyboard macro we
+  have selected, we can type <code>&lt;f4&gt;</code> or <code>C-x
+  e</code> and the selected keyboard macro is replayed.
+</p>
+<p>
+  Note that in the remaining sections below, whenever we use the term
+  <em>last keyboard macro</em>, what it really refers to is the
+  current keyboard macro in the macro ring which is often the last
+  keyboard macro we recorded but if we have navigated to a different
+  keyboard macro in the macro ring, then the term <em>last keyboard
+  macro</em> refers to that keyboard macro.
+</p>
+<h2 id="repeating-keyboard-macros">Repeating Keyboard Macros</h2>
+<p>
+  We can repeat keyboard macros like we repeat most other commands in
+  Emacs: by using numeric prefix arguments. For example,
+  typing <code>C-3 &lt;f4&gt;</code> replays a keyboard macro three
+  times. So does <code>C-3 C-x e</code>.
+</p>
+<p>
+  If we want to repeat the keyboard macro for the remainder of the
+  entire buffer, we could use the zero prefix argument,
+  e.g., <code>C-0 &lt;f4&gt;</code> or <code>C-0 C-x e</code>.
+  Technically, it repeats the keyboard macro until there is an error.
+  As a result, it repeats the keyboard macro until it is repeated on
+  the last line of the buffer and the cursor cannot move down any
+  further.
+</p>
+<h2 id="naming-keyboard-macros">Naming Keyboard Macros</h2>
+<p>
+  Now that we have seen how to perform basic operations with keyboard
+  macros, let us see how to name the macros. This is what I earlier
+  claimed would change the way you Emacs for a second time! Here are
+  the steps:
+</p>
+<ol>
+  <li>
+    <p>
+      If you haven't already, perform steps 1 to 7 from
+      the <a href="#record-and-replay">Record and Replay</a> section
+      to record a keyboard macro.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x C-k n decorate RET</code> to name the last
+      keyboard macro as <code>decorate</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x decorate RET</code> to replay the keyboard macro.
+    </p>
+  </li>
+</ol>
+<p>
+  Did you see what happened here? We assigned a name to our keyboard
+  macro and it immediately became available as an Emacs command that
+  we can now call from Elisp or execute directly using
+  the <code>M-x</code> key sequence.
+</p>
+<h2 id="saving-keyboard-macros">Saving Keyboard Macros</h2>
+<p>
+  After we have named a keyboard macro as explained in the previous
+  section, we can save them too in our initialization file. Assuming
+  the initialization file is present at
+  <code>~/.emacs.d/init.el</code>, perform these steps to save the
+  last keyboard macro:
+</p>
+<ol>
+  <li>
+    <p>
+      Type <code>C-x C-f ~/.emacs.d/init.el RET</code> to open the
+      initialization file.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now move the cursor to a place in this file where Emacs should
+      write the keyboard macro definition too.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x insert-kbd-macro decorate RET</code>. Emacs
+      generates the Elisp code for the keyboard macro
+      named <code>decorate</code> and inserst it as a command into the
+      file. The generated code may look like this:
+    </p>
+  </li>
+  <li>
+    <p>
+      Now save the file with <code>C-x C-s</code>. Then restart Emacs
+      and type <code>M-x decorate RET</code> to confirm that the
+      command <code>decorate</code> indeed replays our keyboard macro.
+    </p>
+  </li>
+</ol>
+<p>
+  The code generated in step 3 may look like this:
+</p>
+<pre>
+<code>(fset 'decorate
+   (kmacro-lambda-form [?\C-a ?\[ ?\[ ?\[ ?\[ ?\C-e ?\] ?\] ?\] ?\] ?\C-n] 0 "%d"))</code>
+</pre>
+<p>
+  To summarize, not only Emacs turns any named keyboard macro into a
+  command but it can also generate the Elisp code for it, so that we
+  can write it to our initialization file and save our keyboard
+  macros. I believe this is one of the most user friendly features of
+  Emacs. It lets you create new commands without having to write a
+  line of Elisp code yourself!
+</p>
+<p>
+  Many users happen to collect a large collection of macros in this
+  manner for repetitive editing tasks. It is advisable to name such
+  macros with a common prefix,
+  e.g., <code>mac-</code>, <code>kb-</code>, your initials, or some
+  such pattern, so that they are easy to locate while invoking them
+  via <code>M-x</code> followed by <code>TAB</code>-based completion.
+</p>
+<p>
+  This section was the main motivation for this post. This is really
+  what I wanted to share when I began writing this post. But now since
+  we are on this subject, let me share more useful tips and techniques
+  about keyboard macros. This is going to be a long post. You might
+  want it to read it in chunks. The next thing we will look at now is
+  how to assign key bindings to our macros.
+</p>
+<h2 id="key-bindings-for-keyboard-macros">Key Bindings for Keyboard Macros</h2>
+<p>
+  The previous two sections explain how we can name a macro and how we
+  can store named macros persistently in our initialization file. Now,
+  we will see how to create key bindings for our macros. The key
+  sequence to create a key binding is <code>C-x C-k b</code>. This
+  command prompts for a key sequence which is then bound to the last
+  keyboard macro. For example, typing <code>C-x C-k b C-c a</code>
+  binds a keyboard macro to the key sequence <code>C-c a</code>.
+</p>
+<p>
+  If the long key sequence necessary to create a key binding for a
+  macro bothers you, the <code>C-x C-k b</code> command offers a
+  convenient shortcut. After typing <code>C-x C-k b</code>, if we type
+  any digit or an uppercase letter, the macro is bound to <code>C-x
+  C-k <em>char</em></code> where <code><em>char</em></code> represents
+  the digit or uppercase letter we typed. For example, <code>C-x C-k b
+  0</code> binds a keyboard macro to <code>C-x C-k 0</code>.
+  Similarly, <code>C-x C-k b A</code> binds a keyboard macro
+  to <code>C-x C-k A</code>.
+</p>
+<p>
+  This can be a convenient way of defining temporary key bindings for
+  frequently used keyboard macros in an edition session.
+</p>
+<h2 id="editing-keyboard-macros">Editing Keyboard Macros</h2>
+<p>
+  Another useful feature among the various keyboard macro features is
+  the ability to edit an existing macro. Let us assume we have
+  recorded the keyboard macro introduced in the
+  section <a href="#record-and-replay">Record and Replay</a>. But then
+  we realize that we want the suffix to be <code>}}}</code> instead
+  of <code>]]]</code>. We can do so by performing the following steps:
+</p>
+<ol>
+  <li>
+    <p>
+      If you haven't already, perform steps 1 to 7 from
+      the <a href="#record-and-replay">Record and Replay</a> section
+      to record a keyboard macro.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x C-k e</code> to edit the keyboard macro. The
+      following prompt appears:
+    </p>
+    <pre><samp>Keyboard macro to edit (C-x e, M-x, C-h l, or keys):</samp></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x e</code> to edit the last keyboard macro.
+    </p>
+  </li>
+  <li>
+    <p>
+      A new buffer named <samp>*Edit Macro*</samp> with the following
+      content appears:
+    </p>
+<pre>
+<samp>;; Keyboard Macro Editor.  Press C-c C-c to finish; press C-x k RET to cancel.
+;; Original keys: C-a [[[ C-e ]]] C-n
+
+Command: last-kbd-macro
+Key: none
+
+Macro:
+
+C-a			;; move-beginning-of-line
+[[[			;; self-insert-command * 3
+C-e			;; move-end-of-line
+]]]			;; self-insert-command * 3
+C-n			;; next-line</samp>
+</pre>
+    <p>
+      This is the keyboard macro editor buffer. We can edit this
+      buffer freely to modify the keyboard macro definition. Move the
+      cursor to the last but one line and edit that line to
+      replace <code>]]]</code> with <code>}}}</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Observe the top line of the buffer to see the editing key
+      sequences supported. Type <code>C-c C-c</code> to complete
+      editing the macro. The keyboard macro editor buffer disappears.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now go to any line of text in any buffer and
+      type <code>&lt;f4&gt;</code> or <code>C-x e</code> to replay the
+      edited macro.
+    </p>
+  </li>
+</ol>
+<p>
+  Notice that in step 1, when we type <code>C-x C-k e</code>, we are
+  presented with a prompt that expects an input. The possible inputs
+  are listed out in the prompt. In the steps above, we type <code>C-x
+  e</code> to select the option that edits the last keyboard macro.
+  Let us take a look at all the available options now:
+</p>
+<ul>
+  <li>
+    <p>
+      <code>C-x e</code>: Edit the last keyboard macro. For example,
+      type <code>C-x C-k e</code> followed by <code>C-x e</code> to
+      invoke this. This is what we did above.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>M-x</code>: Edit a named macro. For example,
+      type <code>C-x C-k e</code> followed by <code>M-x decorate
+      RET</code> to edit a keyboard macro named <code>decorate</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-h l</code>: Edit lossage to create a keyboard macro. For
+      example, type <code>C-x C-k e</code> followed by <code>C-h
+      l</code> to edit lossage and create a keyboard macro. The
+      term <em>lossage</em> is just a fancy term for a certain number
+      of last input keystrokes. By default, the lossage contains the
+      last 300 keystrokes. When we edit lossage in the keyboard macro
+      editor, we can go through our history of keystrokes, edit it
+      freely, keep the keystrokes we want, remove everything else, and
+      type <code>C-c C-c</code> to create a new keyboard macro.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>keys</code>: Yes, there is an option that merely
+      says <code>keys</code>. This means that we can simply type a key
+      sequence some keyboard macro is bound to in order to edit that
+      keyboard macro. For example, type <code>C-x C-k e</code>
+      followed by <code>C-c a</code> to edit a keyboard macro bound to
+      the key sequence <code>C-c a</code>.
+    </p>
+  </li>
+</ul>
+<p>
+  There is a nice pattern in the key sequences above. In all except
+  one case, to edit a keyboard macro, we type <code>C-x C-k e</code>
+  followed by the key sequence that invokes the keyboard macro. So
+  that makes the key sequences easy to remember. The only key sequence
+  that does not quite fit this pattern is the one involving <code>C-h
+  l</code>. We type <code>C-x C-k e</code> followed by <code>C-h
+  l</code> to edit the lossage in the keyboard macro editor. This is
+  not hard to remember either because normally, the key
+  sequence <code>C-h l</code> invokes the <code>view-lossage</code>
+  command which shows the lossage in a read-only buffer, so it seems
+  apt that <code>C-x C-k e</code> followed by <code>C-h l</code> edits
+  the lossage in the keyboard macro editor.
+</p>
+<p>
+  Some of the keyboard macro editing tasks mentioned in the list above
+  can be performed with the following simpler key sequences available
+  in the global keymap:
+</p>
+<ul>
+  <li>
+    <code>C-x C-k C-e</code>: Edit the last keyboard macro.
+  </li>
+  <li>
+    <code>C-x C-k l</code>: Edit lossage to create a keyboard macro.
+  </li>
+</ul>
+<h2 id="keyboard-macros-from-lossage">Keyboard Macros from Lossage</h2>
+<p>
+  The previous section briefly mentioned how we can create keyboard
+  macros from lossage. We will discuss this feature in a bit more
+  detail in this section. Although, no new concepts are introduced in
+  this section, I feel that the ability to create macros from lossage
+  is such a wonderful feature that it deserves its own section. This
+  section is meant to emphasise its usefulness.
+</p>
+<h2 id-"todo">Todo</h2>
+<p>C-x q</p>
