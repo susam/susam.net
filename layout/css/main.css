@@ -43,7 +43,7 @@ blockquote, pre, kbd, .highlight {
   background: {{ light-fill-color }};
 }
 blockquote {
-  border-left: medium solid {{ light-shade-color }};
+  border-left: thick solid {{ light-shade-color }};
   margin-right: 0;
   margin-left: 0;
 }
@@ -100,7 +100,7 @@ ul.blog li {
 hr {
   margin: 1.5em auto;
   border: 0;
-  border-bottom: thin dotted {{ light-line-color }};
+  border-bottom: 0.15em dotted {{ light-line-color }};
 }
 footer {
   text-align: center;
@@ -134,6 +134,7 @@ nav a:last-child, footer a:last-child  {
   }
   blockquote, pre, kbd, .highlight {
     background: {{ dark-fill-color }};
+    box-shadow: 0 0 0.25em {{ dark-shade-color }};
   }
   blockquote {
     border-left-color: {{ dark-shade-color }};
