@@ -1,0 +1,59 @@
+<!-- date: 2022-11-25 01:16:36 +0000 -->
+<!-- name: RickyB -->
+<p>
+  What are the "minor modifications" needed to work on Windows 98?
+</p>
+<!-- date: 2022-11-26 04:08:10 +0000 -->
+<!-- name: Susam -->
+<!-- url: https://susam.net/ -->
+<p>
+  RickyB,
+</p>
+<p>
+  Here is an example <code>DEBUG</code> session from a Windows 98
+  system that contains the minor modifications to obtain the results
+  demonstrated in this blog post:
+</p>
+<pre>
+<samp>C:\&gt;<kbd>DEBUG C:\WINDOWS\COMMAND\MODE.COM</kbd>
+-<kbd>S 0 FFFF 'Invalid parameter'</kbd>
+1391:6B58
+-<kbd>D 6B50 6B6F</kbd>
+1391:6B50  65 6E 20 25 31 0D 0A 11-49 6E 76 61 6C 69 64 20   en %1...Invalid
+1391:6B60  70 61 72 61 6D 65 74 65-72 20 0D 0A 49 6E 76 61   parameter ..Inva
+-<kbd>E 6B57 10 'No soup for you!'</kbd>
+-<kbd>D 6B50 6B6F</kbd>
+1391:6B50  65 6E 20 25 31 0D 0A 10-4E 6F 20 73 6F 75 70 20   en %1...No soup
+1391:6B60  66 6F 72 20 79 6F 75 21-72 20 0D 0A 49 6E 76 61   for you!r ..Inva
+-<kbd>U 0100 0105</kbd>
+1391:0100 E9482B        JMP     2C4B
+1391:0103 80FC04        CMP     AH,04
+-<kbd>D 330 36F</kbd>
+117C:0330  40 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   @...............
+117C:0340  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
+117C:0350  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00   ................
+117C:0360  00 00 00 00 00 FF 00 00-00 00 00 00 00 00 00 00   ................
+-<kbd>A</kbd>
+1391:0100 <kbd>JMP 340</kbd>
+1391:0103
+-<kbd>A 340</kbd>
+1391:0340 <kbd>MOV AH, 9</kbd>
+1391:0342 <kbd>MOV DX, 34A</kbd>
+1391:0345 <kbd>INT 21</kbd>
+1391:0347 <kbd>JMP 2C4B</kbd>
+1391:034A <kbd>DB 'Welcome to Soup Kitchen!', D, A, '$'</kbd>
+1391:0365
+-<kbd>N SOUP.COM</kbd>
+-<kbd>W</kbd>
+Writing 07257 bytes
+-<kbd>Q</kbd>
+
+C:\&gt;<kbd>SOUP 0</kbd>
+Welcome to Soup Kitchen!
+
+No soup for you! - 0
+C:\&gt;</samp>
+</pre>
+<p>
+  I hope that helps!
+</p>

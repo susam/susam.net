@@ -50,7 +50,7 @@
   :members 12)
  (:date "2021-03-16 18:00"
   :slug "iant"
-  :topic "Sections 2.5-2.6; Pages 27-30; A product formula for \\( \\varphi(n) \\), The Dirichlet product of arithmetical functions"
+  :topic "Sections 2.5-2.6; Pages 27-30; A product formula for \\( \\varphi(n), \\) The Dirichlet product of arithmetical functions"
   :duration 40
   :members 14)
  (:date "2021-03-17 18:00"
@@ -70,7 +70,7 @@
   :members 9)
  (:date "2021-03-22 18:00"
   :slug "iant"
-  :topic "Sections 2.11-2.13; Pages 36-39; The inverse of a completely multiplicative function, Lioville's function \\( \\lambda(n) \\), The divisor functions \\( \\sigma_{\\alpha}(n) \\) "
+  :topic "Sections 2.11-2.13; Pages 36-39; The inverse of a completely multiplicative function, Lioville's function \\( \\lambda(n), \\) The divisor functions \\( \\sigma_{\\alpha}(n) \\) "
   :duration 40
   :members 10)
  (:date "2021-03-23 18:00"
@@ -120,12 +120,12 @@
   :members 11)
  (:date "2021-04-06 18:00"
   :slug "iant"
-  :topic "Sections 3.8-3.10; Pages 62-65; An application to the distribution of lattice points visibile from the origin, The average order of \\( \\mu(n) \\) and of \\( \\Lambda(n) \\), The partial sums of a Dirichlet product"
+  :topic "Sections 3.8-3.10; Pages 62-65; An application to the distribution of lattice points visibile from the origin, The average order of \\( \\mu(n) \\) and of \\( \\Lambda(n), \\) The partial sums of a Dirichlet product"
   :duration 40
   :members 11)
  (:date "2021-04-07 18:00"
   :slug "iant"
-  :topic "Section 3.11; Pages 66-69; An application to the distribution of lattice points visibile from the origin, The average order of \\( \\mu(n) \\) and of \\( \\Lambda(n) \\), The partial sums of a Dirichlet product"
+  :topic "Section 3.11; Pages 66-69; An application to the distribution of lattice points visibile from the origin, The average order of \\( \\mu(n) \\) and of \\( \\Lambda(n), \\) The partial sums of a Dirichlet product"
   :duration 40
   :members 10)
  (:date "2021-04-09 18:00"
@@ -210,7 +210,7 @@
   :members 10)
  (:date "2021-05-12 18:00"
   :slug "iant"
-  :topic "Sections 5.5-5.6; Pages 114-116; Polynomial congruences modulo \\( p \\), Lagrange's theorem, Applications of Lagrange's theorem (Wilson's theorem)"
+  :topic "Sections 5.5-5.6; Pages 114-116; Polynomial congruences modulo \\( p, \\) Lagrange's theorem, Applications of Lagrange's theorem (Wilson's theorem)"
   :duration 40
   :members 10)
  (:date "2021-05-13 18:00"
@@ -295,7 +295,7 @@
   :members 7)
  (:date "2021-06-15 17:00"
   :slug "iant"
-  :topic "Sections 8.1-8.2; Pages 157-160; Functions periodic modulo \\( k \\), Existence of finite Fourier series for periodic arithmetical functions"
+  :topic "Sections 8.1-8.2; Pages 157-160; Functions periodic modulo \\( k, \\) Existence of finite Fourier series for periodic arithmetical functions"
   :duration 40
   :members 9)
  (:date "2021-06-16 17:00"
@@ -545,12 +545,12 @@
   :members 5)
  (:date "2021-09-09 17:00"
   :slug "iant"
-  :topic "Sections 13.6-13.7: Pages 287-291; Inequalities for \\( 1/\\zeta(s) \\) and \\( \\zeta'(s)/\\zeta(s) \\), Completion of the proof of the prime number theorem"
+  :topic "Sections 13.6-13.7: Pages 287-291; Inequalities for \\( 1/\\zeta(s) \\) and \\( \\zeta'(s)/\\zeta(s), \\) Completion of the proof of the prime number theorem"
   :duration 40
   :members 4)
  (:date "2021-09-14 17:00"
   :slug "iant"
-  :topic "Sections 13.8-13.9: Pages 291-293; Zero-free regions for \\( \\zeta(s) \\), The Riemann Hypothesis"
+  :topic "Sections 13.8-13.9: Pages 291-293; Zero-free regions for \\( \\zeta(s), \\) The Riemann Hypothesis"
   :duration 40
   :members 5)
  (:date "2021-09-15 17:00"
@@ -580,7 +580,7 @@
   :members 4)
  (:date "2021-09-28 17:00"
   :slug "iant"
-  :topic "Sections 14.5-14.7; Pages 313-318; Combinatorial proof of Euler's pentagonal-number theorem, Euler's recursion formula for \\( p(n) \\), An upper bound for \\( p(n) \\)"
+  :topic "Sections 14.5-14.7; Pages 313-318; Combinatorial proof of Euler's pentagonal-number theorem, Euler's recursion formula for \\( p(n), \\) An upper bound for \\( p(n) \\)"
   :duration 45
   :members 8)
  (:date "2021-09-29 17:00"
@@ -595,7 +595,7 @@
   :members 5)
  (:date "2021-10-01 17:00"
   :slug "iant"
-  :topic "Sections 14.10-14.11; Pages 323-324; Recursion formula for \( p_{A,f}(n) \), The partition identities of Ramanujan"
+  :topic "Sections 14.10-14.11; Pages 323-324; Recursion formula for \\( p_{A,f}(n), \\) The partition identities of Ramanujan"
   :duration 35
   :members 7)
  (:date "2022-12-16 20:00"
@@ -825,7 +825,38 @@
   :members 5)
  (:date "2023-05-28 10:00"
   :slug "mastering-emacs"
-  :topic "Chapter 5: Pages 225-228: The Theory of Editing: Keyboard Macros: Basic Commands"
+  :topic "Chapter 5: Pages 225-227: The Theory of Editing: Keyboard Macros: Basic Commands"
   :duration 40
   :members 6)
+
+ (:date "2023-07-07 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 227-228: The Theory of Editing: Keyboard Macros: Prefix Arguments"
+  :duration 45
+  :members 9)
+ (:date "2023-07-08 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 228-229: The Theory of Editing: Keyboard Macros: Counter"
+  :duration 40
+  :members 6)
+ (:date "2023-07-09 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 229-231: The Theory of Editing: Keyboard Macros: Querying User Input, Recursive Edit"
+  :duration 50
+  :members 7)
+ (:date "2023-07-14 20:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 232-233: The Theory of Editing: Keyboard Macros: Saving and Recalling"
+  :duration 40
+  :members 9)
+  (:date "2023-07-15 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 233-235: The Theory of Editing: Keyboard Macros: Lossage, Practical Uses for Keyboard Macros"
+  :duration 40
+  :members 5)
+  (:date "2023-07-16 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 235-236: The Theory of Editing: Text Expansion: Practical Uses for Keyboard Macros"
+  :duration 40
+  :members -1)
  )

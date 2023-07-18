@@ -10,6 +10,7 @@ help:
 	@echo '  https             Reinstall live website and serve with Nginx via HTTPS.'
 	@echo '  http              Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  rm                Uninstall live website.'
+	@echo '  recu              Pull and deploy content updates.'
 	@echo '  check-form-live   Check forms work correctly on live website.'
 	@echo '  follow-log        Follow access logs on live server.'
 	@echo '  follow-post       Follow form post logs on live server.'
@@ -37,7 +38,7 @@ help:
 	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
 	@echo '  pub               Publish updated website on live server and mirror.'
 	@echo '  web               Publish website on primary server only.'
-	@echo '  cu                Publish content updates on primary server only.'
+	@echo '  webcu             Publish content updates on primary server only.'
 	@echo '  mirror            Publish website on mirror only.'
 	@echo '  pull-backup       Pull a backup of cache from live server.'
 	@echo
@@ -102,6 +103,14 @@ rm: checkroot
 	crontab -l | grep -v "^#" || :
 	@echo Done; echo
 
+recu: checkroot
+	git checkout cu
+	git reset --hard HEAD~5
+	git pull
+	make live
+	systemctl restart nginx form
+	systemctl --no-pager status nginx form
+
 checkroot:
 	@echo Checking if current user is root ...
 	[ $$(id -u) = 0 ]
@@ -127,6 +136,7 @@ top-get-log:
 
 count-log:
 	sudo zgrep -c . /var/log/nginx/access.log* | awk -F : '{printf "%10s  %s\n", $$2, $$1}'
+
 
 # Low-Level Targets
 # -----------------
@@ -195,7 +205,8 @@ check-files:
 		if ! [ -e "content/cafe/posts/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
 	# Ensure punctuation goes inside inline-math.
-	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(s|th|-|</h[1-6]>|</em>|</li>|\)|:)'
+	! grep -IErn '\\)[^ ]' content | grep -vE "mastering-emacs" | \
+	  grep -vE '\\)(s|th|-|</h[1-6]>|</[a-z]+>|\)|:|"|})'
 	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
 	# Ensure current year is present in footer.
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
@@ -366,7 +377,7 @@ web:
 
 cu:
 	git push -f origin cu
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout cu && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
 pull-backup:
 	mkdir -p ~/bkp/

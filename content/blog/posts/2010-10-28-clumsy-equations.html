@@ -6,22 +6,16 @@
   At work today, while calculating optimal parameters for a data
   structure, I arrived at this equation:
 
-  \[
-  x e^{-x} + (1 - e^{-x}) \ln (1 - e^{-x}) = 0.
-  \]
+  \[ x e^{-x} + (1 - e^{-x}) \ln (1 - e^{-x}) = 0. \]
 
   This equation is a little clumsy to deal with. Let us make this neat
   by substituting \( e^{-x} \) with \( t. \) Now we get
 
-  \[
-  -t \ln t + (1 - t) \ln (1 - t) = 0.
-  \]
+  \[ -t \ln t + (1 - t) \ln (1 - t) = 0. \]
 
   If we rearrange this equation as
 
-  \[
-  t \ln t = (1 - t) \ln (1 - t),
-  \]
+  \[ t \ln t = (1 - t) \ln (1 - t), \]
 
   it is easy to see that one of the solutions is \( t = 1 - t, \) thus
   \( t = \frac{1}{2}. \) Are there more solutions to this equation?
@@ -72,9 +66,9 @@
   original equation expressed in terms of \( x \) as follows:
 
   \begin{align*}
-  t = \frac{1}{2} & \iff e^{-x} = \frac{1}{2} \\
-                  & \iff -x = \ln \frac{1}{2} \\
-                  & \iff x = \ln 2 \approx 0.6931.
+    t = \frac{1}{2} &amp; \iff e^{-x} = \frac{1}{2} \\
+                    &amp; \iff -x = \ln \frac{1}{2} \\
+                    &amp; \iff x = \ln 2 \approx 0.6931.
   \end{align*}
 </p>
 <figure class="soft">
@@ -88,40 +82,34 @@
 <p>
   Here is another equation that I had to solve a couple of years ago:
 
-  \[
-  \ln x - x^{0.03} = 0.
-  \]
+  \[ \ln x - x^{0.03} = 0. \]
 
   There is no simple way to solve this equation. I had to resort to
-  using
-  the <a href="https://en.wikipedia.org/wiki/Lambert_W_function">Lambert
+  using the
+  <a href="https://en.wikipedia.org/wiki/Lambert_W_function">Lambert
   W function</a> to solve this. To use this function, we first need to
   bring our equation to the form \( f(x) e^{f(x)} = Y \) where \( f(x)
   \) is a function of \( x \) and \( Y \) is an expression that does
   not contain \( x. \) The solution of \( f(x) e^{f(x)} = Y \) is \(
   f(x) = W(Y). \) To summarize:
 
-  \[
-  f(x) e^{f(x)} = Y \iff f(x) = W(Y).
-  \]
+  \[ f(x) e^{f(x)} = Y \iff f(x) = W(Y). \]
 
   Applying this technique to our equation, we get
 
   \begin{align*}
-  \ln x - x^{0.03} = 0
-  & \iff \ln x = x^{0.03} \\
-  & \iff \ln x = e^{0.03 \ln x} \\
-  & \iff (\ln x)(e^{-0.03 \ln x}) = 1 \\
-  & \iff (-0.03 \ln x)(e^{-0.03 \ln x}) = -0.03. \\
+    \ln x - x^{0.03} = 0
+    &amp; \iff \ln x = x^{0.03} \\
+    &amp; \iff \ln x = e^{0.03 \ln x} \\
+    &amp; \iff (\ln x)(e^{-0.03 \ln x}) = 1 \\
+    &amp; \iff (-0.03 \ln x)(e^{-0.03 \ln x}) = -0.03. \\
   \end{align*}
 
   We have brought the equation to the desired \( f(x) e^{f(x)} = Y \)
   form where \( f(x) = -0.03 \ln x \) and \( Y = -0.03. \) Therefore
   the solution to this equation is
 
-  \[
-  -0.03 \ln x = W(-0.03).
-  \]
+  \[ -0.03 \ln x = W(-0.03). \]
 
   Simplifying this further, we get
 
@@ -132,23 +120,22 @@
   The Maclaurin series of \( W(x) \) is given by
 
   \[
-  W(x) = \sum_{n=1}^\infty \frac{(-n)^{n-1}}{n!} x^n
-  = x - x^2 + \frac{3}{2} x^3 - \frac{8}{3} x^4 +
-  \frac{125}{24} x^5 - \dots
+    W(x)
+    = \sum_{n=1}^\infty \frac{(-n)^{n-1}}{n!} x^n
+    = x - x^2 + \frac{3}{2} x^3 - \frac{8}{3} x^4 +
+      \frac{125}{24} x^5 - \dots
   \]
 
   Using the Maclaurin series of \( W(x), \) we get
 
-  \[
-  W(-0.03) \approx -0.0309428.
-  \]
+  \[ W(-0.03) \approx -0.0309428. \]
 
   Therefore
 
   \[
-  x = e^{\frac{W(-0.03)}{-0.03}}
-  \approx e^{\frac{-0.0309428}{-0.03}}
-  \approx 2.80506.
+    x = e^{\frac{W(-0.03)}{-0.03}}
+      \approx e^{\frac{-0.0309428}{-0.03}}
+      \approx 2.80506.
   \]
 </p>
 <figure class="soft">

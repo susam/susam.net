@@ -18,8 +18,9 @@
 </p>
 <div class="highlight">
   <p>
-    Without using <code>typedef</code>, declare <code>x</code> as a pointer
-    that is equivalent to the following declaration of <code>x</code>:
+    Without using <code>typedef</code>, declare <code>x</code> as a
+    pointer that is equivalent to the following declaration
+    of <code>x</code>:
   </p>
 <pre>
 <code>typedef void (*func_t)(int *);
@@ -28,8 +29,8 @@ func_t (*x)(func_t [10]);</code>
 </div>
 <p>
   <em>
-    If you want to think about this puzzle, this is a good time to pause and
-    think about it. There are spoilers ahead.
+    If you want to think about this puzzle, this is a good time to
+    pause and think about it. There are spoilers ahead.
   </em>
 </p>
 <p>
@@ -43,19 +44,16 @@ func_t (*x)(func_t [10]);</code>
     A function that has <code>int *</code> argument
     and <code>void</code> return type.
   </p>
-
   <p>
     <code>void (*x)(int *)</code><br>
-    A pointer to a function that has <code>int *</code> argument and
-    <code>void</code> return type.
+    A pointer to a function that has <code>int *</code> argument
+    and <code>void</code> return type.
   </p>
-
   <p>
     <code>void (*x())(int *)</code><br>
     A function that returns a pointer to a function that has <code>int
-      *</code> argument and <code>void</code> return type.
+    *</code> argument and <code>void</code> return type.
   </p>
-
   <p>
     <code>void (*x(void (*)(int *)))(int *)</code><br>
     A function that has a pointer to a function that has <code>int
@@ -63,7 +61,6 @@ func_t (*x)(func_t [10]);</code>
     and returns a pointer to a function which has <code>int *</code>
     argument and <code>void</code> return type.
   </p>
-
   <p>
     <code>void (*x(void (*[10])(int *)))(int *)</code><br>
     A function that has an array of 10 pointers to functions that has
@@ -71,7 +68,6 @@ func_t (*x)(func_t [10]);</code>
     argument, and returns a pointer to a function which has <code>int
     *</code> argument and <code>void</code> return type.
   </p>
-
   <p>
     <code>void (*(*x)(void (*[10])(int *)))(int *)</code><br>
     A pointer to a function that has an array of 10 pointers to
@@ -151,7 +147,6 @@ g(): a = 10</samp>
   x: function returning pointer to array[] of pointer to function
   returning char
 </p>
-
 <p>
   <code>char (*(*x[3])())[5]</code><br>
   x: array[3] of pointer to function returning pointer to array[5] of

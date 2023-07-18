@@ -88,6 +88,7 @@ kbd {
 samp kbd {
   border: none;
   box-shadow: none;
+  padding: 0;
 }
 ul.blog {
   margin-top: 1.5em;
