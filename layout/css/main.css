@@ -8,13 +8,10 @@ body {
   padding: 0 1em;
 }
 h1, h2, h3, h4, h5, h6 {
-  margin: 1.25em 0 0.5em 0;
+  margin: 1.25em 0 0.25em 0;
   line-height: 1.2;
 }
-h1 {
-  margin-bottom: 0.25em;
-}
-h1 + div, h2 + div {
+h1 + div {
   margin: 0.5em 0;
 }
 a:link {
@@ -44,8 +41,7 @@ blockquote, pre, kbd, .highlight {
 }
 blockquote {
   border-left: thick solid {{ light-shade-color }};
-  margin-right: 0;
-  margin-left: 0;
+  margin: 1em 0;
 }
 pre {
   overflow: auto;
@@ -53,10 +49,10 @@ pre {
 blockquote, pre, .highlight {
   padding: 0.5em;
 }
-blockquote *:first-child, div.highlight *:first-child {
+blockquote *:first-child, .highlight *:first-child {
   margin-top: 0;
 }
-blockquote *:last-child, div.highlight *:last-child {
+blockquote *:last-child, .highlight *:last-child {
   margin-bottom: 0;
 }
 pre, code, samp, kbd, .mono {
@@ -88,6 +84,7 @@ kbd {
 samp kbd {
   border: none;
   box-shadow: none;
+  padding: 0;
 }
 ul.blog {
   margin-top: 1.5em;
@@ -105,15 +102,12 @@ hr {
 footer {
   text-align: center;
 }
-nav a, footer a {
+nav a {
   margin-right: 1.5em;
   line-height: 2.5;
 }
-nav a:last-child, footer a:last-child  {
+nav a:last-child  {
   margin-right: 0;
-}
-.sep {
-  margin: 0 0.25em;
 }
 @media (prefers-color-scheme: dark) {
   body {
@@ -134,7 +128,6 @@ nav a:last-child, footer a:last-child  {
   }
   blockquote, pre, kbd, .highlight {
     background: {{ dark-fill-color }};
-    box-shadow: 0 0 0.25em {{ dark-shade-color }};
   }
   blockquote {
     border-left-color: {{ dark-shade-color }};
