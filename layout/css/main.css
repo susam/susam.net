@@ -128,6 +128,7 @@ nav a:last-child  {
   }
   blockquote, pre, kbd, .highlight {
     background: {{ dark-fill-color }};
+    box-shadow: 0 0 0.5em {{ dark-shade-color }};
   }
   blockquote {
     border-left-color: {{ dark-shade-color }};
