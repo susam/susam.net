@@ -20,8 +20,6 @@ $ <kbd>cmd='cat "foo bar"'</kbd></samp>
   the command <code>emulate sh</code> before running these examples to
   get similar output.
 </p>
-
-
 <h2 id="experiment-1">Experiment 1</h2>
 <p>
   Now simply enter <code>$cmd</code> as a command into the shell. The
@@ -74,7 +72,6 @@ cat: 'bar"': No such file or directory</samp>
   arguments <code>"foo</code> and <code>bar"</code>. Since no files
   with those names exist, an error occurs.
 </p>
-
 <h2 id="experiment-2">Experiment 2</h2>
 <p>
   Next we try to double-quote the previous command to prevent field
@@ -91,7 +88,6 @@ dash: 8: cat "foo bar": not found</samp>
   field and is then executed as a command. Since there is no such
   weirdly named command, we get the above error.
 </p>
-
 <h2 id="experiment-3">Experiment 3</h2>
 <p>
   Field splitting leads to an error as seen in the first experiment.

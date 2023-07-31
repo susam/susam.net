@@ -131,20 +131,20 @@ if __name__ == '__main__':
   handle this gracefully while printing them.
 </p>
 <pre>
-<code>&gt;&gt;&gt; <kbd>a = {}</kbd>
+<samp>&gt;&gt;&gt; <kbd>a = {}</kbd>
 &gt;&gt;&gt; <kbd>a['self'] = a</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
 {'self': {...}}
 &gt;&gt;&gt; <kbd>a['self']</kbd>
 {'self': {...}}
 &gt;&gt;&gt; <kbd>a['self']['self']</kbd>
-{'self': {...}}</code>
+{'self': {...}}</samp>
 </pre>
 <p>
   Python also allows chained assignments.
 </p>
 <pre>
-<code>&gt;&gt;&gt; <kbd>a = b = c = d = 23.4567</kbd>
+<samp>&gt;&gt;&gt; <kbd>a = b = c = d = 23.4567</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
 23.4567
 &gt;&gt;&gt; <kbd>b</kbd>
@@ -152,7 +152,7 @@ if __name__ == '__main__':
 &gt;&gt;&gt; <kbd>c</kbd>
 23.4567
 &gt;&gt;&gt; <kbd>d</kbd>
-23.4567</code>
+23.4567</samp>
 </pre>
 <p>
   Also, a dictionary has to be initialized before a key access.
@@ -168,22 +168,23 @@ NameError: name 'a' is not defined</samp>
   allocating things in a chained assignment.
 </p>
 <pre>
-<code>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
+<samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-{'k': {...}}</code>
+{'k': {...}}</samp>
 </pre>
 <p>
-  Let's look at something else with recursion which is easier for me to illustrate
+  Let us look at something else with recursion which is easier for me
+  to illustrate
 </p>
 <pre>
-<code>&gt;&gt;&gt; <kbd>a = a[0] = [0, 1]</kbd>
+<samp>&gt;&gt;&gt; <kbd>a = a[0] = [0, 1]</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-[[...], 1]</code>
+[[...], 1]</samp>
 </pre>
 <pre>
-<code>&gt;&gt;&gt; <kbd>a = a[1] = [0, 1]</kbd>
+<samp>&gt;&gt;&gt; <kbd>a = a[1] = [0, 1]</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-[0, [...]]</code></pre>
+[0, [...]]</samp></pre>
 <p>
 The operations look like following:
 </p>
@@ -196,7 +197,7 @@ a &rarr; a[0]</code>
   the pattern?
 </p>
 <p>
-  I couldn't think of a test that would let me dissociate if what is
+  I could not think of a test that would let me dissociate if what is
   happening is
 </p>
 <pre>
@@ -222,8 +223,8 @@ d = c</code>
 <p>
   Every Python object has an infinitely recursive set of attributes
   because methods are functions and functions are objects and all
-  objects have methods. It's a fun way to hit a stack overflow chasing
-  them down.
+  objects have methods. It is a fun way to hit a stack overflow
+  chasing them down.
 </p>
 <!-- date: 2021-11-14 07:02:21 +0000 -->
 <!-- name: Susam Pal -->
@@ -276,7 +277,7 @@ d = c</code>
   Knome,
 </p>
 <p>
-  I think you are overstating that. It's not outright crazy or
+  I think you are overstating that. It is not outright crazy or
   inconsistent, but I quibble with it being sensible.
 </p>
 <!-- date: 2021-11-18 17:36:13 +0000 -->
@@ -292,12 +293,12 @@ d = c</code>
 <!-- name: Anitil -->
 <!-- source: https://news.ycombinator.com/item?id=29271238 -->
 <p>
-  I'm amazed at how long I've been working in python and never known
-  that assignment works in this way. I suppose I just avoid parts of
-  the language that I don't understand.
+  I am amazed at how long I have been working in Python and never
+  known that assignment works in this way. I suppose I just avoid
+  parts of the language that I do not understand.
 </p>
 <p>
-  Looking through the archives, it's a really interesting blog in
+  Looking through the archives, it is a really interesting blog in
   general.
 </p>
 <!-- date: 2021-11-18 22:24:35 +0000 -->
@@ -315,16 +316,16 @@ d = c</code>
 <!-- name: Oliver -->
 <!-- source: https://news.ycombinator.com/item?id=29272147 -->
 <p>
-  It's fallout of the fact that assignment must be a statement, and
-  cannot be an expression. For example, this is wrong in python, while
-  it would be allowed in c-like languages:
+  It is a fallout of the fact that assignment must be a statement, and
+  cannot be an expression. For example, this is wrong in Python, while
+  it would be allowed in C-like languages:
 </p>
 <pre><code>print(a = 5)</code></pre>
 <!-- date: 2021-11-18 23:57:41 +0000 -->
 <!-- name: Tom Forbes -->
 <!-- url: https://github.com/orf/ -->
 <p>
-  Oliver, It's possible now with the walrus operator though:
+  Oliver, It is possible now with the walrus operator though:
 </p>
 <pre><code>print(a := 5)</code></pre>
 <!-- date: 2021-11-19 01:20:56 +0000 -->
@@ -350,9 +351,9 @@ d = c</code>
 <!-- name: Malf -->
 <!-- source: https://news.ycombinator.com/item?id=29292478 -->
 <p>
-  This is the first true "PHPism" I've seen in a "real language". (Is
-  there a name for "we didn't want the general thing (e.g., assignment
-  expressions) but we wanted one narrow subset of it (serial
-  assignment), so we implemented that, but with different semantics
-  for no good reason"?)
+  This is the first true "PHPism" I have seen in a "real language".
+  (Is there a name for "we did not want the general thing (e.g.,
+  assignment expressions) but we wanted one narrow subset of it
+  (serial assignment), so we implemented that, but with different
+  semantics for no good reason"?)
 </p>

@@ -3,13 +3,11 @@
 <!-- import: math.inc -->
 <h2 id="combinatorics-for-fun">Combinatorics for Fun</h2>
 <p>
-  I joined <a href="https://www.rsa.com/">RSA</a> a few weeks ago. It
-  is a small and delightful place with a great work culture. It was
-  founded by Ron Rivest, Adi Shamir, and Leonard Adleman (the
-  inventors of the RSA algorithm) in 1982. The company develops and
-  sells the RSA BSAFE cryptography libraries, SecurID two-factor
-  authentication tokens, and several network security software
-  products these days.
+  At my current workplace, there are several engineers who have an
+  affinity for combinatorics. As a result, discussions about
+  combinatorics problems often occur at the cafeteria. Probability
+  theory is another popular topic of discussion. Of course, often
+  combinatorics and probability theory go hand in hand.
 </p>
 <p>
   I met several engineers here who are fond of mathematics in general
@@ -42,7 +40,6 @@
     Find a closed-form expression for \( f_k(n). \)
   </p>
 </div>
-
 <h2 id="nested-loops">Nested Loops</h2>
 <p>
   Soon after I shared the above problem, a colleague of mine shared
@@ -50,7 +47,8 @@
 </p>
 <div class="highlight">
   <p>
-    Consider the following pseudocode with <code>k</code> nested loops:
+    Consider the following pseudocode with <code>k</code> nested
+    loops:
   </p>
 <pre>
 <code>x = 0
@@ -67,8 +65,8 @@ for c<sub>1</sub> in 0 to (n - 1):
 </div>
 <h2 id="coincidence">Coincidence</h2>
 <p>
-  With one problem each, we went back to our desks. As I began solving the
-  <em>nested loops</em> problem shared by my colleague, I realized
+  With one problem each, we went back to our desks. As I began solving
+  the <em>nested loops</em> problem shared by my colleague, I realized
   that the solution to his problem led me to the <em>recurrence
   relation</em> in the problem I shared with him.
 </p>
@@ -94,7 +92,6 @@ for c<sub>1</sub> in 0 to (n - 1):
   interesting coincidence that the problems we shared with each other
   had the same solution.
 </p>
-
 <h2 id="closed-form-expression">Closed-Form Expression</h2>
 <p>
   The closed form expression for the recurrence relation is
@@ -141,7 +138,7 @@ for c<sub>1</sub> in 0 to (n - 1):
 
   \[ \frac{(n + k - 1)!}{(n - 1)! \, k!} = \binom{n + k - 1}{k}. \]
 
-  This closed-form expression is the solution to both
-  the <em>recurrence relation</em> problem and the <em>nested
-  loops</em> problem.
+  This closed-form expression is the solution to both the
+  <em>recurrence relation</em> problem and the <em>nested loops</em>
+  problem.
 </p>

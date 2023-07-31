@@ -10,6 +10,7 @@ help:
 	@echo '  https             Reinstall live website and serve with Nginx via HTTPS.'
 	@echo '  http              Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  rm                Uninstall live website.'
+	@echo '  recu              Pull and deploy content updates.'
 	@echo '  check-form-live   Check forms work correctly on live website.'
 	@echo '  follow-log        Follow access logs on live server.'
 	@echo '  follow-post       Follow form post logs on live server.'
@@ -29,9 +30,8 @@ help:
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
 	@echo '  run-form          Run form application locally.'
-	@echo '  check-files       Check that content and config files are well-formed.'
+	@echo '  checks            Run checks suitable to be run before push.'
 	@echo '  check-links       Check broken links in a locally running website.'
-	@echo '  check-rendering   Check that all template variables have been rendered.'
 	@echo '  check-paths       Check live website paths and redirects.'
 	@echo '  check-form-rate   Check rate-limiting of form.'
 	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
@@ -102,6 +102,14 @@ rm: checkroot
 	crontab -l | grep -v "^#" || :
 	@echo Done; echo
 
+recu: checkroot
+	git checkout cu
+	git reset --hard HEAD~5
+	git pull
+	make live
+	systemctl restart nginx form
+	systemctl --no-pager status nginx form
+
 checkroot:
 	@echo Checking if current user is root ...
 	[ $$(id -u) = 0 ]
@@ -127,6 +135,7 @@ top-get-log:
 
 count-log:
 	sudo zgrep -c . /var/log/nginx/access.log* | awk -F : '{printf "%10s  %s\n", $$2, $$1}'
+
 
 # Low-Level Targets
 # -----------------
@@ -184,7 +193,25 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-check-files:
+checks: check-copyright check-rendering check-sentence-space check-math-punct check-comment-files check-copyright check-nginx
+
+check-copyright:
+	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
+	@echo Done; echo
+
+check-rendering:
+	grep -r --include '*.html' '{{' _site | head
+	@echo Done; echo
+
+check-math-punct:
+	! grep -IErn '\\)[^- :t"<)}]' content  | grep -vE 'mastering-emacs'
+	@echo Done; echo
+
+check-sentence-space:
+	! grep -IErn '[^0-9][.?!]  ' content | grep -vE 'Corporation|20 00'
+	@echo Done; echo
+
+check-comment-files:
 	# Ensure every comment file has a post file.
 	ls -1 content/blog/comments/ | while read -r f; do \
 	    echo Checking post file for "$$f"; \
@@ -194,11 +221,9 @@ check-files:
 	    echo Checking post file for "$$f"; \
 		if ! [ -e "content/cafe/posts/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
-	# Ensure punctuation goes inside inline-math.
-	! grep -IErn '\\)[^ ]' content | grep -vE '\\)(s|th|-|</h[1-6]>|</em>|</li>|\)|:)'
-	! grep -IErn '(th|-|</h[1-6]>|:) \\)' content
-	# Ensure current year is present in footer.
-	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
+	@echo Done; echo
+
+check-nginx:
 	# Ensure http.susam.net and https.susam.net are consistent.
 	sed -n '1,/limit_req_status/p' etc/nginx/http.susam.net > /tmp/http.susam.net
 	sed -n '1,/limit_req_status/p' etc/nginx/https.susam.net > /tmp/https.susam.net
@@ -212,10 +237,6 @@ check-links:
 	@echo "NOTE: Ensure 'make run-site' is running before running this target"; echo
 	-wget -r -l 0 --spider -nd -nv http://localhost:8000/ -o run.log
 	grep -B1 broken run.log
-	@echo Done; echo
-
-check-rendering:
-	grep -r --include '*.html' '{{' _site | head
 	@echo Done; echo
 
 check-paths:
@@ -366,7 +387,7 @@ web:
 
 cu:
 	git push -f origin cu
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout cu && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
 pull-backup:
 	mkdir -p ~/bkp/

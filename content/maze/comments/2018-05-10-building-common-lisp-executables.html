@@ -1,0 +1,30 @@
+<!-- date: 2023-04-09 04:59:29 +0000 -->
+<!-- name: Héctor -->
+<!-- url: https://github.com/hectormonacci -->
+<p>
+  You can greatly reduce the executable size when compiling with SBCL
+  by adding
+</p>
+<pre><code>:compression t</code></pre>
+<p>
+  to the following:
+</p>
+<pre>
+<code>(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)</code>
+</pre>
+<!-- date: 2023-04-10 07:23:18 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  Thank you, Héctor, for your comment! I updated the example program
+  in this post as follows to test the compression feature:
+</p>
+<pre>
+<code>(defun main ()
+  (format t "hello, world~%"))
+(sb-ext:save-lisp-and-die "hello" :executable t :compression t :toplevel #'main)</code>
+</pre>
+<p>
+  Indeed this created an executable that was only 8.1 MB in size
+  whereas without compression the executable size is 35 MB.
+</p>

@@ -1,5 +1,5 @@
 <!-- title: Journey to the Prime Number Theorem -->
-<!-- tag: IANT Mathematics Computation Meet -->
+<!-- tag: IANT Mathematics Meetup -->
 <!-- import: math.inc extra.css -->
 <p>
   How long does it take to start with zero knowledge of analytic
@@ -75,9 +75,9 @@
   that there are only 168 primes between 1 and 1000, i.e., only 16.8%
   of the numbers between 1 and 1000 are primes. Formally, we denote
   these facts with the mathematical notation \( \pi(x) \) that denotes
-  the prime counting function. We say \( \pi(10) = 4 \), \( \pi(100) =
-  25 \), \( \pi(1000) = 168 \), and so on. Note that we allow \( x \)
-  to be a real number, so while \( \pi(10) = 4 \), we have \(
+  the prime counting function. We say \( \pi(10) = 4, \) \( \pi(100) =
+  25, \) \( \pi(1000) = 168, \) and so on. Note that we allow \( x \)
+  to be a real number, so while \( \pi(10) = 4, \) we have \(
   \pi(10.3) = 4 \) as well. One of the reasons we let \( x \) be a
   real number in the definition of \( \pi(x) \) is because it makes
   various problems we come across during the study of this function
@@ -86,9 +86,9 @@
 <p>
   We observe that the "density" of primes continue to fall as we make
   \( x \) larger and larger. In formal notation, we see that the ratio
-  \( \pi(x) / x \) is \( 0.4 \) when \( x = 10 \). This ratio falls to
-  \( 0.25 \) when \( x = 100 \). It falls further to \( 0.168 \) when
-  \( x = 1000 \), and so on. Can we predict by how much this "density"
+  \( \pi(x) / x \) is \( 0.4 \) when \( x = 10. \) This ratio falls to
+  \( 0.25 \) when \( x = 100. \) It falls further to \( 0.168 \) when
+  \( x = 1000, \) and so on. Can we predict by how much this "density"
   falls? The answer is, yes, and that leads us to the prime number
   theorem. The prime number theorem states that \( \pi(x) / x \) is
   asymptotic to \( 1 / \log x \) as \( x \) approaches infinity, i.e.,
@@ -104,41 +104,56 @@
   \lim_{x \to \infty} \frac{\pi(x) / x}{1 / \log x} = 1.
   \]
 
-  I must mention that the above formulation of the theorem is slightly
-  messy. I will clean it up and write it more elegantly towards the
-  end of this section. Let us see how well this formula works as an
-  estimate for the density of primes for small values of \( x \).
-</p>
-<table style="text-align: right" class="grid center">
-  <tr>
-    <th style="text-align: right">\( x \)</th>
-    <th style="text-align: right">\( \pi(x) \)</th>
-    <th style="text-align: right">\( \pi(x) / x \)</th>
-    <th style="text-align: right">\( 1 / \log x \)</th>
-  </tr>
-  <tr><td>10</td><td>4</td><td>0.4</td><td>0.434</td></tr>
-  <tr><td>100</td><td>25</td><td>0.250</td><td>0.217</td></tr>
-  <tr><td>1000</td><td>168</td><td>0.168</td><td>0.145</td></tr>
-  <tr><td>10000</td><td>1229</td><td>0.1229</td><td>0.1086</td></tr>
-  <tr><td>100000</td><td>9592</td><td>0.09592</td><td>0.08686</td></tr>
-</table>
-<p>
-  Not bad! In fact, the last two columns begin to agree more and more
-  as \( x \) becomes larger and larger.
-</p>
-<p>
-  The prime number theorem is typically stated in the following form:
+  We could also write this as
+
+  \[
+  \lim_{x \to \infty} \frac{\pi(x)}{x / \log x} = 1
+  \]
+
+  or
 
   \[
     \pi(x) \sim \frac{x}{\log x} \text{ as } x \to \infty.
   \]
 
-  Note that this is equivalent to the formulas shown earlier. The
-  limit formula can be written more neatly like this:
-
-  \[
-  \lim_{x \to \infty} \frac{\pi(x) \log x}{x} = 1.
-  \]
+  Let us see how well this formula works as an estimate for the
+  density of primes for small values of \( x. \)
+</p>
+<table style="text-align: right" class="grid center">
+  <tr>
+    <th style="text-align: right">\( x \)</th>
+    <th style="text-align: right">\( \pi(x) \)</th>
+    <th style="text-align: right">\( x / \log x \)</th>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>4</td>
+    <td>4.3</td>
+  </tr>
+  <tr>
+    <td>100</td>
+    <td>25</td>
+    <td>21.7</td>
+  </tr>
+  <tr>
+    <td>1000</td>
+    <td>168</td>
+    <td>144.8</td>
+  </tr>
+  <tr>
+    <td>10000</td>
+    <td>1229</td>
+    <td>1085.7</td>
+  </tr>
+  <tr>
+    <td>100000</td>
+    <td>9592</td>
+    <td>8685.9</td>
+  </tr>
+</table>
+<p>
+  Not bad! In fact, the last two columns begin to agree more and more
+  as \( x \) becomes larger and larger.
 </p>
 <p>
   The analytic proof of the prime number theorem was achieved with an
@@ -240,7 +255,7 @@
   Finally, Chapter 13 showed us how to prove the prime number theorem.
   The plan of the proof was laid out in the first section. Our goal in
   this chapter is to prove that \( \psi(x) \sim x \) as \( x \to
-  \infty \). This is equivalent to the prime number theorem, so
+  \infty. \) This is equivalent to the prime number theorem, so
   proving this amounts to proving the prime number theorem too.
 </p>
 <p>
@@ -260,16 +275,16 @@
   \left( -\frac{\zeta'(s)}{\zeta(s)} - \frac{1}{s - 1} \right) \, ds
   \]
 
-  for \( c > 1 \). The equation above looks quite complex initially
+  for \( c > 1. \) The equation above looks quite complex initially
   but each part of it becomes friendly as we learn to derive it and
   then work on each part of it while working out further proofs. Now
   if we could somehow show that the integral on the right hand side of
-  the above equation approaches 0 as \( x \to \infty \), that would
+  the above equation approaches 0 as \( x \to \infty, \) that would
   end up proving the asymptotic relation involving \( \psi_1(x) \) and
   thus end up proving the prime number theorem by equivalence.
   However, proving that this integral indeed becomes 0 as \( x \to
   \infty \) requires a careful study of \( \zeta(s)/\zeta'(s) \) in
-  the vicinity of the line \( \operatorname{Re}(s) = 1 \). This is the
+  the vicinity of the line \( \operatorname{Re}(s) = 1. \) This is the
   topic that most of the chapter deals with.
 </p>
 <p>
@@ -304,7 +319,7 @@
   number theorem. We have not completed reading the entire book
   though. We still have about another 30 pages to go through. In the
   remaining study of this book, we will learn more about zero-free
-  regions for \( \zeta(s) \), the application of the prime number
+  regions for \( \zeta(s), \) the application of the prime number
   theorem to the divisor function, and the Euler totient function. The
   next and the final chapter too has a lot to offer such as integer
   partition, Euler's pentagonal-number theorem, and the partition

@@ -171,11 +171,11 @@ ld --oformat binary -o a.com a.o</code>
   code.
 </p>
 <p>
-  Before writing the executable binary into the boot sector, we might want
-  to verify whether the code works correctly with an emulator. DOSBox is a
-  pretty good emulator for this purpose. It is available as the
-  <code>dosbox</code> package in Debian. Here is one way to run the
-  executable binary file using DOSBox:
+  Before writing the executable binary into the boot sector, we might
+  want to verify whether the code works correctly with an
+  emulator. DOSBox is a pretty good emulator for this purpose. It is
+  available as the <code>dosbox</code> package in Debian. Here is one
+  way to run the executable binary file using DOSBox:
 </p>
 <pre><code>dosbox -c cls a.com</code></pre>
 <p>
@@ -195,8 +195,8 @@ ld --oformat binary -o a.com a.o</code>
 </p>
 <p>
   Once we are satisfied with the output of <code>a.com</code> running
-  in DOSBox, we create a boot image file with this command:
-  sector with these commands:
+  in DOSBox, we create a boot image file with this command: sector
+  with these commands:
 </p>
 <pre>
 <code>cp a.com a.img

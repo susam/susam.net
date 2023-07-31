@@ -18,8 +18,8 @@ int main()
 <p>
   The output is <code>5 6 5</code> when compiled with GCC and
   <code>6 6 6</code> when compiled with the C compiler that comes with
-    Microsoft Visual Studio. The versions of the compilers with which
-    I got these results are:
+  Microsoft Visual Studio. The versions of the compilers with which I
+  got these results are:
 </p>
 <ul>
   <li>
@@ -67,10 +67,9 @@ int main()
 <p>
   Before looking at the relevant sections of the C99 standard, let us
   see what the book
-  <em><a href="https://en.wikipedia.org/wiki/The_C_Programming_Language_(book)">The
-      C Programming Language</a></em>, Second
-  Edition says about such C statements. In Section 2.12 (Precedence
-  and Order of Evaluation) of the book, the authors write:
+  <em><a href="https://en.wikipedia.org/wiki/The_C_Programming_Language_(book)">The C Programming Language</a></em>,
+  Second Edition says about such C statements. In Section 2.12
+  (Precedence and Order of Evaluation) of the book, the authors write:
 </p>
 <blockquote>
   <p>
@@ -89,7 +88,7 @@ int main()
   </p>
 </blockquote>
 <p>
-In the next paragraph, they write,
+  In the next paragraph, they write,
 </p>
 <blockquote>
   <p>
@@ -108,7 +107,7 @@ printf("%d %d\n", n, power(2, n));</code>
 </pre>
 </blockquote>
 <p>
-They provide one more example in this section:
+  They provide one more example in this section:
 </p>
 <blockquote>
   <p>
@@ -128,8 +127,8 @@ They provide one more example in this section:
 <p>
   To read more about this, download the
   <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf">C99
-    standard</a>, go to section 5.1.2.3 (Program execution), and see
-  the second point which mentions:
+    standard</a>, go to section 5.1.2.3 (Program execution), and see the
+  second point which mentions:
 </p>
 <blockquote>
   Accessing a volatile object, modifying an object, modifying a file,
@@ -137,10 +136,10 @@ They provide one more example in this section:
   all <em>side effects</em>,<sup>11)</sup> which are changes in the
   state of the execution environment. Evaluation of an expression may
   produce side effects. At certain specified points in the execution
-  sequence called
-  <em>sequence points</em>, all side effects of previous evaluations shall
-  be complete and no side effects of subsequent evaluations shall have
-  taken place. (A summary of the sequence points is given in annex C.)
+  sequence called <em>sequence points</em>, all side effects of
+  previous evaluations shall be complete and no side effects of
+  subsequent evaluations shall have taken place. (A summary of the
+  sequence points is given in annex C.)
 </blockquote>
 <p>
   Then go to section 6.5 and see the second point which mentions:
@@ -164,18 +163,17 @@ They provide one more example in this section:
 </p>
 <pre><code>printf("%d %d %d\n", i, i--, ++i);</code></pre>
 <p>
-  there is a sequence point after the evaluation of the three arguments
-  (<code>i</code>, <code>i--</code>, and <code>++i</code>) and before
-  the
-  <code>printf()</code> function is called. But none of the items
-  specified in Annex C implies that there is a sequence point between
-  the evaluation of the arguments. Yet the value of <code>i</code> is
-  modified more than once during the evaluation of these arguments. This
-  makes the behaviour of this statement undefined. Further, the value of
-  <code>i</code> is being read not only for determining what it must
-  be updated to but also for using as arguments to
-  the <code>printf()</code> call. This also makes the behaviour of
-  this code undefined.
+  there is a sequence point after the evaluation of the three
+  arguments (<code>i</code>, <code>i--</code>, and <code>++i</code>)
+  and before the <code>printf()</code> function is called. But none of
+  the items specified in Annex C implies that there is a sequence
+  point between the evaluation of the arguments. Yet the value
+  of <code>i</code> is modified more than once during the evaluation
+  of these arguments. This makes the behaviour of this statement
+  undefined. Further, the value of <code>i</code> is being read not
+  only for determining what it must be updated to but also for using
+  as arguments to the <code>printf()</code> call. This also makes the
+  behaviour of this code undefined.
 </p>
 <p>
   Let us see another example of a sequence point from Annex C.

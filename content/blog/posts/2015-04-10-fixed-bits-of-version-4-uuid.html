@@ -1,11 +1,10 @@
-<!-- title: From UUID to Infinite Loops -->
+<!-- title: Fixed Bits of Version 4 UUID -->
 <!-- tag: Python Programming Technology -->
 <p>
-  Most people involved in software development have probably come
-  across UUIDs. UUID stands for <em>universally unique
-  identifier</em>. It is also sometimes called GUID which stands
-  for <em>globally unique identifier</em>. Quoting
-  from <a href="https://www.rfc-editor.org/rfc/rfc4122">RFC 4122</a>
+  <em>Universally Unique Identifiers</em> or UUIDs are a popular way
+  creating identifiers that are unique for <em>practical</em>
+  purposes. Quoting from
+  <a href="https://www.rfc-editor.org/rfc/rfc4122">RFC 4122</a>
   below:
 </p>
 <blockquote>
@@ -34,13 +33,14 @@
   Version 4 UUID is one of the most popular type of UUIDs in use
   today. Unlike the other versions, this version does not require
   external inputs like MAC address, sequence number, current time,
-  etc. All except 6 bits are generated randomly in version 4 UUIDs.
-  This leads to some fun results. For example, the following piece of
-  Python code is an infinite loop:
+  etc. All except six bits are generated randomly in version 4
+  UUIDs. The six non-random bits are fixed. They represent the version
+  and variant of the UUID. Here is a tiny Python program that
+  demonstrates the first set of fixed bits:
 </p>
 <pre><code>while str(uuid.uuid4())[14] == '4': pass</code></pre>
 <p>
-  So is this:
+  The above program is an infinite loop. So is this:
 </p>
 <pre><code>while str(uuid.uuid4())[19] in ['8', '9', 'a', 'b']: pass</code></pre>
 <p>
@@ -86,7 +86,8 @@ c21b57cc-2a4e-<span class="hl">4</span>425-<span class="hl">a</span>2f4-12925656
 </p>
 <p>
   <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.4">Section
-  4.4</a> of RFC 4122 further summarizes these points. This explains
-  why the two little Python snippets mentioned above amount to
-  infinite loops.
+  4.4</a> of RFC 4122 further summarizes these points. To summarize,
+  version 4 UUIDs, although 128 bits in length, have 122 bits of
+  randomness. They have six fixed bits that represent its version and
+  variant.
 </p>

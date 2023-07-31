@@ -1257,3 +1257,244 @@ baz</code>
     typing <code>e</code> to repeat the macro call.
   </li>
 </ol>
+<p>
+  The behaviour of the the macro commands change with universal
+  arguments and digit arguments as follows:
+</p>
+<ul>
+  <li>
+    <code>C-u F3</code>: Execute the last macro, then record new macro
+    and append it to the last macro. Set
+    <code>kmacro-execute-before-append</code> to <code>nil</code>
+    (it is <code>t</code> by default) to prevent executing the last
+    macro before appending a new macro to the last macro.
+  </li>
+  <li>
+    <code>C-u C-x (</code>: Same as above.
+  </li>
+  <li>
+    <code>C-5 F3</code>: Start recording but set counter to 5, i.e.,
+    while a macro is being recorded, typing <code>F3</code> inserts 5
+    the first time, 6 the second time, and so on. The numeric prefix
+    argument sets the counter value.
+  </li>
+  <li>
+    <code>C-5 C-x (</code>: Same as above.
+  </li>
+  <li>
+    <code>C-u F4</code>: Execute the second macro in the ring.
+  </li>
+  <li>
+    <code>C-7 F4</code>: Repeat the last macro 7 times.
+  </li>
+  <li>
+    <code>C-7 C-x e</code>: Repeat the last macro 7 times.
+  </li>
+  <li>
+    <code>C-0 F3</code>: Repeat macro until there is an error (e.g.,
+    reaching the end of a buffer).
+  </li>
+  <li>
+    <code>C-0 C-x e</code>: Same as above.
+  </li>
+</ul>
+<p>
+  Type <code>C-x C-k C-h</code> to discover keyboard macro commands
+  and their key bindings. The list below shows some of the interesting
+  ones mentioned in the book. In the list below, complete key
+  sequences are used, so that they serve as a demonstration of the
+  macro commands.
+</p>
+<ul>
+  <li>
+    <code>C-x C-k C-a 20 RET</code>: Add 20 value to the counter.
+  </li>
+  <li>
+    <code>C-x C-k TAB</code>: Insert counter. Note that we saw earlier
+    that this can also be done with <code>F3</code>.
+  </li>
+  <li>
+    <code>C-x C-k C-c</code>: Set counter.
+  </li>
+  <li>
+    <code>C-x C-k C-f %02x</code>: Set macro counter format to
+    zero-padded two-digit hexadecimal numbers with a minimum width of
+    2.
+  </li>
+</ul>
+<p>
+  Note that all of the above commands work fine even when no macro
+  recording is in progress. For example, earlier we saw
+  that <code>F3</code> inserts the macro counter value only when a
+  macro recording is in progress. However, <code>C-x C-k TAB</code>
+  inserts the macro counter value even when a macro recording is not
+  in progress.
+</p>
+<p>
+  Another interesting feature mentioned in the book is querying for
+  user input while recording a keyboard macro. The key sequence to
+  query the user is <code>C-x C-k q</code> or <code>C-x q</code>. Here
+  are a few complete key sequences that may be used to demonstrate
+  this feature:
+</p>
+<ul>
+  <li>
+    <code>F3 C-n C-a foo: C-x q C-e :bar F4</code>: This defines a
+    macro such that when we execute the macro by
+    typing <code>F4</code> one more time, the macro first
+    inserts <code>foo</code> at the beginning of the next line, then
+    it prompts us to decide if we want to continue with macro
+    execution. If we type type <code>y</code>, then it continues with
+    the remainder of the macro execution. If we type <code>n</code>,
+    it skips the rest of the macro iteration and continue with the
+    next iteration of the macro (such as when we are replaying the
+    macro multiple times with a digit argument). If we
+    type <code>RET</code>, it skips the rest of the macro execution as
+    well as skip any further iterations of the macro (in case we are
+    replaying the macro multiple times).
+  </li>
+  <li>
+    <code>F3 C-a foo: C-x C-k q C-e :bar F4</code>: Same as above but
+    slightly longer key sequence. The key sequence in the previous
+    point is easier to remember and type.
+  </li>
+</ul>
+<p>
+  In the above examples, when the macro playback prompts queries for
+  user input, we can also type <code>C-l</code> to recentre the
+  screen, <code>C-r</code> to enter recursive edit,
+  or <code>C-M-c</code> to exit recursive edit.
+</p>
+<p>
+  Note that the key sequence <code>C-l</code> behaves a little
+  differently from the regular <code>C-l</code>. Unlike the
+  regular <code>C-l</code>, successive invocations of this key
+  sequence during macro query does not cause the window to reposition
+  at various places (centre, top, and bottom by default) in a cyclical
+  order. Successive invocations of <code>C-l</code> during macro
+  query, leaves the screen centred.
+</p>
+<p>
+  Here are some key sequences to save and recall macros:
+</p>
+<ul>
+  <li>
+    <code>C-x C-k C-p</code>: Move to the previous keyboard macro in
+    the keyboard macro ring.
+  </li>
+  <li>
+    <code>C-x C-k C-n</code>: Move to the next keyboard macro in the
+    keyboard macro ring.
+  </li>
+  <li>
+    <code>C-x C-k n foo RET</code>: Assign the name <code>foo</code>
+    to the current keyboard macro in the keyboard macro ring. Now the
+    macro can be executed by simply typing <code>M-x foo RET</code>.
+  </li>
+  <li>
+    <code>M-x insert-kbd-macro foo RET</code>: Insert the definition
+    of the named keyboard macro <code>foo</code> as Elisp code into
+    the current buffer.
+  </li>
+  <li>
+    <code>C-x C-k b C-c 1</code>: Assign the key sequence <code>C-c
+    1</code> to the current keyboard macro in the keyboard macro ring.
+    Now the macro can be executed by simply typing <code>C-c 1</code>.
+  </li>
+</ul>
+<p>
+  Finally, here are some commands to edit keyboard macros:
+</p>
+<ul>
+  <li>
+    <code>C-x C-k e C-x e</code>: Edit the current keyboard macro.
+  </li>
+  <li>
+    <code>C-x C-k e M-x foo RET</code>: Edit the keyboard macro
+    named <code>foo</code>.
+  </li>
+  <li>
+    <code>C-x C-k e C-c 1</code>: Edit the keyboard macro
+    bound to <code>C-c 1</code>.
+  </li>
+  <li>
+    <code>C-x C-k l</code>: View the most recent 300 keystrokes and
+    edit it to create a new keyboard macro.
+  </li>
+  <li>
+    <code>M-x kmacro-edit-lossage RET</code>: Same as above.
+  </li>
+</ul>
+<p>
+  A few additional commands:
+</p>
+<ul>
+  <li>
+    <code>C-h l</code>: See the last 300 characters typed (lossage).
+  </li>
+  <li>
+    <code>M-x open-dribble-file foo.txt RET</code>: Write input events
+    to a dribble file named <code>foo.txt</code>.
+  </li>
+  <li>
+    <code>M-: (open-dribble-file nil) RET</code>: Close the dribble file.
+  </li>
+</ul>
+<h3 id="text-expansion">Text Expansion</h3>
+<h4 id="abbrev">Abbrev</h4>
+<p>
+  Here are some Abbrev commands:
+</p>
+<ul>
+  <li>
+    <code>C-x a l</code>: Take the word before the cursor and define a
+    mode-specific abbreviation for it.
+  </li>
+  <li>
+    <code>C-x a g</code>: Take the word before the cursor and define a
+    global abbreviation for it.
+  </li>
+  <li>
+    <code>C-x a i l</code>: Take the abbreviated word before the
+    cursor and define a mode-specific expansion for it.
+  </li>
+  <li>
+    <code>C-x a i l</code>: Take the abbreviated word before the
+    cursor and define a global expansion for it.
+  </li>
+</ul>
+<p>
+  Note that for the expansions to work Abbrev mode should be enabled,
+  say with <code>M-x abbrev-mode RET</code>.
+</p>
+<p>
+  Here are some complete key sequences that demonstrate how we can use
+  Abbrev to define an abbreviation, i.e., text that automatically gets
+  replaced by another text:
+</p>
+<ul>
+  <li>
+    <code>Use SPC Debian C-x a l deb RET</code>: Define a
+    mode-specific abbreviation <code>deb</code> such that whenever we
+    type <code>deb</code>, it automatically expands
+    to <code>Debian</code>.
+  </li>
+  <li>
+    <code>Use SPC Linux C-x a g lnx RET</code>: Define a global
+    abbreviation <code>lnx</code> such that whenever we
+    type <code>lin</code>, it automatically expands
+    to <code>Linux</code>.
+  </li>
+  <li>
+    <code>Hello SPC wld C-x a i l World RET</code>: Define a
+    mode-specific abbreviation <code>wld</code> such that whenever we
+    type <code>wld</code>, it automatically expands
+    to <code>World</code>.
+  </li>
+  <li>
+    <code>Hello SPC evry C-x a i l Everyone RET</code>: Define a
+    global abbreviation <code>evry</code> such that whenever we
+    type <code>evry</code>, it automatically expands
+    to <code>Everyone</code>.
+  </li>
+</ul>

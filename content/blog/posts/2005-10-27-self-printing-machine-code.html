@@ -37,7 +37,7 @@ diff foo.com OUT.COM</code>
 </p>
 <pre>
 <samp>C:\&gt;<kbd>DEBUG</kbd>
--<kbd>E</kbd> 100 fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3
+-<kbd>E 100 fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3</kbd>
 -<kbd>N</kbd> FOO.COM
 -<kbd>R CX</kbd>
 CX 0000
@@ -107,6 +107,7 @@ FC: no differences encountered</samp>
   to 2 and generate the software interrupt 0x21 (decimal 33) to write
   the byte in DL to standard output. This is how each iteration reads
   a byte of this program and writes it to standard output.
+</p>
 <p>
   The <code>lodsb</code> instruction increments or decrements SI
   depending on the state of the direction flag (DF). When DF is
@@ -455,7 +456,8 @@ echo 4b 75 f1 f4 eb fd | xxd -r -p >> foo.com
 dosbox foo.com</code>
 </pre>
 <p>
-  With code page 437 active, the output should look approximately like this:
+  With code page 437 active, the output should look approximately like
+  this:
 </p>
 <pre><samp>&#x207F;&#x2502;&#x263B;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x255B;&#x2190;&#x263A;&#x2563;&#x2190;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x4B;&#x75;&#xB1;&#x2320;&#x3B4;&#xB2;&#x207F;&#x2502;&#x263B;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x255B;&#x2190;&#x263A;&#x2563;&#x2190;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x4B;&#x75;&#xB1;&#x2320;&#x3B4;&#xB2;</samp></pre>
 <p>
@@ -529,11 +531,13 @@ echo ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p >> boot.img
 echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 </pre>
 <p>
-  Now we can test this boot image using DOSBox with the following command:
+  Now we can test this boot image using DOSBox with the following
+  command:
 </p>
 <pre><code>dosbox -c cls -c 'boot boot.img'</code></pre>
 <p>
-  We can also test this image using QEMU x86 system emulator as follows:
+  We can also test this image using QEMU x86 system emulator as
+  follows:
 </p>
 <pre><code>qemu-system-i386 -fda boot.img</code></pre>
 <p>
