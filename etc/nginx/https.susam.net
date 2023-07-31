@@ -34,6 +34,7 @@ server {
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /blog/lisp-in-vim.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
     rewrite ^/blog/x86-quine.html$ /blog/self-printing-machine-code.html permanent;
+    rewrite ^/blog/from-uuid-to-infinite-loops.html$ /blog/fixed-bits-of-version-4-uuid.html permanent;
     rewrite ^/maze/rss.xml$ /maze/feed.xml permanent;
     rewrite ^/club/(.*)/$ /maze/meet/$1/ redirect;
     rewrite ^/maze/mastering-emacs/$ /maze/meet/mastering-emacs/ redirect;

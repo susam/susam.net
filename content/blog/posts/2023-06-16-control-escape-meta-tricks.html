@@ -7,10 +7,10 @@
   macOS, ensure that the "Use Option as Meta Key" option is enabled in
   its "Preferences" section. Now type <code>foo bar baz</code>
   followed by <kbd>meta</kbd>+<kbd>b</kbd>
-  (<kbd>alt</kbd>+<kbd>b</kbd> or <kbd>option</kbd>+<kbd>b</kbd> on
-  modern keyboards). In a typical desktop environment with a typical
-  and modern terminal emulator running a modern shell like Bash, Zsh,
-  etc., the cursor should move backward by one word. Now
+  (i.e., <kbd>alt</kbd>+<kbd>b</kbd> or <kbd>option</kbd>+<kbd>b</kbd>
+  on modern keyboards). In a typical desktop environment with a
+  typical and modern terminal emulator running a modern shell like
+  Bash, Zsh, etc., the cursor should move backward by one word. Now
   type <kbd>esc</kbd> <kbd>b</kbd>. The cursor should move back again
   by one word. Finally type <kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>b</kbd>
   and the same thing should happen again. How are we able to perform
@@ -27,7 +27,7 @@
 </p>
 <ul>
   <li>
-    <kbd>meta</kbd>+<kbd>b</kbd> (<kbd>alt</kbd>+<kbd>b</kbd>
+    <kbd>meta</kbd>+<kbd>b</kbd> (i.e., <kbd>alt</kbd>+<kbd>b</kbd>
     or <kbd>option</kbd>+<kbd>b</kbd> on modern keyboards)
   </li>
   <li>
@@ -338,7 +338,7 @@
   Vim in a terminal emulator. While insert mode is active,
   type <kbd>alt</kbd>+<kbd>/</kbd> or <kbd>option</kbd>+<kbd>/</kbd>
   and the current mode should instantly switch to the command-line
-  mode with the forward-slash (<code>/</code>) prompt waiting for our
+  mode with the forward-slash (<samp>/</samp>) prompt waiting for our
   search pattern. This works only in a terminal emulator. It may not
   work in the graphical version of Vim. The table above illustrates
   why this works in a terminal emulator.

@@ -45,13 +45,13 @@ FFFF:0000 EA5BE000F0    JMP     F000:E05B</samp>
 </p>
 <h2 id="reboot-program">Reboot Program</h2>
 <p>
-  Here is a complete <code>DEBUG.EXE</code> session that shows how
-  we could write a simple reboot program:
+  Here is a complete <code>DEBUG.EXE</code> session that shows how we
+  could write a simple reboot program:
 </p>
 <pre>
 <samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>A</kbd>
-1165:0100 JMP FFFF:0000
+1165:0100 <kbd>JMP FFFF:0000</kbd>
 1165:0105
 -<kbd>N REBOOT.COM</kbd>
 -<kbd>R CX</kbd>

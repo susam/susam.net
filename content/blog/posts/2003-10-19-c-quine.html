@@ -97,7 +97,8 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
 </p>
 <pre><samp>;printf(s,34,s,34);}</samp></pre>
 <p>
-  Here are all the five parts of the output presented next to each other:
+  Here are all the five parts of the output presented next to each
+  other:
 </p>
 <pre><samp>main(){char*s=</samp></pre>
 <pre><samp>"</samp></pre>
@@ -120,7 +121,8 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
   terminate with a newline. I found that a little bothersome because I
   am used to always terminating my source code with a single trailing
   newline at the end. So I decided to modify that quine a little to
-  ensure that it always ends with a newline. This is the quine I arrived at:
+  ensure that it always ends with a newline. This is the quine I
+  arrived at:
 </p>
 <pre><samp>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}</samp></pre>
 <p>

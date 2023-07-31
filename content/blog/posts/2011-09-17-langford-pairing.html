@@ -54,46 +54,46 @@
 </p>
 <pre>
 <code>def find_solutions(n, s=None):
-    # If called from main(), i.e., if called without the s parameter,
-    # create a list of 2n zero values. Zeroes represent unoccupied cells.
+    # If called from top-level (s=None), create a list of 2n zero
+    # values. Zeroes represent unoccupied cells.
     if s is None:
         s = [0] * (2 * n)
 
-    # The next number to be placed in two cells.
+    # Next number to be placed.
     m = max(s) + 1
 
     # For each i, try to place m at s[i] and s[i + m + 1].
     for i in range(2 * n - m - 1):
 
-        # If s[i] and s[i + m + 1] are unoccupied.
+        # If s[i] and s[i + m + 1] are unoccupied, ...
         if s[i] == s[i + m + 1] == 0:
-            # Create a copy of the list so that the original list is
-            # unaffected.
-            s_copy = s[:]
 
-            s_copy[i] = s_copy[i + m + 1] = m
+            # first place m at s[i] and s[i + m + 1].
+            s[i] = s[i + m + 1] = m
 
-            # If this number is the last number to be placed, ...
+            # If m is the last number to be placed, ...
             if m == n:
                 # then a solution has been found; yield it.
-                yield s_copy
+                yield s[:]
             else:
                 # else try to place the next number.
-                yield from find_solutions(n, s_copy)
+                yield from find_solutions(n, s)
+
+            # Undo placement of m.
+            s[i] = s[i + m + 1] = 0
 
 
 # Count solutions for 1 <= n <= 12.
 for n in range(1, 13):
-    solutions = list(find_solutions(n))
-    print('n = {:2} => {:6} solutions'.format(n, len(solutions)))</code>
+    count = sum(1 for s in find_solutions(n))
+    print('n = {:2} => {:6} solutions'.format(n, count))</code>
 </pre>
 <p>
-  Depending on your CPU, it can take a couple minutes to about ten
-  minutes for this program to run. Here is the output from the above
-  program:
+  It takes a few minutes for this program to run. Here is the output
+  of this program:
 </p>
 <pre>
-<samp>$ python3 langford.py
+<samp>$ <kbd>python3 langford.py</kbd>
 n =  1 =>      0 solutions
 n =  2 =>      0 solutions
 n =  3 =>      2 solutions
@@ -354,7 +354,7 @@ n = 12 => 216288 solutions</samp>
     \begin{cases}
       \frac{n}{4}     & \text{if } n \equiv 0 \pmod{4}, \\
       \frac{n + 1}{4} & \text{if } n \equiv 3 \pmod{4}.
-      \end{cases}
+    \end{cases}
   \]
 
   Let us now define the following eight sequences:
@@ -362,7 +362,7 @@ n = 12 => 216288 solutions</samp>
   \begin{align*}
     a & = (2x - 1), \\
     b & = (4x - 2), \\
-    c & = (4x - 3), \\
+    c & = (4x - 1), \\
     d & = (4x), \\
     p & = (0 \dots a)_{odd}, \\
     q & = (0 \dots a)_{even}, \\
@@ -406,7 +406,7 @@ n = 12 => 216288 solutions</samp>
   \begin{alignat*}{2}
     a & = (2x - 1)           && = (5), \\
     b & = (4x - 2)           && = (10), \\
-    c & = (4x - 3)           && = (11), \\
+    c & = (4x - 1)           && = (11), \\
     d & = (4x)               && = (12), \\
     p & = (0 \dots a)_{odd}  && = (1, 3), \\
     q & = (0 \dots a)_{even} && = (2, 4), \\
@@ -419,8 +419,8 @@ n = 12 => 216288 solutions</samp>
 
   \[
     (
-    8, 6, 3, 1, 10, 1, 3, 11, 6, 8, 12, 9,
-    7, 4, 2, 10, 5, 2, 4, 11, 7, 9, 5, 12
+      8, 6, 3, 1, 10, 1, 3, 11, 6, 8, 12, 9,
+      7, 4, 2, 10, 5, 2, 4, 11, 7, 9, 5, 12
     ).
   \]
 
@@ -434,18 +434,45 @@ n = 12 => 216288 solutions</samp>
 </p>
 <p>
   The two occurrences of \( a \) have \( q, \) \( c, \) and \( r \) in
-  between, i.e., \( (x - 1) + 1 + (x - 1) = 2x - 1 = a \) numbers in
-  between. Similarly, we can check that the two occurrences of \( b \)
-  have \( b \) numbers in between, likewise for \( c \) and \( d. \)
+  between, i.e.,
+
+  \[ (x - 1) + 1 + (x - 1) = 2x - 1 = a \]
+
+  numbers in between. Similarly, we can check that the two occurrences
+  of \( b \) have \( b \) numbers in between; likewise for \( c \) and
+  \( d. \)
 </p>
 <p>
-  The two occurrences of \( 1 \) belong to belong to \( p. \) Between
-  these two occurrences of \( 1, \) we have only one element of \( b.
-  \) We can show that for each \( k \) in \( p, \) there are \( k \)
+  The two occurrences of \( 1 \) belong to \( p \) and \( p'. \)
+  Between these two occurrences of \( 1, \) we have only one element
+  of \( b. \)
+</p>
+<p>
+  We now show that for each \( k \) in \( p, \) there are \( k \)
   numbers in between. For any \( k \) in \( p, \) there is the
   sequence \( (0..k)'_{odd} \cdot b \cdot (0..k)_{odd} \) in between
   the two occurrences of \( k, \) i.e, there are \( \frac{k - 1}{2} +
-  1 + \frac{k - 1}{2} = k \) numbers in between.
+  1 + \frac{k - 1}{2} = k \) numbers in between. Similarly, we can
+  check that for each \( k \) in \( q, \) there are \( k \) numbers in
+  between.
+</p>
+<p>
+  Finally, we show that for each \( k \) in \( r, \) there are \( k \)
+  numbers in between. For any \( k \) in \( r, \) there is the
+  sequence \( (a..k)'_{odd} \cdot q' \cdot b \cdot a \cdot q \cdot c
+  \cdot (a..k)_{odd} \) in between the two occurrences of \( k. \)
+  Note that \( a \) is odd, so the number of integers in this sequence
+  is
+
+  \[ \frac{k - a - 2}{2} + (x - 1) + 1 + 1 + (x - 1) + 1 + \frac{k - a - 2}{2}. \]
+
+  Simplifying the above expression and then substituting
+  \( a = 2x - 1, \) we get
+
+  \[ k - a - 2 + 2x + 1 = k. \]
+
+  Similarly, we can check that for each \( k \) in \( s, \) there are
+  \( k \) numbers in between.
 </p>
 <h3 id="case-2">Case \( n \equiv 3 \pmod{4} \)</h3>
 <p>
@@ -490,8 +517,10 @@ n = 12 => 216288 solutions</samp>
   specified concatenation, we get the following Langford pairing:
 
   \[
-    (8, 6, 3, 1, 10, 1, 3, 11, 6, 8, 5,
-    9, 7, 4, 2, 10, 5, 2, 4, 11, 7, 9).
+    (
+      8, 6, 3, 1, 10, 1, 3, 11, 6, 8, 5,
+      9, 7, 4, 2, 10, 5, 2, 4, 11, 7, 9
+    ).
   \]
 </p>
 <p>
