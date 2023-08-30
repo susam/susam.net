@@ -11,15 +11,11 @@
   An index of notes for all chapters are available
   at <a href="notes.html">notes.html</a>.
 </p>
-<h2 id="notes">Notes</h2>
-<p>
-  The following notes are related to the content of the chapter.
-</p>
-<h3 id="killing-text">Killing Text</h3>
+<h2 id="killing-text">Killing Text</h2>
 <p>
   Killing text is equivalent to what we call as cutting text in other
-  editors. Killing some text removes the text from the buffer and adds
-  it to the kill ring. The kill ring is the clipboard of Emacs.
+  editors.  Killing some text removes the text from the buffer and
+  adds it to the kill ring.  The kill ring is the clipboard of Emacs.
 </p>
 <p>
   To discover kill commands using the apropos functionality,
@@ -53,8 +49,8 @@
     <code>C-M-k</code>: Kill expression following point.
   </li>
   <li>
-    <code>C-S-&lt;backspace&gt;</code>: Kill current line. Does not
-    work in terminal Emacs. Use <code>C-a C-k</code> as alternative.
+    <code>C-S-&lt;backspace&gt;</code>: Kill current line.  Does not
+    work in terminal Emacs.  Use <code>C-a C-k</code> as alternative.
   </li>
   <li>
     <code>C-w</code>: Kill text between point and mark.
@@ -76,18 +72,18 @@
 </ul>
 <p>
   I have observed that some Emacs users do not bother
-  using <code>M-w</code> to copy to kill ring. Instead they
+  using <code>M-w</code> to copy to kill ring.  Instead they
   type <code>C-w C-/</code> to cut the text and immediately undo the
   cut which effectively leaves the buffer unchanged but inserts a copy
-  of the text that was cut into the kill ring. For example,
+  of the text that was cut into the kill ring.  For example,
   while <code>C-a C-SPC C-n C-n M-w</code> copies two lines into the
-  kill ring, so does <code>C-a C-SPC C-n C-n C-w C-/</code>. The
+  kill ring, so does <code>C-a C-SPC C-n C-n C-w C-/</code>.  The
   latter key sequence avoids having to use <code>M-w</code> but it is
   worth noting that this key sequence does not work in a readonly
-  buffer while the former does. To quickly see the difference,
+  buffer while the former does.  To quickly see the difference,
   open <code>/etc/hosts</code> as a non-root and non-privileged user
-  and try both the key sequences. The former key sequence does not
-  modify the buffer, so it works perfectly in a readonly buffer. The
+  and try both the key sequences.  The former key sequence does not
+  modify the buffer, so it works perfectly in a readonly buffer.  The
   latter key sequence modifies the buffer when we
   type <code>C-w</code>, so it does not work in a readonly buffer.
 </p>
@@ -96,23 +92,23 @@
   learning <code>C-S-&lt;backspace&gt;</code> because they can achieve
   the same results using <code>C-a C-k</code>.
   Further, <code>C-S-&lt;backspace&gt;</code> does not work in
-  terminal Emacs due to terminal limitations. The key
+  terminal Emacs due to terminal limitations.  The key
   sequence <code>C-a</code> moves the cursor to the beginning of the
   line and <code>C-k</code> kills everything until the end of the
   line.
 </p>
 <p>
   There is a difference between <em>deleting</em>
-  and <em>killing</em>. The first two commands <code>C-d</code>
+  and <em>killing</em>.  The first two commands <code>C-d</code>
   and <code>&lt;backspace&gt;</code> delete characters but the deleted
-  characters are not added to the kill ring. The remaining commands in
-  the list above kill text, i.e., remove the text from the buffer and
-  add it to the kill ring. The killed text can be pasted into the
-  buffer using <code>C-y</code>. For example, <code>M-d M-d M-d C-p
+  characters are not added to the kill ring.  The remaining commands
+  in the list above kill text, i.e., remove the text from the buffer
+  and add it to the kill ring.  The killed text can be pasted into the
+  buffer using <code>C-y</code>.  For example, <code>M-d M-d M-d C-p
   C-p C-y</code> kills the next three words and pastes them two lines
   above.
 </p>
-<h3 id="append-kill">Append Kill</h3>
+<h2 id="append-kill">Append Kill</h2>
 <p>
   The key sequence <code>C-M-w</code> is used to ensure that if the
   next command happens to be a kill command, then the killed text is
@@ -123,34 +119,35 @@
   after a kill command adds a new stretch of text to the kill ring,
   subsequent consecutive kills append to the same stretch of text in
   the kill ring, i.e., consecutive kills form a single large stretch
-  of text in the kill ring. This can be tested by performing
-  consecutive kills and then pasting with <code>C-y</code>. For
+  of text in the kill ring.  This can be tested by performing
+  consecutive kills and then pasting with <code>C-y</code>.  For
   example, <code>M-d M-d M-d C-p C-p C-y</code> kills 3 words, creates
   a single stretch of text consisting of those 3 words in the kill
   ring, and pastes that text two lines above.
 </p>
 <p>
   However, the moment a non-kill command is used, it seals the stretch
-  of text in the kill ring. Any subsequent kill command begins a new
-  stretch of text. For example, <code>M-d M-d M-d C-p M-d M-d C-p
+  of text in the kill ring.  Any subsequent kill command begins a new
+  stretch of text.  For example, <code>M-d M-d M-d C-p M-d M-d C-p
   C-y</code> kills 3 words at first but then it moves to the previous
-  line sealing that kill text consisting of 3 words. Then it kills 2
-  words and creates a new stretch of text in the kill ring. Therefore,
-  the final yank command pastes only those 2 words from the kill ring.
+  line sealing that kill text consisting of 3 words.  Then it kills 2
+  words and creates a new stretch of text in the kill ring.
+  Therefore, the final yank command pastes only those 2 words from the
+  kill ring.
 </p>
 <p>
   This can be a problem if we want to kill text from various parts of
   the buffer and yet create a single stretch of text that we want to
-  paste somewhere. That's when <code>C-M-w</code> comes useful. For
+  paste somewhere.  That's when <code>C-M-w</code> comes useful.  For
   example, <code>M-d M-d M-d C-p C-M-w M-d M-d C-p C-y</code> kills 3
   words and creates a single stretch of text in the kill ring
-  consisting of those 3 words. Then it moves one line up and kills 2
+  consisting of those 3 words.  Then it moves one line up and kills 2
   more words but this time it appends those 2 words to the existing
-  stretch of text in the kill ring. Finally, it moves two lines up and
-  pastes the entire stretch of text consisting of 5 words into the
+  stretch of text in the kill ring.  Finally, it moves two lines up
+  and pastes the entire stretch of text consisting of 5 words into the
   buffer.
 </p>
-<h3 id="digit-and-negative-arguments">Digit and Negative Arguments</h3>
+<h2 id="digit-and-negative-arguments">Digit and Negative Arguments</h2>
 <p>
   Here are some complete key sequences that demonstrate digit and
   negative arguments:
@@ -175,23 +172,23 @@
     <code>C-M-- C-M-3 C-M-k</code>: Kill the previous 3 expressions.
   </li>
 </ul>
-<h3 id="yanking-text">Yanking Text</h3>
+<h2 id="yanking-text">Yanking Text</h2>
 <p>
-  There are two key bindings to learn here. The key
+  There are two key bindings to learn here.  The key
   sequence <code>C-y</code> executes the <code>yank</code> command
   which yanks the last stretch of text from the kill ring.
 </p>
 <p>
   In the apropos system, <code>paste</code> is a synonym
-  of <code>yank</code>. Type <code>C-h v apropos-synonyms RET</code>
+  of <code>yank</code>.  Type <code>C-h v apropos-synonyms RET</code>
   to see all the synonyms define for the apropos system.
   Thus <code>C-h a paste RET</code> includes the results
   for <code>yank</code> too.
 </p>
-<h3 id="yank-pop">Yank Pop</h3>
+<h2 id="yank-pop">Yank Pop</h2>
 <p>
   The key sequence <code>M-y</code> executes the <code>yank-pop</code>
-  command which replaces a just-yanked kill with an older kill. This
+  command which replaces a just-yanked kill with an older kill.  This
   key sequence helps us to cycle through the kill ring and fetch older
   and older kills to be pasted into the buffer.
 </p>
@@ -205,27 +202,27 @@
     line: <code>foo bar baz qux quux</code>.
   </li>
   <li>
-    Then type <code>C-a M-d C-g M-d C-g M-d</code>. At these point
+    Then type <code>C-a M-d C-g M-d C-g M-d</code>.  At this point
     three stretches of text have been inserted into the kill ring.
     The <code>C-g</code> between every <code>M-d</code> is there to
     avoid appending kills to the existing stretch of text in the kill
-    ring. This ensures that we have three separate stretches of text
+    ring.  This ensures that we have three separate stretches of text
     in the kill ring.
   </li>
   <li>
-    Now type <code>C-y</code>. The last stretched of kill text,
+    Now type <code>C-y</code>.  The last stretched of kill text,
     i.e., <code>baz</code> is now pasted into the buffer.
   </li>
   <li>
     Now without typing any other key sequence, type <code>M-y</code>.
     The earlier pasted text <code>baz</code> is now replaced with an
-    older stretch of text from the kill ring. Thus <code>baz</code> is
-    replaced with <code>bar</code>.
+    older stretch of text from the kill ring.  Thus <code>baz</code>
+    is replaced with <code>bar</code>.
   </li>
   <li>
-    Now once again type <code>M-y</code>. The earlier pasted
+    Now once again type <code>M-y</code>.  The earlier pasted
     text <code>bar</code> is now replaced with a further older stretch
-    of text from the kill ring. Thus <code>bar</code> is replaced
+    of text from the kill ring.  Thus <code>bar</code> is replaced
     with <code>foo</code>.
   </li>
 </ol>
@@ -241,21 +238,21 @@
 <p>
   Since Emacs 28, the key sequence <code>M-y</code> also supports
   browsing the kill ring and yanking any arbitrary entry from the kill
-  ring. For example, after trying the above experiment,
+  ring.  For example, after trying the above experiment,
   type <code>C-g</code> just to make sure that we are breaking any
-  existing <code>C-y</code> or <code>M-y</code> cycle. Then
+  existing <code>C-y</code> or <code>M-y</code> cycle.  Then
   type <code>M-y</code> and a minibuffer prompt appears to yank an
-  arbitrary kill from the kill ring. If we remember the previous kill,
-  we can type it out partially and type <code>TAB</code> to
-  autocomplete it. Alternatively, we could also type <code>TAB</code>
+  arbitrary kill from the kill ring.  If we remember the previous
+  kill, we can type it out partially and type <code>TAB</code> to
+  autocomplete it.  Alternatively, we could also type <code>TAB</code>
   initially itself to browse all the kills in the kill ring.
 </p>
-<h3 id="maximum-length-of-kill-ring">Maximum Length of Kill Ring</h3>
+<h2 id="maximum-length-of-kill-ring">Maximum Length of Kill Ring</h2>
 <p>
   Type <code>C-h v kill-ring-max RET</code> to see the maximum length
-  of the kill ring. It is <code>60</code> by default.
+  of the kill ring.  It is <code>60</code> by default.
 </p>
-<h3 id="killing-lines">Killing Lines</h3>
+<h2 id="killing-lines">Killing Lines</h2>
 <p>
   Since <code>C-S-&lt;backspace&gt;</code> works only in GUI Emacs and
   not in terminal Emacs due to terminal limitations, in the
@@ -276,16 +273,16 @@
 <p>
   After Emacs is started with the updated initialization file,
   typing <code>C-w</code> kills the current line if there is no active
-  region. However, if there is an active region then <code>C-w</code>
+  region.  However, if there is an active region then <code>C-w</code>
   retains the default behaviour of killing the region.
 </p>
 <p>
   Although the author recommends this package, I do not use this
-  package. I have found <code>C-a C-k</code> to be very effective for
-  killing the current line. However, it is worth noting that for
+  package.  I have found <code>C-a C-k</code> to be very effective for
+  killing the current line.  However, it is worth noting that for
   non-empty lines, <code>C-k</code> does not include the newline in
-  the kill by default. If we want to remove the newline too, we must
-  type <code>C-k</code> another time. Therefore, to faithfully
+  the kill by default.  If we want to remove the newline too, we must
+  type <code>C-k</code> another time.  Therefore, to faithfully
   reproduce the behaviour of <code>C-w</code>
   (of <code>whole-line-or-region</code>) or that
   of <code>C-S-&lt;backspace&gt;</code>, we need to type <code>C-a C-k
@@ -294,18 +291,18 @@
 <p>
   It is possible to change the default behaviour of <code>C-k</code>
   such that when we type it at the beginning of a line, the trailing
-  newline is included in the kill. To do so, add this to the Emacs
+  newline is included in the kill.  To do so, add this to the Emacs
   initialization file:
 </p>
 <pre><code>(setq kill-whole-line t)</code></pre>
 <p>
   After Emacs is started with this initialization
   file, <code>C-k</code> kills a whole line along with the trailing
-  newline only if cursor is at the start of a line. In other words,
+  newline only if cursor is at the start of a line.  In other words,
   with this setting, <code>C-a C-k</code> always kills a whole line
   along with the trailing newline.
 </p>
-<h3 id="transpose">Transpose</h3>
+<h2 id="transpose">Transpose</h2>
 <p>
   Here are some transpose commands:
 </p>
@@ -333,34 +330,35 @@
 </ul>
 <p>
   While using <code>C-t</code> remember that the point is the logical
-  place between two characters. For example if the cursor blinking on
+  place between two characters.  For example if the cursor blinking on
   the letter <code>e</code> of the word <code>hello</code>, then the
-  point is between the letters <code>h</code> and <code>e</code>. When
-  we type a new character, the new character is inserted where the
-  point is. The key sequence <code>C-t</code> interchanges the
+  point is between the letters <code>h</code> and <code>e</code>.
+  When we type a new character, the new character is inserted where
+  the point is.  The key sequence <code>C-t</code> interchanges the
   characters on both sides of the point, i.e., it exchanges the
   character the cursor is blinking on with the character just before
   it.
 </p>
 <p>
   There is a subtle difference between the way <code>C-x C-t</code>
-  works and the way the other commands work. The other commands
-  exchanges the current or previous object with the next one.
+  works and the way the other commands work.  The other commands
+  exchange the current or previous object with the next one.
   However, <code>C-x C-t</code> exchanges the current line with the
   previous one.
 </p>
 <p>
   Note that the cursor moves to the end of the next object after
-  performing an exchange. This allows the object that moved forward to
-  be dragged further forward by repeated application of the same
-  command.
+  performing an exchange.  This allows the object that moved forward
+  to be dragged further forward by repeated application of the same
+  command.  Note again that while the other commands drag the thing at
+  point forward, <code>C-x C-t</code> drags the previous line forward.
 </p>
 <p>
   If the cursor is on a space between <code>"foo" :: "bar"</code>,
   note that <code>M-t</code> will transpose it to <code>"bar" ::
   "foo"</code> because it ignores symbols.
 </p>
-<h3 id="filling">Filling</h3>
+<h2 id="filling">Filling</h2>
 <p>
   Here are some complete key sequences that perform paragraph filling:
 </p>
@@ -376,29 +374,29 @@
   </li>
   <li>
     <code>C-x .</code>: Set the fill prefix to the current line up to
-    point. On performing a fill operation, the fill prefix is inserted
-    at the beginning of every new line created.
+    point.  On performing a fill operation, the fill prefix is
+    inserted at the beginning of every new line created.
   </li>
   <li>
     <code>C-a C-x .</code>: To cancel the fill prefix, type <code>C-x
-    .</code> at the beginning of a line. Thus <code>C-a C-x .</code>
+    .</code> at the beginning of a line.  Thus <code>C-a C-x .</code>
     cancels the fill prefix.
   </li>
   <li>
     <code>M-x auto-fill-mode RET</code>: Toggle auto-filling.
   </li>
 </ul>
-<h3 id="commenting">Commenting</h3>
+<h2 id="commenting">Commenting</h2>
 <p>
   Here are some key bindings to add comments to code in various ways:
 </p>
 <ul>
   <li>
     <code>M-;</code>: Insert or remove comment in a <em>do what I
-    mean</em> (DWIM) fashion. If the line is empty, a comment is
-    inserted at the beginning of the line. If the line is not empty, a
-    comment is inserted at the end of the line and then indented to
-    the column numbered <code>comment-column</code> if it can. If a
+    mean</em> (DWIM) fashion.  If the line is empty, a comment is
+    inserted at the beginning of the line.  If the line is not empty,
+    a comment is inserted at the end of the line and then indented to
+    the column numbered <code>comment-column</code> if it can.  If a
     region is selected, it comments or uncomments that region.
   </li>
   <li>
@@ -406,13 +404,13 @@
   </li>
   <li>
     <code>M-x comment-box RET</code>: Comment a region by drawing a
-    box made of comment characters around the selected region. Running
-    this command repeatedly on the same region creates multiple nested
-    comment boxes.
+    box made of comment characters around the selected region.
+    Running this command repeatedly on the same region creates
+    multiple nested comment boxes.
   </li>
   <li>
     <code>M-j</code>: Insert a new line and continue with the comment
-    if the current line has an open comment. If there is no open
+    if the current line has an open comment.  If there is no open
     comment in the current line, then create a new line and indent.
   </li>
   <li>
@@ -442,10 +440,10 @@
   </li>
   <li>
     <code>comment-padding</code>: Extra spacing between the comment
-    characters and the comment text. This is the minimum number of
+    characters and the comment text.  This is the minimum number of
     spaces (only if the value of this variable is made of spaces) that
     Emacs tries to keep between the comment characters and comment
-    text. No spaces are inserted if <code>comment-start</code>
+    text.  No spaces are inserted if <code>comment-start</code>
     and <code>comment-end</code> already
     provide <code>comment-padding</code> number of spaces or more to
     separate the comment text.
@@ -454,7 +452,7 @@
 <p>
   To demonstrate how changing <code>comment-style</code> changes the
   commenting behaviour try <code>M-x (setq comment-style 'indent)
-  RET</code>, then select a region, and type <code>M-;</code>. The
+  RET</code>, then select a region, and type <code>M-;</code>.  The
   selected region will be commented out with a comment box.
 </p>
 <p>
@@ -462,7 +460,7 @@
   selecting a region in a C buffer, and typing <code>M-;</code> does
   not seem to do anything interesting.
 </p>
-<h3 id="search-and-replace">Search and Replace</h3>
+<h2 id="search-and-replace">Search and Replace</h2>
 <p>
   Here are some complete key sequences that demonstrate search and
   replace commands:
@@ -548,14 +546,14 @@
   Just like incremental search (<code>C-s</code>
   or <code>C-M-s</code>), search and replace performs case folding,
   i.e., performs case-insensitive match if the search string is a
-  lowercase string. However, the moment we include an uppercase
+  lowercase string.  However, the moment we include an uppercase
   character in the search string, search and replace performs
   case-sensitive search and replace.
 </p>
-<h3 id="regular-expressions">Regular Expressions</h3>
+<h2 id="regular-expressions">Regular Expressions</h2>
 <p>
   This section presents some examples of regular-expression-based
-  search as well as search-and-replace. Here is a simple text buffer
+  search as well as search-and-replace.  Here is a simple text buffer
   where the commands to be presented later can be tried out.
 </p>
 <pre>
@@ -605,7 +603,7 @@ web-server-port-HTTP-80
 </p>
 <ul>
   <li>
-    <code>C-M-s  f..</code>: Search for the letter <code>f</code>
+    <code>C-M-s f..</code>: Search for the letter <code>f</code>
     followed by two characters.
   </li>
   <li>
@@ -695,8 +693,8 @@ web-server-port-HTTP-80
     etc.
   </li>
   <li>
-    <code>C-M-s \s"</code>: Search for string delimiter. This does not
-    work in text mode but does work in programming modes.
+    <code>C-M-s \s"</code>: Search for string delimiter.  This does
+    not work in text mode but does work in programming modes.
   </li>
   <li>
     <code>C-M-s \s&lt;</code>: Search for opening comment delimiter.
@@ -710,7 +708,7 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s \Sw</code>: Search for character that is not a word
-    constituent. The pattern <code>\S</code> matches any character
+    constituent.  The pattern <code>\S</code> matches any character
     whose syntax code is not the given syntax code (<code>w</code> in
     this example).
   </li>
@@ -718,11 +716,11 @@ web-server-port-HTTP-80
 <p>
   All examples above that contain the regular
   expression <code>\s</code> followed by a character matches a
-  character that belongs to a specific syntax class. For
+  character that belongs to a specific syntax class.  For
   example <code>\s.</code> matches characters that belong to the
-  punctuation syntax class. The syntax class for each character is
-  decided by the current major mode. Thus the same character may
-  belong to different syntax classes in different modes. For example,
+  punctuation syntax class.  The syntax class for each character is
+  decided by the current major mode.  Thus the same character may
+  belong to different syntax classes in different modes.  For example,
   while the character <code>#</code> belongs to the punctuation syntax
   class in text mode, it belongs to the comment syntax class in Python
   mode.
@@ -748,7 +746,7 @@ web-server-port-HTTP-80
     <code>C-M-% \(foo-\)\sw+\(-baz\) RET \1\?\2 RET</code>: Search for
     the string <code>foo-</code> followed by a word and the
     string <code>baz</code>, and replace the middle word with text
-    input provided by the user. Before each replace operation, Emacs
+    input provided by the user.  Before each replace operation, Emacs
     will prompt the user to edit the replacement pattern by putting
     the point where <code>\?</code> was in the original replacement
     string.
@@ -756,49 +754,49 @@ web-server-port-HTTP-80
   <li>
     <code>C-M-% foo RET \# RET</code>: Search for the
     string <code>foo</code> and replace each match with an
-    autoincrementing number. The first match is replaced
+    autoincrementing number.  The first match is replaced
     with <code>0</code>, the second one with <code>1</code>, the third
-    one with <code>2</code>, and so on. Precisely speaking, the
+    one with <code>2</code>, and so on.  Precisely speaking, the
     backreference <code>\#</code> refers to the count of the
     replacements already made in the current search and replace
     operation.
   </li>
   <li>
     <code>C-M-% foo RET \&amp;\&amp; RET</code>: Search for the
-    string <code>foo</code> and duplicate it. The replacement
+    string <code>foo</code> and duplicate it.  The replacement
     pattern <code>\&amp;</code> stands for the whole match.
   </li>
   <li>
     <code>C-M-% f.. RET \,(upcase \&amp;) RET</code>: Search for the
     letter <code>f</code> followed by two characters and replace the
-    match with an uppercase form of the match. The
+    match with an uppercase form of the match.  The
     syntax <code>\,(<em>form</em>)</code> is used to evaluate an Elisp
-    form and use its result in the replacement string. The
+    form and use its result in the replacement string.  The
     backreference <code>\&amp;</code> refers to the whole match as a
     string in the Elisp expression.
   </li>
   <li>
     <code>C-M-% [0-9]+ RET \,(+ 1000 \#&amp;)</code>: Search for
-    numbers and add 1000 to each match. The
+    numbers and add 1000 to each match.  The
     backreference <code>\#&amp;</code> refers to the whole match as a
     number within the Elisp expression.
   </li>
   <li>
     <code>C-M-% \(\sw+\)-\(\sw+\) RET \,(upcase \2)-\1 RET</code>:
     Search for two words separated by a hyphen and then swap them but
-    convert the second word in each match to uppercase. The
+    convert the second word in each match to uppercase.  The
     backreference <code>\2</code> refers to the string matched by the
     second capturing group as a string within the Elisp expression.
   </li>
   <li>
     <code>C-M-% port-\([0-9]+\) RET port-\,(+ 1000 \#1) RET</code>:
     Search for the string <code>port-</code> followed by a number and
-    add 1000 to the number. The backreference <code>\#1</code> refers
+    add 1000 to the number.  The backreference <code>\#1</code> refers
     to the string matched by the first capturing group as a string
     within the Elisp expression.
   </li>
 </ul>
-<h3 id="changing-case">Changing Case</h3>
+<h2 id="changing-case">Changing Case</h2>
 <p>
   Here are some commands to change case of text:
 </p>
@@ -827,18 +825,19 @@ web-server-port-HTTP-80
 <p>
   Note that the commands <code>C-x C-l</code>
   (<code>downcase-region</code>) and <code>C-x C-u</code>
-  (<code>upcase-region</code>) are disabled by default. Follow the
-  prompts to try it or enable it. A quick way to try it is to
-  type <code>SPC</code>. Also, adding the following to the Emacs
+  (<code>upcase-region</code>) are disabled by default.  Follow the
+  prompts to try it or enable it.  A quick way to try it is to
+  type <code>SPC</code>.  Also, adding the following to the Emacs
   initialization file permanently enables it.
 </p>
 <pre>
 <code>(put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)</code>
 </pre>
-<h3 id="counting">Counting</h3>
+<h2 id="counting">Counting</h2>
 <p>
-  Here are some commands to count lines, words, characters, patterns, etc:
+  Here are some commands to count lines, words, characters, patterns,
+  etc:
 </p>
 <ul>
   <li>
@@ -848,19 +847,19 @@ web-server-port-HTTP-80
     <code>M-x count-words-region RET</code>: Same as above.
   </li>
   <li>
-    <code>M-x count-words RET</code>: Similar to above. If no region
+    <code>M-x count-words RET</code>: Similar to above.  If no region
     is selected, then counts in the entire buffer.
   </li>
   <li>
     <code>M-x how-many RET f.. RET</code>: Show the number of matches
-    for the regular expression <code>f..</code> following point. If
+    for the regular expression <code>f..</code> following point.  If
     region is selected, then show the number of matches in the region.
   </li>
   <li>
     <code>M-x count-matches RET f.. RET</code>: Same as above.
   </li>
 </ul>
-<h3 id="deleting-and-keeping-lines">Deleting and Keeping Lines</h3>
+<h2 id="deleting-and-keeping-lines">Deleting and Keeping Lines</h2>
 <p>
   The commands that are presented in this section can be tested with a
   buffer like this:
@@ -890,55 +889,55 @@ baz</code>
 <ul>
   <li>
     <code>M-x delete-duplicate-lines RET</code>: Delete all but one
-    copy of duplicate lines in region. When executed on the whole of
+    copy of duplicate lines in region.  When executed on the whole of
     the example buffer presented above, it leaves us with three
-    non-empty lines and one blank line. When duplicate lines are
+    non-empty lines and one blank line.  When duplicate lines are
     encountered, the first instance of each line is kept intact and
     the others are deleted.
   </li>
   <li>
     <code>C-u M-x delete-duplicate-lines RET</code>: Like the previous
-    command but search backwards. Thus effectively, the last instance
+    command but search backwards.  Thus effectively, the last instance
     of each repeated line is left intact while the other duplicates
     are deleted.
   </li>
   <li>
     <code>C-u C-u M-x delete-duplicate-lines RET</code>: Delete only
-    those duplicate lines that are adjacent to each other. In every
+    those duplicate lines that are adjacent to each other.  In every
     contiguous group of duplicate lines, the first one is left intact
     and the rest are deleted.
   </li>
   <li>
     <code>C-u C-u C-u M-x delete-duplicate-lines RET</code>: Like the
     first command in this list but repeated blank lines are left
-    intact. When executed on the whole of the example buffer presented
-    above, it leaves us with three non-empty lines and six blank
-    lines.
+    intact.  When executed on the whole of the example buffer
+    presented above, it leaves us with three non-empty lines and six
+    blank lines.
   </li>
   <li>
     <code>M-x flush-lines RET b.. RET</code>: Delete lines in region
-    that match the regular expression <code>b..</code>. If no region
+    that match the regular expression <code>b..</code>.  If no region
     is active, then delete matching lines between the point and end of
-    buffer. The deleted lines are not copied to kill ring.
+    buffer.  The deleted lines are not copied to kill ring.
   </li>
   <li>
     <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
     match the regular expression <code>b..</code> and delete the rest.
     If no region is active, then keep matching lines between the point
-    and end of buffer and delete the rest. The deleted lines are not
+    and end of buffer and delete the rest.  The deleted lines are not
     copied to kill ring.
   </li>
   <li>
     <code>M-x copy-matching-lines RET b.. RET</code>: Copy lines in
     region that match the regular expression <code>b..</code> to the
-    kill ring. If no region is active, then copy matching lines
-    between the point and end of buffer. (Available since Emacs 28.1)
+    kill ring.  If no region is active, then copy matching lines
+    between the point and end of buffer.  (Available since Emacs 28.1)
   </li>
   <li>
     <code>M-x kill-matching-lines RET b.. RET</code>: Kill lines in
     region that match the regular expression <code>b..</code> to the
-    kill ring. If no region is active, then kill matching lines
-    between the point and end of buffer. (Available since Emacs 28.1)
+    kill ring.  If no region is active, then kill matching lines
+    between the point and end of buffer.  (Available since Emacs 28.1)
   </li>
 </ul>
 <p>
@@ -946,7 +945,7 @@ baz</code>
   h</code> to select the entire buffer as the region and then type a
   command mentioned above.
 </p>
-<h3 id="splitting-and-joining-lines">Splitting and Joining Lines</h3>
+<h2 id="splitting-and-joining-lines">Splitting and Joining Lines</h2>
 <p>
   Here is a list of commands that help with splitting and joining
   lines:
@@ -958,9 +957,9 @@ baz</code>
   </li>
   <li>
     <code>C-x C-o</code>: On blank line, delete all surrounding blank
-    lines, leaving just one. On isolated blank line, delete the blank
-    line. On non-blank line, delete all consecutive blank lines that
-    follow the non-blank lines. While deleting blank lines it also
+    lines, leaving just one.  On isolated blank line, delete the blank
+    line.  On non-blank line, delete all consecutive blank lines that
+    follow the non-blank lines.  While deleting blank lines it also
     deletes lines that consist only of whitespaces.
   </li>
   <li>
@@ -969,14 +968,15 @@ baz</code>
     Everything from the next non-whitespace character after the point
     to the end of the line moves down by one line but the new line is
     indented so that the column numbers of all the characters that
-    moved down remain the same. If a fill-prefix has been set, say
+    moved down remain the same.  If a fill-prefix has been set, say
     with <code>C-x .</code>, then the fill-prefix is inserted in the
     new line.
   </li>
   <li>
     <code>M-^</code>: Join current line with previous line and leave
-    exactly one space between the joined lines. If a fill-prefix is
-    set, say with <code>C-x .</code>, then the fill-prefix is removed while joining lines.
+    exactly one space between the joined lines.  If a fill-prefix is
+    set, say with <code>C-x .</code>, then the fill-prefix is removed
+    while joining lines.
   </li>
 </ul>
 <p>
@@ -984,10 +984,10 @@ baz</code>
   spurious blank lines between paragraphs.
 </p>
 <p>
-  Note that <code>M-^</code> also works on a region. When a region is
+  Note that <code>M-^</code> also works on a region.  When a region is
   active, it joins all lines in the region.
 </p>
-<h3 id="examining-and-fixing-whitespace-issues">Examining and Fixing Whitespace Issues</h3>
+<h2 id="examining-and-fixing-whitespace-issues">Examining and Fixing Whitespace Issues</h2>
 <p>
   Here is a list of commands that are useful in examining whitespace
   in the current buffer:
@@ -1010,20 +1010,20 @@ baz</code>
 </ul>
 <p>
   After typing <code>M-x whitespace-toggle-options RET</code>, type a
-  key to tell it what to do. For example, type <code>N</code> and it
+  key to tell it what to do.  For example, type <code>N</code> and it
   will start or restart <code>whitespace-mode</code> with the
-  visualization of newline toggled. Type <code>?</code> to see the
+  visualization of newline toggled.  Type <code>?</code> to see the
   list of all key inputs it supports.
 </p>
 <p>
   The key sequence <code>M-x whitespace-toggle-options RET</code> may
   be typed anytime regardless of whether <code>whitespace-mode</code>
-  is currently enabled or not. If <code>whitespace-mode</code> is not
+  is currently enabled or not.  If <code>whitespace-mode</code> is not
   enabled, running <code>whitespace-toggle-options</code>
-  automatically enables it. If <code>whitespace-mode</code> is already
-  enabled, then running <code>whitespace-toggle-options</code> and
-  toggling an option, restarts local <code>whitespace-mode</code> with
-  the updated option setting.
+  automatically enables it.  If <code>whitespace-mode</code> is
+  already enabled, then running <code>whitespace-toggle-options</code>
+  and toggling an option, restarts local <code>whitespace-mode</code>
+  with the updated option setting.
 </p>
 <p>
   Here are some commands to report and clean up whitespace issues:
@@ -1031,10 +1031,11 @@ baz</code>
 <ul>
   <li>
     <code>M-x whitespace-report RET</code>: Shows a report of
-    whitespace issues. The "Current setting" column on left shows the
+    whitespace issues.  The "Current setting" column on left shows the
     current settings found in the
-    variable <code>whitespace-style</code>. The "Whitespace Problem"
-    column on the right shows the whitespace problems found in the buffer.
+    variable <code>whitespace-style</code>.  The "Whitespace Problem"
+    column on the right shows the whitespace problems found in the
+    buffer.
   </li>
   <li>
     <code>M-x whitespace-report-region RET</code>: Like the previous
@@ -1042,23 +1043,23 @@ baz</code>
   </li>
   <li>
     <code>M-x whitespace-cleanup RET</code>: Cleans up whitespace
-    issues in the buffer. This command checks
+    issues in the buffer.  This command checks
     the <code>whitespace-style</code> variable to decide which issues
-    to fix. See <code>C-h f whitespace-cleanup RET</code> for complete
-    details.
+    to fix.  See <code>C-h f whitespace-cleanup RET</code> for
+    complete details.
   </li>
   <li>
     <code>M-x whitespace-cleanup-region RET</code>: Cleans up
-    whitespace issues in a region. Unlike the previous command, this
+    whitespace issues in a region.  Unlike the previous command, this
     command does not fix empty lines at the beginning or end of
-    buffer. See <code>C-h f whitespace-cleanup-region RET</code> for
+    buffer.  See <code>C-h f whitespace-cleanup-region RET</code> for
     complete details.
   </li>
 </ul>
 <p>
   As mentioned in the list above, the whitespace cleanup functions
   read the variable <code>whitespace-style</code> to decide which
-  whitespace issues to fix. Say, we do not want to fix trailing
+  whitespace issues to fix.  Say, we do not want to fix trailing
   whitespace issue but do want to fix other whitespace issues selected
   by default (e.g., empty lines at the beginning or end of buffer,
   spaces before tab, etc.), then we need to update
@@ -1073,10 +1074,10 @@ baz</code>
   trailing spaces but it will perform the other cleanups determined by
   the value of <code>whitespace-style</code>.
 </p>
-<h3 id="keyboard-macros">Keyboard Macros</h3>
+<h2 id="keyboard-macros">Keyboard Macros</h2>
 <p>
   The behaviour of keyboard macro key sequences depend on the current
-  context. So they are presented as table below.
+  context.  So they are presented as table below.
 </p>
 <table class="grid">
   <tr>
@@ -1185,7 +1186,7 @@ baz</code>
 </ul>
 <p>
   Given these details, there are broadly two ways these macro key
-  sequences can be used. They are shown in the table below.
+  sequences can be used.  They are shown in the table below.
 </p>
 <table class="grid">
   <tr>
@@ -1220,7 +1221,7 @@ baz</code>
 </table>
 <p>
   If you are comfortable using function keys, you might want to follow
-  the second column in the table above. Otherwise, you might want to
+  the second column in the table above.  Otherwise, you might want to
   follow the third column in the table above.
 </p>
 <p>
@@ -1248,12 +1249,12 @@ baz</code>
   </li>
   <li>
     Type <code>C-x e</code> to stop macro recording and call the
-    recorded macro. Now <code>1</code>, dot, and space is inserted at
+    recorded macro.  Now <code>1</code>, dot, and space is inserted at
     the beginning of the line, the first word of the current line is
     capitalized, and the cursor moves to the next line.
   </li>
   <li>
-    Type <code>e</code> to repeat the macro call. Keep
+    Type <code>e</code> to repeat the macro call.  Keep
     typing <code>e</code> to repeat the macro call.
   </li>
 </ol>
@@ -1264,7 +1265,7 @@ baz</code>
 <ul>
   <li>
     <code>C-u F3</code>: Execute the last macro, then record new macro
-    and append it to the last macro. Set
+    and append it to the last macro.  Set
     <code>kmacro-execute-before-append</code> to <code>nil</code>
     (it is <code>t</code> by default) to prevent executing the last
     macro before appending a new macro to the last macro.
@@ -1275,7 +1276,7 @@ baz</code>
   <li>
     <code>C-5 F3</code>: Start recording but set counter to 5, i.e.,
     while a macro is being recorded, typing <code>F3</code> inserts 5
-    the first time, 6 the second time, and so on. The numeric prefix
+    the first time, 6 the second time, and so on.  The numeric prefix
     argument sets the counter value.
   </li>
   <li>
@@ -1300,9 +1301,9 @@ baz</code>
 </ul>
 <p>
   Type <code>C-x C-k C-h</code> to discover keyboard macro commands
-  and their key bindings. The list below shows some of the interesting
-  ones mentioned in the book. In the list below, complete key
-  sequences are used, so that they serve as a demonstration of the
+  and their key bindings.  The list below shows some of the
+  interesting ones mentioned in the book.  In the list below, complete
+  key sequences are used, so that they serve as a demonstration of the
   macro commands.
 </p>
 <ul>
@@ -1310,7 +1311,7 @@ baz</code>
     <code>C-x C-k C-a 20 RET</code>: Add 20 value to the counter.
   </li>
   <li>
-    <code>C-x C-k TAB</code>: Insert counter. Note that we saw earlier
+    <code>C-x C-k TAB</code>: Insert counter.  Note that we saw earlier
     that this can also be done with <code>F3</code>.
   </li>
   <li>
@@ -1324,18 +1325,18 @@ baz</code>
 </ul>
 <p>
   Note that all of the above commands work fine even when no macro
-  recording is in progress. For example, earlier we saw
+  recording is in progress.  For example, earlier we saw
   that <code>F3</code> inserts the macro counter value only when a
-  macro recording is in progress. However, <code>C-x C-k TAB</code>
+  macro recording is in progress.  However, <code>C-x C-k TAB</code>
   inserts the macro counter value even when a macro recording is not
   in progress.
 </p>
 <p>
   Another interesting feature mentioned in the book is querying for
-  user input while recording a keyboard macro. The key sequence to
-  query the user is <code>C-x C-k q</code> or <code>C-x q</code>. Here
-  are a few complete key sequences that may be used to demonstrate
-  this feature:
+  user input while recording a keyboard macro.  The key sequence to
+  query the user is <code>C-x C-k q</code> or <code>C-x q</code>.
+  Here are a few complete key sequences that may be used to
+  demonstrate this feature:
 </p>
 <ul>
   <li>
@@ -1344,18 +1345,18 @@ baz</code>
     typing <code>F4</code> one more time, the macro first
     inserts <code>foo</code> at the beginning of the next line, then
     it prompts us to decide if we want to continue with macro
-    execution. If we type type <code>y</code>, then it continues with
-    the remainder of the macro execution. If we type <code>n</code>,
+    execution.  If we type type <code>y</code>, then it continues with
+    the remainder of the macro execution.  If we type <code>n</code>,
     it skips the rest of the macro iteration and continue with the
     next iteration of the macro (such as when we are replaying the
-    macro multiple times with a digit argument). If we
+    macro multiple times with a digit argument).  If we
     type <code>RET</code>, it skips the rest of the macro execution as
     well as skip any further iterations of the macro (in case we are
     replaying the macro multiple times).
   </li>
   <li>
     <code>F3 C-a foo: C-x C-k q C-e :bar F4</code>: Same as above but
-    slightly longer key sequence. The key sequence in the previous
+    slightly longer key sequence.  The key sequence in the previous
     point is easier to remember and type.
   </li>
 </ul>
@@ -1367,11 +1368,11 @@ baz</code>
 </p>
 <p>
   Note that the key sequence <code>C-l</code> behaves a little
-  differently from the regular <code>C-l</code>. Unlike the
+  differently from the regular <code>C-l</code>.  Unlike the
   regular <code>C-l</code>, successive invocations of this key
   sequence during macro query does not cause the window to reposition
   at various places (centre, top, and bottom by default) in a cyclical
-  order. Successive invocations of <code>C-l</code> during macro
+  order.  Successive invocations of <code>C-l</code> during macro
   query, leaves the screen centred.
 </p>
 <p>
@@ -1388,7 +1389,7 @@ baz</code>
   </li>
   <li>
     <code>C-x C-k n foo RET</code>: Assign the name <code>foo</code>
-    to the current keyboard macro in the keyboard macro ring. Now the
+    to the current keyboard macro in the keyboard macro ring.  Now the
     macro can be executed by simply typing <code>M-x foo RET</code>.
   </li>
   <li>
@@ -1440,8 +1441,8 @@ baz</code>
     <code>M-: (open-dribble-file nil) RET</code>: Close the dribble file.
   </li>
 </ul>
-<h3 id="text-expansion">Text Expansion</h3>
-<h4 id="abbrev">Abbrev</h4>
+<h2 id="text-expansion">Text Expansion</h2>
+<h3 id="abbrev">Abbrev</h3>
 <p>
   Here are some Abbrev commands:
 </p>
@@ -1492,9 +1493,596 @@ baz</code>
     to <code>World</code>.
   </li>
   <li>
-    <code>Hello SPC evry C-x a i l Everyone RET</code>: Define a
+    <code>Hello SPC evry C-x a i g Everyone RET</code>: Define a
     global abbreviation <code>evry</code> such that whenever we
     type <code>evry</code>, it automatically expands
     to <code>Everyone</code>.
   </li>
+</ul>
+<p>
+  Although not mentioned in the book, these commands can be used with
+  a numeric prefix argument to specify the number of words before the
+  cursor to be picked for expansion for the abbreviation we are about
+  to define.  Here are some complete key sequences that demonstrate
+  this:
+</p>
+<ul>
+  <li>
+    <code>I use Debian GNU/Linux C-3 C-x a l dgl</code>: Define a
+    mode-specific abbreviation <code>dgl</code> such that whenever we
+    type <code>dgl</code>, it automatically expands to <code>Debian
+    GNU/Linux</code>.
+  </li>
+  <li>
+    <code>I use Debian GNU/Linux C-3 C-x a g dgl</code>: Similar to
+    above but define a global abbreviation.
+  </li>
+</ul>
+<h3 id="dabbrev">DAbbrev</h3>
+<p>
+  There are two key bindings discussed in the book:
+</p>
+<ul>
+  <li>
+    <code>M-/</code>: Expand the word just before the cursor to the
+    nearest preceding word for which the current word is a prefix.  If
+    no suitable preceding word is found, expand it to the nearest
+    succeeding word for which the current word is a prefix.  Repeating
+    this command cycles between the other matches found.
+  </li>
+  <li>
+    <code>C-M-/</code>: Find all words in the buffer that has the
+    current word before the cursor as the prefix and expand the
+    current word to the longest common prefix of all these matching
+    words.  However, if the longest common prefix of the matching
+    words is same as the word before the cursor, then present them as
+    suggestions for completion.  If there is exactly one matching
+    word, expand the word before the cursor to that word.
+  </li>
+</ul>
+<p>
+  The last command above takes a little while to get used to it.  The
+  following steps demonstrate how it works.
+</p>
+<ol>
+  <li>
+    <p>
+      Create a text buffer with the following line:
+    </p>
+    <pre><code>abacus apple appliance application</code></pre>
+  </li>
+  <li>
+    Type <code>ap</code> followed by <code>C-M-/</code>, the word
+    expands to <code>appl</code> since that is the longest common
+    prefix among the matching words.
+  </li>
+  <li>
+    Type <code>C-M-/</code> again.  The matching
+    words <code>apple</code>, <code>appliance</code>,
+    and <code>application</code> are presented as possible completions
+    in a temporary buffer named <code>*Completions*</code>.
+  </li>
+  <li>
+    Now type <code>ic</code>, so that the word before the cursor
+    becomes <code>applic</code>, and type <code>C-M-/</code> again.
+    Now the word before the cursor expands to <code>application</code>
+    because that is the only possible completion now.
+  </li>
+</ol>
+<p>
+  Note that by default DAbbrev looks for matching words in other open
+  buffers too and offers them as completions.
+</p>
+<h3 id="hippie-expand">Hippie Expand</h3>
+<p>
+  Unlike DAbbrev, Hippie Expand goes beyond open buffers to look for
+  expansions.  The variable
+  <code>hippie-expand-try-functions-list</code> contains a list of
+  expansion functions that <code>hippie-expand</code> uses to look for
+  completions.  The book suggests remapping <code>M-/</code> to
+  invoke <code>hippie-expand</code> with this Elisp code:
+</p>
+<pre><code>(global-set-key [remap dabbrev-expand] 'hippie-expand)</code></pre>
+<p>
+  By default, Hippie Expand can complete file names, complete lines,
+  etc.  For example, if there is a line for which the current line is
+  a prefix (leading whitespace is ignored while checking for matches),
+  then the current line is expanded to the other matchine line.
+</p>
+<p>
+  Repeated invocations of this command cycles between the matches.
+</p>
+<p>
+  As mentioned earlier, the
+  variable <code>hippie-expand-try-functions-list</code> determines
+  which expansion algorithms are used.  Here is an example that
+  demonstrates how we can alter this variable:
+</p>
+<pre><code>(setq hippie-expand-try-functions-list '(try-complete-lisp-symbol))</code></pre>
+<p>
+  The above rather unrealistic example severely restricts the
+  expansions Hippie Expand can perform.  With the above example, word
+  expansion, line expansion, file name completion, etc. are disabled.
+  Only Elisp symbols are expanded.  For example,
+  typing <code>white</code> followed by <code>M-/</code> first expands
+  the word to <code>whitespace</code> because all matching Elisp
+  symbols have that as the longest common prefix.
+  Typing <code>M-/</code> over and over again, completes the expansion
+  further with various Elisp symbols.
+</p>
+<p>
+  As mentioned before, the above example is highly atypical.  The
+  above example is only meant for demonstrating how this variable can
+  be set.  Typically, users add more functions to this variable to add
+  more expansion capabilities.
+</p>
+<h2 id="indenting">Indenting</h2>
+<h3 id="electric-indentation">Electric Indentation</h3>
+<p>
+  Emacs automatically indents code as we type.  The major mode decides
+  the automatic indentation behaviour.  The automatic identation is
+  provided by a global minor mode named
+  <code>electric-indent-mode</code> which is enabled by default.
+</p>
+<p>
+<h3 id="indenting-current-line">Indenting Current Line</h3>
+<p>
+  Typing <code>TAB</code> indents the current line.  In many modes
+  like <code>emacs-lisp-mode</code>, <code>python-mode</code>,
+  <code>text-mode</code>, etc. the command
+  <code>indent-for-tab-command</code> is bound to it.  But there are
+  modes that bind another command to <code>TAB</code>.  For example,
+  in <code>c-mode</code>, the command
+  <code>c-indent-line-or-region</code> is bound to <code>TAB</code>.
+</p>
+<p>
+  The behaviour of <code>indent-for-tab-command</code> is determined
+  by the variables <code>tab-always-indent</code>.  It
+  is <code>t</code> by default which causes <code>TAB</code> to just
+  indent the current line.  If set to <code>nil</code>,
+  hitting <code>TAB</code> indents the current line only if the point
+  is before the first non-whitespace character of the line.  Otherwise
+  it inserts tabs or spaces to move the point to the next tab stop
+  column.  If set to <code>'complete</code>, typing <code>TAB</code>
+  first tries to indent the current line but if the line is already
+  correctly indented, then it tries to complete the thing at point.
+</p>
+<p>
+  When <code>indent-for-tab-command</code> is bound
+  to <code>TAB</code> and when <code>indent-for-tab-command</code>
+  decides to indent the current line, it calls the function in the
+  variable <code>indent-line-function</code> to perform the
+  indentation.  Here is a table that shows
+  what <code>indent-line-function</code> contains in a few major modes
+  where <code>indent-for-tab-command</code> command is bound
+  to <code>TAB</code>:
+</p>
+<table class="grid">
+  <tr>
+    <th><code>major-mode</code></th>
+    <th><code>indent-line-function</code></th>
+  </tr>
+  <tr>
+    <td><code>emacs-lisp-mode</code></td>
+    <td><code>lisp-indent-line</code></td>
+  </tr>
+  <tr>
+    <td><code>python-mode</code></td>
+    <td><code>python-indent-line-function</code></td>
+  </tr>
+  <tr>
+    <td><code>text-mode</code></td>
+    <td><code>indent-relative</code></td>
+  </tr>
+</table>
+<p>
+  While <code>lisp-indent-line</code> and
+  <code>python-indent-line</code> attempt to indent the current line
+  according to the syntax of the language,
+  <code>indent-relative</code> inserts tabs and spaces to move the
+  point to the next indentation point where the indentation point is
+  defined as the next non-whitespace character following whitespace.
+  This can be useful in aligning the point with words in the previous
+  line.  If the previous line has no indentation point (e.g., the
+  previous line is an empty line or does not have whitespace),
+  then <code>tab-to-tab-stop</code> is invoked which inserts tabs or
+  spaces to move the point to the next tab stop column.
+</p>
+<p>
+  The command <code>tab-to-tab-stop</code> command introduced in the
+  previous paragraph can also be invoked with <code>M-i</code>.
+</p>
+<h3 id="use-only-spaces-for-indentation">Use Only Spaces for Indentation</h3>
+<p>
+  By default, Emacs uses a mix of tabs and spaces for indentation and
+  alignment.  When it needs to align the first non-whitespace
+  character of a line with a certain token in the previous line, it
+  would insert as many tabs as it can followed by a few spaces if
+  necessary to attain the desired alignment.  To force Emacs to always
+  use spaces for indentation and alignment, add the following Elisp
+  code to the Emacs initialization file:
+</p>
+<pre><code>(setq-default indent-tabs-mode nil)</code></pre>
+<h3 id="tab-width">Tab Width</h3>
+<p>
+  The variable <code>tab-width</code> is used in various contexts
+  while performing indentation and alignment.  For example,
+  when <code>indent-tabs-mode</code> is enabled, for
+  every <code>tab-width</code> columns of indentation required, Emacs
+  inserts a tab to indent the code.
+</p>
+<p>
+  Also, when <code>indent-tabs-mode</code> is set to <code>nil</code>,
+  typing <code>M-i</code> inserts as many spaces as necessary to move
+  the point to the next tab stop column where the distance between two
+  tab stops is assumed to be <code>tab-width</code>.
+</p>
+<h3 id="edit-tab-stops">Edit Tab Stops</h3>
+<p>
+  The behaviour of <code>M-i</code> can be customised further by
+  manually defining tab stop columns.  Type <code>M-x edit-tab-stops
+  RET</code> first. A buffer named <code>*Tab Stops*</code> appears.
+  The second and third line of this buffer contains a ruler to
+  indicate the column numbers.  Type <code>:</code> (i.e., colon) in
+  the first line whereever you want to define tab stops.  Then
+  type <code>C-c C-c</code> to install the changes.  Now
+  when <code>M-i</code> is typed in a text buffer, each time it
+  inserts as many tabs (if <code>indent-tabs-mode</code>
+  is <code>t</code>) or spaces as necessary to move the point to the
+  next tab stop column as defined earlier in the <code>*Tab
+  Stops*</code> buffer.
+</p>
+<h3 id="indent-regions">Indent Region</h3>
+<p>
+  Typing <code>TAB</code> when a region is active indents the region
+  according to the major mode's indentation rules.  It invokes the
+  same command as the one invoked when we type <code>TAB</code> to
+  indent a line.  The command bound to it takes care of indenting
+  region.  For example, if <code>TAB</code> is bound
+  to <code>indent-for-tab-command</code>, the latter checks if a
+  region is active and if it is, then it simply
+  calls <code>indent-region</code>.
+</p>
+<p>
+  The <code>indent-region</code> command can be invoked explicitly
+  using <code>C-M-\</code>.  If <code>fill-prefix</code> has been set,
+  say with <code>C-x .</code>, then it is added to every line in the
+  region being indented.  With a numeric prefix argument, each line in
+  the region is indented to the column indicated by the argument.  For
+  example, <code>C-M-1 C-M-0 C-M-\</code> indents each line of the
+  region to column 10.
+</p>
+<h3 id="indent-rigidly">Indent Rigidly</h3>
+<p>
+  When we want to rigidly control how a region must be indented, we
+  can type <code>C-x TAB</code> to perform rigid indentation.  Doing
+  so allows us to bypass the indentation rules of the major mode.
+  Instead we control exactly how the indentation must be done.  The
+  following complete key sequences demonstrates a few examples of
+  rigid indentation:
+</p>
+<ol>
+  <li>
+    <code>C-x TAB</code>: Interactively indent region.
+    Type <code>&lt;right&gt;</code> or <code>&lt;left&gt;</code> to
+    increase or decrease indentation by one space, respectively.
+    Type <code>&lt;right&gt;</code> or <code>&lt;left&gt;</code> to
+    increase or decrease indentation by one tab stop, respectively.
+  </li>
+  <li>
+	<code>C-6 C-x TAB</code>: Indent region by 6 spaces.  Appropriate
+	number of tabs and spaces are inserted to achieve an apparent 6
+	spaces of indentation.  Whether tabs are inserted or not and how
+	many tabs are inserted depend on the values
+	of <code>indent-tabs-mode</code> and <code>tab-width</code> as
+	explained in the previous sections.
+  </li>
+  <li>
+	<code>C-- C-6 C-x TAB</code>: Reduce indentation of region by 6
+	spaces.
+  </li>
+</ol>
+<h2 id="sorting">Sorting</h2>
+<p>
+  Assuming a region is active, here are some complete key sequences
+  for various sorting commands:
+</p>
+<ul>
+  <li>
+    <code>M-x sort-lines RET</code>: Sort lines alphabetically.
+  </li>
+  <li>
+    <code>C-u M-x sort-lines RET</code>: Reverse sort lines
+    alphabetically.
+  </li>
+  <li>
+    <code>M-x sort-fields RET</code>: Sort lines alphabetically by the
+    first field alphabetically.  Fields are separated by whitespace.
+  </li>
+  <li>
+    <code>M-2 M-x sort-fields RET</code>: Sort lines alphabetically
+    by the second field.
+  </li>
+  <li>
+    <code>M-2 M-x sort-numeric-fields RET</code>: Sort lines
+    numerically by the second field.
+  </li>
+  <li>
+    <code>M-x sort-columns RET</code>: Sort columns between the column
+    position of mark and column position of point.
+  </li>
+  <li>
+    <code>M-x sort-regexp-fields RET [A-Z]*->\(.*\) RET \1 RET</code>:
+    Sort the strings in each line matched by the given regular
+    expression by the field matched by the first (and the only)
+    capturing group in the regular expression.  The part of each line
+    that is not matched by the regular expression remains intact.
+    They never move.  Only the part of each line that is matched by
+    the regular expression moves around during the sorting operation.
+  </li>
+  <li>
+    <code>M-x sort-regexp-fields RET</code>: Sort paragraphs
+    alphabetically.
+  </li>
+</ul>
+<h2 id="aligning">Aligning</h2>
+<p>
+  The two simple commands for aligning text introduced first in the
+  book are:
+</p>
+<ul>
+  <li>
+    <code>M-x align RET</code>: Aligns current region.
+  </li>
+  <li>
+    <code>M-x align-current RET</code>: Aligns current section.  A
+    section is a group of consecutive lines both below, above, and
+    including the current line for which the first alignment rule
+    (according to the major mode) applies.
+  </li>
+</ul>
+<p>
+  Consider the following Elisp buffer:
+</p>
+<pre>
+<code>(defvar person '(("name" . "Alice")
+                 ("city" . "London")
+                 ("country" . "UK")))</code>
+</pre>
+<p>
+  If we type <code>C-x h</code> followed by <code>M-x align
+  RET</code>, or if we put the cursor on any line of the above code
+  and type <code>M-x align-current RET</code>, we get the following
+  result:
+</p>
+<pre>
+<code>(defvar alice '(("name"    . "Alice")
+                ("city"    . "London")
+                ("country" . "UK")))</code>
+</pre>
+<p>
+  There is also an <code>align-regexp</code> command that allows us to
+  parts of lines by regular expressions.  The following experiments
+  demonstrate this command.
+</p>
+<ol>
+  <li>
+    First create a buffer with the following text:
+<pre>
+<code>Alice:London:UK
+Bob:Paris:France
+Carol:Tokyo:Japan</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x h</code> followed by <code>C-u M-x align-regexp
+        \(\s-*\): RET 1 RET 1 RET y RET</code>.  The result looks like
+        this:
+    </p>
+<pre>
+<code>Alice :London :UK
+Bob   :Paris  :France
+Carol :Tokyo  :Japan</code>
+</pre>
+    <p>
+      Note that the regular expression capturing
+      group <code>\(\s-*\)</code> appears as the default in the
+      minibuffer.  We only add <code>:</code> to it.  Similarly the
+      two occurrences of <code>1</code> appear as default values.  The
+      first <code>1</code> is the default for determining which
+      parenthesis group to modify.  The second <code>1</code> is the
+      default for amount of spacing to be used during alignment.
+      The <code>y</code> in the end specifies that we want to repeat
+      the alignment throughout the line.
+    </p>
+  </li>
+  <li>
+      Type <code>C-/</code> to undo the changes done in the last step.
+      Then type <code>C-x h</code> followed by <code>M-x align-regexp
+      : RET</code>.  This is a shorter equivalent to the previous
+      command.  The output is same as before.
+  </li>
+  <li>
+    <p>
+      Type <code>C-/</code> to undo the changes done in the last step.
+      Then type <code>C-x h</code> followed by <code>C-u M-x
+      align-regexp :\(\s-*\) RET 1 RET 1 y RET</code>.  Note that the
+      only difference this time is that we place the colon before the
+      parenthesis group.  The result looks like this:
+    </p>
+<pre>
+<code>Alice: London: UK
+Bob:   Paris:  France
+Carol: Tokyo:  Japan</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-/</code> to undo the changes done in the last step.
+      Then type <code>C-x h</code> followed by <code>C-u M-x
+      align-regexp \(\s-*\): RET 1 RET 0 y RET</code>.  Note that the
+      only difference this time is that we place the colon before the
+      parenthesis group.  We specify <code>0</code> as the amount of
+      spacing this time, so a minimum of zero spacing is used for
+      alignment when possible.  The result looks like the following.
+      Notice the lack of space after <code>Alice</code>
+      and <code>Carol</code>.
+    </p>
+<pre>
+<code>Alice:London:UK
+Bob  :Paris :France
+Carol:Tokyo :Japan</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-/</code> to undo the changes done in the last step.
+      Then type <code>C-x h</code> followed by <code>C-u M-x
+      align-regexp \(\s-*\): RET 1 RET 5 y RET</code>.  Note that the
+      only difference this time is that we place the colon before the
+      parenthesis group.  We specify <code>5</code> as the amount of
+      spacing this time, so a minimum of 5 spaces are used for
+      alignment.
+    </p>
+<pre>
+<code>Alice     :London     :UK
+Bob       :Paris      :France
+Carol     :Tokyo      :Japan</code>
+</pre>
+  </li>
+</ol>
+<h2 id="zap-to-char">Zap to Char</h2>
+<p>
+  The steps below demonstrate the <code>zap-to-char</code> command
+  that is bound to the key sequence <code>M-z</code>.  This command
+  kills up to and including the given character.
+</p>
+<ol>
+  <li>
+    <p>
+      Create a buffer with the following text:
+    </p>
+    <pre><code>foo bar baz qux quux</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-&lt;</code> to go to the beginning of the buffer
+      and then type <code>M-z r</code> to kill text up to and
+      including the first occurrence of the letter <code>r</code>.
+      The buffer now looks like this:
+    </p>
+    <pre><code>  baz qux quux</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-&lt;</code> to go to the beginning of the buffer
+      and then type <code>M-z x</code> to kill text up to and
+      including the first occurrence of the letter <code>x</code>.
+      The buffer now looks like this:
+    </p>
+    <pre><code> quux</code></pre>
+  </li>
+  <li>
+    <p>
+      Now type <code>C-e SPC C-y</code> to reinsert the killed text at
+      the end of the line.  The buffer now looks like this:
+    </p>
+    <pre><code> quux foo bar baz qux</code></pre>
+    <p>
+      Note that the last step yanks both chunks of text that were
+      killed in the previous two steps.  This is due to the fact that
+      consecutive kills append to the same stretch of text in the kill
+      ring.  This fact was discussed earlier in
+      section <a href="#append-kill">Append Kill</a>
+    </p>
+  </li>
+  <li>
+    <p>
+      Now type <code>M-&lt;</code> to go back to the beginning of the
+      buffer again.  Then type <code>M-2 M-z a</code>.  The numeric
+      argument <code>2</code> specifies that we want to zap up to the
+      second occurrence of the letter <code>a</code>.  The buffer
+      looks like this:
+    </p>
+    <pre><code>z qux</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-e C-y</code> to reinsert the text killed in the
+      previous step at the end of the line.  The buffer looks like
+      this now:
+    </p>
+    <pre><code>z qux quux foo bar ba</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-- M-2 M-z x</code> to zap backward up to the second
+      occurrence of the letter <code>x</code>.  The buffer looks like
+      this now:
+    </p>
+    <pre><code>z qu</code></pre>
+  </li>
+</ol>
+<h2 id="zap-up-to-char">Zap up to Char</h2>
+<p>
+  Here are some steps that demonstrate the <code>zap-up-to-char</code>
+  command.  This command kills text up to, but not including, the
+  given character.
+</p>
+<ol>
+  <li>
+    <p>
+      Create a buffer with the following text:
+    </p>
+    <pre><code>foo bar baz qux quux</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-&lt;</code> to go to the beginning of the buffer.
+      Then type <code>M-x zap-up-to-char RET b</code>.  The result now
+      looks like this:
+    </p>
+    <pre><code>bar baz qux quux</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-2 M-x zap-up-to-char RET q</code>.  The result now
+      looks like this:
+    </p>
+    <pre><code>quux</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>C-e SPC C-k</code> to reinsert the killed text at the end
+      of the buffer:
+    </p>
+    <pre><code>quux foo bar baz qux </code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-2 M-x zap-up-to-char RET b</code>.  The buffer now
+      looks like this:
+    </p>
+    <pre><code>quux foo b</code></pre>
+  </li>
+</ol>
+<p>
+  The author of the book suggests binding this command
+  to <code>M-S-z</code> with the following Elisp code:
+</p>
+<pre><code>(global-set-key (kbd "M-S-z") 'zap-up-to-char)</code></pre>
+<p>
+  The above code, however, does not create the binding successfully.
+  Therefore, use the following Elisp code instead:
+</p>
+<pre><code>(global-set-key (kbd "M-Z") 'zap-up-to-char)</code></pre>
+<p>
+  Now the commands presented in this section above can be typed as
+  follows:
+</p>
+<ul>
+  <li><code>M-Z b</code></li>
+  <li><code>M-2 M-Z q</code></li>
+  <li><code>M-- M-Z b</code></li>
 </ul>

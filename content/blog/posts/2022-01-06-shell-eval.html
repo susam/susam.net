@@ -65,12 +65,13 @@ cat: 'bar"': No such file or directory</samp>
 <p>
   The hexadecimal code <samp>20</samp> in the output confirms that the
   space character is present in the value of <code>IFS</code>.
-  Therefore, as per the POSIX specification, <code>$cmd</code> first
-  expands to <code>cat "foo bar"</code>, then it is split into three
-  fields <code>cat</code>, <code>"foo</code>, and <code>bar"</code>,
-  and then the command <code>cat</code> is executed with two
-  arguments <code>"foo</code> and <code>bar"</code>. Since no files
-  with those names exist, an error occurs.
+  Therefore, according to the POSIX specification, <code>$cmd</code>
+  first expands to <code>cat "foo bar"</code>, then it is split into
+  three fields <code>cat</code>, <code>"foo</code>,
+  and <code>bar"</code>, and then the command <code>cat</code> is
+  executed with two arguments <code>"foo</code>
+  and <code>bar"</code>. Since no files with those names exist, an
+  error occurs.
 </p>
 <h2 id="experiment-2">Experiment 2</h2>
 <p>
@@ -82,7 +83,7 @@ dash: 8: cat "foo bar": not found</samp>
 </pre>
 <p>
   The excerpt from the POSIX.1-2017 specification quoted in the
-  previous section shows that field splitting does not for occur
+  previous section shows that field splitting does not occur for
   variable expansions within double quotes. So the entire
   expansion <code>cat "foo bar"</code> remains intact as a single
   field and is then executed as a command. Since there is no such

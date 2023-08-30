@@ -94,6 +94,12 @@ noscript div {
 .dark {
   display: none;
 }
+.ctrl-l:before {
+  content: "^L";
+}
+.hl {
+  color: {{ light-hl-color }};
+}
 @media (prefers-color-scheme: dark) {
   figure.soft img {
     opacity: 0.7143; /* (0xbb - 0x11) / (0xff - 0x11) */
@@ -106,5 +112,8 @@ noscript div {
   }
   .dark {
     display: block;
+  }
+  .hl {
+    color: {{ dark-hl-color }};
   }
 }

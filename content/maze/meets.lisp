@@ -849,34 +849,44 @@
   :topic "Chapter 5: Pages 232-233: The Theory of Editing: Keyboard Macros: Saving and Recalling"
   :duration 40
   :members 9)
-  (:date "2023-07-15 10:00"
+ (:date "2023-07-15 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 233-235: The Theory of Editing: Keyboard Macros: Lossage, Practical Uses for Keyboard Macros"
   :duration 40
   :members 5)
-  (:date "2023-07-16 10:00"
+ (:date "2023-07-16 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 235-236: The Theory of Editing: Keyboard Macros: Practical Uses for Keyboard Macros"
   :duration 35
   :members 6)
-  (:date "2023-07-22 10:00"
+ (:date "2023-07-22 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 236-239: The Theory of Editing: Text Expansion: Abbrev"
   :duration 30
   :members 5)
-  (:date "2023-07-23 10:00"
+ (:date "2023-07-23 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 239-242: The Theory of Editing: Text Expansion: DAbbrev and Hippie Expand"
   :duration 45
   :members 5)
-  (:date "2023-07-29 10:00"
+ (:date "2023-07-29 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 242-244: The Theory of Editing: Indenting the Current Line"
-  :duration 40
-  :members -1)
-  (:date "2023-07-30 10:00"
+  :duration 50
+  :members 3)
+ (:date "2023-07-30 10:00"
   :slug "mastering-emacs"
   :topic "Chapter 5: Pages 245-246: The Theory of Editing: Indenting Regions"
   :duration 40
-  :members -1)
+  :members 5)
+ (:date "2023-08-05 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 246-250: The Theory of Editing: Sorting"
+  :duration 45
+  :members 4)
+ (:date "2023-08-06 10:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 5: Pages 250-255: The Theory of Editing: Aligning"
+  :duration 50
+  :members 8)
  )

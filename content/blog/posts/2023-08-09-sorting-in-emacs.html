@@ -1,12 +1,18 @@
 <!-- title: Sorting in Emacs -->
 <!-- tag: Emacs Technology -->
+<!-- import: extra.css -->
 <p>
-  In this post, we will look at some hands-on experiments that
-  demonstrate the various Emacs commands that can be used to sort
-  lines in different ways.  Of course, all the sorting commands are
-  described pretty well in the Emacs and Elisp manuals.  Here, we are
-  going to focus on a subset of those commands and present some
-  concrete examples to illustrate how they work.
+  In this article, we will perform a series of hands-on experiments
+  that demonstrate the various Emacs commands that can be used to sort
+  text in different ways.  There is sufficient documentation available
+  for these commands in the Emacs and Elisp manuals.  In this article,
+  however, we will take a look at some concrete examples to illustrate
+  how they work.
+</p>
+<h2 id="sorting-lines">Sorting Lines</h2>
+<p>
+  Our first set of experiments demonstrates different ways to sort
+  lines.  Follow the steps below to perform these experiments.
 </p>
 <ol>
   <li> <!-- 1. Create buffer -->
@@ -156,9 +162,9 @@ Bob    100  London  LCY->CDG</code>
     <p>
       Type <code>C-x h</code> followed by <code>M-- M-2 M-x
       sort-fields RET</code> to sort the lines alphabetically by the
-      second field from the right (the third field).  Note that the
-      first two key combinations are <kbd>meta</kbd>+<kbd>-</kbd>
-      and <kbd>meta</kbd>+<kbd>2</kbd>.  They specify a negative
+      second field from the right (third from the left).  Note that
+      the first two key combinations are <kbd>meta</kbd>+<kbd>-</kbd>
+      and <kbd>meta</kbd>+<kbd>2</kbd>.  They specify the negative
       argument <code>-2</code> to sort the lines by the second field
       from the right.  The result looks like this:
     </p>
@@ -275,7 +281,7 @@ Bob    100  London  LHR->SFO</code>
     <p>
       Assuming the state of the buffer is same as that of the result
       in point 11, we will now see how to alter the previous step such
-      that when we sort the lines by the destination field, the entire
+      that when we sort the lines by the destination field, entire
       lines move along with the destination fields.  The trick is to
       ensure that the regular expression matches entire lines.  To do
       so, we make a minor change in the regular expression.
@@ -348,6 +354,120 @@ Dan    20   Tokyo   HND->LHR</code>
     </p>
   </li>
 </ol>
+<h2 id="sorting-paragraphs-and-pages">Sorting Paragraphs and Pages</h2>
+<p>
+  We have covered most of the sorting commands mentioned in the Emacs
+  manual in the previous section.  Now we will switch gears and
+  discuss a few more of the remaining ones.  We will no longer sort
+  individual lines but paragraphs and pages instead.
+</p>
+<ol>
+  <li> <!-- 1. Create buffer -->
+    <p>
+      First create a buffer with the content provided below.  Note
+      that the text below contains three form feed characters.  In
+      Emacs, they are displayed as <code class="hl">^L</code>.  Many
+      web browsers generally do not display them.
+      The <code class="hl">^L</code> symbols that we see in the text
+      below have been overlayed with CSS.  But there are actual form
+      feed characters next to those overlays.  If you are viewing this
+      post with any decent web browser, you can copy the text below
+      into your Emacs and you should be able to see the form feed
+      characters in Emacs.  In case you do not, insert them yourself
+      by typing <code>C-q C-l</code>.
+    </p>
+<pre>
+<code>Emacs is an advanced, extensible, customizable,
+self-documenting editor.
+
+Emacs editing commands operate in terms of
+characters, words, lines, sentences, paragraphs,
+pages, expressions, comments, etc.
+<span class="ctrl-l hl">&#12;</span>
+We will use the term frame to mean a graphical
+window or terminal screen occupied by Emacs.
+
+At the very bottom of the frame is an echo area.
+The main area of the frame, above the echo area,
+is called the window.
+<span class="ctrl-l hl">&#12;</span>
+The cursor in the selected window shows the
+location where most editing commands take effect,
+which is called point.
+
+If you are editing several files in Emacs, each in
+its own buffer, each buffer has its own value of
+point.
+<span class="ctrl-l hl">&#12;</span></code>
+</pre>
+  </li>
+  <li> <!-- 2. sort-pages -->
+    <p>
+      Our text has six paragraphs spread across three pages.  Each
+      form feed character represents a page break.  Type <code>C-x
+      h</code> followed by <code>M-x sort-pages RET</code> to sort the
+      pages alphabetically.  Note how the second page moves to the
+      bottom because it begins with the letter "W".  The buffer now
+      looks like this now:
+    </p>
+<pre>
+<code>Emacs is an advanced, extensible, customizable,
+self-documenting editor.
+
+Emacs editing commands operate in terms of
+characters, words, lines, sentences, paragraphs,
+pages, expressions, comments, etc.
+<span class="ctrl-l hl">&#12;</span>
+The cursor in the selected window shows the
+location where most editing commands take effect,
+which is called point.
+
+If you are editing several files in Emacs, each in
+its own buffer, each buffer has its own value of
+point.
+<span class="ctrl-l hl">&#12;</span>
+We will use the term frame to mean a graphical
+window or terminal screen occupied by Emacs.
+
+At the very bottom of the frame is an echo area.
+The main area of the frame, above the echo area,
+is called the window.
+<span class="ctrl-l hl">&#12;</span></code>
+</pre>
+  </li>
+  <li> <!-- 3. sort-paragraphs -->
+    <p>
+      Finally, type <code>C-x h</code> followed by <code>M-x
+      sort-paragraphs</code> to sort the paragraphs alphabetically.
+      The buffer looks like this now:
+    </p>
+<pre>
+<code>At the very bottom of the frame is an echo area.
+The main area of the frame, above the echo area,
+is called the window.
+
+Emacs editing commands operate in terms of
+characters, words, lines, sentences, paragraphs,
+pages, expressions, comments, etc.
+<span class="ctrl-l hl">&#12;</span>
+Emacs is an advanced, extensible, customizable,
+self-documenting editor.
+
+If you are editing several files in Emacs, each in
+its own buffer, each buffer has its own value of
+point.
+<span class="ctrl-l hl">&#12;</span>
+The cursor in the selected window shows the
+location where most editing commands take effect,
+which is called point.
+
+We will use the term frame to mean a graphical
+window or terminal screen occupied by Emacs.
+<span class="ctrl-l hl">&#12;</span></code>
+</pre>
+  </li>
+</ol>
+<h2 id="references">References</h2>
 <p>
   To read and learn more about the sorting commands described above
   refer to the following resources:

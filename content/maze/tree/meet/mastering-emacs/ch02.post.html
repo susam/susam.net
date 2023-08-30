@@ -10,11 +10,7 @@
   An index of notes for all chapters are available
   at <a href="notes.html">notes.html</a>.
 </p>
-<h2 id="notes">Notes</h2>
-<p>
-  The following notes are related to the content of the chapter.
-</p>
-<h3 id="magpie-nest-of-shiny-things">Magpie's Nest of Shiny Things</h3>
+<h2 id="magpie-nest-of-shiny-things">Magpie's Nest of Shiny Things</h2>
 <p>
   The following commands mentioned in the book invoke some interesting
   functions:
@@ -36,45 +32,45 @@
     <code>M-x doctor RET</code>: ELIZA chatterbot.
   </li>
 </ul>
-
-<h3 id="cornerstore-of-emacs">Cornerstone of Emacs</h3>
+<h2 id="cornerstore-of-emacs">Cornerstone of Emacs</h2>
 <p>
   The chapter mentions the Elisp interpreter as the cornerstone of
-  Emacs. In fact, Emacs is an editor program that runs in the Elisp
-  interpreter. When we start Emacs, what really starts first is an
-  Elisp interpreter. It executes the Elisp code of an editor program.
+  Emacs.  In fact, Emacs is an editor program that runs in the Elisp
+  interpreter.  When we start Emacs, what really starts first is an
+  Elisp interpreter.  It executes the Elisp code of an editor program.
   When that program executes, we get Emacs, the editor!
 </p>
 <p>
   This behaviour is quite the opposite of how Vim and other editors
-  behave. For example, when we start Vim or Visual Studio Code, first
-  the editor runs. The editor then provides an embedded programming
-  language that we can use to write plugins and extend the editor. For
-  example, Vim offers VimScript to let us write code using VimScript
-  and extend the functionality of Vim. However, when we start Emacs,
-  first the Elisp interpreter runs and this interpreter executes a
-  program that results in Emacs, the editor.
+  behave.  For example, when we start Vim or Visual Studio Code, first
+  the editor runs.  The editor then provides an embedded programming
+  language that we can use to write plugins and extend the editor.
+  For example, Vim offers VimScript to let us write code using
+  VimScript and extend the functionality of Vim.  However, when we
+  start Emacs, first the Elisp interpreter runs and this interpreter
+  executes a program that results in Emacs, the editor.
 </p>
-<h3 id="uptime">Uptime</h3>
+<h2 id="uptime">Uptime</h2>
 <p>
   The key sequence <code>M-x emacs-uptime RET</code> shows how long
-  the current instance of Emacs has been running. Many users have
+  the current instance of Emacs has been running.  Many users have
   month-long uptimes.
 </p>
-<h3 id="rpn-calculator">RPN Calculator</h3>
+<h2 id="rpn-calculator">RPN Calculator</h2>
 <p>
   To try out the calculator, type <code>C-x * c</code> or <code>M-x
-  calc RET</code> to start the calculator. Then to calculate something
-  like, say, 1 + (2 * 3), type <code>1 RET 2 RET 3 RET * +</code>.
+  calc RET</code> to start the calculator.  Then to calculate
+  something like, say, 1 + (2 * 3), type <code>1 RET 2 RET 3 RET *
+  +</code>.
 </p>
-<h3 id="point-and-mark">Point and Mark</h3>
+<h2 id="point-and-mark">Point and Mark</h2>
 <p>
   To try out point and mark quickly, first open a buffer with some
-  text in it. For example, open a file, say, <code>foo.txt</code>
-  using the key sequence <code>C-x C-f foo.txt RET</code>. Make sure
-  there are a few lines of text in the buffer. If it is a new buffer,
-  type some lines of text into it. Then move the point (cursor) to any
-  arbitrary place within the text. The motion keys
+  text in it.  For example, open a file, say, <code>foo.txt</code>
+  using the key sequence <code>C-x C-f foo.txt RET</code>.  Make sure
+  there are a few lines of text in the buffer.  If it is a new buffer,
+  type some lines of text into it.  Then move the point (cursor) to
+  any arbitrary place within the text.  The motion keys
   like <code>C-p</code>, <code>C-n</code>, <code>C-b</code>, <code>C-f</code>,
   etc. or simply <code>&lt;up&gt;</code>, <code>&lt;down&gt;</code>,
   <code>&lt;left&gt;</code>, <code>&lt;right&gt;</code>, etc. may be
@@ -83,41 +79,41 @@
 <p>
   Then type <code>C-SPC</code>
   (i.e., <kbd>ctrl</kbd>+<kbd>space</kbd>) to set the mark at the
-  current position of the point. Then move the point around. Emacs
+  current position of the point.  Then move the point around.  Emacs
   should now be highlighting the region between the mark (set earlier)
-  and the point. Then type <code>M-w</code>
+  and the point.  Then type <code>M-w</code>
   (i.e., <kbd>alt</kbd>+<kbd>w</kbd>) to copy the text in the selected
-  region or type <code>C-w</code> to cut the text instead. Finally,
+  region or type <code>C-w</code> to cut the text instead.  Finally,
   move the point around again and type <code>C-y</code> to paste the
   copied/cut text.
 </p>
-<h3 id="returning-to-mark">Returning to Mark</h3>
+<h2 id="returning-to-mark">Returning to Mark</h2>
 <p>
   Marks can also be used to remember a position in the buffer to which
-  we may wish to return to later. To try it out, first move the point
-  to some place in the buffer where a mark needs to be set. Then
+  we may wish to return to later.  To try it out, first move the point
+  to some place in the buffer where a mark needs to be set.  Then
   type <code>C-SPC C-SPC</code> to set the mark without activating it
   (activating a mark causes Emacs to highlight the region as explained
-  in the previous section). Then move the point to some other place in
-  the buffer. Finally, type <code>C-u C-SPC</code> to return to the
-  marked position.
+  in the previous section).  Then move the point to some other place
+  in the buffer.  Finally, type <code>C-u C-SPC</code> to return to
+  the marked position.
 </p>
-<h3 id="font-locking">Font Locking</h3>
+<h2 id="font-locking">Font Locking</h2>
 <p>
   Font locking (syntax highlighting) in Emacs is made up of faces of
-  properties (colour, font, size, etc.). Type <code>C-u C-x =</code>
+  properties (colour, font, size, etc.).  Type <code>C-u C-x =</code>
   to describe the current character (the character the cursor is on).
-  The output displays the face details as well. Alternatively,
+  The output displays the face details as well.  Alternatively,
   type <code>M-x describe-face RET</code> to describe the face of the
   character the cursor is on.
 </p>
-<h3 id="change-major-mode">Change Major Mode</h3>
+<h2 id="change-major-mode">Change Major Mode</h2>
 <p>
   Emacs almost always sets the appropriate major mode by inspecting
-  the filename or the content of the buffer. However, sometimes it can
-  be useful to set the major mode manually. For example, consider a
-  file named <code>foo.html</code> which is open in Emacs and has the
-  following text:
+  the filename or the content of the buffer.  However, sometimes it
+  can be useful to set the major mode manually.  For example, consider
+  a file named <code>foo.html</code> which is open in Emacs and has
+  the following text:
 </p>
 <pre>
 <code>&lt;h1&gt;Euler's Identity&lt;/h1&gt;
@@ -125,21 +121,21 @@
   In mathematics, &lt;em&gt;Euler's identity&lt;/em&gt; is the
   equality
 
-  \[ e^{i \pi} + 1 = 0. \]
+  \[ e^{i \pi} + 1 = 0.  \]
 
   Euler's identity is a special case of Euler's formula from complex
   analysis, which states that for any real number \( x \),
 
-  \[ e^{ix} = \cos x + i \sin x. \]
+  \[ e^{ix} = \cos x + i \sin x.  \]
 &lt;/p&gt;</code>
 </pre>
 <p>
   This is an HTML file with some LaTeX snippets that would perhaps be
-  rendered using a LaTeX rendering tool such as MathJax or KaTeX. By
+  rendered using a LaTeX rendering tool such as MathJax or KaTeX.  By
   default, when this file is opened in Emacs, the major mode is set to
-  HTML+. However, if one wants to focus on editing the embedded LaTeX
+  HTML+.  However, if one wants to focus on editing the embedded LaTeX
   content, it is possible to change the major mode to LaTeX by
-  typing <code>M-x latex-mode RET</code>. To change the major mode
+  typing <code>M-x latex-mode RET</code>.  To change the major mode
   back to HTML+, type <code>M-x mhtml-mode RET</code>.
 </p>
 <h2 id="links">Links</h2>
@@ -171,7 +167,8 @@
   </li>
   <li>
     <a href="https://www.iro.umontreal.ca/~monnier/oclosure.pdf">Open
-    Closures: Disclosing lambda’s inner monomaniac object!</a> by Stefan Monnier
+    Closures: Disclosing lambda's inner monomaniac object!</a> by
+    Stefan Monnier
   </li>
   <li>
     <a href="http://dantorop.info/project/emacs-animation/">Emacs Lisp
