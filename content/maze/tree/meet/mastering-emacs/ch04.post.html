@@ -10,7 +10,94 @@
   An index of notes for all chapters are available
   at <a href="notes.html">notes.html</a>.
 </p>
-<h2 id="notes">Notes</h2>
+<h2 id="basics">Basics</h2>
 <p>
-  To be archived here later.
+  The following complete key sequences illustrate a few basic
+  commands:
 </p>
+<ul>
+  <li>
+    <code>C-x C-f foo.txt RET</code>: Edit file
+    named <code>foo.txt</code>.
+  </li>
+  <li>
+    <code>C-x C-s</code>: Save current buffer to file.
+  </li>
+  <li>
+    <code>C-x b *scratch* RET</code>: Switch to the buffer
+    named <code>*scratch*</code>.
+  </li>
+  <li>
+    <code>C-x k *scratch* RET</code>: Kill the buffer
+    named <code>*scratch*</code>.
+  </li>
+  <li>
+    <code>C-x k RET</code>: Kill current buffer.  In fact, like the
+    previous key sequence above, typing <code>C-x k</code> first
+    prompts for the buffer name.  However, the current buffer name is
+    selected as the default value already.  As a result,
+    typing <code>RET</code> kills the current buffer.
+  </li>
+  <li>
+    <code>C-x C-b</code>: List buffers.
+  </li>
+  <li>
+    <code>C-x C-c</code>: Exit Emacs.  This command offers to save all
+    unsaved buffers before exiting Emacs.
+  </li>
+  <li>
+    <code>ESC ESC ESC</code>: This command exits the current context.
+    What that means depends very much on the context.  It performs
+    exactly one of the following actions: If there is an active
+    region, then it is deactivated; if a minibuffer is open, it gets
+    rid of it; if recursive edit is in progress, it quits one level of
+    recursive editing; if multiple windows are open, it deletes other
+    windows so that the current window becomes the only window in the
+    frame.  The aforementioned conditions are tested one by one and as
+    soon as one of the conditions is met, the corresponding action is
+    executed and the other conditions are skipped.
+  </li>
+  <li>
+    <code>C-/</code>: Undo changes.
+  </li>
+  <li>
+    <code>F10</code>: Activate the menu bar.
+  </li>
+</ul>
+<p>
+  In my experience, I have found that <code>ESC ESC ESC</code> is most
+  useful when a stray minibuffer is open but the cursor is on some
+  other buffer instead of the minibuffer and I need to close the
+  minibuffer.  Here are some steps that demonstrate this usage:
+</p>
+<ol>
+  <li>
+    <p>
+      Type <code>M-x white</code> and pause.  We now have a partially
+      typed command in the minibuffer.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now pretend that we get distracted by some imperfections in the
+      text buffer that was open earlier and we want to fix those
+      first.  Type <code>C-x o</code> to move away from the minibuffer
+      and go back to the text buffer to perform some editing tasks.
+    </p>
+    <p>
+      In this step, we could have typed <code>C-g</code> to quit the
+      minibuffer first but we did not do that.  We pretended to get
+      distracted by the text buffer and wait straight to it from the
+      minibuffer by typing <code>C-x o</code>.  At this point, the
+      point is in the text buffer and the minibuffer remains open at
+      the bottom.  This can be distracting while performing the text
+      editing tasks.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now type <code>ESC ESC ESC</code> to get rid of the minibuffer
+      at the bottom.
+    </p>
+  </li>
+</ol>

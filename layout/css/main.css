@@ -72,9 +72,6 @@ pre .cursor {
   background: {{ light-samp-color }};
   color: {{ light-fill-color }};
 }
-pre .hl {
-  color: {{ light-hl-color }};
-}
 kbd {
   border: thin solid {{ light-shade-color }};
   box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
@@ -142,9 +139,6 @@ nav a:last-child  {
   pre .cursor {
     background: {{ dark-samp-color }};
     color: {{ dark-fill-color }};
-  }
-  pre .hl {
-    color: {{ dark-hl-color }};
   }
   kbd {
     border-color: {{ dark-shade-color }};
