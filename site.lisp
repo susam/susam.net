@@ -912,24 +912,29 @@ value, next-index."
 (defun find-meet-track (slug slugs)
   (second (first (remove-if-not (lambda (x) (string= (first x) slug)) slugs))))
 
-(defun meet-row-html (meet slugs row-id layout params)
+(defun meet-row-html (meet previous-meet slugs row-id layout params)
   "Create HTML to represent a single row of meeting entry."
-  (add-value "row-id" row-id params)
-  (add-value "class" (if (future-p meet) "future" "past") params)
-  (add-value "date" (format-meet-date (getf meet :date)) params)
-  (add-value "duration" (getf meet :duration) params)
-  (add-value "members" (if (future-p meet) "-" (getf meet :members)) params)
-  (add-value "topic" (fstr "~a: ~a"
-                           (find-meet-track (getf meet :slug) slugs)
-                           (getf meet :topic)) params)
-  (render layout params))
+  (let ((upcoming-attr (if (and previous-meet (not (future-p previous-meet))
+                                (future-p meet)) " id=\"upcoming\"" ""))
+        (topic (fstr "~a: ~a" (find-meet-track (getf meet :slug) slugs)
+                     (getf meet :topic))))
+    (add-value "row-id" row-id params)
+    (add-value "upcoming" upcoming-attr params)
+    (add-value "class" (if (future-p meet) "future" "past") params)
+    (add-value "date" (format-meet-date (getf meet :date)) params)
+    (add-value "duration" (getf meet :duration) params)
+    (add-value "members" (if (future-p meet) "-" (getf meet :members)) params)
+    (add-value "topic" topic params)
+    (render layout params)))
 
 (defun meet-rows-html (meets slugs layout params)
   "Create HTML to represent all rows of meeting entries"
-  (join-strings
-   (loop for row-id from 1 to (length meets)
-         for meet in meets
-         collect (meet-row-html meet slugs row-id layout params))))
+  (let ((previous-meet nil))
+    (join-strings
+     (loop for row-id from 1 to (length meets)
+           for meet in meets
+           collect (meet-row-html meet previous-meet slugs row-id layout params)
+           do (setf previous-meet meet)))))
 
 (defun meet-log-path (current-slug other-slug)
   "Return relative path to meeting track log page."
