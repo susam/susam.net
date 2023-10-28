@@ -40,7 +40,8 @@
         overflow: auto;
       }
       pre {
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
       }
       input {
         color: #ccc;
@@ -151,6 +152,7 @@
         buttonRotate.addEventListener('click', actionRotate)
         buttonBlock.addEventListener('click', actionBlock)
         buttonRepeat.addEventListener('click', actionRepeat)
+        buttonSleep.addEventListener('click', actionSleep)
         buttonDelete.addEventListener('click', actionDelete)
         buttonHelp.addEventListener('click', actionHelp)
         window.addEventListener('hashchange', actionHash)
@@ -207,10 +209,7 @@
         }
         clearHelp()
         log('draw', text.value)
-        if (looperTimer !== null) {
-          window.clearTimeout(looperTimer)
-          looperTimer = null
-        }
+        stopLooper()
         ctx.fillStyle = COLORS[0]
         ctx.fillRect(0, 0, GRID_SIZE * SCALE, GRID_SIZE * SCALE)
         evaluate()
@@ -252,6 +251,9 @@
         while (loop && idx < text.value.length) {
           loop = iterate()
         }
+        if (loop === null) {
+          return
+        }
         if (idx < text.value.length) {
           looperTimer = window.setTimeout(looper, SLEEP_INTERVAL)
         }
@@ -267,6 +269,13 @@
             status.innerHTML = msg
             lastUpdate = now
           }
+        }
+      }
+
+      function stopLooper () {
+        if (looperTimer !== null) {
+          window.clearTimeout(looperTimer)
+          looperTimer = null
         }
       }
 
@@ -303,7 +312,7 @@
         } else if (op === ']') {
           if (stack.length === 0) {
             error('Unexpected &lsquo;]&rsquo;')
-            return
+            return null
           }
           const [jmpIdx, count] = stack.pop()
           if (count !== 0) {
@@ -314,7 +323,7 @@
           }
         } else {
           error('Unknown operation')
-          return
+          return null
         }
         logOp(ops, execIdx, idx, op, color, x, y, heading)
         ++ops
@@ -409,6 +418,12 @@
         draw()
       }
 
+      function actionSleep (e) {
+        e.preventDefault()
+        insertText('S')
+        draw()
+      }
+
       function actionDelete (e) {
         e.preventDefault()
         deleteText()
@@ -423,6 +438,7 @@
 
       function toggleHelp () {
         if (info.style.display === 'none') {
+          stopLooper()
           canvas.style.display = 'none'
           info.style.display = 'block'
           buttonHelp.title = 'Hide help'
