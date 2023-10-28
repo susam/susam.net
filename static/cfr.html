@@ -1,5 +1,5 @@
 <!--
-  CFR Brackets 0.2.0
+  CFR Brackets 0.3.0
   Copyright (c) 2023 Susam Pal
   Source: https://github.com/susam/cfr
   License: MIT
@@ -15,16 +15,16 @@
         background: #111;
         margin: 0;
       }
-      canvas, pre, input, button {
+      canvas, section, pre, input, button {
         background: #000;
         box-sizing: border-box;
         border: 1px solid #333;
       }
-      canvas, pre, input {
+      canvas, section, pre, input {
         display: block;
         margin: 0 auto;
       }
-      pre, input, button, a {
+      section, pre, input, button, a {
         font-family: monospace,monospace;
         font-size: 1em;
         color: #999;
@@ -35,8 +35,13 @@
       canvas {
         image-rendering: pixelated;
       }
-      pre {
+      section {
+        padding: 0 1em;
         overflow: auto;
+      }
+      pre {
+        overflow-x: auto;
+        overflow-y: hidden;
       }
       input {
         color: #ccc;
@@ -58,10 +63,12 @@
       div, footer {
         text-align: center;
       }
-      footer a {
-        line-height: 4;
-        margin-right: 1.5em;
+      a {
         color: #69c;
+      }
+      footer a {
+        line-height: 5;
+        margin-right: 1.5em;
       }
       footer a:last-child {
         margin-right: 0;
@@ -79,21 +86,20 @@
       const PANEL_HEIGHT = 40
       const MAX_CODE_LEN = 256
       const MAX_DIST_LEN = 64
-      const DEMOS = [
-        '[[[[[[[[[[[[[[[FF]]]]]]]RRF[RRR]]]]]]C]]]',
-        '[[[[[FF]]]]]',
-        '[[[[[[[FF]]]]RCC]]]',
-        '[[[[[[[[[[[[[[F]]]]RCC]]]RR[FFF][RRR][FF]]]]]]]]',
-        'R[[[[[[[[[[[[[[FF]]]]]]]RRF[RRR]C]]]]]]]',
-        '[[[[[[[[[[[[FF]]]]RR]][[[FFF]]]RR[[F]][RRR]CC]]]]]]',
-        '[[[[[[[[[[[[[[[FF]]]]RR]][[[FFF]]]RR[[F]][RRR]CC]]]]]]R]]]',
-        '[[[[[[[[[[[[[[[FF]]]]C]]]RRF[RRR]F]]]]]]]]'
-      ]
+      const DEMOS = {
+        0: '[[[[[[[[[[[[[[[FF]]]]]]]RRF[RRR]]]]]]C]]]',
+        1: '[[[[[[[[[[[[[[[FF]]]]C]]]RRF[RRR]F]]]]]]]]',
+        2: 'R[[[[[[[[[[[[[[FF]]]]]]]RRF[RRR]C]]]]]]]',
+        3: '[[[[[[[[[[[[[[F]]]]RCC]]]RR[FFF][RRR][FF]]]]]]]]',
+        4: '[[[[[[[[[[[[FF]]]]RR]][[[FFF]]]RR[[F]][RRR]CC]]]]]]',
+        5: '[[[[[[[[[[[[[[[FF]]]]RR]][[[FFF]]]RR[[F]][RRR]CC]]]]]]R]]]'
+      }
 
       let startTime = null
       let canvas
       let canvasSize
       let ctx
+      let info
       let status
       let text
 
@@ -103,14 +109,16 @@
       let buttonBlock
       let buttonRepeat
       let buttonDelete
+      let buttonHelp
       let buttons
 
-      const demos = {}
       let prevText
+      let questioned = false
 
       function init () {
         // Look up elements.
         canvas = document.getElementById('canvas')
+        info = document.getElementById('info')
         status = document.getElementById('status')
         text = document.getElementById('text')
 
@@ -120,14 +128,15 @@
         canvas.height = GRID_SIZE * SCALE
 
         // Initialize buttons.
+        buttonColor = document.getElementById('color')
         buttonForward = document.getElementById('forward')
         buttonRotate = document.getElementById('rotate')
         buttonBlock = document.getElementById('block')
         buttonRepeat = document.getElementById('repeat')
-        buttonColor = document.getElementById('color')
         buttonDelete = document.getElementById('delete')
+        buttonHelp = document.getElementById('help')
         buttons = [buttonColor, buttonForward, buttonRotate,
-          buttonBlock, buttonRepeat, buttonDelete]
+          buttonBlock, buttonRepeat, buttonDelete, buttonHelp]
 
         // Add event listeners for text.
         text.addEventListener('keyup', actionKey)
@@ -141,16 +150,13 @@
         buttonBlock.addEventListener('click', actionBlock)
         buttonRepeat.addEventListener('click', actionRepeat)
         buttonDelete.addEventListener('click', actionDelete)
+        buttonHelp.addEventListener('click', actionHelp)
         window.addEventListener('hashchange', actionHash)
         window.addEventListener('resize', resize)
 
-        // Set up demos.
-        for (let i = 0; i < DEMOS.length; ++i) {
-          demos[i.toString()] = DEMOS[i]
-        }
-
         // Initialize input code and output.
         resize()
+        clearHelp()
         actionHash()
         text.setSelectionRange(text.value.length, text.value.length)
       }
@@ -161,9 +167,11 @@
         const availableHeight = window.innerHeight - 3 * PANEL_HEIGHT - 5 * PADDING
 
         // Resize canvas.
-        canvasSize = Math.min(availableWidth, availableHeight)
+        canvasSize = Math.floor(Math.min(availableWidth, availableHeight))
         canvas.style.width = canvasSize + 'px'
         canvas.style.height = canvasSize + 'px'
+        info.style.width = canvasSize + 'px'
+        info.style.height = canvasSize + 'px'
 
         // Resize status panel.
         status.style.width = canvasSize + 'px'
@@ -177,8 +185,8 @@
         text.style.marginTop = PADDING + 'px'
 
         // Resize buttons.
-        const buttonWidth = ((canvasSize - (buttons.length - 1) * PADDING) /
-          buttons.length)
+        const buttonWidth = Math.floor(
+          (canvasSize - (buttons.length - 1) * PADDING) / buttons.length)
         for (let i = 0; i < buttons.length; ++i) {
           const button = buttons[i]
           button.style.marginTop = PADDING + 'px'
@@ -191,8 +199,10 @@
 
       function draw () {
         if (prevText === text.value) {
+          log('skipping draw since no change in code')
           return
         }
+        clearHelp()
         log('draw', text.value)
         ctx.fillStyle = COLORS[0]
         ctx.fillRect(0, 0, GRID_SIZE * SCALE, GRID_SIZE * SCALE)
@@ -247,7 +257,7 @@
             ++idx
           } else if (op === ']') {
             if (stack.length === 0) {
-              error('Unexpected \']\'')
+              error('Unexpected &lsquo;]&rsquo;')
               return
             }
             const [jmpIdx, count] = stack.pop()
@@ -266,7 +276,7 @@
         }
 
         if (ops === 0) {
-          status.innerHTML = 'READY'
+          status.innerHTML = 'READY.  Type &lsquo;?&rsquo; for help.'
         } else {
           const ms = Date.now() - startTime
           const rate = ms === 0 ? '-' : Math.round(10000 * ops / ms) / 10
@@ -300,20 +310,22 @@
 
       function updateHash () {
         if (text.value.length > MAX_DIST_LEN) {
-          window.location.hash = ''
+          window.history.replaceState(null, '', '#')
         } else {
           const encoded = urlEncode(text.value)
           const hash = window.location.hash
           const fragment = hash === '' ? '' : hash.substring(1)
           if (encoded !== fragment) {
-            window.location.hash = '#' + encoded
+            window.history.replaceState(null, '', '#' + encoded)
             log('set hash from code:', window.location.hash)
           }
         }
       }
 
-      function actionKey () {
-        setTimeout(normalizeDraw, 10)
+      function actionKey (e) {
+        if (e.key !== 'Shift') {
+          setTimeout(normalizeDraw, 10)
+        }
       }
 
       function normalizeDraw () {
@@ -321,10 +333,14 @@
         sanitizeText()
         updateHash()
         draw()
+        if (questioned) {
+          toggleHelp()
+          questioned = false
+        }
       }
 
       function lookupDemo () {
-        const code = demos[text.value]
+        const code = DEMOS[text.value]
         if (typeof code !== 'undefined') {
           text.value = code
         }
@@ -366,6 +382,33 @@
         draw()
       }
 
+      function actionHelp (e) {
+        e.preventDefault()
+        toggleHelp()
+        text.focus()
+      }
+
+      function toggleHelp () {
+        if (info.style.display === 'none') {
+          canvas.style.display = 'none'
+          info.style.display = 'block'
+          buttonHelp.title = 'Hide help'
+          status.innerHTML = 'Type &lsquo;?&rsquo; or code to hide help.'
+          log('help displayed')
+        } else {
+          log('forcing redraw to clear help')
+          prevText = null // Force redraw to clear help.
+          draw()
+        }
+      }
+
+      function clearHelp () {
+        canvas.style.display = 'block'
+        info.style.display = 'none'
+        buttonHelp.title = 'Show help'
+        log('help cleared')
+      }
+
       function insertText (ch) {
         const cursorStart = text.selectionStart
         const left = text.value.substring(0, cursorStart)
@@ -395,8 +438,8 @@
       }
 
       function sanitizeText () {
-        const cursorStart = text.selectionStart
-        const cursorEnd = text.selectionEnd
+        let cursorStart = text.selectionStart
+        let cursorEnd = text.selectionEnd
         const cursorDir = text.selectionDirection
 
         let result = ''
@@ -405,6 +448,18 @@
           if (ch === 'C' || ch === 'F' || ch === 'R' ||
               ch === '[' || ch === ']') {
             result += ch
+            continue
+          }
+          if (ch === '?') {
+            questioned = true
+          }
+          // Since non-command characters are being removed from the
+          // code, adjust the cursor position accordingly.
+          if (i < cursorStart) {
+            --cursorStart
+          }
+          if (i < cursorEnd) {
+            --cursorEnd
           }
         }
 
@@ -478,21 +533,99 @@
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <section id="info">
+      <p><strong>COMMANDS</strong></p>
+      <ul>
+        <li>
+          <p>
+            <strong>C</strong> - Change colour to the next one from
+            the cyclic sequence:
+            <span style="background: #999; color: #000; padding: 0 2px">black</span>,
+            <span style="color: #36f">blue</span>,
+            <span style="color: #0c0">green</span>,
+            <span style="color: #0cc">cyan</span>,
+            <span style="color: #c00">red</span>,
+            <span style="color: #c0c">magenta</span>,
+            <span style="color: #cc0">yellow</span>, and
+            <span style="color: #ccc">white</span>.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>F</strong> - Move forward by one cell and paint
+            the new cell.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>R</strong> - Rotate clockwise by 45&deg;.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>[</strong> - Begin a repeatable block and continue
+            executing subsequent code normally.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>]</strong> - Go back to the beginning of the
+            current repeatable block, repeat it once more, and exit
+            the block. &nbsp;A block bounded by
+            &lsquo;<strong>[</strong>&rsquo; and
+            &lsquo;<strong>]</strong>&rsquo; behaves like a loop that
+            runs twice before the block exits.
+          </p>
+      </ul>
+      <p><strong>EXAMPLES</strong></p>
+      <ul>
+        <li>
+          <p>
+            <strong>[FFF]</strong> - Draw a column of 6 white cells.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>CC[[FFF]]</strong> - Draw a column of 12 blue cells.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>CCC[[[[[FFF]]R]]]</strong> - Draw a green octagon.
+        </li>
+      </ul>
+      <p><strong>MORE</strong></p>
+      <ul>
+        <li>
+          <p>
+            Visit <a href="https://github.com/susam/cfr">github.com/susam/cfr</a>
+            for complete information.
+          </p>
+        </li>
+        <li>
+          <p>
+            Visit <a href="https://susam.net/cfrs.html">susam.net/cfrs.html</a>
+            for animation effects.
+          </p>
+        </li>
+      </ul>
+    </section>
     <pre id="status"></pre>
     <input id="text" inputmode="none" autofocus
-           placeholder="Type code or type digit or press buttons below.">
+           placeholder="Type code here.">
     <div>
-      <button id="color" title="Color">C</button><!--
-      --><button id="forward" title="Forward">F</button><!--
-      --><button id="rotate" title="Rotate">R</button><!--
-      --><button id="block" title="Begin Block">[</button><!--
-      --><button id="repeat" title="Repeat Block">]</button><!--
-      --><button id="delete" title="Delete">&lt;</button>
+      <button id="color" title="Change colour">C</button><!--
+      --><button id="forward" title="Move forward and paint cell">F</button><!--
+      --><button id="rotate" title="Rotate by 45&deg;">R</button><!--
+      --><button id="block" title="Begin block">[</button><!--
+      --><button id="repeat" title="Repeat block once">]</button><!--
+      --><button id="delete" title="Delete code">&lt;</button><!--
+      --><button id="help" title="Show help">?</button>
     </div>
     <footer>
       <a href="https://github.com/susam/cfr">GitHub</a>
       <a href="https://mastodon.social/@susam">Mastodon</a>
-      <a href="https://github.com/susam/cfr/blob/main/LICENSE.md">License</a>
+      <a href="https://susam.net/cfrs.html">CFRS[]</a>
     </footer>
   </body>
 </html>
