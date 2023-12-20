@@ -27,6 +27,12 @@ server {
     location ~ /Makefile$ {
         default_type text/plain;
     }
+    # Short URLs.
+    rewrite ^/cfr$ /cfr.html permanent;
+    rewrite ^/cfrs$ /cfrs.html permanent;
+    rewrite ^/fxyt$ /fxyt.html permanent;
+    rewrite ^/invaders$ /invaders.html permanent;
+    # Redirects.
     rewrite ^/blog/rss/$ /blog/feed.xml permanent;
     rewrite ^/blog/rss.xml$ /blog/feed.xml permanent;
     rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
