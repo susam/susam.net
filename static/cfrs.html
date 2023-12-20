@@ -1,5 +1,5 @@
 <!--
-  CFRS[] 0.1.0
+  CFRS[] 0.2.0
   Copyright (c) 2023 Susam Pal
   Source: https://github.com/susam/cfrs
   License: MIT
@@ -40,12 +40,15 @@
         overflow: auto;
       }
       pre {
-        overflow-x: auto;
-        overflow-y: hidden;
+        overflow: auto hidden;
       }
       input {
         color: #ccc;
         border-color: #666;
+        text-transform: uppercase;
+      }
+      input::placeholder {
+        text-transform: none;
       }
       input:focus {
         outline: none;
@@ -263,9 +266,11 @@
           const now = Date.now()
           if (now - lastUpdate > 100 || idx === text.value.length) {
             const ms = now - startTime
-            const rate = ms === 0 ? '-' : Math.round(10000 * ops / ms) / 10
-            const msg = text.value.length + ' bytes, ' + ops + ' ops, ' +
-                (ms / 1000) + ' s, ' + rate + ' ops/s'
+            const bytes = text.value.length + (text.value.length === 1 ? ' byte' : ' bytes')
+            const opss = ops + (ops === 1 ? ' op' : ' ops')
+            const duration = (ms / 1000).toFixed(3) + ' s'
+            const rate = (ms === 0 ? '-' : (1000 * ops / ms).toFixed(1)) + ' ops/s'
+            const msg = bytes + ', ' + opss + ', ' + duration + ', ' + rate
             status.innerHTML = msg
             lastUpdate = now
           }
@@ -625,7 +630,7 @@
           <p>
             <strong>]</strong> - Go back to the beginning of the
             current repeatable block, repeat it once more, and exit
-            the block. &nbsp;A block bounded by
+            the block. A block bounded by
             &lsquo;<strong>[</strong>&rsquo; and
             &lsquo;<strong>]</strong>&rsquo; behaves like a loop that
             runs twice before the block exits.
@@ -668,8 +673,7 @@
       </ul>
     </section>
     <pre id="status"></pre>
-    <input id="text" inputmode="none" autofocus
-           placeholder="Type code here.">
+    <input id="text" inputmode="none" autofocus placeholder="Type code here.">
     <div id="buttons">
       <button id="color" title="Change colour">C</button><!--
       --><button id="forward" title="Move forward and paint cell">F</button><!--
@@ -679,7 +683,7 @@
     <div id="buttons">
       <button id="block" title="Begin block">[</button><!--
       --><button id="repeat" title="Repeat block once">]</button><!--
-      --><button id="delete" title="Delete code">&lt;</button><!--
+      --><button id="delete" title="Delete command">&larr;</button><!--
       --><button id="help" title="Show help">?</button>
     </div>
     <footer>
