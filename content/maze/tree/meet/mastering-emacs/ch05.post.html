@@ -1,5 +1,5 @@
 <!-- title: Notes on Chapter 5: The Theory of Editing -->
-<!-- date: 2022-03-31 -->
+<!-- date: 2023-09-16 -->
 <!-- import: extra.css -->
 <p>
   The following notes were taken while discussing Chapter 5 of the
@@ -924,7 +924,7 @@ baz</code>
     <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
     match the regular expression <code>b..</code> and delete the rest.
     If no region is active, then keep matching lines between the point
-    and end of buffer and delete the rest.  The deleted lines are not
+    and end of buffer, and delete the rest.  The deleted lines are not
     copied to kill ring.
   </li>
   <li>
@@ -1761,7 +1761,7 @@ baz</code>
   following complete key sequences demonstrates a few examples of
   rigid indentation:
 </p>
-<ol>
+<ul>
   <li>
     <code>C-x TAB</code>: Interactively indent region.
     Type <code>&lt;right&gt;</code> or <code>&lt;left&gt;</code> to
@@ -1781,7 +1781,7 @@ baz</code>
 	<code>C-- C-6 C-x TAB</code>: Reduce indentation of region by 6
 	spaces.
   </li>
-</ol>
+</ul>
 <h2 id="sorting">Sorting</h2>
 <p>
   Assuming a region is active, here are some complete key sequences
@@ -2009,7 +2009,7 @@ Carol     :Tokyo      :Japan</code>
   </li>
   <li>
     <p>
-      Type <code>C-e C-y</code> to reinsert the text killed in the
+      Type <code>C-e SPC C-y</code> to reinsert the text killed in the
       previous step at the end of the line.  The buffer looks like
       this now:
     </p>
@@ -2054,15 +2054,15 @@ Carol     :Tokyo      :Japan</code>
   </li>
   <li>
     <p>
-      Type <code>C-e SPC C-k</code> to reinsert the killed text at the end
+      Type <code>C-e SPC C-y</code> to reinsert the killed text at the end
       of the buffer:
     </p>
     <pre><code>quux foo bar baz qux </code></pre>
   </li>
   <li>
     <p>
-      Type <code>M-2 M-x zap-up-to-char RET b</code>.  The buffer now
-      looks like this:
+      Type <code>M-- M-2 M-x zap-up-to-char RET b</code>.  The buffer
+      now looks like this:
     </p>
     <pre><code>quux foo b</code></pre>
   </li>
@@ -2085,4 +2085,141 @@ Carol     :Tokyo      :Japan</code>
   <li><code>M-Z b</code></li>
   <li><code>M-2 M-Z q</code></li>
   <li><code>M-- M-Z b</code></li>
+</ul>
+<h2 id="spell-check">Spell Check</h2>
+<p>
+  The spell checking commands of Emacs require a spell checking
+  program to be installed on the system.  Emacs supports the spell
+  checking programs <code>aspell</code>, <code>ispell</code>,
+  <code>hunspell</code>, and <code>enchant-2</code>.  If multiple
+  programs are present, it looks for them one by one in the order
+  specified in the previous sentence and picks the first one that is
+  found.  The following spell checking commands are introduced in the
+  book:
+</p>
+<ul>
+  <li>
+    <code>M-$</code>: Check spelling of word under or before the
+    cursor.  Possible corrections are offered in a new window.  If the
+    word under or before the cursor is already correct, a message
+    like <code>APPLE is correct</code> appears in the echo area.  When
+    corrections are offered, each correction is numbered.
+    Type <code>SPC</code> to leave the word unchanged or type a number
+    to choose a numbered correction.  Type <code>x</code> to exit the
+    the spelling buffer (the one that shows corrections).
+    Type <code>q</code> to quit the spelling session (kills the
+    spelling program process).  To see the list of all key bindings
+    supported, type <code>C-h f ispell-help RET</code>.
+  </li>
+  <li>
+    <code>M-x flyspell-mode RET</code>: Toggle on-the-fly spell
+    checking.  Misspelled words are underlined with squiggly lines.
+    Type <code>C-M-i</code> or <code>C-.</code> to correct a
+    misspelled word under or before the cursor.  All possible
+    corrections appear in the echo area.  Repeat <code>C-M-i</code>
+    or <code>C-.</code> to cycle through the possible corrections.
+  </li>
+  <li>
+    <code>M-x flyspell-prog-mode RET</code>: Turns
+    on <code>flyspell-mode</code> for comments and strings only.  This
+    is useful while working in a buffer with a programming mode
+    enabled.
+  </li>
+  <li>
+    <code>M-x ispell-buffer RET</code>: Check the current buffer for
+    spelling errors interactively.  Each misspelled word is
+    highlighted and corrections are offered in a new window.  The
+    interface and key sequences for making corrections are the same as
+    the ones for <code>M-$</code> introduced above.
+  </li>
+  <li>
+    <code>M-x ispell-region RET</code>: Like the previous command but
+    checks the current region for spelling errors.
+  </li>
+</ul>
+<h2 id="dictionary-lookup">Dictionary Lookup</h2>
+<p>
+  The following complete key sequences demonstrate some of the
+  dictionary commands introduced in the book:
+</p>
+<ul>
+  <li>
+    <code>M-x dictionary-lookup-definition RET</code>: Look up
+    definitions of the word at or before the cursor.
+  </li>
+  <li>
+    <code>M-x dictionary-search RET programming RET</code>: Search
+    definitions of the word <code>programming</code>.
+  </li>
+  <li>
+    <code>M-x dictionary-select-dictionary RET</code>: This command
+    presents a list of available dictionaries in a new buffer.
+    Navigate the buffer and click on a dictionary or
+    type <code>RET</code> while the cursor is on a dictionary entry to
+    select it.  For example, move the cursor down to the entry that
+    begins with the text <code>jargon:</code> and
+    type <code>RET</code> and then type <code>M-x dictionary-search
+    RET programming RET</code> to see the definition of the
+    word <code>programming</code> from the Jargon File only.
+  </li>
+</ul>
+<p>
+  The dictionary commands first attempt to connect to a locally
+  running dictionary server.  If the connection does not succeed, it
+  prompts for consent to connect to
+  <a href="https://dict.org/">dict.org</a>.  Typing <code>y</code> at
+  the prompt allows the command to proceed and complete the command.
+</p>
+<h2 id="quoted-insert">Quoted Insert</h2>
+<p>
+  Here are some complete key sequences that demonstrate quoted insert:
+</p>
+<ul>
+  <li>
+    <code>C-q C-l</code>: Insert form feed character.  This is
+    displayed as <samp>^L</samp> in Emacs using the face
+    named <code>escape-glyph</code>.  Emacs treats each form feed
+    character as a page break and we can navigate back and forth
+    between pages with <code>C-x [</code> and <code>C-x ]</code>,
+    respectively.
+  </li>
+  <li>
+    <code>C-q (</code>: Insert a literal open parenthesis.  Useful
+    in <code>paredit-mode</code> where the key sequence <code>(</code>
+    is bound to <code>paredit-open-round</code> which inserts a
+    balanced pair of parentheses.  To insert a single parenthesis
+    instead, we can perform a quoted insert with <code>C-q (</code>.
+  </li>
+  <li>
+    <code>C-q TAB</code>: Insert a literal tab character.
+  </li>
+  <li>
+    <code>C-q C-j</code>: Insert a literal line feed character, i.e.,
+    a newline character.
+  </li>
+  <li>
+    <code>C-q RET</code>: Insert a literal carriage return.  This is
+    displayed as <samp>^M</samp> in Emacs.
+  </li>
+  <li>
+    <code>C-q ESC</code>: Insert a literal escape character.  This is
+    displayed as <samp>^[</samp> in Emacs.
+  </li>
+  <li>
+    <code>C-q C-[</code>: Same as above.
+  </li>
+</ul>
+<h2 id="links">Links</h2>
+<p>
+  The following list includes some links that were discussed during
+  the book discussion group meetings:
+</p>
+<ul>
+  <li>
+    <a href="https://battlepenguin.com/tech/aspell-and-hunspell-a-tale-of-two-spell-checkers/">Aspell and Hunspell: A Tale of Two Spell Checkers</a>
+  </li>
+  <li>
+    <a href="https://www.reddit.com/r/emacs/comments/fxs92h/">Spell
+      checkers in Emacs in 2020</a>
+  </li>
 </ul>

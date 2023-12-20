@@ -1,0 +1,1345 @@
+<!-- title: Notes on Chapter 6: The Practicals of Emacs -->
+<!-- date: 2023-09-18 -->
+<!-- import: extra.css -->
+<p>
+  The following notes were taken while discussing Chapter 6 of the
+  book <em>Mastering Emacs</em>, 2022 edition (written by Mickey
+  Petersen) in
+  <a href="./{{ index }}">book discussion group meetings</a>.
+</p>
+<p>
+  An index of notes for all chapters are available
+  at <a href="notes.html">notes.html</a>.
+</p>
+<h2 id="exploring-emacs">Exploring Emacs</h2>
+<p>
+  The book suggests the following techniques to explore Emacs:
+</p>
+<ul>
+  <li>
+    <p>
+      Reading the manual.  For example, type <code>M-x info RET</code>
+      or <code>C-h i</code>, then navigate to the <code>Emacs</code>
+      hyperlink, then type <code>C-s version control RET</code>, and
+      then navigate to the node named <code>Version Control</code> to
+      read the corresponding manual.
+    </p>
+    <p>
+      Note that the section named <em>The Info Manual</em> in Chapter
+      3 offers more alternatives to reach a specific node in a more
+      straightforward manner.  For example, <code>C-h i m emacs RET m
+      Version Control RET</code> accomplishes the same result.
+      Alternatively, <code>C-h R emacs RET m Version Control
+      RET</code> also accomplishes the same result.  Yet another way
+      to accomplish the same result is to evaluate the Elisp
+      expression <code>(info "(emacs)Version Control")</code>.  See
+      section <a href="ch03.html#info">Info</a> in chapter 3 notes for
+      more details.
+    </p>
+    <p>
+      Yet another way to explore the manual is to use
+      the <code>info-apropos</code> command.  For example,
+      type <code>M-x info-apropos RET version control RET</code> to
+      find manuals which have the string "version control" in them.
+    </p>
+  </li>
+  <li>
+    <p>
+      Using apropos.  For example, type <code>C-h d version control
+      RET</code> to search for all symbols whose documentation string
+      contains the specified pattern.  Then type <code>C-h a ^vc-
+      RET</code> to search for all commands that match this pattern.
+      This is a convenient way to list the vc commands.  Also, see
+      section <a href="ch03.html#apropos">Apropos</a> in chapter 3
+      notes for more details.
+    </p>
+  </li>
+  <li>
+    <p>
+      Exploring prefix keys.  For example, type <code>C-x v C-h</code>
+      to list all key sequences bound to the prefix key <code>C-x
+      v</code>.  This is in fact a convenient way to list all the vc
+      key bindings.  Also, see section
+      <a href="ch03.html#discovering-and-remembering-keys">Discovering
+      and Remembering Keys</a> in chapter 3 notes for more details.
+    </p>
+  </li>
+  <li>
+    <p>
+      Describe what a key does.  For example, type <code>C-h k</code>
+      followed by <code>C-x v v</code> to see the command that is
+      bound to the latter key sequence as well as its documentation
+      string along with other details like the keymap where the key
+      binding is found, the file where the command is defined, other
+      key bindings for the same command, etc.  See
+      section <a href="ch03.html#describe">Describe</a> in chapter 3
+      notes for some more details.
+    </p>
+  </li>
+  <li>
+    <p>
+      Describe commands.  For example, type <code>C-h f vc-dir
+      RET</code> to see information about the <code>vc-dir</code>
+      command.  See section <a href="ch03.html#describe">Describe</a>
+      in chapter 3 notes for some more details.
+    </p>
+  </li>
+  <li>
+    <p>
+      Find mode commands.  Type <code>C-h m</code> to see the
+      documentation strings of the current major mode and minor modes.
+      A brief summary of the minor modes is shown first, followed by
+      the major mode description.  This is followed by documentation
+      strings of the minor modes separated by page breaks (the form
+      feed character that is rendered as <code>^L</code> in Emacs).
+      See section <a href="ch03.html#describe">Describe</a> in chapter
+      3 notes for some more details.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-X</code> to run
+      <code>execute-extended-command-for-buffer</code> which executes
+      commands that are relevant to the current buffer.  While
+      offering completions, it limits the completions to commands
+      relevant to the current buffer.  See
+      section <a href="ch03.html#m-x-execute-extended-command-for-buffer">M-X:
+      Execute Extended Command for Buffer</a> of chapter 3 notes for
+      more details.
+    </p>
+  </li>
+</ul>
+<h2 id="project-management">Project Management</h2>
+<p>
+  Emacs comes with a project management package
+  named <code>project.el</code> which offers commands to operate on
+  projects.  When we use a project management command like <code>C-x p
+  f</code> to visit a file in the current project, this package
+  automatically detects the top-level directory of the project by
+  checking parent directories for version control system artifacts
+  (e.g., <code>.git</code> directory) and presents files within that
+  top-level directory as autocomplete options.
+</p>
+<p>
+  The following complete key sequences demonstrate the package
+  management commands mentioned in the book:
+</p>
+<ul>
+  <li>
+    <p>
+      <code>C-x p p ... TAB RET ~/git/foo/ RET f README.md</code>:
+      This awkward key sequence discovers a new project directory
+      at <code>~/git/foo/</code> and then finds the file
+      named <code>README.md</code> in it.  As soon as the key
+      sequence <code>f</code> is typed above, the new project
+      directory is discovered and added
+      to <code>~/.emacs.d/projects</code> which is where the list of
+      known projects is saved.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p p bar TAB RET f Makefile</code>: Assuming there is
+      already a known project with <code>bar</code> in its name
+      (say, <code>~/git/bar/</code>) that was discovered earlier, this
+      key sequence switches to that project and finds the file named
+      in <code>Makefile</code> in it.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p f dev/build.sh RET</code>: Find file
+      named <code>dev/build.sh</code> in the current project.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p f build TAB RET</code>: Same as above
+      if <code>dev/build.sh</code> is the only match
+      for <code>build</code>.  Otherwise, it presents all files in the
+      current project containing <code>build</code> anywhere in its
+      path name as autocomplete options.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p f bar TAB RET build TAB RET</code>: When we
+      type <code>C-x p f</code> while visiting a file that does not
+      belong to any project, then its prompts for a project name.  In
+      this example, we type <code>bar TAB RET</code> to automatically
+      expand it to a known project name such
+      as <code>~/git/bar/</code> and enter it.  Then we
+      type <code>build TAB RET</code> to automatically expand it to a
+      file name such as <code>dev/build.sh</code> and enter it.
+    </p>
+    <p>
+      It is worth noting a general point that whenever we invoke a
+      project command while visiting a file that does not belong to a
+      project, the project command prompts for the project name.
+      After we enter the project name, the project command runs on our
+      chosen project.  This general point applies to other project
+      commands that come later in this list.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p b Makefile RET</code>: Switch to a buffer
+      named <code>Makefile</code> in the current project.  While
+      entering the buffer name when <code>TAB</code> is typed,
+      completion options present buffer names from the current project
+      only.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p k yes RET</code>: Kill all buffers belonging to the
+      current project.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p g ^key\&gt; RET</code>: Find all matches for the
+      regular expression <code>^key\&gt;</code> in the current
+      project.  The matches are found in all files in the project
+      regardless of whether they are currently open in Emacs or not.
+      The matches are displayed in a buffer named <code>*xref*</code>.
+      We can navigate this buffer using key sequences
+      like <code>n</code>, <code>p</code>, etc.  Type
+      <code>C-h m</code> in this buffer to see a list of key sequences
+      supported in this buffer.  As we navigate this buffer and go
+      from one match to another using <code>n</code>, <code>p</code>,
+      etc. the files containing the match are loaded in a split window
+      automatically with the matching lines automatically centred in
+      that window.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p r ^key\&gt; RET =key= RET</code>: Find all matches
+      for the regular expression pattern <code>^key\&gt;</code> in the
+      current project and replace them with <code>=key=</code>.  The
+      modified files are not automatically saved though.  They needed
+      to be saved later explicitly.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p c RET</code>: Compiles the current project.  By
+      default, it offers as <code>make -f</code> as the command to be
+      run in the project root.  If a specific <code>make</code> target
+      needs to be executed, then this default command offered may be
+      edited before typing <code>RET</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p v</code>: Runs VC-Dir in the current project's root
+      which in turn shows version control status for the project root.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p s</code>: Start shell in the current project's root
+      directory.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p d RET</code>: Start Dired in the current project's
+      root directory.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p D</code>: Same as above.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-x p d doc/tutorial/ RET</code>: Start Dired in
+      the <code>doc/tutorial/</code> subdirectory in the current
+      project.
+    </p>
+  </li>
+</ul>
+<p>
+  There are several more project management key bindings.
+  Type <code>C-x p C-h</code> to see a complete list of them.
+</p>
+<h2 id="xref">Xref</h2>
+<p>
+  Xref provides a generic framework to support commands for
+  cross-referencing in Emacs.  While there are several ways to set it
+  up and configure it, the book mentions a particular way to set it up
+  using a couple of external tools.  The next two subsections discuss
+  the setup work involved before we can use Xref in a modern way.  The
+  remaining subsections discuss how to use Xref.
+</p>
+<h3 id="xref-setup">Xref Setup</h3>
+<p>
+  By default when we try to look up a definition of an identifier in,
+  say, a C file or Python file, by typing <code>M-.</code>, it
+  presents a minibuffer for us to select a tags table file (typically
+  named <code>TAGS</code>).  This requires setting up
+  a <code>TAGS</code> file with a tool like <code>ctags</code>.  The
+  book, however, does not explore this method for good reason.
+  Typically the <code>TAGS</code> file needs to be created with a tool
+  like <code>ctags</code> or <code>etags</code> for every project we
+  work on.  This file contains an index of names found in source code
+  files.  We need to periodically update it as the code of our
+  projects evolve, so that this index remains up-to-date.  For a long
+  time, this was the only way to maintain an index of the names found
+  in a source code, so that we could perform cross-referencing in
+  editors like Vim and Emacs.  Relying on a tool
+  like <code>grep</code> to search the code on the fly was deemed to
+  be quite slow.  However, with modern, fast hardware we do not have
+  to work like this anymore.  Further, there are search tools
+  like <code>ag</code> and <code>rg</code> which are extremely fast.
+  Given these modern developments, there are simpler ways to set up
+  cross-referencing in Emacs.
+</p>
+<p>
+  The book suggets installing an external package
+  named <code>dumb-jump</code>.  It can be installed from MELPA with
+  the key sequence <code>M-x package-install dumb-jump RET</code>.
+  See <a href="https://github.com/jacktasia/dumb-jump">github.com/jacktasia/dumb-jump</a>
+  for more details about this package.  After installing this package,
+  add the following code to the Emacs initialisation file:
+</p>
+<pre><code>(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)</code></pre>
+<p>
+  Here is a minimal Elisp code that sets up <code>dumb-jump</code>
+  from scratch and configures it as mentioned above:
+</p>
+<pre>
+<code>(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(dolist (package '(dumb-jump))
+  (unless (package-installed-p package)
+    (package-install package)))
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)</code>
+</pre>
+<p>
+  The above code configures Emacs to use MELPA, retrieve the latest
+  list of packages available there, install <code>dumb-jump</code>
+  from it, as well as set up a hook to activate it automatically when
+  we use certain Xref commands.
+</p>
+<h3 id="search-tools-for-xref">Search Tools for Xref</h3>
+<p>
+  Once Xref is set up with <code>dumb-jump</code> as explained in the
+  previous section, open a source code file (say, a C file or a Python
+  file), move the cursor over to some identifier and
+  type <code>M-.</code> to search that identifier in your environment.
+  By default, it searches for the identifier in files of the same type
+  found under the home directory with a tool like <code>ag</code>,
+  <code>rg</code>, or <code>grep</code> (the first one it finds).
+  There is an exception to this rule though.  If
+  neither <code>ag</code> nor <code>rg</code> is found and only GNU
+  grep is found, then typing <code>M-.</code> on an indentifier
+  searches the identifier in all files in the home directory (as
+  opposed to searching for files of a specific type).  If BSD grep is
+  found instead, then this is not a problem and only files of the
+  current type is searched for the identifier.
+</p>
+<p>
+  Further, while looking up definitions within a Git repository, this
+  package invokes the <code>git grep</code> command to restrict
+  searches to the repository directory.
+</p>
+<p>
+  Let us now look at a few examples of the actual search commands that
+  are executed under the hood when we type <code>M-.</code>.
+</p>
+<p>
+  If neither <code>ag</code> nor <code>rg</code> is installed and we
+  only have <code>grep</code> on our system, typing <code>M-.</code>
+  while the cursor is on an identifier named <code>foo</code> in a
+  Python file leads to the execution of a command like this when BSD
+  grep is found:
+</p>
+<pre><code>grep -REn --include '*.py' -e '\s*\bfoo\s*=[^=\n]+' -e 'def\s*foo\b\s*\(' -e 'class\s*foo\b\s*\(?' /Users/susam</code></pre>
+<p>
+  If GNU grep is found instead, then all files (not
+  just <code>*.py</code> files) are searched with a command like this:
+</p>
+<pre><code>grep -rEn -e '[[:space:]]*\bfoo[[:space:]]*=[^=\n]+' -e 'def[[:space:]]*foo\b[[:space:]]*\(' -e 'class[[:space:]]*foo\b[[:space:]]*\(?' /home/susam</code></pre>
+<p>
+  If <code>rg</code> is the only additional search tool installed,
+  then the following command is executed:
+</p>
+<pre><code>rg --color never --no-heading --line-number -U --pcre2 --type py '\s*\bfoo\s*=[^=\n]+|def\s*foo\b\s*\(|class\s*foo\b\s*\(?' /home/susam</code></pre>
+<p>
+  If <code>ag</code> is installed, then the following command is
+  executed:
+</p>
+<pre><code>ag --nocolor --nogroup --python '\s*\bfoo\s*=[^=\n]+|def\s*foo\b\s*\(|class\s*foo\b\s*\(?' /home/susam</code></pre>
+<p>
+  When we type <code>M-.</code> in a file that belongs to a Git
+  repository, only the repository directory is searched with a command
+  like this:
+</p>
+<pre><code>git grep --color=never --line-number --untracked -E '\s*\bfoo\s*=[^=\n]+|def\s*foo\b\s*\(|class\s*foo\b\s*\(?' -- /home/susam/repo/*.py</code></pre>
+<p>
+  The book makes a mention of <code>rg</code> and remarks about the
+  impressive speed with which it searches the file system.  I
+  recommend it too.  Since the <code>M-.</code> command may search the
+  whole home directory, if the home directory is very large, having a
+  fast search tool like <code>rg</code> or <code>ag</code> makes a
+  significant difference.  For example what could normally take 10 to
+  20 seconds to search using <code>grep</code> might only take a
+  second or two with <code>rg</code> or <code>ag</code>.  I
+  use <code>M-.</code> with <code>rg</code>.
+</p>
+<h3 id="four-most-common-xref-commands">Four Most Common Xref Commands</h3>
+<p>
+  The book mentions the following commands as the four most common
+  commands we should know about:
+</p>
+<ul>
+  <li>
+    <p>
+      <code>M-.</code>: Find definitions of the identifier at point.
+      If a unique definition is found, then the file containing the
+      definition is automatically opened and the definition is centred
+      in the window.  If multiple possible candidates are found, then
+      they are displayed in an Xref buffer that we can navigate using
+      key sequences like <code>n</code> or <code>p</code>.  As we
+      navigate the Xref buffer, the source of each match is
+      automatically opened in a split window and the matching line is
+      centred.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>M-,</code>: Go back to where <code>M-.</code> was last
+      invoked.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>M-? foo RET ~/git/foo/ RET</code>: Find all occurrences of
+      the word <code>foo</code> in files of the same type as the
+      current file in the project directory <code>~/git/foo/</code>.
+      It does not restrict the search to definitions only.  If the
+      current file belongs to a project already, then we could simply
+      type <code>M-? foo RET</code>.  In fact, since the input to the
+      minibuffer prompt is the identifier at the point by default, we
+      could simply type <code>M-? RET</code> to search for the current
+      identifier in the current project.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-M-. foo RET</code>: Find symbols matching the given
+      pattern.  Although the documentation mentions that this supports
+      regular expressions, it seemed to treat the given pattern as an
+      identifier and searched for that identifier literally.  In fact,
+      the <code>rg</code> commands that were executed under the hood
+      were exactly the same as the ones executed by <code>M-.</code>.
+      Thus with <code>dumb-jump</code> enabled, both <code>M-.</code>
+      and <code>C-M-.</code> behave similarly.  The only difference is
+      that <code>M-.</code> searches for the identifier at the point
+      whereas <code>C-M-.</code> searches for the identifier we enter
+      at the minibuffer as input.
+    </p>
+  </li>
+</ul>
+<p>
+  When multiple cross-references are displayed in the Xref buffer, we
+  can use the following key sequences to work with the Xref buffer.
+</p>
+<ul>
+  <li>
+    <p>
+      <code>n</code>: Move to the next cross-reference.  The source of
+      the cross-reference is automatically displayed in another
+      window.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>n</code>: Move to the previous cross-reference.  The source
+      of the cross-reference is automatically displayed in another
+      window.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>.</code>: Same as <code>n</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>,</code>: Same as <code>p</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>RET</code>: Jump to the source of the current
+      cross-reference.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>TAB</code>: Hide Xref buffer and jump to the source.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>C-o</code>: Show the source of the cross-reference at
+      point in a separate window but keep the point in the Xref
+      window.  This is useful when we navigate the Xref buffer using
+      normal Emacs commands like <code>C-p</code>, <code>C-n</code>,
+      <code>C-s</code>, etc.  While navigating the Xref buffer with
+      these normal Emacs commands, the source of the cross-references at
+      the point is not automatically displayed.  The key
+      sequence <code>C-o</code> helps us to display the cross-reference
+      at the point in this case.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>r</code>: Perform search and replace in the names of the
+      references displayed in the Xref buffer.  However, I did not
+      find this to be working successfully
+      with <code>dumb-jump</code>.  Any attempt to use this command
+      with <code>dumb-jump</code> always led me to the following
+      error: <code>No suitable matches here</code>.  This key sequence
+      does work as expected when Xref is invoked from Dired as going
+      to be explained in the next section.
+    </p>
+  </li>
+</ul>
+<h3 id="xref-and-dired">Xref and Dired</h3>
+<p>
+  Here are some key sequences that demonstrate how we can use Xref
+  with Dired.
+</p>
+<ul>
+  <li>
+    <code>C-x d RET</code>: Edit current directory using Dired.
+  </li>
+  <li>
+    <code>n</code>: Move to the next line.  <code>C-n</code> also
+    works.
+  </li>
+  <li>
+    <code>p</code>: Move to the previous line.  <code>C-p</code> also
+    works.
+  </li>
+  <li>
+    <code>m</code>: Mark the file or subdirectory at the point.
+  </li>
+  <li>
+    <code>u</code>: Unmark the file or subdirectory at the point.
+  </li>
+  <li>
+    <code>A f.. RET</code>: Find all matches for the regular
+    expression <code>f..</code> in the marked files and
+    subdirectories.  The matches are always displayed in an Xref
+    buffer, even when a single match is found.
+  </li>
+  <li>
+    <code>Q f.. RET bar RET</code>: Find all matches for the regular
+    expression <code>f..</code> in the marked files and subdirectories
+    and replace them with <code>bar</code>.
+  </li>
+</ul>
+<h2 id="working-with-log-files">Working with Log Files</h2>
+<p>
+  In this section of the book, it discusses a set of commands that are
+  useful for working with log files.  Note that some of these commands
+  have been already introduced in the previous chapters.  The
+  following list presents the commands discussed in this section of
+  the book:
+</p>
+<ul>
+  <li>
+    <code>C-x C-f</code>: Find a file.
+  </li>
+  <li>
+    <code>C-x C-r</code>: Find file and open in read-only mode.
+  </li>
+  <li>
+    <code>C-x C-q</code>: Toggle read-only mode.
+  </li>
+  <li>
+    <code>M-x flush-lines RET b.. RET</code>: Delete lines in region
+    that match the regular expression <code>b..</code>.  If no region
+    is active, then delete matching lines between the point and end of
+    buffer.  The deleted lines are not copied to kill ring.  See
+    section <a href="ch05.html#deleting-and-keeping-lines">Deleting
+    and Keeping Lines</a> of chapter 5 notes for more details.
+  </li>
+  <li>
+    <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
+    match the regular expression <code>b..</code> and delete the rest.
+    If no region is active, then keep matching lines between the point
+    and end of buffer, and delete the rest.  The deleted lines are not
+    copied to kill ring.  See section
+    <a href="ch05.html#deleting-and-keeping-lines">Deleting and
+    Keeping Lines</a> of chapter 5 notes for more details.
+  </li>
+  <li>
+    <code>M-s o b.. RET</code>: Show all lines in the current buffer
+    matching the regular expression <code>b..</code>.  If the region
+    is active, then show matching lines from the region only.  The
+    matches are shown in a new Occur mode buffer.  The book makes a
+    special mention that we can run <code>M-s o</code> on an Occur
+    mode buffer to filter it further and get the results in another
+    Occur mode buffer.  See section
+    <a href="ch04.html#occur-mode">Occur Mode</a> in chapter 4 notes
+    for more details.
+  </li>
+</ul>
+<h2 id="highlighting">Highlighting</h2>
+<p>
+  Section <em>Working with Log Files</em> of Chapter 6 of the book
+  also introduces highlighting commands that can be very useful for
+  highlighting certain strings in the log file.  The highlighting
+  commands are demonstrated below with an example.
+</p>
+<ol>
+  <li>
+    <p>
+      First create a buffer with the following content.
+    </p>
+<pre>
+<code>foo bar baz
+Foo Bar Baz
+FOO BAR BAZ
+foo  bar  baz
+Foo  Bar  Baz
+FOO  BAR  BAZ</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Now type <code>M-s h p f.. SPC b.. RET RET</code> to highlight
+      the phrases matching the regular expression <code>f.. b..</code>
+      in a case-insensitive and whitespace-insensitive manner.  A
+      total of six matches will be highlighted because the first two
+      words and the whitespace between them in all lines match this
+      phrase pattern when we ignore the case of the words and the
+      amount of whitespace.  The second <code>RET</code> is meant to
+      accept the default face offered to us for highlighting.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now type <code>M-s h p b.z RET RET</code> to highlight the
+      phrases matching the regular expression <code>b.z</code>.  Again
+      we select the default face offered to us for highlighting.  At
+      this point, we should see two sets of highlighting in two
+      different faces.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now move the cursor to one of the first set of highlights and
+      type <code>M-s h u RET</code>.  Those highlights will be
+      unhighlighted.  The <code>RET</code> key accepts the default
+      unhighlighting pattern offered to us.  It happens to be the
+      pattern with which the highlight under the cursor was
+      highlighted.  That is why this key sequence ends up
+      unhighlighting the highlight under the cursor.
+    </p>
+    <p>
+      If the cursor were not over a highlgiht, then the default
+      unhighlighting pattern offered to us would have been the pattern
+      we used for the last highlight.  In that case, we could
+      type <code>M-s h u f.. b.. RET</code> to explicitly specify the
+      unhighlighting pattern.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now type <code>M-s h u RET</code> again to remove the second set
+      of highlights too.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-s h p F.. SPC B.. RET RET</code> to perform a
+      case-sensitive but whitespace-insensitive highlighting.  When
+      there is an uppercase letter in the pattern, the highlighting
+      becomes case-sensitive.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-s h u RET</code> to remove the previous
+      highlighting.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-s h r f.. SPC b.. RET RET</code> to perform a
+      case-insensitive but whitespace-sensitive highlighting.  This
+      time, there are only three matches from the first three lines.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-s h u RET</code> to remove the previous
+      highlighting.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-s h r F.. SPC B.. RET RET</code> to perform a
+      case-sensitive and whitespace-sensitive highlighting.  The
+      matching strings are found in the second and third lines.
+    </p>
+  </li>
+  <li>
+    <p>
+      Move the cursor to lowercase <code>bar</code> and type <code>M-s
+      h .</code> to highlight symbol at point.  All six occurrences of
+      this symbol are highlighted in a case-insensitive manner because
+      the symbol at point is written in all lowercase.
+    </p>
+  </li>
+  <li>
+    <p>
+      Move the cursor to <code>Baz</code> and type <code>M-s h
+      .</code> to highlight symbol at point.  Only two occurrences of
+      this symbol get highlighted.  The highlighted symbols match the
+      symbol <code>Baz</code> exactly (case-sensitive match).  The
+      highlighting is done in case-sensitive manner because the symbol
+      at point has at least one uppercase letter.
+    </p>
+  </li>
+</ol>
+<h2 id="auto-revert-mode">Auto-Revert Mode</h2>
+<p>
+  The following steps demonstrate how to use
+  the <code>revert-buffer</code> command and then how to
+  use <code>auto-revert-mode</code>.
+</p>
+<ol>
+  <li>
+    <p>
+      In a terminal, run the following command:
+    </p>
+    <pre><code>: &gt; /tmp/log.txt && while true; do date >> /tmp/log.txt; sleep 1; done</code></pre>
+    <p>
+      You could use <code>ansi-term</code> within Emacs too as the
+      terminal if you are familiar with it.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now within Emacs, type <code>C-x C-f /tmp/log.txt RET</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Wait for a few seconds and type <code>M-x revert-buffer RET yes
+      RET</code> to update the buffer with the latest content of the
+      file from the file system.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x auto-revert-mode RET</code> to enable automatic
+      update of the buffer as the file changes on the file system.
+      Note that this reloads the entire file whenever a change is
+      detected, so this could be inefficient while working with very
+      large files.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-&gt;</code> to go to the end of the buffer.  This
+      moves the cursor to the end of the buffer.  Doing this ensures
+      that as the buffer is automatically updated, the cursor
+      automatically keeps moving to the end of the file.
+    </p>
+  </li>
+  <li>
+    <p>
+      Terminate the command of step 1 and run this command in a
+      terminal:
+    </p>
+    <pre><code>echo hello > /tmp/log.txt</code></pre>
+    <p>
+      The content of the buffer should now automatically truncate and
+      update to just the text <code>hello</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Run the command in step 1 again and confirm that the content of
+      the buffer in Emacs gets updated automatically.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x auto-revert-mode RET</code> to disable automatic
+      update of the buffer.
+    </p>
+  </li>
+</ol>
+<h2 id="auto-revert-tail-mode">Auto Revert Tail Mode</h2>
+<p>
+  The mode named <code>auto-revert-tail-mode</code> is similar
+  to <code>auto-revert-mode</code>.  However,
+  unlike <code>auto-revert-mode</code> which reloads the entire file
+  on every update, the <code>auto-revert-tail-mode</code> only follows
+  the tail of the buffer and appends any new text found to the buffer.
+  The following steps demonstrate this:
+</p>
+<ol>
+  <li>
+    <p>
+      Like in the previous section, run the following command:
+    </p>
+    <pre><code>: &gt; /tmp/log.txt && while true; do date >> /tmp/log.txt; sleep 1; done</code></pre>
+  </li>
+  <li>
+    <p>
+      Type <code>M-x auto-revert-tail-mode RET</code>.  Note that this
+      command follows the tail of the file only.  It does not reload
+      the entire file.  This can be confirmed with the next step.
+    </p>
+  </li>
+  <li>
+    <p>
+      Terminate the command of step 1 and run this command in a
+      terminal:
+    </p>
+    <pre><code>echo hello > /tmp/log.txt</code></pre>
+    <p>
+      The buffer for this file in Emacs should automatically update to
+      show the text <code>hello</code> at the bottom.  But notice all
+      the earlier text remains intact.  The earlier text does not
+      disappear from the buffer because Emacs does not reload the
+      entire file when <code>auto-revert-tail-mode</code> is enabled.
+    </p>
+  </li>
+  <li>
+    <p>
+      Run the command in step 1 again and confirm that the content of
+      the buffer begins to get updated automatically again.
+    </p>
+  </li>
+  <li>
+    <p>
+      As of Emacs 28.2, unfortunately running <code>M-x
+      auto-revert-tail-mode RET</code> is not sufficient to disable
+      automatic updates in the buffer.  This command does disable the
+      mode but the buffer continues to be updated everytime the file
+      changes.  This is very likely a bug in this mode.
+    </p>
+    <p>
+      As a workaround, disabling <code>auto-revert-mode</code> ends up
+      stopping the auto-update behaviour.  There are two ways to do
+      this.  You could type <code>M-x auto-revert-mode RET</code>
+      twice: once to enable it and a second time to disable it.
+      Alternatively, just simply type <code>C-0 M-x auto-revert-mode
+      RET</code> which invokes the mode with a prefix argument of zero
+      which ends up disabling the mode.
+    </p>
+  </li>
+</ol>
+<h2 id="browsing-tarballs">Browsing Tarballs</h2>
+<p>
+  The following steps demonstrate how we can not only browse a tarball
+  but also edit files in it and save them back to the tarball.
+</p>
+<ol>
+  <li>
+    <p>
+      First, create a directory of text files with the following shell
+      commands:
+    </p>
+<pre>
+<code>mkdir -p foo/bar/baz/
+echo hello foo > foo/foo.txt
+echo hello bar > foo/bar/bar.txt
+echo hello baz > foo/bar/baz/baz.txt
+tar -caf /tmp/foo.tgz foo/</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Confirm that the tarball looks good with these shell commands:
+    </p>
+<pre>
+<code>tar -tf /tmp/foo.tgz
+tar -xOf /tmp/foo.tgz</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Within Emacs, type <code>C-x C-f /tmp/foo.tgz RET</code> to open
+      the tarball.  A list of all entries in the tarball is displayed
+      in a Tar buffer.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>n</code> and <code>p</code> to navigate the Tar
+      buffer down and up, respectively.
+    </p>
+  </li>
+  <li>
+    <p>
+      With the cursor on the line
+      containing <code>foo/bar/baz/baz.txt</code>,
+      type <code>RET</code>.  The content of this entry is now
+      displayed in a new buffer.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now in the buffer that displays the content
+      of <code>baz.txt</code>, edit its content.  Say, type <code>C-a
+      !</code> to append an exclamation point to this buffer.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x C-s</code> to save this buffer.  This updates the
+      entry of <code>foo/bar/baz/baz.txt</code> within the buffer
+      for <code>foo.tgz</code>.  However, the updated tarball is not
+      written to the file system yet.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>C-x b foo.tgz RET</code> to go back to the buffer
+      with the tarball entry listing.
+    </p>
+  </li>
+  <li>
+    <p>
+      Finally, type <code>C-x C-s</code> to save the tarball to the
+      file system.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now repeat step 2.  The updated content
+      of <code>foo/bar/baz/baz.txt</code> should now appear in the
+      output.
+    </p>
+  </li>
+</ol>
+<h2 id="dired-thumbnail-image-browser">Dired: Thumbnail Image Browser</h2>
+<p>
+  Assuming there is a directory <code>~/foo/</code> that contains
+  several image files as well as files of other types, the
+  command <code>M-x image-dired RET ~/foo/ RET</code> creates a
+  preview buffer of all images in the directory and displays it along
+  with a normal dired buffer showing the directory listing.  Both
+  buffers are displayed in two separate windows.
+</p>
+<p>
+  When the preview buffer is first launched, all image files found in
+  the directory are automatically <em>marked</em>.  This can be seen
+  in the Dired buffer.  However the preview buffer does not reflect
+  this immediately.  Type <code>m</code> in the preview buffer to
+  force it to pick the current list of marked images and highlight
+  them.
+</p>
+<p>
+  As a best practice, remember to type <code>m</code> soon after
+  launching <code>image-dired</code> so that the marked images are
+  accurately displayed in the preview buffer.
+</p>
+<p>
+  Within the preview buffer, the following key sequences are
+  supported:
+</p>
+<ul>
+  <li>
+    <code>C-f</code>: Move to next image.
+  </li>
+  <li>
+    <code>C-b</code>: Move to the previous image.
+  </li>
+  <li>
+    <code>C-n</code>: Move to next row of images.
+  </li>
+  <li>
+    <code>C-p</code>: Move to previous row of images.
+  </li>
+  <li>
+    <code>RET</code>: Display the original image in a display buffer.
+  <li>
+    <code>m</code>: Mark an image file.
+  </li>
+  <li>
+    <code>u</code>: Unmark an image file.
+  </li>
+  <li>
+    <code>d</code>: Flag an image file for deletion.
+  </li>
+  <li>
+    <code>t t</code>: Tag marked thumbnails.  If no thumbnails are
+    marked, tag the current thumbnail.
+  </li>
+  <li>
+    <code>t r</code>: Remove tag from marked thumbnails.  If no
+    thumbnails are marked, remove tag from the current thumbnail.
+  </li>
+  <li>
+    <code>l</code>: Rotate thumbnail left.
+  </li>
+  <li>
+    <code>r</code>: Rotate thumbnail right.
+  </li>
+</ul>
+<h3 id="preview-buffer-quirks">Preview Buffer Quirks</h3>
+<p>
+  The <code>m</code>, <code>u</code>, or <code>d</code> commands in
+  the preview buffer are actually meant to mark, unmark, or flag the
+  corresponding files in the Dired buffer.  The highlighting or
+  unhighlighting that occurs in the preview buffer is merely a
+  convenience feature.  The preview buffer may not always accurately
+  reflect the most recent list of all marked and flagged files.
+  Always keep an eye on the Dired buffer to check the most recent
+  state of the files.
+</p>
+<p>
+  Especially, if we go back to the Dired buffer and mark, unmark, or
+  flag files, the preview buffer does not reflect it automatically.
+  We need to go to the preview buffer again and perform at least one
+  similar operation (<code>m</code>, <code>u</code>,
+  or <code>d</code>) in the preview buffer for it to be updated again.
+  This is why it is important to keep an eye on the Dired buffer to
+  get an accurate account of which files are marked or flagged.
+</p>
+<h3 id="working-on-marked-files">Working on Marked Files</h3>
+<p>
+  Say we have marked some image files using the key
+  sequence <code>m</code> in the preview buffer.  Now we can perform
+  various operations on these marked files.  For example, to copy the
+  marked files to <code>/tmp/</code> directory, in a Dired buffer,
+  type <code>C /tmp/ RET</code>.  To move them instead, type <code>R
+  /tmp/</code>.
+</p>
+<h3 id="deleting-images">Deleting Images</h3>
+<p>
+  When we flag thumbnails by typing <code>d</code> in the preview
+  buffer, the corresponding files are flagged for deletion in the
+  Dired buffer.  The first column of the flagged file entries contain
+  the letter <code>D</code> in the Dired buffer.  Type <code>x</code>
+  in the Dired buffer to permanently delete (expunge) the flagged
+  files.
+</p>
+<h3 id="tagging-and-untagging">Tagging and Untagging</h3>
+<p>
+  If there are marked images, then the tagging and untagging commands
+  executed in the preview buffer work on those marked images.
+  Otherwise, they work on image corresponding to the current
+  thumbnail.  We will refer to these images that the tagging or
+  untagging commands work on as <em>target</em> images in the next few
+  paragraphs..
+</p>
+<p>
+  The key sequence <code>t t trip;oxford;uk RET</code> tags the target
+  images with the tags <code>trip</code>, <code>oxford</code>,
+  and <code>uk</code>.  The tags must be separated by semicolon as
+  shown in the preceding example.  The tags are saved in a path set in
+  the <code>image-dired-db-file</code> variable.  Type <code>C-h v
+  image-dired-db-file</code> to read this path.  Typically, it is
+  something like <code>~/.emacs.d/image-dired/.image-dired_db</code>.
+  We will call this the DB file.  This file may be manually inspected
+  to see how this command and the next command affect the tags for
+  each thumbnail.  Alternatively, type <code>C-t e</code> in a Dired
+  buffer to view and edit the tags of the target files.
+<p>
+<p>
+  The key sequence <code>t r trip RET</code> removes the
+  tag <code>trip</code> from the target images.  By virtue of how this
+  functionality is implemented, a key sequence like <code>t r
+  t.*d</code> removes the tags <code>trip;oxford</code>
+  and <code>trip;salford</code> (if present) from the DB file but it
+  does not remove a tag like <code>trip;cambridge</code> (if present).
+</p>
+<h3 id="using-tags">Using Tags</h3>
+<p>
+  Tagging thumbnails could be useful if we want to later mark files by
+  tags.  In a Dired buffer, the key sequence <code>C-t f t.*d</code>
+  will mark all files whose thumbnails have tags (as they appear in
+  the tags file) matching the regular expression <code>t.*d</code>.
+  For example, images that have with tags <code>trip;oxford;uk</code>
+  as well as <code>trip;london;uk</code> will be marked but images
+  with tags <code>trip;bath;uk</code>
+  and <code>trip;liverpool;uk</code> will not be marked.
+</p>
+<h3 id="display-buffer">Display Buffer</h3>
+<p>
+  When we type <code>RET</code> in the preview buffer, the original
+  image is displayed in a display buffer.  The following key sequences
+  are supported in the display buffer:
+</p>
+<ul>
+  <li>
+    <code>s</code>: Resize image to fit window.
+  </li>
+  <li>
+    <code>f</code>: Display current image in full size.
+  </li>
+  <li>
+    <code>q</code>: Quit window.
+  </li>
+</ul>
+<p>
+  The book makes a note that when we open an image file directly from
+  a Dired buffer, the image is opened in <code>image-mode</code> which
+  is more powerful than the display buffer we get when we open an
+  image from the thumbnail preview window.
+</p>
+<h2 id="docview">DocView</h3>
+<p>
+  When a PDF or another document of a supported format is opened in
+  Emacs, they are converted to images on the fly and displayed in
+  Emacs.  In this section, we will discuss working with PDFs only.
+  The converted images are cached at the directory set in
+  the <code>doc-view-cache-directory</code> variable.
+</p>
+<p>
+  Type <code>C-h v auto-mode-alist RET</code> and search
+  for <code>doc-view</code> in the help buffer to see the list of file
+  formats that Emacs tries to open in DocView.
+</p>
+<p>
+  Ghostscript needs to be installed so that DocView can convert the
+  PDF into images.  Further, for some commands where we perform
+  text-based operations on the PDF, we need the <code>pdftotext</code>
+  command so that DocView can extract text from the PDF.
+  Type <code>C-h v doc-view-ghostscript-program RET</code>
+  and <code>C-h v doc-view-pdftotext-program RET</code> to see the
+  external programs that DocView depends on.  These programs can be
+  installed with the following command on a Debian or Debian-based
+  Linux distribution:
+</p>
+<pre><code>apt-get install ghostscript poppler-utils</code></pre>
+<p>
+  On a macOS system, run the following command instead:
+</p>
+<pre><code>brew install ghostscript poppler</code></pre>
+<p>
+  The following list presents some of the key bindings supported by
+  DocView:
+</p>
+<ul>
+  <li>
+    <code>n</code>: Go to next page.
+  </li>
+  <li>
+    <code>p</code>: Go to previous page.
+  </li>
+  <li>
+    <code>C-x ]</code>: Same as <code>n</code>.
+  </li>
+  <li>
+    <code>C-x [</code>: Same as <code>p</code>.
+  </li>
+  <li>
+    <code>SPC</code>: Scroll up if possible or go to next page.
+  </li>
+  <li>
+    <code>DEL</code>: Scroll down if possible or go to the previous page.
+  </li>
+  <li>
+    <code>S-SPC</code>: Same as above.
+  </li>
+  <li>
+    <code>M-&lt;</code>: View the first page.
+  </li>
+  <li>
+    <code>M-&gt;</code>: View the last page.
+  </li>
+  <li>
+    <code>+</code>: Enlarge the document.
+  </li>
+  <li>
+    <code>-</code>: Shrink the document.
+  </li>
+  <li>
+    <code>0</code>: Reset the document size to the initial one.
+  </li>
+  <li>
+    <code>W</code>: Fit the image width to the window width.
+  </li>
+  <li>
+    <code>H</code>: Fit the image height to the window height.
+  </li>
+  <li>
+    <code>P</code>: Fit the image to the window such that neither the
+    document width nor the document height exceed the window width or
+    height, respectively.
+  </li>
+  <li>
+    <code>F</code>: Resize the window so it just fits the page.  When
+    there is only window in the frame, the window cannot be resized
+    independently of the frame, so the frame is resized instead.
+  </li>
+  <li>
+    <code>M-x doc-view-presentation RET</code>: Display document in
+    presentation mode, i.e., as a full screen slide show.
+  </li>
+</ul>
+<p>
+  Although not mentioned in the book, here are some commands that show
+  how to perform text-based operations on the PDF.  These commands
+  need <code>pdftotext</code> to be installed.
+</p>
+<ul>
+  <li>
+    <code>C-s ^f..\> RET</code>: Initiate a new search for lines that
+    begin with a three-lettered word beginning with the
+    letter <code>f</code>.  The cursor does not move to the first
+    match automatically.  To make the cursor move to the first match,
+    type <code>C-s</code>.  This is also explained in the next point.
+  </li>
+  <li>
+    <code>C-s</code>: When a search has been initiated, jump to the
+    next match for the last search that was initiated.
+  </li>
+  <li>
+    <code>C-u C-s ^b..\> RET</code>: Initiate a new search.  This is
+    useful when a search was already initiated and we want to abandon
+    that search and start another new search.
+  </li>
+  <li>
+    <code>C-r</code>: Similar to <code>C-s</code> but works in reverse
+    direction.  All three commands mentioned above work
+    with <code>C-r</code> too.
+  </li>
+  <li>
+    <code>C-t</code>: Show tooltip for the current location.
+    Normally, this shows a tooltip like "Page 100 of 314" to describe
+    the current page.  When a search is in progress, the tooltip
+    includes all the matches from the current page too.
+  </li>
+  <li>
+    <code>C-c C-t</code>: Show the current document's content as text.
+    Then type the key sequence <code>C-c C-c</code> to switch to
+    editing the document and <code>C-c C-c</code> again to switch to
+    viewing the document.  The key sequence <code>C-c C-c</code> is
+    elaborated a little more in the next point.
+  </li>
+  <li>
+    <code>C-c C-c</code>: Toggle between editing or viewing the
+    document.  In case of PDF, switching to editing the document may
+    not be very helpful because the binary code of the document is
+    opened for editing in this mode which is quite non-trivial to edit
+    directly.
+  </li>
+</p>
+<h4 id="docview-resolution">DocView Resolution</h4>
+<p>
+  If the text in the document looks pixelated in Emacs, set
+  the <code>doc-view-resolution</code> variable to 300 as follows:
+</p>
+<pre><code>(setq doc-view-resolution 300)</code></pre>
+<p>
+  This sets the dots per inch resolution used to render the documents
+  to 300.  This offers a good trade-off between high quality rendering
+  and fast rendering.  After setting this variable, type the following
+  key sequences:
+</p>
+<ul>
+  <li>
+    <code>M-x doc-view-clear-cache RET</code> to delete the cache
+    directory.
+  </li>
+  <li>
+    <code>C-x k</code> to kill the existing DocView buffer (if any).
+  </li>
+  <li>
+    <code>C-x C-f document.pdf RET</code> to open the document
+    (say <code>document.pdf</code>) again!
+  </li>
+</ul>
+<p>
+  Clearing the cache directory and reopening the document in this
+  manner regenerates the images from the documents with the updated
+  resolution.
+</p>
+<h4 id="tramp">TRAMP</h4>
+<p>
+  TRAMP stands for Transparent Remote Access, Multiple Protocol.  The
+  general syntax of paths supported by TRAMP is:
+</p>
+<pre><code>/method:[user@][hostname[#port]]:[path]</code></pre>
+<p>
+  Here
+  are some complete key sequences that demonstrate various ways to
+  open a remote file using TRAMP:
+</p>
+<ol>
+  <li>
+    <code>C-x C-f /ssh:alice@host:~/foo.txt RET</code>: Edit file in a
+    remote host via SSH.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:susam@box#22:~/foo.txt RET</code>: Same as
+    above.  However the port is explicitly specified this time.
+  </li>
+  <li>
+    <code>C-x C-f /scp:alice@host:~/foo.txt RET</code>: Edit file in a
+    remote host via SCP.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:host:~/foo.txt RET</code>: Edit file in a
+    remote host via SSH after logging into it with the username of the
+    current user in the current shell.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@:~/foo.txt RET</code>: Edit file in
+    localhost via SSH after logging into it as a specific user.
+  </li>
+  <code>
+    <code>C-x C-f /ssh::~/foo.txt RET</code>: Edit file in localhost
+    via SSH after logging into it with the username of the current
+    user in current shell.
+  </code>
+  <li>
+    <code>C-x C-f /sudo::/etc/hosts</code>: Edit file as superuser.
+  </li>
+  <li>
+    <code>C-x c-f /sudo:alice@:~/foo.txt RET</code>: Edit file as
+    a specific user.
+  </li>
+  <li>
+    <code>C-x C-f /sudoedit::/etc/hosts</code>: Edit file as superuser
+    but do not keep an open session running in the background for
+    security reasons.  This method has worse performance than
+    the <code>sudo</code> method.
+  </li>
+  <li>
+    <code>C-x C-f /su::/etc/hosts</code>: Edit file as
+    the <code>root</code> user.
+  </li>
+  <li>
+    <code>/su:alice@:~/foo.txt</code>: Edit file as a specific user.
+  </li>
+  <li>
+    <code>C-x C-f /sudo:: RET</code>: Browse the <code>root</code>
+    user's home directory as superuser.
+  </li>
+  <li>
+    <code>C-x C-f /su:: RET</code>: Browse the <code>root</code>
+    user's home directory with Dired.
+  </li>
+  <li>
+    <code>C-x C-f /-:: RET</code>:
+    Use <code>tramp-default-method</code> (<code>scp</code> by
+    default) to connect to <code>tramp-default-host</code>
+    (current <code>hostname</code> by default).  With the default
+    values of these variables, this leads to connecting to the local
+    system as the current user via SCP and browsing the current user's
+    home directory in Dired.
+  </li>
+</ol>

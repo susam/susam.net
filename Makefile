@@ -397,7 +397,7 @@ pull-backup:
 TMP_REV = /tmp/rev.txt
 CAT_REV = cat $(TMP_REV)
 GIT_SRC = https://github.com/susam/susam.net
-GIT_DST = https://github.com/susam/susam.github.io
+GIT_DST = git@github.com:susam/susam.github.io.git
 WEB_URL = https://susam.github.io/
 TMP_GIT = /tmp/tmpgit
 README  = $(TMP_GIT)/README.md
@@ -426,7 +426,7 @@ mirror: site
 	cd $(TMP_GIT) && git config user.email susam@susam.net
 	cd $(TMP_GIT) && git add .
 	cd $(TMP_GIT) && git commit -m "Generated from $(GIT_SRC) - $$($(CAT_REV))"
-	cd $(TMP_GIT) && git remote add origin "$(GIT_DST).git"
+	cd $(TMP_GIT) && git remote add origin "$(GIT_DST)"
 	cd $(TMP_GIT) && git log
 	cd $(TMP_GIT) && git push -f origin main
 	@echo

@@ -1,5 +1,5 @@
 <!-- title: Notes on Chapter 4: The Theory of Movement -->
-<!-- date: 2022-03-25 -->
+<!-- date: 2023-03-25 -->
 <p>
   The following notes were taken while discussing Chapter 4 of the
   book <em>Mastering Emacs</em>, 2022 edition (written by Mickey
@@ -87,17 +87,35 @@
     <p>
       In this step, we could have typed <code>C-g</code> to quit the
       minibuffer first but we did not do that.  We pretended to get
-      distracted by the text buffer and wait straight to it from the
+      distracted by the text buffer and went straight to it from the
       minibuffer by typing <code>C-x o</code>.  At this point, the
-      point is in the text buffer and the minibuffer remains open at
-      the bottom.  This can be distracting while performing the text
-      editing tasks.
+      cursor is in the text buffer and the minibuffer remains open at
+      the bottom.  The open minibuffer can be distracting while
+      performing the text editing tasks.  Typing <code>C-g</code> now
+      will not get rid of the minibuffer because the cursor is no
+      longer in the minibuffer.
     </p>
   </li>
   <li>
     <p>
-      Now type <code>ESC ESC ESC</code> to get rid of the minibuffer
-      at the bottom.
+      Now one way to close the open minibuffer could be to
+      type <code>C-x o</code> to go back to the minibuffer window and
+      type <code>C-g</code>.  However, there is a more direct way to
+      do this as explained in the next point.
+    </p>
+  </li>
+  <li>
+    <p>
+      Type <code>ESC ESC ESC</code> to get rid of the minibuffer at
+      the bottom.  This works even when the cursor is not in the
+      minibuffer but is in the text buffer instead.
     </p>
   </li>
 </ol>
+<p>
+  TODO: More notes coming up here soon!
+</p>
+<h2 id="occur-mode">Occur Mode</h2>
+<p>
+  TODO: More notes coming up here soon!
+</p>
