@@ -36,7 +36,7 @@ Sun Sep 13 12:26:40 UTC 2020</samp>
 All such dates (in UTC) until the end of the current century:
 </p>
 <pre>
-$ <kbd>python3 -q</kbd>
+<samp>$ <kbd>python3 -q</kbd>
 >>> <kbd>from datetime import datetime</kbd>
 >>> <kbd>for t in range(0, 4_200_000_000, 100_000_000):</kbd>
 ... <kbd>    print(f'{t:13_d} - {datetime.utcfromtimestamp(t)}')

@@ -1,5 +1,5 @@
 <!-- title: Notes on Chapter 3: First Steps -->
-<!-- date: 2022-12-18 -->
+<!-- date: 2023-01-07 -->
 <p>
   The following notes were taken while discussing Chapter 3 of the
   book <em>Mastering Emacs</em>, 2022 edition (written by Mickey
@@ -381,14 +381,11 @@
 <p>
   Emacs 28 introduces <code>M-X</code> that runs the
   command <code>execute-extended-command-for-buffer</code>.  The book
-  mentions this key binding as <code>M-S-x</code> which is technically
-  the same thing as <code>M-x</code>.  After
-  all, <kbd>shift</kbd>+<kbd>x</kbd> produces the
-  character <code>X</code>.  In these notes, we'll
-  write <code>M-X</code> for simplicity and also for consistency with
-  the output of <code>describe-key</code> (i.e., the output
-  of <code>C-h k M-S-x</code> shows the key as <code>M-X</code>,
-  not <code>M-S-x</code>).
+  mentions this key binding as <code>M-S-x</code> which is in
+  fact <code>M-X</code>.  In these notes, we'll write <code>M-X</code>
+  for consistency with how this key sequence is actually defined and
+  represented in Emacs (for example, note that <code>C-h k
+  M-S-x</code> shows the key as <code>M-X</code>).
 </p>
 <p>
   To see how this function works, first open a file,
@@ -872,7 +869,7 @@
 <p>
   The following points explain the navigation commands of Info:
 </p>
-<ol>
+<ul>
   <li>
     Type <code>[</code> or <code>]</code> to go to the previous or
     next node, respectively.  Typing <code>]</code> repeatedly is a
@@ -899,10 +896,10 @@
     Type <code>DEL</code> or <code>S-SPC</code> to scroll one screen
     backward at a time.  When a node boundary is reached, these
     commands automatically load the next or previous node.  Thus
-    typing <code>SPC</code> over and over again is a nice way to all
-    the text in a node and then go to the next node.  This provides an
-    experience that is closest to reading a book paragraph by
-    paragraph and page by page.
+    typing <code>SPC</code> over and over again is a nice way to read
+    all the text in a node and then go to the next node.  This
+    provides an experience that is closest to reading a book paragraph
+    by paragraph and page by page.
   </li>
   <li>
     Type <code>TAB</code> to go to the next cross-reference or menu
@@ -924,7 +921,7 @@
     Therefore typing <code>C-h i</code> will switch to the Info buffer
     and we can read the last node we visited again.
   </li>
-</ol>
+</ul>
 <p>
   To summarise, the commands <code>[</code> and <code>]</code> are
   great for browsing every node.  The command <code>SPC</code>
@@ -932,36 +929,42 @@
   paragraph and page by page.
 </p>
 <p>
-  Further, when we open the Info reader with <code>C-h i</code> for
-  the first time, immediately typing <code>m</code> is a convenient
-  way to enter a particular menu item for a manual and jump to that
-  manual.
+  There are several ways to reach a specific node of a specific
+  manual.  The following points describe some of them:
 </p>
-<p>
-  Since Emacs 28, we can also use <code>C-h R</code> to open a
-  specific manual from any buffer, i.e., we do not need to
-  type <code>C-h i</code> first to enter Info.  For example,
-  type <code>C-h R org RET</code> to enter the Org manual.
-</p>
-<p>
-  To look up the documentation for a command, type <code>C-h F</code>,
-  e.g., <code>C-h F find-file RET</code>.
-</p>
-<p>
-  Although not mentioned in the book, a popular way to point others to
-  a specific node in the manual is to provide an Elisp expression like
-  the following:
-</p>
-<pre><code>(info "(org) Internal Links")</code></pre>
-<p>
-  Evaluating this Elisp expression takes us to the node
-  named <code>Internal Links</code> in the <code>org</code> manual.
-  Of course, we could have reached it indirectly by typing <code>C-h R
-  org RET m Hyperlinks RET m Internal Links RET</code> or
-  even <code>C-h R org RET m Internal Links RET</code>.  However, the
-  above Elisp expression is a convenient way to share a pointer to a
-  specific node in a specific manual with other Emacs users.
-</p>
+<ul>
+  <li>
+    When we open the Info reader with <code>C-h i</code> for the first
+    time, immediately typing <code>m</code> is a convenient way to
+    enter a particular menu item for a manual and jump to that manual,
+    e.g., type <code>C-h i m org RET</code> to go to the Org manual.
+  </li>
+  <li>
+    Since Emacs 28, we can also use <code>C-h R</code> to open a
+    specific manual from any buffer, i.e., we do not need to
+    type <code>C-h i</code> first to enter Info.  For example,
+    type <code>C-h R org RET</code> to enter the Org manual.
+  </li>
+  <li>
+    To look up the documentation for a command, type <code>C-h
+      F</code>, e.g., <code>C-h F find-file RET</code>.
+  </li>
+  <li>
+    Although not mentioned in the book, a popular way to point others
+    to a specific node in the manual is to provide an Elisp expression
+    to visit a node.  For example, to read the node
+    named <code>Internal Links</code> in the <code>org</code> manual,
+    evaluate the expression <code>(info "(org)Internal Links")</code>.
+  </li>
+  <li>
+    An alternative to the Elisp expression in the previous point could
+    be typing <code>C-h R org RET m Hyperlinks RET m Internal Links
+    RET</code> or even <code>C-h R org RET m Internal Links
+    RET</code>.  However, the Elisp expression in the previous point
+    is a convenient way to share a pointer to a specific node in a
+    specific manual with other Emacs users.
+  </li>
+</ul>
 <h2 id="apropos">Apropos</h2>
 <p>
   The following key sequences demonstrate how to use the apropos
@@ -983,7 +986,7 @@
   </li>
   <li>
     <code>C-h d cleanup-region RET</code>: Show symbols whose
-    documentation strings matche the given regular expression pattern.
+    documentation strings match the given regular expression pattern.
     Note that this command shows symbols
     like <code>whitespace-cleanup</code>
     and <code>whitespace-report-region</code> in the results because
@@ -1032,7 +1035,7 @@
 <p>
   The following key sequences demonstrate the describe system:
 </p>
-<ol>
+<ul>
   <li>
     <code>C-h m</code>: Display documentation of current major mode
     and minor modes along with key bindings introduced by the modes.
@@ -1059,7 +1062,7 @@
     <code>C-h k C-x C-f</code>: Display documentation of the command
     bound to the key sequence <code>C-x C-f</code>.
   </li>
-</ol>
+</ul>
 <h2 id="links">Links</h2>
 <p>
   The following list includes some links that were discussed during

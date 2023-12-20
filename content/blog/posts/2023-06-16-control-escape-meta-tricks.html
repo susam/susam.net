@@ -260,16 +260,17 @@
   from the character code has been yet another one. These different
   methods produce identical results for the first table but not so for
   the second table. For example, while turning off the 6th and 7th
-  bits of 32 (the code of the <em>space</em> character) does give us 0
-  but merely flipping its 7th bit does not. Further, note that
-  allowing <kbd>ctrl</kbd>+<kbd>space</kbd> to produce the null
-  character is a bit redundant because <kbd>ctrl</kbd>+<kbd>@</kbd>
-  already did that right from the days of very early keyboards. The
-  second entry above is also a special rule because we neither turn
-  off bits nor subtract 64. Instead, we flip the 7th least significant
-  bit which amounts to adding 64 to the code of the modified
-  character. It is also the only control code that has its 6th and 7th
-  least significant bits turned on.
+  least significnat bits of 32 (the code of the <em>space</em>
+  character) does give us 0 but merely flipping its 7th bit does
+  not. Further, note that allowing <kbd>ctrl</kbd>+<kbd>space</kbd> to
+  produce the null character is a bit redundant
+  because <kbd>ctrl</kbd>+<kbd>@</kbd> already did that right from the
+  days of very early keyboards. The second entry above is also a
+  special rule because we neither turn off bits nor subtract
+  64. Instead, we flip the 7th least significant bit which amounts to
+  adding 64 to the code of the modified character. It is also the only
+  control code that has its 6th and 7th least significant bits turned
+  on.
 </p>
 <h2 id="meta-key-sequences">Meta Key Sequences</h2>
 <p>
