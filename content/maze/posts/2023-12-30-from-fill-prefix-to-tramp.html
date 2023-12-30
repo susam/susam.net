@@ -1,0 +1,592 @@
+<!-- title: From Fill Prefix to TRAMP -->
+<!-- tag: Emacs Meetup -->
+<p>
+  Our <a href="meet/mastering-emacs/{{ index }}">tiny book club</a>
+  that used to meet during the weekends and holidays and discuss the
+  book <a href="https://www.masteringemacs.org/">Mastering Emacs</a>,
+  2022 edition came to an end today.  We had
+  our <a href="meet/mastering-emacs/log.html#72">final meeting
+  today</a> in which we discussed how to use Dired to work across
+  multiple directories, the various shells and terminal modes
+  available in Emacs, and the final chapter of the book that offers
+  some recommendations about third-party packages and online Emacs
+  communities.
+</p>
+<p>
+  A big thanks to Mickey Petersen for writing the book and also very
+  generously granting me the permission to share his book on screen
+  while discussing the book.
+</p>
+<p>
+  This book club began on 16 Dec 2022 when we had our first meeting
+  over Jitsi.  Nearly nine months ago, on 02 Apr 2023, I posted an
+  update about this book club in another blog post which can be found
+  here: <a href="from-lunar-phases-to-yank-pop.html">From Lunar Phases
+  to Yank-Pop</a>.  If you have not read that post yet, please do read
+  it before returning to this post.  If you have recently begun
+  learning Emacs, I think you will find that post very useful.
+</p>
+<p>
+  Back then, when I posted that last update, we had spent about 26
+  hours together across 36 meetings and we were reading Chapter 5 of
+  the book.  It took another 36 meetings to complete that chapter and
+  the remaining two chapters.  After a total of 72 meetings, we
+  completed discussing Chapter 7 of the book which concluded this
+  series of book club meetings.  In total, we have spent a little over
+  52 hours together to discuss this book, trying out every concept and
+  command introduced in the book, and sharing our insights about the
+  material with each other.
+</p>
+<p>
+  In this post, I will share some highlights from our meetings since
+  the <a href="from-lunar-phases-to-yank-pop.html">last update</a>.
+  These highlights share some concepts and commands we learnt that
+  most members of our book club were not familiar with earlier but
+  were found to be very useful after having learnt them.
+</p>
+<h2 id="fill-prefix">Fill Prefix</h2>
+<p>
+  Most of us in the book discussion group knew about filling
+  paragraphs with <code>M-q</code>.  Type a badly formatted paragraphs
+  with very long and very short lines, say, something like the
+  following one:
+</p>
+<pre>
+<code>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore
+magna aliqua.  Arcu dui vivamus arcu felis bibendum ut tristique et egestas.
+Bibendum arcu vitae
+elementum curabitur vitae.</code>
+</pre>
+<p>
+  Now put the point (cursor) anywhere on the paragraph and
+  type <code>M-q</code>.  The paragraph gets neatly formatted to
+  something like this:
+</p>
+<pre>
+<code>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua.  Arcu dui
+vivamus arcu felis bibendum ut tristique et egestas.  Bibendum arcu
+vitae elementum curabitur vitae.</code>
+</pre>
+<p>
+  The key sequence <code>M-q</code> invokes
+  the <code>fill-paragraph</code> command that reformats the paragraph
+  such that each line is as long as possible without exceeding the
+  fill width (70 columns by default).  This is a feature most of use
+  very often.  However what some of us did not know that there is such
+  a thing as fill-prefix which is taken into account while filling
+  paragraphs.  To illustrate this concept, we will first consider this
+  badly formatted paragraph:
+</p>
+<pre>
+<code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+:::: incididunt ut labore et dolore
+:::: magna aliqua.  Arcu dui vivamus arcu felis bibendum ut tristique et egestas.
+:::: Bibendum arcu vitae
+:::: elementum curabitur vitae.</code>
+</pre>
+<p>
+  For some reason each line has a prefix consisting of four colons and
+  a space.  After we reformat this paragraph with <code>M-q</code>, we
+  get something like this:
+</p>
+<pre>
+<code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+eiusmod tempor :::: incididunt ut labore et dolore :::: magna aliqua.
+Arcu dui vivamus arcu felis bibendum ut tristique et egestas.  ::::
+Bibendum arcu vitae :::: elementum curabitur vitae.</code>
+</pre>
+<p>
+  This is not what we want.  We want the paragraph to be formatted
+  such that each line does not exceed 70 characters in length (which
+  we have, in fact, been accomplished above) and each line contains
+  the four colons and a space as the prefix (this is broken above).
+  Can we do this?  Yes, by setting a fill prefix.
+  Type <code>C-/</code> or <code>C-x u</code> to undo the bad
+  formatting we did just now and let us try again.  This time move the
+  point over to the <code>L</code> of <code>Lorem</code> and
+  type <code>C-x .</code> to set the fill prefix to the current line
+  up to the point.  A confirmation is printed in the echo area
+  that <code>":::: "</code> has been set as the fill prefix.  Then
+  type <code>M-q</code> and the paragraph is now neatly formatted to
+  the following:
+</p>
+<pre>
+<code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+:::: eiusmod tempor incididunt ut labore et dolore magna aliqua.  Arcu
+:::: dui vivamus arcu felis bibendum ut tristique et egestas.
+:::: Bibendum arcu vitae elementum curabitur vitae.</code>
+</pre>
+<p>
+  Note how every line is as long as possible without exceeding 70
+  characters in length and each line contains the fill prefix.  Emacs
+  took care to remove the fill prefix from each line, subtract the
+  length of the fill prefix from the maximum character budget it has
+  for each line, reformat the lines, and then reinsert the fill prefix
+  on each line of the result.
+</p>
+<p>
+  To turn off the fill prefix, simply set it to an empty prefix by
+  typing <code>C-x .</code> at the beginning of the line.
+  Thus, <code>C-a C-x .</code> becomes an idiom for turning off the
+  fill prefix.
+</p>
+<h2 id="elisp-expressions-in-replacement-strings">Elisp Expressions in Replacement Strings</h2>
+<p>
+  It was no surprise to anyone in the book discussion group that the
+  key sequence <code>C-M-% f.. RET bar RET</code> starts a
+  search-and-replace operation for strings that match the regular
+  expression pattern <code>f..</code> to be replaced with the
+  text <code>bar</code>.
+</p>
+<p>
+  The concept of backreferences was also known to most.  For
+  example, <code>C-M-% \(f..\)-\(b..\) RET \2-\1 RET</code> searches
+  for strings matching the given regular expression pattern and
+  replaces it with a new string that swaps the positions of the first
+  capturing group and the second capturing group.  The
+  backreference <code>\1</code> refers to the string matched by the
+  first capturing group <code>\(f..\)</code> and
+  similarly <code>\2</code> refers to the string matched by the secodn
+  capturing group <code>\(b..\)</code>.  In this exapmle, a string
+  like <code>foo-bar</code> is replaced with <code>bar-foo</code>,
+  or <code>playful-banter</code> with <code>playban-fulter</code>.
+</p>
+<p>
+  However what came as a surprise to some of us that we could also use
+  Elisp expressions in the replacemet strings.  The syntax to do so is
+  to write <code>\,</code> followed by the Elisp expression in the
+  replacement string.  For example, the key sequence <code>C-M-%
+  f.. RET \,(upcase \&) RET</code>.  Note how we are using the
+  backreference <code>\&</code> that refers to the whole match as the
+  argument to the Elisp function <code>upcase</code> that converts its
+  argument to upper-case.  This example searches for strings that
+  match the pattern <code>f..</code> and replace them with the
+  upper-case form of the match.  A string like <code>foo-bar</code> is
+  replaced with <code>FOO-bar</code>.
+</p>
+<p>
+  Here is another slightly more sophisticated example: <code>C-M-%
+  port-\([0-9]+\) RET port-\,(+ 1000 \#1)</code>.  The
+  backreference <code>\#1</code> refers to the string matched by the
+  first capturing group <code>\([0-9]+\)</code> as
+  an <em>integer</em>.  The Elisp expression in the replacement
+  pattern simply adds 1000 to that number and replaces the matched
+  string with the result.  A string like <code>port-80</code>
+  becomes <code>port-1080</code>.
+</p>
+<h2 id="keep-lines-and-flush-lines">Keep Lines and Flush Lines</h2>
+<p>
+  Another nifty set of commands that our group members enjoyed
+  learning were the commands about keeping and flushing lines.  These
+  commands can be incredibly useful while filtering large log files.
+  Here is a brief illustration of some of these commands:
+</p>
+<ul>
+  <li>
+    <code>M-x keep-lines RET f.. RET</code>: Keep lines in region that
+    match the regular expression <code>f..</code> and delete the rest.
+    If no region is active, then keep matching lines between the point
+    and end of buffer, and delete the rest.  The deleted lines are not
+    copied to kill ring.
+  </li>
+  <li>
+    <code>M-x flush-lines RET f.. RET</code>: Delete lines in the
+    region that match the regular expression <code>f..</code>.  If no
+    region is active, then delete matching lines between the point and
+    end of buffer.  The deleted lines are not copied to kill ring.
+  </li>
+</ul>
+<p>
+  Note how each point above mentions that the deleted lines are not
+  copied to the kill ring.  This can be an inconvenience if we want to
+  quickly yank the deleted lines to another buffer.  Emacs 28.1
+  introduces a couple of more commands that remedy this situation to
+  an extent.  Here they are:
+</p>
+<ul>
+  <li>
+    <code>M-x copy-matching-lines RET f.. RET</code>: Copy lines in
+    the region that match the regular expression <code>f..</code>.  If
+    no region is active, then copy matching lines between the point
+    and end of buffer.
+  </li>
+  <li>
+    <code>M-x kill-matching-lines RET f.. RET</code>: Kill lines in
+    region that match the regular expression <code>f..</code> to the
+    kill ring.  If no region is active, then kill matching lines
+    between the point and end of buffer.
+  </li>
+</ul>
+<h2 id="keyboard-macros">Keyboard Macros</h2>
+<p>
+  Most experienced Emacs users in our group were aware of keyboard
+  macros.  However, some people did learn this wonderful automation
+  feature for the first time in our meetings, so I thought this
+  deserves its own section in this post.
+</p>
+<p>
+  Keyboard macros is a large topic on its own which is best learnt
+  from
+  section <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html">Keyboard
+  Macros</a>.  On Emacs, type <code>M-: (info "(emacs) Keyboard
+  Macros")</code> to open this section using the Info documentation
+  browser.  In this blog post though, we will very briefly talk about
+  keyboard macros that should be enough to get a beginner started with
+  them.
+</p>
+<p>
+  Say, we have a buffer that looks like this:
+</p>
+<pre>
+<code>foo:bar:baz
+bar:baz:qux
+quux:corge:grault
+garply:waldo:fred</code>
+</pre>
+<p>
+  Now suppose we want to swap the first two fields separated by colon
+  in each line.  Of course, we could do it using regular expressions,
+  for example, with the key sequence <code>C-M-% ^\(.+\):\(.+\) RET
+  \2:\1 RET</code> but we can also solve this problem in a more "dumb"
+  way by simply performing the edits necessary to do the swap on one
+  line and then ask Emacs to repeat what we did on other lines.  Here
+  are the steps:
+</p>
+<ol>
+  <li>
+    First move the point (cursor) to somewhere on the first line.
+  </li>
+  <li>
+    Then type <code>C-x (</code> to start recording a keyboard macro.
+  </li>
+  <li>
+    Then type <code>C-a M-d C-d M-f : C-y C-n</code> to swap the first
+    and second fields on the first line and moves the point to the
+    next line.  This is just one way to achieve the swap.  You may use
+    any editing commands you are comfortable with to make the swap and
+    move the point to the next line.
+  </li>
+  <li>
+    Now type <code>C-x )</code> to stop macro recording.
+  </li>
+  <li>
+    Now type <code>C-x e</code> to replay the macro in the second
+    line.  As soon as we type this key sequence, the swap occurs in
+    the second line and the cursor moves to the third line.  Keep
+    repeating this key sequence to keep repeating the swap operation
+    on subsequent lines.
+  </li>
+</ol>
+<p>
+  To summarise, <code>C-x (</code> starts recording a new keyboard
+  macro, <code>C-x )</code> stops recording the keyboard macro,
+  and <code>C-x e</code> replays the last keyboard macro.
+  Alternatively, we could also functions keys <code>F3</code>
+  and <code>F4</code>.  To start recording a keyboard macro,
+  type <code>F3</code>.  Type <code>F4</code> to stop recording a
+  keyboard macro.  Then type <code>F4</code> again to replay the last
+  macro.
+</p>
+<p>
+  Pay close attention to step 3 above.  We start the key sequence
+  with <code>C-a</code> to move the point to the first column.  This
+  may feel redundant when the cursor is already at the first column.
+  However in our meetings, I used to emphasise often about the
+  importance of this.  Typing <code>C-a</code> at the beginning
+  ensures that we do not carry over any assumptions about where the
+  cursor is on the line into the rest of the keyboard macro definition
+  we are going to record.  By typing <code>C-a</code>, we ensure that
+  no matter where the cursor is on the line, when we replay the macro,
+  the cursor would first move to the beginning of the line.  This
+  guarantee allows us to confidently define the rest of the editing
+  operations necessary to perform the swap.
+</p>
+<p>
+  Similarly, at the end we type <code>C-n</code> to move the point to
+  the next line.  This is important too and I used to emphasise this
+  too in our meetings.  Moving the cursor to the next line ensures
+  that the cursor is in a good place to allow repeating the keyboard
+  macro again immediately.  This is why we could type <code>C-x
+  e</code> (or alternatively, <code>F4</code>) over and over again to
+  replay the macro on subsequent lines.  In fact, if we feel confident
+  about the keyboard macro, we can repeat it several times
+  automatically using the digit argument.  For example, type <code>C-3
+  C-x e</code> (or alternatively <code>C-3 F4</code>) to repeat the
+  keyboard macro 3 times.  We could also type <code>C-0 C-x e</code>
+  (or alternatively <code>C-0 F4</code>) to repeat the keyboard macro
+  until there is an error (e.g., reaching the end of the buffer).
+</p>
+<h2 id="dabbrev">DAbbrev</h2>
+<p>
+  DAbbrev stands for <code>dynamic abbrevation</code>.  This is a
+  pretty useful package that many of us learnt only from our book club
+  meetings.  We discussed two simple key sequences supported by this
+  package:
+</p>
+<ul>
+  <li>
+    <code>M-/</code>: Expand the word before the point to the nearest
+    preceding word for which the current word is a prefix.  In case,
+    no suitable preceding word is found, then expand the current word
+    to the nearest succeeding word for which the current word is a
+    prefix.
+  </li>
+  <li>
+    <code>C-M-/</code>: Find all words in the buffer that has the
+    current word before the cursor as the prefix and expand the
+    current word to the longest common prefix of all these matching
+    words.  However, if the longest common prefix of the matching
+    words is same as the word before the cursor, then present them as
+    suggestions for completion.  If there is exactly one matching
+    word, expand the word before the cursor to that word.
+  </li>
+</ul>
+<p>
+  Let us look at some examples.  Suppose there is a buffer with the
+  following one line of text:
+</p>
+<pre><code>abacus apple appliance application</code></pre>
+<p>
+  Now if we type <code>ap</code> on the next line and
+  type <code>M-/</code>, DAbbrev automatically expands the partially
+  written word to <code>application</code> because that is nearest
+  word that has <code>ap</code> as the prefix.
+</p>
+<p>
+  But if we type <code>ap</code> and type <code>C-M-/</code>, the word
+  expands to <code>appl</code> since that is the longest common prefix
+  among all the matching words.  If we type <code>C-M-/</code> again,
+  then <code>apple</code>, <code>appliance</code>,
+  and <code>application</code> are presented as possible completions
+  in a temporary buffer named <code>*Completions*</code>.  If we
+  type <code>ic</code>, so that the word before the cursor
+  becomes <code>appic</code>, and type <code>C-M-/</code>, it is
+  expanded to <code>application</code> because that is the only
+  possible completion now.
+</p>
+<p>
+  These two commands are simpler than it sounds from the long
+  description of these commands presented in the preceding section.
+  When we actually begin to use them, they begin to intuitive in no
+  time.  Roughly speaking, while <code>M-/</code> expands the word
+  before the point to the nearest preceding word, <code>C-M-/</code>
+  considers all matching words in the file for expansion and presents
+  completion options to the user when it finds multiple of them.
+</p>
+<h2 id="tab-vs-m-i">TAB vs M-i</h2>
+<p>
+  The behaviour of Emacs while <code>TAB</code> can be surprising to
+  beginners.  In most other mainstream editors, this key inserts a tab
+  character or enough number of spaces so that the cursor moves to the
+  next tab stop.  But in Emacs, <code>TAB</code> most often indents
+  the current line according to the syntax rules implemented by the
+  major mode enabled in the buffer.
+</p>
+<p>
+  What is a simple key on other editors happens to be a complex
+  feature in Emacs.  The exact behaviour of <code>TAB</code> is
+  controlled by variables
+  like <code>tab-always-indent</code>, <code>indent-line-function</code>,
+  etc.  Some major modes may refer to other such special variables to
+  decide what <code>TAB</code> should do.  However, as a user of Emacs
+  this is not something we normally worry about.  Most major modes set
+  up all these variables in such a way that <code>TAB</code> almost
+  always does what an experienced Emacs user expects, i.e., indent the
+  current line of code correctly.
+</p>
+<p>
+  But what if we really do want to just insert a tab or enough number
+  of spaces to move the point to the next tab stop column.  That is
+  done with <code>M-i</code>.  If the
+  variable <code>indent-tabs-mode</code> is set to <code>t</code>,
+  then <code>M-i</code> inserts a literal tab character.  If it is set
+  to <code>nil</code>, then <code>M-i</code> inserts enough number of
+  spaces to move the point to the next tab stop column.
+</p>
+<p>
+  To summarise, the behaviour of <code>M-i</code> is similar to
+  the <code>TAB</code> behaviour we observe in other editors.
+  However, I have never seen any Emacs user using this key sequence on
+  a regular basis while performing day-to-day work of editing code.
+  Everyone I know just types <code>TAB</code> to automatically indent
+  code.  In fact, we could also select a region of code and
+  type <code>TAB</code> to reindent the whole region.  It takes a
+  while for beginners to get used to this <code>TAB</code> behaviour
+  but I think that it is really worthwhile getting used to this
+  behaviour.
+</p>
+<h2 id="project-management">Project Management</h2>
+<p>
+  The project management commands that come out of the box (from the
+  package named <code>project.el</code>) came as a surprise to some.
+  In fact, some members of our group who never used the project
+  management commands before now happen to use them often after
+  learning about them in our meetings.
+</p>
+<p>
+ When we use a project management command like <code>C-x p f</code> to
+ visit a file in the current project, this package automatically
+ detects the top-level directory of the project by checking parent
+ directories for version control system artifacts
+ (e.g., <code>.git</code> directory) and presents files within that
+ top-level directory as autocomplete options.
+</p>
+<p>
+  There is a lot that can be written about the project management
+  features that come out of the box in Emacs.  The following list
+  introduces only the very simple ones to get someone started with
+  them:
+</p>
+<ul>
+  <li>
+    <code>C-x p p ... TAB RET ~/git/foo/ RET f README.md</code>: This
+    awkward key sequence discovers a new project directory at
+    <code>~/git/foo/</code> and then finds the file
+    named <code>README.md</code> in it.  As soon as the key
+    sequence <code>f</code> is typed above, the new project directory
+    is discovered and added to <code>~/.emacs.d/projects</code> which
+    is where the list of known projects is saved.  While this key
+    sequence is awkward, this needs to be done only once for each
+    project while working with that project for the first time.
+  </li>
+  <li>
+    <code>C-x p p foo TAB RET f Makefile RET</code>: Assuming there is
+    already a known project with <code>foo</code> in its name
+    (say, <code>~/git/foo/</code>) that was discovered earlier, this
+    key sequence switches to that project and finds the file named in
+    Makefile in it.
+  </li>
+  <li>
+    <code>C-x p f logger RET</code>: Find file with name that
+    matches <code>logger</code> in the current project.  This searches
+    all subdirectories recursively.  If there is only matching file
+    (say, <code>src/logger.cc</code>), that file is opened.  If there
+    are multiple matching files
+    (say, <code>src/logger.cc</code>, <code>test/logger_test.cc</code>,
+    etc.), they are presented as completion options.
+  </li>
+  <li>
+    <code>C-x p f foo TAB RET logger TAB RET</code>: When we
+    type <code>C-x p f</code> while visiting a file that does not
+    belong to any project, then its prompts for a project name first.
+    In this example, we type <code>foo TAB RET</code> to automatically
+    expand it to a known project name such as <code>~/git/foo/</code>
+    and enter it.  Then we type <code>logger TAB RET</code> to
+    automatically expand it to a file name such
+    as <code>src/logger.cc</code>.
+  </li>
+  <li>
+    <code>C-x p g ^key\&gt; RET</code>: Find all matches for the
+    regular expression <code>^key\&gt;</code> in the current project.
+    The results are displayed in <code>*xref*</code> buffer.
+  </li>
+  <li>
+    <code>C-x p s</code>: Start a shell in the current project's root directory.
+  </li>
+  <li>
+    <code>C-x p d</code>: Start Dired in the current project's root directory.
+  </li>
+</ul>
+<p>
+  There are several more project management commands but we will end
+  the above list here for the sake of brevity.  Do pay attention to
+  the fourth point that mentions if the current file does not belong
+  to any project, we are first prompted to enter the project name.
+  This is a common theme for all project management commands.  Anytime
+  we invoke a project management command, it works on the current
+  project.  However if there is no current project, then it
+  automatically prompts us to enter a project name before executing
+  the command.
+</p>
+<h2 id="eshell-with-tramp">Eshell with TRAMP</h2>
+<p>
+  Many members of group knew about Eshell and TRAMP separately.  For
+  example, <code>M-x eshell RET</code> starts Eshell.  Eshell is
+  implemented purely in Elisp and we can use it somewhat like a
+  regular shell.  Here is an example session:
+</p>
+<pre>
+<samp>~ $ <kbd>cd /tmp/</kbd>
+/tmp $ <kbd>echo hello &gt; hello.txt</kbd>
+/tmp $ <kbd>cat hello.txt</kbd>
+hello
+/tmp $ <kbd>python3 --version</kbd>
+Python 3.11.5
+/tmp $ <kbd>which cd echo cat python3 which</kbd>
+eshell/cd is a byte-compiled Lisp function in ‘em-dirs.el’.
+eshell/echo is a byte-compiled Lisp function in ‘em-basic.el’.
+eshell/cat is a byte-compiled Lisp function in ‘em-unix.el’.
+/usr/bin/python3
+eshell/which is a byte-compiled Lisp function in ‘esh-cmd.el’.</samp>
+</pre>
+<p>
+  We also knew about TRAMP.  For example, when we type the key
+  sequence <code>C-x C-f /ssh:alice@box:/tmp/foo.txt RET</code>, TRAMP
+  notices that we intend to connect to a remote system
+  named <code>box</code> as the user <code>alice</code> and edit a
+  file named <code>/tmp/foo.txt</code> on the remote system.  TRAMP
+  then transparently establishes the SSH connection for us.  If public
+  key authentication is already set up, then the connection is
+  successfully established in a few seconds.  Otherwise it prompts for
+  a password.  In the end, we do get a buffer to edit the remote
+  file <code>/tmp/foo.txt</code>.  Once we have this buffer, we never
+  have to do anything special to work on the remote system.  All Emacs
+  commands work seamlessly on this buffer for the remote file.  For
+  example, when we type <code>C-x C-s</code> TRAMP would go ahead and
+  save the file to the remote system using the established SSH
+  connection.
+</p>
+<p>
+  So we knew about Eshell and we knew about TRAMP.  However what many
+  of us found pleasantly surprising was how well Eshell and TRAMP work
+  together.  Here is an example Eshell session that demonstrates this:
+</p>
+<pre>
+<samp>~ $ <kbd>cd /tmp/</kbd>
+/tmp $ <kbd>echo foo &gt; foo.txt</kbd>
+/tmp $ <kbd>ls</kbd>
+foo.txt
+/tmp $ <kbd>cd /ssh:alice@box:/tmp/</kbd>
+/ssh:alice@box:/tmp $ <kbd>echo bar &gt; bar.txt</kbd>
+/ssh:alice@box:/tmp $ <kbd>ls</kbd>
+bar.txt
+/ssh:alice@box:/tmp $ <kbd>cd /opt/</kbd>
+/opt $ <kbd>cp /ssh:alice@box:/tmp/bar.txt /tmp/</kbd>
+/opt $ <kbd>ls /tmp/</kbd>
+bar.txt  foo.txt</samp>
+</pre>
+<p>
+  Look at how the command <code>cd /ssh:alice@box:/tmp/</code> above
+  has seamlessly and transparently set the current directory of the
+  shell to the remote directory.  When we create a file after that, it
+  gets created on the remote directory, again quite seamlessly and
+  transparently.  And that's not all.  We can work across directories
+  opened with multiple TRAMP methods too.  For example first consider
+  this session:
+</p>
+<pre>
+<samp>~ $ <kbd>cp /ssh:alice@box:/etc/wgetrc /etc/</kbd>
+Opening output file Permission denied /etc/wgetrc</samp>
+</pre>
+<p>
+  Of course, this failed because the current user does not have
+  permission to write <code>/etc/</code> but the current user
+  has <code>sudo</code> privilege, so we can do something like this:
+</p>
+<pre>
+<samp>~ $ <kbd>cp /ssh:alice@box:/etc/wgetrc /sudo::/etc/</kbd>
+~ $ <kbd>ls /etc/wgetrc</kbd>
+/etc/wgetrc
+</pre>
+<p>
+  Indeed TRAMP indeed lives up to its name <em>Transparent Remote
+    Access, Multiple Protocol</em>!
+</p>
+<h2 id="thanks">Thanks</h2>
+<p>
+  A big thank you to the Emacs community on Libera IRC and Matrix
+  networks who showed interest in these meetings, joined these
+  meetings, and helped make these meetings successful!
+</p>
