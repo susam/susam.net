@@ -4,8 +4,10 @@
 <guid>{{ site-url }}{{ zone-slug }}/{{ slug }}.html</guid>
 <description>
 <![CDATA[
-{{ body }}
-<p><a href="{{ site-url }}{{ zone-slug }}/{{ slug }}.html">Read on website</a></p>
+{{ body }}<!-- ### -->
+<p>
+  <a href="{{ site-url }}{{ zone-slug }}/{{ slug }}.html">Read on website</a>{{ tags-for-feed }}
+</p>
 ]]>
 </description>
 <pubDate>{{ rss-date }}</pubDate>

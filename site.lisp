@@ -421,13 +421,24 @@ value, next-index."
   "Return the first word from the given string."
   (first (uiop:split-string s)))
 
-(defun format-tag-links (post)
+(defun format-tags (post)
   "Create HTML to display tags for the given post."
   (let ((html ""))
     (dolist (tag (uiop:split-string (get-value "tag" post)))
+      (setf html (fstr "~a<a href=\"tag/~a.html\">#~a</a>~%" html tag tag)))
+    html))
+
+
+(defun format-tags-for-feed (post params)
+  "Create HTML to display tags for the given post."
+  (let ((html "")
+        (site-url (get-value "site-url" params))
+        (zone-slug (get-value "zone-slug" params))
+        (tags (uiop:split-string (get-value "tag" post))))
+    (dolist (tag tags)
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a~%  <span class=\"sep\">&bull;</span> " html))
-      (setf html (fstr "~a<a href=\"tag/~a.html\">#~a</a>" html tag tag)))
+      (setf html (fstr "~a |~%  <a href=\"~a~a/tag/~a.html\">#~a</a>"
+                       html site-url zone-slug tag tag)))
     html))
 
 
@@ -457,7 +468,7 @@ value, next-index."
          (body))
     ;; Read post and merge its parameters with call parameters.
     (setf params (append post params))
-    (add-value "tags" (format-tag-links post) params)
+    (add-value "tags" (format-tags post) params)
     (invoke-callback params)
     ;; Render placeholder in post body if requested.
     (when (string= (get-value "render" params) "yes")
@@ -483,6 +494,7 @@ value, next-index."
     (dolist (post posts)
       (unless (string= (get-value "unlist" post) "yes")
         (setf post (append post params))
+        (add-value "tags-for-feed" (format-tags-for-feed post params) post)
         (invoke-callback post)
         (push (render item-layout post) rendered-posts)))
     ;; Add list parameters.
