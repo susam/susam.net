@@ -7,7 +7,8 @@
         <title>
           <xsl:value-of select="description"/>
         </title>
-        <link rel="stylesheet" href="../css/main.css"/>
+        <link rel="stylesheet" href="/css/main.css"/>
+        <link rel="stylesheet" href="/css/extra.css"/>
       </head>
       <body>
         <h1>
@@ -15,11 +16,19 @@
         </h1>
         <xsl:for-each select="item">
           <h2>
+            <xsl:attribute name="id">
+              <xsl:value-of select="translate(guid, ':/.', '---')"/>
+            </xsl:attribute>
             <a>
               <xsl:attribute name="href">
                 <xsl:value-of select="link"/>
               </xsl:attribute>
               <xsl:value-of select="title"/>
+            </a>
+            <a>
+              <xsl:attribute name="href">
+                <xsl:value-of select="concat('#', translate(guid, ':/.', '---'))"/>
+              </xsl:attribute>
             </a>
           </h2>
           <div>
@@ -28,9 +37,15 @@
           </div>
           <p>
             <xsl:value-of
-                select="substring-before(substring-after(description, '&lt;p&gt;'), '&lt;/p&gt;')"
+                select="substring-after(substring-before(description, '&lt;/p&gt;'), '&lt;p&gt;')"
+                disable-output-escaping="yes"/> ...
+
+          </p>
+          <p>
+            <xsl:value-of
+                select="substring-after(description, '&lt;!-- ### --&gt;')"
                 disable-output-escaping="yes"/>
-            ...
+
           </p>
         </xsl:for-each>
       </body>
