@@ -320,19 +320,19 @@
 (test-case read-sections-single
   (let* ((body (format nil "<!-- foo -->~%Foo"))
          (result (read-sections body)))
-    (assert (equal (get-value "foo" result) (list "Foo")))))
+    (assert (equal (aget "foo" result) (list "Foo")))))
 
 (test-case read-sections-multiple
   (let* ((body (format nil "<!-- foo -->~%Foo<!-- bar -->~%Bar"))
          (result (read-sections body)))
-    (assert (equal (get-value "foo" result) (list "Foo")))
-    (assert (equal (get-value "bar" result) (list "Bar")))))
+    (assert (equal (aget "foo" result) (list "Foo")))
+    (assert (equal (aget "bar" result) (list "Bar")))))
 
 (test-case read-sections-repeating-section-names
   (let* ((body (format nil "<!-- a -->~%A<!-- b -->~%B<!-- a -->~%C"))
          (result (read-sections body)))
-    (assert (equal (get-value "a" result) (list "A" "C")))
-    (assert (equal (get-value "b" result) (list "B")))))
+    (assert (equal (aget "a" result) (list "A" "C")))
+    (assert (equal (aget "b" result) (list "B")))))
 
 (test-case weekday-name
   (assert (string= (weekday-name 0) "Mon"))
@@ -411,38 +411,38 @@
     (assert (string= date "2020-06-01"))
     (assert (string= slug "foo"))))
 
-(test-case add-value
+(test-case aput
   (let ((alist))
-    (add-value "a" "apple" alist)
-    (string= (get-value "a" alist) "apple")
-    (assert (not (get-value "b" alist)))))
+    (aput "a" "apple" alist)
+    (string= (aget "a" alist) "apple")
+    (assert (not (aget "b" alist)))))
 
-(test-case add-value-multiple
+(test-case aput-multiple
   (let ((alist))
-    (add-value "a" "apple" alist)
-    (add-value "b" "ball" alist)
-    (add-value "c" "cat" alist)
-    (assert (string= (get-value "a" alist) "apple"))
-    (assert (string= (get-value "b" alist) "ball"))
-    (assert (string= (get-value "c" alist) "cat"))))
+    (aput "a" "apple" alist)
+    (aput "b" "ball" alist)
+    (aput "c" "cat" alist)
+    (assert (string= (aget "a" alist) "apple"))
+    (assert (string= (aget "b" alist) "ball"))
+    (assert (string= (aget "c" alist) "cat"))))
 
-(test-case add-value-new-overrides-old
+(test-case aput-new-overrides-old
   (let ((alist))
-    (add-value "a" "apple" alist)
-    (add-value "a" "ant" alist)
-    (assert (string= (get-value "a" alist) "ant"))))
+    (aput "a" "apple" alist)
+    (aput "a" "ant" alist)
+    (assert (string= (aget "a" alist) "ant"))))
 
-(test-case add-list-value
+(test-case aput-list
   (let ((alist))
-    (add-list-value "a" "apple" alist)
-    (add-list-value "a" "axe" alist)
-    (add-list-value "b" "ball" alist)
-    (add-list-value "c" "cat" alist)
-    (add-list-value "a" "ant" alist)
-    (add-list-value "b" "bag" alist)
-    (assert (equal (get-value "a" alist) (list "ant" "axe" "apple")))
-    (assert (equal (get-value "b" alist) (list "bag" "ball")))
-    (assert (equal (get-value "c" alist) (list "cat")))))
+    (aput-list "a" "apple" alist)
+    (aput-list "a" "axe" alist)
+    (aput-list "b" "ball" alist)
+    (aput-list "c" "cat" alist)
+    (aput-list "a" "ant" alist)
+    (aput-list "b" "bag" alist)
+    (assert (equal (aget "a" alist) (list "ant" "axe" "apple")))
+    (assert (equal (aget "b" alist) (list "bag" "ball")))
+    (assert (equal (aget "c" alist) (list "cat")))))
 
 (test-case reverse-list-values-in-alist-nil
   (assert (not (reverse-list-values-in-alist nil))))
@@ -483,43 +483,42 @@
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- title: Foo Bar -->~%Baz Qux"))
   (let ((post (read-post "test-tmp/2020-06-01-quux-quuz.html")))
-    (assert (string= (get-value "date" post) "2020-06-01"))
-    (assert (string= (get-value "slug" post) "quux-quuz"))
-    (assert (string= (get-value "title" post) "Foo Bar"))
-    (assert (string= (get-value "body" post) "Baz Qux"))
-    (assert (string= (get-value "rss-date" post)
-                     "Mon, 01 Jun 2020 00:00:00 +0000"))
-    (assert (string= (get-value "simple-date" post) "01 Jun 2020"))))
+    (assert (string= (aget "date" post) "2020-06-01"))
+    (assert (string= (aget "slug" post) "quux-quuz"))
+    (assert (string= (aget "title" post) "Foo Bar"))
+    (assert (string= (aget "body" post) "Baz Qux"))
+    (assert (string= (aget "rss-date" post) "Mon, 01 Jun 2020 00:00:00 +0000"))
+    (assert (string= (aget "simple-date" post) "01 Jun 2020"))))
 
 (test-case read-post-without-date
   (write-file "test-tmp/quux-quuz.html" "Baz Qux")
   (let ((params (read-post "test-tmp/quux-quuz.html")))
-    (assert (eq (get-value "date" params) nil))
-    (assert (string= (get-value "slug" params) "quux-quuz"))
-    (assert (string= (get-value "body" params) "Baz Qux"))))
+    (assert (eq (aget "date" params) nil))
+    (assert (string= (aget "slug" params) "quux-quuz"))
+    (assert (string= (aget "body" params) "Baz Qux"))))
 
 (test-case read-post-date-in-filename-only
   (write-file "test-tmp/2020-06-01-quux-quuz.html" "Baz Qux")
   (let ((params (read-post "test-tmp/2020-06-01-quux-quuz.html")))
-    (assert (string= (get-value "date" params) "2020-06-01"))
-    (assert (string= (get-value "slug" params) "quux-quuz"))
-    (assert (string= (get-value "body" params) "Baz Qux"))))
+    (assert (string= (aget "date" params) "2020-06-01"))
+    (assert (string= (aget "slug" params) "quux-quuz"))
+    (assert (string= (aget "body" params) "Baz Qux"))))
 
 (test-case read-post-date-in-header-only
   (write-file "test-tmp/quux-quuz.html"
               (format nil "<!-- date: 2020-06-02 -->~%Baz Qux"))
   (let ((params (read-post "test-tmp/quux-quuz.html")))
-    (assert (string= (get-value "date" params) "2020-06-02"))
-    (assert (string= (get-value "slug" params) "quux-quuz"))
-    (assert (string= (get-value "body" params) "Baz Qux"))))
+    (assert (string= (aget "date" params) "2020-06-02"))
+    (assert (string= (aget "slug" params) "quux-quuz"))
+    (assert (string= (aget "body" params) "Baz Qux"))))
 
 (test-case read-post-date-in-filename-and-header
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- date: 2020-06-02 -->~%Baz Qux"))
   (let ((params (read-post "test-tmp/2020-06-01-quux-quuz.html")))
-    (assert (string= (get-value "date" params) "2020-06-02"))
-    (assert (string= (get-value "slug" params) "quux-quuz"))
-    (assert (string= (get-value "body" params) "Baz Qux"))))
+    (assert (string= (aget "date" params) "2020-06-02"))
+    (assert (string= (aget "slug" params) "quux-quuz"))
+    (assert (string= (aget "body" params) "Baz Qux"))))
 
 (test-case render
   (let* ((template "Foo {{ var-x }} Baz {{ var-y }} Quux")
@@ -615,36 +614,32 @@
   (let ((params (list (cons "import" "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
     (add-head-params "_site/" params)
-    (assert (string= (get-value "imports" params) (format nil result "./")))
+    (assert (string= (aget "imports" params) (format nil result "./")))
     (add-head-params "_site/foo.html" params)
-    (assert (string= (get-value "imports" params) (format nil result "./")))
+    (assert (string= (aget "imports" params) (format nil result "./")))
     (add-head-params "_site/foo/" params)
-    (assert (string= (get-value "imports" params) (format nil result "../")))
+    (assert (string= (aget "imports" params) (format nil result "../")))
     (add-head-params "_site/foo/bar.html" params)
-    (assert (string= (get-value "imports" params) (format nil result "../")))))
+    (assert (string= (aget "imports" params) (format nil result "../")))))
 
 (test-case add-head-params-canonical-url
   (let ((params (list (cons "site-url" "https://example.com/"))))
     (add-head-params "_site/" params)
-    (assert (string= (get-value "canonical-url" params)
-                     "https://example.com/"))
+    (assert (string= (aget "canonical-url" params) "https://example.com/"))
     (add-head-params "_site/foo/" params)
-    (assert (string= (get-value "canonical-url" params)
-                     "https://example.com/foo/"))
+    (assert (string= (aget "canonical-url" params) "https://example.com/foo/"))
     (add-head-params "_site/foo/bar/" params)
-    (assert (string= (get-value "canonical-url" params)
+    (assert (string= (aget "canonical-url" params)
                      "https://example.com/foo/bar/"))))
 
 (test-case add-head-params-canonical-url-index
   (let ((params (list (cons "site-url" "https://example.com/"))))
     (add-head-params "_site/index.html" params)
-    (assert (string= (get-value "canonical-url" params)
-                     "https://example.com/"))
+    (assert (string= (aget "canonical-url" params) "https://example.com/"))
     (add-head-params "_site/foo/index.html" params)
-    (assert (string= (get-value "canonical-url" params)
-                     "https://example.com/foo/"))
+    (assert (string= (aget "canonical-url" params) "https://example.com/foo/"))
     (add-head-params "_site/foo/bar/index.html" params)
-    (assert (string= (get-value "canonical-url" params)
+    (assert (string= (aget "canonical-url" params)
                      "https://example.com/foo/bar/"))))
 
 (test-case make-posts-single
@@ -671,9 +666,9 @@
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]" nil)))
     (assert (= (length posts) 3))
-    (assert (string= (get-value "date" (first posts)) "2020-06-01"))
-    (assert (string= (get-value "date" (second posts)) "2020-06-02"))
-    (assert (string= (get-value "date" (third posts)) "2020-06-03"))))
+    (assert (string= (aget "date" (first posts)) "2020-06-01"))
+    (assert (string= (aget "date" (second posts)) "2020-06-02"))
+    (assert (string= (aget "date" (third posts)) "2020-06-03"))))
 
 (test-case make-posts-filename-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
@@ -809,20 +804,19 @@ x
 yz
 "))
     (multiple-value-bind (p next-index) (read-comment text 0)
-      (assert (string= (get-value "date" p) "2020-06-01 07:08:09 +0000"))
-      (assert (string= (get-value "simple-date" p) "01 Jun 2020 07:08 GMT"))
-      (assert (string= (get-value "name" p) "Alice"))
-      (assert (string= (get-value "commenter" p) "Alice"))
-      (assert (string= (get-value "body" p)
-                       (format nil "x~%")))
+      (assert (string= (aget "date" p) "2020-06-01 07:08:09 +0000"))
+      (assert (string= (aget "simple-date" p) "01 Jun 2020 07:08 GMT"))
+      (assert (string= (aget "name" p) "Alice"))
+      (assert (string= (aget "commenter" p) "Alice"))
+      (assert (string= (aget "body" p) (format nil "x~%")))
       (assert (= next-index 64)))
     (multiple-value-bind (p next-index) (read-comment text 64)
-      (assert (string= (get-value "date" p) "2020-06-02 17:18:19 +0000"))
-      (assert (string= (get-value "simple-date" p) "02 Jun 2020 17:18 GMT"))
-      (assert (string= (get-value "name" p) "Bob"))
-      (assert (string= (get-value "commenter" p)
+      (assert (string= (aget "date" p) "2020-06-02 17:18:19 +0000"))
+      (assert (string= (aget "simple-date" p) "02 Jun 2020 17:18 GMT"))
+      (assert (string= (aget "name" p) "Bob"))
+      (assert (string= (aget "commenter" p)
                        "<a href=\"https://example.com/\">Bob</a>"))
-      (assert (string= (get-value "body" p) (format nil "yz~%")))
+      (assert (string= (aget "body" p) (format nil "yz~%")))
       (assert (eq next-index nil)))))
 
 (test-case read-comments-single
@@ -833,9 +827,9 @@ Foo")
     (assert (string= slug "comments"))
     (assert (= (length comments) 1))
     (let ((comment1 (first comments)))
-      (assert (string= (get-value "date" comment1) "2020-06-01 07:08:09 +0000"))
-      (assert (string= (get-value "name" comment1) "Alice"))
-      (assert (string= (get-value "body" comment1) "Foo")))))
+      (assert (string= (aget "date" comment1) "2020-06-01 07:08:09 +0000"))
+      (assert (string= (aget "name" comment1) "Alice"))
+      (assert (string= (aget "body" comment1) "Foo")))))
 
 (test-case read-comments-multiple
   (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 00:00:01 +0000 -->
@@ -853,15 +847,15 @@ Z")
     (let* ((comment1 (first comments))
            (comment2 (second comments))
            (comment3 (third comments)))
-      (assert (string= (get-value "date" comment1) "2020-06-03 00:00:03 +0000"))
-      (assert (string= (get-value "author" comment1) "Carol"))
-      (assert (string= (get-value "body" comment1) (format nil "Z")))
-      (assert (string= (get-value "date" comment2) "2020-06-02 00:00:02 +0000"))
-      (assert (string= (get-value "author" comment2) "Bob"))
-      (assert (string= (get-value "body" comment2) (format nil "Y~%")))
-      (assert (string= (get-value "date" comment3) "2020-06-01 00:00:01 +0000"))
-      (assert (string= (get-value "author" comment3) "Alice"))
-      (assert (string= (get-value "body" comment3) (format nil "X~%"))))))
+      (assert (string= (aget "date" comment1) "2020-06-03 00:00:03 +0000"))
+      (assert (string= (aget "author" comment1) "Carol"))
+      (assert (string= (aget "body" comment1) (format nil "Z")))
+      (assert (string= (aget "date" comment2) "2020-06-02 00:00:02 +0000"))
+      (assert (string= (aget "author" comment2) "Bob"))
+      (assert (string= (aget "body" comment2) (format nil "Y~%")))
+      (assert (string= (aget "date" comment3) "2020-06-01 00:00:01 +0000"))
+      (assert (string= (aget "author" comment3) "Alice"))
+      (assert (string= (aget "body" comment3) (format nil "X~%"))))))
 
 (test-case make-comment-list
   (make-comment-list
