@@ -51,17 +51,6 @@
   (let ((name (car (last (pathname-directory path)))))
     (namestring (make-pathname :directory (list :relative name)))))
 
-(defun copy-file (input output)
-  "Copy file from a file path to a file/directory path."
-  (when (uiop:directory-pathname-p output)
-    (setq output (merge-pathnames (file-namestring input) output)))
-  (uiop:copy-file input output))
-
-(defun copy-files (input output)
-  "Copy files from a wildcard path to a directory path."
-  (dolist (pathname (directory input))
-    (copy-file pathname output)))
-
 (defun copy-directory (src dst)
   "Copy directory from a directory path to a directory path"
   (make-directory dst)
@@ -410,7 +399,8 @@ value, next-index."
   (setf dst-path (render dst-path params))
   (write-log "Writing ~a ..." dst-path)
   (add-head-params dst-path params)
-  (write-file dst-path (extra-markup (render layout params))))
+  (write-file dst-path (extra-markup (render layout params)))
+  (neat-url-path dst-path))
 
 (defun format-size (size)
   "Convert size in bytes to human-readable size."
@@ -436,19 +426,18 @@ value, next-index."
   (let ((html ""))
     (dolist (tag (uiop:split-string (aget "tag" post)))
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a |~%  <a href=\"tag/~a.html\">#~a</a>" html tag tag)))
+      (setf html (fstr "~a |~%  <a href=\"../tag/~a.html\">#~a</a>" html tag tag)))
     html))
 
 (defun format-tags-for-feed (post params)
   "Create HTML to display tags for the given post."
   (let ((html "")
         (site-url (aget "site-url" params))
-        (zone-slug (aget "zone-slug" params))
         (tags (uiop:split-string (aget "tag" post))))
     (dolist (tag tags)
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a |~%  <a href=\"~a~a/tag/~a.html\">#~a</a>"
-                       html site-url zone-slug tag tag)))
+      (setf html (fstr "~a |~%  <a href=\"~a/tag/~a.html\">#~a</a>"
+                       html site-url tag tag)))
     html))
 
 
@@ -485,16 +474,20 @@ value, next-index."
       (setf body (render (aget "body" params) params))
       (aput "body" body post)      ; make-reading needs this.
       (aput "body" body params))
-    (write-page dst layout params)
+    (aput "path" (write-page dst layout params) post)
     post))
+
+(defun sort-posts (posts)
+  "Sort posts in reverse chronological order."
+  (sort posts (lambda (x y) (string< (aget "date" x)
+                                     (aget "date" y)))))
 
 (defun make-posts (src dst layout params)
   "Generate pages from post or content files."
   (let ((posts))
     (dolist (src-path (directory src))
       (push (make-post src-path dst layout params) posts))
-    (sort posts (lambda (x y) (string< (aget "date" x)
-                                       (aget "date" y))))))
+    (sort-posts posts)))
 
 (defun make-post-list (posts dst list-layout item-layout params)
   "Generate list page for a list of posts."
@@ -612,45 +605,6 @@ value, next-index."
     (aput "post-title" post-title params)
     ;; Determine destination path and URL.
     (write-page dst none-layout params)))
-
-
-;;; Tags
-;;; ----
-
-(defun collect-tags (posts)
-  "Group post by tags and return an alist of tag and post list."
-  (let ((tags))
-    (dolist (post posts)
-      (dolist (tag (uiop:split-string (aget "tag" post)))
-        (aput-list tag post tags)))
-    ;; Sort posts in chronological order under each tag.
-    (dolist (tag-entry tags)
-      (setf (cdr tag-entry)
-            (sort (cdr tag-entry) (lambda (x y)
-                                    (string< (aget "date" x)
-                                             (aget "date" y))))))
-    ;; Sort tags in ascending order of post count.
-    (sort tags (lambda (x y) (< (count-listed-posts (cdr x))
-                                (count-listed-posts (cdr y)))))))
-
-(defun tags-html (tags params)
-  "Render tag list as HTML."
-  (let ((item-layout (read-file "layout/tag/tag.html"))
-        (tag)
-        (posts)
-        (count)
-        (rendered-tags))
-    ;; Render each tag-map entry.
-    (dolist (tag-entry tags)
-      (setf tag (car tag-entry))
-      (setf posts (cdr tag-entry))
-      (setf count (count-listed-posts posts))
-      (aput "tag-slug" (string-downcase tag) params)
-      (aput "tag-title" tag params)
-      (aput "count" count params)
-      (aput "post-label" (if (= count 1) "post" "posts") params)
-      (push (render item-layout params) rendered-tags))
-    (join-strings rendered-tags)))
 
 
 ;;; Tree
@@ -795,11 +749,8 @@ value, next-index."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
-        (feed-xml (read-file "layout/blog/feed.xml"))
-        (item-xml (read-file "layout/blog/item.xml"))
         (post-dst "_site/{{ zone-slug }}/{{ slug }}.html")
         (list-dst "_site/{{ zone-slug }}/index.html")
-        (feed-dst "_site/{{ zone-slug }}/feed.xml")
         (posts))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
@@ -812,8 +763,6 @@ value, next-index."
     (when (probe-file (render list-dst params))
       (setf list-dst "_site/{{ zone-slug }}/posts.html"))
     (make-post-list posts list-dst list-layout item-layout params)
-    ;; Create RSS feed.
-    (make-post-list posts feed-dst feed-xml item-xml params)
     posts))
 
 (defun make-zone-comments (posts src page-layout &optional params)
@@ -842,35 +791,6 @@ value, next-index."
                                list-layout item-layout params)
             (make-comment-none post comment-dst none-layout params))))))
 
-(defun make-zone-tags (tags dst page-layout params)
-  "Generate blog for a specific tag"
-  (let ((tags-layout (read-file "layout/tag/tags.html"))
-        (list-layout (read-file "layout/tag/list.html"))
-        (item-layout (read-file "layout/tag/item.html"))
-        (feed-xml (read-file "layout/blog/feed.xml"))
-        (item-xml (read-file "layout/blog/item.xml"))
-        (tags-dst (namestring (merge-pathnames "index.html" dst)))
-        (list-dst (namestring (merge-pathnames "{{ tag-slug }}.html" dst)))
-        (feed-dst (namestring (merge-pathnames "{{ tag-slug }}.xml" dst)))
-        (tag)
-        (posts)
-        (title))
-    (set-nested-template tags-layout page-layout)
-    (set-nested-template list-layout page-layout)
-    (aput "tag-list" (tags-html tags params) params)
-    (aput "tag-count" (length tags) params)
-    (aput "tag-label" (if (= (length tags) 1) "tag" "tags") params)
-    (write-page tags-dst tags-layout params)
-    (dolist (tag-entry tags)
-      (setf tag (car tag-entry))
-      (setf posts (cdr tag-entry))
-      (aput "tag-slug" (string-downcase tag) params)
-      (aput "tag-title" tag params)
-      (setf title (render "{{ nick }}'s {{ tag-title }} {{ zone-name }}" params))
-      (aput "title" title params)
-      (make-post-list posts list-dst list-layout item-layout params)
-      (make-post-list posts feed-dst feed-xml item-xml params))))
-
 (defun make-zone-tree (src page-layout &optional params)
   "Copy and render files found recursively in the given path."
   (let ((post-layout (read-file "layout/tree/post.html"))
@@ -888,21 +808,12 @@ value, next-index."
 ;;; Complete Zone
 ;;; -------------
 
-(defun zone-title (zone-slug zone-name params)
-  "Map slug to title of the zone's blog."
-  (cond ((string= zone-slug "blog")
-         (aget "author" params))
-        ((string= zone-slug "maze")
-         (fstr "~a's ~a" (aget "nick" params) zone-name))))
-
 (defun make-zone (zone-slug page-layout params)
   "Create a complete zone with blog, tags, and tree."
   (let* ((zone-name (string-capitalize zone-slug))
-         (zone-title (zone-title zone-slug zone-name params))
+         (zone-title (fstr "~a's ~a" (aget "nick" params) zone-name))
          (dst-dir (fstr "_site/~a/" zone-slug))
-         (tags-dst "_site/{{ zone-slug }}/tag/")
-         (posts)
-         (tags))
+         (posts))
     (aput "zone-slug" zone-slug params)
     (aput "zone-name" zone-name params)
     (aput "title" zone-title params)
@@ -912,8 +823,6 @@ value, next-index."
     (make-more-list dst-dir page-layout params)
     (setf posts (make-zone-blog (fstr "content/~a/posts/*.html" zone-slug)
                                 page-layout params))
-    (setf tags (collect-tags posts))
-    (make-zone-tags tags tags-dst page-layout params)
     (make-zone-comments posts (fstr "content/~a/comments/*.html" zone-slug)
                         page-layout params)
     (make-directory-lists dst-dir page-layout params)
@@ -1176,8 +1085,7 @@ value, next-index."
              (toc-items)
              (tag-items))
         ;; Sort posts under current tag in reverse chronological order.
-        (setf posts (sort posts (lambda (x y) (string< (aget "date" x)
-                                                       (aget "date" y)))))
+        (sort-posts posts)
         ;; Ensure the post list under the current tag is not empty.
         (unless (zerop count)
           ;; Add parameters for rendering tag list for current tag.
@@ -1243,6 +1151,87 @@ value, next-index."
                     list-layout item-layout params)))
 
 
+;;; Tags and Feeds
+;;; --------------
+
+(defun collect-tags (posts)
+  "Group post by tags and return an alist of tag and post list."
+  (let ((tags))
+    (dolist (post posts)
+      (dolist (tag (uiop:split-string (aget "tag" post)))
+        (aput-list tag post tags)))
+    (dolist (tag-entry tags)
+      (sort-posts (cdr tag-entry)))
+    (sort tags (lambda (x y) (< (count-listed-posts (cdr x))
+                                (count-listed-posts (cdr y)))))))
+
+(defun tags-html (tags params)
+  "Render tag list as HTML."
+  (let ((item-layout (read-file "layout/tag/tag.html"))
+        (tag)
+        (posts)
+        (count)
+        (rendered-tags))
+    ;; Render each tag-map entry.
+    (dolist (tag-entry tags)
+      (setf tag (car tag-entry))
+      (setf posts (cdr tag-entry))
+      (setf count (count-listed-posts posts))
+      (aput "tag-slug" (string-downcase tag) params)
+      (aput "tag" tag params)
+      (aput "count" count params)
+      (aput "post-label" (if (= count 1) "post" "posts") params)
+      (push (render item-layout params) rendered-tags))
+    (join-strings rendered-tags)))
+
+
+(defun make-tags (posts page-layout params)
+  "Generate tag index, tag lists, and tag feeds."
+  (let* ((tags-layout (read-file "layout/tag/tags.html"))
+         (list-layout (read-file "layout/tag/list.html"))
+         (item-layout (read-file "layout/tag/item.html"))
+         (feed-xml (read-file "layout/tag/feed.xml"))
+         (item-xml (read-file "layout/tag/item.xml"))
+         (tags-dst "_site/tag/index.html")
+         (list-dst "_site/tag/{{ tag-slug }}.html")
+         (feed-dst "_site/tag/{{ tag-slug }}.xml")
+         (tags (collect-tags posts))
+         (tag)
+         (posts))
+    (set-nested-template tags-layout page-layout)
+    (set-nested-template list-layout page-layout)
+    ;; Tag index page.
+    (aput "tag-list" (tags-html tags params) params)
+    (aput "tag-count" (length tags) params)
+    (aput "tag-label" (if (= (length tags) 1) "tag" "tags") params)
+    (aput "title" (render "{{ nick }}'s Tags" params) params)
+    (aput "subtitle" "" params)
+    (write-page tags-dst tags-layout params)
+    ;; Tag list page for each tag.
+    (dolist (tag-entry tags)
+      (setf tag (car tag-entry))
+      (setf posts (cdr tag-entry))
+      (aput "tag" tag params)
+      (aput "tag-slug" (string-downcase tag) params)
+      (aput "title" (render "{{ nick }}'s {{ tag }} Posts" params) params)
+      (aput "subtitle" "" params)
+      (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
+      (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Posts" params)
+            params)
+      (make-post-list posts list-dst list-layout item-layout params)
+      (make-post-list posts feed-dst feed-xml item-xml params))))
+
+(defun make-feed (posts params)
+  "Generate feed for the complete website."
+  (sort-posts posts)
+  (let ((feed-xml (read-file "layout/tag/feed.xml"))
+        (item-xml (read-file "layout/tag/item.xml")))
+    (aput "title" (aget "author" params) params)
+    (aput "link" (aget "site-url" params) params)
+    (aput "description" (render "{{ nick }}'s Feed" params) params)
+    (make-post-list posts "_site/feed.xml" feed-xml item-xml params)))
+
+
 ;;; Home Page
 ;;; ---------
 
@@ -1276,7 +1265,8 @@ value, next-index."
                       (cons "zone-slug" "blog")
                       (cons "zone-name" "Blog")))
         (page-layout (read-file "layout/page.html"))
-        (posts))
+        (posts)
+        (all-posts))
     ;; If params file exists, merge it with local params.
     (when (probe-file "params.lisp")
       (setf params (append (read-list "params.lisp") params)))
@@ -1291,12 +1281,17 @@ value, next-index."
     (make-xsl)
     ;; Zones.
     (aput "head" "main.css" params)
-    (make-zone "maze" page-layout params)
+    (setf posts (make-zone "maze" page-layout params))
+    (setf all-posts (append all-posts posts))
     ;; Meetup logs.
     (make-meets page-layout params)
     (setf posts (make-zone "blog" page-layout params))
+    (setf all-posts (append all-posts posts))
     ;; Home page.
     (make-home posts page-layout params)
+    ;; Aggregates.
+    (make-tags all-posts page-layout params)
+    (make-feed all-posts params)
     ;; Other sections.
     (make-music "content/music/*.html" page-layout params)
     (make-reading "content/reading/*.html" page-layout params)

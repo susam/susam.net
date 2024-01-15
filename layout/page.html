@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#333">
   <link rel="canonical" href="{{ canonical-url }}">
   <link rel="icon" type="image/png" href="{{ root }}favicon.png">
-  <link rel="alternate" type="application/rss+xml" title="Feed for {{ nick }}'s {{ zone-name }}" href="{{ root }}{{ zone-slug }}/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="{{ nick }}'s Feed" href="{{ root }}feed.xml">
 {{ heads }}{{ imports }}</head>
 <body>
 <main>
@@ -17,7 +17,7 @@
   <nav>
     <a href="{{ root }}{{ index }}">Home</a>
     <a href="{{ root }}{{ zone-slug }}/{{ index }}">{{ zone-name }}</a>
-    <a href="{{ root }}{{ zone-slug }}/feed.xml">Feed</a>
+    <a href="{{ root }}feed.xml">Feed</a>
     <a href="{{ site-url }}form/subscribe/">Subscribe</a>
     <a href="{{ root }}about.html">About</a>
     <a href="https://github.com/susam">GitHub</a>

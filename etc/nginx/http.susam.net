@@ -30,8 +30,7 @@ server {
     rewrite ^/fxyt$ /fxyt.html permanent;
     rewrite ^/inv$ /invaders.html permanent;
     # Redirects.
-    rewrite ^/blog/rss/$ /blog/feed.xml permanent;
-    rewrite ^/blog/rss.xml$ /blog/feed.xml permanent;
+    rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /feed.xml redirect;
     rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
     rewrite ^/blog/infosys-tcs-or-wipro/$ /blog/infosys-tcs-or-wipro.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /blog/lisp-in-vim.html permanent;
@@ -39,9 +38,6 @@ server {
     rewrite ^/blog/x86-quine.html$ /blog/self-printing-machine-code.html permanent;
     rewrite ^/blog/from-uuid-to-infinite-loops.html$ /blog/fixed-bits-of-version-4-uuid.html permanent;
     rewrite ^/cfr.html$ /cfrs.html permanent;
-    rewrite ^/maze/rss.xml$ /maze/feed.xml permanent;
-    rewrite ^/club/(.*)/$ /maze/meet/$1/ redirect;
-    rewrite ^/maze/mastering-emacs/$ /maze/meet/mastering-emacs/ redirect;
 }
 
 # http://(www.susam.net|susam.in)/ => http://susam.net/

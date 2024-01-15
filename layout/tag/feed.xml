@@ -4,9 +4,9 @@
 
 <channel>
 <title>{{ title }}</title>
-<link>{{ canonical-url }}</link>
+<link>{{ link }}</link>
 <atom:link rel="self" type="application/rss+xml" href="{{ canonical-url }}"/>
-<description>Feed from {{ nick }}'s {{ zone-name }}</description>
+<description>{{ description }}</description>
 
 {{ body }}
 
