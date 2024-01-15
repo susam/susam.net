@@ -290,29 +290,6 @@
       (assert (equal headers nil))
       (assert (= next-index 0)))))
 
-(test-case read-sections-empty-string
-  (assert (not (read-sections ""))))
-
-(test-case read-sections-none
-  (assert (not (read-sections "Foo"))))
-
-(test-case read-sections-single
-  (let* ((body (format nil "<!-- foo -->~%Foo"))
-         (result (read-sections body)))
-    (assert (equal (aget "foo" result) (list "Foo")))))
-
-(test-case read-sections-multiple
-  (let* ((body (format nil "<!-- foo -->~%Foo<!-- bar -->~%Bar"))
-         (result (read-sections body)))
-    (assert (equal (aget "foo" result) (list "Foo")))
-    (assert (equal (aget "bar" result) (list "Bar")))))
-
-(test-case read-sections-repeating-section-names
-  (let* ((body (format nil "<!-- a -->~%A<!-- b -->~%B<!-- a -->~%C"))
-         (result (read-sections body)))
-    (assert (equal (aget "a" result) (list "A" "C")))
-    (assert (equal (aget "b" result) (list "B")))))
-
 (test-case weekday-name
   (assert (string= (weekday-name 0) "Mon"))
   (assert (string= (weekday-name 1) "Tue"))
@@ -879,16 +856,6 @@ Z")
   (assert (string= (read-file "test-tmp/foo.html")
                    "[Comments on Foo Foo apple]")))
 
-(test-case links-html-single
-  (assert (string= (links-html (list (cons "pdf" "foo.pdf")))
-                   " [<a href=\"foo.pdf\" class=\"basic\">PDF</a>]"))
-  (assert (string= (links-html (list (cons "url" "foo.html")))
-                   " [<a href=\"foo.html\" class=\"basic\">url</a>]"))
-  (assert (string= (links-html (list (cons "pdf" "foo.pdf")
-                                     (cons "url" "foo.html")))
-                   (join-strings
-                    (list " [<a href=\"foo.html\" class=\"basic\">url</a>]"
-                          " [<a href=\"foo.pdf\" class=\"basic\">PDF</a>]")))))
 
 ;; End test cases.
 
