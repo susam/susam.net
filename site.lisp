@@ -136,11 +136,21 @@
 
 (defun join-strings (strings)
   "Join strings into a single string."
-  (format nil "~{~a~}" strings))
+  (apply #'concatenate 'string strings))
 
 (defun repeat-string (count string)
   "Repeat string count number of times."
-  (format nil "~v{~a~:*~}" count (list string)))
+  (join-strings (loop repeat count collect string)))
+
+(defun indent-lines (count string)
+  "Indent lines by count spaces."
+  (let* ((clean-string (string-right-trim '(#\Newline) string))
+         (lines (uiop:split-string clean-string :separator (fstr "~%")))
+         (indent (repeat-string count " ")))
+    (join-strings (loop for line in lines
+                        collect (if (zerop (length line))
+                                    (fstr "~%")
+                                    (fstr "~a~a~%" indent line))))))
 
 (defmacro add-value (key value alist)
   "Add key-value pair to alist."
@@ -1067,6 +1077,18 @@ value, next-index."
   (make-posts "layout/css/*.css" "_site/css/{{ slug }}.css" "{{ body }}"
               (append (main-style) (list (cons "render" "yes")))))
 
+(defun feed-css ()
+  "Return stylesheet for feed as a string."
+  (let* ((css (main-style))
+         (styles (list (render (read-file "layout/css/main.css") css)
+                       (render (read-file "layout/css/extra.css") css))))
+    (fstr "~%~a" (indent-lines 10 (join-strings styles)))))
+
+(defun make-xsl ()
+  "Generate stylesheet for feed."
+  (make-posts "layout/blog/*.xsl" "_site/{{ slug }}.xsl" "{{ body }}"
+              (list (cons "css" (feed-css)) (cons "render" "yes"))))
+
 
 ;;; Reading
 ;;; -------
@@ -1264,8 +1286,9 @@ value, next-index."
     ;; Static files.
     (copy-directory "static/" "_site/")
     (copy-directory "_cache/mathjax/" "_site/js/mathjax/")
-    ;; Stylesheet.
+    ;; Stylesheets.
     (make-css)
+    (make-xsl)
     ;; Zones.
     (add-value "head" "main.css" params)
     (make-zone "maze" page-layout params)
