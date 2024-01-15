@@ -436,7 +436,7 @@ value, next-index."
         (tags (uiop:split-string (aget "tag" post))))
     (dolist (tag tags)
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a |~%  <a href=\"~a/tag/~a.html\">#~a</a>"
+      (setf html (fstr "~a |~%  <a href=\"~atag/~a.html\">#~a</a>"
                        html site-url tag tag)))
     html))
 
