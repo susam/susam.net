@@ -1041,7 +1041,7 @@ value, next-index."
       (dolist (tag (uiop:split-string (aget "tag" post)))
         (aput-list tag post tags)))
     (dolist (tag-entry tags)
-      (sort-posts (cdr tag-entry)))
+      (setf (cdr tag-entry) (sort-posts (cdr tag-entry))))
     (sort tags (lambda (x y) (< (count-listed-posts (cdr x))
                                 (count-listed-posts (cdr y)))))))
 
@@ -1103,7 +1103,7 @@ value, next-index."
 
 (defun make-feed (posts params)
   "Generate feed for the complete website."
-  (sort-posts posts)
+  (setf posts (sort-posts posts))
   (let ((feed-xml (read-file "layout/tag/feed.xml"))
         (item-xml (read-file "layout/tag/item.xml")))
     (aput "title" (aget "author" params) params)
