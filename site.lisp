@@ -152,18 +152,18 @@
                                     (fstr "~%")
                                     (fstr "~a~a~%" indent line))))))
 
-(defmacro add-value (key value alist)
+(defmacro aput (key value alist)
   "Add key-value pair to alist."
   `(push (cons ,key ,value) ,alist))
 
-(defmacro add-list-value (key value alist)
+(defmacro aput-list (key value alist)
   "Add value to a list corresponding to the key in alist."
   `(progn
      (unless (assoc ,key ,alist :test #'string=)
        (push (cons ,key ()) ,alist))
      (push ,value (cdr (assoc ,key ,alist :test #'string=)))))
 
-(defun get-value (key alist)
+(defun aget (key alist)
   "Given a key, return its value found in the list of parameters."
   (cdr (assoc key alist :test #'string=)))
 
@@ -303,7 +303,7 @@ value, next-index."
         (incf start-index (length start-token))
         (setf end-index (search end-token template :start2 start-index))
         (let* ((key (subseq template start-index end-index))
-               (val (get-value key params)))
+               (val (aget key params)))
           ;; If key exists in params, replace key with value.
           ;; Otherwise, leave the key intact in text.
           (if val
@@ -332,7 +332,7 @@ value, next-index."
 (defun head-html (import-header params)
   "Given the value of an import header, return HTML code for it."
   (let ((names (uiop:split-string import-header))
-        (root (get-value "root" params))
+        (root (aget "root" params))
         (snippets))
     (dolist (name names)
       (cond ((string-ends-with ".css" name)
@@ -356,19 +356,19 @@ value, next-index."
 
 (defun neat-url (path params)
   "Create canonical URL for the given rendered file path."
-  (fstr "~a~a" (get-value "site-url" params) (neat-url-path path)))
+  (fstr "~a~a" (aget "site-url" params) (neat-url-path path)))
 
 (defmacro add-head-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
   `(progn
-     (add-value "root" (relative-root-path ,dst-path) ,params)
-     (add-value "canonical-url" (neat-url ,dst-path ,params) ,params)
-     (add-value "heads" (head-html (get-value "head" ,params) ,params) ,params)
-     (add-value "imports" (head-html (get-value "import" ,params) ,params) ,params)))
+     (aput "root" (relative-root-path ,dst-path) ,params)
+     (aput "canonical-url" (neat-url ,dst-path ,params) ,params)
+     (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
+     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
 
 (defmacro invoke-callback (params)
   "Run callback and add the parameters returned by it to params."
-  `(let ((callback (get-value "callback" ,params))
+  `(let ((callback (aget "callback" ,params))
          (callback-params))
      (when callback
        (setf callback-params (funcall callback ,params))
@@ -376,7 +376,7 @@ value, next-index."
 
 (defun count-listed-posts (posts)
   "Count the number of posts that are allowed to be listed in a post list."
-  (loop for post in posts count (string/= (get-value "unlist" post) "yes")))
+  (loop for post in posts count (string/= (aget "unlist" post) "yes")))
 
 (defun extra-markup (text)
   "Add extra markup to the page to create heading anchor links."
@@ -434,7 +434,7 @@ value, next-index."
 (defun format-tags (post)
   "Create HTML to display tags for the given post."
   (let ((html ""))
-    (dolist (tag (uiop:split-string (get-value "tag" post)))
+    (dolist (tag (uiop:split-string (aget "tag" post)))
       (setf html (fstr "~a<a href=\"tag/~a.html\">#~a</a>~%" html tag tag)))
     html))
 
@@ -442,9 +442,9 @@ value, next-index."
 (defun format-tags-for-feed (post params)
   "Create HTML to display tags for the given post."
   (let ((html "")
-        (site-url (get-value "site-url" params))
-        (zone-slug (get-value "zone-slug" params))
-        (tags (uiop:split-string (get-value "tag" post))))
+        (site-url (aget "site-url" params))
+        (zone-slug (aget "zone-slug" params))
+        (tags (uiop:split-string (aget "tag" post))))
     (dolist (tag tags)
       (setf tag (string-downcase tag))
       (setf html (fstr "~a |~%  <a href=\"~a~a/tag/~a.html\">#~a</a>"
@@ -461,15 +461,15 @@ value, next-index."
         (post)
         (date))
     (multiple-value-bind (date slug) (date-slug filename)
-      (add-value "date" date post)
-      (add-value "slug" slug post))
+      (aput "date" date post)
+      (aput "slug" slug post))
     (multiple-value-bind (headers next-index) (read-headers text 0)
       (setf post (append headers post))
-      (add-value "body" (subseq text next-index) post))
-    (setf date (get-value "date" post))
+      (aput "body" (subseq text next-index) post))
+    (setf date (aget "date" post))
     (when date
-      (add-value "rss-date" (rss-date date) post)
-      (add-value "simple-date" (simple-date date) post))
+      (aput "rss-date" (rss-date date) post)
+      (aput "simple-date" (simple-date date) post))
     post))
 
 (defun make-post (src-path dst layout params)
@@ -478,13 +478,13 @@ value, next-index."
          (body))
     ;; Read post and merge its parameters with call parameters.
     (setf params (append post params))
-    (add-value "tags" (format-tags post) params)
+    (aput "tags" (format-tags post) params)
     (invoke-callback params)
     ;; Render placeholder in post body if requested.
-    (when (string= (get-value "render" params) "yes")
-      (setf body (render (get-value "body" params) params))
-      (add-value "body" body post)      ; make-reading needs this.
-      (add-value "body" body params))
+    (when (string= (aget "render" params) "yes")
+      (setf body (render (aget "body" params) params))
+      (aput "body" body post)      ; make-reading needs this.
+      (aput "body" body params))
     (write-page dst layout params)
     post))
 
@@ -493,8 +493,8 @@ value, next-index."
   (let ((posts))
     (dolist (src-path (directory src))
       (push (make-post src-path dst layout params) posts))
-    (sort posts (lambda (x y) (string< (get-value "date" x)
-                                       (get-value "date" y))))))
+    (sort posts (lambda (x y) (string< (aget "date" x)
+                                       (aget "date" y))))))
 
 (defun make-post-list (posts dst list-layout item-layout params)
   "Generate list page for a list of posts."
@@ -502,15 +502,15 @@ value, next-index."
         (rendered-posts))
     ;; Render each post.
     (dolist (post posts)
-      (unless (string= (get-value "unlist" post) "yes")
+      (unless (string= (aget "unlist" post) "yes")
         (setf post (append post params))
-        (add-value "tags-for-feed" (format-tags-for-feed post params) post)
+        (aput "tags-for-feed" (format-tags-for-feed post params) post)
         (invoke-callback post)
         (push (render item-layout post) rendered-posts)))
     ;; Add list parameters.
-    (add-value "body" (join-strings rendered-posts) params)
-    (add-value "count" count params)
-    (add-value "post-label" (if (= count 1) "post" "posts") params)
+    (aput "body" (join-strings rendered-posts) params)
+    (aput "count" count params)
+    (aput "post-label" (if (= count 1) "post" "posts") params)
     ;; Determine destination path and URL.
     (write-page dst list-layout params)))
 
@@ -528,18 +528,18 @@ value, next-index."
         (next-index))         ; Index at which to search next comment.
     (setf (values comment start-index) (read-headers text start-index))
     ;; Determine commenter's display name.
-    (setf commenter (get-value "name" comment))
-    (setf url (get-value "url" comment))
+    (setf commenter (aget "name" comment))
+    (setf url (aget "url" comment))
     (when url
       (setf commenter (fstr "<a href=\"~a\">~a</a>" url commenter)))
-    (add-value "commenter" commenter comment)
+    (aput "commenter" commenter comment)
     ;; Formatted dates.
-    (setf date (get-value "date" comment))
-    (add-value "rss-date" (rss-date date) comment)
-    (add-value "simple-date" (simple-date date) comment)
+    (setf date (aget "date" comment))
+    (aput "rss-date" (rss-date date) comment)
+    (aput "simple-date" (simple-date date) comment)
     ;; Select content until next header or end-of-text as body.
     (setf next-index (search start-token text :start2 start-index))
-    (add-value "body" (subseq text start-index next-index) comment)
+    (aput "body" (subseq text start-index next-index) comment)
     (values comment next-index)))
 
 (defun read-comments (filename)
@@ -552,10 +552,10 @@ value, next-index."
     (loop
      (setf (values comment next-index) (read-comment text next-index))
      ;; Current comment date must be more recent than the previous comment.
-     (when (and (consp comments) (string< (get-value "date" comment)
-                                          (get-value "date" (car comments))))
+     (when (and (consp comments) (string< (aget "date" comment)
+                                          (aget "date" (car comments))))
        (error (fstr "Incorrect order for comment ~a in ~a"
-                    (get-value "date" comment) filename)))
+                    (aget "date" comment) filename)))
      (push comment comments)
      (unless next-index
        (return)))
@@ -564,52 +564,52 @@ value, next-index."
 (defun check-comment-dates (comments)
   "Ensure that every comment on this site includes UTC timezone."
   (dolist (comment comments)
-    (unless (string-ends-with " +0000" (get-value "date" comment))
+    (unless (string-ends-with " +0000" (aget "date" comment))
       (error (fstr "Time zone missing in comment date ~a in ~a"
-                   (get-value "date" comment)
-                   (get-value "slug" comment))))))
+                   (aget "date" comment)
+                   (aget "slug" comment))))))
 
 (defun make-comment-list (post comments dst list-layout item-layout params)
   "Generate comment list page."
-  (let* ((post-slug (get-value "slug" post))
-         (post-title (get-value "title" post))
-         (post-import (get-value "import" post))
+  (let* ((post-slug (aget "slug" post))
+         (post-title (aget "title" post))
+         (post-import (aget "import" post))
          (count (length comments))
          (comment-label (if (= count 1) "comment" "comments"))
          (rendered-comments))
     ;; Add comment item parameters.
-    (add-value "slug" post-slug params)
-    (add-value "title" (fstr "Comments on ~a" post-title) params)
-    (add-value "post-title" (get-value "title" post) params)
-    (add-value "count" count params)
-    (add-value "comment-label" comment-label params)
+    (aput "slug" post-slug params)
+    (aput "title" (fstr "Comments on ~a" post-title) params)
+    (aput "post-title" (aget "title" post) params)
+    (aput "count" count params)
+    (aput "comment-label" comment-label params)
     ;; Render each comment.
     (loop for index from count downto 1
           for comment in comments
           do (setf comment (append comment params))
-             (add-value "comment-id" index comment)
-             (add-value "commenter-type"
-                        (if (string= (get-value "name" comment)
-                                     (get-value "author" params))
-                            "author" "visitor") comment)
+             (aput "comment-id" index comment)
+             (aput "commenter-type"
+                   (if (string= (aget "name" comment)
+                                (aget "author" params))
+                       "author" "visitor") comment)
              (push (render item-layout comment) rendered-comments))
     ;; Inherit imports from post.
     (if post-import
         (setf post-import (fstr "comment.css ~a" post-import))
         (setf post-import "comment.css"))
-    (add-value "import" post-import params)
+    (aput "import" post-import params)
     ;; Determine destination path and URL.
-    (add-value "body" (join-strings rendered-comments) params)
+    (aput "body" (join-strings rendered-comments) params)
     (write-page dst list-layout params)))
 
 (defun make-comment-none (post dst none-layout params)
   "Generate a comment page with no comments."
-  (let* ((post-slug (get-value "slug" post))
-         (post-title (get-value "title" post)))
+  (let* ((post-slug (aget "slug" post))
+         (post-title (aget "title" post)))
     ;; Set list parameters.
-    (add-value "slug" post-slug params)
-    (add-value "title" (fstr "Comments on ~a" post-title) params )
-    (add-value "post-title" post-title params)
+    (aput "slug" post-slug params)
+    (aput "title" (fstr "Comments on ~a" post-title) params )
+    (aput "post-title" post-title params)
     ;; Determine destination path and URL.
     (write-page dst none-layout params)))
 
@@ -621,14 +621,14 @@ value, next-index."
   "Group post by tags and return an alist of tag and post list."
   (let ((tags))
     (dolist (post posts)
-      (dolist (tag (uiop:split-string (get-value "tag" post)))
-        (add-list-value tag post tags)))
+      (dolist (tag (uiop:split-string (aget "tag" post)))
+        (aput-list tag post tags)))
     ;; Sort posts in chronological order under each tag.
     (dolist (tag-entry tags)
       (setf (cdr tag-entry)
             (sort (cdr tag-entry) (lambda (x y)
-                                    (string< (get-value "date" x)
-                                             (get-value "date" y))))))
+                                    (string< (aget "date" x)
+                                             (aget "date" y))))))
     ;; Sort tags in ascending order of post count.
     (sort tags (lambda (x y) (< (count-listed-posts (cdr x))
                                 (count-listed-posts (cdr y)))))))
@@ -645,10 +645,10 @@ value, next-index."
       (setf tag (car tag-entry))
       (setf posts (cdr tag-entry))
       (setf count (count-listed-posts posts))
-      (add-value "tag-slug" (string-downcase tag) params)
-      (add-value "tag-title" tag params)
-      (add-value "count" count params)
-      (add-value "post-label" (if (= count 1) "post" "posts") params)
+      (aput "tag-slug" (string-downcase tag) params)
+      (aput "tag-title" tag params)
+      (aput "count" count params)
+      (aput "post-label" (if (= count 1) "post" "posts") params)
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
 
@@ -658,7 +658,7 @@ value, next-index."
 
 (defun updated-date-callback (post)
   "Create last-updated parameter if post contains updated date."
-  (let ((updated (get-value "updated" post))
+  (let ((updated (aget "updated" post))
         (last-updated ""))
     (when updated
       (setf last-updated
@@ -668,7 +668,7 @@ value, next-index."
 (defun make-tree (src dst page-layout post-layout params)
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
-  (add-value "callback" #'updated-date-callback params)
+  (aput "callback" #'updated-date-callback params)
   (dolist (pathname (uiop:directory-files src))
     (let* ((basename (file-namestring pathname))
            (destpath (namestring (merge-pathnames basename dst))))
@@ -701,13 +701,13 @@ value, next-index."
                                 (lambda (x y) (string> (car x) (car y)))))
     (dolist (entry paths-and-sizes)
       (let ((item-params params))
-        (add-value "path" (car entry) item-params)
-        (add-value "size" (cdr entry) item-params)
+        (aput "path" (car entry) item-params)
+        (aput "size" (cdr entry) item-params)
         (if (string-ends-with "/" (car entry))
-            (add-value "index" (get-value "index" params) item-params)
-            (add-value "index" "" item-params))
+            (aput "index" (aget "index" params) item-params)
+            (aput "index" "" item-params))
         (push (render item-layout item-params) rendered-rows)))
-    (add-value "rows" (join-strings rendered-rows) params)
+    (aput "rows" (join-strings rendered-rows) params)
     (dolist (dst-path dst-filenames)
       (setf dst-path (enough-namestring (merge-pathnames dst-path current-pathname)))
       (unless (probe-file dst-path)
@@ -735,8 +735,8 @@ value, next-index."
     (unless (equal apex-pathname current-pathname)
       (push (cons "../" "-") paths-and-sizes))
     (push (cons "./" (format-size total-size)) paths-and-sizes)
-    (add-value "url-path" url-path params)
-    (add-value "title" (render title params) params)
+    (aput "url-path" url-path params)
+    (aput "title" (render title params) params)
     (when (plusp max-render-depth)
       (make-directory-index current-pathname paths-and-sizes dst-filenames
                               page-layout params))
@@ -770,13 +770,13 @@ value, next-index."
     (set-nested-template list-layout page-layout)
     (dolist (path (sort paths #'string>))
       (let ((item-params params))
-        (add-value "path" path item-params)
+        (aput "path" path item-params)
         (if (string-ends-with "/" path)
-            (add-value "index" (get-value "index" params) item-params)
-            (add-value "index" "" item-params))
+            (aput "index" (aget "index" params) item-params)
+            (aput "index" "" item-params))
         (push (render item-layout item-params) rendered-items)))
-    (add-value "title" "Maze Tree" params)
-    (add-value "items" (join-strings rendered-items) params)
+    (aput "title" "Maze Tree" params)
+    (aput "items" (join-strings rendered-items) params)
     (write-page dst-path list-layout params)))
 
 (defun make-tree-list (path page-layout params)
@@ -807,7 +807,7 @@ value, next-index."
     ;; Read and render all posts.
     (setf posts (make-posts src post-dst post-layout params))
     ;; Create blog list page.
-    (add-value "subtitle" "" params)
+    (aput "subtitle" "" params)
     ;; If blog list filename is unavailable, choose different filename.
     (when (probe-file (render list-dst params))
       (setf list-dst "_site/{{ zone-slug }}/posts.html"))
@@ -831,13 +831,13 @@ value, next-index."
     (dolist (src-path (directory src))
       (multiple-value-bind (comments slug) (read-comments src-path)
         (check-comment-dates comments)
-        (add-value slug comments comment-map)))
+        (aput slug comments comment-map)))
     ;; Add parameters for comment list rendering.
     ;; For each post, render its comment list page.
     (dolist (post posts)
-      (let* ((slug (get-value "slug" post))
-             (comments (get-value slug comment-map)))
-        (if (get-value slug comment-map)
+      (let* ((slug (aget "slug" post))
+             (comments (aget slug comment-map)))
+        (if (aget slug comment-map)
             (make-comment-list post comments comment-dst
                                list-layout item-layout params)
             (make-comment-none post comment-dst none-layout params))))))
@@ -857,17 +857,17 @@ value, next-index."
         (title))
     (set-nested-template tags-layout page-layout)
     (set-nested-template list-layout page-layout)
-    (add-value "tag-list" (tags-html tags params) params)
-    (add-value "tag-count" (length tags) params)
-    (add-value "tag-label" (if (= (length tags) 1) "tag" "tags") params)
+    (aput "tag-list" (tags-html tags params) params)
+    (aput "tag-count" (length tags) params)
+    (aput "tag-label" (if (= (length tags) 1) "tag" "tags") params)
     (write-page tags-dst tags-layout params)
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
       (setf posts (cdr tag-entry))
-      (add-value "tag-slug" (string-downcase tag) params)
-      (add-value "tag-title" tag params)
+      (aput "tag-slug" (string-downcase tag) params)
+      (aput "tag-title" tag params)
       (setf title (render "{{ nick }}'s {{ tag-title }} {{ zone-name }}" params))
-      (add-value "title" title params)
+      (aput "title" title params)
       (make-post-list posts list-dst list-layout item-layout params)
       (make-post-list posts feed-dst feed-xml item-xml params))))
 
@@ -891,9 +891,9 @@ value, next-index."
 (defun zone-title (zone-slug zone-name params)
   "Map slug to title of the zone's blog."
   (cond ((string= zone-slug "blog")
-         (get-value "author" params))
+         (aget "author" params))
         ((string= zone-slug "maze")
-         (fstr "~a's ~a" (get-value "nick" params) zone-name))))
+         (fstr "~a's ~a" (aget "nick" params) zone-name))))
 
 (defun make-zone (zone-slug page-layout params)
   "Create a complete zone with blog, tags, and tree."
@@ -903,10 +903,10 @@ value, next-index."
          (tags-dst "_site/{{ zone-slug }}/tag/")
          (posts)
          (tags))
-    (add-value "zone-slug" zone-slug params)
-    (add-value "zone-name" zone-name params)
-    (add-value "title" zone-title params)
-    (add-value "subtitle" (fstr " - ~a" zone-title) params)
+    (aput "zone-slug" zone-slug params)
+    (aput "zone-name" zone-name params)
+    (aput "title" zone-title params)
+    (aput "subtitle" (fstr " - ~a" zone-title) params)
     (make-zone-tree (fstr "content/~a/tree/" zone-slug) page-layout params)
     (make-tree-list dst-dir page-layout params)
     (make-more-list dst-dir page-layout params)
@@ -940,13 +940,13 @@ value, next-index."
                                 (future-p meet)) " id=\"upcoming\"" ""))
         (topic (fstr "~a: ~a" (find-meet-track (getf meet :slug) slugs)
                      (getf meet :topic))))
-    (add-value "row-id" row-id params)
-    (add-value "upcoming" upcoming-attr params)
-    (add-value "class" (if (future-p meet) "future" "past") params)
-    (add-value "date" (format-meet-date (getf meet :date)) params)
-    (add-value "duration" (getf meet :duration) params)
-    (add-value "members" (if (future-p meet) "-" (getf meet :members)) params)
-    (add-value "topic" topic params)
+    (aput "row-id" row-id params)
+    (aput "upcoming" upcoming-attr params)
+    (aput "class" (if (future-p meet) "future" "past") params)
+    (aput "date" (format-meet-date (getf meet :date)) params)
+    (aput "duration" (getf meet :duration) params)
+    (aput "members" (if (future-p meet) "-" (getf meet :members)) params)
+    (aput "topic" topic params)
     (render layout params)))
 
 (defun meet-rows-html (meets slugs layout params)
@@ -984,30 +984,30 @@ value, next-index."
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
          (dst (if slug "_site/maze/meet/{{ slug }}/log.html"
                   "_site/maze/meet/log.html")))
-    (add-value "head" (fstr "~a extra.css meets.css math.inc"
-                            (get-value "head" params)) params)
-    (add-value "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
-    (add-value "subtitle" "" params)
-    (add-value "zone-slug" "maze" params)
-    (add-value "zone-name" "Maze" params)
-    (add-value "slug" (if slug slug "index") params) ; Needed by next call.
-    (add-value "track-path"
-               (render (if slug "../{{ slug }}/{{ index }}" "../{{ index }}")
-                       params) params)
-    (add-value "track-name" (if track track "club") params)
-    (add-value "other-title" (if slug "Other Tracks" "Individual Tracks") params)
-    (add-value "other" (if slug "other" "individual") params)
-    (add-value "rows" (meet-rows-html meets slugs item-layout params) params)
-    (add-value "total-count" past-count params)
-    (add-value "meeting-label" (if (= past-count 1) "meeting" "meetings") params)
-    (add-value "total-minutes" minutes params)
-    (add-value "total-hours" (fstr "~,1f" (/ minutes 60)) params)
-    (add-value "tracks" (meet-tracks-html slug slugs) params)
+    (aput "head" (fstr "~a extra.css meets.css math.inc"
+                       (aget "head" params)) params)
+    (aput "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
+    (aput "subtitle" "" params)
+    (aput "zone-slug" "maze" params)
+    (aput "zone-name" "Maze" params)
+    (aput "slug" (if slug slug "index") params) ; Needed by next call.
+    (aput "track-path"
+          (render (if slug "../{{ slug }}/{{ index }}" "../{{ index }}")
+                  params) params)
+    (aput "track-name" (if track track "club") params)
+    (aput "other-title" (if slug "Other Tracks" "Individual Tracks") params)
+    (aput "other" (if slug "other" "individual") params)
+    (aput "rows" (meet-rows-html meets slugs item-layout params) params)
+    (aput "total-count" past-count params)
+    (aput "meeting-label" (if (= past-count 1) "meeting" "meetings") params)
+    (aput "total-minutes" minutes params)
+    (aput "total-hours" (fstr "~,1f" (/ minutes 60)) params)
+    (aput "tracks" (meet-tracks-html slug slugs) params)
     ;; Avoid division-by-zero with a fake count.
     (when (zerop past-count)
       (setf past-count 1))
-    (add-value "average-minutes" (fstr "~,1f" (/ minutes past-count)) params)
-    (add-value "average-members" (fstr "~,1f" (/ members past-count)) params)
+    (aput "average-minutes" (fstr "~,1f" (/ minutes past-count)) params)
+    (aput "average-members" (fstr "~,1f" (/ members past-count)) params)
     (write-page dst list-layout params)))
 
 (defun check-meets-dates (meets)
@@ -1100,7 +1100,7 @@ value, next-index."
     (dolist (entry key-attrs)
       (let* ((key (car entry))
              (label (cdr entry))
-             (link (get-value key post)))
+             (link (aget key post)))
         (when link
           (push (fstr " [<a href=\"~a\" class=\"basic\">~a</a>]"
                       link label) result))))
@@ -1130,7 +1130,7 @@ value, next-index."
       (setf end-index (search start-token body :start2 start-index))
       (setf section-body (subseq body start-index end-index))
       ;; Collect section name and section body.
-      (add-list-value section-name section-body result)
+      (aput-list section-name section-body result)
       (unless end-index
         (return)))
     ;; Order the section bodies in the order they were read.
@@ -1158,16 +1158,16 @@ value, next-index."
     ;; such that each entry in tag-map maps a tag to a list of posts.
     (dolist (src-path (directory src))
       (let* ((post (read-post src-path))
-             (tag (get-value "tag" post)))
-        (setf post (append (read-sections (get-value "body" post)) post))
-        (add-value "extra" (links-html post) post)
-        (unless (get-value tag tag-defs)
+             (tag (aget "tag" post)))
+        (setf post (append (read-sections (aget "body" post)) post))
+        (aput "extra" (links-html post) post)
+        (unless (aget tag tag-defs)
           (error (fstr  "Unknown tag ~a in ~a" tag src-path)))
-        (add-list-value tag post tag-map)))
+        (aput-list tag post tag-map)))
     ;; Render posts under each tag to form tag lists for each tag.
     (dolist (tag-def tag-defs)
       (let* ((tag-name (car tag-def))
-             (posts (get-value tag-name tag-map))
+             (posts (aget tag-name tag-map))
              (count (length posts))
              (tag-title (first (cdr tag-def)))
              (singular (second (cdr tag-def)))
@@ -1176,39 +1176,39 @@ value, next-index."
              (toc-items)
              (tag-items))
         ;; Sort posts under current tag in reverse chronological order.
-        (setf posts (sort posts (lambda (x y) (string< (get-value "date" x)
-                                                       (get-value "date" y)))))
+        (setf posts (sort posts (lambda (x y) (string< (aget "date" x)
+                                                       (aget "date" y)))))
         ;; Ensure the post list under the current tag is not empty.
         (unless (zerop count)
           ;; Add parameters for rendering tag list for current tag.
-          (add-value "tag" tag-name tag-params)
-          (add-value "tag-title" (string-capitalize tag-title) tag-params)
-          (add-value "count" count tag-params)
-          (add-value "tag-label" (if (= count 1) singular plural) tag-params)
+          (aput "tag" tag-name tag-params)
+          (aput "tag-title" (string-capitalize tag-title) tag-params)
+          (aput "count" count tag-params)
+          (aput "tag-label" (if (= count 1) singular plural) tag-params)
           ;; Render posts under current tag to form tag list for current tag.
           (dolist (post posts)
             (let ((post-params (append post params))
-                  (quotes (loop for q in (get-value "quote" post)
+                  (quotes (loop for q in (aget "quote" post)
                                 collect
                                 (fstr "<blockquote>~%~a</blockquote>" q))))
-              (add-value "quotes" (join-strings quotes) post-params)
-              (add-value "notes" (join-strings (get-value "note" post)) post-params)
-              (add-value "quote-title" (if (= (length quotes) 1)
+              (aput "quotes" (join-strings quotes) post-params)
+              (aput "notes" (join-strings (aget "note" post)) post-params)
+              (aput "quote-title" (if (= (length quotes) 1)
                                            "An Excerpt"
                                            "Some Excerpts") post-params)
               (push (render item-layout post-params) tag-items)
               (push (render toci-layout post-params) toc-items)))
           ;; Render table of contents for current tag.
-          (add-value "body" (join-strings toc-items) tag-params)
+          (aput "body" (join-strings toc-items) tag-params)
           (push (render tocl-layout tag-params) toc-list)
           ;; Render tag list for current tag.
-          (add-value "body" (join-strings tag-items) tag-params)
+          (aput "body" (join-strings tag-items) tag-params)
           (push (render tagl-layout tag-params) tag-list))))
     ;; Add parameters for reading list page.
-    (add-value "body" (join-strings tag-list) params)
-    (add-value "toc" (join-strings toc-list) params)
-    (add-value "title" "My Reading List" params)
-    (add-value "import" "reading.css math.inc" params)
+    (aput "body" (join-strings tag-list) params)
+    (aput "toc" (join-strings toc-list) params)
+    (aput "title" "My Reading List" params)
+    (aput "import" "reading.css math.inc" params)
     (write-page dst-path read-layout params)))
 
 
@@ -1232,13 +1232,13 @@ value, next-index."
              (rendered-widget (render widget-layout widget-params)))
         (list (cons "widget" rendered-widget))))
     ;; Add parameters for music post rendering.
-    (add-value "import" "extra.css music.css" params)
-    (add-value "callback" #'make-widget-callback params)
+    (aput "import" "extra.css music.css" params)
+    (aput "callback" #'make-widget-callback params)
     ;; Render all music posts.
     (setf posts (make-posts src "_site/music/{{ slug }}.html"
                             post-layout params))
     ;; Generate music list page.
-    (add-value "title" "Music" params)
+    (aput "title" "Music" params)
     (make-post-list posts "_site/music/index.html"
                     list-layout item-layout params)))
 
@@ -1251,10 +1251,10 @@ value, next-index."
   (let ((home-layout (read-file "layout/home/list.html"))
         (item-layout (read-file "layout/home/item.html")))
     (set-nested-template home-layout page-layout)
-    (add-value "zone-name" "Blog" params)
-    (add-value "zone-slug" "blog" params)
-    (add-value "title" (get-value "author" params) params)
-    (add-value "subtitle" "" params)
+    (aput "zone-name" "Blog" params)
+    (aput "zone-slug" "blog" params)
+    (aput "title" (aget "author" params) params)
+    (aput "subtitle" "" params)
     (make-post-list posts "_site/index.html" home-layout item-layout params)))
 
 
@@ -1290,7 +1290,7 @@ value, next-index."
     (make-css)
     (make-xsl)
     ;; Zones.
-    (add-value "head" "main.css" params)
+    (aput "head" "main.css" params)
     (make-zone "maze" page-layout params)
     ;; Meetup logs.
     (make-meets page-layout params)
