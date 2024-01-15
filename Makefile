@@ -184,7 +184,7 @@ loop:
 	while true; do make dist; sleep 5; done
 
 run-site:
-	cd _site && python3 -m http.server
+	python3 -m http.server -b localhost -d _site/
 
 run-form: site
 	sbcl --load form.lisp

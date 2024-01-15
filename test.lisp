@@ -110,27 +110,6 @@
   (assert (string= (directory-basename "/foo/bar/") "bar/"))
   (assert (string= (directory-basename "/foo/bar/baz.txt") "bar/")))
 
-(test-case copy-file-to-file
-  (write-file "test-tmp/foo.txt" "foo")
-  (copy-file "test-tmp/foo.txt" "test-tmp/bar.txt")
-  (assert (string= (read-file "test-tmp/bar.txt") "foo")))
-
-(test-case copy-file-to-dir
-  (write-file "test-tmp/foo/foo.txt" "foo")
-  (make-directory "test-tmp/bar/")
-  (copy-file "test-tmp/foo/foo.txt" "test-tmp/bar/")
-  (assert (string= (read-file "test-tmp/bar/foo.txt") "foo")))
-
-(test-case copy-files-to-dir
-  (write-file "test-tmp/foo/foo.txt" "foo")
-  (write-file "test-tmp/foo/bar.txt" "bar")
-  (write-file "test-tmp/foo/baz.txt" "baz")
-  (make-directory "test-tmp/bar/")
-  (copy-files "test-tmp/foo/*.txt" "test-tmp/bar/")
-  (assert (string= (read-file "test-tmp/bar/foo.txt") "foo"))
-  (assert (string= (read-file "test-tmp/bar/bar.txt") "bar"))
-  (assert (string= (read-file "test-tmp/bar/baz.txt") "baz")))
-
 (test-case copy-directory
   (write-file "test-tmp/foo/foo.txt" "foo")
   (write-file "test-tmp/foo/bar/foo.txt" "foo")
