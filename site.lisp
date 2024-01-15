@@ -386,23 +386,23 @@ value, next-index."
            (end-tag-index)
            (next-index 0))
       (loop
-         (setf begin-tag-index (search "<h" text :start2 next-index))
-         (unless begin-tag-index
-           (return))
-         (cond ((and (digit-char-p (char text (+ begin-tag-index 2)))
-                     (substring-at "id=\"" text (+ begin-tag-index 4)))
+        (setf begin-tag-index (search "<h" text :start2 next-index))
+        (unless begin-tag-index
+          (return))
+        (cond ((and (digit-char-p (char text (+ begin-tag-index 2)))
+                    (substring-at "id=\"" text (+ begin-tag-index 4)))
 
-                (setf end-id-index (search "\"" text
-                                           :start2 (+ begin-tag-index 8)))
-                (setf end-tag-index (search "</h" text
-                                            :start2 (+ end-id-index 2)))
-                (format s "~a" (subseq text next-index end-tag-index))
-                (format s "<a href=\"#~a\"></a></h"
-                        (subseq text (+ begin-tag-index 8) end-id-index))
-                (setf next-index (+ end-tag-index 3)))
-               (t
-                (format s "~a" (subseq text next-index (+ begin-tag-index 2)))
-                (setf next-index (+ begin-tag-index 2)))))
+               (setf end-id-index (search "\"" text
+                                          :start2 (+ begin-tag-index 8)))
+               (setf end-tag-index (search "</h" text
+                                           :start2 (+ end-id-index 2)))
+               (format s "~a" (subseq text next-index end-tag-index))
+               (format s "<a href=\"#~a\"></a></h"
+                       (subseq text (+ begin-tag-index 8) end-id-index))
+               (setf next-index (+ end-tag-index 3)))
+              (t
+               (format s "~a" (subseq text next-index (+ begin-tag-index 2)))
+               (setf next-index (+ begin-tag-index 2)))))
       (format s "~a" (subseq text next-index)))))
 
 (defun write-page (dst-path layout params)
@@ -435,9 +435,9 @@ value, next-index."
   "Create HTML to display tags for the given post."
   (let ((html ""))
     (dolist (tag (uiop:split-string (aget "tag" post)))
-      (setf html (fstr "~a<a href=\"tag/~a.html\">#~a</a>~%" html tag tag)))
+      (setf tag (string-downcase tag))
+      (setf html (fstr "~a |~%  <a href=\"tag/~a.html\">#~a</a>" html tag tag)))
     html))
-
 
 (defun format-tags-for-feed (post params)
   "Create HTML to display tags for the given post."
@@ -550,15 +550,15 @@ value, next-index."
         (comment)
         (comments))
     (loop
-     (setf (values comment next-index) (read-comment text next-index))
-     ;; Current comment date must be more recent than the previous comment.
-     (when (and (consp comments) (string< (aget "date" comment)
-                                          (aget "date" (car comments))))
-       (error (fstr "Incorrect order for comment ~a in ~a"
-                    (aget "date" comment) filename)))
-     (push comment comments)
-     (unless next-index
-       (return)))
+      (setf (values comment next-index) (read-comment text next-index))
+      ;; Current comment date must be more recent than the previous comment.
+      (when (and (consp comments) (string< (aget "date" comment)
+                                           (aget "date" (car comments))))
+        (error (fstr "Incorrect order for comment ~a in ~a"
+                     (aget "date" comment) filename)))
+      (push comment comments)
+      (unless next-index
+        (return)))
     (values comments slug)))
 
 (defun check-comment-dates (comments)
@@ -739,7 +739,7 @@ value, next-index."
     (aput "title" (render title params) params)
     (when (plusp max-render-depth)
       (make-directory-index current-pathname paths-and-sizes dst-filenames
-                              page-layout params))
+                            page-layout params))
     ;; Return total size of current directory tree to caller.
     total-size))
 
@@ -1194,8 +1194,8 @@ value, next-index."
               (aput "quotes" (join-strings quotes) post-params)
               (aput "notes" (join-strings (aget "note" post)) post-params)
               (aput "quote-title" (if (= (length quotes) 1)
-                                           "An Excerpt"
-                                           "Some Excerpts") post-params)
+                                      "An Excerpt"
+                                      "Some Excerpts") post-params)
               (push (render item-layout post-params) tag-items)
               (push (render toci-layout post-params) toc-items)))
           ;; Render table of contents for current tag.
