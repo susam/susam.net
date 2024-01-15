@@ -472,7 +472,6 @@ value, next-index."
     ;; Render placeholder in post body if requested.
     (when (string= (aget "render" params) "yes")
       (setf body (render (aget "body" params) params))
-      (aput "body" body post)      ; make-reading needs this.
       (aput "body" body params))
     (aput "path" (write-page dst layout params) post)
     post))
@@ -999,127 +998,6 @@ value, next-index."
               (list (cons "css" (feed-css)) (cons "render" "yes"))))
 
 
-;;; Reading
-;;; -------
-
-(defun links-html (post)
-  "Generate HTML for reference links in reading post."
-  (let ((key-attrs (list (cons "pdf" "PDF") (cons "url" "url")))
-        (result))
-    (dolist (entry key-attrs)
-      (let* ((key (car entry))
-             (label (cdr entry))
-             (link (aget key post)))
-        (when link
-          (push (fstr " [<a href=\"~a\" class=\"basic\">~a</a>]"
-                      link label) result))))
-    (join-strings result)))
-
-(defun read-sections (body)
-  "Read sections within post body."
-  (let* ((start-token "<!-- ")
-         (end-token (format nil " -->~%"))
-         (start-len (length start-token))
-         (end-len (length end-token))
-         (start-index 0)   ; Index of start-token.
-         (end-index)       ; Index of end-token.
-         (section-name)    ; Text between start-token and end-token.
-         (section-body)    ; Text between end-token and next start-token/EOT.
-         (result))
-    (loop
-      ;; Extract section name between start-token and end-token.
-      (unless (setf start-index (search start-token body :start2 start-index))
-        (return))
-      (incf start-index start-len)
-      (unless (setf end-index (search end-token body :start2 start-index))
-        (return))
-      (setf section-name (subseq body start-index end-index))
-      ;; Extract section body between end-token and next start-token/EOT.
-      (setf start-index (+ end-index end-len))
-      (setf end-index (search start-token body :start2 start-index))
-      (setf section-body (subseq body start-index end-index))
-      ;; Collect section name and section body.
-      (aput-list section-name section-body result)
-      (unless end-index
-        (return)))
-    ;; Order the section bodies in the order they were read.
-    (reverse-list-values-in-alist result)))
-
-(defun make-reading (src page-layout params)
-  "Generate reading list page."
-  (let ((tag-defs '(("technical" "Technical" "book" "books")
-                    ("textbook" "Textbooks" "book" "books")
-                    ("paper" "Papers" "paper" "papers")
-                    ("non-fiction" "Non-Fiction" "book" "books")
-                    ("fiction" "Fiction" "book" "books")))
-        (read-layout (read-file "layout/reading/read.html"))
-        (tagl-layout (read-file "layout/reading/tagl.html"))
-        (item-layout (read-file "layout/reading/tagi.html"))
-        (tocl-layout (read-file "layout/reading/tocl.html"))
-        (toci-layout (read-file "layout/reading/toci.html"))
-        (dst-path "_site/reading.html")
-        (tag-map)
-        (toc-list)
-        (tag-list))
-    ;; Combine layouts to form final layouts.
-    (set-nested-template read-layout page-layout)
-    ;; Read all reading posts and insert them into tag-map by tags
-    ;; such that each entry in tag-map maps a tag to a list of posts.
-    (dolist (src-path (directory src))
-      (let* ((post (read-post src-path))
-             (tag (aget "tag" post)))
-        (setf post (append (read-sections (aget "body" post)) post))
-        (aput "extra" (links-html post) post)
-        (unless (aget tag tag-defs)
-          (error (fstr  "Unknown tag ~a in ~a" tag src-path)))
-        (aput-list tag post tag-map)))
-    ;; Render posts under each tag to form tag lists for each tag.
-    (dolist (tag-def tag-defs)
-      (let* ((tag-name (car tag-def))
-             (posts (aget tag-name tag-map))
-             (count (length posts))
-             (tag-title (first (cdr tag-def)))
-             (singular (second (cdr tag-def)))
-             (plural (third (cdr tag-def)))
-             (tag-params params)
-             (toc-items)
-             (tag-items))
-        ;; Sort posts under current tag in reverse chronological order.
-        (sort-posts posts)
-        ;; Ensure the post list under the current tag is not empty.
-        (unless (zerop count)
-          ;; Add parameters for rendering tag list for current tag.
-          (aput "tag" tag-name tag-params)
-          (aput "tag-title" (string-capitalize tag-title) tag-params)
-          (aput "count" count tag-params)
-          (aput "tag-label" (if (= count 1) singular plural) tag-params)
-          ;; Render posts under current tag to form tag list for current tag.
-          (dolist (post posts)
-            (let ((post-params (append post params))
-                  (quotes (loop for q in (aget "quote" post)
-                                collect
-                                (fstr "<blockquote>~%~a</blockquote>" q))))
-              (aput "quotes" (join-strings quotes) post-params)
-              (aput "notes" (join-strings (aget "note" post)) post-params)
-              (aput "quote-title" (if (= (length quotes) 1)
-                                      "An Excerpt"
-                                      "Some Excerpts") post-params)
-              (push (render item-layout post-params) tag-items)
-              (push (render toci-layout post-params) toc-items)))
-          ;; Render table of contents for current tag.
-          (aput "body" (join-strings toc-items) tag-params)
-          (push (render tocl-layout tag-params) toc-list)
-          ;; Render tag list for current tag.
-          (aput "body" (join-strings tag-items) tag-params)
-          (push (render tagl-layout tag-params) tag-list))))
-    ;; Add parameters for reading list page.
-    (aput "body" (join-strings tag-list) params)
-    (aput "toc" (join-strings toc-list) params)
-    (aput "title" "My Reading List" params)
-    (aput "import" "reading.css math.inc" params)
-    (write-page dst-path read-layout params)))
-
-
 ;;; Music
 ;;; -----
 
@@ -1294,7 +1172,6 @@ value, next-index."
     (make-feed all-posts params)
     ;; Other sections.
     (make-music "content/music/*.html" page-layout params)
-    (make-reading "content/reading/*.html" page-layout params)
     (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
     (make-directory-lists "_site/" page-layout params))
   t)
