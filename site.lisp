@@ -472,7 +472,9 @@ value, next-index."
     ;; Render placeholder in post body if requested.
     (when (string= (aget "render" params) "yes")
       (setf body (render (aget "body" params) params))
-      (aput "body" body params))
+      (aput "body" body params)
+      ;; Update body in post to the rendered body.
+      (aput "body" body post))
     (aput "path" (write-page dst layout params) post)
     post))
 

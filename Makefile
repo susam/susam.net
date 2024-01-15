@@ -200,7 +200,7 @@ check-copyright:
 	@echo Done; echo
 
 check-rendering:
-	grep -r --include '*.html' '{{' _site | head
+	grep -r --include '*.html' --include '*.xml' '{{' _site | head
 	@echo Done; echo
 
 check-math-punct:
