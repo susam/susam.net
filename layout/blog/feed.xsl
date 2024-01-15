@@ -7,8 +7,7 @@
         <title>
           <xsl:value-of select="description"/>
         </title>
-        <link rel="stylesheet" href="/css/main.css"/>
-        <link rel="stylesheet" href="/css/extra.css"/>
+        <style>{{ css }}        </style>
       </head>
       <body>
         <h1>

@@ -246,6 +246,16 @@
   (assert (string= (repeat-string 2 "foo") "foofoo"))
   (assert (string= (repeat-string 3 "foo") "foofoofoo")))
 
+(test-case indent-lines
+  (assert (string= (indent-lines 0 "") ""))
+  (assert (string= (indent-lines 4 "") ""))
+  (assert (string= (indent-lines 0 "x") (fstr "x~%")))
+  (assert (string= (indent-lines 1 "x") (fstr " x~%")))
+  (assert (string= (indent-lines 2 "x") (fstr "  x~%")))
+  (assert (string= (indent-lines 4 "x") (fstr "    x~%")))
+  (assert (string= (indent-lines 4 (fstr "x~%")) (fstr "    x~%")))
+  (assert (string= (indent-lines 4 (fstr "x~%y~%")) (fstr "    x~%    y~%"))))
+
 
 ;;; Test Cases for Tool Definitions
 ;;; -------------------------------
