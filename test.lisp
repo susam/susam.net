@@ -734,8 +734,7 @@
               (list (cons "import" "foo.css") (cons "root" "")))
   (let ((s "[  <link rel=\"stylesheet\" href=\"../../css/foo.css\">
 foo]"))
-    (assert (string= (read-file "test-tmp/output/foo.txt") s)))
-)
+    (assert (string= (read-file "test-tmp/output/foo.txt") s))))
 
 (test-case make-posts-import-js
   (write-file "test-tmp/content/foo.txt" "foo")
