@@ -400,21 +400,6 @@
     (assert (equal (aget "b" alist) (list "bag" "ball")))
     (assert (equal (aget "c" alist) (list "cat")))))
 
-(test-case reverse-list-values-in-alist-nil
-  (assert (not (reverse-list-values-in-alist nil))))
-
-(test-case reverse-list-values-in-alist
-  (assert (equal
-           (reverse-list-values-in-alist
-            (list (cons "a" (list "val1" "val2" "val3"))
-                  (cons "b" (list "val1" "val2"))
-                  (cons "c" (list "val1"))
-                  (cons "d" '())))
-           (list (cons "a" (list "val3" "val2" "val1"))
-                 (cons "b" (list "val2" "val1"))
-                 (cons "c" (list "val1"))
-                 (cons "d" '())))))
-
 (test-case extra-markup
   (assert (string= (extra-markup "") ""))
   (assert (string= (extra-markup "foo") "foo"))
