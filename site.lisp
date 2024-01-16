@@ -413,10 +413,6 @@ value, next-index."
         (return)))
     (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun first-word (s)
-  "Return the first word from the given string."
-  (first (uiop:split-string s)))
-
 (defun format-tags (post)
   "Create HTML to display tags for the given post."
   (let ((html ""))
