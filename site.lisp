@@ -359,10 +359,6 @@ value, next-index."
        (setf callback-params (funcall callback ,params))
        (setf ,params (append callback-params ,params)))))
 
-(defun count-listed-posts (posts)
-  "Count the number of posts that are allowed to be listed in a post list."
-  (loop for post in posts count (string/= (aget "unlist" post) "yes")))
-
 (defun extra-markup (text)
   "Add extra markup to the page to create heading anchor links."
   (with-output-to-string (s)
@@ -413,7 +409,7 @@ value, next-index."
         (return)))
     (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun format-tags (post)
+(defun format-tags-for-html (post)
   "Create HTML to display tags for the given post."
   (let ((html ""))
     (dolist (tag (uiop:split-string (aget "tag" post)))
@@ -459,7 +455,8 @@ value, next-index."
          (body))
     ;; Read post and merge its parameters with call parameters.
     (setf params (append post params))
-    (aput "tags" (format-tags post) params)
+    (aput "tags-for-feed" (format-tags-for-feed post params) post)
+    (aput "tags-for-html" (format-tags-for-html post) params)
     (invoke-callback params)
     ;; Render placeholder in post body if requested.
     (when (string= (aget "render" params) "yes")
@@ -482,17 +479,20 @@ value, next-index."
       (push (make-post src-path dst layout params) posts))
     (sort-posts posts)))
 
+(defun only-list-posts (posts)
+  "Select posts that can be listed in post lists."
+  (remove-if (lambda (post) (string= (aget "unlist" post) "yes")) posts))
+
 (defun make-post-list (posts dst list-layout item-layout params)
   "Generate list page for a list of posts."
-  (let ((count (count-listed-posts posts))
+  (setf posts (only-list-posts posts))
+  (let ((count (length posts))
         (rendered-posts))
     ;; Render each post.
     (dolist (post posts)
-      (unless (string= (aget "unlist" post) "yes")
-        (setf post (append post params))
-        (aput "tags-for-feed" (format-tags-for-feed post params) post)
-        (invoke-callback post)
-        (push (render item-layout post) rendered-posts)))
+      (setf post (append post params))
+      (invoke-callback post)
+      (push (render item-layout post) rendered-posts))
     ;; Add list parameters.
     (aput "body" (join-strings rendered-posts) params)
     (aput "count" count params)
@@ -662,7 +662,7 @@ value, next-index."
 
 (defun visit-directory (apex-pathname current-pathname dst-filenames title
                         page-layout params max-render-depth)
-  "Make index pages for the given current directory and its subdirectories."
+  "Make index pages for the given directory and its subdirectories recursively."
   (let ((url-path (enough-namestring current-pathname apex-pathname))
         (total-size 0)
         (paths-and-sizes)
@@ -691,25 +691,31 @@ value, next-index."
     total-size))
 
 (defun make-directory-lists (path page-layout &optional params)
-  "Make index pages for each site directory."
+  "Make index pages for each site directory and subdirectories recursively."
   (visit-directory (truename "_site/") (truename path)
                    '("index.html" "ls.html") "Index of {{ url-path }}"
                    page-layout params 100))
 
-(defun visit-tree-directory (apex-pathname current-pathname page-layout params)
-  "Collect paths from the given directory and its subdirectories."
+(defun make-more-list (path page-layout &optional params)
+  "Make index page immediately under the given directory only."
+  (visit-directory (truename "_site/") (truename path) '("more.html")
+                   (render "More from {{ zone-name }}" params)
+                   page-layout params 1))
+
+(defun collect-tree-paths (apex-pathname current-pathname page-layout params)
+  "Collect paths from the given directory and its subdirectories recursively."
   (let ((paths))
     ;; Collect subdirectories.
     (dolist (path (uiop:subdirectories current-pathname))
       (push (enough-namestring path apex-pathname) paths)
-      (setf paths (append (visit-tree-directory apex-pathname path
-                                                page-layout params) paths)))
+      (setf paths (append (collect-tree-paths apex-pathname path
+                                              page-layout params) paths)))
     ;; Collect files.
     (dolist (path (uiop:directory-files current-pathname))
       (push (enough-namestring path apex-pathname) paths))
     paths))
 
-(defun render-tree-list (paths dst-path page-layout params)
+(defun render-tree-paths (paths dst-path page-layout params)
   "Render the given list of paths into a page with a flat HTML list."
   (let* ((list-layout (read-file "layout/tree/list.html"))
          (item-layout (read-file "layout/tree/item.html"))
@@ -728,10 +734,10 @@ value, next-index."
 
 (defun make-tree-list (path page-layout params)
   "Generate a flat tree listing of the given directory."
-  (let ((paths (visit-tree-directory (truename path) (truename path)
-                                     page-layout params))
+  (let ((paths (collect-tree-paths (truename path) (truename path)
+                                   page-layout params))
         (dst-path (namestring (merge-pathnames "TREE.html" path))))
-    (render-tree-list paths dst-path page-layout params)))
+    (render-tree-paths paths dst-path page-layout params)))
 
 
 ;;; Zone Components
@@ -790,16 +796,6 @@ value, next-index."
         (dst (render "_site/{{ zone-slug }}/" params)))
     (set-nested-template post-layout page-layout)
     (make-tree src dst page-layout post-layout params)))
-
-(defun make-more-list (path page-layout &optional params)
-  "Make index pages for each site directory."
-  (visit-directory (truename "_site/") (truename path) '("more.html")
-                   (render "More from {{ zone-name }}" params)
-                   page-layout params 1))
-
-
-;;; Complete Zone
-;;; -------------
 
 (defun make-zone (zone-slug page-layout params)
   "Create a complete zone with blog, tags, and tree."
@@ -1028,14 +1024,14 @@ value, next-index."
 
 (defun collect-tags (posts)
   "Group post by tags and return an alist of tag and post list."
+  (setf posts (only-list-posts posts))
   (let ((tags))
     (dolist (post posts)
       (dolist (tag (uiop:split-string (aget "tag" post)))
         (aput-list tag post tags)))
     (dolist (tag-entry tags)
       (setf (cdr tag-entry) (sort-posts (cdr tag-entry))))
-    (sort tags (lambda (x y) (< (count-listed-posts (cdr x))
-                                (count-listed-posts (cdr y)))))))
+    (sort tags (lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
 
 (defun tags-html (tags params)
   "Render tag list as HTML."
@@ -1048,14 +1044,13 @@ value, next-index."
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
       (setf posts (cdr tag-entry))
-      (setf count (count-listed-posts posts))
+      (setf count (length posts))
       (aput "tag-slug" (string-downcase tag) params)
       (aput "tag" tag params)
       (aput "count" count params)
       (aput "post-label" (if (= count 1) "post" "posts") params)
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
-
 
 (defun make-tags (posts page-layout params)
   "Generate tag index, tag lists, and tag feeds."
