@@ -156,10 +156,6 @@
   "Given a key, return its value found in the list of parameters."
   (cdr (assoc key alist :test #'string=)))
 
-(defun reverse-list-values-in-alist (alist)
-  (loop for entry in alist
-        collect (cons (car entry) (reverse (cdr entry)))))
-
 
 ;;; Tool Definitions
 ;;; ----------------
