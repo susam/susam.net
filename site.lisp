@@ -409,16 +409,24 @@ value, next-index."
         (return)))
     (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun format-tags-for-html (post)
-  "Create HTML to display tags for the given post."
+(defun format-tags-for-html (post root indent)
+  "Create HTML to display tags."
   (let ((html "")
         (sep ""))
     (dolist (tag (uiop:split-string (aget "tag" post)))
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a~a<a href=\"../tag/~a.html\">#~a</a>"
-                       html sep tag tag))
-      (setf sep (fstr " |~%  ")))
+      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
+                       html sep root tag tag))
+      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
+
+(defun format-tags-for-post (post)
+  "Create HTML to display tags on a post page."
+  (format-tags-for-html post "../" 2))
+
+(defun format-tags-for-list (post)
+  "Create HTML to display tags on the full post list page."
+  (format-tags-for-html post "" 4))
 
 (defun format-tags-for-feed (post params)
   "Create HTML to display tags for the given post."
@@ -459,7 +467,8 @@ value, next-index."
   (let* ((post (read-post src-path))
          (body))
     ;; Read post and merge its parameters with call parameters.
-    (aput "tags-for-html" (format-tags-for-html post) post)
+    (aput "tags-for-post" (format-tags-for-post post) post)
+    (aput "tags-for-list" (format-tags-for-list post) post)
     (aput "tags-for-feed" (format-tags-for-feed post params) post)
     (setf params (append post params))
     (invoke-callback params)
