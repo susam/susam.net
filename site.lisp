@@ -411,21 +411,26 @@ value, next-index."
 
 (defun format-tags-for-html (post)
   "Create HTML to display tags for the given post."
-  (let ((html ""))
+  (let ((html "")
+        (sep ""))
     (dolist (tag (uiop:split-string (aget "tag" post)))
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a |~%  <a href=\"../tag/~a.html\">#~a</a>" html tag tag)))
+      (setf html (fstr "~a~a<a href=\"../tag/~a.html\">#~a</a>"
+                       html sep tag tag))
+      (setf sep (fstr " |~%  ")))
     html))
 
 (defun format-tags-for-feed (post params)
   "Create HTML to display tags for the given post."
   (let ((html "")
+        (sep "")
         (site-url (aget "site-url" params))
         (tags (uiop:split-string (aget "tag" post))))
     (dolist (tag tags)
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a |~%  <a href=\"~atag/~a.html\">#~a</a>"
-                       html site-url tag tag)))
+      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
+                       html sep site-url tag tag))
+      (setf sep (fstr " |~%  ")))
     html))
 
 
@@ -454,9 +459,9 @@ value, next-index."
   (let* ((post (read-post src-path))
          (body))
     ;; Read post and merge its parameters with call parameters.
-    (setf params (append post params))
+    (aput "tags-for-html" (format-tags-for-html post) post)
     (aput "tags-for-feed" (format-tags-for-feed post params) post)
-    (aput "tags-for-html" (format-tags-for-html post) params)
+    (setf params (append post params))
     (invoke-callback params)
     ;; Render placeholder in post body if requested.
     (when (string= (aget "render" params) "yes")
@@ -616,22 +621,25 @@ value, next-index."
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
   (aput "callback" #'updated-date-callback params)
-  (dolist (pathname (uiop:directory-files src))
-    (let* ((basename (file-namestring pathname))
-           (destpath (namestring (merge-pathnames basename dst))))
-      (cond ((string-ends-with ".page.html" basename)
-             (setf destpath (string-replace ".page.html" ".html" destpath))
-             (make-post pathname destpath page-layout params))
-            ((string-ends-with ".post.html" basename)
-             (setf destpath (string-replace ".post.html" ".html" destpath))
-             (make-post pathname destpath post-layout params))
-            (t
-             (uiop:copy-file pathname destpath)))))
-  (dolist (pathname (uiop:subdirectories src))
-    (let* ((basename (directory-basename pathname))
-           (destpath (merge-pathnames basename dst)))
-      (make-directory destpath)
-      (make-tree pathname destpath page-layout post-layout params))))
+  (let ((posts))
+    (dolist (pathname (uiop:directory-files src))
+      (let* ((basename (file-namestring pathname))
+             (destpath (namestring (merge-pathnames basename dst))))
+        (cond ((string-ends-with ".page.html" basename)
+               (setf destpath (string-replace ".page.html" ".html" destpath))
+               (push (make-post pathname destpath page-layout params) posts))
+              ((string-ends-with ".post.html" basename)
+               (setf destpath (string-replace ".post.html" ".html" destpath))
+               (push (make-post pathname destpath post-layout params) posts))
+              (t
+               (uiop:copy-file pathname destpath)))))
+    (dolist (pathname (uiop:subdirectories src))
+      (let* ((basename (directory-basename pathname))
+             (destpath (merge-pathnames basename dst)))
+        (make-directory destpath)
+        (setf posts (append posts (make-tree pathname destpath page-layout
+                                             post-layout params)))))
+    (remove-if-not (lambda (post) (aget "date" post)) posts)))
 
 
 ;;; Directory Listing
@@ -802,20 +810,22 @@ value, next-index."
   (let* ((zone-name (string-capitalize zone-slug))
          (zone-title (fstr "~a's ~a" (aget "nick" params) zone-name))
          (dst-dir (fstr "_site/~a/" zone-slug))
-         (posts))
+         (tree-posts)
+         (blog-posts))
     (aput "zone-slug" zone-slug params)
     (aput "zone-name" zone-name params)
     (aput "title" zone-title params)
     (aput "subtitle" (fstr " - ~a" zone-title) params)
-    (make-zone-tree (fstr "content/~a/tree/" zone-slug) page-layout params)
+    (setf tree-posts (make-zone-tree (fstr "content/~a/tree/" zone-slug)
+                                     page-layout params))
     (make-tree-list dst-dir page-layout params)
     (make-more-list dst-dir page-layout params)
-    (setf posts (make-zone-blog (fstr "content/~a/posts/*.html" zone-slug)
-                                page-layout params))
-    (make-zone-comments posts (fstr "content/~a/comments/*.html" zone-slug)
+    (setf blog-posts (make-zone-blog (fstr "content/~a/posts/*.html" zone-slug)
+                                     page-layout params))
+    (make-zone-comments blog-posts (fstr "content/~a/comments/*.html" zone-slug)
                         page-layout params)
     (make-directory-lists dst-dir page-layout params)
-    posts))
+    (append tree-posts blog-posts)))
 
 
 ;;; Meets
@@ -1088,6 +1098,15 @@ value, next-index."
       (make-post-list posts list-dst list-layout item-layout params)
       (make-post-list posts feed-dst feed-xml item-xml params))))
 
+(defun make-full (posts page-layout params)
+  "Generate post list for the full website."
+  (setf posts (sort-posts posts))
+  (let ((list-layout (read-file "layout/full/list.html"))
+        (item-layout (read-file "layout/full/item.html")))
+    (set-nested-template list-layout page-layout)
+    (aput "title" "All Posts" params)
+    (make-post-list posts "_site/posts.html" list-layout item-layout params)))
+
 (defun make-feed (posts params)
   "Generate feed for the complete website."
   (setf posts (sort-posts posts))
@@ -1146,18 +1165,19 @@ value, next-index."
     ;; Stylesheets.
     (make-css)
     (make-xsl)
-    ;; Zones.
     (aput "head" "main.css" params)
+    ;; Maze.
     (setf posts (make-zone "maze" page-layout params))
     (setf all-posts (append all-posts posts))
-    ;; Meetup logs.
     (make-meets page-layout params)
+    ;; Blog.
     (setf posts (make-zone "blog" page-layout params))
     (setf all-posts (append all-posts posts))
-    ;; Home page.
+    ;; Home.
     (make-home posts page-layout params)
     ;; Aggregates.
     (make-tags all-posts page-layout params)
+    (make-full all-posts page-layout params)
     (make-feed all-posts params)
     ;; Other sections.
     (make-music "content/music/*.html" page-layout params)

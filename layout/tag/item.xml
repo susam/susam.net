@@ -6,7 +6,8 @@
 <![CDATA[
 {{ body }}<!-- ### -->
 <p>
-  <a href="{{ site-url }}{{ path }}">Read on website</a>{{ tags-for-feed }}
+  <a href="{{ site-url }}{{ path }}">Read on website</a> |
+  {{ tags-for-feed }}
 </p>
 ]]>
 </description>
