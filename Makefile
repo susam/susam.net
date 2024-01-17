@@ -243,6 +243,8 @@ check-paths:
 	# Blog legacy URL redirects
 	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
 	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
+	curl -sSI https://susam.net/blog/feed.xml | grep 'Location: https://susam.net/feed.xml'
+	# HTTPS redirects
 	curl -sSI http://susam.net/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
 	curl -sSI http://susam.net/blog/fd-100.html | grep 'Location: https://susam.net/blog/fd-100.html'
 	# Main Xlog
@@ -251,7 +253,7 @@ check-paths:
 	curl -sSI https://susam.net/blog/re-infosys-tcs-or-wipro.html | grep '200 OK'
 	curl -sSI https://susam.net/blog/comments/re-infosys-tcs-or-wipro.html | grep '200 OK'
 	# Maze
-	curl -sSI https://susam.net/maze/c-quine.html | grep '200 OK'
+	curl -sSI https://susam.net/blog/c-quine.html | grep '200 OK'
 	@echo Done; echo
 
 check-form-rate:
