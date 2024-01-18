@@ -22,6 +22,7 @@ help:
 	@echo '  live              Generate live directory for website.'
 	@echo '  site              Generate website.'
 	@echo '  dist              Generate website for distribution as zip/tarball.'
+	@echo '  diff              Compare _site with _ref to look for layout differences.'
 	@echo
 	@echo 'Development targets:'
 	@echo '  opt               Create directories at /opt for testing.'
@@ -159,6 +160,10 @@ dist: mathjax
 	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
 	     --load site.lisp \
 	     --quit
+	@echo Done; echo
+
+diff:
+	diff -ru _ref/ _site/
 	@echo Done; echo
 
 mathjax:
