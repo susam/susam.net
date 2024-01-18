@@ -1165,8 +1165,7 @@ value, next-index."
     ;; If *params* exists, merge it with local params.
     (when *params*
       (setf params (append *params* params)))
-    ;; Static files.
-    (copy-directory "static/" "_site/")
+    ;; Dependencies.
     (copy-directory "_cache/mathjax/" "_site/js/mathjax/")
     ;; Stylesheets.
     (make-css)
