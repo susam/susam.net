@@ -823,7 +823,6 @@ value, next-index."
   "Create a complete blog with blog, tags, and list page."
   (let* ((zone-name (string-capitalize zone-slug))
          (zone-title (fstr "~a's ~a" (aget "nick" params) zone-name))
-         (dst-dir (fstr "_site/~a/" zone-slug))
          (posts))
     (aput "zone-slug" zone-slug params)
     (aput "zone-name" zone-name params)
@@ -833,7 +832,6 @@ value, next-index."
                                  page-layout params))
     (make-blog-comments posts (fstr "content/~a/comments/*.html" zone-slug)
                         page-layout params)
-    (make-directory-lists dst-dir page-layout params)
     posts))
 
 
@@ -1194,9 +1192,8 @@ value, next-index."
     (make-tags all-posts page-layout params)
     (make-full all-posts page-layout params)
     (make-feed all-posts params)
-    ;; Other sections.
+    ;; Directory indices.
     (make-music "content/music/*.html" page-layout params)
-    (make-posts "content/*.html" "_site/{{ slug }}.html" page-layout params)
     (make-directory-lists "_site/" page-layout params))
   t)
 
