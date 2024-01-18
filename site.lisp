@@ -1033,7 +1033,8 @@ value, next-index."
     ;; Generate music list page.
     (aput "title" "Music" params)
     (make-post-list posts "_site/music/index.html"
-                    list-layout item-layout params)))
+                    list-layout item-layout params)
+    posts))
 
 
 ;;; Tags and Feeds
@@ -1107,7 +1108,6 @@ value, next-index."
 
 (defun make-full (posts page-layout params)
   "Generate post list for the full website."
-  (setf posts (sort-posts posts))
   (let ((list-layout (read-file "layout/full/list.html"))
         (item-layout (read-file "layout/full/item.html")))
     (set-nested-template list-layout page-layout)
@@ -1116,7 +1116,6 @@ value, next-index."
 
 (defun make-feed (posts params)
   "Generate feed for the complete website."
-  (setf posts (sort-posts posts))
   (let ((feed-xml (read-file "layout/tag/feed.xml"))
         (item-xml (read-file "layout/tag/item.xml")))
     (aput "title" (aget "author" params) params)
@@ -1176,24 +1175,26 @@ value, next-index."
     ;; Tree.
     (setf posts (make-tree "content/tree/" "_site/" page-layout params))
     (setf all-posts (append all-posts posts))
+    (make-meets page-layout params)
     ;; Maze.
     (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
     (make-more-list "_site/maze/" "More from Maze" page-layout params)
     (setf posts (make-blog "maze" page-layout params))
     (setf all-posts (append all-posts posts))
-    ;; Meets TODO - Move meets.lisp to tree?
-    (make-meets page-layout params)
     ;; Blog.
     (aput "subtitle" (fstr " - ~a" (aget "author" params)) params)
-    (let ((posts (make-blog "blog" page-layout params)))
-      (setf all-posts (append all-posts posts))
-      (make-home posts page-layout params))
+    (setf posts (make-blog "blog" page-layout params))
+    (setf all-posts (append all-posts posts))
+    (make-home posts page-layout params)
+    ;; Music
+    (setf posts (make-music "content/music/*.html" page-layout params))
+    (setf all-posts (append all-posts posts))
     ;; Aggregates.
+    (setf all-posts (sort-posts all-posts))
     (make-tags all-posts page-layout params)
     (make-full all-posts page-layout params)
     (make-feed all-posts params)
     ;; Directory indices.
-    (make-music "content/music/*.html" page-layout params)
     (make-directory-lists "_site/" page-layout params))
   t)
 

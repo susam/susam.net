@@ -22,6 +22,7 @@ help:
 	@echo '  live              Generate live directory for website.'
 	@echo '  site              Generate website.'
 	@echo '  dist              Generate website for distribution as zip/tarball.'
+	@echo '  ref               Create _ref directory to compare _site against later.'
 	@echo '  diff              Compare _site with _ref to look for layout differences.'
 	@echo
 	@echo 'Development targets:'
@@ -161,6 +162,10 @@ dist: mathjax
 	     --load site.lisp \
 	     --quit
 	@echo Done; echo
+
+ref: dist
+	rm -rf _ref/
+	mv _site/ _ref/
 
 diff:
 	diff -ru _ref/ _site/
