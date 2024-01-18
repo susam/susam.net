@@ -154,7 +154,11 @@ site: mathjax
 
 dist: mathjax
 	@echo Generating distributable website ...
-	sbcl --eval '(defvar *params* (list (cons "index" "index.html")))' --load site.lisp --quit
+	sbcl --noinform \
+	     --eval '(setf *break-on-signals* t)' \
+	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	     --load site.lisp \
+	     --quit
 	@echo Done; echo
 
 mathjax:
@@ -254,6 +258,12 @@ check-paths:
 	curl -sSI https://susam.net/blog/comments/re-infosys-tcs-or-wipro.html | grep '200 OK'
 	# Maze
 	curl -sSI https://susam.net/blog/c-quine.html | grep '200 OK'
+	@echo Done; echo
+
+list-no-meta:
+	grep -r --include "*.page.html" -L date: content; echo
+	grep -r -l date: --exclude-dir comments content | xargs grep -L tag:; echo
+	grep -r --include "????-??-??-*.html" --exclude-dir comments -L tag:; echo
 	@echo Done; echo
 
 check-form-rate:

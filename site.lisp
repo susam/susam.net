@@ -343,13 +343,19 @@ value, next-index."
   "Create canonical URL for the given rendered file path."
   (fstr "~a~a" (aget "site-url" params) (neat-url-path path)))
 
-(defmacro add-head-params (dst-path params)
+(defun zone-slug (path)
+  "Determine zone slug to be used in the footer from the file path."
+  (if (string-starts-with "_site/maze/" path) "maze" "blog"))
+
+(defmacro add-page-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
   `(progn
      (aput "root" (relative-root-path ,dst-path) ,params)
      (aput "canonical-url" (neat-url ,dst-path ,params) ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
-     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
+     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
+     (aput "zone-slug" (zone-slug ,dst-path) params)
+     (aput "zone-name" (string-capitalize (aget "zone-slug" ,params)) ,params)))
 
 (defmacro invoke-callback (params)
   "Run callback and add the parameters returned by it to params."
@@ -390,7 +396,7 @@ value, next-index."
   "Render given layout with given parameters and write page."
   (setf dst-path (render dst-path params))
   (write-log "Writing ~a ..." dst-path)
-  (add-head-params dst-path params)
+  (add-page-params dst-path params)
   (write-file dst-path (extra-markup (render layout params)))
   (neat-url-path dst-path))
 
@@ -626,7 +632,7 @@ value, next-index."
             (fstr "&nbsp;&bull;&nbsp;(last updated on ~a)" (simple-date updated))))
     (list (cons "last-updated" last-updated))))
 
-(defun make-tree (src dst page-layout post-layout params)
+(defun make-tree-recursively (src dst page-layout post-layout params)
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
   (aput "callback" #'updated-date-callback params)
@@ -646,9 +652,16 @@ value, next-index."
       (let* ((basename (directory-basename pathname))
              (destpath (merge-pathnames basename dst)))
         (make-directory destpath)
-        (setf posts (append posts (make-tree pathname destpath page-layout
-                                             post-layout params)))))
+        (setf posts (append posts (make-tree-recursively pathname destpath
+                                                         page-layout post-layout
+                                                         params)))))
     (remove-if-not (lambda (post) (aget "date" post)) posts)))
+
+(defun make-tree (src dst page-layout params)
+  "Make tree of files and folders from the content tree."
+  (let ((post-layout (read-file "layout/tree/post.html")))
+    (set-nested-template post-layout page-layout)
+    (make-tree-recursively src dst page-layout post-layout params)))
 
 
 ;;; Directory Listing
@@ -713,11 +726,10 @@ value, next-index."
                    '("index.html" "ls.html") "Index of {{ url-path }}"
                    page-layout params 100))
 
-(defun make-more-list (path page-layout &optional params)
+(defun make-more-list (path title page-layout &optional params)
   "Make index page immediately under the given directory only."
   (visit-directory (truename "_site/") (truename path) '("more.html")
-                   (render "More from {{ zone-name }}" params)
-                   page-layout params 1))
+                   title page-layout params 1))
 
 (defun collect-tree-paths (apex-pathname current-pathname page-layout params)
   "Collect paths from the given directory and its subdirectories recursively."
@@ -732,7 +744,7 @@ value, next-index."
       (push (enough-namestring path apex-pathname) paths))
     paths))
 
-(defun render-tree-paths (paths dst-path page-layout params)
+(defun render-tree-paths (paths dst-path title page-layout params)
   "Render the given list of paths into a page with a flat HTML list."
   (let* ((list-layout (read-file "layout/tree/list.html"))
          (item-layout (read-file "layout/tree/item.html"))
@@ -745,23 +757,23 @@ value, next-index."
             (aput "index" (aget "index" params) item-params)
             (aput "index" "" item-params))
         (push (render item-layout item-params) rendered-items)))
-    (aput "title" "Maze Tree" params)
+    (aput "title" title params)
     (aput "items" (join-strings rendered-items) params)
     (write-page dst-path list-layout params)))
 
-(defun make-tree-list (path page-layout params)
+(defun make-tree-list (path title page-layout params)
   "Generate a flat tree listing of the given directory."
   (let ((paths (collect-tree-paths (truename path) (truename path)
                                    page-layout params))
         (dst-path (namestring (merge-pathnames "TREE.html" path))))
-    (render-tree-paths paths dst-path page-layout params)))
+    (render-tree-paths paths dst-path title page-layout params)))
 
 
-;;; Zone Components
-;;; ---------------
+;;; Blog
+;;; ----
 
-(defun make-zone-blog (src page-layout params)
-  "Generate blog."
+(defun make-blog-posts (src page-layout params)
+  "Generate blog post pages for all posts in a blog directory."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
@@ -781,7 +793,7 @@ value, next-index."
     (make-post-list posts list-dst list-layout item-layout params)
     posts))
 
-(defun make-zone-comments (posts src page-layout &optional params)
+(defun make-blog-comments (posts src page-layout &optional params)
   "Generate comment list pages or no comments pages for all posts."
   (let ((none-layout (read-file "layout/comment/none.html"))
         (list-layout (read-file "layout/comment/list.html"))
@@ -807,34 +819,22 @@ value, next-index."
                                list-layout item-layout params)
             (make-comment-none post comment-dst none-layout params))))))
 
-(defun make-zone-tree (src page-layout &optional params)
-  "Copy and render files found recursively in the given path."
-  (let ((post-layout (read-file "layout/tree/post.html"))
-        (dst (render "_site/{{ zone-slug }}/" params)))
-    (set-nested-template post-layout page-layout)
-    (make-tree src dst page-layout post-layout params)))
-
-(defun make-zone (zone-slug page-layout params)
-  "Create a complete zone with blog, tags, and tree."
+(defun make-blog (zone-slug page-layout params)
+  "Create a complete blog with blog, tags, and list page."
   (let* ((zone-name (string-capitalize zone-slug))
          (zone-title (fstr "~a's ~a" (aget "nick" params) zone-name))
          (dst-dir (fstr "_site/~a/" zone-slug))
-         (tree-posts)
-         (blog-posts))
+         (posts))
     (aput "zone-slug" zone-slug params)
     (aput "zone-name" zone-name params)
     (aput "title" zone-title params)
     (aput "subtitle" (fstr " - ~a" zone-title) params)
-    (setf tree-posts (make-zone-tree (fstr "content/~a/tree/" zone-slug)
-                                     page-layout params))
-    (make-tree-list dst-dir page-layout params)
-    (make-more-list dst-dir page-layout params)
-    (setf blog-posts (make-zone-blog (fstr "content/~a/posts/*.html" zone-slug)
-                                     page-layout params))
-    (make-zone-comments blog-posts (fstr "content/~a/comments/*.html" zone-slug)
+    (setf posts (make-blog-posts (fstr "content/~a/posts/*.html" zone-slug)
+                                 page-layout params))
+    (make-blog-comments posts (fstr "content/~a/comments/*.html" zone-slug)
                         page-layout params)
     (make-directory-lists dst-dir page-layout params)
-    (append tree-posts blog-posts)))
+    posts))
 
 
 ;;; Meets
@@ -939,8 +939,8 @@ value, next-index."
 
 (defun make-meets (page-layout params)
   "Create meeting log pages for all tracks."
-  (let ((meets (read-list "content/maze/meets.lisp"))
-        (slugs (read-list "content/maze/slugs.lisp"))
+  (let ((meets (read-list "content/tree/meets.lisp"))
+        (slugs (read-list "content/tree/slugs.lisp"))
         (list-layout (read-file "layout/meets/list.html"))
         (item-layout (read-file "layout/meets/item.html")))
     (set-nested-template list-layout page-layout)
@@ -1175,15 +1175,21 @@ value, next-index."
     (make-css)
     (make-xsl)
     (aput "head" "main.css" params)
-    ;; Maze.
-    (setf posts (make-zone "maze" page-layout params))
+    ;; Tree.
+    (setf posts (make-tree "content/tree/" "_site/" page-layout params))
     (setf all-posts (append all-posts posts))
+    ;; Maze.
+    (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
+    (make-more-list "_site/maze/" "More from Maze" page-layout params)
+    (setf posts (make-blog "maze" page-layout params))
+    (setf all-posts (append all-posts posts))
+    ;; Meets TODO - Move meets.lisp to tree?
     (make-meets page-layout params)
     ;; Blog.
-    (setf posts (make-zone "blog" page-layout params))
-    (setf all-posts (append all-posts posts))
-    ;; Home.
-    (make-home posts page-layout params)
+    (aput "subtitle" (fstr " - ~a" (aget "author" params)) params)
+    (let ((posts (make-blog "blog" page-layout params)))
+      (setf all-posts (append all-posts posts))
+      (make-home posts page-layout params))
     ;; Aggregates.
     (make-tags all-posts page-layout params)
     (make-full all-posts page-layout params)
