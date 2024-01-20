@@ -33,18 +33,10 @@
   "Create a new directory along with its parents."
   (ensure-directories-exist path))
 
-(defun directory-exists-p (path)
-  "Check whether the specified directory exists on the filesystem."
-  (uiop:directory-exists-p path))
-
 (defun remove-directory (path)
   "Remove the specified directory tree from the file system."
   (uiop:delete-directory-tree (pathname path) :validate t
                                               :if-does-not-exist :ignore))
-
-(defun directory-name (path)
-  "Return only the directory portion of path."
-  (namestring (make-pathname :directory (pathname-directory path))))
 
 (defun directory-basename (path)
   "Return the parent directory of the specified pathname."
@@ -822,12 +814,11 @@ value, next-index."
 (defun make-blog (zone-slug page-layout params)
   "Create a complete blog with blog, tags, and list page."
   (let* ((zone-name (string-capitalize zone-slug))
-         (zone-title (fstr "~a's ~a" (aget "nick" params) zone-name))
+         (title (fstr "~a's ~a" (aget "nick" params) zone-name))
          (posts))
     (aput "zone-slug" zone-slug params)
     (aput "zone-name" zone-name params)
-    (aput "title" zone-title params)
-    (aput "subtitle" (fstr " - ~a" zone-title) params)
+    (aput "title" title params)
     (setf posts (make-blog-posts (fstr "content/~a/posts/*.html" zone-slug)
                                  page-layout params))
     (make-blog-comments posts (fstr "content/~a/comments/*.html" zone-slug)
@@ -1175,19 +1166,17 @@ value, next-index."
     (setf posts (make-tree "content/tree/" "_site/" page-layout params))
     (setf all-posts (append all-posts posts))
     (make-meets page-layout params)
-    ;; Maze.
-    (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
-    (make-more-list "_site/maze/" "More from Maze" page-layout params)
-    (setf posts (make-blog "maze" page-layout params))
-    (setf all-posts (append all-posts posts))
-    ;; Blog.
-    (aput "subtitle" (fstr " - ~a" (aget "author" params)) params)
-    (setf posts (make-blog "blog" page-layout params))
-    (setf all-posts (append all-posts posts))
-    (make-home posts page-layout params)
     ;; Music
     (setf posts (make-music "content/music/*.html" page-layout params))
     (setf all-posts (append all-posts posts))
+    ;; Maze.
+    (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
+    (make-more-list "_site/maze/" "More from Maze" page-layout params)
+    ;; Blogs.
+    (dolist (blog '("maze" "blog"))
+      (setf posts (make-blog blog page-layout params))
+      (setf all-posts (append all-posts posts)))
+    (make-home posts page-layout params)
     ;; Aggregates.
     (setf all-posts (sort-posts all-posts))
     (make-tags all-posts page-layout params)
