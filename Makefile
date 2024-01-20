@@ -43,8 +43,8 @@ help:
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
 	@echo '  run-dist          Serve distribution locally via a local HTTP server.'
-	@echo '  run-site-deep     Serve website from a subdirectory path.'
-	@echo '  run-dist-deep     Serve distribution from a subdirectory path.'
+	@echo '  run-deep-site     Serve website from a subdirectory path.'
+	@echo '  run-deep-dist     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
 	@echo '  checks            Run checks suitable to be run before push.'
 	@echo '  check-links       Check broken links in a locally running website.'
@@ -280,9 +280,9 @@ run-dist: dist serve
 
 run-site: site serve
 
-run-dist-deep: dist deep serve
+run-deep-dist: dist deep serve
 
-run-site-deep: site deep serve
+run-deep-site: site deep serve
 
 run-form: site
 	sbcl --load form.lisp
@@ -292,7 +292,7 @@ test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
 checks: check-copyright check-rendering check-sentence-space check-math-punct \
-check-entities check-lines check-comment-files check-copyright check-nginx
+check-entities check-newlines check-comment-files check-copyright check-nginx
 
 check-copyright:
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" content/tree/cv.html content/tree/foss.html
@@ -317,7 +317,7 @@ check-entities:
 	grep -IErn --include='*.html' --exclude=invaders.html --exclude=cfrs.html --exclude=fxyt.html ' [<>&] ' content; [ $$? = 1 ]
 	@echo Done; echo
 
-check-lines:
+check-newlines:
 	grep -IErn '(<br>|\\\[).' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
 	@echo Done; echo
 

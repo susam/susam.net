@@ -948,34 +948,34 @@ value, next-index."
    (cons "font-family" "georgia, serif")
    ;; Light color scheme.
    (cons "light-background-color" "#fec")
-   (cons "light-body-color" "#320")     ; contrast 13.4
+   (cons "light-body-color" "#320")     ; contrast 11.5, 13.4
    (cons "light-link-color" "#900")     ; contrast  1.7,  7.8, 13.4
    (cons "light-visited-color" "#400")  ; contrast  1.1, 14.7, 13.4
-   (cons "light-hover-color" "#c00")
-   (cons "light-active-color" "#c0c")
-   (cons "light-fill-color" "#edb")
-   (cons "light-shade-color" "#cb9")
-   (cons "light-code-color" "#040")
-   (cons "light-samp-color" "#720")
-   (cons "light-hl-color" "#906")
-   (cons "light-line-color" "#986")
-   (cons "light-success-color" "#060")
-   (cons "light-error-color" "#900")
+   (cons "light-hover-color" "#c00")    ; contrast  2.6,  5.1, 13.4
+   (cons "light-active-color" "#c0c")   ; contrast  3.2,  4.1, 13.4
+   (cons "light-fill-color" "#edb")     ; contrast  1.2
+   (cons "light-shade-color" "#cb9")    ; contrast  1.4
+   (cons "light-code-color" "#040")     ; contrast  1.3,  8.6, 10.0
+   (cons "light-samp-color" "#620")     ; contrast  1.3,  8.8, 10.2
+   (cons "light-hl-color" "#606")       ; contrast  1.3,  8.9, 10.4
+   (cons "light-line-color" "#986")     ; contrast  3.0
+   (cons "light-success-color" "#050")  ; contrast  8.0
+   (cons "light-error-color" "#900")    ; contrast  7.8
    ;; Dark color scheme.
    (cons "dark-background-color" "#110")
-   (cons "dark-body-color" "#cb9")      ; contrast 10.1
-   (cons "dark-link-color" "#eb6")      ; contrast 1.1, 10.8, 10.1
-   (cons "dark-visited-color" "#d93")   ; contrast 1.3,  7.9, 10.1
-   (cons "dark-hover-color" "#fc9")
-   (cons "dark-active-color" "#f9f")
-   (cons "dark-fill-color" "#000")
-   (cons "dark-shade-color" "#320")
-   (cons "dark-code-color" "#9c6")
-   (cons "dark-samp-color" "#db0")
-   (cons "dark-hl-color" "#fac")
-   (cons "dark-line-color" "#653")
-   (cons "dark-success-color" "#3c6")
-   (cons "dark-error-color" "#f99")))
+   (cons "dark-body-color" "#bba")      ; contrast 10.8,  9.8
+   (cons "dark-link-color" "#eb6")      ; contrast  1.1, 10.8,  9.8
+   (cons "dark-visited-color" "#d93")   ; contrast  1.2,  7.9,  9.8
+   (cons "dark-hover-color" "#fc9")     ; contrast  1.3, 13.0,  9.8
+   (cons "dark-active-color" "#f9f")    ; contrast  1.0, 10.2,  9.8
+   (cons "dark-fill-color" "#000")      ; contrast  1.1
+   (cons "dark-shade-color" "#332")     ; contrast  1.6
+   (cons "dark-code-color" "#9c6")      ; contrast  1.0, 11.2, 10.1
+   (cons "dark-samp-color" "#db0")      ; contrast  1.0, 11.2, 10.1
+   (cons "dark-hl-color" "#f9c")        ; contrast  1.0, 10.7,  9.7
+   (cons "dark-line-color" "#764")      ; contrast  2.7
+   (cons "dark-success-color" "#3c6")   ; contrast  9.0
+   (cons "dark-error-color" "#f96")))   ; contrast  9.0
 
 (defun make-css ()
   "Generate stylesheets for the main website."
