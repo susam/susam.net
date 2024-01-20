@@ -78,27 +78,13 @@
 
 (test-case make-directory
   (make-directory "test-tmp/foo/bar/")
-  (assert (directory-exists-p "test-tmp/foo/bar/")))
+  (assert (uiop:directory-exists-p "test-tmp/foo/bar/")))
 
 (test-case remove-directory
   (make-directory "test-tmp/foo/bar/")
-  (assert (directory-exists-p "test-tmp/foo/bar/"))
+  (assert (uiop:directory-exists-p "test-tmp/foo/bar/"))
   (remove-directory "test-tmp/foo/")
-  (assert (not (directory-exists-p "test-tmp/foo/"))))
-
-(test-case directory-name
-  (assert (string= (directory-name "") ""))
-  (assert (string= (directory-name "foo") ""))
-  (assert (string= (directory-name "foo/") "foo/"))
-  (assert (string= (directory-name "foo/bar.txt") "foo/"))
-  (assert (string= (directory-name "foo/bar/") "foo/bar/"))
-  (assert (string= (directory-name "foo/bar/baz.txt") "foo/bar/"))
-  (assert (string= (directory-name "/") "/"))
-  (assert (string= (directory-name "/foo") "/"))
-  (assert (string= (directory-name "/foo/") "/foo/"))
-  (assert (string= (directory-name "/foo/bar.txt") "/foo/"))
-  (assert (string= (directory-name "/foo/bar/") "/foo/bar/"))
-  (assert (string= (directory-name "/foo/bar/baz.txt") "/foo/bar/")))
+  (assert (not (uiop:directory-exists-p "test-tmp/foo/"))))
 
 (test-case directory-basename
   (assert (string= (directory-basename "foo/") "foo/"))
@@ -551,35 +537,35 @@
   (assert (string= (relative-root-path "_site/foo/bar/") "../../"))
   (assert (string= (relative-root-path "_site/foo/bar/index.html") "../../")))
 
-(test-case add-head-params-imports
+(test-case add-page-params-imports
   (let ((params (list (cons "import" "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
-    (add-head-params "_site/" params)
+    (add-page-params "_site/" params)
     (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-head-params "_site/foo.html" params)
+    (add-page-params "_site/foo.html" params)
     (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-head-params "_site/foo/" params)
+    (add-page-params "_site/foo/" params)
     (assert (string= (aget "imports" params) (format nil result "../")))
-    (add-head-params "_site/foo/bar.html" params)
+    (add-page-params "_site/foo/bar.html" params)
     (assert (string= (aget "imports" params) (format nil result "../")))))
 
-(test-case add-head-params-canonical-url
+(test-case add-page-params-canonical-url
   (let ((params (list (cons "site-url" "https://example.com/"))))
-    (add-head-params "_site/" params)
+    (add-page-params "_site/" params)
     (assert (string= (aget "canonical-url" params) "https://example.com/"))
-    (add-head-params "_site/foo/" params)
+    (add-page-params "_site/foo/" params)
     (assert (string= (aget "canonical-url" params) "https://example.com/foo/"))
-    (add-head-params "_site/foo/bar/" params)
+    (add-page-params "_site/foo/bar/" params)
     (assert (string= (aget "canonical-url" params)
                      "https://example.com/foo/bar/"))))
 
-(test-case add-head-params-canonical-url-index
+(test-case add-page-params-canonical-url-index
   (let ((params (list (cons "site-url" "https://example.com/"))))
-    (add-head-params "_site/index.html" params)
+    (add-page-params "_site/index.html" params)
     (assert (string= (aget "canonical-url" params) "https://example.com/"))
-    (add-head-params "_site/foo/index.html" params)
+    (add-page-params "_site/foo/index.html" params)
     (assert (string= (aget "canonical-url" params) "https://example.com/foo/"))
-    (add-head-params "_site/foo/bar/index.html" params)
+    (add-page-params "_site/foo/bar/index.html" params)
     (assert (string= (aget "canonical-url" params)
                      "https://example.com/foo/bar/"))))
 
