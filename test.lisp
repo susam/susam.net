@@ -386,6 +386,17 @@
     (assert (equal (aget "b" alist) (list "bag" "ball")))
     (assert (equal (aget "c" alist) (list "cat")))))
 
+(test-case last-n
+  (let ((seq '(10 20 30 40 50)))
+    (assert (not (last-n 0 seq)))
+    (assert (equal (last-n 1 seq) '(50)))
+    (assert (equal (last-n 2 seq) '(40 50)))
+    (assert (equal (last-n 3 seq) '(30 40 50)))
+    (assert (equal (last-n 4 seq) '(20 30 40 50)))
+    (assert (equal (last-n 5 seq) '(10 20 30 40 50)))
+    (assert (equal (last-n 6 seq) '(10 20 30 40 50)))
+    (assert (equal (last-n 10 seq) '(10 20 30 40 50)))))
+
 (test-case extra-markup
   (assert (string= (extra-markup "") ""))
   (assert (string= (extra-markup "foo") "foo"))
