@@ -148,6 +148,10 @@
   "Given a key, return its value found in the list of parameters."
   (cdr (assoc key alist :test #'string=)))
 
+(defun last-n (n sequence)
+  "Return at most the last n elements of a sequence as a new sequence."
+  (subseq sequence (max 0 (- (length sequence) n))))
+
 
 ;;; Tool Definitions
 ;;; ----------------
@@ -1070,7 +1074,8 @@ value, next-index."
          (item-xml (read-file "layout/tag/item.xml"))
          (tags-dst "_site/tag/index.html")
          (list-dst "_site/tag/{{ tag-slug }}.html")
-         (feed-dst "_site/tag/{{ tag-slug }}.xml")
+         (mini-feed-dst "_site/tag/{{ tag-slug }}.xml")
+         (full-feed-dst "_site/tag/{{ tag-slug }}-full.xml")
          (tags (collect-tags posts))
          (tag)
          (posts))
@@ -1095,7 +1100,8 @@ value, next-index."
       (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Posts" params)
             params)
       (make-post-list posts list-dst list-layout item-layout params)
-      (make-post-list posts feed-dst feed-xml item-xml params))))
+      (make-post-list (last-n 20 posts) mini-feed-dst feed-xml item-xml params)
+      (make-post-list posts full-feed-dst feed-xml item-xml params))))
 
 (defun make-full (posts page-layout params)
   "Generate post list for the full website."
@@ -1112,7 +1118,8 @@ value, next-index."
     (aput "title" (aget "author" params) params)
     (aput "link" (aget "site-url" params) params)
     (aput "description" (render "{{ nick }}'s Feed" params) params)
-    (make-post-list posts "_site/feed.xml" feed-xml item-xml params)))
+    (make-post-list (last-n 20 posts) "_site/feed.xml" feed-xml item-xml params)
+    (make-post-list posts "_site/feed-full.xml" feed-xml item-xml params)))
 
 
 ;;; Home Page
