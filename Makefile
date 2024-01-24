@@ -408,6 +408,7 @@ web:
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout main && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
 cu:
+	git push origin main
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
