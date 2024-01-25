@@ -1,0 +1,492 @@
+<!-- title: Quicksort with Jenkins for Fun and No Profit -->
+<!-- tag: Programming Technology -->
+<!-- import: extra.css -->
+<p>
+  I first encountered Jenkins in 2007 while contributing to the Apache
+  Nutch project.  It was called Hudson back then.  The nightly builds
+  for the project ran on Hudson at that time.  I remember sifting
+  through my emails and reviewing build result notifications to keep
+  an eye on that patches got merged into the trunk.  Yes, patches!
+  And trunk!  We were still using SVN back then.  Hudson was renamed
+  to Jenkins in 2011.
+</p>
+<p>
+  Since version 2.0 (released on 20 Apr 2016), Jenkins supports
+  pipeline scripts written in Groovy as a first-class entity.  A
+  pipeline script effectively defines the build job.  It can define
+  build properties, build stages, build steps, etc.  It can even
+  invoke other build jobs, including itself.
+</p>
+<p>
+  Wait!  If a pipeline can invoke itself, can we perhaps solve a
+  recursive problem with it?  Yes, we can!  That is precisely what we
+  are going to do in this post.  We are going to implement quicksort
+  as a Jenkins pipeline for fun and not a whit of profit!
+</p>
+<h2 id="set-up-jenkins-container">Set Up Jenkins Container</h2>
+<p>
+  Before we get started, I need to tell you how to set up Jenkins just
+  enough to try the experiments presented later in this post on your
+  local system.  This could be especially useful if you have never
+  used Jenkins before or if you do not have a Jenkins instance
+  avilable with you right now.  However if you are familiar with
+  Jenkins and if you have access to a Jenkins instance right now, you
+  are welcome to skip right ahead to the
+  section <a href="#quicksort">Quicksort</a>.
+</p>
+<p>
+  The steps below assume a Debian GNU/Linux system.  However, it
+  should be possible to do this on any operating system as long as you
+  can run Docker containers.  Since software evolves over time, let me
+  note down the versions of software tools I am using while writing
+  this post.  Here they are:
+</p>
+<ul>
+  <li>Debian GNU/Linux 12.4 (bookworm)</li>
+  <li>Docker version 20.10.24+dfsg1, build 297e128</li>
+  <li>Docker image tagged jenkins/jenkins:2.426.3-lts-jdk17</li>
+  <li>Jenkins 2.426.3</li>
+</ul>
+<p>
+  We will be performing only quick-and-dirty experiments in this post,
+  so we do not need a production-grade Jenkins instance.  We will run
+  Jenkins temporarily in a container.  The following steps show how to
+  do this and how to configure Jenkins for the upcoming experiments:
+</p>
+<ol>
+  <li>
+    <p>
+      Install Docker if it is not already present on the system.  For
+      example, on a Debian system, the following command installs
+      Docker:
+    </p>
+    <pre><code>sudo apt-get install docker.io</code></pre>
+  </li>
+  <li>
+    <p>
+      Now run the Jenkins container with this command:
+    </p>
+    <pre><code>sudo docker run --rm -p 8080:8080 jenkins/jenkins:lts</code></pre>
+  </li>
+  <li>
+    <p>
+      When the container starts, it prints a password towards the
+      bottom of the logs.  Copy the password.
+    </p>
+  </li>
+  <li>
+    <p>
+      Visit <a href="http://localhost:8080/">http://localhost:8080/</a>
+      in a web browser.  When the <em>Unlock Jenkins</em> page
+      appears, paste the password and click <em>Continue</em>.
+    </p>
+  </li>
+  <li>
+    <p>
+      On the <em>Customize Jenkins</em> page, click <em>Install
+      suggested plugins</em>.  Alternatively, to avoid installing
+      unnecessary plugins, click <em>Select plugins to install</em>,
+      deselect everything except <em>Pipeline</em>, and
+      click <em>Install</em>.  We need the pipeline plugin to perform
+      rest of the experiment laid out in this post.
+    </p>
+  </li>
+  <!--
+    With suggested plugins:
+    Completed installation of 84 plugins in 1 min 52 sec
+         
+    With only pipeline plugin:
+    Completed installation of 50 plugins in 44 sec
+  -->
+  <li>
+    <p>
+      On the <em>Create First Admin User</em> page, enter the details
+      to create a new user.
+    </p>
+  </li>
+  <li>
+    <p>
+      On the <em>Instance Configuration</em> page, click <em>Save and
+      Finish</em>.
+    </p>
+  </li>
+  <li>
+    <p>
+      The <em>Jenkins is ready!</em> page appears.  Click <em>Start
+      using Jenkins</em>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Go to <em>Build Executor Status</em> &gt; <em>Built-In Node</em>
+      &gt; <em>Configure</em> and change <em>Number of executors</em>
+      from the default value of <code>2</code> to <code>20</code>.
+      Click <em>Save</em>.
+    </p>
+  </li>
+</ol>
+<h2 id="hello-world">Hello World</h2>
+<p>
+  The following steps show how to run your first Jenkins pipeline:
+</p>
+<ol>
+  <li>
+    <p>
+      Go to <em>Dashboard</em> &gt; <em>New Item</em>.  Enter an item
+      name, say, <code>hello</code>, select <em>Pipeline</em>, and
+      click <em>OK</em>.
+    </p>
+  </li>
+  <li>
+    <p>
+      On the next page, scroll down to the <em>Pipeline</em> section
+      at the bottom and paste the following pipeline script and
+      click <em>Save</em>.
+    </p>
+<pre>
+<code>node {
+    echo "hello, world"
+}</code>
+</pre>
+  </li>
+  <li>
+    <p>
+      Now click <em>Build Now</em>.  A new build number appears on the
+      bottom half of the left sidebar.  Click on the build number,
+      then click <em>Console Output</em> to see the output of the
+      pipeline.  The <code>hello, world</code> message should be
+      present in the output.
+    </p>
+  </li>
+</ol>
+<p>
+  To edit the pipeline script anytime, go to <em>Dashboard</em>, click
+  on the pipeline, then go to <em>Configure</em>, scroll down to
+  the <em>Pipeline</em> section, edit the script, and
+  click <em>Save</em>.
+</p>
+<p>
+  In real world software development, Jenkins is typically configured
+  to automatically pull some source code from a project repository
+  maintained under a version control system.  The top-level directory
+  of such a project contains a file named <code>Jenkinsfile</code>
+  with the pipeline script in it.  But since we are only having fun in
+  this post, we will just paste our pipeline script directly into the
+  pipeline configuration page on Jenkins as explained above in order
+  to keep things simple.  Jenkins also supports another way of writing
+  pipelines using a declarative style.  They are known
+  as <em>declarative pipelines</em>.  In this post, however, we are
+  writing <em>scripted pipelines</em> so that we can write simple
+  Groovy code for our experiments without having to bother about too
+  many pipeline-specific notions like stages, steps, etc.
+</p>
+<h2 id="factorial">Factorial</h2>
+<p>
+  Now let us write a simple pipeline that calculates the factorial of
+  a nonnegative integer.  This will help us to demonstrate how a build
+  job can recursively call itself.  We are not going to write
+  something like the following:
+</p>
+<pre>
+<code>properties([
+    parameters([
+        string(
+            name: 'INPUT',
+            defaultValue: '0',
+            description: 'A nonnegative integer'
+        )
+    ])
+])
+
+def factorial(n) {
+    return n == 0 ? 1 : n * factorial(n - 1)
+}
+
+node {
+    echo "${factorial(params.INPUT as int)}"
+}</code>
+</pre>
+<p>
+  The code above is an example of a function that calls itself
+  recursively.  However, we want the <em>build job</em> (not the
+  function) to call itself recursively.  So we write the following
+  instead:
+</p>
+<pre>
+<code>properties([
+    parameters([
+        string(
+            name: 'INPUT',
+            defaultValue: '0',
+            description: 'A nonnegative integer'
+        )
+    ])
+])
+
+def MAX_INPUT = 10
+
+node {
+    echo "INPUT: ${params.INPUT}"
+    currentBuild.description = "${params.INPUT} -&gt; ..."
+
+    def n = params.INPUT as int
+    if (n &gt; MAX_INPUT) {
+        echo "ERROR: Input must not be greater than ${MAX_INPUT}"
+    }
+
+    env.RESULT = n == 0 ? 1 : n * (
+        build(
+            job: env.JOB_NAME,
+            parameters: [string(name: 'INPUT', value: "${n - 1}")]
+        ).getBuildVariables().RESULT as int
+    )
+
+    echo "RESULT: ${env.RESULT}"
+    currentBuild.description = "${params.INPUT} -&gt; ${env.RESULT}"
+}</code>
+</pre>
+<p>
+  This code example demonstrates a few things worth noting:
+</p>
+<ul>
+  <li>
+    <p>
+      The <code>properties</code> step at the top sets up a build
+      parameter named <code>INPUT</code> with a default value
+      of <code>0</code>.  This will allow us to enter an input number
+      while building the job.
+    </p>
+  </li>
+  <li>
+    <p>
+      Within the <code>node</code>, we first check that the input is
+      not too large.  If the input number is larger than 10, the
+      pipeline refuses to run.  This is just a tiny safety check to
+      prevent the overzealous among you for from inadvertently causing
+      havoc in your Jenkins instance by triggering a job with a large
+      input and depleting all the executors with an excess of
+      recursive jobs.
+    </p>
+  </li>
+  <li>
+    <p>
+      Then we perform the classic recursion to compute the factorial
+      of a given nonnegative integer.  The only thing that may appear
+      unusual here is that instead of just writing <code>factorial(n -
+      1)</code> we make a <code>build()</code> call to invoke the job
+      itself recursively and pass <code>n - 1</code> as a build
+      parameter input to that job.
+    </p>
+  </li>
+  <li>
+    <p>
+      Each recursively called job writes its output to an environment
+      variable name <code>RESULT</code> and exits.  Then the
+      higher-level job invocation looks up the environment variables
+      in the build result of the job that just finished with
+      the <code>getBuildVariables()</code> call, picks
+      the <code>RESULT</code>, and multiplies it by <code>n</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      The lines that update <code>currentBuild.description</code> are
+      there only to show handy descriptions of what is going on (the
+      input and the result) in the list of builds on the left sidebar.
+      A screenshot presented later illustrates this.
+    </p>
+  </li>
+</ul>
+<p>
+  To try this, perform the following steps on the Jenkins instance:
+</p>
+<ol>
+  <li>
+    <p>
+      Go to <em>Dashboard</em> &gt; <em>New Item</em>.  Enter an item
+      name, say, <code>factorial</code>, select <em>Pipeline</em>, and
+      click <em>OK</em>.
+    </p>
+  </li>
+  <li>
+    <p>
+      On the next page, scroll down to the <em>Pipeline</em> section
+      at the bottom and paste the pipeline script code presented
+      above.
+    </p>
+  </li>
+  <li>
+    <p>
+      Click <em>Build Now</em>.  The first build sets
+      the <code>INPUT</code> build parameter to <code>0</code> (the
+      default value specified in the pipeline script).  The
+      result <code>1</code> shoud appear in the <em>Console
+      Output</em> page.
+    </p>
+  </li>
+  <li>
+    After the first build completes, the <em>Build Now</em> option on
+    the left sidebar gets replaced with the <em>Build with
+    Parameters</em> option.  Click it, then enter a number,
+    say, <code>5</code> and click <em>Build</em>.  Now we should see
+    Jenkins recursively triggering a total of 6 build jobs and each
+    build job printing the factorial of the integer it receives as
+    input.  The top-level build job prints <code>120</code> as its
+    result.
+  </li>
+</ol>
+<p>
+  Here is a screenshot of what the build history looks like on the
+  left sidebar:
+</p>
+<figure class="soft lightshadow">
+  <img src="../files/blog/jenkins-factorial.png" alt="Screenshot of Jenkins build history that shows the builds that are triggered while computing the factorial of 0 and 5">
+  <figcaption>
+    The factorial of 0 computed in build 1 and the factorial of 5
+    computed in build 2
+  </figcaption>
+</figure>
+<p>
+  Build number 1 is the first build that computed the factorial of 0.
+  Build number 2 is the second build that computed the factorial of 5.
+  This build resulted in recursively triggering 5 more builds which we
+  see as build numbers 3 to 7.  The little input and output numbers
+  displayed below each build number is
+  the <code>currentBuild.description</code> we set in the pipeline
+  script.
+</p>
+<p>
+  If we click on build number 7, we find this on the build page:
+</p>
+<figure class="soft lightshadow">
+  <img src="../files/blog/jenkins-recursion.png" alt="Screenshot of Jenkins build page that shows build jobs triggered recursively">
+  <figcaption>
+    Build #7 page
+  </figcaption>
+</figure>
+<p>
+  This was a simple pipeline that demonstrates how a build job can
+  trigger itself, pass input to the triggered build and retrieve its
+  output.  We did not do much error checking or handling.  We have
+  kept the code as simple as reasonably possible.  The focus here was
+  only on demonstrating the recursion.
+</p>
+<h2 id="quicksort">Quicksort</h2>
+<p>
+  Now we will implement quicksort in Jenkins.  Sorting numbers using
+  the standard library is quite straightforward in Groovy.  Here is an
+  example in the form of Jenkins pipeline:
+</p>
+<pre>
+<code>properties([
+    parameters([
+        string(
+            name: 'INPUT',
+            defaultValue: '4, 3, 5, 4, 5, 8, 7, 9, 1',
+            description: 'Comma-separated list of integers'
+        )
+    ])
+])
+
+node {
+    def numbers = params.INPUT.split('\\s*,\\s*').collect {it as int}
+    echo "${numbers.sort()}"
+}</code>
+</pre>
+<p>
+  It can't get simpler than this.  However, we are not here to
+  demonstrate the standard library methods.  We are here to
+  demonstrate recursion in Jenkins!  We write the following pipeline
+  script instead:
+</p>
+<pre>
+<code>properties([
+    parameters([
+        string(
+            name: 'INPUT',
+            defaultValue: '4, 3, 5, 4, 5, 8, 7, 9, 1',
+            description: 'Comma-separated list of integers'
+        )
+    ])
+])
+
+def MAX_INPUT_SIZE = 10
+
+node {
+    echo "INPUT: ${params.INPUT}"
+    currentBuild.description = "${params.INPUT} -&gt; ..."
+
+    def numbers = params.INPUT.split('\\s*,\\s*').collect {it as int}
+    if (numbers.size() &gt; MAX_INPUT_SIZE) {
+        echo "ERROR: Input must not contain more than ${MAX_INPUT_SIZE} integers"
+    }
+
+    def pivot = numbers[0]
+    def others = numbers.drop(1)
+    def lo = others.findAll { it <= pivot }
+    def hi = others.findAll { it &gt; pivot }
+    def builds = [:]
+    def results = [lo: [], hi: []]
+
+    if (lo) {
+        builds.lo = {
+            results.lo = build(
+                job: env.JOB_NAME,
+                parameters: [string(name: 'INPUT', value: lo.join(', '))
+            ]).getBuildVariables().RESULT.split('\\s*,\\s*') as List
+        }
+    }
+    if (hi) {
+        builds.hi = {
+            results.hi = build(
+                job: env.JOB_NAME,
+                parameters: [string(name: 'INPUT', value: hi.join(', '))
+            ]).getBuildVariables().RESULT.split('\\s*,\\s*') as List
+        }
+    }
+    parallel builds
+
+    env.RESULT = (results.lo + [pivot] + results.hi).join(', ')
+    echo "RESULT: ${env.RESULT}"
+    currentBuild.description = "${params.INPUT} -&gt; ${env.RESULT}"
+}</code>
+</pre>
+<p>
+  Some of the code is similar to the one in the previous section.  For
+  example, the <code>properties</code> step to set up the build
+  parameter, the <code>build()</code> call, setting the result
+  in <code>env.RESULT</code>, etc. should look familiar.  Let us pay
+  attention to what is different.
+</p>
+<p>
+  Firstly, we have two <code>build()</code> calls instead of just one.
+  In fact, we have two closures with one <code>build()</code> call in
+  each closure.  Then we use the <code>parallel</code> step to execute
+  both these closures in parallel.  In each build job, we pick the
+  first integer in the input as the pivot, then compare all the
+  remaining integers with this pivot and separate them
+  into <code>lo</code> (low numbers) and <code>hi</code> (high
+  numbers).  Then we call the build job recursively to repeat this
+  algorithm twice: once on the low numbers and again on the high
+  numbers.
+</p>
+<figure class="soft lightshadow">
+  <img src="../files/blog/jenkins-quicksort.png" alt="Screenshot of Jenkins build history that shows the builds that are triggered while performing quicksort on a list of integers">
+  <figcaption>
+    Quicksort with recursive Jenkins builds
+  </figcaption>
+</figure>
+<p>
+  Unlike most textbook implementations of quicksort which lets the
+  recursion run all the way to the base case in which an empty list is
+  received and the recursive call returns without doing anything, the
+  above implementation is slightly optimised to avoid making recursive
+  builds when we find that the list of low numbers or the list of high
+  numbers is empty.  We lose a little bit of simplicity by doing this
+  but it helps in avoiding wasteful build jobs that just receive an
+  empty list of numbers as input and exit without doing anything
+  meaningful.
+</p>
+<p>
+  I hope this was fun!
+</p>
