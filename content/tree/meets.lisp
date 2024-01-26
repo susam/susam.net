@@ -934,9 +934,28 @@
   :topic "Chapter 6: Pages 278-279: The Practical of Emacs: DocView: Viewing Rich Documents"
   :duration 50
   :members 7)
- (:date "2023-10-28 09:00"
+ (:date "2023-12-26 15:00"
   :slug "mastering-emacs"
-  :topic "Chapter 6: Pages 280-282: The Practical of Emacs: TRAMP: Remote File Editing"
-  :duration 40
-  :members -1)
- )
+  :topic "Chapter 6: Pages 279-282: The Practical of Emacs: TRAMP: Remote File Editing"
+  :duration 30
+  :members 6)
+ (:date "2023-12-27 15:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 6: Pages 282-287: The Practical of Emacs: TRAMP: The Default Directory and Remote Editing, Multi-Hops and User Switching"
+  :duration 65
+  :members 5)
+ (:date "2023-12-28 21:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 6: Pages 287-293: The Practical of Emacs: EWW: Emacs Web Wowser; Dired: Navigation, Marking and Unmarking"
+  :duration 60
+  :members 6)
+ (:date "2023-12-29 15:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 6: Pages 294-298: The Practical of Emacs: Dired: Operations, Dired-X"
+  :duration 65
+  :members 5)
+ (:date "2023-12-30 12:00"
+  :slug "mastering-emacs"
+  :topic "Chapter 6: Pages 299-308: The Practical of Emacs: Dired: Working Across Directories, Shell Commands, Compiling in Emacs, Shells in Emacs: M-x shell, M-x ansi-term, M-x eshell; Chapter 7: Pages 319-314: Conclusion"
+  :duration 90
+  :members 9))

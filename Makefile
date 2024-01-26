@@ -47,7 +47,7 @@ help:
 	@echo '  check-form-rate   Check rate-limiting of form.'
 	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
 	@echo '  pub               Publish updated website on live server and mirror.'
-	@echo '  web               Publish website on primary server only.'
+	@echo '  main              Publish main branch on primary server only.'
 	@echo '  cu                Publish content updates on primary server only.'
 	@echo '  mirror            Publish website on mirror only.'
 	@echo '  pull-backup       Pull a backup of cache from live server.'
@@ -296,9 +296,9 @@ check-comment-files:
 	    echo Checking post file for "$$f"; \
 		if ! [ -e "content/blog/posts/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
-	ls -1 content/cafe/comments/ | while read -r f; do \
+	ls -1 content/maze/comments/ | while read -r f; do \
 	    echo Checking post file for "$$f"; \
-		if ! [ -e "content/cafe/posts/$$f" ]; then \
+		if ! [ -e "content/maze/posts/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
 	@echo Done; echo
 
@@ -466,9 +466,9 @@ check-form:
 	@echo
 	@echo Done
 
-pub: web mirror
+pub: cu mirror
 
-web:
+main:
 	git push -f origin main
 	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout main && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 

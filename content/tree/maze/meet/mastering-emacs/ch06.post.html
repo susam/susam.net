@@ -1,5 +1,5 @@
 <!-- title: Notes on Mastering Emacs: Chapter 6: The Practicals of Emacs -->
-<!-- date: 2023-12-29 -->
+<!-- date: 2023-12-28 -->
 <!-- tag: Emacs Technology -->
 <!-- import: extra.css -->
 <p>
@@ -228,8 +228,9 @@
       <code>C-x p c RET</code>: Compiles the current project.  By
       default, it offers as <code>make -f</code> as the command to be
       run in the project root.  If a specific <code>make</code> target
-      needs to be executed, then this default command offered may be
-      edited before typing <code>RET</code>.
+      needs to be executed or if another command needs to be executed,
+      then the default command offered may be edited before
+      typing <code>RET</code>.
     </p>
   </li>
   <li>
@@ -1237,8 +1238,8 @@ tar -xOf /tmp/foo.tgz</code>
     opened for editing in this mode which is quite non-trivial to edit
     directly.
   </li>
-</p>
-<h4 id="docview-resolution">DocView Resolution</h4>
+</ul>
+<h3 id="docview-resolution">DocView Resolution</h4>
 <p>
   If the text in the document looks pixelated in Emacs, set
   the <code>doc-view-resolution</code> variable to 300 as follows:
@@ -1268,7 +1269,7 @@ tar -xOf /tmp/foo.tgz</code>
   manner regenerates the images from the documents with the updated
   resolution.
 </p>
-<h4 id="tramp">TRAMP</h4>
+<h2 id="tramp">TRAMP</h4>
 <p>
   TRAMP stands for Transparent Remote Access, Multiple Protocol.  The
   general syntax of paths supported by TRAMP is:
@@ -1279,9 +1280,9 @@ tar -xOf /tmp/foo.tgz</code>
   are some complete key sequences that demonstrate various ways to
   open a remote file using TRAMP:
 </p>
-<ol>
+<ul>
   <li>
-    <code>C-x C-f /ssh:alice@host:~/foo.txt RET</code>: Edit file in a
+    <code>C-x C-f /ssh:alice@box:~/foo.txt RET</code>: Edit file in a
     remote host via SSH.
   </li>
   <li>
@@ -1289,11 +1290,11 @@ tar -xOf /tmp/foo.tgz</code>
     above.  However the port is explicitly specified this time.
   </li>
   <li>
-    <code>C-x C-f /scp:alice@host:~/foo.txt RET</code>: Edit file in a
+    <code>C-x C-f /scp:alice@box:~/foo.txt RET</code>: Edit file in a
     remote host via SCP.
   </li>
   <li>
-    <code>C-x C-f /ssh:host:~/foo.txt RET</code>: Edit file in a
+    <code>C-x C-f /ssh:box:~/foo.txt RET</code>: Edit file in a
     remote host via SSH after logging into it with the username of the
     current user in the current shell.
   </li>
@@ -1327,6 +1328,9 @@ tar -xOf /tmp/foo.tgz</code>
     <code>/su:alice@:~/foo.txt</code>: Edit file as a specific user.
   </li>
   <li>
+    <code>/su:alice@localhost:~/foo.txt</code>: Same as above.
+  </li>
+  <li>
     <code>C-x C-f /sudo:: RET</code>: Browse the <code>root</code>
     user's home directory as superuser.
   </li>
@@ -1343,4 +1347,1097 @@ tar -xOf /tmp/foo.tgz</code>
     system as the current user via SCP and browsing the current user's
     home directory in Dired.
   </li>
+</ul>
+<p>
+  This chapter recommends looking up the info manual
+  page <code>(tramp) Internal methods</code> but this is very likely
+  an error.  For example, evaluating <code>(info "(tramp)Internal
+  methods")</code> leads to the following error:
+</p>
+<pre><code>user-error: No such node or anchor: Internal methods</code></pre>
+<p>
+  Instead evaluate <code>(info "(tramp)Inline methods")</code> to
+  reach the correct node that describes the various connection
+  methods.
+</p>
+<h3 id="default-directory">Default Directory</h2>
+<p>
+  The variable <code>default-directory</code> is buffer local.
+  Typically, this is automatically set to the directory where Emacs
+  was launched or to the directory of the currently visited file.
+  Commands like <code>C-x C-f</code> defaults to looking up files in
+  this directory.
+</p>
+<p>
+  While editing a remote file via TRAMP, the value for this variable
+  may look something like <code>/ssh:alice@box:/home/alice/</code>.
+  The <code>@</code> character is displayed in the mode line while
+  editng a remote file.
+</p>
+<p>
+  The chapter presents the following examples of commands that work
+  seamlessly on a remote machine:
+</p>
+<ul>
+  <li>
+    <code>C-x d</code>: Manage remote files and directories.  We can
+    even copy files (using the key sequence <code>C</code>) between
+    remote and local dired sessions.
+  </li>
+  <li>
+    <code>M-x compile RET RET</code>: Run <code>make -k</code> (the
+    default) or an arbitrary command remotely.  The result is shown in
+    the <code>*compilation*</code> buffer.
+  </li>
+  <li>
+    <code>M-x rgrep RET f.. RET *.txt RET RET</code>:
+    Use <code>find</code> and <code>grep</code> together to search for
+    the pattern <code>f..</code> in files matching the
+    pattern <code>*.txt</code> in the current remote directory.
+  </li>
+  <li>
+    <code>M-x shell RET</code>: Open shell on the remote system in the
+    current remote directory.
+  </li>
+  <li>
+    <code>M-x eshell RET</code>: Open Eshell on the remote system in
+    the current remote directory.
+  </li>
+</ul>
+<p>
+  With Eshell we can go directly into remote directories seamlessly.
+  The following Eshell session illustrates this:
+</p>
+<pre>
+<samp>Welcome to the Emacs shell
+
+~ $ <kbd>uname</kbd>
+Darwin
+~ $ <kbd>cd /ssh:alice@box:~/foo/</kbd>
+/ssh:alice@box:/home/alice/foo $ <kbd>hostname</kbd>
+debian
+/ssh:alice@box:/home/alice/foo $</samp>
+</pre>
+<h3 id="multi-hops">Multi-Hops</h2>
+<p>
+  Here are some commands that illustrate how multi-hops work:
+</p>
+<ul>
+  <li>
+    <code>C-x C-f /ssh:alice@box|ssh:bob@localhost:~/foo.txt
+    RET</code>: First log in as <code>alice</code>
+    into <code>box</code> and then from there log in
+    as <code>bob</code> into the same system.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box|sudo:box:/etc/hosts RET</code>: First
+    log in as <code>alice</code> into <code>box</code> and then edit
+    file as superuser.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box|sudo::/etc/hosts RET</code>: Same as
+    above.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box|sudo:bob@box:~/bar.txt RET</code>:
+    First log in as <code>alice</code> into <code>box</code> and then
+    use <code>sudo</code> to edit file as <code>bob</code> in the
+    latter user's home directory.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box|su::/etc/hosts RET</code>: First log
+    in as <code>alice</code> into <code>box</code> and then edit file
+    as <code>root</code>.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box|su:bob@:~/bar.txt RET</code>: First log
+    in as <code>alice</code> into <code>box</code> and then edit file
+    as <code>bob</code>.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box|su:bob@box:~/bar.txt RET</code>: Same
+    as above.
+  </li>
+  <li>
+    <code>C-x C-f /ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:~/foo.txt</code>:
+    An example of two hops.
+  </li>
+</ul>
+<p>
+  Bookmarks with key sequences like <code>C-x r m</code>
+  (<code>bookmark-set</code>), <code>C-x r l</code>
+  (<code>bookmark-bmenu-list</code>), and <code>C-x r b</code>
+  (<code>bookmark-jump</code>) work seamlessly for remote files
+  (including multi-hops).
+</p>
+<p>
+  Eshell works seamlessy too across multi-hops.  Here is an Eshell
+  session that illustrates it:
+</p>
+<pre>
+<samp>~ $ <kbd>uname</kbd>
+Darwin
+~ $ <kbd>cd '/ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar/'</kbd>
+/ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar $ <kbd>uname</kbd>
+Linux
+/ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar $</samp>
+</pre>
+<h2 id="eww">EWW: Emacs Web Wowser</h2>
+<p>
+  The following commands are useful to get started with EWW.
+</p>
+<ul>
+  <li>
+    <code>M-x eww RET hello RET</code>: Search for the word "hello"
+    with DuckDuckGo.  If the buffer <code>*eww*</code> already exists,
+    then reuse that buffer, otherwise create such a buffer.  The
+    search engine can be customised by setting the
+    variable <code>eww-search-prefix</code> (it
+    is <code>"https://duckduckgo.com/html/?q="</code> by default).
+  </li>
+  <li>
+    <code>C-u M-x eww RET hello RET</code>: Like previous command
+    except that it creates a new EWW buffer.
+  </li>
+  <li>
+    <code>M-x eww RET example.net RET</code>: Visit the
+    URL <a href="http://example.net/">http://example.net</a>.  Reuses
+    the <code>*eww*</code> buffer if it exists.
+  </li>
+  <li>
+    <code>M-x eww RET http://example.net/ RET</code>: Same as above.
+  </li>
+  <li>
+    <code>C-u M-x eww RET example.net RET</code>: Like before but
+    creates a new EWW buffer.
+  </li>
+</ul>
+<p>
+  In the EWW buffer, the following navigation keys work:
+</p>
+<ul>
+  <li>
+    <code>TAB</code>: Skip to the next link.
+  </li>
+  <li>
+    <code>S-TAB</code> or <code>C-M-i</code>: Skip to the previous link.
+  </li>
+  <li>
+    <code>RET</code>: Browse the URL under point.
+  </li>
+  <li>
+    <code>C-u RET</code>: Browse the URL under point using an external
+    browser.  This is especially useful when we know that the URL we
+    want to open does not render well in EWW.
+  </li>
+  <li>
+    <code>&amp;</code>: Open the current page in an external browser.
+    Note that unlike the previous command, this command opens
+    the <em>current</em> page.  The previous command opens the URL
+    under point instead.
+  </li>
+  <li>
+    <code>q</code>: Quit EWW.
+  </li>
+  <li>
+    <code>l</code>: Go to the previously displayed page.
+  </li>
+  <li>
+    <code>r</code>: Go to the next displayed page.
+  </li>
+  <li>
+    <code>b</code>: Bookmark the current page.
+  </li>
+  <li>
+    <code>B</code>: Show bookmarks.
+  </li>
+  <li>
+    <code>H</code>: Show history of the current EWW buffer.  The most
+    recently visited URLs are displayed on top and the oldest ones are
+    shown at the bottom.  The current URL is not displayed in the
+    history.  Only the older URLs are shown in the history.
+  </li>
+  <li>
+    <code>R</code>: View the main "readable" parts of the current
+    page.  This command uses heuristics to find the parts of the web
+    page that contains the main content and omits the non-content part
+    like navigation menus etc.
+  </li>
+  <li>
+    <code>M-s M-w</code>: Search the web for the text in the region.
+    If there is no region, then prompt for a search string.
+  </li>
+  <li>
+    <code>M-RET</code>: Open link in a new EWW buffer.
+  </li>
+  <li>
+    <code>s</code>: Prompt for an EWW buffer to display and switch to
+    the selected buffer.  This is similar to changing to tabs in a
+    desktop web browser.
+  </li>
+  <li>
+    <code>w</code>: If the point is on a URL or just after a URL, then
+    copy that URL to the kill ring.  If the point is at any other
+    place, copy the URL of the current page.
+  </li>
+</ul>
+<p>
+  Further, EWW supports a few semantic browsing methods.  The
+  pertaining commands are presented below.  However note that whether
+  these commands would work on a page or not depends on whether the
+  page provides the relevant navigation aids required by these
+  commands.  Here are the key sequences for such commands:
+</p>
+<ul>
+  <li>
+    <code>p</code>: Go to the page marked <em>previous</em>.  A page
+    is marked <em>previous</em> if there is
+    a <code>&lt;link&gt;</code> tag or an <code>&lt;a&gt;</code> tag
+    for it with the attribute <code>rel="prev"</code> (a standard
+    value for the attribute) or <code>rel="previous"</code>
+    (non-standard value supported by EWW).
+  </li>
+  <li>
+    <code>n</code>: Go to the page marked <em>next</em>.  A page is
+    marked <em>next</em> if there is a <code>&lt;link&gt;</code> tag
+    or an <code>&lt;a&gt;</code> tag for it with the
+    attribute <code>rel="next"</code>.
+  </li>
+  <li>
+    <code>u</code>: Go to the page marked <em>up</em>.  A page is
+    marked <em>up</em> if there is a <code>&lt;link&gt;</code>
+    or an <code>&lt;a&gt;</code> tag for it with the
+    attribute <code>rel="up"</code>.
+  </li>
+  <li>
+    <code>t</code>: Go to the page marked <em>top</em>.  A page is
+    marked <em>top</em> if there is a <code>&lt;link&gt;</code> tag or
+    an <code>&lt;a&gt;</code> tag for it with the
+    attribute <code>rel="start"</code> or <code>rel="home"</code>
+    or <code>rel="contents"</code>.
+  </li>
+</ul>
+<h2 id="invoking-external-browser">Invoking External Browser</h2>
+<p>
+  If we would rather open a URL using our desktop web browser, then we
+  can use the <code>browse-url</code> command like this: <code>M-x
+  browse-url RET http://example.net/ RET</code>.
+</p>
+<p>
+  This command very conveniently picks up the word or domain name at
+  the point or just before the point and uses that as the default
+  value for the URL input.  Therefore if the cursor is already on a
+  URL, then we can simply type <code>M-x browse-url RET RET</code> to
+  visit it.
+</p>
+<h2 id="dired">Dired</h2>
+<h3 id="dired-getting-started">Dired: Getting Started</h3>
+<p>
+  There are several ways to start Dired.  Some examples are presented
+  below:
+</p>
+<ul>
+  <li>
+    <code>C-x C-f ~/foo/bar/ C-d</code>: If IDO or FIDO mode is
+    enabled, then this key sequence automatically opens Dired in the
+    given directory path.  Essentially, while using <code>C-x
+    C-f</code> with IDO/FIDO mode, we can type <code>C-d</code>
+    anytime and Dired is opened in the path entered so far.
+  </li>
+  <li>
+    <code>M-x dired RET ~/foo/bar/ RET</code>: Opens Dired in the
+    given directory path.
+  </li>
+  <li>
+    <code>M-x dired RET RET</code>: In the previous command, the
+    default input is the path of the current directory
+    (<code>default-directory</code>), so this key sequence
+    conveniently opens Dired in the current directory.
+  </li>
+  <li>
+    <code>C-x d</code>: Same as above.
+  </li>
+  <li>
+    <code>C-x 4 d</code>: Like before but open Dired in another
+    window.
+  </li>
+</ul>
+<h3 id="dired-navigation">Dired: Navigation</h3>
+<p>
+  The following keys work in a Dired buffer:
+</p>
+<ul>
+  <li>
+    <code>RET</code>: Visit the file or directory on the current line.
+  </li>
+  <li>
+    <code>^</code>: Go up by one directory.  If the parent directory
+    is found in an existing buffer, then switch to that buffer.
+    Otherwise create a new buffer to show the parent directory in
+    Dired.
+  </li>
+  <li>
+    <code>q</code>: Quit Dired window.  The buffer remains intact,
+    i.e., the buffer is only buried, not killed.
+  </li>
+  <li>
+    <code>C-u q</code>: Quit Dired window and kill the buffer.
+  </li>
+  <li>
+    <code>p</code> or <code>C-p</code>: Move to the previous line and
+    position the point on the filename.
+  </li>
+  <li>
+    <code>n</code> or <code>C-n</code>: Move to the next line and
+    position the point on the filename.
+  </li>
+</ul>
+<p>
+  Note that when we go from one Dired buffer to another (say, by
+  typing <code>RET</code> to enter a subdirectory from a parent
+  directory), then typing <code>q</code> or <code>C-u q</code> buries
+  or kills (respectively) the current buffer and takes us back to the
+  last Dired buffer.
+</p>
+<h3 id="dired-marking-and-unmarking">Dired: Marking and Unmarking</h3>
+<p>
+  The following list describes marking and unmarking commands of
+  Dired:
+</p>
+<ul>
+  <li>
+    <code>m</code>: Mark the file or directory at point.  If the
+    region is active, mark all files or directories in the region.
+    Note that at least one character of the filename or directory name
+    must lie within the region for a file to be marked.
+  </li>
+  <li>
+    <code>u</code>: Unmark the file or directory at point.  If the
+    region is active, unmark all files or directories in the region.
+    Note that this also removes the flag for deletion (introduced
+    later in this list).
+  </li>
+  <li>
+    <code>U</code>: Unmark everything.  Note that this also removes
+    flags for deletion.
+  </li>
+  <li>
+    <code>d</code>: Flag the file or directory for deletion.  If the
+    region is active, flag all files or directories in the region for
+    deletion.
+  </li>
+</ul>
+<p>
+  The following key sequences describe the effects of prefix arguments
+  with marking, unmarking, and flagging commands:
+</p>
+<ul>
+  <li>
+    <code>C-5 m</code>: Mark 5 files from the current line to 4 more
+    lines below.
+  </li>
+  <li>
+    <code>C-5 u</code>: Unmark 5 files from the current line for
+    deletion..
+  </li>
+  <li>
+    <code>C-5 d</code>: Flag 5 files from the current line for deletion.
+  </li>
+  <li>
+    <code>C-- C-1 m</code>: Mark the file on the previous line.
+  </li>
+  <li>
+    <code>C-- C-1 u</code>: Unmark the file on the previous line.
+  </li>
+  <li>
+    <code>C-- C-1 d</code>: Flag the file on the previous line for deletion.
+  </li>
+  <li>
+    <code>C-- C-5 m</code>: Mark files in the 5 previous lines.
+  </li>
+  <li>
+    <code>C-- C-5 u</code>: Unmark files in the 5 previous lines.
+  </li>
+  <li>
+    <code>C-- C-5 d</code>: Flag files in the 5 previous lines for
+    deletion.
+  </li>
+</ul>
+<p>
+  Additionally, the chapter mentions the following commands in a
+  separate table but on Emacs 28.2, they seem to have the same effect
+  as one of the commands discussed earlier:
+</p>
+<ul>
+  <li>
+    <code>* m</code>: Behaves the same as <code>m</code> and marks
+    files.
+  </li>
+  <li>
+    <code>* u</code>: Behaves the same as <code>u</code> and unmarks
+    files.
+  </li>
+</ul>
+<p>
+  However the following commands (also introduced briefly in the same
+  table but illustrated with complete key sequences below) provide
+  additional marking and unmarking facilities:
+</p>
+<ul>
+  <li>
+    <code>* % f.. RET</code>: Mark files with names that match the
+    regular expression <code>f..</code>.  If the region is active,
+    then only the files in the region that match the pattern are
+    marked.  The directories <code>.</code> and <code>..</code> are
+    never marked.
+  </li>
+  <li>
+    <code>% m f.. RET</code>: Same as above.
+  </li>
+  <li>
+    <code>C-u * % f.. RET</code>: Unmark files with names that match
+    the regular expression <code>f..</code>.  If the region is active,
+    then only the files in the region that match the pattern are
+    unmarked.  The directories <code>.</code> and <code>..</code> are
+    never unmarked.
+  </li>
+  <li>
+    <code>C-u % m f.. RET</code>: Same as above.
+  </li>
+  <li>
+    <code>t</code> or <code>* t</code>: Toggle marks.  The marked
+    files become unmarked and vice versa.  If the region is active,
+    toggle the marks of only the files in the region.  The
+    directories <code>.</code> and <code>..</code> are never toggled.
+    Flagged files are not toggled.
+  </li>
+  <li>
+    <code>* c * D</code>: Change all files marked with <code>*</code>
+    to be now marked with <code>D</code> (i.e., flagged for deletion).
+    Note that unlike the other commands, this command ignores the
+    active region.  It performs the change in the whole buffer.
+  </li>
+  <li>
+    <code>* c D SPC</code>: Change all files marked
+    with <code>D</code> to be now unmarked.
+  </li>
+</ul>
+<p>
+  The chapter also mentions a key sequence <code>* .</code> to mark
+  files by extension but this requires <code>dired-x</code>, so this
+  is discussed in a later section of this page.
+</p>
+<h3 id="dired-operations">Dired: Operations</h3>
+<p>
+  This section explains some operations we can perform in Dired.  If
+  there are one or more items marked in the Dired buffer, then the
+  operations work on the marked items.  Otherwise, the operations work
+  on the item under the cursor.
+</p>
+<ul>
+  <li>
+    <code>C</code>: Copy marked files, or copy the current file.  If
+    one file is being copied, this command prompts for the target file
+    path.  If multiple files are being copied, this command prompts
+    for the target directory path.
+  </li>
+  <li>
+    <code>R</code>: Rename marked files, or the current file.  If one
+    file is being renamed, this command prompts for the target file
+    path.  If multiple file are being renamed, this command prompts
+    for the target directory path.
+  </li>
+  <li>
+    <code>O</code>: Change owner of the marked files or the current
+    file.  A complete key sequence may look like <code>O root
+    RET</code>.
+  </li>
+  <li>
+    <code>G</code>: Change group of the marked files or the current
+    file.  A complete sequence may look like <code>G wheel RET</code>.
+  </li>
+  <li>
+    <code>M</code>: Change the mode of the marked files or the current
+    file.  A complete key sequence may look like <code>M u+x
+    RET</code> or <code>M 600 RET</code>.  Both symbolic modes
+    like <code>u+x</code> and numeric modes like <code>600</code> are
+    supported.
+  </li>
+  <li>
+    <code>D</code>: Delete marked files, i.e., the files that are
+    marked with <code>*</code> on the leftmost column of the Dired
+    buffer.
+  </li>
+  <li>
+    <code>x</code>: Delete the files flagged for deletion, i.e., the
+    files that are marked with <code>D</code> on the leftmost column
+    of the Dired buffer.
+  </li>
+  <li>
+    <code>c</code>: Compress marked files or current file into an
+    archive.  The archive file name is prompted.  The format of the
+    archive is automatically deduced from the extension of the file
+    name entered at the prompt.  A complete key sequence may look
+    like <code>c foo.tar.gz RET</code> or <code>c foo.zip RET</code>.
+  </li>
+</ul>
+<p>
+  Note the difference between <code>D</code> and <code>x</code>.  The
+  key <code>D</code> deletes marked files but the key <code>x</code>
+  deletes flagged files.  Therefore there are two ways of deleting
+  files:
+</p>
+<ul>
+  <li>
+    Mark files with <code>m</code> and delete them with <code>D</code>.
+  </li>
+  <li>
+    Flag files with <code>d</code> and delete them with <code>x</code>.
+  </li>
+</ul>
+<p>
+  I normally prefer the second way of deleting files.  Since deleting
+  file is a destructive operation which is possibly risky, I like to
+  flag them first with <code>d</code> before deleting them
+  with <code>x</code>.  In other words, I flag files for deletions and
+  mark files for everything else.  Since I do not use
+  the <code>D</code> key, I can be confident that my marked files are
+  always safe and there is no risk of inadvertently deleting them.
+</p>
+<h3 id="dired-copying-or-renaming-between-buffers">Dired: Copying or Renaming Between Buffers</h3>
+<p>
+  The following steps explain how we can copy or move files from one
+  Dired buffer to another.  First we will see the default behaviour
+  and then we will customise Dired to copy or move files to a
+  particular Dired directory.
+</p>
+<ol>
+  <li>
+    Type <code>C-x d /usr/ RET</code>.
+  </li>
+  <li>
+    Type <code>C-x 2</code>.
+  </li>
+  <li>
+    Type <code>C-x d /tmp/ RET</code>.
+  </li>
+  <li>
+    Type <code>C-x 2</code> agian.
+  </li>
+  <li>
+    Type <code>C-x d /etc/ RET</code>.
+  </li>
+  <li>
+    Move the cursor on some file in <code>/etc/</code> and then
+    type <code>C</code> or <code>R</code> and we will see that the
+    default directory to copy/move the file to is <code>/etc/</code>.
+  </li>
+  <li>
+    Now type <code>(setq dired-dwim-target t)</code>.
+  </li>
+  <li>
+    Now type <code>C</code> or <code>R</code> again while the cursor
+    is on some file in <code>/etc/</code>.  We will see that the
+    default directory to copy/move the file to is <code>/tmp/</code>
+    now.  Since <code>dired-dwim-target</code> is set to non-nil,
+    Dired picks the directory from the next window with a Dired buffer
+    and uses that as the target buffer.
+  </li>
 </ol>
+<h3 id="dired-more-keys">Dired: More Keys</h3>
+<p>
+  Here are some examples of Dired keys that do not act on marked files
+  but does other interesting work:
+</p>
+<ul>
+  <li>
+    <code>g</code>: Refresh the Dired buffer.
+  </li>
+  <li>
+    <code>+</code>: Create directory.  A complete key sequence may
+    look like <code>+ bar RET</code>.
+  </li>
+  <li>
+    <code>s</code>: Toggle sorting by date.  By default, the items in
+    the Dired buffer are sorted by file/directory names.
+  </li>
+  <li>
+    <code>&lt;</code>: Jump to the next directory.
+  </li>
+  <li>
+    <code>&gt;</code>: Jump to the previous directory.
+  </li>
+  <li>
+    <code>j</code>: Jump to a file by name.  A complete sequence may
+    look like <code>j hosts RET</code>.  Note that this only moves the
+    cursor to the line in Dired buffer with the provided filename.  It
+    does not visit the file.
+  </li>
+  <li>
+    <code>M-s a C-s</code>: Perform multi-file incremental search
+    through all marked files, or the current file.  Marked directories
+    are ignored.  Action region is also ignored.  It performs the
+    search across all marked files.  A complete key sequence may look
+    like <code>M-s a C-s foo</code> and then repeat <code>C-s</code>
+    over and over again to jump through all the matches.  When the
+    search reaches the end of one file, the next <code>C-s</code>
+    automatically jumps to the match in the next file.
+  </li>
+  <li>
+    <code>Q</code>: Perform multi-file regex-based search-and-replace
+    operation through all marked files, or the current file.  For any
+    marked directories, the search-and-replace operation is performed
+    in all its files recursively.  The active region is ignored.  A
+    complete key sequence may look like <code>Q f.. RET \&amp;\&amp;
+    RET</code> which searches for strings matching the
+    pattern <code>f..</code>  and duplicates that string.  The key
+    sequences supported by <code>C-M-%</code>
+    (<code>query-replace-regexp</code>)
+    like <code>y</code>, <code>n</code>, etc. work here.  See
+    section <a href="ch05.html#search-and-replace">Search and
+    Replace</a> for an account of the supported key sequences.  The
+    search results are also displayed in a
+    separate <code>*xref*</code>
+  </li>
+  <li>
+    <code>A</code>: Find matches for a regular expression pattern in
+    all marked files, or the current file.  For any marked
+    directories, all its files are searched recursively.  The active
+    region is ignored.  A complete key sequence may look like <code>A
+    f.. RET</code>.  Note that this does not perform incremental
+    search.  Instead the search results are displayed in
+    <code>*xref*</code> buffer.
+  </li>
+  <li>
+    <code>!</code>: Run a shell command on each marked file or
+    directory (or the current file or directory if nothing is marked).
+    The command is executed synchronously.  The active region is
+    ignored, or the current file or directory.  The command works on
+    all marked files and directories.  The output is displayed in a
+    separate buffer.  If <code>*</code> is present in the command,
+    then each <code>*</code> is replaced with the entire file list and
+    the command runs only once (not multiple times, once for each
+    file).  If <code>?</code> is present in the command, then the
+    command runs multiple times, once for each marked file, with
+    each <code>?</code> replaced with the name of the file being
+    operated on.  It is an error to specify both <code>*</code>
+    and <code>?</code>.  If neither is present, then the command runs
+    multiple times, once for each marked file.
+  </li>
+  <li>
+    <code>&</code>: Like the previous command but runs the command
+    asynchronously.
+  </li>
+</ul>
+<p>
+  To understand the usefulness of <code>g</code>, while Dired is open
+  create a new file in the current directory with, say, <code>C-x C-f
+  foo.txt RET</code> and save it with <code>C-x s</code>.  Then kill
+  the buffer for the file with <code>C-x k</code> and return to the
+  Dired buffer.  The Dired buffer does not show the new
+  file <code>foo.txt</code>.  Now type <code>g</code> to refresh the
+  Dired buffer.  As soon as <code>g</code> is typed, the buffer gets
+  updated to display the new file.
+</p>
+<p>
+  To understand the difference between <code>!</code>
+  and <code>&</code> mark five files and then type the key
+  sequence <code>! sleep 1; echo</code>.  Emacs blocks (i.e., does not
+  react to our keystrokes) for 5 seconds while it runs the given
+  command for each file.  When the <code>echo</code> output for all
+  files is obtained after 5 seconds, the output appears and Emacs
+  unblocks again.  Now type <code>& sleep 1; echo</code>.  Now Emacs
+  remains unblocked while the output of each e>echo</command> command
+  appears at one second intervals in the output buffer.
+</p>
+<h3 id="dired-x">Dired-X</h3>
+<p>
+  Dired-X provides extra Dired functionality.  It is not enabled by
+  default.  To enable it, add the following line to the Emacs
+  initialisation file:
+</p>
+<pre><code>(require 'dired-x)</code></pre>
+<p>
+  The following key sequences are supported by Dired-X:
+</p>
+<ul>
+  <li>
+    <code>F</code>: Visit the marked files or the current file.  When
+    multiple files are visited, they are opened in split windows
+    distributed as evenly as possible.
+  </li>
+  <li>
+    <code>C-u F</code>: Visit the marked files or the current file but
+    open them in background, i.e., do not show them on any window.
+  </li>
+  <li>
+    <code>* .</code>: Mark files with a certain extension.  If the
+    region is active, then mark only the files in the region that have
+    the given extension.  A complete key sequence may look
+    like <code>* . txt</code>.
+  </li>
+  <li>
+    <code>!</code> and <code>&</code>: These commands still work the
+    way they were described in the previous section.  However with
+    Dired-X enabled, when <code>!</code> or <code>&</code> is invoked
+    on a single file (either a single marked file or no marked file in
+    which case it operates on the current file), it automatically
+    determines the command to execute for the current file type and
+    offers that as the default input.
+  </li>
+</ul>
+<h3 id="dired-working-across-directories">Dired: Working Across Directories</h3>
+<p>
+  The following key sequences offer some support for working across
+  multiple directories in the same Dired buffer:
+</p>
+<ul>
+  <li>
+    <code>i</code>: While the cursor is on a line for a directory, it
+    expands the directory listing for that directory in the same Dired
+    buffer.  Now we could use the mark, unmark, etc. commands to
+    select files that belong to multiple directories and operate on
+    them from the same Dired buffer.
+  </li>
+  <li>
+    <code>$</code>: Collapse or expand the current directory listing.
+    If there are multiple directory listings (such as the ones created
+    with <code>i</code>), then move to the next directory listing
+    after collapsing or expanding the current one.
+  </li>
+</ul>
+<p>
+  Using <code>i</code> to insert the directory listing of a
+  subdirectory into the current Dired buffer could feel tedious if we
+  want to recursively work on multiple directories.  The commands
+  (illustrated with complete key sequences below) may be more suitable
+  for such operations:
+</p>
+<ul>
+  <li>
+    <p>
+      <code>M-x find-dired RET RET -name SPC "f*.txt" RET</code>: Find
+      all files and directories in the current directory and its
+      subdirectories recursively with name matching the
+      pattern <code>f*.txt</code> and show the results in the buffer
+      named <code>*Find*</code> with Dired mode enabled in it.  Emacs
+      runs the following command to get the results:
+    </p>
+    <pre><code>find . \( -name "f*.txt" \) -ls</code></pre>
+  </li>
+  <li>
+    <p>
+      <code>M-x find-name-dired RET RET f*.txt RET</code>: Same as
+      above.  Emacs runs the following command to get the results:
+    </p>
+    <pre><code>find . \( -name f\*.txt \) -l</code></pre>
+    <p>
+      Further on a system with case-insensitive filenames, Emacs is
+      clever enough to use the <code>-iname</code> argument instead
+      of <code>-name</code> so that case-insensitive search is
+      performed.
+    </p>
+  </li>
+  <li>
+    <p>
+      <code>M-x find-grep-dired RET RET f.. RET</code>: Find all files
+      in the current directory and its subdirectories recursively and
+      list the files where lines matching the regular
+      expression <code>..</code> is found.  The result is shown in a
+      the buffer named <code>*Find</code> with Dired mode enabled in
+      it.  Emacs runs the following command to get the results:
+      <pre><code>find . \( -type f -exec grep -q -e f.. \{\} \; \) -ls</code></pre>
+    <p>
+  </li>
+  <li>
+    <p>
+      <code>M-x find-lisp-find-dired RET RET f.. RET</code>: Find all
+      files in the current directory and subdirectories recursively
+      and list the files with names that match the regular expression
+      pattern <code>..</code>.  Note that this is different from
+      both <code>find-name-dired</code>
+      and <code>find-grep-dired</code>.  The former relies on the
+      Unix <code>find</code> command to match filenames using glob
+      patterns.  The latter uses both <code>find</code>
+      and <code>grep</code> to list files that contain a line with a
+      matching regular expression pattern.  However this command lists
+      files with names that match a regular expression pattern (not
+      glob pattern).  Further this command is implemented purely in
+      Elisp and does not have any external dependencies on tools
+      like <code>find</code> and <code>grep</code>.
+  </li>
+</ul>
+<h2 id="shell-commands">Shell Commands</h2>
+<p>
+  The following complete key sequences demonstrate how we can invoke
+  shell commands from Emacs.
+</p>
+<ul>
+  <li>
+    <code>M-! uname RET</code>: Execute shell command and show output.
+  </li>
+  <li>
+    <code>C-u M-! uname RET</code>: Like above but insert the output
+    into the buffer wherever the cursor is.  The cursor remains at the
+    same place.  The mark is set to the character just after the last
+    character of the output.  Therefore, typing <code>C-x C-x</code>
+    (<code>exchange-point-and-mark</code>) is a quick way to highlight
+    the output just inserted as an active region.
+  </li>
+  <li>
+    <code>M-! ping SPC -c SPC 4 SPC localhost RET</code>: Execute a
+    slightly long running shell command that takes about 4 seconds to
+    complete.  Emacs blocks while the command is running because the
+    command is executed synchronously.
+  </li>
+  <li>
+    <code>C-u M-! ping SPC -c SPC 4 SPC localhost RET</code>: Like
+    before but the output is inserted into the buffer.  Again, Emacs
+    blocks while the command is executed.  The output appears in the
+    buffer only after the command completes execution.
+  </li>
+  <li>
+    <code>M-&amp; ping SPC -c SPC 4 SPC localhost RET</code>:
+    Like <code>M-!</code> but execute shell command asynchronously.
+    Emacs remains unblocked and the output appears in the output
+    buffer as soon as the output is printed by the command.
+  </li>
+  <li>
+    <code>M-| wc RET</code>: Pipe region to shell command and show
+    output.
+  </li>
+  <li>
+    <code>C-u M-| wc RET</code>: Pipe region to shell command and
+    replace the region with the output.
+  </li>
+</ul>
+<p>
+  The book also mentions that <code>C-u M-&amp;</code> is supposed to
+  work like <code>C-u M-!</code> but asynchronously but I did not find
+  this to be true.  For example, <code>C-u M-& uname RET</code> led to
+  the following error <code>Wrong type argument: stringp, (4)</code>.
+  This may be a bug in Emacs 28.2.
+</p>
+<h2 id="compiling-in-emacs">Compiling in Emacs</h2>
+<p>
+  The following complete key sequences demonstrate this feature:
+</p>
+<ul>
+  <li>
+    <code>M-x compile RET</code>: Runs <code>make -f</code> by
+    default.  The default command is offered as a minibuffer input
+    before we type <code>RET</code>.  Therefore we can edit the
+    command to any arbitrary command before typing <code>RET</code>.
+  </li>
+  <li>
+    <code>M-x recompile RET</code>: Runs the last compile command
+    again.
+  </li>
+  <li>
+    <code>C-x p c</code>: Compile in the current project.  See
+    section <a href="#project-management">Project Management</a> for
+    more details.
+  </li>
+</ul>
+<p>
+  The compile commands display the output in
+  the <code>*compilation*</code> buffer where the following key
+  sequences work:
+</p>
+<ul>
+  <li>
+    <code>M-g M-n</code>: Jump to the next error.  The cursor jumps to
+    the next error line in the <code>*compilation*</code> and the
+    source of the matching error line is opened in a separated window.
+  </li>
+  <li>
+    <code>M-g M-p</code>: Jump to the previous error.
+  </li>
+  <li>
+    <code>g</code>: Recompile, i.e., run the last compile command
+    again.
+  </li>
+</ul>
+<h2 id="shells-in-emacs">Shells in Emacs</h2>
+<h3 id="m-x-shell">M-x shell</h3>
+<p>
+  The key sequence <code>M-x shell RET</code> starts a shell with
+  input/output done via a buffer.  Some important points to keep in
+  mind while using this:
+</p>
+<ul>
+  <li>
+    The TAB-completion mechanism of the underlying shell (e.g., Bash,
+    Zsh, etc.) does not work.  In fact, <code>TAB</code> invokes
+    Emacs's own completion mechanism.
+  </li>
+  <li>
+    Programs like <code>top</code> and <code>man</code> that need to
+    control the terminal do not work.  Only programs that perform
+    input/output via standard input, standard output, and standard
+    error, etc. work well.
+  </li>
+  <li>
+    Since the shell buffer is made completely of text, all text
+    editing commands of Emacs work seamlessly on the buffer.
+  </li>
+  <li>
+    We can take the cursor to absolutely anywhere in the buffer and
+    type <code>RET</code> to execute whatever is on that line as a
+    shell command.  Shell prompt on the line is automatically excluded
+    from the command to be executed.
+  </li>
+</ul>
+<p>
+  Here are some key bindings that work in the shell buffer:
+</p>
+<ul>
+  <li>
+    <code>M-p</code>: Cycle backwards through input history.
+  </li>
+  <li>
+    <code>M-n</code>: Cycle forwards through input history.
+  </li>
+  <li>
+    <code>C-&lt;up&gt;</code>: Same as <code>M-p</code>.  May not work
+    if the desktop environment gobbles up this keystroke.
+  </li>
+  <li>
+    <code>C-&lt;down&gt;</code>: Same as <code>M-n</code>.  May not
+    work if the desktop environment gobbles up this keystroke.
+  </li>
+  <li>
+    <code>M-r f..</code>: Search history backwards for all commands
+    that match the pattern <code>f..</code>.  Within the search, we
+    can use incremental search key bindings
+    like <code>C-r</code>, <code>C-s</code>, etc. to search backward,
+    forward, etc. respectively.
+  </li>
+  <li>
+    <code>C-c C-p</code>: Move to the previous prompt.  The cursor
+    moves to the place just after the prompt.
+  </li>
+  <li>
+    <code>C-c C-n</code>: Move to the next prompt.
+  </li>
+  <li>
+    <code>C-c C-s out.txt RET</code>: Write output since the last
+    input to a file.  Any prompt at the end of the output is not
+    written.  Note that by default the output on shell contains the
+    input command as well.  The input command is echoed back, so our
+    input command appears twice in the buffer: once where we typed it
+    and once more echoed just before the beginning of the output.
+    This echoed input command is also saved to the file.
+  </li>
+  <li>
+    <code>C-c C-o</code>: Delete all output since the last input.  Any
+    prompt is of course left intact.
+  </li>
+  <li>
+    <code>C-u C-c C-o</code>: Delete all output since the last input
+    and save it to the kill ring.
+  </li>
+  <li>
+    <code>C-c C-l</code>: Show the list of recent inputs in
+    the <code>*Input History*</code> buffer.
+  </li>
+  <li>
+    <code>C-d</code>: If the cursor is at the end of the buffer and
+    there is no input, send EOF.  Otherwise delete a character forward.
+  </li>
+  <li>
+    <code>C-c C-z</code>: Suspend the current job.  This performs the
+    same function as <code>C-z</code> in the underlying shell.  We can
+    then use job control commands like <code>bg</code>
+    or <code>fg</code> to resume the job as a background process or
+    foreground process.
+  </li>
+  <li>
+    <code>TAB</code>: Perform completion at point.
+  </li>
+</ul>
+<h3 id="m-x-ansi-term">M-x ansi-term</h3>
+<p>
+  The key sequence <code>M-x ansi-term RET RET</code> launches an
+  ANSI-capable terminal emulator.  It can run sophisticated programs
+  like <code>top</code>, <code>man</code>, etc. that require terminal
+  capabilities fine.  The following key sequences are useful in this
+  terminal emulator:
+</p>
+<ul>
+  <li>
+    <code>C-c C-j</code>: Switch to line ("cooked") sub-mode.  Emacs
+    editing key sequences work normally in this mode,
+    except <code>RET</code> which sends the current line as a command
+    to the underlying shell.
+  </li>
+  <li>
+    <code>C-c C-k</code>: Switch to char ("raw") sub-mode.  By
+    default, the terminal starts in this mode.  Each character we type
+    in this sub-mode is sent directly to the shell, except for the
+    escape character <code>C-c</code> which is used as the prefix keys
+    for the key sequences described in this list.
+  </li>
+  <li>
+    <code>C-c C-c</code>: Interrupt the current subjob.
+  </li>
+</ul>
+<h3 id="m-x-eshell">M-x eshell</h3>
+<p>
+  The key sequence <code>M-x eshell RET</code> creates an interactive
+  Eshell buffer if none exists, or switches to an existing one.
+  Eshell is implemented in Elisp.  It provides Elisp implementation of
+  Unix commands like <code>ls</code>, <code>cp</code>, etc.
+</p>
+<p>
+  The list below provides examples of some commands we can enter
+  directly into Eshell:
+</p>
+<ul>
+  <li>
+    <code>which ls</code>: The output should show that <code>ls</code>
+    is an Elisp function.
+  </li>
+  <li>
+    <code>which which</code>: The output should show
+    that <code>which</code> itself is an Elisp function.
+  </li>
+  <li>
+    <code>which top</code>: The output should show the file path of
+    the external program <code>top</code>.
+  </li>
+  <li>
+    <code>ls -l</code>: Run Eshell's implementation of <code>ls</code>
+    written in Elisp.
+  </li>
+  <li>
+    <code>find-file /etc/hosts</code>: Run the Elisp function
+    named <code>find-file</code> with the
+    argument <code>/etc/hosts</code> thus opening the file in a
+    buffer.
+  </li>
+  <li>
+    <code>/bin/ls -l</code>: Run the external command <code>ls</code>
+    available provided by the operating system utilities.
+  </li>
+  <li>
+    <code>python3 --version</code>: Run the external
+    program <code>python3</code>.
+  </li>
+  <li>
+    <code>top</code>: Start the program <code>top</code> in a separate
+    buffer with <code>term-mode</code> as the major mode.
+  </li>
+</ul>
+<p>
+  In the last point we see that for programs like <code>top</code>
+  which need terminal capabilities to show output in a visual fashion
+  (as opposed to just printing output to standard output or standard
+  error), Eshell automatically runs the program in
+  a <code>term-mode</code> buffer, so that the output of the visual
+  program can be handled and displayed correctly.  Eshell looks at the
+  list in the variable <code>eshell-visual-commands</code> to
+  determine if a command needs terminal support or not.  By default,
+  commands like <code>vi</code>, <code>screen</code>,
+  <code>tmux</code>, <code>top</code>, etc. belong to this list.
+</p>

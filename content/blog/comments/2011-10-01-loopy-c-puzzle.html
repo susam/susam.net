@@ -3,16 +3,18 @@
 <!-- url: http://www.blogger.com/profile/17574626231451600275 -->
 <pre>
 <code>int i;
-for (i = 0; abs(i) &lt; 6; i--)
-    printf(".");</code>
+for (i = 0; abs(i) &lt; 6; i--) {
+    printf(".");
+}</code>
 </pre>
 <!-- date: 2011-10-01 04:46:44 +0000 -->
 <!-- name: Ryan -->
 <!-- url: http://www.blogger.com/profile/17574626231451600275 -->
 <pre>
 <code>int i;
-for (i = 0; -i &lt; 6; i--)
-    printf(".");</code>
+for (i = 0; -i &lt; 6; i--) {
+    printf(".");
+}</code>
 </pre>
 <!-- date: 2011-10-01 04:48:38 +0000 -->
 <!-- name: Sean -->
@@ -27,8 +29,9 @@ Ah-ha, a tricky one:
 </p>
 <pre>
 <code>int i;
-for (i = 0; i ^= 6; i--)
-    printf(".");</code>
+for (i = 0; i ^= 6; i--) {
+    printf(".");
+}</code>
 </pre>
 <!-- date: 2011-10-01 04:54:56 +0000 -->
 <!-- name: Ryan -->
@@ -42,4 +45,32 @@ Ah, Sean beat me to it. :(
 <pre><code>for (i = 0; i + 6; i--)</code></pre>
 <p>
 will stop when i&nbsp;+&nbsp;6&nbsp;=&nbsp;0.
+</p>
+<!-- date: 2023-12-22 11:46:39 +0000 -->
+<!-- name: John Tromp -->
+<!-- url: https://tromp.github.io/ -->
+<blockquote>
+  The value in variable <code>i</code> decrements
+  to <code>INT_MIN</code> after <code>|INT_MIN| + 1</code> iterations.
+</blockquote>
+<p>
+  No; i decrements to <code>INT_MIN</code>
+  after <code>|INT_MIN|</code> iterations.  For example,
+  if <code>i</code> were a signed 1-bit integer,
+  making <code>INT_MIN</code> equal to <code>-1</code>,
+  than <code>i</code> becomes <code>-1</code> upon
+  executing <code>--i</code> after the first iteration.
+</p>
+<p>
+  Of course, you're correct that <code>|INT_MIN| + 1</code> dots are
+  output, due to the extra (and final) iteration starting with <code>i
+  = INT_MIN</code>.
+</p>
+<!-- date: 2024-01-12 21:38:02 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  John, You are absolutely right.  Thank you for taking a close look
+  at this post and reporting the off-by-one error in my explanation.
+  I have updated the post now to correct it.
 </p>
