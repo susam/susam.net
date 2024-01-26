@@ -6,9 +6,9 @@
   Nutch project.  It was called Hudson back then.  The nightly builds
   for the project ran on Hudson at that time.  I remember sifting
   through my emails and reviewing build result notifications to keep
-  an eye on that patches got merged into the trunk.  Yes, patches!
-  And trunk!  We were still using SVN back then.  Hudson was renamed
-  to Jenkins in 2011.
+  an eye on the patches that got merged into the trunk everyday.  Yes,
+  patches and trunk!  We were still using SVN back then.  Hudson was
+  renamed to Jenkins in 2011.
 </p>
 <p>
   Since version 2.0 (released on 20 Apr 2016), Jenkins supports
@@ -18,21 +18,20 @@
   invoke other build jobs, including itself.
 </p>
 <p>
-  Wait!  If a pipeline can invoke itself, can we perhaps solve a
-  recursive problem with it?  Yes, we can!  That is precisely what we
+  Wait!  If a pipeline can invoke itself, can we, perhaps, solve a
+  recursive problem with it?  Absolutely!  This is precisely what we
   are going to do in this post.  We are going to implement quicksort
   as a Jenkins pipeline for fun and not a whit of profit!
 </p>
-<h2 id="set-up-jenkins-container">Set Up Jenkins Container</h2>
+<h2 id="run-jenkins">Run Jenkins</h2>
 <p>
   Before we get started, I need to tell you how to set up Jenkins just
   enough to try the experiments presented later in this post on your
-  local system.  This could be especially useful if you have never
-  used Jenkins before or if you do not have a Jenkins instance
-  avilable with you right now.  However if you are familiar with
-  Jenkins and if you have access to a Jenkins instance right now, you
-  are welcome to skip right ahead to the
-  section <a href="#quicksort">Quicksort</a>.
+  local system.  This could be useful if you have never used Jenkins
+  before or if you do not have a Jenkins instance available with you
+  right now.  If you are already well-versed in Jenkins and have an
+  instance at your disposal, feel free to skip ahead directly to
+  the <a href="#quicksort">Quicksort</a> section.
 </p>
 <p>
   The steps below assume a Debian GNU/Linux system.  However, it
@@ -120,7 +119,7 @@
     <p>
       Go to <em>Build Executor Status</em> &gt; <em>Built-In Node</em>
       &gt; <em>Configure</em> and change <em>Number of executors</em>
-      from the default value of <code>2</code> to <code>20</code>.
+      from the default value of <code>2</code> to <code>10</code>.
       Click <em>Save</em>.
     </p>
   </li>
@@ -151,7 +150,7 @@
   </li>
   <li>
     <p>
-      Now click <em>Build Now</em>.  A new build number appears on the
+      Now click <em>Build Now</em>.  A new build number appears at the
       bottom half of the left sidebar.  Click on the build number,
       then click <em>Console Output</em> to see the output of the
       pipeline.  The <code>hello, world</code> message should be
@@ -168,17 +167,18 @@
 <p>
   In real world software development, Jenkins is typically configured
   to automatically pull some source code from a project repository
-  maintained under a version control system.  The top-level directory
-  of such a project contains a file named <code>Jenkinsfile</code>
-  with the pipeline script in it.  But since we are only having fun in
-  this post, we will just paste our pipeline script directly into the
-  pipeline configuration page on Jenkins as explained above in order
-  to keep things simple.  Jenkins also supports another way of writing
-  pipelines using a declarative style.  They are known
-  as <em>declarative pipelines</em>.  In this post, however, we are
-  writing <em>scripted pipelines</em> so that we can write simple
-  Groovy code for our experiments without having to bother about too
-  many pipeline-specific notions like stages, steps, etc.
+  maintained under a version control system and then build it using
+  the pipeline script found in the file named <code>Jenkinsfile</code>
+  present at the top-level directory of the project.  But since we
+  only intend to perform fun experiments in this post, we will just
+  paste our pipeline script directly into the pipeline configuration
+  page on Jenkins as explained above in order to keep things simple.
+  Jenkins also supports another way of writing pipelines using a
+  declarative style.  They are known as <em>declarative
+  pipelines</em>.  In this post, however, we will be writing
+  only <em>scripted pipelines</em> so that we can write simple Groovy
+  code for our experiments without having to bother about too many
+  pipeline-specific notions like stages, steps, etc.
 </p>
 <h2 id="factorial">Factorial</h2>
 <p>
@@ -259,10 +259,10 @@ node {
   </li>
   <li>
     <p>
-      Within the <code>node</code>, we first check that the input is
-      not too large.  If the input number is larger than 10, the
-      pipeline refuses to run.  This is just a tiny safety check to
-      prevent the overzealous among you for from inadvertently causing
+      Within the <code>node</code> block, we first check that the
+      input is not too large.  If the input number is larger than 10,
+      the pipeline refuses to run.  This is just a tiny safety check
+      to prevent the overzealous among you from inadvertently causing
       havoc in your Jenkins instance by triggering a job with a large
       input and depleting all the executors with an excess of
       recursive jobs.
@@ -281,24 +281,26 @@ node {
   <li>
     <p>
       Each recursively called job writes its output to an environment
-      variable name <code>RESULT</code> and exits.  Then the
+      variable named <code>RESULT</code> and exits.  Then the
       higher-level job invocation looks up the environment variables
       in the build result of the job that just finished with
-      the <code>getBuildVariables()</code> call, picks
-      the <code>RESULT</code>, and multiplies it by <code>n</code>.
+      the <code>getBuildVariables()</code> call, reads the
+      <code>RESULT</code> variable, and multiplies the value found
+      there by <code>n</code>.
     </p>
   </li>
   <li>
     <p>
       The lines that update <code>currentBuild.description</code> are
       there only to show handy descriptions of what is going on (the
-      input and the result) in the list of builds on the left sidebar.
-      A screenshot presented later illustrates this.
+      input and the result) in the build history that appears on the
+      left sidebar.  A screenshot presented later illustrates this.
     </p>
   </li>
 </ul>
 <p>
-  To try this, perform the following steps on the Jenkins instance:
+  To run the above pipeline, perform the following steps on the
+  Jenkins instance:
 </p>
 <ol>
   <li>
@@ -311,8 +313,7 @@ node {
   <li>
     <p>
       On the next page, scroll down to the <em>Pipeline</em> section
-      at the bottom and paste the pipeline script code presented
-      above.
+      at the bottom and paste the pipeline script presented above.
     </p>
   </li>
   <li>
@@ -336,8 +337,8 @@ node {
   </li>
 </ol>
 <p>
-  Here is a screenshot of what the build history looks like on the
-  left sidebar:
+  Here is a screenshot that shows what the build history looks like on
+  the left sidebar:
 </p>
 <figure class="soft lightshadow">
   <img src="../files/blog/jenkins-factorial.png" alt="Screenshot of Jenkins build history that shows the builds that are triggered while computing the factorial of 0 and 5">
@@ -347,13 +348,12 @@ node {
   </figcaption>
 </figure>
 <p>
-  Build number 1 is the first build that computed the factorial of 0.
-  Build number 2 is the second build that computed the factorial of 5.
-  This build resulted in recursively triggering 5 more builds which we
-  see as build numbers 3 to 7.  The little input and output numbers
-  displayed below each build number is
-  the <code>currentBuild.description</code> we set in the pipeline
-  script.
+  In the screenshot above, build number 2 is the build we triggered to
+  compute the factorial of 5.  This build resulted in recursively
+  triggering five more builds which we see as build numbers 3 to 7.
+  The little input and output numbers displayed below each build
+  number comes from the <code>currentBuild.description</code> value we
+  set in the pipeline script.
 </p>
 <p>
   If we click on build number 7, we find this on the build page:
@@ -367,9 +367,9 @@ node {
 <p>
   This was a simple pipeline that demonstrates how a build job can
   trigger itself, pass input to the triggered build and retrieve its
-  output.  We did not do much error checking or handling.  We have
-  kept the code as simple as reasonably possible.  The focus here was
-  only on demonstrating the recursion.
+  output.  We did not do much error checking or error handling here.
+  We have kept the code as simple as reasonably possible.  The focus
+  here was only on demonstrating the recursion.
 </p>
 <h2 id="quicksort">Quicksort</h2>
 <p>
@@ -485,7 +485,9 @@ node {
   numbers is empty.  We lose a little bit of simplicity by doing this
   but it helps in avoiding wasteful build jobs that just receive an
   empty list of numbers as input and exit without doing anything
-  meaningful.
+  meaningful.  Further optimisation could involve avoiding recursion
+  for small input sizes, such as 1 or 2, but that is not done here for
+  the sake of simplicity and brevity.
 </p>
 <p>
   I hope this was fun!

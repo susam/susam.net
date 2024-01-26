@@ -113,8 +113,19 @@
     </p>
   </li>
 </ol>
+<h2 id="major-mode-load-order">Major Mode Load Order</h2>
 <p>
-  TODO: More notes coming up here soon!
+  The chapter mentions the following order for detecting major mode:
+</p>
+<ul>
+  <li>File-local variables</li>
+  <li>Program loader directives</li>
+  <li>Magic mode detection</li>
+  <li>Automatic mode detection</li>
+</ul>
+<p>
+  Let us start from the bottom of the list and share some experimental
+  results that illustrate how the major mode detection works.
 </p>
 <h2 id="occur-mode">Occur Mode</h2>
 <p>
