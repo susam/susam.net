@@ -23,7 +23,8 @@ help:
 	@echo '  top-ref           Filter access logs to find the top referrers.'
 	@echo '  post-log          Filter form post logs to find all successful posts.'
 	@echo '  count-log         Count hits in each access log file.'
-	@echo '  grepl re=PATTERN   Filter access logs by regular expression pattern.'
+	@echo '  grepl re=PATTERN   Filter all access logs by regular expression pattern.'
+	@echo '  grepd re=PATTERN   Filter current access log by regular expression pattern.'
 	@echo '  grepv re=PATTERN   Filter visit logs by regular expression pattern.'
 	@echo
 	@echo 'Low-level targets:'
@@ -138,7 +139,7 @@ follow-post:
 	tail -F /opt/log/form/form.log | grep POST
 
 follow-visit:
-	echo 0 > /tmp/lines.txt
+	if ! [ -f /tmp/lines.txt ]; then echo 0 > /tmp/lines.txt; fi
 	while true; do \
 	  make -s cache-visits FILE=/var/log/nginx/access.log; \
 	  prev_lines=$$(cat /tmp/lines.txt); \
@@ -178,6 +179,10 @@ count-log:
 grepl:
 	[ -n "$$re" ]
 	sudo zgrep -h $(re) /var/log/nginx/access.log*
+
+grepd:
+	[ -n "$$re" ]
+	sudo grep -h $(re) /var/log/nginx/access.log
 
 grepv:
 	[ -n "$$re" ]
