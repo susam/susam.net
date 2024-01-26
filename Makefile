@@ -12,11 +12,19 @@ help:
 	@echo '  rm                Uninstall live website.'
 	@echo '  recu              Pull and deploy content updates.'
 	@echo '  check-form-live   Check forms work correctly on live website.'
+	@echo
+	@echo 'Monitoring targets to run on live server:'
 	@echo '  follow-log        Follow access logs on live server.'
 	@echo '  follow-post       Follow form post logs on live server.'
+	@echo '  follow-visit      Follow access logs to watch visitor activity on live server.'
+	@echo '  top-visit-get     Filter access logs to find most visited paths.'
+	@echo '  top-visit-ref     Filter access logs to find the top referrers for visitors.'
+	@echo '  top-get           Filter access logs to find most hit paths.'
+	@echo '  top-ref           Filter access logs to find the top referrers.'
 	@echo '  post-log          Filter form post logs to find all successful posts.'
-	@echo '  top-get-log       Filter access logs to find most popular paths.'
 	@echo '  count-log         Count hits in each access log file.'
+	@echo '  grepl re=PATTERN   Filter access logs by regular expression pattern.'
+	@echo '  grepv re=PATTERN   Filter visit logs by regular expression pattern.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -129,14 +137,64 @@ follow-log:
 follow-post:
 	tail -F /opt/log/form/form.log | grep POST
 
+follow-visit:
+	echo 0 > /tmp/lines.txt
+	while true; do \
+	  make -s cache-visits FILE=/var/log/nginx/access.log; \
+	  prev_lines=$$(cat /tmp/lines.txt); \
+	  curr_lines=$$(wc -l < /tmp/visits.txt); \
+	  echo "$$curr_lines" > /tmp/lines.txt; \
+	  if [ "$$curr_lines" -lt "$$prev_lines" ]; then \
+	    prev_lines=0; \
+	    echo "Log file truncated; following from the beginning"; \
+	  fi; \
+	  echo "$$(date +"%Y-%m-%d %H:%M:%S") New visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
+	  echo; \
+	  tail -n +"$$(( $$prev_lines + 1 ))" /tmp/visits.txt; \
+	  echo; \
+	  sleep 60; \
+	done
+
+top-visit-get:
+	make cache-visits FILE=/var/log/nginx/access.log*
+	grep -o 'GET /[^ ]*' /tmp/visits.txt | sort | uniq -c | sort -nr | nl | less
+
+top-visit-ref:
+	make cache-visits FILE=/var/log/nginx/access.log*
+	awk '{print $$11}' /tmp/visits.txt | sort | uniq -c | sort -nr | nl | less
+
+top-get:
+	sudo zgrep ' 200 ' /var/log/nginx/access.log* | grep -o 'GET /[^ ]*' | sort | uniq -c | sort -nr | nl | less
+
+top-ref:
+	sudo zgrep ' 200 ' /var/log/nginx/access.log* | awk '{print $$11}' | sort | uniq -c | sort -nr | nl | less
+
 post-log:
 	tail -F /opt/log/form/form.log | grep written
 
-top-get-log:
-	sudo zgrep ' 200 ' /var/log/nginx/access.log* | grep -o 'GET /[^ ]*' | sort | uniq -c | sort -nr | nl | less
-
 count-log:
 	sudo zgrep -c . /var/log/nginx/access.log* | awk -F : '{printf "%10s  %s\n", $$2, $$1}'
+
+grepl:
+	[ -n "$$re" ]
+	sudo zgrep -h $(re) /var/log/nginx/access.log*
+
+grepv:
+	[ -n "$$re" ]
+	sudo grep -h $(re) /tmp/visits.txt
+
+filter-visitors:
+	grep -E 'GET /(favicon\.png|favicon\.ico|feed\.xsl|css) .* "https://susam\.net/' | awk '{print $$1}' | sort -u
+
+filter-visits:
+	sudo zgrep -f /tmp/visitors.txt | grep -vE '\.(css|js|ico|png|jpg|gif|woff|xml|xsl)'
+
+cache-visits:
+	sudo zgrep -h ' 200 ' $(FILE) | make filter-visitors > /tmp/visitors.txt
+	sudo zgrep -h ' 200 ' $(FILE) | make filter-visits > /tmp/visits.txt
+
+clean-visits:
+	rm -f /tmp/visitors.txt /tmp/visits.txt
 
 
 # Low-Level Targets
