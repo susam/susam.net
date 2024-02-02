@@ -149,8 +149,8 @@ follow-visit:
 	    prev_lines=0; \
 	    echo "Log file truncated; following from the beginning"; \
 	  fi; \
-	  echo "$$(date +"%Y-%m-%d %H:%M:%S") New visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	  if [ "$$curr_lines" -ne "$$prev_lines" ]; then \
+	    echo "$$(date +"%Y-%m-%d %H:%M:%S") New visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	    echo; \
 	    tail -n +"$$(( $$prev_lines + 1 ))" /tmp/visits.txt; \
 	    echo; \
