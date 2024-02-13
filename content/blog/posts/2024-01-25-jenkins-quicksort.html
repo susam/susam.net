@@ -7,21 +7,20 @@
   for the project ran on Hudson at that time.  I remember sifting
   through my emails and reviewing build result notifications to keep
   an eye on the patches that got merged into the trunk everyday.  Yes,
-  patches and trunk!  We were still using SVN back then.  Hudson was
-  renamed to Jenkins in 2011.
+  patches and trunk!  We were still using SVN back then.
 </p>
 <p>
-  Since version 2.0 (released on 20 Apr 2016), Jenkins supports
-  pipeline scripts written in Groovy as a first-class entity.  A
-  pipeline script effectively defines the build job.  It can define
-  build properties, build stages, build steps, etc.  It can even
-  invoke other build jobs, including itself.
+  Hudson was renamed to Jenkins in 2011.  Since version 2.0 (released
+  on 20 Apr 2016), Jenkins supports pipeline scripts written in Groovy
+  as a first-class entity.  A pipeline script effectively defines the
+  build job.  It can define build properties, build stages, build
+  steps, etc.  It can even invoke other build jobs, including itself.
 </p>
 <p>
-  Wait!  If a pipeline can invoke itself, can we, perhaps, solve a
-  recursive problem with it?  Absolutely!  This is precisely what we
-  are going to do in this post.  We are going to implement quicksort
-  as a Jenkins pipeline for fun and not a whit of profit!
+  Wait a minute!  If a pipeline can invoke itself, can we, perhaps,
+  solve a recursive problem with it?  Absolutely!  This is precisely
+  what we are going to do in this post.  We are going to implement
+  quicksort as a Jenkins pipeline for fun and not a whit of profit!
 </p>
 <h2 id="run-jenkins">Run Jenkins</h2>
 <p>
@@ -47,8 +46,8 @@
   <li>Jenkins 2.426.3</li>
 </ul>
 <p>
-  We will be performing only quick-and-dirty experiments in this post,
-  so we do not need a production-grade Jenkins instance.  We will run
+  We will perform only quick-and-dirty experiments in this post, so we
+  do not need a production-grade Jenkins instance.  We will run
   Jenkins temporarily in a container.  The following steps show how to
   do this and how to configure Jenkins for the upcoming experiments:
 </p>
@@ -175,7 +174,7 @@
   page on Jenkins as explained above in order to keep things simple.
   Jenkins also supports another way of writing pipelines using a
   declarative style.  They are known as <em>declarative
-  pipelines</em>.  In this post, however, we will be writing
+  pipelines</em>.  In this post, however, we will write
   only <em>scripted pipelines</em> so that we can write simple Groovy
   code for our experiments without having to bother about too many
   pipeline-specific notions like stages, steps, etc.
@@ -273,7 +272,7 @@ node {
       Then we perform the classic recursion to compute the factorial
       of a given nonnegative integer.  The only thing that may appear
       unusual here is that instead of just writing <code>factorial(n -
-      1)</code> we make a <code>build()</code> call to invoke the job
+      1)</code>, we make a <code>build()</code> call to invoke the job
       itself recursively and pass <code>n - 1</code> as a build
       parameter input to that job.
     </p>

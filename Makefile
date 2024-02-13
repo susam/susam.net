@@ -150,7 +150,7 @@ follow-visit:
 	    echo "Log file truncated; following from the beginning"; \
 	  fi; \
 	  if [ "$$curr_lines" -ne "$$prev_lines" ]; then \
-	    echo "$$(date +"%Y-%m-%d %H:%M:%S") New visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
+	    echo "[$$(date +"%Y-%m-%d %H:%M:%S")] new visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	    echo; \
 	    tail -n +"$$(( $$prev_lines + 1 ))" /tmp/visits.txt; \
 	    echo; \
@@ -164,13 +164,13 @@ top-visit-get:
 
 top-visit-ref:
 	make cache-visits FILE=/var/log/nginx/access.log*
-	awk '{print $$11}' /tmp/visits.txt | sort | uniq -c | sort -nr | nl | less
+	awk '{print $$11}' /tmp/visits.txt | grep -vE '^"https?://susam\.net/?' | sort | uniq -c | sort -nr | nl | less
 
 top-get:
 	sudo zgrep ' 200 ' /var/log/nginx/access.log* | grep -o 'GET /[^ ]*' | sort | uniq -c | sort -nr | nl | less
 
 top-ref:
-	sudo zgrep ' 200 ' /var/log/nginx/access.log* | awk '{print $$11}' | sort | uniq -c | sort -nr | nl | less
+	sudo zgrep ' 200 ' /var/log/nginx/access.log* | awk '{print $$11}' | grep -vE '^"https?://susam\.net/?' | sort | uniq -c | sort -nr | nl | less
 
 post-log:
 	tail -F /opt/log/form/form.log | grep written
