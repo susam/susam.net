@@ -1,51 +1,54 @@
 <!-- date: 2011-11-08 22:28:08 +0000 -->
 <!-- name: Matt Mullins -->
 <p>
-The problem with challenge-response authentication, however, is that it
-requires the server to store passwords in plaintext. There are very few
-servers I trust enough to store my password without properly hashing it
-first.
+  The problem with challenge-response authentication, however, is that
+  it requires the server to store passwords in plaintext.  There are
+  very few servers I trust enough to store my password without
+  properly hashing it first.
 </p>
 <p>
-In practice, most systems use PLAIN authentication over a secured
-connection, such as by SSL, so that it's not susceptible to the
-man-in-the-middle problem described.
+  In practice, most systems use PLAIN authentication over a secured
+  connection, such as by SSL, so that it's not susceptible to the
+  man-in-the-middle problem described.
 </p>
 <p>
-You can also use Kerberos through GSSAPI to trust a single source for
-authentication tickets. A Kerberos key distribution center does store
-password-equivalent data as plain-text, but it minimizes the number of
-systems that need to be protected to such a high degree.
+  You can also use Kerberos through GSSAPI to trust a single source
+  for authentication tickets.  A Kerberos key distribution center does
+  store password-equivalent data as plain-text, but it minimizes the
+  number of systems that need to be protected to such a high degree.
 </p>
 <!-- date: 2011-11-09 21:20:00 +0000 -->
 <!-- name: Susam Pal -->
 <!-- url: https://susam.net/ -->
 <p>
-Matt, you make a very good point. Yes, the server needs to store the
-passwords in plaintext in case of CRAM-MD5 authentication so that it can
-compute the expected response and match it with the received response.
+  Matt, you make a very good point.  Yes, the server needs to store
+  the passwords in plaintext in case of CRAM-MD5 authentication so
+  that it can compute the expected response and match it with the
+  received response.
 </p>
 <p>
-Here is a sample entry in the /etc/exim4/passwd file for the curious:
+  Here is a sample entry in the /etc/exim4/passwd file for the
+  curious:
 </p>
 <pre><code>alice:$1$vRPkzzDi$3sqk2e4Jcgn/YEeB1JqgT1</code></pre>
 <p>
-In case of PLAIN or LOGIN authentication mechanism, the above entry is
-enough to setup the user 'alice' with password 'wonderland' that has
-been used in this post. In this example, the second field contains the
-password hashed with MD5 and a random salt. After the server receives
-the password from the client, it would compute a hash from the password
-using the same hashing algorithm and salt (<code>vRPkzzDi</code> in this
-case) and check that the result matches with the hash in this file.
+  In case of PLAIN or LOGIN authentication mechanism, the above entry
+  is enough to setup the user 'alice' with password 'wonderland' that
+  has been used in this post.  In this example, the second field
+  contains the password hashed with MD5 and a random salt.  After the
+  server receives the password from the client, it would compute a
+  hash from the password using the same hashing algorithm and salt
+  (<code>vRPkzzDi</code> in this case) and check that the result
+  matches with the hash in this file.
 </p>
 <p>
-For CRAM-MD5 authentication mechanism to work properly, we'll need an
-entry like this in the <code>passwd</code> file.
+  For CRAM-MD5 authentication mechanism to work properly, we'll need
+  an entry like this in the <code>passwd</code> file.
 </p>
 <pre><code>alice:$1$vRPkzzDi$3sqk2e4Jcgn/YEeB1JqgT1:wonderland</code></pre>
 <p>
-Strictly speaking, the second field is not necessary. It could have been
-empty since only the third field containing the password in plaintext is
-used to compute the expected response to the challenge during CRAM-MD5
-authentication.
+  Strictly speaking, the second field is not necessary.  It could have
+  been empty since only the third field containing the password in
+  plaintext is used to compute the expected response to the challenge
+  during CRAM-MD5 authentication.
 </p>

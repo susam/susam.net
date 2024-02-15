@@ -7,7 +7,7 @@
 <pre><code>fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3</code></pre>
 <p>
   We can write these bytes to a file with the .COM extension and
-  execute it in DOS. It runs successfully in MS-DOS 6.22, Windows 98,
+  execute it in DOS.  It runs successfully in MS-DOS 6.22, Windows 98,
   as well as in DOSBox and writes a copy of itself to standard output.
 </p>
 <h2 id="contents">Contents</h2>
@@ -55,18 +55,18 @@ FC: no differences encountered</samp>
 <p>
   In the <code>DEBUG</code> session shown above, we use the debugger
   command <code>E</code> to enter the machine code at offset 0x100 of
-  the code segment. Then we use the <code>N</code> command to name the
-  file we want to write this machine code to. The command <code>R
+  the code segment.  Then we use the <code>N</code> command to name
+  the file we want to write this machine code to.  The command <code>R
   CX</code> is used to specify that we want to write 0xC (decimal 12)
-  bytes to this file. The <code>W</code> command writes the 12 bytes
-  entered at offset 0x100. The <code>Q</code> command quits the
-  debugger. Then we run the new <code>FOO.COM</code> program while
-  redirecting its output to <code>OUT.COM</code>. Finally, we use
+  bytes to this file.  The <code>W</code> command writes the 12 bytes
+  entered at offset 0x100.  The <code>Q</code> command quits the
+  debugger.  Then we run the new <code>FOO.COM</code> program while
+  redirecting its output to <code>OUT.COM</code>.  Finally, we use
   the <code>FC</code> command to compare the two files and confirm
   that they are exactly the same.
 </p>
 <p>
-  Let us disasssemble this program now and see what it does. The
+  Let us disasssemble this program now and see what it does.  The
   output below is generated using the Netwide Disassembler (NDISASM),
   a tool that comes with Netwide Assembler (NASM):
 </p>
@@ -83,42 +83,42 @@ FC: no differences encountered</samp>
 </pre>
 <p>
   When DOS executes a program in .COM file, it loads the machine code
-  in the file at offset 0x100 of the code segment chosen by DOS. That
+  in the file at offset 0x100 of the code segment chosen by DOS.  That
   is why we ask the disassembler to assume a load address of 0x100
-  with the <code>-o</code> command line option. The first instruction
-  clears the direction flag. The purpose of this instruction is
-  explained later. The next instruction sets the register CL to 0xc
-  (decimal 12). The register CH is already set to 0 by default when a
-  .COM program starts. Thus setting the register CL to 0 effectively
-  sets the entire register CX to 0xc. The register CX is used as a
+  with the <code>-o</code> command line option.  The first instruction
+  clears the direction flag.  The purpose of this instruction is
+  explained later.  The next instruction sets the register CL to 0xc
+  (decimal 12).  The register CH is already set to 0 by default when a
+  .COM program starts.  Thus setting the register CL to 0 effectively
+  sets the entire register CX to 0xc.  The register CX is used as a
   loop counter for the <code>loop 0x103</code> instruction that comes
-  later. Everytime this loop instruction executes, it decrements CX
-  and makes a near jump to offset 0x103 if CX is not 0. This results
+  later.  Everytime this loop instruction executes, it decrements CX
+  and makes a near jump to offset 0x103 if CX is not 0.  This results
   in 12 iterations of the loop.
 </p>
 <p>
   In each iteration of the loop, the instructions from offset 0x103 to
-  offset 0x109 are executed. The <code>lodsb</code> instruction loads
-  a byte from address DS:SI into AL. When DOS starts executing this
+  offset 0x109 are executed.  The <code>lodsb</code> instruction loads
+  a byte from address DS:SI into AL.  When DOS starts executing this
   program, DS and SI are set to CS and 0x100 by default, so at the
   beginning DS:SI points to the first byte of the program.
   The <code>xchg</code> instruction exchanges the values in AX and DX.
-  Thus the byte we just loaded into AL ends up in DL. Then we set AH
+  Thus the byte we just loaded into AL ends up in DL.  Then we set AH
   to 2 and generate the software interrupt 0x21 (decimal 33) to write
-  the byte in DL to standard output. This is how each iteration reads
+  the byte in DL to standard output.  This is how each iteration reads
   a byte of this program and writes it to standard output.
 </p>
 <p>
   The <code>lodsb</code> instruction increments or decrements SI
-  depending on the state of the direction flag (DF). When DF is
-  cleared, it increments SI. If DF is set, it decrements SI. We use
+  depending on the state of the direction flag (DF).  When DF is
+  cleared, it increments SI.  If DF is set, it decrements SI.  We use
   the <code>cld</code> instruction at the beginning to clear DF, so
   that in each iteration of the loop, SI moves forward to point to the
-  next byte of the program. This is how the 12 iterations of the loop
-  write 12 bytes of the program to standard output. In many DOS
+  next byte of the program.  This is how the 12 iterations of the loop
+  write 12 bytes of the program to standard output.  In many DOS
   environments, the DF flag is already in cleared state when a .COM
   program starts, so the CLD instruction could be omitted in such
-  environments. However, there are some environments where DF may not
+  environments.  However, there are some environments where DF may not
   be in cleared state when our program starts, so it is a best
   practice to clear DF before relying on it.
 </p>
@@ -129,12 +129,12 @@ FC: no differences encountered</samp>
 <h2 id="quine-conundrums">Quine Conundrums</h2>
 <p>
   While reading the description of the self-printing program presented
-  earlier, one might wonder if it is a quine. While there is no
+  earlier, one might wonder if it is a quine.  While there is no
   standardized definition of the term <em>quine</em>, it is generally
   accepted that a quine is a computer program that takes no input and
-  produces an exact copy of its own source code as its output. Since a
-  quine cannot take any input, tricks involving reading its own source
-  code or evaluating itself are ruled out.
+  produces an exact copy of its own source code as its output.  Since
+  a quine cannot take any input, tricks involving reading its own
+  source code or evaluating itself are ruled out.
 </p>
 <p>
   For example, this shell script is a valid quine:
@@ -147,19 +147,19 @@ FC: no differences encountered</samp>
 <pre><code>cat $0</code></pre>
 <p>
   The shell script above reads its own source code which is considered
-  cheating. Improper quines like this are often called <em>cheating
+  cheating.  Improper quines like this are often called <em>cheating
   quines</em>.
 </p>
 <p>
-  Is our 12-byte x86 program a quine? It turns out that we have a
-  conundrum. There is no notion of source code for our program. There
-  would have been one if we had written out the source code of this
-  program in assembly language. In such a case we would first need to
-  choose an assembler and a proper quine would need to produce an
-  exact copy of the assembly language source code (not the machine
-  code bytes) for the chosen assembler. But we are not doing that
-  here. We want the machine code to produce an exact copy of itself.
-  There is no source code involved. We only have machine code. So we
+  Is our 12-byte x86 program a quine?  It turns out that we have a
+  conundrum.  There is no notion of source code for our program.
+  There would have been one if we had written out the source code of
+  this program in assembly language.  In such a case we would first
+  need to choose an assembler and a proper quine would need to produce
+  an exact copy of the assembly language source code (not the machine
+  code bytes) for the chosen assembler.  But we are not doing that
+  here.  We want the machine code to produce an exact copy of itself.
+  There is no source code involved.  We only have machine code.  So we
   could argue that the whole notion of machine code quine is nonsense.
   No machine code quine can exist because there is no source code to
   produce as output.
@@ -167,29 +167,29 @@ FC: no differences encountered</samp>
 <p>
   However, we could also argue that the machine code is the input for
   the CPU that the CPU fetches, decodes, and converts to a sequence of
-  state changes in the CPU. If we define a machine code quine to be a
+  state changes in the CPU.  If we define a machine code quine to be a
   machine code program that writes its own bytes, then we could say
   that we have a machine code quine here.
 </p>
 <p>
   Let us now entertain the thought that our 12-byte program is indeed
-  a machine code quine. Now we have a new conundrum. Is it a proper
-  quine? This program reads its own bytes from memory and writes them.
-  Does that make it a cheating quine? What would a proper quine
-  written in pure machine code even look like? If we look at the shell
-  script quine above, we see that it contains parts of the executable
-  part of the script code embedded in a string as data. Then we format
-  the string cleverly to produce a new string that looks exactly like
-  the entire shell script. It is a common pattern followed in many
-  quines. The quine does not read its own code but it reads some data
-  defined by the code and formats that data to look like its own code.
-  However, in pure machine code like this the lines between data and
-  code are blurred. Even if we try to keep the bytes we want to read
-  at a separate place in the memory and treat it like data, they would
-  look exactly like machine instructions, so one might wonder if there
-  is any point in trying to make a machine quine that does not read
-  its own bytes. Nevertheless the next section shows how to accomplish
-  this.
+  a machine code quine.  Now we have a new conundrum.  Is it a proper
+  quine?  This program reads its own bytes from memory and writes
+  them.  Does that make it a cheating quine?  What would a proper
+  quine written in pure machine code even look like?  If we look at
+  the shell script quine above, we see that it contains parts of the
+  executable part of the script code embedded in a string as data.
+  Then we format the string cleverly to produce a new string that
+  looks exactly like the entire shell script.  It is a common pattern
+  followed in many quines.  The quine does not read its own code but
+  it reads some data defined by the code and formats that data to look
+  like its own code.  However, in pure machine code like this the
+  lines between data and code are blurred.  Even if we try to keep the
+  bytes we want to read at a separate place in the memory and treat it
+  like data, they would look exactly like machine instructions, so one
+  might wonder if there is any point in trying to make a machine quine
+  that does not read its own bytes.  Nevertheless the next section
+  shows how to accomplish this.
 </p>
 <h2 id="proper-quines">Proper Quines</h2>
 <p>
@@ -242,12 +242,12 @@ diff foo.com OUT.COM</code>
 00000127  C3                ret</samp>
 </pre>
 <p>
-  The first 20 bytes is the executable part of the program. The next
-  20 bytes is the data read by the program. The executable bytes are
-  identical to the data bytes. The executable part of the program has
-  an outer loop that iterates twice. In each iteration, it reads the
-  data bytes and writes them to standard output. Therefore, in two
-  iterations of the outer loop, it writes the data bytes twice. In
+  The first 20 bytes is the executable part of the program.  The next
+  20 bytes is the data read by the program.  The executable bytes are
+  identical to the data bytes.  The executable part of the program has
+  an outer loop that iterates twice.  In each iteration, it reads the
+  data bytes and writes them to standard output.  Therefore, in two
+  iterations of the outer loop, it writes the data bytes twice.  In
   this manner, the output is identical to the program itself.
 </p>
 <p>
@@ -287,29 +287,29 @@ diff foo.com OUT.COM</code>
 0000011F  C3                ret</samp>
 </pre>
 <p>
-  This example too has two parts. The first half has the executable
-  bytes and the second half has the data bytes. Both parts are
-  identical. This example sets AH to 9 in the first instruction and
+  This example too has two parts.  The first half has the executable
+  bytes and the second half has the data bytes.  Both parts are
+  identical.  This example sets AH to 9 in the first instruction and
   then later uses <code>int 0x21</code> to invoke the DOS service that
   prints a dollar-terminated string beginning at the address specifed
-  in DS:DX. When a .COM program starts, DS already points to the
-  current code segment, so we don't have to set it explicitly. The
-  dollar symbol has an ASCII code of 0x24 (decimal 36). We need to be
+  in DS:DX.  When a .COM program starts, DS already points to the
+  current code segment, so we don't have to set it explicitly.  The
+  dollar symbol has an ASCII code of 0x24 (decimal 36).  We need to be
   careful about not having this value anywhere within the the data
   bytes or this DOS function would prematurely stop printing our data
-  bytes as soon as it encounters this value. That is why we set AL to
+  bytes as soon as it encounters this value.  That is why we set AL to
   0x23 in the first instruction, then increment it to 0x24 in the
   second instruction, and then copy this value to the end of the data
-  bytes in the third instruction. Finally, we execute <code>int
+  bytes in the third instruction.  Finally, we execute <code>int
   0x21</code> twice to write the data bytes twice to standard output,
   so that the output matches the program itself.
 </p>
 <p>
   While both these programs take care not to read the same memory
   region that is being executed by the CPU, the data bytes they read
-  look exactly like the executable bytes. This is what I meant when I
+  look exactly like the executable bytes.  This is what I meant when I
   mentioned earlier that the lines between code and data are blurred
-  in an exercise like this. This is why I don't really see a point in
+  in an exercise like this.  This is why I don't really see a point in
   keeping the executable bytes separate from the data bytes while
   writing machine code quines.
 </p>
@@ -317,28 +317,28 @@ diff foo.com OUT.COM</code>
 <p>
   The self-printing programs presented above use <code>int 0x21</code>
   which offers DOS services that support various input/output
-  functions. In the first two programs, we selected the function to
+  functions.  In the first two programs, we selected the function to
   write a character to standard output by setting AH to 2 before
-  invoking this software interrupt. In the next program, we selected
+  invoking this software interrupt.  In the next program, we selected
   the function to write a dollar-terminated string to standard output
   by setting AH to 9.
 </p>
 <p>
   The <code>ret</code> instruction in the end too relies on DOS
-  services. When a .COM program starts, the register SP contains
-  0xfffe. The stack memory locations at offset 0xfffe and 0xffff
-  contain 0x00 and 0x00, respectively. Further, the memory address at
+  services.  When a .COM program starts, the register SP contains
+  0xfffe.  The stack memory locations at offset 0xfffe and 0xffff
+  contain 0x00 and 0x00, respectively.  Further, the memory address at
   offset 0x0000 contains the instruction <code>int 0x20</code> which
-  is a DOS service that terminates the program. As a result, executing
-  the <code>ret</code> instruction pops 0x0000 off the stack at 0xfffe
-  and loads it into IP. This results in the instruction <code>int
-  0x20</code> at offset 0x0000 getting executed. This instruction
-  terminates the program and returns to DOS.
+  is a DOS service that terminates the program.  As a result,
+  executing the <code>ret</code> instruction pops 0x0000 off the stack
+  at 0xfffe and loads it into IP.  This results in the
+  instruction <code>int 0x20</code> at offset 0x0000 getting executed.
+  This instruction terminates the program and returns to DOS.
 </p>
 <p>
   Relying on DOS services gives us a comfortable environment to work
-  with. In particular, DOS implements the notion of <em>standard
-  output</em> which lets us redirect standard output to a file. This
+  with.  In particular, DOS implements the notion of <em>standard
+  output</em> which lets us redirect standard output to a file.  This
   lets us conveniently compare the original program file and the
   output file with the <code>FC</code> command and confirm that they
   are identical.
@@ -346,10 +346,10 @@ diff foo.com OUT.COM</code>
 <p>
   But one might wonder if we could avoid relying on DOS services
   completely and still write a program that prints its own bytes to
-  screen. We definitely can. We could write directly to video memory
+  screen.  We definitely can.  We could write directly to video memory
   at address 0xb800:0x0000 and show the bytes of the program on
-  screen. We could also forgo DOS completely and let BIOS load our
-  program from the boot sector and execute it. The next two sections
+  screen.  We could also forgo DOS completely and let BIOS load our
+  program from the boot sector and execute it.  The next two sections
   discuss these things.
 </p>
 <h2 id="writing-to-video-memory-directly">Writing to Video Memory Directly</h2>
@@ -374,9 +374,9 @@ dosbox foo.com</code>
 <p>
   Now of course this type of output looks gibberish but there is a
   quick and dirty way to confirm that this output indeed represents
-  the bytes of our program. We can use the <code>TYPE</code> command
+  the bytes of our program.  We can use the <code>TYPE</code> command
   of DOS to print the program and check if the symbols that appear in
-  its output seem consistent with the output above. Here is an
+  its output seem consistent with the output above.  Here is an
   example:
 </p>
 <pre>
@@ -389,7 +389,7 @@ C:\&gt;</samp>
   This output looks very similar to the previous one except that the
   byte value 0x0a is rendered as a line break in this output whereas
   in the previous output this byte value is represented as a circle in
-  a box. This method would not have worked if there were any control
+  a box.  This method would not have worked if there were any control
   characters such as backspace or carriage return that result in
   characters being erased in the displayed output.
 </p>
@@ -397,7 +397,7 @@ C:\&gt;</samp>
   A proper way to verify that the output of the program represents the
   bytes of the program would be to find each symbol in the output in a
   chart for code page 437 and confirm that the byte value of each
-  symbol matches each byte value in the program. Here is one such
+  symbol matches each byte value in the program.  Here is one such
   chart that approximates the symbols in code page 437 with Unicode
   symbols: <a href="../maze/cp437/cp437.html">cp437.html</a>.
 </p>
@@ -419,25 +419,26 @@ C:\&gt;</samp>
 00000110  EBFD              jmp short 0x10f</samp>
 </pre>
 <p>
-  This program sets ES to 0xb800 and DI to 0. Thus ES:DI points to the
-  video memory at address 0xb800:0x0000. DS:SI points to the first
-  instruction of this program by default. Further AH is set to 0xa.
-  This is used to specify the colour attribute of the text to be
-  displayed on screen. Each iteration of the loop in this program
+  This program sets ES to 0xb800 and DI to 0.  Thus ES:DI points to
+  the video memory at address 0xb800:0x0000.  DS:SI points to the
+  first instruction of this program by default.  Further AH is set to
+  0xa.  This is used to specify the colour attribute of the text to be
+  displayed on screen.  Each iteration of the loop in this program
   loads a byte of the program and writes it along with the colour
-  attribute to video memory. The <code>lodsb</code> instruction loads
+  attribute to video memory.  The <code>lodsb</code> instruction loads
   a byte of the program from the memory address specified by DS:SI
-  into AL and increments SI by 1. AH is already set to 0xa. The value
-  0xa (binary 00001010) here specifies black as the background colour
-  and bright green as the foreground colour. The <code>stosw</code>
-  instruction stores a word from AX to the memory address specified by
-  ES:DI and increments DI by 2. In this manner, the byte in AL and its
-  colour attribute in AH gets copied to the video memory.
+  into AL and increments SI by 1.  AH is already set to 0xa.  The
+  value 0xa (binary 00001010) here specifies black as the background
+  colour and bright green as the foreground colour.
+  The <code>stosw</code> instruction stores a word from AX to the
+  memory address specified by ES:DI and increments DI by 2.  In this
+  manner, the byte in AL and its colour attribute in AH gets copied to
+  the video memory.
 </p>
 <p>
   Once again, if you are not happy about the program reading its own
   executable bytes, we can keep the bytes we read separate from the
-  bytes the CPU executes. Here is a 54-byte program that does this:
+  bytes the CPU executes.  Here is a 54-byte program that does this:
 </p>
 <pre>
 <code>fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4
@@ -449,10 +450,10 @@ C:\&gt;</samp>
   Here is how we can create and run this program:
 </p>
 <pre>
-<code>echo fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4 | xxd -r -p > foo.com
-echo 0a ac ab e2 fc 4b 75 f1 f4 eb fd fc b3 02 b4 b8 | xxd -r -p >> foo.com
-echo 8e c0 31 ff be 1b 01 b9 1b 00 b4 0a ac ab e2 fc | xxd -r -p >> foo.com
-echo 4b 75 f1 f4 eb fd | xxd -r -p >> foo.com
+<code>echo fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4 | xxd -r -p &gt; foo.com
+echo 0a ac ab e2 fc 4b 75 f1 f4 eb fd fc b3 02 b4 b8 | xxd -r -p &gt;&gt; foo.com
+echo 8e c0 31 ff be 1b 01 b9 1b 00 b4 0a ac ab e2 fc | xxd -r -p &gt;&gt; foo.com
+echo 4b 75 f1 f4 eb fd | xxd -r -p &gt;&gt; foo.com
 dosbox foo.com</code>
 </pre>
 <p>
@@ -462,12 +463,12 @@ dosbox foo.com</code>
 <pre><samp>&#x207F;&#x2502;&#x263B;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x255B;&#x2190;&#x263A;&#x2563;&#x2190;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x4B;&#x75;&#xB1;&#x2320;&#x3B4;&#xB2;&#x207F;&#x2502;&#x263B;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x255B;&#x2190;&#x263A;&#x2563;&#x2190;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x4B;&#x75;&#xB1;&#x2320;&#x3B4;&#xB2;</samp></pre>
 <p>
   We can clearly see in this output that the first 27 bytes of output
-  are identical to the next 27 bytes of the output. Like the proper
+  are identical to the next 27 bytes of the output.  Like the proper
   quines discussed earlier, this one too has two halves that are
-  identical to each other. The executable code in the first half reads
-  the data bytes from the second half and prints the data bytes twice
-  so that the output bytes is an exact copy of all 54 bytes in the
-  program. Here is the disassembly:
+  identical to each other.  The executable code in the first half
+  reads the data bytes from the second half and prints the data bytes
+  twice so that the output bytes is an exact copy of all 54 bytes in
+  the program.  Here is the disassembly:
 </p>
 <pre>
 <samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
@@ -505,8 +506,8 @@ dosbox foo.com</code>
 <p>
   This disassembly is rather long but we can clearly see that the
   bytes from offset 0x100 to offset 0x11a are identical to the bytes
-  from offset 0x11b to 0x135. These are the bytes we see in the output
-  of the program too.
+  from offset 0x11b to 0x135.  These are the bytes we see in the
+  output of the program too.
 </p>
 <h2 id="boot-program">Boot Program</h2>
 <p>
@@ -518,7 +519,7 @@ ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd</code></pre>
 <p>
   We can create a boot image that contains these bytes, write it to
   the boot sector of a drive and boot an IBM PC compatible computer
-  with it. On booting, this program prints its own bytes on the
+  with it.  On booting, this program prints its own bytes on the
   screen.
 </p>
 <p>
@@ -526,8 +527,8 @@ ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd</code></pre>
   create a boot image with the above program:
 </p>
 <pre>
-<code>echo ea 05 7c 00 00 fc b8 00 b8 8e c0 8c c8 8e d8 31 | xxd -r -p > boot.img
-echo ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p >> boot.img
+<code>echo ea 05 7c 00 00 fc b8 00 b8 8e c0 8c c8 8e d8 31 | xxd -r -p &gt; boot.img
+echo ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p &gt;&gt; boot.img
 echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 </pre>
 <p>
@@ -543,7 +544,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <p>
   We could also write this image to the boot sector of an actual
   physical storage device, such as a USB flash drive, and then boot
-  the computer with it. Here is an example command that writes the
+  the computer with it.  Here is an example command that writes the
   boot image to the drive represented by the device
   path <code>/dev/sdx</code>.
 </p>
@@ -551,8 +552,8 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <p>
   <em>
     CAUTION: You need to be absolutely sure of the device path of the
-    device being written to. The device path <code>/dev/sdx</code> is
-    only an example here. If the boot image is written to the wrong
+    device being written to.  The device path <code>/dev/sdx</code> is
+    only an example here.  If the boot image is written to the wrong
     device, access to the data on that would be lost.
   </em>
 </p>
@@ -563,12 +564,12 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <pre><samp>&#x3A9;&#x2663;&#x7C;&#x20;&#x20;&#x207F;&#x2555;&#x20;&#x2555;&#xC4;&#x2514;&#xEE;&#x255A;&#xC4;&#x256A;&#x31;&#xA0;&#x255B;&#x20;&#x7C;&#x2563;&#x20;&#x20;&#x2524;&#x25D9;&#xBC;&#xBD;&#x393;&#x207F;&#x2320;&#x3B4;&#xB2;</samp></pre>
 <p>
   This looks like gibberish, however every symbol in the above output
-  corresponds to a byte of the program mentioned earlier. For example,
-  the first symbol (omega) represents the byte value 0xea, the second
-  symbol (club) represents the byte value 0x05, and so on. The chart
-  at <a href="../maze/cp437/cp437.html">cp437.html</a> can be used to
-  confirm that every symbol in the output indeed represents every byte
-  of the program.
+  corresponds to a byte of the program mentioned earlier.  For
+  example, the first symbol (omega) represents the byte value 0xea,
+  the second symbol (club) represents the byte value 0x05, and so on.
+  The chart at <a href="../maze/cp437/cp437.html">cp437.html</a> can
+  be used to confirm that every symbol in the output indeed represents
+  every byte of the program.
 </p>
 <p>
   Here is the disassembly of the program:
@@ -597,33 +598,33 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <p>
   The ellipsis in the end represents the remainder of the bytes that
   contains zeroes and the boot sector magic bytes 0x55 and 0xaa in the
-  end. They have been omitted here for the sake of brevity.
+  end.  They have been omitted here for the sake of brevity.
 </p>
 <p>
   When a computer boots, the BIOS reads the boot sector code from the
   first sector of the boot device into the memory at physical address
-  0x7c00 and jumps to this address. Most BIOS implementations jump to
+  0x7c00 and jumps to this address.  Most BIOS implementations jump to
   0x0000:0x7c00 but there are some implementations that jump to
-  0x07c0:0x0000 instead. Both these jumps are jumps to the same
+  0x07c0:0x0000 instead.  Both these jumps are jumps to the same
   physical address 0x7c00 but this difference poses a problem for us
   because the offsets in our program depend on which jump the BIOS
-  executed. In order to ensure that our program can run with both
+  executed.  In order to ensure that our program can run with both
   types of BIOS implementations, we use a popular trick of having the
   first instruction of our program execute a jump to address
-  0x0000:0x7c05 in order to reach the second instruction. This sets
+  0x0000:0x7c05 in order to reach the second instruction.  This sets
   the register CS to 0 and IP to 0x7c05 and we don't have to worry
-  about the differences between BIOS implementations anymore. We can
+  about the differences between BIOS implementations anymore.  We can
   now pretend as if a BIOS implementation that jumps to 0x0000:0x7c00
   is going to load our program.
 </p>
 <p>
   The remainder of the program is similar to the one in the previous
-  section. However, there are some small but important differences.
+  section.  However, there are some small but important differences.
   While the DOS environment guarantees that AH and CH are initialized
   to 0 when a .COM program starts, the BIOS offers no such guarantee
-  while loading and executing a boot program. This is why we use the
+  while loading and executing a boot program.  This is why we use the
   registers AX and CX (as opposed to only AH and CL) in
-  the <code>mov</code> instructions to initialize them. Similarly,
+  the <code>mov</code> instructions to initialize them.  Similarly,
   while DOS initializes SI to 0x100 when a .COM program starts, for a
   boot program, we set the register SI ourselves.
 </p>
@@ -631,8 +632,8 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
   If you feel uncomfortable about calling the above program a quine
   because it reads its own bytes from the memory, we could have the
   program read the bytes it needs to print from a separate place in
-  memory. We do not execute these bytes. We only read them and copy
-  them to video memory. The following 76-byte program does this:
+  memory.  We do not execute these bytes.  We only read them and copy
+  them to video memory.  The following 76-byte program does this:
 </p>
 <pre>
 <code>ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8
@@ -645,11 +646,11 @@ b4 0a ac ab e2 fc 4b 75 f1 f4 eb fd</code>
   Here is how we can create a boot image with this:
 </p>
 <pre>
-<code>echo ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8 | xxd -r -p > boot.img
-echo 8e d8 31 ff be 26 7c b9 26 00 b4 0a ac ab e2 fc | xxd -r -p >> boot.img
-echo 4b 75 f1 f4 eb fd ea 05 7c 00 00 fc bb 02 00 b8 | xxd -r -p >> boot.img
-echo 00 b8 8e c0 8c c8 8e d8 31 ff be 26 7c b9 26 00 | xxd -r -p >> boot.img
-echo b4 0a ac ab e2 fc 4b 75 f1 f4 eb fd | xxd -r -p >> boot.img
+<code>echo ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8 | xxd -r -p &gt; boot.img
+echo 8e d8 31 ff be 26 7c b9 26 00 b4 0a ac ab e2 fc | xxd -r -p &gt;&gt; boot.img
+echo 4b 75 f1 f4 eb fd ea 05 7c 00 00 fc bb 02 00 b8 | xxd -r -p &gt;&gt; boot.img
+echo 00 b8 8e c0 8c c8 8e d8 31 ff be 26 7c b9 26 00 | xxd -r -p &gt;&gt; boot.img
+echo b4 0a ac ab e2 fc 4b 75 f1 f4 eb fd | xxd -r -p &gt;&gt; boot.img
 echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 </pre>
 <p>
@@ -706,14 +707,14 @@ qemu-system-i386 -fda boot.img</code></pre>
 00007C4E  0000              add [bx+si],al
 ...</samp></pre>
 <p>
-  This program has two identical halves. The first half from offset
-  0x7c00 to offset 0x7c25 are executable bytes. The second half from
+  This program has two identical halves.  The first half from offset
+  0x7c00 to offset 0x7c25 are executable bytes.  The second half from
   offset 0x7c26 to 0x7c4b are the data bytes read by the executable
-  bytes. The executable part of the code has an outer loop that uses
-  the register BX as the counter variable. It sets BX to 2 so that the
-  outer loop iterates twice. In each iteration, it reads data bytes
-  from the second half of the program and prints them. The code to
-  read bytes and print them is very similar to our earlier program.
+  bytes.  The executable part of the code has an outer loop that uses
+  the register BX as the counter variable.  It sets BX to 2 so that
+  the outer loop iterates twice.  In each iteration, it reads data
+  bytes from the second half of the program and prints them.  The code
+  to read bytes and print them is very similar to our earlier program.
   Since the data bytes in the second half are identical to the
   executable bytes in the first half, printing the data bytes twice
   amounts to printing all bytes of the program.

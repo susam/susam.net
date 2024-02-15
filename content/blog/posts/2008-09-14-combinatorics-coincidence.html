@@ -22,8 +22,8 @@
     \[
       f_k(n) =
       \begin{cases}
-        n                       & \text{if } k = 1, \\
-        \sum_{i=1}^n f_{k-1}(i) & \text{if } k \ge 2.
+        n                       &amp; \text{if } k = 1, \\
+        \sum_{i=1}^n f_{k-1}(i) &amp; \text{if } k \ge 2.
       \end{cases}
     \]
 
@@ -75,7 +75,9 @@ for c<sub>1</sub> in 0 to (n - 1):
   Extending this argument, we now see that for any \( k \ge 1, \) the
   final value of \( x \) is
 
-  \[ f_k(n) = f_{k-1}(1) + f_{k-1}(2) + \dots + f_{k-1}(n).  \]
+  \[
+    f_k(n) = f_{k-1}(1) + f_{k-1}(2) + \dots + f_{k-1}(n).
+  \]
 
   In other words, the solution to his <em>nested loops</em> problem is
   the solution to my <em>recurrence relation</em> problem.  It was an
@@ -86,7 +88,9 @@ for c<sub>1</sub> in 0 to (n - 1):
 <p>
   The closed form expression for the recurrence relation is
 
-  \[ f_k(n) = \binom{n + k - 1}{k}.  \]
+  \[
+    f_k(n) = \binom{n + k - 1}{k}.
+  \]
 
   It is quite easy to prove this using the principle of mathematical
   induction.  Since we know that this is also the result of
@@ -97,7 +101,9 @@ for c<sub>1</sub> in 0 to (n - 1):
   In the <em>nested loops</em> problem, the following inequalities are
   always met due to the loop conditions:
 
-  \[ n - 1 \ge c_1 \ge c_2 \ge \dots \ge c_k \ge 0.  \]
+  \[
+    n - 1 \ge c_1 \ge c_2 \ge \dots \ge c_k \ge 0.
+  \]
 
   The variables \( c_1, c_2, \dots, c_k \) take all possible
   arrangements of integer values that satisfy the above inequalities.
@@ -127,7 +133,9 @@ for c<sub>1</sub> in 0 to (n - 1):
   The number of permutations of \( n - 1 \) similar balls and \( k \)
   similar sticks is
 
-  \[ \frac{(n + k - 1)!}{(n - 1)! \, k!} = \binom{n + k - 1}{k}.  \]
+  \[
+    \frac{(n + k - 1)!}{(n - 1)! \, k!} = \binom{n + k - 1}{k}.
+  \]
 
   This closed-form expression is the solution to both the
   <em>recurrence relation</em> problem and the <em>nested loops</em>

@@ -3,20 +3,20 @@
 <p>
   Both MS-DOS and Windows 98 come with a debugger program
   named <code>DEBUG.EXE</code> that make it possible to edit binary
-  files without requiring additional tools. Although the primary
+  files without requiring additional tools.  Although the primary
   purpose of this program is to test and debug executable files, it
-  can be used to edit binary files too. Two examples of this are shown
-  in this post. The first example edits a string of bytes in an
-  executable file. The second one edits machine instructions to alter
-  the behaviour of the program. Both examples provided in the next two
-  sections can be reproduced on MS-DOS version 6.22. These examples
-  can be performed on Windows 98 too after minor adjustments.
+  can be used to edit binary files too.  Two examples of this are
+  shown in this post.  The first example edits a string of bytes in an
+  executable file.  The second one edits machine instructions to alter
+  the behaviour of the program.  Both examples provided in the next
+  two sections can be reproduced on MS-DOS version 6.22.  These
+  examples can be performed on Windows 98 too after minor adjustments.
 </p>
 <h2 id="editing-data">Editing Data</h2>
 <p>
   Let us first see an example of editing an error message produced by
-  the <code>MODE</code> command. This DOS command is used for
-  displaying and reconfiguring system settings. For example, the
+  the <code>MODE</code> command.  This DOS command is used for
+  displaying and reconfiguring system settings.  For example, the
   following command sets the display to show 40 characters per line:
 </p>
 <pre><samp>C:\&gt;<kbd>MODE 40</kbd></samp></pre>
@@ -49,7 +49,7 @@ Invalid parameter - 0
 C:\&gt;</samp>
 </pre>
 <p>
-  We will edit this error message to be slightly more helpful. The
+  We will edit this error message to be slightly more helpful.  The
   following debugger session shows how.
 </p>
 <pre>
@@ -73,46 +73,47 @@ Writing 05C11 bytes
 C:\&gt;</samp>
 </pre>
 <p>
-  We first open <code>MODE.COM</code> with the debugger. When we do
+  We first open <code>MODE.COM</code> with the debugger.  When we do
   so, the entire program is loaded into offset 0x100 of the code
-  segment (CS). Then we use the <code>S</code> debugger command to
-  search for the string "Invalid parameter". This prints the offset at
-  which this string occurs in memory.
+  segment (CS).  Then we use the <code>S</code> debugger command to
+  search for the string "Invalid parameter".  This prints the offset
+  at which this string occurs in memory.
 </p>
 <p>
   We use the <code>D</code> command to dump the bytes around that
-  offset. In the first row of the output, the byte value 13 (decimal
-  19) represents the length of the string that follows it. Indeed
+  offset.  In the first row of the output, the byte value 13 (decimal
+  19) represents the length of the string that follows it.  Indeed
   there are 19 bytes in the string composed of the text <code>"Invalid
   parameter"</code> and the following carriage return (CR) and line
-  feed (LF) characters. The CR and LF characters have ASCII codes 0xD
-  (decimal 13) and 0xA (decimal 10). These values can be seen at the
+  feed (LF) characters.  The CR and LF characters have ASCII codes 0xD
+  (decimal 13) and 0xA (decimal 10).  These values can be seen at the
   third and fourth places of the second row of the output of this
   command.
 </p>
 <p>
   Then we use the <code>E</code> command to enter a new string length
-  followed by a new string to replace the existing error message. Note
-  that we enter a string length of 0x12 (decimal 18) which is indeed
-  the length of the string that follows it. After entering the new
-  string, we dump the memory again with <code>D</code> to verify that
-  the new string is now present in memory.
+  followed by a new string to replace the existing error message.
+  Note that we enter a string length of 0x12 (decimal 18) which is
+  indeed the length of the string that follows it.  After entering the
+  new string, we dump the memory again with <code>D</code> to verify
+  that the new string is now present in memory.
 </p>
 <p>
   After confirming that the edited string looks good, we use
   the <code>N</code> command to specify the name of the file we want
-  to write the edited binary to. This command starts writing the bytes
-  from offset 0x100 to the named file. It reads the number of bytes to
-  be written to the file from the BX and CX registers. These registers
-  are already initialized to the length of the file when we load a
-  file in the debugger. Since we have not modified these registers
-  ourselves, we don't need to set them again. In case you do need to
-  set the BX and CX registers in a different situation, the commands
-  to do so are <code>R BX</code> and <code>R CX</code>, respectively.
+  to write the edited binary to.  This command starts writing the
+  bytes from offset 0x100 to the named file.  It reads the number of
+  bytes to be written to the file from the BX and CX registers.  These
+  registers are already initialized to the length of the file when we
+  load a file in the debugger.  Since we have not modified these
+  registers ourselves, we don't need to set them again.  In case you
+  do need to set the BX and CX registers in a different situation, the
+  commands to do so are <code>R BX</code> and <code>R CX</code>,
+  respectively.
 </p>
 <p>
   Finally, the <code>W</code> command writes the file and
-  the <code>Q</code> command quits the debugger. Now we can test the
+  the <code>Q</code> command quits the debugger.  Now we can test the
   new program as follows:
 </p>
 <pre>
@@ -127,7 +128,7 @@ C:\&gt;</samp>
 <p>
   In this section, we will see how to edit the binary we created in
   the previous section further to add our own machine instructions to
-  print a welcome message when the program starts. Here is an example
+  print a welcome message when the program starts.  Here is an example
   debugger session that shows how to do it.
 </p>
 <pre>
@@ -175,31 +176,31 @@ C:\&gt;</samp>
 <p>
   At the beginning, we use the debugger command <code>U</code> to
   unassemble (disassemble) some bytes at the top of the program to see
-  what they look like. We see that the very first instruction is a
-  jump to offset 0x2298. The debugger command <code>D 300</code> shows
-  that there are contiguous zero bytes around offset 0x330. We replace
-  some of these zero bytes with new machine instructions that print
-  our welcome message. To do this, we first replace the jump
+  what they look like.  We see that the very first instruction is a
+  jump to offset 0x2298.  The debugger command <code>D 300</code>
+  shows that there are contiguous zero bytes around offset 0x330.  We
+  replace some of these zero bytes with new machine instructions that
+  print our welcome message.  To do this, we first replace the jump
   instruction at the top with a jump instruction to offset 0x330 where
-  we then place the machine code for our welcome message. This new
+  we then place the machine code for our welcome message.  This new
   machine code prints the welcome message and then jumps to offset
   0x2298 allowing the remainder of the program to execute as usual.
 </p>
 <p>
   The debugger command <code>A</code> is used to assemble the machine
-  code for the altered jump instruction at the top. By default it
+  code for the altered jump instruction at the top.  By default it
   writes the assembled machine code to CS:0100 which is the address at
-  which DOS loads executable programs. Then we use the debugger
+  which DOS loads executable programs.  Then we use the debugger
   command <code>A 330</code> to add new machine code at offset 0x330.
   We try not to go beyond the region with contiguous zeroes while
-  writing our machine instructions. Fortunately for us, our entire
+  writing our machine instructions.  Fortunately for us, our entire
   code for the welcome message occupies 37 bytes and and the last byte
   of our code lands at offset 0x354.
 </p>
 <p>
   Finally, we write the updated program in memory back to the file
-  named <code>SOUP.COM</code>. Since the debugger was used to load the
-  file named <code>SOUP.COM</code>, we do not need to use
+  named <code>SOUP.COM</code>.  Since the debugger was used to load
+  the file named <code>SOUP.COM</code>, we do not need to use
   the <code>N</code> command to specify the name of the file again.
   When a file has just been loaded into the debugger, by default
   the <code>W</code> command writes the program in memory back to the

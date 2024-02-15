@@ -138,7 +138,7 @@ public class LuceneDemo
         System.out.println("Query: '" + query + "' in '" + field + "'");
         System.out.println("Total hits: " + docs.totalHits);
         System.out.println("");
-        for (int i = 0; i < docs.scoreDocs.length; i++) {
+        for (int i = 0; i &lt; docs.scoreDocs.length; i++) {
             ScoreDoc hit = docs.scoreDocs[i];
             Document doc = searcher.doc(hit.doc);
             System.out.println("#" + i);

@@ -2,32 +2,30 @@
 <!-- tag: Programming DOS Technology -->
 <!-- import: extra.css math.inc -->
 <p>
-  I learnt how to write computer programs in IBM/LCSI PC Logo. That
-  was back in the year 1992. Computers were much simpler in those
-  days. The ones in our school were IBM PC compatible computers with
-  mostly monochrome displays. The ability to boot a computer using a
+  I learnt how to write computer programs in IBM/LCSI PC Logo.  That
+  was back in the year 1992.  Computers were much simpler in those
+  days.  The ones in our school were IBM PC compatible computers with
+  mostly monochrome displays.  The ability to boot a computer using a
   5¼-inch floppy disk containing MS-DOS, load a Logo interpreter and
   then write some programs without any distraction had its own charm
   that I find missing from modern day computing.
 </p>
-
 <h2 id="the-first-line-of-code">The First Line of Code</h2>
 <p>
   The first line of code I ever wrote was:
 </p>
 <!--
-Class Age Year
-   KG   4   88
-    1   5   89
-    2   6   90
-    3   7   91
-    4   8   92
-    5   9   93
-    6  10   94
-    7  11   95
-    8  12   96
-    9  13   97
-   10  14   98
+ K   4  88-89
+ 1   5  89-90
+ 2   6  90-91
+ 3   7  91-92
+ 4   8  92-93
+ 5   9  93-94
+ 6  10  94-95
+ 7  11  95-96
+ 8  12  96-97
+ 9  13  97-98
+10  14  98-99
 -->
 <pre><code>FD 100</code></pre>
 <p>
@@ -42,20 +40,19 @@ Class Age Year
   </figcaption>
 </figure>
 <p>
-  That is the "hello, world" of turtle graphics in Logo. That simple
-  line of code changed my world. I could make stuff happen in an
-  otherwise mostly blank monochrome CRT display. Until then I had seen
-  CRTs in televisions where I had very little control on what I see on
-  the screen. But now, I had control! The turtle became my toy and I
-  could make it draw anything on a 320 &times; 250 canvas.
+  That is the "hello, world" of turtle graphics in Logo.  That simple
+  line of code changed my world.  I could make stuff happen in an
+  otherwise mostly blank monochrome CRT display.  Until then I had
+  seen CRTs in televisions where I had very little control on what I
+  see on the screen.  But now, I had control!  The turtle became my
+  toy and I could make it draw anything on a 320 &times; 250 canvas.
 </p>
-
 <h2 id="polygons">Polygons</h2>
 <p>
-  With a little knowledge of geometry, one could draw polygons. Often
-  the first polygon one would learn to draw was a square. It involves
+  With a little knowledge of geometry, one could draw polygons.  Often
+  the first polygon one would learn to draw was a square.  It involves
   making the turtle walk forward 100 steps, then turn right 90&deg;,
-  and repeat these two operations four times in a loop. Here is the
+  and repeat these two operations four times in a loop.  Here is the
   code:
 </p>
 <pre><code>REPEAT 4 [FD 100 RT 90]</code></pre>
@@ -71,12 +68,12 @@ Class Age Year
   </figcaption>
 </figure>
 <p>
-  Similarly, one could draw other polygons. The only thing my
+  Similarly, one could draw other polygons.  The only thing my
   nine-year-old self then needed to understand was that after drawing
   an entire polygon, the turtle is back to its original position
-  having completed one full turn. Therefore to draw a polygon with \(
+  having completed one full turn.  Therefore to draw a polygon with \(
   n \) sides, the turtle needs to turn by \( 360 / n \) degrees after
-  drawing each side. Drawing a pentagon is as simple as:
+  drawing each side.  Drawing a pentagon is as simple as:
 </p>
 <pre><code>REPEAT 5 [FD 80 RT 72]</code></pre>
 <p>
@@ -93,8 +90,8 @@ Class Age Year
 <p>
   The same approach works for drawing a regular five-pointed star too.
   The only new thing we need to consider here is that as the turtle
-  draws the shape, it makes two full turns. Therefore, it must turn by
-  \( 720 / 5 \) degrees after drawing each side. Here is the code:
+  draws the shape, it makes two full turns.  Therefore, it must turn
+  by \( 720 / 5 \) degrees after drawing each side.  Here is the code:
 </p>
 <pre><code>REPEAT 5 [FD 100 RT 144]</code></pre>
 <p>
@@ -113,18 +110,18 @@ Class Age Year
   polygons above and then trying to please my sense of aesthetics by
   centring these polygons horizontally on the screen and having them
   stand firmly on an imaginary horizontal line so that they look
-  balanced. I won't include the code and output for that on this page
+  balanced.  I won't include the code and output for that on this page
   for the sake of brevity of this post but here are links to some
   screenshots I have kept that show a few of several ways to do it:
   <a href="../files/blog/logo-square-centre.png">logo-square-centre.png</a>,
   <a href="../files/blog/logo-pentagon-centre.png">logo-pentagon-centre.png</a>, and
   <a href="../files/blog/logo-star-centre.png">logo-star-centre.png</a>.
 </p>
-
 <h2 id="circles">Circles</h2>
 <p>
-  Going from polygons to circles was especially fun. Here is the first
-  piece of code one would normally write to learn to draw a circle:
+  Going from polygons to circles was especially fun.  Here is the
+  first piece of code one would normally write to learn to draw a
+  circle:
 </p>
 <pre><code>REPEAT 360 [FD 1 RT 1]</code></pre>
 <p>
@@ -139,13 +136,14 @@ Class Age Year
   </figcaption>
 </figure>
 <p>
-  Now precisely speaking, this is not exactly a circle. This is a
-  triacosiahexeacontagon, i.e., a 360-gon. It is an approximation of a
-  circle with 360 very short line segments. Nevertheless it was enough
-  to get a young child who had just begun to learn using the computer
-  excited about programming. It showed me how control flow could be
-  used elegantly to express complex ideas in a simple expression. By
-  the way, here is one way to centre that circle horizontally on the
+  Now precisely speaking, this is not exactly a circle.  This is a
+  triacosiahexeacontagon, i.e., a 360-gon.  It is an approximation of
+  a circle with 360 very short line segments.  Nevertheless it was
+  enough to get a young child who had just begun to learn using the
+  computer excited about programming.  It showed me how control flow
+  could be used elegantly to express complex ideas in a simple
+  expression.  By the way, here is one way to centre that circle
+  horizontally on the
   screen: <a href="../files/blog/logo-circle-centre.png">logo-circle-centre.png</a>.
 </p>
 <p>
@@ -153,7 +151,7 @@ Class Age Year
 </p>
 <pre><code>REPEAT 20 [REPEAT 180 [FD 1 RT 2] RT 18]</code></pre>
 <p>
-  This code draws 20 overlapping circles. The output looks like this:
+  This code draws 20 overlapping circles.  The output looks like this:
 </p>
 <figure>
   <a href="../files/blog/logo-circles.png"><img
@@ -163,22 +161,21 @@ Class Age Year
     Grid of circles drawn with IBM Personal Computer Logo
   </figcaption>
 </figure>
-
 <h2 id="a-lasting-effect">A Lasting Effect</h2>
 <p>
-  There is a lot more to Logo than turtle graphics. Logo gave me a
+  There is a lot more to Logo than turtle graphics.  Logo gave me a
   brief taste of functional programming even though back then I did
-  not know the term "functional programming". I discovered the same
-  simplicity and elegance later in Lisp about 15 years later. After
+  not know the term "functional programming".  I discovered the same
+  simplicity and elegance later in Lisp about 15 years later.  After
   all, Logo can be thought of as a dialect of Lisp without parentheses
   that controls a turtle.
 </p>
 <p>
   At an impressionable age of nine, reading and writing code like
   this, and using simple arithmetic, geometry, logic, and code to
-  manipulate a two-dimensional world had a lasting effect on me. Back
+  manipulate a two-dimensional world had a lasting effect on me.  Back
   in those days, I used to find joy in sharing some of my interesting
-  Logo programs with my teachers and friends. I like to believe that
+  Logo programs with my teachers and friends.  I like to believe that
   my passion for software engineering as well as my love for writing
   code, sharing code, and open source development are a result of
   coming across these beautiful code examples early in my life.

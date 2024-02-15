@@ -4,17 +4,17 @@
 <h2 id="vintage-dos-programs">Vintage DOS Programs</h2>
 <p>
   Once in a while, I fire up one of the vintage DOS games or language
-  interpreters in DOSBox for nostalgia's sake. DOSBox is an emulator
+  interpreters in DOSBox for nostalgia's sake.  DOSBox is an emulator
   program that emulates IBM PC compatible computers running DOS.
   Trying my hands on these antiquated DOS programs now evokes old
   memories from my childhood days days when I first came across
   computers as part of our primary school curriculum.
 </p>
 <p>
-  Computers were much simpler in those days. The ones in our school
-  were IBM PC compatible computers with mostly monochrome displays. A
+  Computers were much simpler in those days.  The ones in our school
+  were IBM PC compatible computers with mostly monochrome displays.  A
   couple of them had support for a very limited number of colours
-  provided by CGA or EGA graphics cards. The ability to boot a
+  provided by CGA or EGA graphics cards.  The ability to boot a
   computer using a 5&frac14;-inch floppy disk containing MS-DOS, load
   a Logo or BASIC interpreter, or a computer game from another floppy
   disk, and then write some programs or play a few games without any
@@ -24,7 +24,7 @@
 <p>
   Often while using old DOS programs with DOSBox in this day and age,
   I want to take screenshot captures or video captures of the DOSBox
-  sessions and share them with my friends. In this article, I will
+  sessions and share them with my friends.  In this article, I will
   explain how I create good quality screenshot captures and video
   captures of DOSBox sessions in formats that I can share with others.
 </p>
@@ -44,7 +44,7 @@
 <p>
   Since this article involves several pieces of software, some of what
   is written here may not hold good in future if the behaviour of any
-  of these software tools change in future. The list below contains
+  of these software tools change in future.  The list below contains
   the versions of all software tools that were used to test the
   commands provided in this article:
 </p>
@@ -58,7 +58,7 @@
 </ol>
 <p>
   Note that both Logo and Digger programs in the list above are DOS
-  programs that were released in 1983. They cannot be run directly on
+  programs that were released in 1983.  They cannot be run directly on
   modern computers but they can be run with DOSBox since it emulates
   old IBM PC compatible computers.
 </p>
@@ -66,12 +66,12 @@
 <p>
   IBM Personal Computer Logo developed by Logo Computer Systems Inc.
   (LCSI) in 1983 was the first piece of software I got introduced to
-  while learning computers as a kid. I came across it at the age of 8
+  while learning computers as a kid.  I came across it at the age of 8
   when I was in Class 4 and our school had a 5&frac14;-inch floppy
-  disk with IBM PC Logo on it. As a result, Logo was the first
-  programming language I learnt in my life. About 20 years later, I
+  disk with IBM PC Logo on it.  As a result, Logo was the first
+  programming language I learnt in my life.  About 20 years later, I
   would realize that the first programming language I learnt is a
-  dialect of Lisp. How wonderful!
+  dialect of Lisp.  How wonderful!
 </p>
 <figure id="logo-welcome-screenshot">
   <a href="../files/blog/dosbox-logo-0.png"><img
@@ -124,9 +124,9 @@
 <p>
   The <code>-machine cga</code> option emulates a machine with Color
   Graphics Adapter (CGA) because Digger requires a machine of this
-  type to run correctly. The <code>cycles=500</code> configuration
+  type to run correctly.  The <code>cycles=500</code> configuration
   option slows down the speed at which DOSBox emulates instructions in
-  order to emulate the slow machines of olden days. Without this
+  order to emulate the slow machines of olden days.  Without this
   option, Digger runs too fast to be able to be conveniently playable.
 </p>
 <figure id="digger-game-screenshot">
@@ -141,8 +141,8 @@
   Digger has an excellent gameplay where the player digs through
   underground tunnels to pick up emeralds, drop gold bags to release
   the gold or squash nobbins and hobbins, collect the released gold to
-  earn more points, and so on. It uses bright and attractive colours.
-  The music is great. When Digger was released in 1983, it was quite
+  earn more points, and so on.  It uses bright and attractive colours.
+  The music is great.  When Digger was released in 1983, it was quite
   advanced for its time.
 </p>
 <h2 id="dosbox-screenshot-capture">DOSBox Screenshot Capture</h2>
@@ -153,10 +153,10 @@
   aspect ratio of old CRT computer monitors.
 </p>
 <p>
-  To obtain the screenshots, we first
-  press <kbd>ctrl</kbd>+<kbd>f5</kbd> while DOSBox is running. The
-  paths of the screenshots appear in the console output at the
-  terminal where DOSBox was launched. For example:
+  To obtain the screenshots, we first press
+  <kbd>ctrl</kbd>+<kbd>f5</kbd> while DOSBox is running.  The paths of
+  the screenshots appear in the console output at the terminal where
+  DOSBox was launched.  For example:
 </p>
 <pre>
 <samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_000.png
@@ -168,11 +168,11 @@ Capturing Screenshot to /Users/susam/Library/Preferences/capture/digger_001.png<
 </pre>
 <p>
   The screenshots obtained in this manner have an aspect ratio of 8:5
-  which makes the output look stretched horizontally. The old CRT
+  which makes the output look stretched horizontally.  The old CRT
   computer monitors for which these old DOS programs were written had
-  an aspect ratio of 4:3 instead. This stretched look can be fixed by
-  resizing the images to an aspect ratio of 4:3. Here are the commands
-  used to fix the aspect ratio and produce the images:
+  an aspect ratio of 4:3 instead.  This stretched look can be fixed by
+  resizing the images to an aspect ratio of 4:3.  Here are the
+  commands used to fix the aspect ratio and produce the images:
 </p>
 <pre>
 <code>convert logo_000.png -sample '1920x1440!' dosbox-logo-0.png
@@ -212,29 +212,29 @@ x 1200 >= 91.0% displays.
 x 1440 >= 92.7% displays
 -->
 <p>
-  The <code>convert</code> program comes with ImageMagick. There are a
-  few things worth noting here:
+  The <code>convert</code> program comes with ImageMagick.  There are
+  a few things worth noting here:
 </p>
 <ul>
   <li>
     We use the <code>-sample</code> option here to resize the image as
-    opposed to using <code>-resize</code> or <code>-scale</code>. The
+    opposed to using <code>-resize</code> or <code>-scale</code>.  The
     <code>-resize</code> or <code>-scale</code> option would smooth
     the jagged edges in the text and graphics by introducing
-    additional colours. The <code>-resize</code> option is great for
+    additional colours.  The <code>-resize</code> option is great for
     real world images where we do want the edges to be smooth while
     scaling up or down but in these screenshots we want to retain the
     crisp and jagged edges that is typical of DOSBox and the old CRT
-    monitors. Therefore we use the <code>-sample</code> option that
-    does not introduce any new colours. Instead it uses
+    monitors.  Therefore we use the <code>-sample</code> option that
+    does not introduce any new colours.  Instead it uses
     nearest-neighbour interpolation (point sampling) to decide the
     colours of the scaled image.
   </li>
   <li>
     The <code>!</code> flag is used to ignore the aspect ratio of the
-    original image. Without this flag, the output files would be
+    original image.  Without this flag, the output files would be
     1920x1200 in size, that is, the largest size with an aspect ratio
-    of 8:5 that fits in a 1920x1440 box. With this flag, the original
+    of 8:5 that fits in a 1920x1440 box.  With this flag, the original
     aspect ratio of 8:5 is ignored and the output is exactly 1920x1440
     in size.
   </li>
@@ -242,8 +242,8 @@ x 1440 >= 92.7% displays
 <h2 id="dosbox-video-capture">DOSBox Video Capture</h2>
 <p>
   To start capturing video of DOSBox, we
-  press <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>f5</kbd>. The same key
-  combination stops capturing video. The following output appears in
+  press <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>f5</kbd>.  The same key
+  combination stops capturing video.  The following output appears in
   the console output to show where the video file is saved:
 </p>
 <pre>
@@ -253,7 +253,7 @@ Stopped capturing video.</samp>
 <p>
   Say, I want to share a video capture of DOSBox with Logo running on
   it with my friends who might be on devices that do not support
-  playing AVI files. The following FFmpeg command converts the video
+  playing AVI files.  The following FFmpeg command converts the video
   to a format that can be distributed widely and played on a wide
   range of devices and players:
 </p>
@@ -292,13 +292,13 @@ Stopped capturing video.</samp>
     </p>
     <p>
       The audio is silent in this video, so we reduce the file size a
-      little by disabling the audio stream with this option. For
+      little by disabling the audio stream with this option.  For
       example, without this option the output file size was 317 KB but
       with this option it turned out to be 282 KB.
     </p>
     <p>
       This option should not be specified if the audio stream needs to
-      preserved, for example, with DOS games that have audio. We will
+      preserved, for example, with DOS games that have audio.  We will
       see an example of this in the next section.
     </p>
   </li>
@@ -308,8 +308,8 @@ Stopped capturing video.</samp>
     </p>
     <p>
       This option selects the x264 encoder to encode the video stream
-      into H.264 format. H.264 is also known as MPEG-4 Part 10,
-      Advanced Video Coding (MPEG-4 AVC). Currently, it is the most
+      into H.264 format.  H.264 is also known as MPEG-4 Part 10,
+      Advanced Video Coding (MPEG-4 AVC).  Currently, it is the most
       popular format for recording, compression, and distribution of
       video content.
     </p>
@@ -321,17 +321,17 @@ Stopped capturing video.</samp>
     <p>
       This option provides visually lossless output, that is, high
       quality output without any loss in quality that can be perceived
-      by human eyes. For completely lossless output, we need to use
-      the <code>-crf 0</code> option. However, this option sets the
+      by human eyes.  For completely lossless output, we need to use
+      the <code>-crf 0</code> option.  However, this option sets the
       video profile to <code>High 4:4:4 Predictive</code> which
-      prevents the video from playing in some video players. This
+      prevents the video from playing in some video players.  This
       issue is discussed in more detail in the point
       about <code>yuv420p</code> pixel format that comes later in this
-      list. Since <code>-crf 0</code> cannot be used due to this
+      list.  Since <code>-crf 0</code> cannot be used due to this
       issue, the next best option is
       <code>-crf 1</code> which while not completely lossless is much
-      better than visually lossless. Since it trades quality for
-      output size, the output file turns out to be 319 KB in size. The
+      better than visually lossless.  Since it trades quality for
+      output size, the output file turns out to be 319 KB in size.  The
       <code>-crf 51</code> option produces the most lossy output, that
       is, the worst quality output with a file size of 159 KB.
     </p>
@@ -342,8 +342,8 @@ Stopped capturing video.</samp>
     </p>
     <p>
       This option provides better compression at the cost of encoding
-      speed. For example, without this option it produces an output of
-      size 355 KB in about 16 seconds on my system but with this
+      speed.  For example, without this option it produces an output
+      of size 355 KB in about 16 seconds on my system but with this
       option it produces an output of size 282 KB in about 31 seconds
       on the same system.
     </p>
@@ -358,7 +358,7 @@ Stopped capturing video.</samp>
     </p>
     <p>
       For example, without this video filter option, we get the output
-      in the YUV 4:4:4 planar format. I found that QuickTime Player
+      in the YUV 4:4:4 planar format.  I found that QuickTime Player
       version 10.4 on macOS High Sierra as well as Android 9.0.0 was
       unable to play this format.
     </p>
@@ -373,7 +373,7 @@ pix_fmt=yuv444p
 </pre>
     <p>
       With this video filter option, we get the output in the YUV
-      4:2:0 planar format. Now both QuickTime Player version 10.4 as
+      4:2:0 planar format.  Now both QuickTime Player version 10.4 as
       well as Android 9.0.0 could play this format.
     </p>
 <pre>
@@ -388,11 +388,11 @@ pix_fmt=yuv420p
     <p>
       For maximum compatibility with very old or obsolete devices, we
       could add the <code>-profile:v baseline</code> option that setst
-      the video profile to <code>Constrained Baseline</code>. This
+      the video profile to <code>Constrained Baseline</code>.  This
       option is not recommended unless we really need to support old
-      or obsolete devices. We also need to keep in mind that the
+      or obsolete devices.  We also need to keep in mind that the
       baseline profile does not support lossless encoding with
-      the <code>-crf 0</code> option. The least lossy encoding option
+      the <code>-crf 0</code> option.  The least lossy encoding option
       we can specify with this profile is <code>-crf 1</code> which
       while not technically lossless is much better than visually
       lossless.
@@ -420,13 +420,13 @@ pix_fmt=yuv420p
     <p>
       The <code>neighbor</code> flag ensures that the nearest-neighbor
       interpolation (point sampling) is used to decide the colours of
-      the scaled image. Without this option, the default bicubic
-      interpolation algorithm is used. It has the effect of smoothing
+      the scaled image.  Without this option, the default bicubic
+      interpolation algorithm is used.  It has the effect of smoothing
       the edges by introducing new colours such as new shades of grey
-      for this example video. While such smoothing of edges is good
+      for this example video.  While such smoothing of edges is good
       for scaling pictures of the real world, in this case, it spoils
       the crisp and jagged edges that is typical of output visible in
-      DOSBox or the old CRT monitors. With the <code>neighbor</code>
+      DOSBox or the old CRT monitors.  With the <code>neighbor</code>
       option, we retain the crisp and jagged edges visible in the
       original video capture.
     </p>
@@ -437,16 +437,16 @@ pix_fmt=yuv420p
     </p>
     <p>
       This video filter option sets the frame rate to 30 frames per
-      second (FPS). Without this option, the output video has a frame
-      rate of 70.09 FPS and file size of 558 KB. With this option the
+      second (FPS).  Without this option, the output video has a frame
+      rate of 70.09 FPS and file size of 558 KB.  With this option the
       output frame rate is 30 FPS and the file size is 282 KB.
     </p>
     <p>
       The default value of <code>machine</code> configuration variable
       of DOSBox v0.74-3 is <code>svga_s3</code>, so by default it
-      emulates a machine with SVGA card. While emulating a machine
+      emulates a machine with SVGA card.  While emulating a machine
       with SVGA card, DOSBox creates video capture files with frame
-      rate of 70.09 FPS. When it emulates a machine with CGA card,
+      rate of 70.09 FPS.  When it emulates a machine with CGA card,
       such as when the its <code>machine</code> configuration variable
       is set to <code>cga</code> or when DOSBox is run with
       the <code>-machine cga</code> option, it creates video captures
@@ -455,7 +455,7 @@ pix_fmt=yuv420p
     <p>
       For the <a href="#logo-video">Logo video capture</a>, there is
       no high-speed motion going on in the video, so we don't need a
-      high frame rate. A lower frame rate of 30 FPS looks just as
+      high frame rate.  A lower frame rate of 30 FPS looks just as
       good.
     </p>
   </li>
@@ -463,14 +463,14 @@ pix_fmt=yuv420p
 <h2 id="dosbox-audio-video-capture">DOSBox Audio/Video Capture</h2>
 <p>
   The video capture of Digger game is processed similarly, however,
-  there are a few additional things we need to take care of. We want
-  to include the game audio in the output file. We also want a higher
+  there are a few additional things we need to take care of.  We want
+  to include the game audio in the output file.  We also want a higher
   frame rate because games may sometimes have high-speed motion.
 </p>
 <p>
   Like before, we use <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>f5</kbd> to
-  start capturing the video. The same key combination stops capturing
-  video. The following output appears in the console output to show
+  start capturing the video.  The same key combination stops capturing
+  video.  The following output appears in the console output to show
   where the video file is saved:
 </p>
 <pre>
@@ -500,7 +500,7 @@ Stopped capturing video.</samp>
 </figure>
 <p>
   Most of the FFmpeg options used in the command above have been
-  discussed in the previous section. Let us discuss the new options
+  discussed in the previous section.  Let us discuss the new options
   used here that have not been discussed earlier:
 </p>
 <ul>
@@ -510,8 +510,8 @@ Stopped capturing video.</samp>
     </p>
     <p>
       This option selects the native FFmpeg AAC encoder to encode the
-      audio stream to Advanced Audio Coding (AAC) format. It is a very
-      popular format for audio streams in MP4 files.
+      audio stream to Advanced Audio Coding (AAC) format.  It is a
+      very popular format for audio streams in MP4 files.
     </p>
   </li>
   <li>
@@ -520,10 +520,10 @@ Stopped capturing video.</samp>
     </p>
     <p>
       This sets the audio bitrate high enough to ensure that we get
-      good quality audio in the output. We don't need to worry about
-      our specified bitrate being too high. If the audio can be
+      good quality audio in the output.  We don't need to worry about
+      our specified bitrate being too high.  If the audio can be
       encoded with a lower bitrate without compromising on quality,
-      the output audio stream is encoded at a lower bitrate. For
+      the output audio stream is encoded at a lower bitrate.  For
       example, for this specific video, the actual audio bitrate in
       the output file turns out to be 245k because that is enough to
       encode the audio stream in the input file.
@@ -545,13 +545,13 @@ bit_rate=245184
       however, certain parts of the output video look slightly choppy.
       For example, at 7 seconds into the video when the player is the
       pushing up against the gold bag, the video becomes slightly
-      choppy if we generate the output with a frame rate of 30 FPS. A
+      choppy if we generate the output with a frame rate of 30 FPS.  A
       higher frame rate such as 50 FPS prevents this problem.
     </p>
     <p>
       If we omit this option entirely, we get an output video that has
       the same frame rate as that of the input video, that is, 59.92
-      FPS, with an output file size of 4.6 MB. With this option, we
+      FPS, with an output file size of 4.6 MB.  With this option, we
       get an output video that has a frame rate of 50 FPS and a file
       size of 4.2 MB.
     </p>
@@ -565,11 +565,11 @@ bit_rate=245184
   crisp and jagged edges in the <a href="#logo-video">Logo video
   capture</a> but it does not produce perfect results for
   the <a href="#digger-video">Digger video capture</a> in this
-  section. Despite the imperfection, it is still necessary to specify
+  section.  Despite the imperfection, it is still necessary to specify
   the <code>neighbor</code> option because without this option, the
-  output video looks even worse. We can use a different pixel format
+  output video looks even worse.  We can use a different pixel format
   like <code>yuv444p</code> instead of <code>yuv420p</code> to work
-  around this issue. Using the <code>yuv444p</code> format indeed
+  around this issue.  Using the <code>yuv444p</code> format indeed
   results in perfect nearest-neighbour interpolation which helps in
   retaining the crisp and jagged edges in the video accurately but as
   explained in the previous section, many media players currently
@@ -579,8 +579,9 @@ bit_rate=245184
 <h2 id="dosbox-gif-animation">DOSBox GIF Animation</h2>
 <p>
   Now just for fun, let us see if we can convert the video captures
-  into GIF animations. This can be done quite easily with FFmpeg. Here
-  are the commands to convert the Logo video capture to GIF animation:
+  into GIF animations.  This can be done quite easily with FFmpeg.
+  Here are the commands to convert the Logo video capture to GIF
+  animation:
 </p>
 <pre>
 <samp>ffmpeg -i logo_000.avi -vf palettegen palette.png
@@ -591,8 +592,8 @@ ffmpeg -i logo_000.avi -i palette.png \
 <p>
   The first command generates a colour palette from the video capture.
   The second command uses this colour palette to generate a GIF
-  animation. Like before, we use the <code>neighbor</code> flag to
-  retain the crisp and jagged edges. Here is the output:
+  animation.  Like before, we use the <code>neighbor</code> flag to
+  retain the crisp and jagged edges.  Here is the output:
 </p>
 <figure id="logo-gif">
   <a href="../files/blog/dosbox-logo.gif"><img

@@ -3,13 +3,12 @@
 <p>
   Today I learnt how to create an aggregate function in PostgreSQL
   function that wraps the functionality provided by other aggregate
-  functions in PosgreSQL. In this experiment, I created
+  functions in PosgreSQL.  In this experiment, I created
   a <code>cv()</code> function that calculates the coefficient of
-  variation. The function <code>cv(x)</code> is equivalent
+  variation.  The function <code>cv(x)</code> is equivalent
   to <code>stddev(x)</code> / <code>avg(x)</code> where <code>x</code>
   represents the list of data points.
 </p>
-
 <h2 id="example-data-table">Example Data Table</h2>
 <pre>
 <samp>$ <kbd>cat perf.sql</kbd>
@@ -73,7 +72,6 @@ statistics-# <kbd>WHERE aggfnoid='avg(double precision)'::regprocedure;</kbd>
 
 statistics=#</samp>
 </pre>
-
 <h2 id="function-definition">Function Definition</h2>
 <pre>
 <samp>$ <kbd>cat cv.sql</kbd>
@@ -91,7 +89,6 @@ CREATE AGGREGATE cv(double precision)
     initcond = '{0, 0, 0}'
 );</samp>
 </pre>
-
 <h2 id="usage">Usage</h2>
 <pre>
 <samp>$ <kbd>psql statistics</kbd>
@@ -121,13 +118,12 @@ statistics=# <kbd>select cv(duration) from performance;</kbd>
 
 statistics=#</samp>
 </pre>
-
 <h2 id="bessel-correction">Bessel's Correction</h2>
 <p>
   Checked whether
   <a href="http://en.wikipedia.org/wiki/Bessel's_correction">Bessel's
-    correction</a> was used in the <code>stddev()</code> function of
-  PostgreSQL. Yes, it was used.
+  correction</a> was used in the <code>stddev()</code> function of
+  PostgreSQL.  Yes, it was used.
 </p>
 <pre>
 <samp>$ <kbd>octave -q</kbd>

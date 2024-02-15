@@ -76,13 +76,16 @@ noscript div {
   color: {{ light-error-color }};
   padding: 0 1em;
 }
-.email {
+.box {
   border: thin solid {{ light-line-color }};
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin: 1em 0;
+  padding: 1em;
 }
-.email .header, .email .body {
-  margin: 1em;
+.box *:first-child {
+  margin-top: 0;
+}
+.box *:last-child {
+  margin-bottom: 0;
 }
 .textcenter {
   text-align: center;

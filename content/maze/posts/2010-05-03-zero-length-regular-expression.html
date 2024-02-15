@@ -2,31 +2,27 @@
 <!-- tag: Perl Python Java Lisp Programming Technology -->
 <p>
   This post presents a list of how zero length regular expression is
-  handled in various tools and programming languages. All of them
+  handled in various tools and programming languages.  All of them
   compile the zero length regular expression pattern and the regular
   expression matches all strings.
 </p>
-
 <h2 id="gnu-grep">GNU grep</h2>
 <pre>
 <samp>$ <kbd>printf "foo\nbar\n" | grep ""</kbd>
 foo
 bar</samp>
 </pre>
-
 <h2 id="bsd-grep">BSD grep</h2>
 <pre>
 <samp>$ <kbd>printf "foo\nbar\n" | grep ""</kbd>
 foo
 bar</samp>
 </pre>
-
 <h2 id="perl">Perl</h2>
 <pre>
 <samp>$ <kbd>perl -e 'print(("foo" =~ //) . "\n")'</kbd>
 1</samp>
 </pre>
-
 <h2 id="python">Python</h2>
 <pre>
 <samp>$ <kbd>python</kbd>
@@ -36,7 +32,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt; <kbd>import re; re.compile('').search('foo')</kbd>
 &lt;_sre.SRE_Match object at 0x7fc6c5a2c510&gt;
 </pre>
-
 <h2 id="java">Java</h2>
 <pre>
 <samp>$ <kbd>cat RegexExperiment.java</kbd>
@@ -53,7 +48,6 @@ public class RegexExperiment
 $ <kbd>javac RegexExperiment.java && java RegexExperiment</kbd>
 true</samp>
 </pre>
-
 <h2 id="mzscheme">MzScheme</h2>
 <pre>
 <samp>$ <kbd>mzscheme</kbd>
@@ -61,7 +55,6 @@ Welcome to MzScheme v4.0.1 [3m], Copyright (c) 2004-2008 PLT Scheme Inc.
 > <kbd>(regexp-match "" "foo")</kbd>
 ("")</samp>
 </pre>
-
 <h2 id="clisp">CLISP</h2>
 <pre>
 <samp>$ <kbd>clisp</kbd>
@@ -86,7 +79,6 @@ Type :h and hit Enter for context help.
 [1]> <kbd>(regexp:match "" "foo")</kbd>
 #S(REGEXP:MATCH :START 0 :END 0)</samp>
 </pre>
-
 <h2 id="c">C</h2>
 <pre>
 <samp>$ <kbd>ls -l /usr/lib/libpcre.so*</kbd>

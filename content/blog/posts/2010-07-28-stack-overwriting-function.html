@@ -4,9 +4,9 @@
 <h2 id="skipping-over-a-function-call">Skipping Over a Function Call</h2>
 <p>
   Here is a C puzzle that involves some analysis of the machine code
-  generated from it followed by manipulation of the runtime stack. The
-  solution to this puzzle is <em>implementation-dependent</em>. Here
-  is the puzzle:
+  generated from it followed by manipulation of the runtime stack.
+  The solution to this puzzle is <em>implementation-dependent</em>.
+  Here is the puzzle:
 </p>
 <div class="highlight">
 <p>
@@ -42,16 +42,14 @@ int main()
 </p>
 </div>
 <p>
-  <em>
-    If you want to think about this problem, this is a good time to
-    pause and think about it. There are spoilers ahead.
-  </em>
+  <em>If you want to think about this problem, this is a good time to
+  pause and think about it.  There are spoilers ahead.</em>
 </p>
 <p>
   The solution essentially involves figuring out what code we can
   place in the body of <code>f()</code> such that it causes the
   program to skip over the machine code generated for
-  the <code>printf("2\n")</code> operation. I'll share two solutions
+  the <code>printf("2\n")</code> operation.  I'll share two solutions
   for two different implementations:
 </p>
 <ol>
@@ -68,7 +66,7 @@ int main()
 <p>
   Let us first see step by step how I approached this problem for GCC.
   We add a statement <code>char a = 7;</code> to the function
-  <code>f()</code>. The code looks like this:
+  <code>f()</code>.  The code looks like this:
 </p>
 <pre>
 <code>#include &lt;stdio.h&gt;
@@ -88,7 +86,7 @@ int main()
 }</code>
 </pre>
 <p>
-  There is nothing special about the number <code>7</code> here. We
+  There is nothing special about the number <code>7</code> here.  We
   just want to define a variable in <code>f()</code> and assign some
   value to it.
 </p>
@@ -129,28 +127,28 @@ Disassembly of section .text:
 <p>
   When <code>main()</code> calls <code>f()</code>, the microprocessor
   saves the return address (where the control must return to after
-  <code>f()</code> is executed) in stack. The line at offset
+  <code>f()</code> is executed) in stack.  The line at offset
   <samp>1d</samp> in the listing above for <code>main()</code> is the
-  call to <code>f()</code>. After <code>f()</code> is executed, the
-  instruction at offset <samp>22</samp> is executed. Therefore the
+  call to <code>f()</code>.  After <code>f()</code> is executed, the
+  instruction at offset <samp>22</samp> is executed.  Therefore the
   return address that is saved on stack is the address at which the
   instruction at offset
   <samp>22</samp> would be present at runtime.
 </p>
 <p>
   The instructions at offsets <samp>22</samp> and <samp>27</samp> are
-  the instructions for the <code>printf("2\n")</code> call. These are
-  the instructions we want to skip over. In other words, we want to
+  the instructions for the <code>printf("2\n")</code> call.  These are
+  the instructions we want to skip over.  In other words, we want to
   modify the return address in the stack from the address of the
   instruction at offset <samp>22</samp> to that of the instruction at
-  offset <samp>2c</samp>. This is equivalent to skipping 10 bytes
+  offset <samp>2c</samp>.  This is equivalent to skipping 10 bytes
   (0x2c - 0x22 = 10) of machine code or adding 10 to the return
   address saved in the stack.
 </p>
 <p>
   Now how do we get hold of the return address saved in the stack when
-  <code>f()</code> is being executed? This is where the variable
-  <code>a</code> we defined in <code>f()</code> helps. The instruction
+  <code>f()</code> is being executed?  This is where the variable
+  <code>a</code> we defined in <code>f()</code> helps.  The instruction
   at offset <samp>4</samp> is the instruction generated for
   assigning <code>7</code> to the variable <code>a</code>.
 </p>
@@ -208,8 +206,8 @@ Disassembly of section .text:
 <p>
   If we add 9 to the address of the variable <code>a</code>, i.e.,
   <code>&amp;a</code>, we get the address where the return address is
-  stored. We saw earlier that if we increment this return address by
-  10 bytes, it solves the problem. Therefore here is the solution
+  stored.  We saw earlier that if we increment this return address by
+  10 bytes, it solves the problem.  Therefore here is the solution
   code:
 </p>
 <pre>
@@ -334,7 +332,7 @@ _main:
   offsets <code>25</code>, <code>2A</code>, and <code>2F</code> show
   the instructions we want to skip, i.e., instead of returning to the
   instruction at offset <code>25</code>, we want the microprocessor to
-  return to the instruction at offset <code>32</code>. This involves
+  return to the instruction at offset <code>32</code>.  This involves
   skipping 13 bytes (0x32 - 0x25 = 13) of machine code.
 </p>
 <p>
@@ -370,7 +368,7 @@ _main:
 <p>
   If we add 5 to the address of the variable <code>a</code>, i.e.,
   <code>&amp;a</code>, we get the address where the return address is
-  stored. Here is the solution code:
+  stored.  Here is the solution code:
 </p>
 <pre>
 <code>#include &lt;stdio.h&gt;
@@ -414,14 +412,14 @@ C:\&gt;<kbd>overwrite.exe</kbd>
 <h2 id="conclusion">Conclusion</h2>
 <p>
   The machine code that the compiler generates for a given C code is
-  highly dependent on the implementation of the compiler. In the two
+  highly dependent on the implementation of the compiler.  In the two
   examples above, we have two different solutions for two different
   compilers.
 </p>
 <p>
   Even with the same brand of compiler, the way it generates machine
   code for a given code may change from one version of the compiler to
-  another. Therefore, it is very likely that the above solution would
+  another.  Therefore, it is very likely that the above solution would
   not work on another system (such as your system) even if you use the
   same compiler that I am using in the examples above.
 </p>

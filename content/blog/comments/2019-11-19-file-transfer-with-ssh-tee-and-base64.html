@@ -3,7 +3,7 @@
 <!-- source: https://news.ycombinator.com/item?id=24505775 -->
 <p>
   The instructions in this article should work, but they're more
-  complicated than necessary maybe. If you don't
+  complicated than necessary maybe.  If you don't
   have <code>scp</code>, you can usually just do something like this:
 </p>
 <pre><code>ssh HOST cat remote_file &gt; local_file</code></pre>
@@ -24,10 +24,10 @@
 </p>
 <pre><code>ssh HOST tar cjf - /path/to/folder | tar xjf -</code></pre>
 <p>
-  Basically I ask ssh to execute tar on the remote host to create a
-  compressed archive. ssh will output the archive contents on the
-  local host; this data is then passed on to a local tar for
-  extraction.
+  Basically I ask <code>ssh</code> to execute <code>tar</code> on the
+  remote host to create a compressed archive.  <code>ssh</code> will
+  output the archive contents on the local host; this data is then
+  passed on to a local <code>tar</code> for extraction.
 </p>
 <!-- date: 2020-09-17 15:35:20 +0000 -->
 <!-- name: Susam Pal -->
@@ -41,7 +41,7 @@
 <!-- name: Djent -->
 <!-- source: https://news.ycombinator.com/item?id=24505923 -->
 <p>
-  This seems like a CTF trick. If I were faced with this problem, I
+  This seems like a CTF trick.  If I were faced with this problem, I
   would do an SSH local port forward, and then just <code>wget</code>
   the file, hosted locally with <code>python -m
   SimpleHTTPServer</code>.
@@ -60,7 +60,7 @@
 <pre><code>ssh -L 9000:127.0.0.1:8000 HOST</code></pre>
 <p>
   Now when I visit <code>http://127.0.0.1:9000/</code> on my local
-  system, I get a "connection reset by peer" error. At the same time,
+  system, I get a "connection reset by peer" error.  At the same time,
   on the terminal where I have set up the port forward with the ssh
   command above, I get this error:
 </p>
@@ -85,26 +85,27 @@
 <p>
   Susam, Your patience in (re-)explaining this constraint to everyone
   in this thread who thinks you don't know your way around standard
-  Unix tools is impressive. :-)
+  Unix tools is impressive.  :-)
 </p>
 <!-- date: 2020-09-17 16:19:19 +0000 -->
 <!-- name: JadeNB -->
 <!-- source: https://news.ycombinator.com/item?id=24506545 -->
 <blockquote>
   <p>
-    Honestly, I find it distasteful to have to spend time working around
-    somebody's incompetence at securing systems.
+    Honestly, I find it distasteful to have to spend time working
+    around somebody's incompetence at securing systems.
   </p>
   <p>
-    Doing it on your time means you delay delivering on your project and
-    you let whoever did this get away with wasting everybody elses time.
+    Doing it on your time means you delay delivering on your project
+    and you let whoever did this get away with wasting everybody elses
+    time.
   </p>
 </blockquote>
 <p>
   Lmilcin,
 </p>
 <p>
-  While it may be distasteful, what's the alternative? Refusing on
+  While it may be distasteful, what's the alternative?  Refusing on
   principle to use a system configured in a way you don't like is way
   more likely to hurt you than it is to hurt anyone else, especially
   the person who configured the system.
@@ -119,7 +120,7 @@
 <!-- name: Hai Vu -->
 <!-- url: https://github.com/vtvh -->
 <p>
-  Really nice article. I never thought such things can be done. A use
-  case that I can think of is logging SSH sessions and see what I've
-  done with them.
+  Really nice article.  I never thought such things can be done.  A
+  use case that I can think of is logging SSH sessions and see what
+  I've done with them.
 </p>

@@ -2,12 +2,12 @@
 <!-- tag: Forth Programming Technology -->
 <p>
   I wrote a tiny Forth program today to celebrate the Star Wars Day!
-  Today, i.e., May 4 is the Star Wars Day. The date (May the fourth)
+  Today, i.e., May 4 is the Star Wars Day.  The date (May the fourth)
   is a pun on the popular Star Wars catchphrase, "May the Force be
-  with you." Forth, the programming language, is named so as a
-  shortened form of the word "Fourth". The name stood for "fourth
-  generation". Quoting
-  from <a href="https://web.archive.org/web/20160409083846/http://www.colorforth.com/HOPL.html">Forth
+  with you."  Forth, the programming language, is named so as a
+  shortened form of the word "Fourth".  The name stood for "fourth
+  generation".  Quoting from
+  <a href="https://web.archive.org/web/20160409083846/http://www.colorforth.com/HOPL.html">Forth
   - The Early Years</a>:
 </p>
 <blockquote>
@@ -18,14 +18,14 @@
 <p>
   So the Forth program presented in this post to print a slightly
   altered Star Wars catchphrase using ASCII stars (asterisks) is like
-  a double pun! Or is that a triple pun?
+  a double pun!  Or is that a triple pun?
 </p>
 <p>
   Also, if Yoda were a programmer, I think Forth would be his most
-  favourite programming language. Yoda would say, "A Forth programmer
-  I am. Hrmmm," and he would add two and two with, <code>2 2 +</code>.
-  It just makes a lot of sense to celebrate May the 4th with some
-  Forth programming.
+  favourite programming language.  Yoda would say, "A Forth programmer
+  I am.  Hrmmm," and he would add two and two with, <code>2 2
+  +</code>.  It just makes a lot of sense to celebrate May the 4th
+  with some Forth programming.
 </p>
 <p>
   Here is the program I wrote to celebrate the day:
@@ -38,8 +38,8 @@
    0  do  cr  loop  ;
 
 : print
-   dup 40 > if  40 - lines  else
-   dup 20 > if  20 - spaces  else
+   dup 40 &gt; if  40 - lines  else
+   dup 20 &gt; if  20 - spaces  else
       stars
    then then  ;
 
@@ -133,7 +133,7 @@ bye</code>
 <ol>
   <li>
     <p>
-      Install GForth. On macOS, enter the following command if you
+      Install GForth.  On macOS, enter the following command if you
       have Homebrew:
     </p>
     <pre><code>brew install gforth</code></pre>
@@ -173,19 +173,18 @@ bye</code>
 </p>
 <p>
   By the way, Forth brings back the fun in computing for me that I
-  once experienced when I began learning to code with Logo. It is
-  simple, distraction-free, and fun! I will conclude this post with a
+  once experienced when I began learning to code with Logo.  It is
+  simple, distraction-free, and fun!  I will conclude this post with a
   famous quote from Alan J. Perlis:
 </p>
 <blockquote>
-I think that it's extraordinarily important that we in computer
-science keep fun in computing. When it started out, it was an awful
-lot of fun. Of course, the paying customers got shafted every now and
-then, and after a while we began to take their complaints seriously.
-We began to feel as if we really were responsible for the successful,
-error-free perfect use of these machines. I don't think we are. I
-think we're responsible for stretching them, setting them off in new
-directions, and keeping fun in the house. I hope the field of computer
-science never loses its sense of fun.
-</blockquote>    
-
+  I think that it's extraordinarily important that we in computer
+  science keep fun in computing.  When it started out, it was an awful
+  lot of fun.  Of course, the paying customers got shafted every now
+  and then, and after a while we began to take their complaints
+  seriously.  We began to feel as if we really were responsible for
+  the successful, error-free perfect use of these machines.  I don't
+  think we are.  I think we're responsible for stretching them,
+  setting them off in new directions, and keeping fun in the house.  I
+  hope the field of computer science never loses its sense of fun.
+</blockquote>

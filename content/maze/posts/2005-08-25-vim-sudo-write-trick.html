@@ -7,19 +7,18 @@
 </p>
 <pre><samp>E45: 'readonly' option is set (add ! to override)</samp></pre>
 <p>
-  You now realize that only root can edit the file. What do you? Start
-  over? No, instead try this:
+  You now realize that only root can edit the file.  What do you?
+  Start over?  No, instead try this:
 </p>
 <pre><code>:w !sudo tee "%"</code></pre>
 <p>
   I learnt this trick recently from the comment section
-  of <a href="https://web.archive.org/web/20051120054527/http://www.vim.org/tips/tip.php?tip_id=975">Tip #975</a>
-  on the Vim Tips website.
+  of <a href="https://web.archive.org/web/20051120054527/http://www.vim.org/tips/tip.php?tip_id=975">Tip
+  #975</a> on the Vim Tips website.
 </p>
-
 <h2 id="explanation">Explanation</h2>
 <p>
-  How does the <code>:w !sudo tee "%"</code> trick work? Let us look
+  How does the <code>:w !sudo tee "%"</code> trick work?  Let us look
   at the command part-by-part:
 </p>
 <ul>
@@ -33,7 +32,7 @@
   <li>
     <p><code>"%"</code></p>
     <p>
-      The <code>%</code> is replaced with the current filename. The
+      The <code>%</code> is replaced with the current filename.  The
       quotes around it keeps the filename as a single argument even if
       it contains whitespace.
     </p>
@@ -42,12 +41,11 @@
     <p><code>tee {file}</code></p>
     <p>
       The <code>tee</code> command is a Unix command (not a Vim
-      command). It copies standard input to standard output
+      command).  It copies standard input to standard output
       and <code>{file}</code>.
     </p>
   </li>
 </ul>
-
 <h2 id="more">More Information</h2>
 <p>
   For more information on this command, enter the following commands

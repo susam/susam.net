@@ -1,7 +1,7 @@
 <!-- title: URL in C -->
 <!-- tag: C Programming Technology Puzzle -->
 <p>
-  Here is an interesting C puzzle I created recently. It is a silly
+  Here is an interesting C puzzle I created recently.  It is a silly
   one but you might find it amusing.
 </p>
 <pre>
@@ -24,32 +24,30 @@ hello, world</samp>
 <p>
   However, the
   <a href="http://www.open-std.org/JTC1/SC22/WG14/www/docs/n1256.pdf">C99
-    standard</a> does not mention anywhere that a URL is a valid
-  syntactic element in C. How does this code work then?
+  standard</a> does not mention anywhere that a URL is a valid
+  syntactic element in C.  How does this code work then?
 </p>
 <p>
-  <em>
-    <strong>Update on 04 Jun 2011:</strong> The puzzle has been solved
-    in the <a href="comments/url-in-c.html">comments</a> section. If
-    you want to think about the problem before you see the solutions,
-    this is a good time to pause and think about it. There are
-    spoilers ahead.
-  </em>
+  <em><strong>Update on 04 Jun 2011:</strong> The puzzle has been
+  solved in the <a href="comments/url-in-c.html">comments</a> section.
+  If you want to think about the problem before you see the solutions,
+  this is a good time to pause and think about it.  There are spoilers
+  ahead.</em>
 </p>
 <p>
   The code works fine because <code>https:</code> is a label and
-  <code>//</code> following it begins a comment. In case, you are
+  <code>//</code> following it begins a comment.  In case, you are
   wondering if <code>//</code> is indeed a valid comment in C, yes, it
-  is, since C99. Download the
+  is, since C99.  Download the
   <a href="http://www.open-std.org/JTC1/SC22/WG14/www/docs/n1256.pdf">C99
-    standard</a>, go to section 6.4.9 (Comments) and read the second
+  standard</a>, go to section 6.4.9 (Comments) and read the second
   point which mentions this:
 </p>
 <blockquote>
   Except within a character constant, a string literal, or a comment,
   the characters <code>//</code> introduce a comment that includes all
   multibyte characters up to, but not including, the next new-line
-  character. The contents of such a comment are examined only to
+  character.  The contents of such a comment are examined only to
   identify multibyte characters and to find the terminating new-line
   character.
 </blockquote>

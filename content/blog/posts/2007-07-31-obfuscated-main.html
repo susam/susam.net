@@ -3,13 +3,13 @@
 <p>
   Between 2001 and 2005, when I was doing my engineering studies, I
   used to run a mailing list called <em>ncoders</em> which had around
-  150 members. We used to discuss programming and network protocols in
-  the mailing list.
+  150 members.  We used to discuss programming and network protocols
+  in the mailing list.
 </p>
 <p>
   One day we were discussing how we could obfuscate the
   <code>main()</code> function in C such that the <code>main()</code>
-  function didn't seem to appear in the code. I wrote the following
+  function didn't seem to appear in the code.  I wrote the following
   code and posted to the mailing list:
 </p>
 <pre>
@@ -24,37 +24,37 @@ int begin()
 }</code>
 </pre>
 <p>
-  This program compiles and runs successfully. It produces the
+  This program compiles and runs successfully.  It produces the
   following output:
 </p>
 <pre><samp>Stumped?</samp></pre>
 <p>
-  The mailing list does not exist anymore. The community disappeared
-  gradually and the mailing list was removed. But the code seems to
+  The mailing list does not exist anymore.  The community disappeared
+  gradually and the mailing list was removed.  But the code seems to
   have survived in the inboxes of some subscribers because if we
-  search the
-  web, <a href="https://www.google.com/search?q=%22s%2Ct%2Cu%2Cm%2Cp%2Ce%2Cd%22+define">we
+  search the web,
+  <a href="https://www.google.com/search?q=%22s%2Ct%2Cu%2Cm%2Cp%2Ce%2Cd%22+define">we
   can find so many occurrences of this code</a>.
 </p>
 <p>
-  Here is a quick explanation of the code. In C, <code>##</code> is
+  Here is a quick explanation of the code.  In C, <code>##</code> is
   the preprocessor operator for concatenation.
 </p>
 <ul>
   <li>
-    <code>begin()</code> is replaced
-    with <code>decode(a,n,i,m,a,t,e)()</code>,
+    <code>begin()</code> is replaced with
+    <code>decode(a,n,i,m,a,t,e)()</code>,
   </li>
   <li>
-    <code>decode(a,n,i,m,a,t,e)()</code> is replaced with <code>m ## a
-      ## i ## n()</code>, and
+    <code>decode(a,n,i,m,a,t,e)()</code> is replaced with
+    <code>m ## a ## i ## n()</code>, and
   </li>
   <li>
-    <code>m ## a ## i ## n()</code> is replaced
-    with <code>main()</code>.
+    <code>m ## a ## i ## n()</code> is replaced with
+    <code>main()</code>.
   </li>
 </ul>
 <p>
-  Thus effectively, <code>begin()</code> is replaced
-  with <code>main()</code>.
+  Thus effectively, <code>begin()</code> is replaced with
+  <code>main()</code>.
 </p>

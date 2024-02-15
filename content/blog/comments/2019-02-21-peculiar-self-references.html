@@ -9,15 +9,15 @@
 <p>
   <code>a = a['k'] = {}</code> is also valid JavaScript syntax,
   however running it throws an exception and generally works as OP
-  probably expected the statement to work. The reason is that in JS,
+  probably expected the statement to work.  The reason is that in JS,
   the statement is parsed as
 </p>
 <pre><code>a = (a['k'] = {})</code></pre>
 <p>
   where <code>(a['k'] = {})</code> is executed first and also returns
-  the assigned value. Meanwhile in Python, apparently multi-assignment
-  is a grammar production of its own, so the above would be parsed as
-  sort of:
+  the assigned value.  Meanwhile in Python, apparently
+  multi-assignment is a grammar production of its own, so the above
+  would be parsed as sort of:
 </p>
 <pre><code>multi-assign(a, a['k']) = {}</code></pre>
 <p>
@@ -29,7 +29,7 @@
 <!-- source: https://news.ycombinator.com/item?id=29205493 -->
 <p>
   In my opinion, it would make more sense to just treat assignments as
-  expressions, as is done in C-like languages. Maybe I'm just more
+  expressions, as is done in C-like languages.  Maybe I'm just more
   accustomed to C-like languages, though.
 </p>
 <p>
@@ -43,7 +43,7 @@
 <!-- source: https://news.ycombinator.com/item?id=29207020 -->
 <p>
   XG15, Yet another reason is all the references in LHS expressions
-  are resolved before the inner expression is executed. Thus
+  are resolved before the inner expression is executed.  Thus
 <p>
 <pre><code>a['k'] = a = {}</code></pre>
 <p>
@@ -68,9 +68,9 @@
 </ul>
 <p>
   Use of "or" rather than "and" is deliberate, to fix an obscure edge
-  case. We can't even limit the restriction to "assignments involving
-  a function call". Notably, <code>self.a = a = {}</code> is not
-  always the same as <code>a = self.a = {}</code>. Proof:
+  case.  We can't even limit the restriction to "assignments involving
+  a function call".  Notably, <code>self.a = a = {}</code> is not
+  always the same as <code>a = self.a = {}</code>.  Proof:
 </p>
 <pre>
 </code>#!/usr/bin/env python3
@@ -113,8 +113,8 @@ if __name__ == '__main__':
   When <code>self.a = a = 4</code> is evaluated, once again the
   assignment to <code>self.a</code> triggers
   the <code>__setattr__</code> call which tells us that the value of
-  local <code>a</code> is still <code>3</code>. It has not been
-  updated to <code>4</code> yet. It gets updated to <code>4</code>
+  local <code>a</code> is still <code>3</code>.  It has not been
+  updated to <code>4</code> yet.  It gets updated to <code>4</code>
   after the assignment to <code>self.a</code> completes.
 </p>
 <p>
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 <!-- source: https://lobste.rs/s/nivexd/#c_8ars0e -->
 <p>
   This is very neat, but I would like to approach it a bit
-  differently. Python allows self-referential objects and is able to
+  differently.  Python allows self-referential objects and is able to
   handle this gracefully while printing them.
 </p>
 <pre>
@@ -223,7 +223,7 @@ d = c</code>
 <p>
   Every Python object has an infinitely recursive set of attributes
   because methods are functions and functions are objects and all
-  objects have methods. It is a fun way to hit a stack overflow
+  objects have methods.  It is a fun way to hit a stack overflow
   chasing them down.
 </p>
 <!-- date: 2021-11-14 07:02:21 +0000 -->
@@ -239,15 +239,15 @@ d = c</code>
 <!-- name: Blind Mathematician -->
 <!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4a4m7/ -->
 <p>
-  This looks like a big oops in language design. Time to upgrade to
+  This looks like a big oops in language design.  Time to upgrade to
   Python4 for a fix!
 </p>
 <!-- date: 2021-11-18 13:36:40 +0000 -->
 <!-- name: Knome -->
 <!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4a56j/ -->
 <p>
-  Wow. That is surprising. It makes sense but strikes me as the exact
-  opposite of what I would expect looking at the code. I would
+  Wow.  That is surprising.  It makes sense but strikes me as the
+  exact opposite of what I would expect looking at the code.  I would
   definitely have expected the binding order to be the more common
   right-to-left and for the original code to generate a name error,
   rather than the latter.
@@ -255,9 +255,7 @@ d = c</code>
 <!-- date: 2021-11-18 13:41:18 +0000 -->
 <!-- name: Knome -->
 <!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4ap0d/ -->
-<pre>
-<code>a = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = {}</code>
-</pre>
+<pre><code>a = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = a[len(a)] = {}</code></pre>
 <p>
   This is knowledge that should have remained hidden.
 </p>
@@ -271,13 +269,13 @@ d = c</code>
 <!-- name: Shellac -->
 <!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4dqhj/ -->
 <blockquote>
-  Knome: ... It makes sense ...
+  Knome: ...  It makes sense ...
 </blockquote>
 <p>
   Knome,
 </p>
 <p>
-  I think you are overstating that. It is not outright crazy or
+  I think you are overstating that.  It is not outright crazy or
   inconsistent, but I quibble with it being sensible.
 </p>
 <!-- date: 2021-11-18 17:36:13 +0000 -->
@@ -285,7 +283,7 @@ d = c</code>
 <!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl58b41/ -->
 <p>
   The thing I learned today is that multiple assignments are evaluated
-  left-to-right. I assumed it would be the other way around.
+  left-to-right.  I assumed it would be the other way around.
   Like <code>a[0] = a = [0]</code> would have been a lot less
   surprising.
 </p>
@@ -294,7 +292,7 @@ d = c</code>
 <!-- source: https://news.ycombinator.com/item?id=29271238 -->
 <p>
   I am amazed at how long I have been working in Python and never
-  known that assignment works in this way. I suppose I just avoid
+  known that assignment works in this way.  I suppose I just avoid
   parts of the language that I do not understand.
 </p>
 <p>
@@ -317,8 +315,8 @@ d = c</code>
 <!-- source: https://news.ycombinator.com/item?id=29272147 -->
 <p>
   It is a fallout of the fact that assignment must be a statement, and
-  cannot be an expression. For example, this is wrong in Python, while
-  it would be allowed in C-like languages:
+  cannot be an expression.  For example, this is wrong in Python,
+  while it would be allowed in C-like languages:
 </p>
 <pre><code>print(a = 5)</code></pre>
 <!-- date: 2021-11-18 23:57:41 +0000 -->
@@ -333,17 +331,17 @@ d = c</code>
 <!-- source: https://news.ycombinator.com/item?id=29272718 -->
 <p>
   Some languages wear the things that make you go WTF on their
-  sleeves. In contrast, Python's surprises pop up slowly over time,
+  sleeves.  In contrast, Python's surprises pop up slowly over time,
   and in places where you'd least expect them.
 </p>
 <!-- date: 2021-11-19 05:22:18 +0000 -->
 <!-- name: Solar Fields -->
 <!-- source: https://news.ycombinator.com/item?id=29274097 -->
 <p>
-  Heavyset, I wonder if it's because of their subtlety. I assume you
+  Heavyset, I wonder if it's because of their subtlety.  I assume you
   are referencing JavaScript, where the warts are impossible to ignore
   because you can't write an everyday program as a beginner without
-  running into them. This sort of thing from the article is just not
+  running into them.  This sort of thing from the article is just not
   something I would typically be trying to do in the normal course of
   shuffling data around.
 </p>

@@ -2,12 +2,12 @@
 <!-- name: Joshua Tobin -->
 <p>
   Some notation: I use tuples \( (r, g, b) \) to represent the numbers
-  of chameleons of each colour at any given time. The transformation
+  of chameleons of each colour at any given time.  The transformation
   \( (r', g', b') \to (r, g, b) \) denotes that the number of red,
   blue, and green chameleons changed from \( (r', g', b') \) to \( (r,
-  g, b). \) Then I work backwards in time. So, if there are \( (r, g,
-  b) \) chameleons now, the previous transformation must have been one
-  of the following:
+  g, b).  \) Then I work backwards in time.  So, if there are \( (r,
+  g, b) \) chameleons now, the previous transformation must have been
+  one of the following:
 </p>
 <ul>
   <li>\( (r - 2x, g + x, b + x) \to (r, g, b) \)</li>
@@ -20,9 +20,9 @@
 </p>
 <p>
   We know that when the zoologists arrived for the first time, they
-  observed \( (2000, 3000, d). \) We also know that when they arrived
-  for the second time, they observed \( (5000 + d, 0, 0). \) The
-  question is: what are the possible values of \( d? \) I answer this
+  observed \( (2000, 3000, d).  \) We also know that when they arrived
+  for the second time, they observed \( (5000 + d, 0, 0).  \) The
+  question is: what are the possible values of \( d?  \) I answer this
   in two parts.
 </p>
 <p>
@@ -30,45 +30,44 @@
   of 3.</em>
 </p>
 <p>
-
   <em>Proof.</em> Let us look at how each number in the tuple change
-  modulo 3 for each possible transformation. For example, without loss
-  of generality, consider the transformation \( (r - 2x, g + x, b +
-  2x) \to (r, g, b). \) Note that \( -2x \equiv x \pmod{3}. \) So
+  modulo 3 for each possible transformation.  For example, without
+  loss of generality, consider the transformation \( (r - 2x, g + x, b
+  + 2x) \to (r, g, b).  \) Note that \( -2x \equiv x \pmod{3}.  \) So
   every transformation just adds the same number modulo 3 to each
   number in the tuple.
 </p>
 <p>
   We know that we start with \( (2000, 3000, d) \) and reach \( (5000
-  + d, 0, 0). \) Since the values of green and blue are congruent
+  + d, 0, 0).  \) Since the values of green and blue are congruent
   modulo 3 in the end (both are 0), therefore their values must be
-  congruent modulo 3 at the start. Hence \( d \equiv 0 \pmod{3}. \)
+  congruent modulo 3 at the start.  Hence \( d \equiv 0 \pmod{3}.  \)
 </p>
 <p>
   <strong>Part 2.</strong> <em>If \( d \) is any multiple of 3 we can
   find a sequence of transformations to go from \( (2000, 3000, d) \)
-  to \( (5000 + d, 0, 0). \)</em>
+  to \( (5000 + d, 0, 0).  \)</em>
 </p>
 <p>
-  <em>Proof</em>. Consider \( (r, g, b) \) where \( r \ge 1 \) and \(
-  g \ge 3. \) We can get
+  <em>Proof</em>.  Consider \( (r, g, b) \) where \( r \ge 1 \) and \(
+  g \ge 3.  \) We can get
 
   \[
-  (r, g, b) \to (r - 1, g - 1, b + 2) \to (r + 3, g - 3, b).
+    (r, g, b) \to (r - 1, g - 1, b + 2) \to (r + 3, g - 3, b).
   \]
 
   This means that we can keep taking 3 from the value of green and
-  keep adding it to the value of red. So if we start with \( (2000,
-  3000, d, \) we can can get \( (5000, 0, d). \)
+  keep adding it to the value of red.  So if we start with \( (2000,
+  3000, d, \) we can can get \( (5000, 0, d).  \)
 </p>
 <p>
   Similarly for \( r \ge 1 \) and \( b \ge 3, \) we can get
 
   \[
-  (r, g, b) \to (r - 1, g + 2, b - 1) \to (r + 3, g, b - 3).
+    (r, g, b) \to (r - 1, g + 2, b - 1) \to (r + 3, g, b - 3).
   \]
 
   So we can keep taking 3 from the value of blue and keep adding it to
-  the value of red. If \( d \) is a multiple of 3, we can use this to
-  go from \( (5000, 0, d) \) to \( (5000 + d, 0, 0). \)
+  the value of red.  If \( d \) is a multiple of 3, we can use this to
+  go from \( (5000, 0, d) \) to \( (5000 + d, 0, 0).  \)
 </p>
