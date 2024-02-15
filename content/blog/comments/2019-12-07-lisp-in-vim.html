@@ -2,109 +2,112 @@
 <!-- name: dcassett -->
 <!-- source: https://news.ycombinator.com/item?id=21736129 -->
 <p>
-IMHO a very well-written article with great attention to detail. I
-especially liked the section on paredit with its step-by-step
-explanation.
+  IMHO a very well-written article with great attention to detail.  I
+  especially liked the section on paredit with its step-by-step
+  explanation.
 </p>
 <!-- date: 2019-12-08 15:56:38 +0000 -->
 <!-- name: lancebeet -->
 <!-- source: https://news.ycombinator.com/item?id=21736490 -->
 <p>
-I wonder why the author doesn't mention the plugin <a
-href="https://github.com/jpalardy/vim-slime">vim-slime</a>, given that
-it seems to be more popular than either Slimv or Vlime on GitHub. From
-what I can gather, Slimv and Vlime are more focused on Lisp with
-built-in completion and debugging whereas vim-slime is language agnostic
-and simply recreates just the "connected REPL" behavior of Slime.
+  I wonder why the author doesn't mention the plugin
+  <a href="https://github.com/jpalardy/vim-slime">vim-slime</a>, given
+  that it seems to be more popular than either Slimv or Vlime on
+  GitHub.  From what I can gather, Slimv and Vlime are more focused on
+  Lisp with built-in completion and debugging whereas vim-slime is
+  language agnostic and simply recreates just the "connected REPL"
+  behavior of Slime.
 </p>
 <!-- date: 2019-12-08 18:32:44 +0000 -->
 <!-- name: Susam Pal -->
 <!-- url: https://susam.net/ -->
 <!-- source: https://news.ycombinator.com/item?id=21737320 -->
 <p>
-The "vim-slime" plugin is not appropriate for my blog post because it is
-nothing like SLIME. In fact, the word "slime" in "vim-slime" is poorly
-chosen. It supports none of the SLIME features. It does not even provide
-the "connected REPL" experience like SLIME, Slimv, or Vlime does. Here
-are the major reasons why vim-slime is very limited and insufficient as
-a Lisp development environment when compared to SLIME, Slimv, or Vlime:
+  The "vim-slime" plugin is not appropriate for my blog post because
+  it is nothing like SLIME.  In fact, the word "slime" in "vim-slime"
+  is poorly chosen.  It supports none of the SLIME features.  It does
+  not even provide the "connected REPL" experience like SLIME, Slimv,
+  or Vlime does.  Here are the major reasons why vim-slime is very
+  limited and insufficient as a Lisp development environment when
+  compared to SLIME, Slimv, or Vlime:
 </p>
 <ol>
   <li>
-    It does not understand s-expressions. It can only send the current
-    text paragraph or text selected in visual mode to a terminal running
-    in GNU Screen, tmux, Neovim, etc. Therefore, it cannot send, say,
-    only the current expression or an entire function definition or a
-    top-level form to the terminal.
+    It does not understand s-expressions.  It can only send the
+    current text paragraph or text selected in visual mode to a
+    terminal running in GNU Screen, tmux, Neovim, etc.  Therefore, it
+    cannot send, say, only the current expression or an entire
+    function definition or a top-level form to the terminal.
   </li>
   <li>
     Since it is language-agnostic and really only sends text from a
     buffer to a terminal, it does not care whether the text is code or
-    prose. It also does not care if the terminal is running a Unix
-    shell or a REPL. It is the user's responsibility to ensure that
+    prose.  It also does not care if the terminal is running a Unix
+    shell or a REPL.  It is the user's responsibility to ensure that
     the correct REPL is running on the terminal and the corresponding
     code is being sent from Vim using vim-slime.
   </li>
   <li>
     Since it does not implement the client-server architecture that
     SLIME and Swank implement together, it has none of the interactive
-    debugging features of SLIME. It cannot automatically launch the
-    integrated Slime Debugger (SLDB) when an unhandled condition occurs.
-    As a result, all debugging features like inspecting code, inspecting
-    variables, etc. are missing.
+    debugging features of SLIME.  It cannot automatically launch the
+    integrated Slime Debugger (SLDB) when an unhandled condition
+    occurs.  As a result, all debugging features like inspecting code,
+    inspecting variables, etc. are missing.
   </li>
   <li>
-    Almost all of the SLIME features are missing from it. It does not
-    support displaying argument lists as we type function calls, Common
-    Lisp HyperSpec (CLHS) lookup and completion, describing symbols,
-    cross-referencing, etc.
+    Almost all of the SLIME features are missing from it.  It does not
+    support displaying argument lists as we type function calls,
+    Common Lisp HyperSpec (CLHS) lookup and completion, describing
+    symbols, cross-referencing, etc.
   </li>
   <li>
-    It does not provide any key-bindings for common tasks such as macro
-    expansion, function tracing, etc.
+    It does not provide any key-bindings for common tasks such as
+    macro expansion, function tracing, etc.
   </li>
 </ol>
 <p>
-Swank server is an integral component of SLIME. It is essential to the
-way SLIME works. A plugin that does not talk to Swank server can hardly
-be anything like SLIME. Slimv and Vlime on the other hand talk to the
-same Swank server that SLIME talks to. Slimv and Vlime are
-re-implementations of the client component of SLIME. They send SLIME
-commands to Swank just like SLIME does. As a result, Slimv and Vlime are
-able to support a good portion of the features available in SLIME.
+  Swank server is an integral component of SLIME.  It is essential to
+  the way SLIME works.  A plugin that does not talk to Swank server
+  can hardly be anything like SLIME.  Slimv and Vlime on the other
+  hand talk to the same Swank server that SLIME talks to.  Slimv and
+  Vlime are re-implementations of the client component of SLIME.  They
+  send SLIME commands to Swank just like SLIME does.  As a result,
+  Slimv and Vlime are able to support a good portion of the features
+  available in SLIME.
 </p>
 <!-- date: 2019-12-08 19:49:29 +0000 -->
 <!-- name: lancebeet -->
 <!-- source: https://news.ycombinator.com/item?id=21737832 -->
 <p>
-Thank you for the explanation.
+  Thank you for the explanation.
 </p>
 <!-- date: 2021-04-20 04:10:02 +0000 -->
 <!-- name: Dennis Ng -->
 <!-- url: https://stackoverflow.com/users/4393254/ -->
 <p>
-Such a great article.
+  Such a great article.
 </p>
 <p>
-I really wish though there is a button to turn on and off so one can
-read only about Slimv or Vlime or both.
+  I really wish though there is a button to turn on and off so one can
+  read only about Slimv or Vlime or both.
 </p>
 <!-- date: 2022-01-09 01:03:25 +0000 -->
 <!-- name: Aqezz -->
 <!-- source: https://www.reddit.com/r/lisp/comments/rydzol/_/hruofm0/ -->
 <p>
-  This is great! I just recently started using Vlime and had been
+  This is great!  I just recently started using Vlime and had been
   starting SBCL externally but
   your <kbd>\</kbd><kbd>r</kbd><kbd>r</kbd> hotkey has just saved me
   lots of annoyance!
 </p>
 <p>
   Same with the interactive debugging, I didn't know you could inspect
-  the call stack like that and evaluate stuff! I only knew about
-  choosing restarts. Thanks for this write up!
+  the call stack like that and evaluate stuff!  I only knew about
+  choosing restarts.  Thanks for this write up!
 </p>
 <!-- date: 2022-08-22 16:23:18 +0000 -->
 <!-- name: Goutham Bharadwaj -->
 <p>
-  This is a great article! Thank you so much!
+  This is a great article!  Thank you so much!
 </p>

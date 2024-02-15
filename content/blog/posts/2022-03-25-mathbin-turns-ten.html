@@ -2,64 +2,64 @@
 <!-- tag: Web Technology -->
 <p>
   On this day, ten years ago, <a href="https://mathb.in/">MathB.in</a>
-  was released on the world wide web. MathB.in is a web-based
+  was released on the world wide web.  MathB.in is a web-based
   mathematics pastebin service that is used for sharing snippets of
   mathematical text with others.
   Visit <a href="https://mathb.in/">mathb.in</a> to see what it looks
-  like and use it. The source code is available
+  like and use it.  The source code is available
   at <a href="https://github.com/susam/mathb">github.com/susam/mathb</a>.
 </p>
 <h2 id="brief-history-mathematics-pastebins">A Brief History of Mathematics Pastebins</a></h2>
 <p>
   MathB.in is the oldest mathematics pastebin that is still alive and
-  serving its community of users. It isn't the first mathematics
-  pastebin though. It's the second. The first one was written by Mark
-  A. Stratman and hosted at <em>mathbin.net</em> until 2020. It was
-  very popular in the <code>#math</code> and <code>#physics</code>
-  channels on IRC networks between 2006 and 2013. It did not have live
-  preview but it used an actual LaTeX system in the backend for
+  serving its community of users.  It isn't the first mathematics
+  pastebin though.  It's the second.  The first one was written by
+  Mark A. Stratman and hosted at <em>mathbin.net</em> until 2020.  It
+  was very popular in the <code>#math</code> and <code>#physics</code>
+  channels on IRC networks between 2006 and 2013.  It did not have
+  live preview but it used an actual LaTeX system in the backend for
   rendering mathematical formulas into images, so the output was of
-  pretty good quality. It served IRC users very well for sharing
+  pretty good quality.  It served IRC users very well for sharing
   problems and solutions quickly with each other on IRC channels.
   Since late-2014, Mark's website began intermittently displaying a
-  notice that the website was shutting down. The notice replaced the
+  notice that the website was shutting down.  The notice replaced the
   actual pastebin on some days, so users were forced to look for
-  alternatives. MathB.in was already available on the web and popular
+  alternatives.  MathB.in was already available on the web and popular
   among IRC users by then, so it turned out to be a good alternative.
   Mark's website disappeared sometime in late-2020.
 </p>
 <p>
   Another alternative to the first mathematics pastebin was Huy
-  Nguyen's <em>texpaste.com</em>. It was released on the web in
-  September 2013. I believe it was the third pastebin to be released
-  on the web. In fact, it was a bit more than a pastebin. It allowed
+  Nguyen's <em>texpaste.com</em>.  It was released on the web in
+  September 2013.  I believe it was the third pastebin to be released
+  on the web.  In fact, it was a bit more than a pastebin.  It allowed
   users to sign up for accounts and save their notes in their
-  accounts. It had some nifty widgets to click and automatically
-  insert common LaTeX symbols instead of typing them out manually. It
-  had its own community of users. However, it suffered from serious
-  spam problems. Searching for "texpaste.com" on Twitter shows how the
-  service was being exploited by spammers to share dubious content and
-  links several times every single day between December 2016 and
-  February 2018. Despite the spam problems, it continued to serve its
-  genuine users for many years. Finally, the website disappeared in
+  accounts.  It had some nifty widgets to click and automatically
+  insert common LaTeX symbols instead of typing them out manually.  It
+  had its own community of users.  However, it suffered from serious
+  spam problems.  Searching for "texpaste.com" on Twitter shows how
+  the service was being exploited by spammers to share dubious content
+  and links several times every single day between December 2016 and
+  February 2018.  Despite the spam problems, it continued to serve its
+  genuine users for many years.  Finally, the website disappeared in
   2021 and has not returned since then.
 </p>
 <h2 id="story-of-mathbin">The Story of MathB.in</h2>
 <p>
   MathB.in was born on Sunday, 25 March 2012, after a single night of
-  furious coding. The previous night, I happened to stumble
+  furious coding.  The previous night, I happened to stumble
   upon <a href="https://math.stackexchange.com/">math.stackexchange.com</a>
-  and I noticed that it seemed to have decent LaTeX support. As I dove
-  deeper into the HTML source code of the pages of this website, I was
-  surprised to see that the rendered LaTeX was not made of image files
-  embedded into the web pages which used to be a prevalent practice in
-  those days. Instead, the mathematical formulas were rendered as text
-  with quite complicated styling done with CSS to make the rendered
-  mathematics formula look as good as a PDF rendered by an actual
-  LaTeX system. On further investigation I realized that this Stack
-  Exchange website was
+  and I noticed that it seemed to have decent LaTeX support.  As I
+  dove deeper into the HTML source code of the pages of this website,
+  I was surprised to see that the rendered LaTeX was not made of image
+  files embedded into the web pages which used to be a prevalent
+  practice in those days.  Instead, the mathematical formulas were
+  rendered as text with quite complicated styling done with CSS to
+  make the rendered mathematics formula look as good as a PDF rendered
+  by an actual LaTeX system.  On further investigation I realized that
+  this Stack Exchange website was
   using <a href="https://www.mathjax.org/">MathJax</a> to produce
-  high-quality typography from LaTeX code. As a frequent participant
+  high-quality typography from LaTeX code.  As a frequent participant
   in the <code>#math</code> channels on various IRC networks, I
   immediately realized that using MathJax could lead to a modern
   mathematics pastebin with live preview and beautiful mathematics
@@ -69,26 +69,26 @@
 <p>
   Thanks to that chance encounter with MathJax, I spent the rest of
   the Saturday night coding a new mathematics pastebin using MathJax
-  and PHP. After coding all through the night, registering a new
+  and PHP.  After coding all through the night, registering a new
   domain name, and setting up a website, MathB.in was published early
-  Sunday morning. I shared the link to the website with some of my
+  Sunday morning.  I shared the link to the website with some of my
   friends who were fond of sharing mathematics puzzles and solutions.
   I also
   <a href="https://groups.google.com/g/mathjax-users/c/_YAetB0gx2w/m/Xocb-aJOu4IJ">announced</a>
-  its availability on the MathJax mailing list. Since then word about
+  its availability on the MathJax mailing list.  Since then word about
   my new website spread to various IRC communities and it soon became
   quite popular in mathematically-oriented channels.
 </p>
 <h2 id="source-code">Source Code</h2>
 <p>
-  The source code of MathB.in was originally written in PHP. I
+  The source code of MathB.in was originally written in PHP.  I
   gradually began releasing its source code part by part in November
-  2013. The first complete open source release of MathB.in was done in
-  December 2013.
+  2013.  The first complete open source release of MathB.in was done
+  in December 2013.
 </p>
 <p>
   The early source code of MathB.in was quite complicated and
-  over-engineered. I was young and naive. Much like how toddlers and
+  over-engineered.  I was young and naive.  Much like how toddlers and
   young kids like to play with miniature forms of real world objects
   like cars, trains, trucks, and kitchen sets, in my naivety, I had
   ended up creating a miniature form of the multiple levels of
@@ -97,44 +97,44 @@
 </p>
 <p>
   The thought of rewriting the software and simplifying it crossed my
-  mind many times. Incidentally, several years before writing
-  MathB.in, I had stumbled upon the Lisp family of languages. It was
+  mind many times.  Incidentally, several years before writing
+  MathB.in, I had stumbled upon the Lisp family of languages.  It was
   during a long layover at an airport in September 2007 that I decided
   to boot my laptop running Debian GNU/Linux 4.0 (Etch) and learn some
-  Lisp programming. I happened to have GNU CLISP 2.41 installed on it,
-  so I fired it up and began learning Common Lisp. A few months later
-  I also dabbled in Scheme. I found the sheer simplicity, beauty, and
-  elegance of Lisp and Scheme to be fascinating. But the thought of
-  writing websites using Common Lisp did not occur to me until much
-  later.
+  Lisp programming.  I happened to have GNU CLISP 2.41 installed on
+  it, so I fired it up and began learning Common Lisp.  A few months
+  later I also dabbled in Scheme.  I found the sheer simplicity,
+  beauty, and elegance of Lisp and Scheme to be fascinating.  But the
+  thought of writing websites using Common Lisp did not occur to me
+  until much later.
 </p>
 <p>
   At some point much later, I began rewriting MathB.in in Common Lisp
   while preserving its user interface and most of its behaviour.
-  MathB.in no longer runs on PHP. It has been rewritten in Common Lisp
-  and the entire application code is now a single Lisp source code
-  file.
+  MathB.in no longer runs on PHP.  It has been rewritten in Common
+  Lisp and the entire application code is now a single Lisp source
+  code file.
 </p>
 <h2 id="mathbin-today">MathB.in Today</h2>
 <p>
   While the user interface and behaviour of MathB.in has remain
   largely the same as it was on its first day of release back in 2012,
-  there have been some new additions to its feature set. Support for
-  GitHub Flavoured Markdown (GFM) has been added by popular demand. It
-  now uses the <a href="https://github.com/susam/texme">TeXMe</a>
-  renderer to more robustly parse a mix of Markdown and LaTeX. A dark
+  there have been some new additions to its feature set.  Support for
+  GitHub Flavoured Markdown (GFM) has been added by popular demand.
+  It now uses the <a href="https://github.com/susam/texme">TeXMe</a>
+  renderer to more robustly parse a mix of Markdown and LaTeX.  A dark
   colour scheme has been added which is displayed on web browsers that
-  are running on a desktop with dark colour scheme enabled. The layout
-  of the user interface elements are now responsive and adapt to small
-  screen devices.
+  are running on a desktop with dark colour scheme enabled.  The
+  layout of the user interface elements are now responsive and adapt
+  to small screen devices.
 </p>
 <p>
   Today MathB.in is used in various IRC channels for exchanging
-  mathematics problems and solutions. From the testimonials I have
+  mathematics problems and solutions.  From the testimonials I have
   received so far, I know that it is also used by many teachers in
   schools and colleges to hand out problems, sample solutions, and
-  notes to their students. Occasionally I receive emails and messages
+  notes to their students.  Occasionally I receive emails and messages
   from kind strangers on the Internet who tell me how useful MathB.in
-  has been for them. Running this project for a decade and knowing
+  has been for them.  Running this project for a decade and knowing
   that it has been useful to many people has brought me joy.
 </p>

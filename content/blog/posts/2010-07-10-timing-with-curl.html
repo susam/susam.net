@@ -43,8 +43,8 @@ time_total: 0.982326</samp>
 </p>
 <p>
   The list below provides a description of each number in the output
-  above. This information is picked straight from the manual page of
-  curl 7.20.0. Here are the details:
+  above.  This information is picked straight from the manual page of
+  curl 7.20.0.  Here are the details:
 </p>
 <ul>
   <li>
@@ -64,13 +64,13 @@ time_total: 0.982326</samp>
     <p>
       <em>time_appconnect:</em> The time, in seconds, it took from the
       start until the SSL/SSH/etc connect/handshake to the remote host
-      was completed. (Added in 7.19.0)
+      was completed.  (Added in 7.19.0)
     </p>
   </li>
   <li>
     <p>
       <em>time_pretransfer:</em> The time, in seconds, it took from
-      the start until the file transfer was just about to begin. This
+      the start until the file transfer was just about to begin.  This
       includes all pre-transfer commands and negotiations that are
       specific to the particular protocol(s) involved.
     </p>
@@ -79,9 +79,9 @@ time_total: 0.982326</samp>
     <p>
       <em>time_redirect:</em> The time, in seconds, it took for all
       redirection steps include name lookup, connect, pretransfer and
-      transfer before the final transaction was started. time_redirect
-      shows the complete execution time for multiple redirections.
-      (Added in 7.12.3)
+      transfer before the final transaction was started.
+      time_redirect shows the complete execution time for multiple
+      redirections.  (Added in 7.12.3)
     </p>
   </li>
   <li>
@@ -94,7 +94,7 @@ time_total: 0.982326</samp>
   <li>
     <p>
       <em>time_total:</em> The total time, in seconds, that the full
-      operation lasted. The time will be displayed with millisecond
+      operation lasted.  The time will be displayed with millisecond
       resolution.
     </p>
   </li>
@@ -103,8 +103,8 @@ time_total: 0.982326</samp>
   An important thing worth noting here is that the difference in the
   numbers for <code>time_appconnect</code>
   and <code>time_connect</code> time tells us how much time is spent
-  in SSL/TLS handshake. For a cleartext connection without SSL/TLS,
-  <code>time_appconnect</code> is reported as zero. Here is an example
+  in SSL/TLS handshake.  For a cleartext connection without SSL/TLS,
+  <code>time_appconnect</code> is reported as zero.  Here is an example
   output that demonstrates this:
 </p>
 <pre>
@@ -123,8 +123,8 @@ time_total: 0.512853</samp>
 </pre>
 <p>
   Also note that <code>time_redirect</code> is zero in both outputs
-  above. That is because no redirection occurs while visiting
-  <a href="https://example.com">example.com</a>. Here is another
+  above.  That is because no redirection occurs while visiting
+  <a href="https://example.com">example.com</a>.  Here is another
   example that shows how the output looks when a redirection occurs:
 </p>
 <pre>

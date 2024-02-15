@@ -4,10 +4,10 @@
 <p>
   MS-DOS as well as Windows 98 come with a debugger program
   named <code>DEBUG.EXE</code> that can be used to work with assembly
-  language instructions and machine code. In MS-DOS version 6.22, this
+  language instructions and machine code.  In MS-DOS version 6.22, this
   program is named <code>DEBUG.EXE</code> and it is typically present
-  at <code>C:\DOS\DEBUG.EXE</code>. On Windows 98, this program is
-  usually present at <code>C:\Windows\Command\Debug.exe</code>. It is
+  at <code>C:\DOS\DEBUG.EXE</code>.  On Windows 98, this program is
+  usually present at <code>C:\Windows\Command\Debug.exe</code>.  It is
   a line-oriented debugger that supports various useful features to
   work with and debug binary executable programs consisting of machine
   code.
@@ -15,15 +15,15 @@
 <p>
   In this post, we see how we can use this debugger program to
   assemble a few minimal programs that print some characters to
-  standard output. We first create a 7-byte program that prints a
-  single character. Then we create a 23-byte program that prints the
-  "hello, world" string. All the steps provided in this post work well
+  standard output.  We first create a 7-byte program that prints a
+  single character.  Then we create a 23-byte program that prints the
+  "hello, world" string.  All the steps provided in this post work well
   with Windows 98 too.
 </p>
 <h2 id="print-character">Print Character</h2>
 <p>
   Let us first see how to create a tiny 7-byte program that prints the
-  character <code>A</code> to standard output. The
+  character <code>A</code> to standard output.  The
   following <code>DEBUG.EXE</code> session shows how we do it.
 </p>
 <pre>
@@ -57,30 +57,30 @@ C:\&gt;</samp>
 </pre>
 <p>
   The debugger command <code>A</code> creates machine executable code
-  from assembly language instructions. The machine code created is
-  written to the main memory at address CS:0100 by default. The first
+  from assembly language instructions.  The machine code created is
+  written to the main memory at address CS:0100 by default.  The first
   three instructions generate the software interrupt 0x21 (decimal 33)
   with AH set to 2 and DL set to 0x41 (decimal 65) which happens to be
-  the ASCII code of the character <code>A</code>. Interrupt 0x21
-  offers a wide variety of DOS services. Setting AH to 2 tells this
+  the ASCII code of the character <code>A</code>.  Interrupt 0x21
+  offers a wide variety of DOS services.  Setting AH to 2 tells this
   interrupt to invoke the function that prints a single character to
-  standard output. This function expects DL to be set to the ASCII
+  standard output.  This function expects DL to be set to the ASCII
   code of the character we want to print.
 </p>
 <p>
   The command <code>G</code> executes the program in memory from the
-  current location. The current location is defined by the current
-  value of CS:IP which is CS:0100 by default. We use this command to
+  current location.  The current location is defined by the current
+  value of CS:IP which is CS:0100 by default.  We use this command to
   confirm that the program runs as expected.
 </p>
 <p>
   Next we prepare to write the machine code to a binary executable
-  file. The command <code>N</code> is used to specify the name of the
-  file. The command <code>W</code> is used to write the machine code
-  to the file. This command expects the registers BX and CX to contain
-  the number of bytes to be written to the file. When the DOS debugger
+  file.  The command <code>N</code> is used to specify the name of the
+  file.  The command <code>W</code> is used to write the machine code
+  to the file.  This command expects the registers BX and CX to contain
+  the number of bytes to be written to the file.  When the DOS debugger
   starts, BX is already initialized to 0, so we only set the register
-  CX to 7 with the <code>R CX</code> command. Finally, we use the
+  CX to 7 with the <code>R CX</code> command.  Finally, we use the
   command <code>Q</code> to quit the debugger and return to MS-DOS.
 </p>
 <h2 id="hello-world">Hello, World</h2>
@@ -123,30 +123,30 @@ C:\&gt;</samp>
 </pre>
 <p>
   In the program above we use the pseudo-instruction <code>DB</code>
-  to define the bytes of the string we want to print. We add the
+  to define the bytes of the string we want to print.  We add the
   trailing bytes 0xD and 0xA to print the carriage return (CR) and the
   line feed (LF) characters so that the string is terminated with a
-  newline. Finally, the string is terminated with the byte for dollar
+  newline.  Finally, the string is terminated with the byte for dollar
   sign (<code>'$'</code>) because the software interrupt we generate
   next expects the string to be terminated with this symbol's byte
   value.
 </p>
 <p>
-  We use the software interrupt 0x21 again. However, this time we set
-  AH to 9 to invoke the function that prints a string. This function
+  We use the software interrupt 0x21 again.  However, this time we set
+  AH to 9 to invoke the function that prints a string.  This function
   expects DS:DX to point to the address of a string terminated with
-  the byte value of <code>'$'</code>. The register <code>DS</code> has
+  the byte value of <code>'$'</code>.  The register <code>DS</code> has
   the same value as that of <code>CS</code>, so we only
   set <code>DX</code> to the offset at which the string begins.
 </p>
 <h2 id="debugger-scripting">Debugger Scripting</h2>
 <p>
   We have already seen above how to assemble a "hello, world" program
-  in the previous section. We started the debugger program, typed some
+  in the previous section.  We started the debugger program, typed some
   commands, and typed assembly language instructions to create our
-  program. It is also possible to prepare a separate input file with
+  program.  It is also possible to prepare a separate input file with
   all the debugger commands and assembly language instructions in it.
-  We then feed this file to the debugger program. This can be useful
+  We then feed this file to the debugger program.  This can be useful
   while writing more complex programs where we cannot afford to lose
   our assembly language source code if we inadvertently crash the
   debugger by executing an illegal instruction.
@@ -173,14 +173,14 @@ Q</code>
 </pre>
 <p>
   This is almost the same as the inputs we typed into the debugger in
-  the previous section. The only difference from the previous section
+  the previous section.  The only difference from the previous section
   is that we omit the <code>G</code> command here because we don't
   really need to run the program while assembling it, although we
   could do so if we really wanted to.
 </p>
 <p>
   Then we can run the DOS command <code>DEBUG &lt; HELLO.TXT</code> to
-  assemble the program and create the binary executable file. Here is
+  assemble the program and create the binary executable file.  Here is
   a DOS session example that shows what the output of this command
   looks like:
 </p>
@@ -211,7 +211,7 @@ C:\&gt;</samp>
 <p>
   Now that we have seen how to assemble simple programs into binary
   executable files using the debugger, we will now briefly see how to
-  disassemble the binary executable files. This could be useful when
+  disassemble the binary executable files.  This could be useful when
   we want to debug an existing program.
 </p>
 <pre>
@@ -247,19 +247,19 @@ C:\&gt;</samp>
 117C:0100  B4 09 BA 08 01 CD 21 C3-68 65 6C 6C 6F 2C 20 77   ......!.hello, w
 117C:0110  6F 72 6C 64 0D 0A 24                              orld..$</samp>
 </pre>
-<h2 id="int-20-vs-ret">INT 20 vs. RET</h2>
+<h2 id="int-20-vs-ret">INT 20 vs RET</h2>
 <p>
   Another way to terminate a .COM program is to simply use the
-  instruction <code>INT 20</code>. This consumes two bytes in the
-  machine code: <code>CD 20</code>. While producing the smallest
+  instruction <code>INT 20</code>.  This consumes two bytes in the
+  machine code: <code>CD 20</code>.  While producing the smallest
   possible executables was not really the goal of this post, the code
   examples above indulge in a little bit of size reduction by using
-  the <code>RET</code> instruction to terminate the program. This
-  consumes only one byte: <code>C3</code>. This works because when a
-  .COM file starts, the register SP contains FFFE. The stack memory
+  the <code>RET</code> instruction to terminate the program.  This
+  consumes only one byte: <code>C3</code>.  This works because when a
+  .COM file starts, the register SP contains FFFE.  The stack memory
   locations at offset FFFE and FFFF contain 00 and 00, respectively.
   Further, the memory address offset 0000 contains the
-  instruction <code>INT 20</code>. Here is a demonstration of these
+  instruction <code>INT 20</code>.  Here is a demonstration of these
   facts using the debugger program:
 </p>
 <pre>
@@ -274,7 +274,7 @@ SP FFFE
 </pre>
 <p>
   As a result, executing the <code>RET</code> instruction pops 0000
-  off the stack at FFFE and loads it into IP. This results in the
+  off the stack at FFFE and loads it into IP.  This results in the
   instruction <code>INT 20</code> at offset 0000 getting executed
   which leads to program termination.
 </p>
@@ -282,17 +282,17 @@ SP FFFE
   While both <code>INT 20</code> and <code>RET</code> lead to
   successful program termination both in DOS as well as while
   debugging with <code>DEBUG.EXE</code>, there is some difference
-  between them which affects the debugging experience. Terminating the
+  between them which affects the debugging experience.  Terminating the
   program with <code>INT 20</code> allows us to run the program
   repeatedly within the debugger by repeated applications of
-  the <code>G</code> debugger command. But when we terminate the
+  the <code>G</code> debugger command.  But when we terminate the
   program with <code>RET</code>, we cannot run the program repeatedly
-  in this manner. The program runs and terminates successfully the
+  in this manner.  The program runs and terminates successfully the
   first time we run it in the debugger but the stack does not get
   reinitialized with zeros to prepare it for another execution of the
-  program within the debugger. Therefore when we try to run the
+  program within the debugger.  Therefore when we try to run the
   program the second time using the <code>G</code> command, the
-  program does not terminate successfully. It hangs instead. It is
+  program does not terminate successfully.  It hangs instead.  It is
   possible to work around this by reinitializing the stack with the
   debugger command <code>E FFFE 0 0</code> before
   running <code>G</code> again.
@@ -302,7 +302,7 @@ SP FFFE
   Although the DOS debugger is very limited in features in comparison
   with sophisticated assemblers like NASM, MASM, etc., this humble
   program can perform some of the basic operations involved in working
-  with assembly language and machine code. It can read and write
+  with assembly language and machine code.  It can read and write
   binary executable files, examine memory, execute machine
   instructions in memory, modify registers, edit binary files, etc.
   The fact that this debugger program is always available with MS-DOS

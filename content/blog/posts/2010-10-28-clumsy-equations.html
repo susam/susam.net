@@ -6,19 +6,25 @@
   At work today, while calculating optimal parameters for a data
   structure, I arrived at this equation:
 
-  \[ x e^{-x} + (1 - e^{-x}) \ln (1 - e^{-x}) = 0. \]
+  \[
+    x e^{-x} + (1 - e^{-x}) \ln (1 - e^{-x}) = 0.
+  \]
 
-  This equation is a little clumsy to deal with. Let us make this neat
-  by substituting \( e^{-x} \) with \( t. \) Now we get
+  This equation is a little clumsy to deal with.  Let us make this neat
+  by substituting \( e^{-x} \) with \( t.  \) Now we get
 
-  \[ -t \ln t + (1 - t) \ln (1 - t) = 0. \]
+  \[
+    -t \ln t + (1 - t) \ln (1 - t) = 0.
+  \]
 
   If we rearrange this equation as
 
-  \[ t \ln t = (1 - t) \ln (1 - t), \]
+  \[
+    t \ln t = (1 - t) \ln (1 - t),
+  \]
 
   it is easy to see that one of the solutions is \( t = 1 - t, \) thus
-  \( t = \frac{1}{2}. \) Are there more solutions to this equation?
+  \( t = \frac{1}{2}.  \) Are there more solutions to this equation?
   The answer turns out to be: <em>no</em>.
 </p>
 <figure class="soft">
@@ -28,30 +34,30 @@
   </figcaption>
 </figure>
 <p>
-  In this problem, \( x \) is a real number and so is \( t. \) In the
-  domain of real numbers, \( \ln t \) is undefined for \( t \le 0. \)
-  As a result, \( \ln (1 - t) \) is undefined for \( t \ge 1. \)
+  In this problem, \( x \) is a real number and so is \( t.  \) In the
+  domain of real numbers, \( \ln t \) is undefined for \( t \le 0.  \)
+  As a result, \( \ln (1 - t) \) is undefined for \( t \ge 1.  \)
   Therefore we need to look for values of \( t \) in the open interval
   \( (0, 1) \) that could be solutions to the equation.
 </p>
 <p>
   The function \( \ln t \) is a strictly increasing function for \( t
-  > 0. \) This is easy to show from the derivative of \( \ln t. \) The
-  derivative of \( \ln t \) is \( \frac{1}{t} \) which is strictly
-  positive for \( t > 0. \)
+  &gt; 0.  \) This is easy to show from the derivative of \( \ln t.
+  \) The derivative of \( \ln t \) is \( \frac{1}{t} \) which is
+  strictly positive for \( t &gt; 0.  \)
 <p>
 <p>
-  Since \( \ln t \) is a strictly increasing function for \( t > 0, \)
-  we can make the following conclusions:
+  Since \( \ln t \) is a strictly increasing function for \( t &gt; 0,
+  \) we can make the following conclusions:
 </p>
 <ul>
   <li>
-    For \( 0 < t < \frac{1}{2}, \) \( t < (1 - t) \implies
-    t \ln t < (1 - t) \ln (1 - t). \)
+    For \( 0 &lt; t &lt; \frac{1}{2}, \) \( t &lt; (1 - t) \implies
+    t \ln t &lt; (1 - t) \ln (1 - t).  \)
   </li>
   <li>
-    For \( \frac{1}{2} < t < 1, \) \( t > (1 - t) \implies
-    t \ln t > (1 - t) \ln (1 - t). \)
+    For \( \frac{1}{2} &lt; t &lt; 1, \) \( t &gt; (1 - t) \implies
+    t \ln t &gt; (1 - t) \ln (1 - t).  \)
   </li>
 </ul>
 <p>
@@ -82,18 +88,22 @@
 <p>
   Here is another equation that I had to solve a couple of years ago:
 
-  \[ \ln x - x^{0.03} = 0. \]
+  \[
+    \ln x - x^{0.03} = 0.
+  \]
 
-  There is no simple way to solve this equation. I had to resort to
+  There is no simple way to solve this equation.  I had to resort to
   using the
-  <a href="https://en.wikipedia.org/wiki/Lambert_W_function">Lambert
-  W function</a> to solve this. To use this function, we first need to
+  <a href="https://en.wikipedia.org/wiki/Lambert_W_function">Lambert W
+  function</a> to solve this.  To use this function, we first need to
   bring our equation to the form \( f(x) e^{f(x)} = Y \) where \( f(x)
   \) is a function of \( x \) and \( Y \) is an expression that does
-  not contain \( x. \) The solution of \( f(x) e^{f(x)} = Y \) is \(
-  f(x) = W(Y). \) To summarize:
+  not contain \( x.  \) The solution of \( f(x) e^{f(x)} = Y \) is \(
+  f(x) = W(Y).  \) To summarize:
 
-  \[ f(x) e^{f(x)} = Y \iff f(x) = W(Y). \]
+  \[
+    f(x) e^{f(x)} = Y \iff f(x) = W(Y).
+  \]
 
   Applying this technique to our equation, we get
 
@@ -102,19 +112,21 @@
     &amp; \iff \ln x = x^{0.03} \\
     &amp; \iff \ln x = e^{0.03 \ln x} \\
     &amp; \iff (\ln x)(e^{-0.03 \ln x}) = 1 \\
-    &amp; \iff (-0.03 \ln x)(e^{-0.03 \ln x}) = -0.03. \\
+    &amp; \iff (-0.03 \ln x)(e^{-0.03 \ln x}) = -0.03.  \\
   \end{align*}
 
   We have brought the equation to the desired \( f(x) e^{f(x)} = Y \)
-  form where \( f(x) = -0.03 \ln x \) and \( Y = -0.03. \) Therefore
+  form where \( f(x) = -0.03 \ln x \) and \( Y = -0.03.  \) Therefore
   the solution to this equation is
 
-  \[ -0.03 \ln x = W(-0.03). \]
+  \[
+    -0.03 \ln x = W(-0.03).
+  \]
 
   Simplifying this further, we get
 
   \[
-  x = e^{\frac{W(-0.03)}{-0.03}}.
+    x = e^{\frac{W(-0.03)}{-0.03}}.
   \]
 
   The Maclaurin series of \( W(x) \) is given by
@@ -128,7 +140,9 @@
 
   Using the Maclaurin series of \( W(x), \) we get
 
-  \[ W(-0.03) \approx -0.0309428. \]
+  \[
+    W(-0.03) \approx -0.0309428.
+  \]
 
   Therefore
 

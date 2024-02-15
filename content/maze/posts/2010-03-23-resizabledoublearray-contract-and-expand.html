@@ -37,7 +37,7 @@
 +        System.out.println(":::: numElements incremented to: " +
 +                           numElements);
 +
-         if ((startIndex + numElements) > internalArray.length) {
+         if ((startIndex + numElements) &gt; internalArray.length) {
 +            System.out.println(":::: expanding ...");
              expand();
 +            System.out.println(":::: expanded; internalArray.length: " +
@@ -45,7 +45,7 @@
          }
          internalArray[startIndex + (numElements - 1)] = value;
 +        System.out.print(":::: internalArray: ");
-+        for (int i = 0; i < startIndex + numElements; i++) {
++        for (int i = 0; i &lt; startIndex + numElements; i++) {
 +            System.out.print(internalArray[i] + ", ");
 +        }
 +        System.out.println();
@@ -71,7 +71,7 @@ public class RDAContractExpand
     public static void main(String[] args)
     {
         ResizableDoubleArray rda = new ResizableDoubleArray(10);
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i &lt; 10; i++)
             rda.addElement(i);
     }
 }</code>

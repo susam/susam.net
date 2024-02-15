@@ -4,7 +4,7 @@
   As an alternative, use <kbd>ctrl</kbd>+<kbd>f</kbd> for
   "forward-inc-search"; it's easier to remember (mnemonic) and means
   you can still use <kbd>ctrl</kbd>+<kbd>s</kbd>
-  or <kbd>ctrl</kbd>+<kbd>q</kbd> for flow control as normal. For
+  or <kbd>ctrl</kbd>+<kbd>q</kbd> for flow control as normal.  For
   example, in Bash:
 </p>
 <pre><code>bind '"\C-f": forward-search-history'</code></pre>
@@ -71,8 +71,8 @@ echo test ^s incremental search during readline:
 <!-- name: Susam Pal -->
 <!-- url: https://susam.net/ -->
 <p>
-  Thank you, Peter, for your comments. It took a few changes to get
-  your Bash script to work properly in my shell. Since I do not
+  Thank you, Peter, for your comments.  It took a few changes to get
+  your Bash script to work properly in my shell.  Since I do not
   have <code>PROMPT_COMMAND</code> set in my shell, the evaluation of
   the following prompt command
 </p>
@@ -86,7 +86,7 @@ bash: PROMPT_COMMAND: line 0: `; : _IXONOFF'</samp>
 </pre>
 <p>
   Here is how I modified your script to check
-  if <code>PROMPT_COMMAND</code> is set before expanding it. If it is
+  if <code>PROMPT_COMMAND</code> is set before expanding it.  If it is
   not set we use the null command <code>:</code> before the semicolon
   separator.
 </p>
@@ -114,7 +114,7 @@ trap _TRAP_DEBUG DEBUG</code>
 <!-- date: 2023-01-14 23:30:01 +0000 -->
 <!-- name: KDK -->
 <p>
-  This was a very interesting read! I have personally solved this by
+  This was a very interesting read!  I have personally solved this by
   using fuzzy finder, which gives a menu/search box with a selection
   instead of the simplistic string matching
   of <kbd>ctrl</kbd>+<kbd>r</kbd>.
@@ -127,16 +127,16 @@ trap _TRAP_DEBUG DEBUG</code>
 </p>
 <p>
   The XON/XOFF feature actually seems quite useful for terminals
-  without scrollback. Or for when you don't have a mouse. Hopefully
-  I'll remember it. Thank you very much for your article!
+  without scrollback.  Or for when you don't have a mouse.  Hopefully
+  I'll remember it.  Thank you very much for your article!
 </p>
 <!-- date: 2023-05-08 00:34:28 +0000 -->
 <!-- name: Orev -->
 <!-- source: https://news.ycombinator.com/item?id=35856902 -->
 <p>
   This is a great explanation, especially the part describing how
-  control codes are mapped to their corresponding letters. I always
+  control codes are mapped to their corresponding letters.  I always
   felt there was probably some logic to it, but the idea never fully
-  materialized into something I thought to investigate. Learning about
-  how to disable XON/OFF is more like a bonus.
+  materialized into something I thought to investigate.  Learning
+  about how to disable XON/OFF is more like a bonus.
 </p>

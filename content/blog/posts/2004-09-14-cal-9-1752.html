@@ -2,7 +2,7 @@
 <!-- tag: Unix Technology -->
 <p>
   A very interesting thing I came across recently while learning Unix
-  is an apparent gap in the calendar for Sep 1752. Here is how
+  is an apparent gap in the calendar for Sep 1752.  Here is how
   the <code>cal</code> output for this month appears on a Unix or
   Linux system:
 </p>
@@ -21,9 +21,9 @@ Su Mo Tu We Th Fr Sa
 </p>
 <!-- SunOS 5.9 was released on 28 May 2002 -->
 <blockquote>
-  An unusual calendar is printed for September 1752. That is the month
-  11 days were skipped to make up for lack of leap year adjustments.
-  To see this calendar, type: <code>cal 9 1752</code>
+  An unusual calendar is printed for September 1752.  That is the
+  month 11 days were skipped to make up for lack of leap year
+  adjustments.  To see this calendar, type: <code>cal 9 1752</code>
 </blockquote>
 <p>
   Similarly, FreeBSD 5.0 has the following note in its manual page
@@ -36,7 +36,7 @@ Su Mo Tu We Th Fr Sa
   </p>
   <p style="margin-left: 2em">
     Assume the switch from Julian to Gregorian Calendar at the date
-    associated with the <em>country_code</em>. If not
+    associated with the <em>country_code</em>.  If not
     specified, <strong>ncal</strong> tries to guess the switch date
     from the local environment or falls back to September 2, 1752.
     This was when Great Britain and her colonies switched to the
@@ -47,19 +47,19 @@ Su Mo Tu We Th Fr Sa
   On investigating this switch from Julian to Gregorian calendar, I
   learnt that the Julian calendar was introduced by Julius Caesar in
   46 BC and it remained in effect across most of the Western world
-  from 45 BC to 1582. It assumed an average year to be 365.25 days
-  long. However, the actual solar year has been known to be around
-  365.2422 days since the 17th century. Although the difference
+  from 45 BC to 1582.  It assumed an average year to be 365.25 days
+  long.  However, the actual solar year has been known to be around
+  365.2422 days since the 17th century.  Although the difference
   appears to be too small, it leads to an error of adding 1 extra day
-  every 128 years. To reduce this error, the Gregorian calendar was
-  introduced in October 1582 by Pope Gregory XIII. It assumed an
+  every 128 years.  To reduce this error, the Gregorian calendar was
+  introduced in October 1582 by Pope Gregory XIII.  It assumed an
   average year to be 365.2425 days long.
 </p>
 <p>
   The new calendar was adopted in some European countries where 4 Oct
   1582 was followed by 15 Oct 1582 thereby skipping 10 days in
-  between. However, it took as long as September 1752 for the new
-  calendar to be adopted by Britain. In Great Britain and the British
+  between.  However, it took as long as September 1752 for the new
+  calendar to be adopted by Britain.  In Great Britain and the British
   Empire, 2 Sep 1752 was followed by 14 Sep 1752 and that is the gap
   of 11 days we see in the <code>cal 9 1752</code> output.
 </p>

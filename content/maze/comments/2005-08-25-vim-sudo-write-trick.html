@@ -1,21 +1,21 @@
 <!-- date: 2021-05-08 15:27:28 +0000 -->
-<!-- name: Mr. Long Long -->
+<!-- name: Long Long -->
 <!-- source: https://news.ycombinator.com/item?id=27087983 -->
 <p>
-  Wonderful! I could have done with this trick the number of times
-  I've been caught out with this one. Noted with thanks.
+  Wonderful!  I could have done with this trick the number of times
+  I've been caught out with this one.  Noted with thanks.
 </p>
 <!-- date: 2021-10-30 16:58:05 +0000 -->
 <!-- name: CRMD -->
 <!-- source: https://news.ycombinator.com/item?id=29050281 -->
 <p>
-  20+ years of using Unix and vi, and still learning tricks. Love it!
+  20+ years of using Unix and vi, and still learning tricks.  Love it!
 </p>
 <!-- date: 2021-10-30 20:06:53 +0000 -->
 <!-- name: LP -->
 <p>
-  The quotes around the percent sign are unnecessary. The
-    command <code>:w ! sudo tee %</code> works just fine. I use it
+  The quotes around the percent sign are unnecessary.  The
+    command <code>:w !sudo tee %</code> works just fine.  I use it
     everytime!
 </p>
 <!-- date: 2021-10-30 23:00:37 +0000 -->
@@ -27,7 +27,7 @@
 <p>
   Like I explained in my blog post, the quotes around the percent sign
   are necessary to keep the filename as a single argument when the
-  filename contains whitespace. If there is no whitespace in the
+  filename contains whitespace.  If there is no whitespace in the
   filename, then the quotes are not necessary.
 </p>
 <p>
@@ -61,7 +61,7 @@ vim "foo bar.txt"</code></pre>
     </p>
     <pre><code>cat "foo bar.txt"</code></pre>
     <p>
-      The file still appears empty. Nothing was saved to this file.
+      The file still appears empty.  Nothing was saved to this file.
     </p>
   </li>
   <li>
@@ -97,7 +97,7 @@ cat bar.txt</code></pre>
 <!-- name: RGovostes -->
 <!-- source: https://news.ycombinator.com/item?id=29053852 -->
 <p>
-  I have often wished there were something equivalent for nano. Of
+  I have often wished there were something equivalent for nano.  Of
   course you can just save to another file and <code>sudo mv</code> it
   into place.
 </p>
@@ -111,7 +111,7 @@ read -p "Path: " FILENAME
 cat "$1" | sudo tee "$FILENAME"</code>
 </pre>
 <p>
-  and then invoke it with <code>^T</code> from nano. Bonus points:
+  and then invoke it with <code>^T</code> from nano.  Bonus points:
   Extract the destination filename automatically from <code>ps -p
   $PPID -o command=</code> (somewhat portable) or
   from <code>/proc</code> (Linux).
@@ -121,7 +121,7 @@ cat "$1" | sudo tee "$FILENAME"</code>
 <!-- url: https://susam.net/ -->
 <p>
   RGovostes, Thanks for the interesting idea to make this trick work
-  with nano. Based on your comment, I wrote this script to
+  with nano.  Based on your comment, I wrote this script to
   automatically detect the destination filename when invoked
   with <code>^T</code> from nano.
 </p>
@@ -132,12 +132,12 @@ COMMAND=$(ps -p $PPID -o args=)
 FILENAME=${COMMAND#*nano }
 printf "Write to $FILENAME? (y/n) "
 read ANSWER
-[ "$ANSWER" = y ] && sudo tee "$FILENAME" < "$1" > /dev/null</code>
+[ "$ANSWER" = y ] &amp;&amp; sudo tee "$FILENAME" &lt; "$1" &gt; /dev/null</code>
 </pre>
 <p>
-  After saving this file to,
-  say, <code>/usr/local/bin/sudowrite</code>, it can be set up for
-  usage like this:
+  After saving this file to, say,
+  <code>/usr/local/bin/sudowrite</code>, it can be set up for usage
+  like this:
 </p>
 <pre>
 <code>sudo chmod u+x /usr/local/bin/sudowrite
@@ -151,9 +151,9 @@ export SPELL=/usr/local/bin/sudowrite</code>
 nano foo.txt</code>
 </pre>
 <p>
-  Now write some text and try to save it by
-  typing <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>o</kbd> followed
-  by <kbd>enter</kbd>. The following error should appear:
+  Now write some text and try to save it by typing
+  <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>o</kbd> followed
+  by <kbd>enter</kbd>.  The following error should appear:
 </p>
 <pre><samp>[ Error writing foo.txt: Permission denied ]</samp></pre>
 <p>
@@ -166,9 +166,9 @@ nano foo.txt</code>
 <!-- url: https://github.com/kevincox -->
 <!-- source: https://lobste.rs/s/ozidc1/#c_lipzyk -->
 <p>
-  I just
-  use <a href="https://github.com/tpope/vim-eunuch">vim-eunuch</a>
-  which includes a <code>:SudoWrite</code> in its list of goodies.
+  I just use
+  <a href="https://github.com/tpope/vim-eunuch">vim-eunuch</a> which
+  includes a <code>:SudoWrite</code> in its list of goodies.
 </p>
 <p>
   Everything in the plugin is pretty easy to live without but in my
@@ -179,20 +179,16 @@ nano foo.txt</code>
 <p>
   I have got this in my ~/.vimrc now:
 </p>
-<pre><code>command W w !sudo tee "%" > /dev/null</code></pre>
+<pre><code>command W w !sudo tee "%" &gt; /dev/null</code></pre>
 <!-- date: 2021-12-11 18:35:16 +0000 -->
 <!-- name: Mario -->
 <p>
-  This is a nice tip! I ended up adding this to my ~/.vimrc:
+  This is a nice tip!  I ended up adding this to my ~/.vimrc:
 </p>
-<pre>
-<code>command W execute 'silent write !sudo tee "%" > /dev/null' | edit!</code>
-</pre>
+<pre><code>command W execute 'silent write !sudo tee "%" &gt; /dev/null' | edit!</code></pre>
 <!-- date: 2021-12-12 21:18:58 +0000 -->
 <!-- name: Toby -->
 <p>
-  Thanks for the tip! Adding this to my Vim configuration:
+  Thanks for the tip!  Adding this to my Vim configuration:
 </p>
-<pre>
-<code>com W exe 'sil w !sudo tee "%" > /dev/null' | e!</code>
-</pre>
+<pre><code>com W exe 'sil w !sudo tee "%" &gt; /dev/null' | e!</code></pre>

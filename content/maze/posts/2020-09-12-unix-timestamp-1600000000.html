@@ -4,13 +4,11 @@
   At 2020-09-13 12:26:40 UTC, the Unix timestamp is going to turn
   1600000000.
 </p>
-
 <h2 id="unix-timestamp-conversion">Unix Timestamp Conversion</h2>
 <p>
   The following subsections show a few examples of converting the Unix
   timestamp to a human-readable date.
 </p>
-
 <h3 id="python">Python</h3>
 <pre>
 <samp>$ <kbd>python3 -q</kbd>
@@ -18,22 +16,19 @@
 >>> <kbd>datetime.utcfromtimestamp(1_600_000_000)</kbd>
 datetime.datetime(2020, 9, 13, 12, 26, 40)</samp>
 </pre>
-
 <h3 id="gnu-date">GNU date (Linux)</h3>
 <pre>
 <samp>$ <kbd>date -ud @1600000000</kbd>
 Sun Sep 13 12:26:40 UTC 2020</samp>
 </pre>
-
 <h3 id="bsd-date">BSD date (macOS, FreeBSD, OpenBSD, etc.)</h3>
 <pre>
 <samp>$ <kbd>date -ur 1600000000</kbd>
 Sun Sep 13 12:26:40 UTC 2020</samp>
 </pre>
-
 <h2 id="other-such-dates">Other Such Dates</h2>
 <p>
-All such dates (in UTC) until the end of the current century:
+  All such dates (in UTC) until the end of the current century:
 </p>
 <pre>
 <samp>$ <kbd>python3 -q</kbd>
@@ -91,7 +86,7 @@ All such dates (in UTC) until the end of the current century:
   <a href="https://twitter.com/susam/status/1305120936098627589">twitter.com/susam/status/130512093609862758</a>.
 </p>
 <p>
-Reproduced as text below:
+  Reproduced as text below:
 </p>
 <pre>
 <samp>$ <kbd>date -u; date; date +%s</kbd>
@@ -104,16 +99,16 @@ Sun Sep 13 17:56:40 IST 2020
 1600000000</samp>
 </pre>
 <p>
-An important point worth noting from the POSIX.1-2008 specification:
+  An important point worth noting from the POSIX.1-2008 specification:
 </p>
 <blockquote>
-Coordinated Universal Time (UTC) includes leap seconds. However, in
-POSIX time (seconds since the Epoch), leap seconds are ignored (not
-applied) to provide an easy and compatible method of computing time
-differences. Broken-down POSIX time is therefore not necessarily UTC,
-despite its appearance.
+  Coordinated Universal Time (UTC) includes leap seconds.  However, in
+  POSIX time (seconds since the Epoch), leap seconds are ignored (not
+  applied) to provide an easy and compatible method of computing time
+  differences.  Broken-down POSIX time is therefore not necessarily
+  UTC, despite its appearance.
 </blockquote>
 <p>
-See <a href="https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xbd_chap04.html#tag_21_04_16">&sect;
-A.4.16</a> of the POSIX.1-2008 specification for more details.
+  See <a href="https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xbd_chap04.html#tag_21_04_16">&sect; A.4.16</a>
+  of the POSIX.1-2008 specification for more details.
 </p>

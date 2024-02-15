@@ -3,53 +3,44 @@
 <!-- import: math.inc -->
 <!-- unlist: yes -->
 <h2 id="approximation-problem">Approximation Problem</h2>
-
 <p>
-Auto rickshaw fare in Bangalore was revised on Fri, 20 Dec 2013. The old
-rate for an auto rickshaw ride was a minimum of 20 rupees for the first
-1.8 km and 11 rupees per km thereafter. The new rate is a minimum of 25
-rupees for the first 1.9 km and 13 rupees per km thereafter.
+  Auto rickshaw fare in Bangalore was revised on Fri, 20 Dec 2013.
+  The old rate for an auto rickshaw ride was a minimum of 20 rupees
+  for the first 1.8 km and 11 rupees per km thereafter.  The new rate
+  is a minimum of 25 rupees for the first 1.9 km and 13 rupees per km
+  thereafter.
 </p>
-
 <p>
-It usually takes a few months for auto rickshaw drivers to upgrade their
-meters to display the fare as per the revised rate, so the old meters
-still display the fare as per the old rate. The auto rickshaw drivers
-carry printed conversion charts to look up the fare displayed on an old
-meter and convert it to the actual fare to be paid as per the new rate.
+  It usually takes a few months for auto rickshaw drivers to upgrade
+  their meters to display the fare as per the revised rate, so the old
+  meters still display the fare as per the old rate.  The auto
+  rickshaw drivers carry printed conversion charts to look up the fare
+  displayed on an old meter and convert it to the actual fare to be
+  paid as per the new rate.
 </p>
-
 <p>
-If an old meter displays the minimum fare of 20 rupees, we know that the
-actual fare to be paid is 25 rupees, the minimum as per the new fare
-rate. We will not discuss this case of minimum fare again in this post
-because this conversion is trivial and straightforward.
+  If an old meter displays the minimum fare of 20 rupees, we know that
+  the actual fare to be paid is 25 rupees, the minimum as per the new
+  fare rate.  We will not discuss this case of minimum fare again in
+  this post because this conversion is trivial and straightforward.
 </p>
-
 <p>
-In the remaining post, we will now only consider the case where the fare
-displayed on the old meter is more than the minimum fare, i.e., when
-more than 1.8 km has been travelled. Is there a convenient way to
-quickly and mentally convert it to an approximation of the actual fare
-to be paid as per the new rate?
+  In the remaining post, we will now only consider the case where the
+  fare displayed on the old meter is more than the minimum fare, i.e.,
+  when more than 1.8 km has been travelled.  Is there a convenient way
+  to quickly and mentally convert it to an approximation of the actual
+  fare to be paid as per the new rate?
 </p>
-
 <p>
-<em>
-If you want to think about this problem, this is a good time to pause
-and think about it. There are spoilers ahead.
-</em>
+  <em>If you want to think about this problem, this is a good time to
+  pause and think about it.  There are spoilers ahead.</em>
 </p>
-
-
 <h2 id="quick-approximation">Quick Approximation</h2>
-
 <p>
-Assuming an old meter displays a fare that exceeds the minimum fare of
-20 rupees, here is a quick three-step method I arrived at to get an
-approximation of the actual fare as per the new rate:
+  Assuming an old meter displays a fare that exceeds the minimum fare
+  of 20 rupees, here is a quick three-step method I arrived at to get
+  an approximation of the actual fare as per the new rate:
 </p>
-
 <ol>
   <li>
     Remove the units digit and the decimal digits from the fare
@@ -62,137 +53,116 @@ approximation of the actual fare as per the new rate:
     Add the previous result to the fare displayed in the meter.
   </li>
 </ol>
-
-
 <h2 id="example">Example</h2>
-
 <p>
-Let us do an example to see how accurately our three-step method can
-determine the actual fare. Let us assume that we travelled 8.3 km and
-the fare displayed on the old meter is 91.50 rupees.
+  Let us do an example to see how accurately our three-step method can
+  determine the actual fare.  Let us assume that we travelled 8.3 km
+  and the fare displayed on the old meter is 91.50 rupees.
 </p>
-
 <ol>
-  <li>Remove the units and decimal digits. We get 9.</li>
-  <li>Double 9. We get 18.</li>
-  <li>Add 18 to 91.50. We get 109.50.</li>
+  <li>Remove the units and decimal digits.  We get 9.</li>
+  <li>Double 9.  We get 18.</li>
+  <li>Add 18 to 91.50.  We get 109.50.</li>
 </ol>
-
 <p>
-The actual fare for 8.3 km as per the new rate is 108.20 rupees. Our
-three-step method overestimated the actual fare by 1.30 rupees only.
+  The actual fare for 8.3 km as per the new rate is 108.20 rupees.
+  Our three-step method overestimated the actual fare by 1.30 rupees
+  only.
 </p>
-
 <p>
-In fact, for any distance within 15 km, this three-step method may
-underestimate or overestimate the actual fare by a maximum of 2.70
-rupees only. That's a pretty good approximation.
+  In fact, for any distance within 15 km, this three-step method may
+  underestimate or overestimate the actual fare by a maximum of 2.70
+  rupees only.  That's a pretty good approximation.
 </p>
-
 <p>
-If you were looking only for a quick method to get an approximation of
-the actual fare as per the new rate, this is all you need to know. You
-may skip the remaining post unless you want to know why this method
-works.
+  If you were looking only for a quick method to get an approximation
+  of the actual fare as per the new rate, this is all you need to
+  know.  You may skip the remaining post unless you want to know why
+  this method works.
 </p>
-
-
 <h2 id="exact-conversion-formula">Exact Conversion Formula</h2>
-
 <p>
-Before we try to understand why the above three-step method works, let
-us obtain a conversion formula that would convert the fare displayed in
-an old meter to the exact actual fare to be paid.
+  Before we try to understand why the above three-step method works,
+  let us obtain a conversion formula that would convert the fare
+  displayed in an old meter to the exact actual fare to be paid.
 </p>
-
 <p>
-If we take a ride for \( d \) km, the fare displayed on an old meter is
-\( 20 + 11 (d - 1.8) \) rupees. But the actual fare to be paid as per
-the new rate is \( 25 + 13 (d - 1.9) \) rupees.
+  If we take a ride for \( d \) km, the fare displayed on an old meter
+  is \( 20 + 11 (d - 1.8) \) rupees.  But the actual fare to be paid
+  as per the new rate is \( 25 + 13 (d - 1.9) \) rupees.
 </p>
-
 <p>
-From the above formulae, we can see that if the fare displayed on an old
-meter is \( x \) rupees, then we have travelled \( \frac{x - 0.2}{11} \)
-km. Thus the actual fare as per the new rate is \( 25 + 13 \left(
-\frac{x - 0.2}{11} - 1.9 \right) \) rupees = \( \frac{13x + 0.7}{11} \)
-rupees.
+  From the above formulae, we can see that if the fare displayed on an
+  old meter is \( x \) rupees, then we have travelled \( \frac{x -
+  0.2}{11} \) km.  Thus the actual fare as per the new rate is \( 25 +
+  13 \left( \frac{x - 0.2}{11} - 1.9 \right) \) rupees = \( \frac{13x
+  + 0.7}{11} \) rupees.
 </p>
-
 <p>
-We have obtained at an exact conversion formula of \( y = \frac{13x +
-0.7}{11} \) where \( x \) is the fare displayed on an old meter and \( y
-\) is the actual fare to be paid as per the new rate.
+  We have obtained at an exact conversion formula of \( y = \frac{13x
+  + 0.7}{11} \) where \( x \) is the fare displayed on an old meter
+  and \( y \) is the actual fare to be paid as per the new rate.
 </p>
-
-
 <h2 id="approximate-conversion-formula">Approximate Conversion Formula</h2>
-
 <p>
-In this section, we will see why the three-step method works. First, we
-arrive at a formula that is equivalent to the three-step method. The
-three steps convert a displayed fare of \( x \) to an approximation of
-actual fare \( \left\lfloor \frac{x}{10} \right\rfloor \cdot 2 + x \) as
-follows:
+  In this section, we will see why the three-step method works.
+  First, we arrive at a formula that is equivalent to the three-step
+  method.  The three steps convert a displayed fare of \( x \) to an
+  approximation of actual fare \( \left\lfloor \frac{x}{10}
+  \right\rfloor \cdot 2 + x \) as follows:
 </p>
-
 <ol>
   <li>
     Removing the units and decimal digits of \( x \) gives us
-    \( \left\lfloor \frac{x}{10} \right\rfloor. \)
+    \( \left\lfloor \frac{x}{10} \right\rfloor.  \)
   </li>
   <li>
     Doubling the previous result gives us
-    \( \left\lfloor\frac{x}{10} \right\rfloor \cdot 2. \)
+    \( \left\lfloor\frac{x}{10} \right\rfloor \cdot 2.  \)
   </li>
   <li>
     Adding it to \( x \) gives us \(
-    \left\lfloor \frac{x}{10} \right\rfloor \cdot 2 + x. \)
+    \left\lfloor \frac{x}{10} \right\rfloor \cdot 2 + x.  \)
   </li>
 </ol>
-
 <p>
-We have obtained an approximate conversion formula of \(
-\overset{\approx}{y} = \left\lfloor \frac{x}{10} \right\rfloor \cdot 2 +
-x \) where \( x \) is the fare displayed on an old meter and \(
-\overset{\approx}{y} \) is an approximation of the actual fare to be
-paid as per the new rate.
+  We have obtained an approximate conversion formula of \(
+  \overset{\approx}{y} = \left\lfloor \frac{x}{10} \right\rfloor \cdot
+  2 + x \) where \( x \) is the fare displayed on an old meter and \(
+  \overset{\approx}{y} \) is an approximation of the actual fare to be
+  paid as per the new rate.
 </p>
-
 <p>
-Is \( \overset{\approx}{y} \) really a good approximation for \( y? \)
-Yes, it is, as shown below:
+  Is \( \overset{\approx}{y} \) really a good approximation for \( y?
+  \) Yes, it is, as shown below:
 
-\begin{align*}
-y & =       \frac{13x + 0.7}{11} \\
-  & =       x + \frac{2x}{11} + \frac{0.7}{11} \\
-  & \approx x + \frac{2x}{10} \\
-  & \approx x + 2 \left\lfloor \frac{x}{10} \right\rfloor = \overset{\approx}{y}.
-\end{align*}
+  \begin{align*}
+    y
+    &amp; =       \frac{13x + 0.7}{11} \\
+    &amp; =       x + \frac{2x}{11} + \frac{0.7}{11} \\
+    &amp; \approx x + \frac{2x}{10} \\
+    &amp; \approx x + 2 \left\lfloor \frac{x}{10} \right\rfloor = \overset{\approx}{y}.
+  \end{align*}
 </p>
-
-
 <h2 id="approximation-error">Approximation Error</h2>
-
 <p>
-We have seen so far that the three-step method works and it provides a
-good estimate of the actual fare as per the new rate. However, since
-this is an approximation, the estimated fare has some error due to which
-it does not match the actual fare to be paid exactly. In this section,
-we will see how much that error is. It turns out the error is not too
-bad, so the three-step method can be used to quickly get a ballpark
-figure for the actual fare as per the revised fare rate.
+  We have seen so far that the three-step method works and it provides
+  a good estimate of the actual fare as per the new rate.  However,
+  since this is an approximation, the estimated fare has some error
+  due to which it does not match the actual fare to be paid exactly.
+  In this section, we will see how much that error is.  It turns out
+  the error is not too bad, so the three-step method can be used to
+  quickly get a ballpark figure for the actual fare as per the revised
+  fare rate.
 </p>
-
 <p>
-The Python 3 code below shows for every 100 metres of ride, the
-displayed fare (<code>meter</code>) on an old meter, the actual fare
-(<code>actual</code>) as per the new rate, the approximate fare
-(<code>approx</code>) computed with the three-step method, and the
-difference (<code>error</code>) between the actual fare and approximate
-fare:
+  The Python 3 code below shows for every 100 metres of ride, the
+  displayed fare (<code>meter</code>) on an old meter, the actual fare
+  (<code>actual</code>) as per the new rate, the approximate fare
+  (<code>approx</code>) computed with the three-step method, and the
+  difference (<code>error</code>) between the actual fare and
+  approximate fare:
 </p>
-
 <pre>
 <code>print('  km   meter  actual  approx  error')
 
@@ -209,10 +179,10 @@ while km &lt; 30.01:
 
     km += 0.1</code>
 </pre>
-
-The output of the above program is provided below. Scroll down to see
-the complete output.
-
+<p>
+  The output of the above program is provided below.  Scroll down to
+  see the complete output.
+</p>
 <pre style="max-height: 15em">
 <samp>  km   meter  actual  approx  error
  1.9   21.10   25.00   25.10   0.10
@@ -498,12 +468,11 @@ the complete output.
 29.9  329.10  389.00  393.10   4.10
 30.0  330.20  390.30  396.20   5.90</samp>
 </pre>
-
 <p>
-The error does not exceed 2.70 rupees for the first 15 km and 5.90
-rupees for the first 30 km. We can say that the three-step method
-discussed in this post provides a pretty good approximation for the
-actual fare as per the new rate. Therefore, the three-step method can be
-used as a quick sanity check to confirm that the actual fare demanded by
-the auto rickshaw driver is close to what it should be.
+  The error does not exceed 2.70 rupees for the first 15 km and 5.90
+  rupees for the first 30 km.  We can say that the three-step method
+  discussed in this post provides a pretty good approximation for the
+  actual fare as per the new rate.  Therefore, the three-step method
+  can be used as a quick sanity check to confirm that the actual fare
+  demanded by the auto rickshaw driver is close to what it should be.
 </p>

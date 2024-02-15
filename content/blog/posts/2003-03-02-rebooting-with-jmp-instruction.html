@@ -3,7 +3,7 @@
 <p>
   While learning about x86 microprocessors, I realized that it is
   possible to reboot a computer running MS-DOS or Windows 98 by
-  jumping to the memory address FFFF:0000. Here is an
+  jumping to the memory address FFFF:0000.  Here is an
   example <code>DEBUG.EXE</code> session from MS-DOS 6.22:
 </p>
 <pre>
@@ -18,8 +18,8 @@
 </p>
 <p>
   When the computer boots, the x86 microprocessor starts in real mode
-  and executes the instruction at FFFF:0000. This is an address in the
-  BIOS ROM that contains a far jump instruction to go to another
+  and executes the instruction at FFFF:0000.  This is an address in
+  the BIOS ROM that contains a far jump instruction to go to another
   address, typically F000:E05B.
 </p>
 <pre>
@@ -30,16 +30,16 @@ FFFF:0000 EA5BE000F0    JMP     F000:E05B</samp>
 <p>
   The address F000:E05B contains the BIOS start-up program which
   performs a power-on self-test (POST), initializes the peripheral
-  devices, loads the boot sector code, and executes it. These
+  devices, loads the boot sector code, and executes it.  These
   operations complete the booting sequence.
 </p>
 <p>
   The important point worth noting here is that the very first
   instruction the microprocessor executes after booting is the
-  instruction at FFFF:0000. We can use this fact to create a tiny
-  executable program that can be used to reboot the computer. Of
+  instruction at FFFF:0000.  We can use this fact to create a tiny
+  executable program that can be used to reboot the computer.  Of
   course, we can always perform a soft reboot using the key
-  sequence <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>. However,
+  sequence <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>.  However,
   just for fun, let us create a program to reboot the computer with
   a <code>JMP FFFF:0000</code> instruction.
 </p>
@@ -65,9 +65,9 @@ C:\&gt;</samp>
 </pre>
 <p>
   Note that the <code>N</code> (name) command specifies the name of
-  the file where we write the binary machine code to. Also, note that
+  the file where we write the binary machine code to.  Also, note that
   the <code>W</code> (write) command expects the registers BX and CX
-  to contain the number of bytes to be written to the file. When the
+  to contain the number of bytes to be written to the file.  When the
   DOS debugger starts, it already initializes BX to 0 automatically,
   so we only set the register CX to 5 with the <code>R CX</code>
   command above.
@@ -80,9 +80,9 @@ C:\&gt;</samp>
 <p>
   In the previous section, we saw how we can start
   <code>DEBUG.EXE</code> and type the debugger commands and the
-  assembly language instruction to jump to FFFF:0000. We can also keep
+  assembly language instruction to jump to FFFF:0000.  We can also keep
   these debugger inputs in a separate text file and feed that to the
-  debugger. Here is how the content of such a text file would look:
+  debugger.  Here is how the content of such a text file would look:
 </p>
 <pre>
 <code>A
@@ -97,11 +97,11 @@ Q</code>
 <p>
   If the above input is saved in a file, say, <code>REBOOT.TXT</code>,
   then we can run the DOS command <code>DEBUG &lt; REBOOT.TXT</code>
-  to assemble the program and create the binary executable file. The
+  to assemble the program and create the binary executable file.  The
   following DOS session example shows how this command behaves:
 </p>
 <pre>
-<samp>C:\&gt;<kbd>DEBUG < REBOOT.TXT</kbd>
+<samp>C:\&gt;<kbd>DEBUG &lt; REBOOT.TXT</kbd>
 -A
 1165:0100 JMP FFFF:0000
 1165:0105

@@ -17,21 +17,21 @@
 </pre>
 <p>
   The output above was obtained on a Debian GNU/Linux 11.2 (bullseye)
-  system. The above loop sends multiple ICMP echo requests with
+  system.  The above loop sends multiple ICMP echo requests with
   different Time to Live (TTL) values to reach the host
-  for <code>example.com</code>. The TTL occurs as an 8-bit field in
-  the Internet Protocol (IP) header of each packet. It is the 9th
+  for <code>example.com</code>.  The TTL occurs as an 8-bit field in
+  the Internet Protocol (IP) header of each packet.  It is the 9th
   octet in an IPv4 header and the 8th octet in an IPv6 header.
 </p>
 <p>
   When a router on the path to the destination receives a packet, it
-  decrements the TTL value in the IP header by one. If the TTL value
+  decrements the TTL value in the IP header by one.  If the TTL value
   becomes 0 after the decrement operation, the router responds with a
-  "time-to-live exceeded" ICMP message. Thus an echo request with TTL
+  "time-to-live exceeded" ICMP message.  Thus an echo request with TTL
   value set to 1 gets us an ICMP "time-to-live exceeded" message from
   the first router in the path, the next echo request with TTL value 2
   gets us a similar ICMP message from the second router in the path,
-  and so on. The traceroute is complete when we receive a successful
+  and so on.  The traceroute is complete when we receive a successful
   ICMP echo reply.
 </p>
 <p>
@@ -52,17 +52,17 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
  9  93.184.216.34 (93.184.216.34)  70.827 ms  62.896 ms  73.342 ms</samp>
 </pre>
 <p>
-  Each line in the output above corresponds to a hop. Each line shows
-  one or more addresses. A maximum of three addresses can be seen in
-  the result for each hop. That is because there are multiple paths to
-  the destination and the <code>traceroute</code> command sends 3 UDP
-  probe packets by default for each hop. In this manner, it ends up
-  discovering multiple routes to the destination. It is worth noting
-  here that by default <code>traceroute</code> sends UDP packets, not
-  ICMP echo requests, with different TTL values as probe packets. But
-  the route discovery mechanism remains the same. After sending each
-  probe packet, it waits for ICMP "time-to-live exceeded messages"
-  from the routers that fall in the path to the destination.
+  Each line in the output above corresponds to a hop.  Each line shows
+  one or more addresses.  A maximum of three addresses can be seen in
+  the result for each hop.  That is because there are multiple paths
+  to the destination and the <code>traceroute</code> command sends 3
+  UDP probe packets by default for each hop.  In this manner, it ends
+  up discovering multiple routes to the destination.  It is worth
+  noting here that by default <code>traceroute</code> sends UDP
+  packets, not ICMP echo requests, with different TTL values as probe
+  packets.  But the route discovery mechanism remains the same.  After
+  sending each probe packet, it waits for ICMP "time-to-live exceeded
+  messages" from the routers that fall in the path to the destination.
 </p>
 <p>
   By comparing the two outputs above, we can see that the route found
@@ -80,6 +80,6 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
   On macOS, the <code>-t</code> option of the <code>ping</code>
   command specifies a timeout (not IP TTL) that prevents it from
   waiting for too long for a successful echo reply which we don't
-  expect to receive. Further, on macOS, the <code>-m</code> option of
+  expect to receive.  Further, on macOS, the <code>-m</code> option of
   the <code>ping</code> command specifies the IP TTL.
 </p>

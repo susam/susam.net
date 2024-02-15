@@ -18,8 +18,8 @@ True</samp>
 </pre>
 <p>
   The output shows that <code>a[0]</code> refers to <code>a</code>
-  itself which makes it a self-referential list. Why does this simple
-  code create a self-referential list? Should it not have failed
+  itself which makes it a self-referential list.  Why does this simple
+  code create a self-referential list?  Should it not have failed
   with <code>NameError</code> because <code>a</code> is not yet
   defined while assigning the list <code>[0]</code>
   to <code>a[0]</code>?
@@ -43,7 +43,8 @@ True</samp>
 </pre>
 <p>
    Note that <code>0</code> is used as a dictionary key in the above
-  example. Here is another very simple example that uses a string key:
+  example.  Here is another very simple example that uses a string
+  key:
 </p>
 <pre>
 <samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
@@ -69,7 +70,7 @@ a[0] = new</code>
 <p>
   <a href="https://docs.python.org/3.7/reference/simple_stmts.html#assignment-statements">Section
   7.2 (Assignment statements)</a> of <em>The Python Language
-  Reference</em> confirms this behaviour. Quoting the relevant part
+  Reference</em> confirms this behaviour.  Quoting the relevant part
   from this section here:
 </p>
 <blockquote>
@@ -89,8 +90,8 @@ target          ::=  identifier
                      | "*" target</code>
 </pre>
   <p>
-    (See
-    section <a href="https://docs.python.org/3.7/reference/expressions.html#primaries">Primaries</a>
+    (See section
+    <a href="https://docs.python.org/3.7/reference/expressions.html#primaries">Primaries</a>
     for the syntax definitions for attributeref, subscription, and
     slicing.)
   </p>
@@ -112,11 +113,11 @@ target          ::=  identifier
 <p>
   has two <code>target_list</code> elements (<code>a</code>
   and <code>a[0]</code>) and a <code>starred_expression</code> element
-  (<code>[0]</code>). As a result, the same list on the
+  (<code>[0]</code>).  As a result, the same list on the
   right-hand-side is assigned to both <code>a</code>
   and <code>a[0]</code>, from left to right, i.e., the
   list <code>[0]</code> is first assigned to <code>a</code>,
-  then <code>a[0]</code> is set to the <em>same</em> list. As a
+  then <code>a[0]</code> is set to the <em>same</em> list.  As a
   result, <code>a[0]</code> is set to <code>a</code> itself.
 </p>
 <p>
@@ -124,23 +125,24 @@ target          ::=  identifier
 </p>
 <pre><code>a = a[0] = {}</code></pre>
 <p>
-  can be explained in a similar way. The dictionary object on the
-  right-hand-side is first assigned to <code>a</code>. Then a
+  can be explained in a similar way.  The dictionary object on the
+  right-hand-side is first assigned to <code>a</code>.  Then a
   key <code>0</code> is inserted within the <em>same</em> dictionary.
   Finally the value of <code>a[0]</code> is set to the <em>same</em>
-  dictionary. In other words, <code>a[0]</code> is set
+  dictionary.  In other words, <code>a[0]</code> is set
   to <code>a</code> itself.
 </p>
 <h2 id="more-experiments">More Experiments</h2>
 <p>
   The evaluation of the expression list on the right hand side first
   and then assigning the result to each target list from left to right
-  explains the behaviour we observed in the previous sections. This
+  explains the behaviour we observed in the previous sections.  This
   left-to-right assignment is quite uncommon among mainstream
-  programming languages. For example, in C, C++, Java, and JavaScript
+  programming languages.  For example, in C, C++, Java, and JavaScript
   the simple assignment operator (<code>=</code>) has right-to-left
-  associativity. The left-to-right assignment in Python can be further
-  demonstrated with some intentional errors. Here is an example:
+  associativity.  The left-to-right assignment in Python can be
+  further demonstrated with some intentional errors.  Here is an
+  example:
 </p>
 <pre>
 <samp>&gt;&gt;&gt; <kbd>a[0] = a = [0]</kbd>

@@ -4,39 +4,39 @@
 <p>
   How long does it take to start with zero knowledge of analytic
   number theory and successfully learn the analytic proof of the prime
-  number theorem? Take a guess! I will share my answer in the next two
-  paragraphs. This is something I had wondered when we began our
-  analytic number theory book discussion group in March 2021. Back
+  number theorem?  Take a guess!  I will share my answer in the next
+  two paragraphs.  This is something I had wondered when we began our
+  analytic number theory book discussion group in March 2021.  Back
   then, I thought it would take at least 100 hours of effort.
 </p>
 <p>
   The book I had chosen for our discussions was <em>Introduction to
-  Analytic Number Theory</em> (Apostol, 1976). I have been hosting
+  Analytic Number Theory</em> (Apostol, 1976).  I have been hosting
   40-minute meetings for about 3-4 days every week since March 2021.
-  We discuss a couple of pages of the book in every meeting. Most
+  We discuss a couple of pages of the book in every meeting.  Most
   participants in this meeting are from Hacker News and Libera IRC
-  network. For a long time, I was eager to learn the proof of the
-  prime number theorem. For those unfamiliar with the theorem, I will
-  describe it briefly in further sections. Let me first answer the
+  network.  For a long time, I was eager to learn the proof of the
+  prime number theorem.  For those unfamiliar with the theorem, I will
+  describe it briefly in further sections.  Let me first answer the
   question I asked in the previous paragraph.
 </p>
 <p>
   So how long does it take to start with no knolwedge of analytic
   number theory and teach ourselves the analytic proof of the prime
-  number theorem? Turns out, it takes 72 hours! It took our group
-  72 hours spread across
+  number theorem?  Turns out, it takes 72 hours!  It took our group 72
+  hours spread across
   <a href="meet/iant/log.html#110">110 meetings</a> over 6 months to
-  be able to understand the proof. It is worth noting here that most
+  be able to understand the proof.  It is worth noting here that most
   of us in this group have full-time jobs and other personal
-  obligations! We were all doing this for fun, for the joy of
+  obligations!  We were all doing this for fun, for the joy of
   learning!
 </p>
 <p>
   Now I must mention that the 72 hours noted above is only the time
   spent together in reading the book and working through the theorems
-  and proofs. It does not include the personal time spent in solving
-  problems, reading some sections again, taking notes, etc. All of
-  that was done in our personal time. We did discuss the solutions to
+  and proofs.  It does not include the personal time spent in solving
+  problems, reading some sections again, taking notes, etc.  All of
+  that was done in our personal time.  We did discuss the solutions to
   some of the very interesting problems in our meetings just to take a
   break from the theorem-and-proof style of reading but most of these
   72 hours of meetings focussed on working through the theorems and
@@ -46,68 +46,69 @@
   It may be possible to achieve this milestone in lesser number of
   hours, perhaps by reading the book alone which for some folks might
   be faster than studying in a group, or perhaps by skipping some
-  chapters for topics that look very familiar. In our discussions,
-  however, we did not skip any chapter. There were in fact a few
-  chapters we could have skipped. All members of these meetings were
+  chapters for topics that look very familiar.  In our discussions,
+  however, we did not skip any chapter.  There were in fact a few
+  chapters we could have skipped.  All members of these meetings were
   very familiar with divisibility, greatest common divisor, the
-  fundamental theorem of arithmetic, etc. discussed in Chapter 1. Most
-  of us were also very familiar with the concepts discussed in Chapter
-  5 such as congruences, residue classes, the Euler-Fermat theorem,
-  the Chinese remainder theorem, etc. Despite being familiar with
-  these concepts, we decided not to skip any chapter for the sake of
-  completeness of our coverage of the material. In fact, we read every
-  single line of the book and deliberated over every single concept
-  discussed in the book. With this detailed and tedious approach to
-  reading the book, it took us 72 hours to read about 290 pages and
-  learn the analytic proof of the prime number theorem in Chapter 13.
+  fundamental theorem of arithmetic, etc. discussed in Chapter 1.
+  Most of us were also very familiar with the concepts discussed in
+  Chapter 5 such as congruences, residue classes, the Euler-Fermat
+  theorem, the Chinese remainder theorem, etc.  Despite being familiar
+  with these concepts, we decided not to skip any chapter for the sake
+  of completeness of our coverage of the material.  In fact, we read
+  every single line of the book and deliberated over every single
+  concept discussed in the book.  With this detailed and tedious
+  approach to reading the book, it took us 72 hours to read about 290
+  pages and learn the analytic proof of the prime number theorem in
+  Chapter 13.
 </p>
-
 <h2 id="prime-number-theorem">Prime Number Theorem</h2>
 <p>
   The prime number theorem is a very curious fact about the
   distribution of prime numbers that Gauss noticed in the year 1792
-  when he was about 15 years old. He noticed that the occurrence of
+  when he was about 15 years old.  He noticed that the occurrence of
   primes become rarer and rarer as we expand our search for them to
-  larger and larger integers. For example, there are 4 primes between
-  1 and 10, i.e., 40% of the numbers between 1 and 10 are primes! But
+  larger and larger integers.  For example, there are 4 primes between
+  1 and 10, i.e., 40% of the numbers between 1 and 10 are primes!  But
   there are only 25 primes between 1 and 100, i.e., only 25% of the
-  numbers between 1 and 100 are primes. If we go up to 1000, we notice
-  that there are only 168 primes between 1 and 1000, i.e., only 16.8%
-  of the numbers between 1 and 1000 are primes. Formally, we denote
-  these facts with the mathematical notation \( \pi(x) \) that denotes
-  the prime counting function. We say \( \pi(10) = 4, \) \( \pi(100) =
-  25, \) \( \pi(1000) = 168, \) and so on. Note that we allow \( x \)
-  to be a real number, so while \( \pi(10) = 4, \) we have \(
-  \pi(10.3) = 4 \) as well. One of the reasons we let \( x \) be a
-  real number in the definition of \( \pi(x) \) is because it makes
-  various problems we come across during the study of this function
-  more convenient to work on using real analysis.
+  numbers between 1 and 100 are primes.  If we go up to 1000, we
+  notice that there are only 168 primes between 1 and 1000, i.e., only
+  16.8% of the numbers between 1 and 1000 are primes.  Formally, we
+  denote these facts with the mathematical notation \( \pi(x) \) that
+  denotes the prime counting function.  We say \( \pi(10) = 4, \) \(
+  \pi(100) = 25, \) \( \pi(1000) = 168, \) and so on.  Note that we
+  allow \( x \) to be a real number, so while \( \pi(10) = 4, \) we
+  have \( \pi(10.3) = 4 \) as well.  One of the reasons we let \( x \)
+  be a real number in the definition of \( \pi(x) \) is because it
+  makes various problems we come across during the study of this
+  function more convenient to work on using real analysis.
 </p>
 <p>
   We observe that the "density" of primes continue to fall as we make
-  \( x \) larger and larger. In formal notation, we see that the ratio
-  \( \pi(x) / x \) is \( 0.4 \) when \( x = 10. \) This ratio falls to
-  \( 0.25 \) when \( x = 100. \) It falls further to \( 0.168 \) when
-  \( x = 1000, \) and so on. Can we predict by how much this "density"
-  falls? The answer is, yes, and that leads us to the prime number
-  theorem. The prime number theorem states that \( \pi(x) / x \) is
-  asymptotic to \( 1 / \log x \) as \( x \) approaches infinity, i.e.,
+  \( x \) larger and larger.  In formal notation, we see that the
+  ratio \( \pi(x) / x \) is \( 0.4 \) when \( x = 10.  \) This ratio
+  falls to \( 0.25 \) when \( x = 100.  \) It falls further to \(
+  0.168 \) when \( x = 1000, \) and so on.  Can we predict by how much
+  this "density" falls?  The answer is, yes, and that leads us to the
+  prime number theorem.  The prime number theorem states that \(
+  \pi(x) / x \) is asymptotic to \( 1 / \log x \) as \( x \)
+  approaches infinity, i.e.,
 
   \[
-  \frac{\pi(x)}{x} \sim \frac{1}{\log x} \text{ as } x \to \infty.
+    \frac{\pi(x)}{x} \sim \frac{1}{\log x} \text{ as } x \to \infty.
   \]
 
   For those unfamiliar with the notation of asymptotic equality, here
   is another equivalent way to state the above relationship,
 
   \[
-  \lim_{x \to \infty} \frac{\pi(x) / x}{1 / \log x} = 1.
+    \lim_{x \to \infty} \frac{\pi(x) / x}{1 / \log x} = 1.
   \]
 
   We could also write this as
 
   \[
-  \lim_{x \to \infty} \frac{\pi(x)}{x / \log x} = 1
+    \lim_{x \to \infty} \frac{\pi(x)}{x / \log x} = 1
   \]
 
   or
@@ -117,7 +118,7 @@
   \]
 
   Let us see how well this formula works as an estimate for the
-  density of primes for small values of \( x. \)
+  density of primes for small values of \( x.  \)
 </p>
 <table style="text-align: right" class="grid center">
   <tr>
@@ -152,153 +153,151 @@
   </tr>
 </table>
 <p>
-  Not bad! In fact, the last two columns begin to agree more and more
+  Not bad!  In fact, the last two columns begin to agree more and more
   as \( x \) becomes larger and larger.
 </p>
 <p>
   The analytic proof of the prime number theorem was achieved with an
   intricate chain of equivalences and implications between various
-  theorems. The book consumes 13 chapters and 290 pages before
-  completing the proof of the prime number theorem. Each page is also
-  quite dense with information. The amount of commentary or
-  illustrations is very little in the book. Most of the book keeps
-  alternating between theorem statements and proofs. Occasionally, for
-  especially long chapters with an intricate sequence of proofs,
+  theorems.  The book consumes 13 chapters and 290 pages before
+  completing the proof of the prime number theorem.  Each page is also
+  quite dense with information.  The amount of commentary or
+  illustrations is very little in the book.  Most of the book keeps
+  alternating between theorem statements and proofs.  Occasionally,
+  for especially long chapters with an intricate sequence of proofs,
   Apostol provides a plan of the proof in the introductions to such
-  chapters. It is quite hard to summarize a large and dense volume of
+  chapters.  It is quite hard to summarize a large and dense volume of
   work like this in a blog post but I will make an attempt to paint a
   very high-level picture of some of the key concepts that are
   involved in the proof.
 </p>
-
 <h2 id="the-basics">Equivalent Forms</h2>
 <p>
   Everything from Chapters 1 to 3 is about building basic concepts and
   tools we will use later to work on the problem of the prime number
-  theorem. These concepts and tools were very interesting on their
-  own. They involved divisibility, various number-theoretic functions,
-  Dirichlet products, the big oh notation, etc. Chapter 4 was the
-  first chapter where we engaged ourselves with the prime number
-  theorem. This chapter taught us several other formulas that were
-  logically equivalent to the prime number theorem. One equivalence
-  that would play a big role later was the equivalence between the
-  prime number theorem
+  theorem.  These concepts and tools were very interesting on their
+  own.  They involved divisibility, various number-theoretic
+  functions, Dirichlet products, the big oh notation, etc.  Chapter 4
+  was the first chapter where we engaged ourselves with the prime
+  number theorem.  This chapter taught us several other formulas that
+  were logically equivalent to the prime number theorem.  One
+  equivalence that would play a big role later was the equivalence
+  between the prime number theorem
 
   \[
-  \lim_{x \to \infty} \frac{\pi(x) \log x}{x} = 1
+    \lim_{x \to \infty} \frac{\pi(x) \log x}{x} = 1
   \]
 
   and the following form:
 
   \[
-  \lim_{x \to \infty} \frac{\psi(x)}{x} = 1.
+    \lim_{x \to \infty} \frac{\psi(x)}{x} = 1.
   \]
 
   If we could prove one, the validity of the other would be
-  established automatically. The notation \( \psi(x) \) denotes the
+  established automatically.  The notation \( \psi(x) \) denotes the
   Chebyshev function which in turn is defined in terms of the Mangoldt
   function \( \Lambda(n) \) as \( \psi(x) = \sum_{n \le x} \Lambda(n).
   \) Note that the formula above can also be stated using the
   asymptotic equality notation as follows:
   
   \[
-  \psi(x) \sim x \text{ as } x \to \infty.
+    \psi(x) \sim x \text{ as } x \to \infty.
   \]
   
   There were several other equivalent forms too shown in Chapter 4.
   The fact that all these various forms were equivalent to each other
-  was rigorously proved in the chapter. Thus proving any one of the
+  was rigorously proved in the chapter.  Thus proving any one of the
   equivalent forms would be sufficient to prove the prime number
-  theorem. But in Chapter 4, we did not know how to prove any of the
-  equivalent forms. We could only prove the equivalence of the various
-  formulas, not the formulas themselves. We only learnt that if any of
-  the equivalent forms is true, so is the prime number theorem.
-  Similarly, if any of the equivalent forms is false, so is the prime
-  number theorem. We would visit the prime number theorem again in
-  Chapter 13 which would complete the proof of the prime number
-  theorem by showing that the equivalent form mentioned above is
-  indeed true.
+  theorem.  But in Chapter 4, we did not know how to prove any of the
+  equivalent forms.  We could only prove the equivalence of the
+  various formulas, not the formulas themselves.  We only learnt that
+  if any of the equivalent forms is true, so is the prime number
+  theorem.  Similarly, if any of the equivalent forms is false, so is
+  the prime number theorem.  We would visit the prime number theorem
+  again in Chapter 13 which would complete the proof of the prime
+  number theorem by showing that the equivalent form mentioned above
+  is indeed true.
 </p>
-
 <h2 id="dirichlet-dirichlet-dirichlet">Dirichlet, Dirichlet, Dirichlet!</h2>
 <p>
   Chapters 5 to 10 introduced more concepts involving congruences,
   finite abelian groups, their characters, Dirichlet characters,
   Dirichlet's theorem on primes in arithmetic progressions, Gauss
-  sums, quadratic residues, primitive roots, etc. Some of these
+  sums, quadratic residues, primitive roots, etc.  Some of these
   concepts would turn out to be very important in proving the prime
   number theroem but most of them probably are not too important if
   understanding the proof of the prime number theorem is the only
-  goal. Regardless, all of these chapters were very interesting.
+  goal.  Regardless, all of these chapters were very interesting.
 </p>
 <p>
   It was in Chapters 11 and 12 that we felt that we were getting
-  closer and closer to the proof of the prime number theorem. Chapter
+  closer and closer to the proof of the prime number theorem.  Chapter
   11 began a detailed and rigorous study of convergence and divergence
-  of Dirichlet series. The Riemann zeta function is a specific type of
-  Dirichlet series. Chapter 12 introduced analytic continuation of the
-  Riemann zeta function. We could then show interesting results like
-  \( \zeta(0) = -1/2 \) and \( \zeta(-1) = -1/12 \) using the analytic
-  continuation of the zeta function. This chapter also showed us why
-  all trivial zeroes of \( \zeta(s) \) must lie at negative even
-  integers.
+  of Dirichlet series.  The Riemann zeta function is a specific type
+  of Dirichlet series.  Chapter 12 introduced analytic continuation of
+  the Riemann zeta function.  We could then show interesting results
+  like \( \zeta(0) = -1/2 \) and \( \zeta(-1) = -1/12 \) using the
+  analytic continuation of the zeta function.  This chapter also
+  showed us why all trivial zeroes of \( \zeta(s) \) must lie at
+  negative even integers.
 </p>
 <p>
   One thing I realized during the study of this book is how frequently
   we use concepts, operations, functions, and theorems named after
-  Dirichlet. It was impossible to get through a meeting without having
-  uttered "Dirichlet" at least a dozen times!
+  Dirichlet.  It was impossible to get through a meeting without
+  having uttered "Dirichlet" at least a dozen times!
 </p>
-
 <h2 id="chain-of-proofs">Chain of Proofs</h2>
 <p>
   Finally, Chapter 13 showed us how to prove the prime number theorem.
-  The plan of the proof was laid out in the first section. Our goal in
-  this chapter is to prove that \( \psi(x) \sim x \) as \( x \to
-  \infty. \) This is equivalent to the prime number theorem, so
+  The plan of the proof was laid out in the first section.  Our goal
+  in this chapter is to prove that \( \psi(x) \sim x \) as \( x \to
+  \infty.  \) This is equivalent to the prime number theorem, so
   proving this amounts to proving the prime number theorem too.
 </p>
 <p>
   Next we learn that the asymptotic relation \( \psi_1(x) \sim x^2 / 2
   \) as \( x \to \infty \) implies the previous asymptotic
-  relationship. Here \( \psi_1(x) \) is defined as \( \psi_1(x) =
-  \int_1^x \psi(t) \, dt. \) This implication is proved quite easily
-  in one and a half pages. But we still need to show that the
+  relationship.  Here \( \psi_1(x) \) is defined as \( \psi_1(x) =
+  \int_1^x \psi(t) \, dt.  \) This implication is proved quite easily
+  in one and a half pages.  But we still need to show that the
   asymptotic relation \( \psi_1(x) \sim x^2 / 2 \) as \( x \to \infty
-  \) indeed holds good. Proving this takes a lot of work. To prove
+  \) indeed holds good.  Proving this takes a lot of work.  To prove
   this asymptotic relation we first learn to arrive at the following
   equation involving a contour integral:
 
   \[
-  \frac{\psi_1(x)}{x^2} - \frac{1}{2} \left( 1 - \frac{1}{x} \right)^2
-  = \frac{1}{2\pi i} \int_{c - \infty i}^{c + \infty i} \frac{x^{s - 1}}{s(s + 1)}
-  \left( -\frac{\zeta'(s)}{\zeta(s)} - \frac{1}{s - 1} \right) \, ds
+    \frac{\psi_1(x)}{x^2} - \frac{1}{2} \left( 1 - \frac{1}{x} \right)^2
+    = \frac{1}{2\pi i} \int_{c - \infty i}^{c + \infty i} \frac{x^{s - 1}}{s(s + 1)}
+    \left( -\frac{\zeta'(s)}{\zeta(s)} - \frac{1}{s - 1} \right) \, ds
   \]
 
-  for \( c > 1. \) The equation above looks quite complex initially
-  but each part of it becomes friendly as we learn to derive it and
-  then work on each part of it while working out further proofs. Now
-  if we could somehow show that the integral on the right hand side of
-  the above equation approaches 0 as \( x \to \infty, \) that would
-  end up proving the asymptotic relation involving \( \psi_1(x) \) and
-  thus end up proving the prime number theorem by equivalence.
-  However, proving that this integral indeed becomes 0 as \( x \to
-  \infty \) requires a careful study of \( \zeta(s)/\zeta'(s) \) in
-  the vicinity of the line \( \operatorname{Re}(s) = 1. \) This is the
-  topic that most of the chapter deals with.
+  for \( c &gt; 1.  \) The equation above looks quite complex
+  initially but each part of it becomes friendly as we learn to derive
+  it and then work on each part of it while working out further
+  proofs.  Now if we could somehow show that the integral on the right
+  hand side of the above equation approaches 0 as \( x \to \infty, \)
+  that would end up proving the asymptotic relation involving \(
+  \psi_1(x) \) and thus end up proving the prime number theorem by
+  equivalence.  However, proving that this integral indeed becomes 0
+  as \( x \to \infty \) requires a careful study of \(
+  \zeta(s)/\zeta'(s) \) in the vicinity of the line \(
+  \operatorname{Re}(s) = 1.  \) This is the topic that most of the
+  chapter deals with.
 </p>
 <p>
   This plan of the proof looked quite convoluted initially but Apostol
   has done a great job in this chapter to first walk us through this
   plan and then prove each fact that we need to make the proof work in
-  a detailed and rigorous manner. When we reached the end of the
+  a detailed and rigorous manner.  When we reached the end of the
   proof, one of our regular members remarked, "Now the proof does not
   look so complex!"
 </p>
 <p>
   Would the elementary proof of the prime number theory have been
-  easier? I don't know. I have not studied the elementary proof. But
-  Apostol does say this at the beginning of Chapter 13,
+  easier?  I don't know.  I have not studied the elementary proof.
+  But Apostol does say this at the beginning of Chapter 13,
 </p>
 <blockquote>
   The analytic proof is shorter than the elementary proof sketched in
@@ -307,22 +306,21 @@
 <p>
   Learning the analytic proof itself was quite a long journey that
   required dedication and consistency in our studies over a period of
-  6 months. If we trust the above excerpt from the book, then I think
+  6 months.  If we trust the above excerpt from the book, then I think
   it is fair to assume that the elementary proof is even more
   formidable.
 </p>
-
 <h2 id="conclusion">Conclusion</h2>
 <p>
   That was an account of our journey through an analytic number theory
   book from its first chapter up to the analytic proof of the prime
-  number theorem. We have not completed reading the entire book
-  though. We still have about another 30 pages to go through. In the
+  number theorem.  We have not completed reading the entire book
+  though.  We still have about another 30 pages to go through.  In the
   remaining study of this book, we will learn more about zero-free
   regions for \( \zeta(s), \) the application of the prime number
-  theorem to the divisor function, and the Euler totient function. The
-  next and the final chapter too has a lot to offer such as integer
-  partition, Euler's pentagonal-number theorem, and the partition
-  identities of Ramanujan. I am pretty hopeful that we will be
-  complete reading this book in another few weeks of meetings.
+  theorem to the divisor function, and the Euler totient function.
+  The next and the final chapter too has a lot to offer such as
+  integer partition, Euler's pentagonal-number theorem, and the
+  partition identities of Ramanujan.  I am pretty hopeful that we will
+  be complete reading this book in another few weeks of meetings.
 </p>

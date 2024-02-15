@@ -272,22 +272,34 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: check-copyright check-rendering check-sentence-space check-math-punct check-comment-files check-copyright check-nginx
+checks: check-copyright check-rendering check-sentence-space check-math-punct \
+check-entities check-lines check-comment-files check-copyright check-nginx
 
 check-copyright:
-	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" static/cv.html
+	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" content/tree/cv.html content/tree/foss.html
 	@echo Done; echo
 
 check-rendering:
 	grep -r --include '*.html' --include '*.xml' '{{' _site | head
 	@echo Done; echo
 
-check-math-punct:
-	! grep -IErn '\\)[^- :t"<)}]' content  | grep -vE 'mastering-emacs'
+check-sentence-space:
+	grep --exclude invaders.html --exclude cfrs.html -IErn "[^0-9A-Z.][.?!][])\"']? [A-Z]" content | grep -vE "No soup for you|Mr\. T\.|function!|RET|SPC"; [ $$? = 1 ]
+	@#                      ^-----^
+	grep -IERn '\.  [a-z]' content | grep -vE '\.  freenode'; [ $$? = 1 ]
+	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.'; [ $$? = 1 ]
 	@echo Done; echo
 
-check-sentence-space:
-	! grep -IErn '[^0-9][.?!]  ' content | grep -vE 'Corporation|20 00'
+check-math-punct:
+	grep -IErn '\\)[^- :t"<)}]' content | grep -vE '<code>'; [ $$? = 1 ]
+	@echo Done; echo
+
+check-entities:
+	grep -IErn ' [<>&] ' content/blog content/maze; [ $$? = 1 ]
+	@echo Done; echo
+
+check-lines:
+	grep -IErn '(<br>|\\\[).' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-comment-files:

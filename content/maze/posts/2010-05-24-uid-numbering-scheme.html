@@ -19,17 +19,17 @@ by <a href="http://web.archive.org/web/20100523144720/http://uidai.gov.in/">Uniq
       these biometrics have to be compared against the entire UID
       database (existing residents with UIDs) to ensure that this new
       applicant is indeed unique and has not already been allotted a
-      UID (even under a different name, address etc). This 1:N
+      UID (even under a different name, address etc).  This 1:N
       biometric comparison (N=size of the UID database) is the most
       compute intensive operation of the UID server systeem.
     </blockquote>
     <p>
-      It sounds as if the search operation would take O(N) time. Why
+      It sounds as if the search operation would take O(N) time.  Why
       can't the data be treated as binary numbers that can be ordered
-      and indexed? It'll improve the search time to at least O(log N)
+      and indexed?  It'll improve the search time to at least O(log N)
       time and possibly even further to O(1) time if a hashtable is
-      used. The performance improvement is going to be huge since N is
-      as large as 1.2 billion.
+      used.  The performance improvement is going to be huge since N
+      is as large as 1.2 billion.
     </p>
   </li>
   <li>
@@ -37,40 +37,40 @@ by <a href="http://web.archive.org/web/20100523144720/http://uidai.gov.in/">Uniq
       <strong>Memorization of UID</strong> (page 6):
     </p>
     <blockquote>
-      This section is about how long the string length should be. In
+      This section is about how long the string length should be.  In
       short, the string has to be as short as possible but that meets
       density requirement and does not include alphabet characters,
-      just numbers. It is important to keep the UID simple and small
+      just numbers.  It is important to keep the UID simple and small
       to help residents to remember their number.
     </blockquote>
     <blockquote>
       Firstly the use of the hindu-arabic numeral
       system(0,1,2,3,4,5,6,7,8,9) is suggested since these numerals
       are recognized/used by the largest subset of people in the
-      country. Secondly we suggest the use of 12 digits (11 + 1 check
-      sum) since 11 digits gives us a 100 billion number space which in
-      turn can provide a low density of used numbers.
+      country.  Secondly we suggest the use of 12 digits (11 + 1 check
+      sum) since 11 digits gives us a 100 billion number space which
+      in turn can provide a low density of used numbers.
     </blockquote>
     <p>
-      I don't think a 12 digit UID is easy to memorize. However, I
+      I don't think a 12 digit UID is easy to memorize.  However, I
       agree that this length is necessary to ensure unique UIDs for a
-      large population like India's. The population of India is about
-      1.2 billion now. Now issuing 1.2 billion UIDs from a maximum
+      large population like India's.  The population of India is about
+      1.2 billion now.  Now issuing 1.2 billion UIDs from a maximum
       possible space of 100 billion numbers implies that any UID
       chosen at random has a 1.2% probability of being a valid UID
-      issued to someone. In other words, 1 out of every 83 possible
-      UID values is a valid UID issued to someone. Therefore, these
-      UIDs should not be treated as secret. It should be assumed that
+      issued to someone.  In other words, 1 out of every 83 possible
+      UID values is a valid UID issued to someone.  Therefore, these
+      UIDs should not be treated as secret.  It should be assumed that
       an adversary can easily guess valid UIDs issued to actual
       residents.
     </p>
     <p>
       Note that this problem gets worse as the population of India
-      grows. Currently, it is growing at the rate of about 1.4% every
-      year. The growth rate is expected to slow down in future. For
+      grows.  Currently, it is growing at the rate of about 1.4% every
+      year.  The growth rate is expected to slow down in future.  For
       now, I will assume that the growth rate is never going to exceed
-      1.4% to get a conservative estimate. Then by the year 2050, the
-      population of India would not exceed 2.1 billion. Then the
+      1.4% to get a conservative estimate.  Then by the year 2050, the
+      population of India would not exceed 2.1 billion.  Then the
       probability that a randomly generated UID is an actual UID
       issued to a resident would increase to 2.1%.
     </p>
@@ -92,9 +92,9 @@ by <a href="http://web.archive.org/web/20100523144720/http://uidai.gov.in/">Uniq
       biometric marker – such as a fingerprint.
     </blockquote>
     <p>
-      Using biometrics while issuing UIDs may be fine. But using
+      Using biometrics while issuing UIDs may be fine.  But using
       biometrics for other important transactions might put the
-      resident at risk. For example, see this BBC news story:
+      resident at risk.  For example, see this BBC news story:
       <a href="http://web.archive.org/web/20050528103727/http://news.bbc.co.uk/2/hi/asia-pacific/4396831.stm">Malaysia Car Thieves Steal Finger</a>.
   </li>
   <li>
@@ -103,15 +103,15 @@ by <a href="http://web.archive.org/web/20100523144720/http://uidai.gov.in/">Uniq
     </p>
     <blockquote>
       Number Generation: The numbers are generated in a random,
-      non-repeating sequence. There are several approaches to doing
-      this in the computer science literature. The algorithm and any
+      non-repeating sequence.  There are several approaches to doing
+      this in the computer science literature.  The algorithm and any
       "seed" chosen to generate IDs should not be made public and
       should be considered a national secret.
     </blockquote>
     <p>
-      This violates Shannon's maxim, "The enemy knows the system." The
-      security of the system must rely on the secrecy of the seed
-      only. It must not depend on the secrecy of the algorithm.
+      This violates Shannon's maxim, "The enemy knows the system."
+      The security of the system must rely on the secrecy of the seed
+      only.  It must not depend on the secrecy of the algorithm.
       Further, as explained in point 2 above, an adversory can
       randomly generate 12 digit number with a high likelihood of it
       being an actual UID to a resident.
@@ -123,12 +123,12 @@ by <a href="http://web.archive.org/web/20100523144720/http://uidai.gov.in/">Uniq
     </p>
     <blockquote>
       There is one scheme that meets our requirements: the Verhoeff
-      Scheme. This scheme is relatively complex, and in the days
+      Scheme.  This scheme is relatively complex, and in the days
       before ubiquitous computing, there was a tendency to avoid it in
-      favor of simpler schemes. In this day and age however, and at
-      the scale of the UID, precision must be the goal. The Verhoeff
+      favor of simpler schemes.  In this day and age however, and at
+      the scale of the UID, precision must be the goal.  The Verhoeff
       scheme catches all single errors and all adjacent
-      transpositions. It also catches >95% of twin errors and >94% of
+      transpositions.  It also catches >95% of twin errors and >94% of
       jump transpositions.
     </blockquote>
     <p>
@@ -142,6 +142,6 @@ by <a href="http://web.archive.org/web/20100523144720/http://uidai.gov.in/">Uniq
   <strong>Update on 31 May 2010:</strong> After an email conversation
   with Nandan Nilekani about the points I have documented in this blog
   post, he requested that I send these points in the form a document
-  to him so that he can have it reviewed by his team. I have done so
+  to him so that he can have it reviewed by his team.  I have done so
   today.
 </p>
