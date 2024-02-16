@@ -67,7 +67,7 @@
 (defun write-file (filename text)
   "Write text to file and close the file."
   (make-directory filename)
-  (with-open-file (f filename :direction :output :if-exists :supersede)
+  (with-open-file (f filename :direction :output :if-exists :error)
     (write-sequence text f)))
 
 (defun write-log (fmt &rest args)
