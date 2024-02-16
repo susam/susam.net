@@ -350,8 +350,17 @@ value, next-index."
      (aput "canonical-url" (neat-url ,dst-path ,params) ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
-     (aput "zone-slug" (zone-slug ,dst-path) params)
-     (aput "zone-name" (string-capitalize (aget "zone-slug" ,params)) ,params)))
+     (cond ((string= (aget "zone-name" ,params) "Xlog")
+            (aput "zone-index" "xlog.html" ,params))
+           ((string-starts-with "_site/maze/" ,dst-path)
+            (aput "zone-index" (fstr "maze/~a" (aget "index" ,params)) ,params)
+            (aput "zone-name" "Maze" ,params))
+           ((string-starts-with "_site/cc/" ,dst-path)
+            (aput "zone-index" (fstr "cc/~a" (aget "index" ,params)) ,params)
+            (aput "zone-name" "CC" ,params))
+           (t
+            (aput "zone-index" "blog.html" ,params)
+            (aput "zone-name" "Blog" ,params)))))
 
 (defmacro invoke-callback (params)
   "Run callback and add the parameters returned by it to params."
@@ -411,24 +420,23 @@ value, next-index."
         (return)))
     (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun format-tags-for-html (post root indent)
+(defun format-tags-for-html (post indent)
   "Create HTML to display tags."
   (let ((html "")
         (sep ""))
     (dolist (tag (uiop:split-string (aget "tag" post)))
       (setf tag (string-downcase tag))
-      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
-                       html sep root tag tag))
+      (setf html (fstr "~a~a<a href=\"tag/~a.html\">#~a</a>" html sep tag tag))
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
 
 (defun format-tags-for-post (post)
   "Create HTML to display tags on a post page."
-  (format-tags-for-html post "../" 2))
+  (format-tags-for-html post 2))
 
 (defun format-tags-for-list (post)
   "Create HTML to display tags on the full post list page."
-  (format-tags-for-html post "" 4))
+  (format-tags-for-html post 4))
 
 (defun format-tags-for-feed (post params)
   "Create HTML to display tags for the given post."
@@ -573,15 +581,14 @@ value, next-index."
 
 (defun make-comment-list (post comments dst list-layout item-layout params)
   "Generate comment list page."
-  (let* ((post-slug (aget "slug" post))
-         (post-title (aget "title" post))
-         (post-import (aget "import" post))
+  (let* ((post-import (aget "import" post))
          (count (length comments))
          (comment-label (if (= count 1) "comment" "comments"))
          (rendered-comments))
     ;; Add comment item parameters.
-    (aput "slug" post-slug params)
-    (aput "title" (fstr "Comments on ~a" post-title) params)
+    (aput "slug" (aget "slug" post) params)
+    (aput "path" (aget "path" post) params)
+    (aput "title" (fstr "Comments on ~a" (aget "title" post)) params)
     (aput "post-title" (aget "title" post) params)
     (aput "count" count params)
     (aput "comment-label" comment-label params)
@@ -606,14 +613,11 @@ value, next-index."
 
 (defun make-comment-none (post dst none-layout params)
   "Generate a comment page with no comments."
-  (let* ((post-slug (aget "slug" post))
-         (post-title (aget "title" post)))
-    ;; Set list parameters.
-    (aput "slug" post-slug params)
-    (aput "title" (fstr "Comments on ~a" post-title) params )
-    (aput "post-title" post-title params)
-    ;; Determine destination path and URL.
-    (write-page dst none-layout params)))
+  (aput "slug" (aget "slug" post) params)
+  (aput "path" (aget "path" post) params)
+  (aput "title" (fstr "Comments on ~a" (aget "title" post)) params )
+  (aput "post-title" (aget "title" post) params)
+  (write-page dst none-layout params))
 
 
 ;;; Tree
@@ -768,13 +772,13 @@ value, next-index."
 ;;; Blog
 ;;; ----
 
-(defun make-blog-posts (src page-layout params)
+(defun make-blog-posts (src zone-slug page-layout params)
   "Generate blog post pages for all posts in a blog directory."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
-        (post-dst "_site/{{ zone-slug }}/{{ slug }}.html")
-        (list-dst "_site/{{ zone-slug }}/index.html")
+        (post-dst "_site/{{ slug }}.html")
+        (list-dst (fstr "_site/~a.html" zone-slug))
         (posts))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
@@ -782,10 +786,8 @@ value, next-index."
     ;; Read and render all posts.
     (setf posts (make-posts src post-dst post-layout params))
     ;; Create blog list page.
+    (aput "title" (render "{{ nick }}'s {{ zone-name }}" params) params)
     (aput "subtitle" "" params)
-    ;; If blog list filename is unavailable, choose different filename.
-    (when (probe-file (render list-dst params))
-      (setf list-dst "_site/{{ zone-slug }}/posts.html"))
     (make-post-list posts list-dst list-layout item-layout params)
     posts))
 
@@ -794,7 +796,7 @@ value, next-index."
   (let ((none-layout (read-file "layout/comment/none.html"))
         (list-layout (read-file "layout/comment/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
-        (comment-dst (render "_site/{{ zone-slug }}/comments/{{ slug }}.html"
+        (comment-dst (render "_site/comments/{{ slug }}.html"
                              params))
         (comment-map))
     ;; Combine layouts to form final layouts.
@@ -818,15 +820,11 @@ value, next-index."
 (defun make-blog (zone-slug page-layout params)
   "Create a complete blog with blog, tags, and list page."
   (let* ((zone-name (string-capitalize zone-slug))
-         (title (fstr "~a's ~a" (aget "nick" params) zone-name))
          (posts))
-    (aput "zone-slug" zone-slug params)
     (aput "zone-name" zone-name params)
-    (aput "title" title params)
-    (setf posts (make-blog-posts (fstr "content/~a/posts/*.html" zone-slug)
-                                 page-layout params))
-    (make-blog-comments posts (fstr "content/~a/comments/*.html" zone-slug)
-                        page-layout params)
+    (setf posts (make-blog-posts (fstr "content/~a/*.html" zone-slug)
+                                 zone-slug page-layout params))
+    (make-blog-comments posts "content/comments/*.html" page-layout params)
     posts))
 
 
@@ -892,14 +890,11 @@ value, next-index."
          (past-count (length past-meets))
          (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
-         (dst (if slug "_site/maze/meet/{{ slug }}/log.html"
-                  "_site/maze/meet/log.html")))
+         (dst (if slug "_site/cc/{{ slug }}/log.html" "_site/cc/log.html")))
     (aput "head" (fstr "~a extra.css meets.css math.inc"
                        (aget "head" params)) params)
     (aput "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
     (aput "subtitle" "" params)
-    (aput "zone-slug" "maze" params)
-    (aput "zone-name" "Maze" params)
     (aput "slug" (if slug slug "index") params) ; Needed by next call.
     (aput "track-path"
           (render (if slug "../{{ slug }}/{{ index }}" "../{{ index }}")
@@ -1130,8 +1125,6 @@ value, next-index."
   (let ((home-layout (read-file "layout/home/list.html"))
         (item-layout (read-file "layout/home/item.html")))
     (set-nested-template home-layout page-layout)
-    (aput "zone-name" "Blog" params)
-    (aput "zone-slug" "blog" params)
     (aput "title" (aget "author" params) params)
     (aput "subtitle" "" params)
     (make-post-list posts "_site/index.html" home-layout item-layout params)))
@@ -1151,9 +1144,7 @@ value, next-index."
                       (cons "render" "yes")
                       (cons "heads" "")
                       (cons "imports" "")
-                      (cons "index" "")
-                      (cons "zone-slug" "blog")
-                      (cons "zone-name" "Blog")))
+                      (cons "index" "")))
         (page-layout (read-file "layout/page.html"))
         (posts)
         (all-posts))
@@ -1180,9 +1171,10 @@ value, next-index."
     (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
     (make-more-list "_site/maze/" "More from Maze" page-layout params)
     ;; Blogs.
-    (dolist (blog '("maze" "blog"))
+    (dolist (blog '("xlog" "blog"))
       (setf posts (make-blog blog page-layout params))
       (setf all-posts (append all-posts posts)))
+    ;; Home page.
     (make-home posts page-layout params)
     ;; Aggregates.
     (setf all-posts (sort-posts all-posts))

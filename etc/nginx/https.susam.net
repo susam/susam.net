@@ -33,12 +33,14 @@ server {
     rewrite ^/inv$ /invaders.html permanent;
     # Redirects.
     rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /feed.xml redirect;
-    rewrite ^/blog/obfuscating-main/$ /blog/obfuscated-main.html permanent;
-    rewrite ^/blog/infosys-tcs-or-wipro/$ /blog/infosys-tcs-or-wipro.html permanent;
-    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /blog/lisp-in-vim.html permanent;
-    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /blog/lisp-in-vim.html permanent;
-    rewrite ^/blog/x86-quine.html$ /blog/self-printing-machine-code.html permanent;
-    rewrite ^/blog/from-uuid-to-infinite-loops.html$ /blog/fixed-bits-of-version-4-uuid.html permanent;
+    rewrite ^/blog/obfuscating-main/$ /obfuscated-main.html permanent;
+    rewrite ^/blog/infosys-tcs-or-wipro/$ /infosys-tcs-or-wipro.html permanent;
+    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /lisp-in-vim.html permanent;
+    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /lisp-in-vim.html permanent;
+    rewrite ^/blog/x86-quine.html$ /self-printing-machine-code.html permanent;
+    rewrite ^/blog/from-uuid-to-infinite-loops.html$ /fixed-bits-of-version-4-uuid.html permanent;
+    rewrite ^/blog/(.*)$ /$1 redirect;
+    rewrite ^/maze/elisp-in-replacement-string.html$ /elisp-in-replacement-string.html redirect;
     rewrite ^/cfr.html$ /cfrs.html permanent;
 }
 
