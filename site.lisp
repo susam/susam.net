@@ -339,28 +339,27 @@ value, next-index."
   "Create canonical URL for the given rendered file path."
   (fstr "~a~a" (aget "site-url" params) (neat-url-path path)))
 
-(defun zone-slug (path)
-  "Determine zone slug to be used in the footer from the file path."
-  (if (string-starts-with "_site/maze/" path) "maze" "blog"))
+(defmacro add-zone-params (dst-path params)
+  `(cond ((string-starts-with "_site/maze/" ,dst-path)
+          (aput "zone-index" (render "maze/{{ index }}" ,params) ,params)
+          (aput "zone-name" "Maze" ,params))
+         ((string-starts-with "_site/cc/" ,dst-path)
+          (aput "zone-index" (render "cc/{{ index }}" ,params) ,params)
+          (aput "zone-name" "CC" ,params))
+         (t
+          (let ((zone-slug (or (aget "blog-slug" ,params) "blog"))
+                (zone-name (or (aget "blog-name" ,params) "Blog")))
+            (aput "zone-index" (fstr "~a.html" zone-slug) ,params)
+            (aput "zone-name" zone-name ,params)))))
 
 (defmacro add-page-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
   `(progn
-     (aput "root" (relative-root-path ,dst-path) ,params)
+     (aput "root" (relative-root-path ,dst-path) params)
      (aput "canonical-url" (neat-url ,dst-path ,params) ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
-     (cond ((string= (aget "zone-name" ,params) "Xlog")
-            (aput "zone-index" "xlog.html" ,params))
-           ((string-starts-with "_site/maze/" ,dst-path)
-            (aput "zone-index" (fstr "maze/~a" (aget "index" ,params)) ,params)
-            (aput "zone-name" "Maze" ,params))
-           ((string-starts-with "_site/cc/" ,dst-path)
-            (aput "zone-index" (fstr "cc/~a" (aget "index" ,params)) ,params)
-            (aput "zone-name" "CC" ,params))
-           (t
-            (aput "zone-index" "blog.html" ,params)
-            (aput "zone-name" "Blog" ,params)))))
+     (add-zone-params ,dst-path ,params)))
 
 (defmacro invoke-callback (params)
   "Run callback and add the parameters returned by it to params."
@@ -772,13 +771,13 @@ value, next-index."
 ;;; Blog
 ;;; ----
 
-(defun make-blog-posts (src zone-slug page-layout params)
+(defun make-blog-posts (src page-layout params)
   "Generate blog post pages for all posts in a blog directory."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
         (post-dst "_site/{{ slug }}.html")
-        (list-dst (fstr "_site/~a.html" zone-slug))
+        (list-dst (render "_site/{{ blog-slug }}.html" params))
         (posts))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
@@ -786,7 +785,7 @@ value, next-index."
     ;; Read and render all posts.
     (setf posts (make-posts src post-dst post-layout params))
     ;; Create blog list page.
-    (aput "title" (render "{{ nick }}'s {{ zone-name }}" params) params)
+    (aput "title" (render "{{ nick }}'s {{ blog-name }}" params) params)
     (aput "subtitle" "" params)
     (make-post-list posts list-dst list-layout item-layout params)
     posts))
@@ -817,13 +816,12 @@ value, next-index."
                                list-layout item-layout params)
             (make-comment-none post comment-dst none-layout params))))))
 
-(defun make-blog (zone-slug page-layout params)
+(defun make-blog (src name page-layout params)
   "Create a complete blog with blog, tags, and list page."
-  (let* ((zone-name (string-capitalize zone-slug))
-         (posts))
-    (aput "zone-name" zone-name params)
-    (setf posts (make-blog-posts (fstr "content/~a/*.html" zone-slug)
-                                 zone-slug page-layout params))
+  (aput "blog-name" name params)
+  (aput "blog-slug" (string-downcase name) params)
+  (let* ((posts))
+    (setf posts (make-blog-posts src page-layout params))
     (make-blog-comments posts "content/comments/*.html" page-layout params)
     posts))
 
@@ -1171,9 +1169,10 @@ value, next-index."
     (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
     (make-more-list "_site/maze/" "More from Maze" page-layout params)
     ;; Blogs.
-    (dolist (blog '("xlog" "blog"))
-      (setf posts (make-blog blog page-layout params))
-      (setf all-posts (append all-posts posts)))
+    (setf posts (make-blog "content/blog/*.html" "Blog" page-layout params))
+    (setf all-posts (append all-posts posts))
+    (setf posts (make-blog "content/elog/*.html" "Wall" page-layout params))
+    (setf all-posts (append all-posts posts))
     ;; Home page.
     (make-home posts page-layout params)
     ;; Aggregates.

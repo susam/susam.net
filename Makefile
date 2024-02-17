@@ -280,7 +280,7 @@ check-copyright:
 	@echo Done; echo
 
 check-rendering:
-	grep -r --include '*.html' --include '*.xml' '{{' _site | head
+	grep -r --include '*.html' --include '*.xml' '{{' _site; [ $$? = 1 ]
 	@echo Done; echo
 
 check-sentence-space:
@@ -295,7 +295,7 @@ check-math-punct:
 	@echo Done; echo
 
 check-entities:
-	grep -IErn ' [<>&] ' content/blog content/maze; [ $$? = 1 ]
+	grep -IErn --include='*.html' --exclude=invaders.html --exclude=cfrs.html --exclude=fxyt.html ' [<>&] ' content; [ $$? = 1 ]
 	@echo Done; echo
 
 check-lines:
@@ -304,13 +304,9 @@ check-lines:
 
 check-comment-files:
 	# Ensure every comment file has a post file.
-	ls -1 content/blog/comments/ | while read -r f; do \
+	ls -1 content/comments/ | while read -r f; do \
 	    echo Checking post file for "$$f"; \
-		if ! [ -e "content/blog/posts/$$f" ]; then \
-			echo No post file for comment file: "$$f"; exit 1; fi; done
-	ls -1 content/maze/comments/ | while read -r f; do \
-	    echo Checking post file for "$$f"; \
-		if ! [ -e "content/maze/posts/$$f" ]; then \
+		if ! [ -e "content/blog/$$f" ] && ! [ -e "content/elog/$$f" ]; then \
 			echo No post file for comment file: "$$f"; exit 1; fi; done
 	@echo Done; echo
 
@@ -332,19 +328,14 @@ check-links:
 
 check-paths:
 	# Blog legacy URL redirects
-	curl -sSI http://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
-	curl -sSI https://susam.in/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
+	curl -sSI https://susam.in/about.html | grep 'Location: https://susam.net/about.html'
 	curl -sSI https://susam.net/blog/feed.xml | grep 'Location: https://susam.net/feed.xml'
 	# HTTPS redirects
-	curl -sSI http://susam.net/blog/fd-100/ | grep 'Location: https://susam.net/blog/fd-100/'
+	curl -sSI http://susam.net/fd-100.html | grep 'Location: https://susam.net/fd-100.html'
 	curl -sSI http://susam.net/blog/fd-100.html | grep 'Location: https://susam.net/blog/fd-100.html'
-	# Main Xlog
-	curl -sSI https://susam.net/blog/infosys-tcs-or-wipro.html | grep '200 OK'
-	curl -sSI https://susam.net/blog/comments/infosys-tcs-or-wipro.html | grep '200 OK'
-	curl -sSI https://susam.net/blog/re-infosys-tcs-or-wipro.html | grep '200 OK'
-	curl -sSI https://susam.net/blog/comments/re-infosys-tcs-or-wipro.html | grep '200 OK'
-	# Maze
-	curl -sSI https://susam.net/blog/c-quine.html | grep '200 OK'
+	# Main Blog
+	curl -sSI https://susam.net/fd-100.html | grep '200 OK'
+	curl -sSI https://susam.net/comments/fd-100.html | grep '200 OK'
 	@echo Done; echo
 
 list-no-meta:

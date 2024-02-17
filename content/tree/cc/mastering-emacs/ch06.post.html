@@ -768,7 +768,7 @@ FOO  BAR  BAZ</code>
       Terminate the command of step 1 and run this command in a
       terminal:
     </p>
-    <pre><code>echo hello > /tmp/log.txt</code></pre>
+    <pre><code>echo hello &gt; /tmp/log.txt</code></pre>
     <p>
       The content of the buffer should now automatically truncate and
       update to just the text <code>hello</code>.
@@ -815,7 +815,7 @@ FOO  BAR  BAZ</code>
       Terminate the command of step 1 and run this command in a
       terminal:
     </p>
-    <pre><code>echo hello > /tmp/log.txt</code></pre>
+    <pre><code>echo hello &gt; /tmp/log.txt</code></pre>
     <p>
       The buffer for this file in Emacs should automatically update to
       show the text <code>hello</code> at the bottom.  But notice all
@@ -862,9 +862,9 @@ FOO  BAR  BAZ</code>
     </p>
 <pre>
 <code>mkdir -p foo/bar/baz/
-echo hello foo > foo/foo.txt
-echo hello bar > foo/bar/bar.txt
-echo hello baz > foo/bar/baz/baz.txt
+echo hello foo &gt; foo/foo.txt
+echo hello bar &gt; foo/bar/bar.txt
+echo hello baz &gt; foo/bar/baz/baz.txt
 tar -caf /tmp/foo.tgz foo/</code>
 </pre>
   </li>
