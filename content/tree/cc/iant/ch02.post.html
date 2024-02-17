@@ -16,24 +16,24 @@
   \[
     I(n) =
     \begin{cases}
-    1 & \text{ if } n = 1, \\
-    0 & \text{ if } n > 1.
+    1 &amp; \text{ if } n = 1, \\
+    0 &amp; \text{ if } n &gt; 1.
     \end{cases}
   \]
 </p>
 <p>
   \begin{align*}
     f(n)I(n)
-    & =
+    &amp; =
     \begin{cases}
-      1 \cdot 1    & \text{ if } n = 1, \\
-      f(n) \cdot 0 & \text{ if } n > 1.
+      1 \cdot 1    &amp; \text{ if } n = 1, \\
+      f(n) \cdot 0 &amp; \text{ if } n &gt; 1.
     \end{cases} \\
-    & = \begin{cases}
-      1 & \text{ if } n = 1, \\
-      0 & \text{ if } n > 1.
+    &amp; = \begin{cases}
+      1 &amp; \text{ if } n = 1, \\
+      0 &amp; \text{ if } n &gt; 1.
     \end{cases} \\
-    & = I(n).
+    &amp; = I(n).
   \end{align*}
 </p>
 <h3 id="mobius-function-for-prime-powers">M&ouml;bius function for prime powers</h3>
@@ -48,26 +48,26 @@
 <p>
   \begin{align*}
     \sum_{d \mid p^a} \mu(d) f(d) f\left(\frac{p^a}{d}\right)
-    & = \sum_{d = 1, p, p^2, \dots, p^a} \mu(d) f(d) f\left(\frac{p^a}{d}\right) \\
-    & = \begin{aligned}[t]
-           & \mu(1) f(1) f\left( \frac{p^a}{1} \right) +
-             \mu(p) f(p) f\left( \frac{p^a}{p} \right) \\
-           & + \underbrace{\mu(p^2) f(p^2) f\left( \frac{p^a}{p^2} \right) + \dots +
-                           \mu(p^a) f(p^a) f\left( \frac{p^a}{p^a} \right)}_{=\,0}
+    &amp; = \sum_{d = 1, p, p^2, \dots, p^a} \mu(d) f(d) f\left(\frac{p^a}{d}\right) \\
+    &amp; = \begin{aligned}[t]
+           &amp; \mu(1) f(1) f\left( \frac{p^a}{1} \right) +
+                 \mu(p) f(p) f\left( \frac{p^a}{p} \right) \\
+           &amp; + \underbrace{\mu(p^2) f(p^2) f\left( \frac{p^a}{p^2} \right) + \dots +
+                               \mu(p^a) f(p^a) f\left( \frac{p^a}{p^a} \right)}_{=\,0}
         \end{aligned} \\
-    & = \mu(1) f(1) f(p^a) + \mu(p) f(p) f(p^{a - 1}) \\
-    & = f(p^a) - f(p) f(p^{a - 1}).
+    &amp; = \mu(1) f(1) f(p^a) + \mu(p) f(p) f(p^{a - 1}) \\
+    &amp; = f(p^a) - f(p) f(p^{a - 1}).
   \end{align*}
 </p>
 <h3 id="final-step-in-the-proof-of-theorem-2.17">Final step in the proof of Theorem 2.17</h3>
 <p>
   \begin{align*}
     f(p^a)
-    & = f(p)f(p^{a - 1}) \\
-    & = f(p)f(p)f(p^{a - 2}) \\
-    & = \dots \\
-    & = \underbrace{f(p)f(p)f(p) \dots f(p)}_{a \text{ times}} \\
-    & = \left( f(p) \right)^a.
+    &amp; = f(p)f(p^{a - 1}) \\
+    &amp; = f(p)f(p)f(p^{a - 2}) \\
+    &amp; = \dots \\
+    &amp; = \underbrace{f(p)f(p)f(p) \dots f(p)}_{a \text{ times}} \\
+    &amp; = \left( f(p) \right)^a.
   \end{align*}
 </p>
 <h3 id="how-the-completely-multiplicative-property-works-for-prime-powers">How the completely multiplicative property works for prime powers</h3>
@@ -122,19 +122,19 @@
 
   \begin{align*}
     g(p_i^{a_i})
-    & = \sum_{d \mid p_i^{a_i}} \mu(d) f(d) \\
-    & = \mu(1) f(1) + \mu(p_i) f(p_i) +
-        \underbrace{\mu(p_i^2) f(p_i^2) + \dots + \mu(p_i^{a_i}) f(p_i^{a_i})}_{=\,0} \\
-    & = 1 - f(p).
+    &amp; = \sum_{d \mid p_i^{a_i}} \mu(d) f(d) \\
+    &amp; = \mu(1) f(1) + \mu(p_i) f(p_i) +
+             \underbrace{\mu(p_i^2) f(p_i^2) + \dots + \mu(p_i^{a_i}) f(p_i^{a_i})}_{=\,0} \\
+    &amp; = 1 - f(p).
   \end{align*}
 
   From the two equations above, we get
 
   \begin{align*}
     g(n)
-    & = g(p_1^{a_1}) g(p_2^{a_2}) \dots g(p_k^{a_k}) \\
-    & = (1 - f(p_1)) (1 - f(p_2)) \dots (1 - f(p_k)) \\
-    & = \prod_{p \mid n} (1 - f(p)).
+    &amp; = g(p_1^{a_1}) g(p_2^{a_2}) \dots g(p_k^{a_k}) \\
+    &amp; = (1 - f(p_1)) (1 - f(p_2)) \dots (1 - f(p_k)) \\
+    &amp; = \prod_{p \mid n} (1 - f(p)).
   \end{align*}
 </p>
 
@@ -145,14 +145,14 @@
 <p>
   \begin{align*}
     A(x)B(x)
-    & = \left( \sum_{n=0}^{\infty} a(n) x^n \right) \left( \sum_{n=0}^{\infty} b(n) x^n \right) \\
-    & = \left( a(0) + a(1)x + a(2)x^2 + \dots \right)
-        \left( b(0) + b(1)x + b(2)x^2 + \dots \right) \\
-    & = a(0)b(0) +
-        \Bigl( a(0)b(1) + a(1)b(0) \Bigr) x +
-        \Bigl( a(0)b(2) + a(1)b(1) + a(2)b(0) \Bigr) x^2 + \dots \\
-    & = \sum_{k=0}^0 a(k)b(n - k) + \sum_{k=0}^1 a(k)b(1 - k)x + \sum_{k=0}^2 a(k)b(2 - k)x^2 + \dots \\
-    & = \sum_{n=0}^{\infty} \sum_{k=0}^n a(k)b(n - k).
+    &amp; = \left( \sum_{n=0}^{\infty} a(n) x^n \right) \left( \sum_{n=0}^{\infty} b(n) x^n \right) \\
+    &amp; = \left( a(0) + a(1)x + a(2)x^2 + \dots \right)
+            \left( b(0) + b(1)x + b(2)x^2 + \dots \right) \\
+    &amp; = a(0)b(0) +
+            \Bigl( a(0)b(1) + a(1)b(0) \Bigr) x +
+            \Bigl( a(0)b(2) + a(1)b(1) + a(2)b(0) \Bigr) x^2 + \dots \\
+    &amp; = \sum_{k=0}^0 a(k)b(n - k) + \sum_{k=0}^1 a(k)b(1 - k)x + \sum_{k=0}^2 a(k)b(2 - k)x^2 + \dots \\
+    &amp; = \sum_{n=0}^{\infty} \sum_{k=0}^n a(k)b(n - k).
   \end{align*}
 </p>
 <h3 id="commutativity-of-product-of-formal-power-series">Commutativity of product of formal power series</h3>
@@ -183,9 +183,9 @@
 
   \begin{align*}
     A(x)\Bigl(B(x) + C(x)\Bigr)
-    & = \left( \sum_{n=0}^{\infty} a(n) x^n \right)
+    &amp; = \left( \sum_{n=0}^{\infty} a(n) x^n \right)
         \left( \sum_{n=0}^{\infty} \Bigl( b(n) + c(n) \Bigr) x^n \right) \\
-    & = \sum_{n=0}^{\infty} \Bigl\{ \sum_{k=0}^{n} a(k) \Bigl( b(n - k) + c(n - k) \Bigr) \Bigr\} x^n.
+    &amp; = \sum_{n=0}^{\infty} \Bigl\{ \sum_{k=0}^{n} a(k) \Bigl( b(n - k) + c(n - k) \Bigr) \Bigr\} x^n.
   \end{align*}
 
   \[
@@ -198,26 +198,26 @@
 <p>
   \begin{align*}
     A(x)B(x)
-    & = \sum_{n=0}^{\infty} \Bigl( \sum_{k=0}^{n} a(k) b(n - k) \Bigr) x^n \\
-    & = \Bigl( a(0) b(0) \Bigr) x^0 +
-        \Bigl( a(0) b(1) + a(1) b(0) \Bigr) x^1 +
-        \Bigl( a(0) b(2) + a(1) b(1) + a(2) b(0) \Bigr) x^2 +
-        \dots \\
-    & = 1.
+    &amp; = \sum_{n=0}^{\infty} \Bigl( \sum_{k=0}^{n} a(k) b(n - k) \Bigr) x^n \\
+    &amp; = \Bigl( a(0) b(0) \Bigr) x^0 +
+            \Bigl( a(0) b(1) + a(1) b(0) \Bigr) x^1 +
+            \Bigl( a(0) b(2) + a(1) b(1) + a(2) b(0) \Bigr) x^2 +
+            \dots \\
+    &amp; = 1.
   \end{align*}
 </p>
 <h3 id="inverse-of-geometric-series">Inverse of geometric series</h3>
 <p>
   \begin{align*}
-    A(x) & = 1 + ax + (ax)^2 + (ax)^3 + \dots, \\
-    B(x) & = 1 - ax.
+    A(x) &amp; = 1 + ax + (ax)^2 + (ax)^3 + \dots, \\
+    B(x) &amp; = 1 - ax.
   \end{align*}
 
   \begin{align*}
     A(x) B(x)
-    & = \Bigl( 1 + ax + (ax)^2 + (ax)^3 + \dots \Bigr) (1 - ax) \\
-    & = \Bigl( 1 + ax + (ax)^2 + (ax)^3 + \dots \Bigr) -
-        \Bigl( (ax) - (ax)^2 - (ax)^3 - \dots \Bigr)
+    &amp; = \Bigl( 1 + ax + (ax)^2 + (ax)^3 + \dots \Bigr) (1 - ax) \\
+    &amp; = \Bigl( 1 + ax + (ax)^2 + (ax)^3 + \dots \Bigr) -
+            \Bigl( (ax) - (ax)^2 - (ax)^3 - \dots \Bigr)
     = 1.
   \end{align*}
 </p>
@@ -236,11 +236,11 @@
 <p>
   \begin{align*}
     f(n)
-    & = f(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k})
+    &amp; = f(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k})
     = f(p_1^{a_1}) f(p_2^{a_2}) \dots f(p_k^{a_k}), \\ \\
 
     g(n)
-    & = g(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k})
+    &amp; = g(p_1^{a_1} p_2^{a_2} \dots p_k^{a_k})
     = g(p_1^{a_1}) g(p_2^{a_2}) \dots g(p_k^{a_k}).  \\
   \end{align*}
 </p>
@@ -248,9 +248,9 @@
 <p>
   \begin{align*}
     \mu_p(x) = \sum_{n=0}^{\infty} \mu(p^n) x^n
-    & = \mu(1) + \mu(p) x + \mu(p^2) x^2 + \mu(p^3) x^3 + \dots \\
-    & = 1 - x + 0 + 0 + \dots \\
-    & = 1 - x.
+    &amp; = \mu(1) + \mu(p) x + \mu(p^2) x^2 + \mu(p^3) x^3 + \dots \\
+    &amp; = 1 - x + 0 + 0 + \dots \\
+    &amp; = 1 - x.
   \end{align*}
 </p>
 
@@ -306,9 +306,9 @@
 
   \begin{align*}
     \frac{1}{1 - p^{\alpha}} \cdot \frac{1}{1 - x}
-    & = \frac{1}{1 - x - p^{\alpha}x + p^{\alpha}x^2} \\
-    & = \frac{1}{1 - (1 + p^{\alpha})x + p^{\alpha}x^2} \\
-    & = \frac{1}{1 - \sigma_{\alpha}(p)x + p^{\alpha}x^2}.
+    &amp; = \frac{1}{1 - x - p^{\alpha}x + p^{\alpha}x^2} \\
+    &amp; = \frac{1}{1 - (1 + p^{\alpha})x + p^{\alpha}x^2} \\
+    &amp; = \frac{1}{1 - \sigma_{\alpha}(p)x + p^{\alpha}x^2}.
   \end{align*}
 
   Note that \( \sigma_{\alpha}(n) = \sum_{d\,\mid\,n} d^{\alpha}, \) so

@@ -42,40 +42,40 @@
 <p>
   \begin{align*}
     \int_{m + 1}^{k} [t] f'(t) dt
-    & = \int_{m + 1}^{m + 2} [t] f'(t) dt
+    &amp; = \int_{m + 1}^{m + 2} [t] f'(t) dt
     + \int_{m + 2}^{m + 3} [t] f'(t) dt + \dots
     + \int_{k - 1}^{k} [t] f'(t) dt \\
-    & =
+    &amp; =
     \begin{aligned}[t]
-      & (m + 2) f(m + 2) - (m + 1) f(m + 1) - f(m + 2) \\
-    + & (m + 3) f(m + 3) - (m + 2) f(m + 2) - f(m + 3) \\
-      & \dots \\
-    + & (k) f(k) - (k - 1) f(k - 1) - f(k)
+      &amp; (m + 2) f(m + 2) - (m + 1) f(m + 1) - f(m + 2) \\
+    + &amp; (m + 3) f(m + 3) - (m + 2) f(m + 2) - f(m + 3) \\
+      &amp; \dots \\
+    + &amp; (k) f(k) - (k - 1) f(k - 1) - f(k)
     \end{aligned} \\
-    & = kf(k) - (m + 1)f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
-    & = kf(k) - mf(m + 1) - f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
-    & = kf(k) - mf(m + 1) - \sum_{n=m + 1}^{k} f(n) \\
-    & = kf(k) - mf(m + 1) - \sum_{y &lt; n \le x} f(n).
+    &amp; = kf(k) - (m + 1)f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
+    &amp; = kf(k) - mf(m + 1) - f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
+    &amp; = kf(k) - mf(m + 1) - \sum_{n=m + 1}^{k} f(n) \\
+    &amp; = kf(k) - mf(m + 1) - \sum_{y &lt; n \le x} f(n).
   \end{align*}
 </p>
 <h3 id="equation-6-in-the-proof-of-eulers-summation-formula">Equation (6) in the proof of Euler's summation formula</h3>
 <p>
   \begin{align*}
     \sum_{y &lt; n \le x} f(n)
-    & = - \int_{m + 1}^k [t] f'(t) \, dt + k f(k) - m f(m + 1) \\
-    & = \begin{aligned}[t]
-          & \left( - \int_y^{m + 1} [t] f'(t) \, dt
-                   - \int_{m + 1}^k [t] f'(t) \, dt
-                   - \int_k^x [t] f'(t) \, dt \right) \\
-          & + f(k) - m f(m + 1)
-            + \int_y^{m + 1} [t] f'(t) \, dt
-            + \int_k^x [t] f'(t) \, dt
+    &amp; = - \int_{m + 1}^k [t] f'(t) \, dt + k f(k) - m f(m + 1) \\
+    &amp; = \begin{aligned}[t]
+          &amp; \left( - \int_y^{m + 1} [t] f'(t) \, dt
+                       - \int_{m + 1}^k [t] f'(t) \, dt
+                       - \int_k^x [t] f'(t) \, dt \right) \\
+          &amp; + f(k) - m f(m + 1)
+                + \int_y^{m + 1} [t] f'(t) \, dt
+                + \int_k^x [t] f'(t) \, dt
         \end{aligned} \\
-    & = - \int_y^x [t] f'(t) \, dt + k f(k) - m f(m + 1)
-        + \int_y^{m + 1} m f'(t) \, dt + \int_k^x k f'(t) \, dt \\
-    & = - \int_y^x [t] f'(t) \, dt + k f(k) - m f(m + 1)
-        + \biggl( m f(m + 1) - m f(y) \biggr) + \biggl( k f(x) - k f(k) \biggr) \\
-    & = - \int_y^x [t] f'(t) \, dt + k f(x) - m f(y).
+    &amp; = - \int_y^x [t] f'(t) \, dt + k f(k) - m f(m + 1)
+            + \int_y^{m + 1} m f'(t) \, dt + \int_k^x k f'(t) \, dt \\
+    &amp; = - \int_y^x [t] f'(t) \, dt + k f(k) - m f(m + 1)
+            + \biggl( m f(m + 1) - m f(y) \biggr) + \biggl( k f(x) - k f(k) \biggr) \\
+    &amp; = - \int_y^x [t] f'(t) \, dt + k f(x) - m f(y).
   \end{align*}
 </p>
 <h3 id="using-integration-by-parts-in-the-proof-of-eulers-summation-formula">Using integration by parts in the proof of Euler's summation formula</h3>
@@ -96,14 +96,14 @@
 
   \begin{align*}
     \sum_{y &lt; n \le x} f(n)
-    & = -\int_y^x [t] f'(t) \, dt + k f(x) - m f(y) \\
-    & = \begin{aligned}[t]
-          & -\int_y^x [t] f'(t) \, dt + [x] f(x) - [y] f(y) \\
-          & + \underbrace{
+    &amp; = -\int_y^x [t] f'(t) \, dt + k f(x) - m f(y) \\
+    &amp; = \begin{aligned}[t]
+          &amp; -\int_y^x [t] f'(t) \, dt + [x] f(x) - [y] f(y) \\
+          &amp; + \underbrace{
             \left( \int_y^x t f'(t) \, dt - x f(x) + y f(y)
                    + \int_y^x f(t) \, dt \right)}_{0 \text{ by above definite integral}}
         \end{aligned} \\
-    & = \int_y^x f(t) \, dt + \int_y^x (t - [t]) f'(t) \, dt
+    &amp; = \int_y^x f(t) \, dt + \int_y^x (t - [t]) f'(t) \, dt
         + f(x)([x] - x) - f(y)([y] - y).
   \end{align*}
 </p>
@@ -115,8 +115,8 @@
   Splitting definite integral:
 
   \begin{align*}
-    & \int_1^{\infty} f(t) \, dt = \int_1^{x} f(t) \, dt + \int_x^{\infty} f(t) \, dt \\
-    & \iff
+    &amp; \int_1^{\infty} f(t) \, dt = \int_1^{x} f(t) \, dt + \int_x^{\infty} f(t) \, dt \\
+    &amp; \iff
     \int_1^{\infty} f(t) \, dt - \int_x^{\infty} f(t) \, dt = \int_1^x f(t) \, dt.
   \end{align*}
 
@@ -161,12 +161,12 @@
 
   \begin{align*}
     C
-    & = \lim_{x \to \infty}
-        \left( \sum_{n \le x} \frac{1}{n} - \log x \right) \\
-    & = \lim_{x \to \infty}
-        \left( 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt
-                 + O\left( \frac{1}{x} \right) \right) \\
-    & = 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt.
+    &amp; = \lim_{x \to \infty}
+            \left( \sum_{n \le x} \frac{1}{n} - \log x \right) \\
+    &amp; = \lim_{x \to \infty}
+            \left( 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt
+                     + O\left( \frac{1}{x} \right) \right) \\
+    &amp; = 1 - \int_1^{\infty} \frac{t - [t]}{t^2} \, dt.
   \end{align*}
 </p>
 <h3 id="some-integrals-in-the-proof-of-theorem-3.2-b">Some integrals in the proof of Theorem 3.2 (b)</h3>
@@ -195,10 +195,10 @@
 
   \begin{align*}
     \sum_{n \le x} \frac{1}{n^s}
-    & = \int_1^x \frac{dt}{t^s}
-        - s \int_1^x \frac{t - [t]}{t^{s + 1}} + 1
-        - \frac{x - [x]}{x^s} \, dt \\
-    & = \frac{x^{1 - s}}{1 - s} - \frac{1}{1 - s}
-        - s \int_1^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt + 1 + O(x^{-s}).
+    &amp; = \int_1^x \frac{dt}{t^s}
+            - s \int_1^x \frac{t - [t]}{t^{s + 1}} + 1
+            - \frac{x - [x]}{x^s} \, dt \\
+    &amp; = \frac{x^{1 - s}}{1 - s} - \frac{1}{1 - s}
+            - s \int_1^{\infty} \frac{t - [t]}{t^{s + 1}} \, dt + 1 + O(x^{-s}).
   \end{align*}
 </p>
