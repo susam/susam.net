@@ -22,3 +22,4 @@
 (nearest-short-code "6f4e37" "coffee")       ; https://encycolorpedia.com/6f4e37
 (nearest-short-code "873b3c" "wine cask")    ; https://encycolorpedia.com/873b3c
 (nearest-short-code "774d3f" "wine barrel")  ; https://encycolorpedia.com/774d3f
+(nearest-short-code "bea493" "mocha")        ; https://encycolorpedia.com/bea493
