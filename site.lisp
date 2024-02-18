@@ -946,18 +946,18 @@ value, next-index."
    ;; HTML elements.
    (cons "font-family" "georgia, serif")
    ;; Light color scheme.
-   (cons "light-background-color" "#fed")
-   (cons "light-body-color" "#321")
+   (cons "light-background-color" "#fec")
+   (cons "light-body-color" "#320")
    (cons "light-link-color" "#900")
    (cons "light-visited-color" "#330")
    (cons "light-hover-color" "#c00")
    (cons "light-active-color" "#c0c")
-   (cons "light-fill-color" "#edc")
-   (cons "light-shade-color" "#cba")
+   (cons "light-fill-color" "#edb")
+   (cons "light-shade-color" "#cb9")
    (cons "light-code-color" "#040")
    (cons "light-samp-color" "#620")
    (cons "light-hl-color" "#906")
-   (cons "light-line-color" "#987")
+   (cons "light-line-color" "#986")
    (cons "light-success-color" "#060")
    (cons "light-error-color" "#900")
    ;; Dark color scheme.
