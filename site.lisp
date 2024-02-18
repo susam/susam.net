@@ -520,7 +520,7 @@ value, next-index."
     ;; Add list parameters.
     (aput "body" (join-strings rendered-posts) params)
     (aput "count" count params)
-    (aput "post-label" (if (= count 1) "post" "posts") params)
+    (aput "page-label" (if (= count 1) "page" "pages") params)
     ;; Determine destination path and URL.
     (write-page dst list-layout params)))
 
@@ -655,7 +655,7 @@ value, next-index."
         (setf posts (append posts (make-tree-recursively pathname destpath
                                                          page-layout post-layout
                                                          params)))))
-    (remove-if-not (lambda (post) (aget "date" post)) posts)))
+    posts))
 
 (defun make-tree (src dst page-layout params)
   "Make tree of files and folders from the content tree."
@@ -1056,7 +1056,7 @@ value, next-index."
       (aput "tag-slug" (string-downcase tag) params)
       (aput "tag" tag params)
       (aput "count" count params)
-      (aput "post-label" (if (= count 1) "post" "posts") params)
+      (aput "page-label" (if (= count 1) "page" "pages") params)
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
 
@@ -1089,10 +1089,10 @@ value, next-index."
       (setf posts (cdr tag-entry))
       (aput "tag" tag params)
       (aput "tag-slug" (string-downcase tag) params)
-      (aput "title" (render "{{ nick }}'s {{ tag }} Posts" params) params)
+      (aput "title" (render "{{ nick }}'s {{ tag }} Pages" params) params)
       (aput "subtitle" "" params)
       (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
-      (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Posts" params)
+      (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Pages" params)
             params)
       (make-post-list posts list-dst list-layout item-layout params)
       (make-post-list (last-n 20 posts) mini-feed-dst feed-xml item-xml params)
@@ -1103,8 +1103,8 @@ value, next-index."
   (let ((list-layout (read-file "layout/full/list.html"))
         (item-layout (read-file "layout/full/item.html")))
     (set-nested-template list-layout page-layout)
-    (aput "title" "All Posts" params)
-    (make-post-list posts "_site/posts.html" list-layout item-layout params)))
+    (aput "title" "All Pages" params)
+    (make-post-list posts "_site/pages.html" list-layout item-layout params)))
 
 (defun make-feed (posts params)
   "Generate feed for the complete website."
