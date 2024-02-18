@@ -345,12 +345,13 @@ value, next-index."
           (aput "zone-name" "Maze" ,params))
          ((string-starts-with "_site/cc/" ,dst-path)
           (aput "zone-index" (render "cc/{{ index }}" ,params) ,params)
-          (aput "zone-name" "CC" ,params))
+          (aput "zone-name" "Club" ,params))
+         ((string= (aget "blog-name" ,params) "Wall")
+          (aput "zone-index" "wall.html" ,params)
+          (aput "zone-name" "Wall" ,params))
          (t
-          (let ((zone-slug (or (aget "blog-slug" ,params) "blog"))
-                (zone-name (or (aget "blog-name" ,params) "Blog")))
-            (aput "zone-index" (fstr "~a.html" zone-slug) ,params)
-            (aput "zone-name" zone-name ,params)))))
+          (aput "zone-index" "links.html" ,params)
+          (aput "zone-name" "Links" ,params))))
 
 (defmacro add-page-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
@@ -1122,7 +1123,7 @@ value, next-index."
 (defun make-home (posts page-layout params)
   "Generate home page."
   (let ((home-layout (read-file "layout/home/list.html"))
-        (item-layout (read-file "layout/home/item.html")))
+        (item-layout (read-file "layout/blog/item.html")))
     (set-nested-template home-layout page-layout)
     (aput "title" (aget "author" params) params)
     (aput "subtitle" "" params)
@@ -1166,7 +1167,9 @@ value, next-index."
     ;; Music
     (setf posts (make-music "content/music/*.html" page-layout params))
     (setf all-posts (append all-posts posts))
-    ;; Maze.
+    ;; More links.
+    (make-tree-list "_site/" "Tree" page-layout params)
+    (make-more-list "_site/" "More" page-layout params)
     (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
     (make-more-list "_site/maze/" "More from Maze" page-layout params)
     ;; Blogs.
