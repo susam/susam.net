@@ -74,7 +74,13 @@
 </pre>
 <pre>
 <samp>$ <kbd>uname</kbd>
-Darwin</samp>
+Darwin
+$ <kbd><span class="cursor">c</span>lear</kbd></samp>
+</pre>
+<pre>
+<samp>$ <kbd>echo hello | od -tcx1</kbd>
+<span class="hl">0000000</span>    h   e   l   l   o  \n
+           68  65  6c  6c  6f  0a</samp>
 </pre>
 <p>
   <kbd>ctrl</kbd>+<kbd>c</kbd>,
@@ -300,24 +306,20 @@ Darwin</samp>
   </p>
 </div>
 <h2 id="mitte-comment">Mitte Comment</h2>
+<div class="status success">
+  <ul>
+    <li>Comment felicius acceperunt.</li>
+    <li>Quisque sit amet nisl non possunt iuxta recensionem.</li>
+  </ul>
+</div>
+<div class="status error">
+  <ul>
+    <li>Aliquam petitio.</li>
+  </ul>
+</div>
 <form>
   <input id="name" name="name" value="" required placeholder="Name">
   <input id="url" type="url" name="url" value="" placeholder="URL">
   <textarea id="comment" name="comment" required placeholder="Comment"></textarea>
-  <div class="success">
-    <div class="status">
-      <ul>
-        <li>Comment felicius acceperunt.</li>
-        <li>Quisque sit amet nisl non possunt iuxta recensionem.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="errors">
-    <div class="status">
-      <ul>
-        <li>Aliquam petitio.</li>
-      </ul>
-    </div>
-  </div>
   <button>Submit Comment</button>
 </form>
