@@ -31,8 +31,10 @@ help:
 	@echo '  live              Generate live directory for website.'
 	@echo '  site              Generate website.'
 	@echo '  dist              Generate website for distribution as zip/tarball.'
-	@echo '  ref               Create _ref directory to compare _site against later.'
-	@echo '  diff              Compare _site with _ref to look for layout differences.'
+	@echo '  ref               Create _ref/ directory to compare _site against later.'
+	@echo '  diff              Compare _site/ with _ref/ to look for layout differences.'
+	@echo '  serve             Serve _site/ directory via a local HTTP server.'
+	@echo '  deep              Put website in a directory deeply nested within _site/.'
 	@echo
 	@echo 'Development targets:'
 	@echo '  opt               Create directories at /opt for testing.'
@@ -40,6 +42,9 @@ help:
 	@echo '  loop              Run a loop to create website directory repeatedly.'
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
+	@echo '  run-dist          Serve distribution locally via a local HTTP server.'
+	@echo '  run-site-deep     Serve website from a subdirectory path.'
+	@echo '  run-dist-deep     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
 	@echo '  checks            Run checks suitable to be run before push.'
 	@echo '  check-links       Check broken links in a locally running website.'
@@ -232,6 +237,15 @@ ref: dist
 	rm -rf _ref/
 	mv _site/ _ref/
 
+serve:
+	python3 -m http.server -b localhost -d _site/
+
+deep:
+	rm -rf _prep/
+	mkdir -p _prep/foo/bar/baz/qux/
+	mv _site/ _prep/foo/bar/baz/qux/
+	mv _prep/ _site/
+
 diff:
 	diff -ru _ref/ _site/
 	@echo Done; echo
@@ -262,8 +276,13 @@ comment:
 loop:
 	while true; do make dist; sleep 5; done
 
-run-site:
-	python3 -m http.server -b localhost -d _site/
+run-dist: dist serve
+
+run-site: site serve
+
+run-dist-deep: dist deep serve
+
+run-site-deep: site deep serve
 
 run-form: site
 	sbcl --load form.lisp
