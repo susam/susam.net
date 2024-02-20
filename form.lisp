@@ -78,7 +78,7 @@
   "Save comment to a file."
   (let* ((time-string (universal-time-string current-time))
          (text (with-output-to-string (s)
-                 (format s "post: ~a~%" (aget "post" params))
+                 (format s "p: ~a~%" (aget "p" params))
                  (format s "user-agent: ~a~%" (hunchentoot:user-agent))
                  (format s "remote-addr: ~a~%" (hunchentoot:remote-addr*))
                  (format s "real-ip: ~a~%" ip)
@@ -202,7 +202,7 @@
         (max-comment-length 1000)
         (result)
         (errors))
-    (when (or (string= (aget "post" params) "")
+    (when (or (string= (aget "p" params) "")
               (string= (aget "name" params) "")
               (string= (aget "comment" params) ""))
       (push "Invalid request." errors))
@@ -224,7 +224,7 @@
 
 (defun dodgy-comment-p (params)
   "Check if post content has invalid fields."
-  (or (string/= (aget "post" params) (aget "slug" params))
+  (or (string/= (aget "p" params) (aget "slug" params))
       (string/= (from-post (aget "xkey" params)) (aget "xval" params))))
 
 (defun reject-comment (layout errors params)
@@ -256,7 +256,7 @@
   (let ((ip (real-ip))
         (current-time (get-universal-time))
         (errors))
-    (aput "post" (or (from-get "post") "") params)
+    (aput "p" (or (from-get "p") "") params)
     (dolist (key (list "slug" "name" "url" "comment"))
       (aput key (or (from-post key) "") params))
     (if (setf errors (reject-comment-p options ip current-time params))
@@ -268,8 +268,8 @@
   (aput "title" "Post Comment" params)
   (aput "class" "" params)
   (aput "status" "" params)
-  (aput "post" (or (from-get "post") "") params)
-  (aput "slug" (or (from-get "post") "") params)
+  (aput "p" (or (from-get "p") "") params)
+  (aput "slug" (or (from-get "p") "") params)
   (aput "name" "" params)
   (aput "url" "" params)
   (aput "comment" "" params)
@@ -296,23 +296,9 @@
 ;;; Subscriber Form
 ;;; ---------------
 
-(defun subscriber-form-get (layout params ykey yval)
-  "Return empty form page."
-  (aput "title" "Post Comment" params)
-  (aput "class" "" params)
-  (aput "status" "" params)
-  (aput "post" (or (from-get "post") "") params)
-  (aput "slug" (or (from-get "post") "") params)
-  (aput "name" "" params)
-  (aput "url" "" params)
-  (aput "comment" "" params)
-  (aput "ykey" ykey params)
-  (aput "yval" yval params)
-  (render layout params))
-
 (defun subscriber-intention (action)
   "Return intention phrase for subscriber form."
-  (let ((subscribers (+ 232 27)))
+  (let ((subscribers (+ 232 30)))
     (if (string= action "subscribe")
         (format nil "join ~a other subscribers and receive" subscribers)
         (format nil "stop receiving"))))
