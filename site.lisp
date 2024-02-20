@@ -948,31 +948,31 @@ value, next-index."
    (cons "font-family" "georgia, serif")
    ;; Light color scheme.
    (cons "light-background-color" "#fec")
-   (cons "light-body-color" "#320")
-   (cons "light-link-color" "#700")
-   (cons "light-visited-color" "#406")
+   (cons "light-body-color" "#320")     ; contrast 13.4
+   (cons "light-link-color" "#900")     ; contrast  1.7,  7.8, 13.4
+   (cons "light-visited-color" "#400")  ; contrast  1.1, 14.7, 13.4
    (cons "light-hover-color" "#c00")
    (cons "light-active-color" "#c0c")
    (cons "light-fill-color" "#edb")
    (cons "light-shade-color" "#cb9")
    (cons "light-code-color" "#040")
-   (cons "light-samp-color" "#620")
+   (cons "light-samp-color" "#720")
    (cons "light-hl-color" "#906")
    (cons "light-line-color" "#986")
    (cons "light-success-color" "#060")
    (cons "light-error-color" "#900")
    ;; Dark color scheme.
    (cons "dark-background-color" "#110")
-   (cons "dark-body-color" "#cb9")
-   (cons "dark-link-color" "#fb8")
-   (cons "dark-visited-color" "#cbc")
+   (cons "dark-body-color" "#cb9")      ; contrast 10.1
+   (cons "dark-link-color" "#eb6")      ; contrast 1.1, 10.8, 10.1
+   (cons "dark-visited-color" "#d93")   ; contrast 1.3,  7.9, 10.1
    (cons "dark-hover-color" "#fc9")
-   (cons "dark-active-color" "#ff9")
+   (cons "dark-active-color" "#f9f")
    (cons "dark-fill-color" "#000")
    (cons "dark-shade-color" "#320")
-   (cons "dark-code-color" "#8b5")
-   (cons "dark-samp-color" "#ca0")
-   (cons "dark-hl-color" "#fa6")
+   (cons "dark-code-color" "#9c6")
+   (cons "dark-samp-color" "#db0")
+   (cons "dark-hl-color" "#fac")
    (cons "dark-line-color" "#653")
    (cons "dark-success-color" "#3c6")
    (cons "dark-error-color" "#f99")))
