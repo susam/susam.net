@@ -107,8 +107,7 @@
   `(progn
      (aput "root" "../../" ,params)
      (aput "index" "" ,params)
-     (aput "zone-slug" "blog" ,params)
-     (aput "zone-name" "Blog" ,params)
+     (aput "zone-link" "" ,params)
      (aput "current-year" (nth-value 5 (get-decoded-time)) ,params)
      (aput "canonical-url" "" ,params)
      (aput "heads" (head-html "main.css" ,params) ,params)

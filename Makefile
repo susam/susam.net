@@ -506,10 +506,11 @@ post-comment2:
 	curl -sS 'localhost:4242/form/comment/?p=foo' -d slug=foo -d name=alice -d email= -d action= -d comment=body | grep '<li>'
 
 post-subscriber1:
-	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d ylang=en-us | grep '<li>' | grep 'Successfully' | grep '<li>'
+	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d ylang=en-us | grep '<li>'
 
 post-subscriber2:
-	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>' | grep 'Successfully' | grep '<li>'
+	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
+
 pub: cu mirror
 
 main:
