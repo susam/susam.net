@@ -5,7 +5,7 @@
 <channel>
 <title>{{ title }}</title>
 <link>{{ link }}</link>
-<atom:link rel="self" type="application/rss+xml" href="{{ canonical-url }}"/>
+<atom:link rel="self" type="application/rss+xml" href="{{ neat-url }}"/>
 <description>{{ description }}</description>
 
 {{ body }}

@@ -31,8 +31,6 @@ help:
 	@echo '  live              Generate live directory for website.'
 	@echo '  site              Generate website.'
 	@echo '  dist              Generate website for distribution as zip/tarball.'
-	@echo '  ref               Create _ref/ directory to compare _site against later.'
-	@echo '  diff              Compare _site/ with _ref/ to look for layout differences.'
 	@echo '  serve             Serve _site/ directory via a local HTTP server.'
 	@echo '  deep              Put website in a directory deeply nested within _site/.'
 	@echo
@@ -40,6 +38,8 @@ help:
 	@echo '  opt               Create directories at /opt for testing.'
 	@echo '  comment           Create comment file for filename in FILE macro.'
 	@echo '  loop              Run a loop to create website directory repeatedly.'
+	@echo '  ref               Create reference directories for the current website.'
+	@echo '  diff              Create new websites and compare against reference directories.'
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
 	@echo '  run-dist          Serve distribution locally via a local HTTP server.'
@@ -233,10 +233,6 @@ dist: mathjax
 	     --quit
 	@echo Done; echo
 
-ref: dist
-	rm -rf _ref/
-	mv _site/ _ref/
-
 serve:
 	python3 -m http.server -b localhost -d _site/
 
@@ -245,10 +241,6 @@ deep:
 	mkdir -p _prep/foo/bar/baz/qux/
 	mv _site/ _prep/foo/bar/baz/qux/
 	mv _prep/ _site/
-
-diff:
-	diff -ru _ref/ _site/
-	@echo Done; echo
 
 mathjax:
 	mkdir -p _cache/
@@ -275,6 +267,25 @@ comment:
 
 loop:
 	while true; do make dist; sleep 5; done
+
+ref:
+	rm -rf _ref/
+	mkdir _ref/
+	make dist
+	mv _site/ _ref/dist/
+	make site
+	mv _site/ _ref/site/
+
+diff:
+	rm -rf _new/
+	mkdir _new/
+	make dist
+	mv _site/ _new/dist/
+	make site
+	mv _site/ _new/site/
+	diff -ru _ref/site/ _new/site/
+	diff -ru _ref/dist/ _new/dist/
+	@echo Done; echo
 
 run-dist: dist serve
 
