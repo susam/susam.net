@@ -323,7 +323,7 @@ value, next-index."
             ((string-ends-with ".inc" name)
              (push (head-inc-html name params) snippets))
             (t
-             (error (fstr "Unknown import type ~a in ~a" name import-header)))))
+             (error "Unknown import type ~a in ~a" name import-header))))
     (if snippets (fstr "~{~a~}" (reverse snippets)) "")))
 
 (defun relative-root-path (path)
@@ -331,13 +331,15 @@ value, next-index."
   (let ((depth (count #\/ (string-replace "_site/" "" path))))
     (if (zerop depth) "./" (repeat-string depth "../"))))
 
-(defun neat-url-path (path)
+(defun neat-path (path params)
   "Create canonical path component of the URL for the given rendered file path."
-  (string-replace "index.html" "" (string-replace "_site/" "" path)))
+  (setf path (string-replace "index.html" (aget "index" params) path))
+  (string-replace "_site/" "" path))
 
 (defun neat-url (path params)
   "Create canonical URL for the given rendered file path."
-  (fstr "~a~a" (aget "site-url" params) (neat-url-path path)))
+  (push (cons "index" "") params)
+  (fstr "~a~a" (aget "site-url" params) (neat-path path params)))
 
 (defmacro add-zone-params (dst-path params)
   `(cond ((string-starts-with "_site/maze/" ,dst-path)
@@ -353,14 +355,20 @@ value, next-index."
           (aput "zone-index" "links.html" ,params)
           (aput "zone-name" "Links" ,params))))
 
-(defmacro add-page-params (dst-path params)
+(defmacro add-output-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
   `(progn
-     (aput "root" (relative-root-path ,dst-path) params)
-     (aput "canonical-url" (neat-url ,dst-path ,params) ,params)
+     (aput "root" (relative-root-path ,dst-path) ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
-     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
-     (add-zone-params ,dst-path ,params)))
+     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
+
+(defmacro add-page-params (dst page params)
+  `(let ((dst-path (render ,dst ,page)))
+     (aput "tags-for-page" (format-tags-for-page ,page) ,page)
+     (aput "tags-for-list" (format-tags-for-list ,page) ,page)
+     (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
+     (aput "neat-url" (neat-url dst-path ,params) ,page)
+     (aput "path" (neat-path dst-path ,params) ,page)))
 
 (defmacro invoke-callback (params)
   "Run callback and add the parameters returned by it to params."
@@ -397,14 +405,6 @@ value, next-index."
                (setf next-index (+ begin-tag-index 2)))))
       (format s "~a" (subseq text next-index)))))
 
-(defun write-page (dst-path layout params)
-  "Render given layout with given parameters and write page."
-  (setf dst-path (render dst-path params))
-  (write-log "Writing ~a ..." dst-path)
-  (add-page-params dst-path params)
-  (write-file dst-path (extra-markup (render layout params)))
-  (neat-url-path dst-path))
-
 (defun format-size (size)
   "Convert size in bytes to human-readable size."
   (let ((powers (list (cons (expt 2 30) "G")
@@ -420,30 +420,30 @@ value, next-index."
         (return)))
     (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
-(defun format-tags-for-html (post indent)
+(defun format-tags-for-html (page indent)
   "Create HTML to display tags."
   (let ((html "")
         (sep ""))
-    (dolist (tag (uiop:split-string (aget "tag" post)))
+    (dolist (tag (uiop:split-string (aget "tag" page)))
       (setf tag (string-downcase tag))
       (setf html (fstr "~a~a<a href=\"tag/~a.html\">#~a</a>" html sep tag tag))
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
 
-(defun format-tags-for-post (post)
-  "Create HTML to display tags on a post page."
-  (format-tags-for-html post 2))
+(defun format-tags-for-page (page)
+  "Create HTML to display tags on a page."
+  (format-tags-for-html page 2))
 
-(defun format-tags-for-list (post)
-  "Create HTML to display tags on the full post list page."
-  (format-tags-for-html post 4))
+(defun format-tags-for-list (page)
+  "Create HTML to display tags on the full page list."
+  (format-tags-for-html page 4))
 
-(defun format-tags-for-feed (post params)
-  "Create HTML to display tags for the given post."
+(defun format-tags-for-feed (page params)
+  "Create HTML to display tags for the given page."
   (let ((html "")
         (sep "")
         (site-url (aget "site-url" params))
-        (tags (uiop:split-string (aget "tag" post))))
+        (tags (uiop:split-string (aget "tag" page))))
     (dolist (tag tags)
       (setf tag (string-downcase tag))
       (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
@@ -451,74 +451,89 @@ value, next-index."
       (setf sep (fstr " |~%  ")))
     html))
 
+(defun write-page (dst-path layout params)
+  "Render given layout with given parameters and write page."
+  (setf dst-path (render dst-path params))
+  (add-page-params dst-path params params)
+  (write-log "Writing ~a ..." dst-path)
+  (add-output-params dst-path params)
+  (add-zone-params dst-path params)
+  (write-file dst-path (extra-markup (render layout params))))
 
-;;; Posts
+
+;;; Pages
 ;;; -----
 
-(defun read-post (filename)
-  "Parse post file."
+(defun read-page (filename)
+  "Parse content file."
   (let ((text (read-file filename))
-        (post)
+        (page)
         (date))
     (multiple-value-bind (date slug) (date-slug filename)
-      (aput "date" date post)
-      (aput "slug" slug post))
+      (aput "date" date page)
+      (aput "slug" slug page))
     (multiple-value-bind (headers next-index) (read-headers text 0)
-      (setf post (append headers post))
-      (aput "body" (subseq text next-index) post))
-    (setf date (aget "date" post))
+      (setf page (append headers page))
+      (aput "body" (subseq text next-index) page))
+    (setf date (aget "date" page))
     (when date
-      (aput "rss-date" (rss-date date) post)
-      (aput "simple-date" (simple-date date) post))
-    post))
+      (aput "rss-date" (rss-date date) page)
+      (aput "simple-date" (simple-date date) page))
+    page))
 
-(defun make-post (src-path dst layout params)
-  "Generate page from post or content file."
-  (let* ((post (read-post src-path))
+(defun make-page (src-path dst layout params)
+  "Generate page from content file."
+  (let* ((page (read-page src-path))
          (body))
-    ;; Read post and merge its parameters with call parameters.
-    (aput "tags-for-post" (format-tags-for-post post) post)
-    (aput "tags-for-list" (format-tags-for-list post) post)
-    (aput "tags-for-feed" (format-tags-for-feed post params) post)
-    (setf params (append post params))
+    ;; Read content and merge its parameters with call parameters.
+    (add-page-params dst page params)
+    (setf params (append page params))
     (invoke-callback params)
-    ;; Render placeholder in post body if requested.
+    ;; Render placeholder in page body if requested.
     (when (string= (aget "render" params) "yes")
       (setf body (render (aget "body" params) params))
       (aput "body" body params)
-      ;; Update body in post to the rendered body.
-      (aput "body" body post))
-    (aput "path" (write-page dst layout params) post)
-    post))
+      ;; Update body in page to the rendered body.
+      (aput "body" body page))
+    (write-page dst layout params)
+    page))
 
-(defun sort-posts (posts)
-  "Sort posts in reverse chronological order."
-  (sort posts (lambda (x y) (string< (aget "date" x)
+(defun copy-page (src-path dst-path params)
+  "Copy an HTML page to destination path."
+  (uiop:copy-file src-path dst-path)
+  (let* ((meta-path (string-replace ".html" ".aux.html" (namestring src-path)))
+         (page (read-page meta-path)))
+    (add-page-params dst-path page params)
+    page))
+
+(defun sort-pages (pages)
+  "Sort pages in reverse chronological order."
+  (sort pages (lambda (x y) (string< (aget "date" x)
                                      (aget "date" y)))))
 
-(defun make-posts (src dst layout params)
-  "Generate pages from post or content files."
-  (let ((posts))
+(defun make-pages (src dst layout params)
+  "Generate pages from content files."
+  (let ((pages))
     (dolist (src-path (directory src))
-      (push (make-post src-path dst layout params) posts))
-    (sort-posts posts)))
+      (push (make-page src-path dst layout params) pages))
+    (sort-pages pages)))
 
-(defun only-list-posts (posts)
-  "Select posts that can be listed in post lists."
-  (remove-if (lambda (post) (string= (aget "unlist" post) "yes")) posts))
+(defun only-list-pages (pages)
+  "Select pages that can be listed in page lists."
+  (remove-if (lambda (page) (string= (aget "unlist" page) "yes")) pages))
 
-(defun make-post-list (posts dst list-layout item-layout params)
-  "Generate list page for a list of posts."
-  (setf posts (only-list-posts posts))
-  (let ((count (length posts))
-        (rendered-posts))
-    ;; Render each post.
-    (dolist (post posts)
-      (setf post (append post params))
-      (invoke-callback post)
-      (push (render item-layout post) rendered-posts))
+(defun make-page-list (pages dst list-layout item-layout params)
+  "Generate list page for a list of content pages."
+  (setf pages (only-list-pages pages))
+  (let ((count (length pages))
+        (rendered-pages))
+    ;; Render each page.
+    (dolist (page pages)
+      (setf page (append page params))
+      (invoke-callback page)
+      (push (render item-layout page) rendered-pages))
     ;; Add list parameters.
-    (aput "body" (join-strings rendered-posts) params)
+    (aput "body" (join-strings rendered-pages) params)
     (aput "count" count params)
     (aput "page-label" (if (= count 1) "page" "pages") params)
     ;; Determine destination path and URL.
@@ -564,8 +579,8 @@ value, next-index."
       ;; Current comment date must be more recent than the previous comment.
       (when (and (consp comments) (string< (aget "date" comment)
                                            (aget "date" (car comments))))
-        (error (fstr "Incorrect order for comment ~a in ~a"
-                     (aget "date" comment) filename)))
+        (error "Incorrect order for comment ~a in ~a"
+               (aget "date" comment) filename))
       (push comment comments)
       (unless next-index
         (return)))
@@ -587,7 +602,7 @@ value, next-index."
          (rendered-comments))
     ;; Add comment item parameters.
     (aput "slug" (aget "slug" post) params)
-    (aput "path" (aget "path" post) params)
+    (aput "post-path" (aget "path" post) params)
     (aput "title" (fstr "Comments on ~a" (aget "title" post)) params)
     (aput "post-title" (aget "title" post) params)
     (aput "count" count params)
@@ -614,7 +629,7 @@ value, next-index."
 (defun make-comment-none (post dst none-layout params)
   "Generate a comment page with no comments."
   (aput "slug" (aget "slug" post) params)
-  (aput "path" (aget "path" post) params)
+  (aput "post-path" (aget "path" post) params)
   (aput "title" (fstr "Comments on ~a" (aget "title" post)) params )
   (aput "post-title" (aget "title" post) params)
   (write-page dst none-layout params))
@@ -623,39 +638,51 @@ value, next-index."
 ;;; Tree
 ;;; ----
 
-(defun updated-date-callback (post)
-  "Create last-updated parameter if post contains updated date."
-  (let ((updated (aget "updated" post))
+(defun updated-date-callback (page)
+  "Create last-updated parameter if page contains updated date."
+  (let ((updated (aget "updated" page))
         (last-updated ""))
     (when updated
       (setf last-updated
             (fstr "&nbsp;&bull;&nbsp;(last updated on ~a)" (simple-date updated))))
     (list (cons "last-updated" last-updated))))
 
+(defun validate-pages (pages)
+  "Validate pages to ensure required metadata is present."
+  (dolist (page pages)
+    (dolist (key '("date" "tag"))
+      (when (not (aget key page))
+        (error "Missing key ~a for page ~a" key (aget "slug" page))))))
+
 (defun make-tree-recursively (src dst page-layout post-layout params)
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
   (aput "callback" #'updated-date-callback params)
-  (let ((posts))
+  (let ((pages))
     (dolist (pathname (uiop:directory-files src))
       (let* ((basename (file-namestring pathname))
              (destpath (namestring (merge-pathnames basename dst))))
         (cond ((string-ends-with ".page.html" basename)
                (setf destpath (string-replace ".page.html" ".html" destpath))
-               (push (make-post pathname destpath page-layout params) posts))
+               (push (make-page pathname destpath page-layout params) pages))
               ((string-ends-with ".post.html" basename)
                (setf destpath (string-replace ".post.html" ".html" destpath))
-               (push (make-post pathname destpath post-layout params) posts))
+               (push (make-page pathname destpath post-layout params) pages))
+              ((string-ends-with ".aux.html" basename)
+               (write-log "Skipping ~a" basename))
+              ((string-ends-with ".html" basename)
+               (push (copy-page pathname destpath params) pages))
               (t
                (uiop:copy-file pathname destpath)))))
     (dolist (pathname (uiop:subdirectories src))
       (let* ((basename (directory-basename pathname))
              (destpath (merge-pathnames basename dst)))
         (make-directory destpath)
-        (setf posts (append posts (make-tree-recursively pathname destpath
+        (setf pages (append pages (make-tree-recursively pathname destpath
                                                          page-layout post-layout
                                                          params)))))
-    posts))
+    (validate-pages pages)
+    pages))
 
 (defun make-tree (src dst page-layout params)
   "Make tree of files and folders from the content tree."
@@ -772,27 +799,27 @@ value, next-index."
 ;;; Blog
 ;;; ----
 
-(defun make-blog-posts (src page-layout params)
+(defun make-posts (src page-layout params)
   "Generate blog post pages for all posts in a blog directory."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
-        (post-dst "_site/{{ slug }}.html")
+        (page-dst "_site/{{ slug }}.html")
         (list-dst (render "_site/{{ blog-slug }}.html" params))
-        (posts))
+        (pages))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
     (set-nested-template list-layout page-layout)
-    ;; Read and render all posts.
-    (setf posts (make-posts src post-dst post-layout params))
+    ;; Read and render all pages.
+    (setf pages (make-pages src page-dst post-layout params))
     ;; Create blog list page.
     (aput "title" (render "{{ nick }}'s {{ blog-name }}" params) params)
     (aput "subtitle" "" params)
-    (make-post-list posts list-dst list-layout item-layout params)
-    posts))
+    (make-page-list pages list-dst list-layout item-layout params)
+    pages))
 
-(defun make-blog-comments (posts src page-layout &optional params)
-  "Generate comment list pages or no comments pages for all posts."
+(defun make-comments (pages src page-layout &optional params)
+  "Generate comment list pages or no comments pages for all pages."
   (let ((none-layout (read-file "layout/comment/none.html"))
         (list-layout (read-file "layout/comment/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
@@ -808,23 +835,23 @@ value, next-index."
         (check-comment-dates comments)
         (aput slug comments comment-map)))
     ;; Add parameters for comment list rendering.
-    ;; For each post, render its comment list page.
-    (dolist (post posts)
-      (let* ((slug (aget "slug" post))
+    ;; For each page, render its comment list page.
+    (dolist (page pages)
+      (let* ((slug (aget "slug" page))
              (comments (aget slug comment-map)))
         (if (aget slug comment-map)
-            (make-comment-list post comments comment-dst
+            (make-comment-list page comments comment-dst
                                list-layout item-layout params)
-            (make-comment-none post comment-dst none-layout params))))))
+            (make-comment-none page comment-dst none-layout params))))))
 
 (defun make-blog (src name page-layout params)
   "Create a complete blog with blog, tags, and list page."
   (aput "blog-name" name params)
   (aput "blog-slug" (string-downcase name) params)
-  (let* ((posts))
-    (setf posts (make-blog-posts src page-layout params))
-    (make-blog-comments posts "content/comments/*.html" page-layout params)
-    posts))
+  (let* ((pages))
+    (setf pages (make-posts src page-layout params))
+    (make-comments pages "content/comments/*.html" page-layout params)
+    pages))
 
 
 ;;; Meets
@@ -979,7 +1006,7 @@ value, next-index."
 
 (defun make-css ()
   "Generate stylesheets for the main website."
-  (make-posts "layout/css/*.css" "_site/css/{{ slug }}.css" "{{ body }}"
+  (make-pages "layout/css/*.css" "_site/css/{{ slug }}.css" "{{ body }}"
               (append (main-style) (list (cons "render" "yes")))))
 
 (defun feed-css ()
@@ -991,7 +1018,7 @@ value, next-index."
 
 (defun make-xsl ()
   "Generate stylesheet for feed."
-  (make-posts "layout/blog/*.xsl" "_site/{{ slug }}.xsl" "{{ body }}"
+  (make-pages "layout/blog/*.xsl" "_site/{{ slug }}.xsl" "{{ body }}"
               (list (cons "css" (feed-css)) (cons "render" "yes"))))
 
 
@@ -1004,55 +1031,55 @@ value, next-index."
         (post-layout (read-file "layout/music/post.html"))
         (item-layout (read-file "layout/music/item.html"))
         (widget-layout (read-file "layout/music/widget.html"))
-        (posts))
+        (pages))
     ;; Combine layouts to form final layouts.
     (set-nested-template list-layout page-layout)
     (set-nested-template post-layout page-layout)
     ;; Callback function to be passed as a parameter to renderer.
-    (defun make-widget-callback (post)
+    (defun make-widget-callback (page)
       "Callback function to render music player widget."
-      (let* ((widget-params (append post params))
+      (let* ((widget-params (append page params))
              (rendered-widget (render widget-layout widget-params)))
         (list (cons "widget" rendered-widget))))
-    ;; Add parameters for music post rendering.
+    ;; Add parameters for music page rendering.
     (aput "import" "extra.css music.css" params)
     (aput "callback" #'make-widget-callback params)
-    ;; Render all music posts.
-    (setf posts (make-posts src "_site/music/{{ slug }}.html"
+    ;; Render all music pages.
+    (setf pages (make-pages src "_site/music/{{ slug }}.html"
                             post-layout params))
     ;; Generate music list page.
     (aput "title" "Music" params)
-    (make-post-list posts "_site/music/index.html"
+    (make-page-list pages "_site/music/index.html"
                     list-layout item-layout params)
-    posts))
+    pages))
 
 
 ;;; Tags and Feeds
 ;;; --------------
 
-(defun collect-tags (posts)
-  "Group post by tags and return an alist of tag and post list."
-  (setf posts (only-list-posts posts))
+(defun collect-tags (pages)
+  "Group page by tags and return an alist of tag and page list."
+  (setf pages (only-list-pages pages))
   (let ((tags))
-    (dolist (post posts)
-      (dolist (tag (uiop:split-string (aget "tag" post)))
-        (aput-list tag post tags)))
+    (dolist (page pages)
+      (dolist (tag (uiop:split-string (aget "tag" page)))
+        (aput-list tag page tags)))
     (dolist (tag-entry tags)
-      (setf (cdr tag-entry) (sort-posts (cdr tag-entry))))
+      (setf (cdr tag-entry) (sort-pages (cdr tag-entry))))
     (sort tags (lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
 
 (defun tags-html (tags params)
   "Render tag list as HTML."
   (let ((item-layout (read-file "layout/tag/tag.html"))
         (tag)
-        (posts)
+        (pages)
         (count)
         (rendered-tags))
     ;; Render each tag-map entry.
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
-      (setf posts (cdr tag-entry))
-      (setf count (length posts))
+      (setf pages (cdr tag-entry))
+      (setf count (length pages))
       (aput "tag-slug" (string-downcase tag) params)
       (aput "tag" tag params)
       (aput "count" count params)
@@ -1060,7 +1087,7 @@ value, next-index."
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
 
-(defun make-tags (posts page-layout params)
+(defun make-tags (pages page-layout params)
   "Generate tag index, tag lists, and tag feeds."
   (let* ((tags-layout (read-file "layout/tag/tags.html"))
          (list-layout (read-file "layout/tag/list.html"))
@@ -1071,9 +1098,9 @@ value, next-index."
          (list-dst "_site/tag/{{ tag-slug }}.html")
          (mini-feed-dst "_site/tag/{{ tag-slug }}.xml")
          (full-feed-dst "_site/tag/{{ tag-slug }}-full.xml")
-         (tags (collect-tags posts))
+         (tags (collect-tags pages))
          (tag)
-         (posts))
+         (pages))
     (set-nested-template tags-layout page-layout)
     (set-nested-template list-layout page-layout)
     ;; Tag index page.
@@ -1086,7 +1113,7 @@ value, next-index."
     ;; Tag list page for each tag.
     (dolist (tag-entry tags)
       (setf tag (car tag-entry))
-      (setf posts (cdr tag-entry))
+      (setf pages (cdr tag-entry))
       (aput "tag" tag params)
       (aput "tag-slug" (string-downcase tag) params)
       (aput "title" (render "{{ nick }}'s {{ tag }} Pages" params) params)
@@ -1094,40 +1121,40 @@ value, next-index."
       (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
       (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Pages" params)
             params)
-      (make-post-list posts list-dst list-layout item-layout params)
-      (make-post-list (last-n 20 posts) mini-feed-dst feed-xml item-xml params)
-      (make-post-list posts full-feed-dst feed-xml item-xml params))))
+      (make-page-list pages list-dst list-layout item-layout params)
+      (make-page-list (last-n 20 pages) mini-feed-dst feed-xml item-xml params)
+      (make-page-list pages full-feed-dst feed-xml item-xml params))))
 
-(defun make-full (posts page-layout params)
-  "Generate post list for the full website."
+(defun make-full (pages page-layout params)
+  "Generate page list for the full website."
   (let ((list-layout (read-file "layout/full/list.html"))
         (item-layout (read-file "layout/full/item.html")))
     (set-nested-template list-layout page-layout)
     (aput "title" "All Pages" params)
-    (make-post-list posts "_site/pages.html" list-layout item-layout params)))
+    (make-page-list pages "_site/pages.html" list-layout item-layout params)))
 
-(defun make-feed (posts params)
+(defun make-feed (pages params)
   "Generate feed for the complete website."
   (let ((feed-xml (read-file "layout/tag/feed.xml"))
         (item-xml (read-file "layout/tag/item.xml")))
     (aput "title" (aget "author" params) params)
     (aput "link" (aget "site-url" params) params)
     (aput "description" (render "{{ nick }}'s Feed" params) params)
-    (make-post-list (last-n 20 posts) "_site/feed.xml" feed-xml item-xml params)
-    (make-post-list posts "_site/feed-full.xml" feed-xml item-xml params)))
+    (make-page-list (last-n 20 pages) "_site/feed.xml" feed-xml item-xml params)
+    (make-page-list pages "_site/feed-full.xml" feed-xml item-xml params)))
 
 
 ;;; Home Page
 ;;; ---------
 
-(defun make-home (posts page-layout params)
+(defun make-home (pages page-layout params)
   "Generate home page."
   (let ((home-layout (read-file "layout/home/list.html"))
         (item-layout (read-file "layout/blog/item.html")))
     (set-nested-template home-layout page-layout)
     (aput "title" (aget "author" params) params)
     (aput "subtitle" "" params)
-    (make-post-list posts "_site/index.html" home-layout item-layout params)))
+    (make-page-list pages "_site/index.html" home-layout item-layout params)))
 
 
 ;;; Complete Website
@@ -1146,8 +1173,8 @@ value, next-index."
                       (cons "imports" "")
                       (cons "index" "")))
         (page-layout (read-file "layout/page.html"))
-        (posts)
-        (all-posts))
+        (pages)
+        (all-pages))
     ;; If params file exists, merge it with local params.
     (when (probe-file "params.lisp")
       (setf params (append (read-list "params.lisp") params)))
@@ -1161,30 +1188,28 @@ value, next-index."
     (make-xsl)
     (aput "head" "main.css" params)
     ;; Tree.
-    (setf posts (make-tree "content/tree/" "_site/" page-layout params))
-    (setf all-posts (append all-posts posts))
+    (setf pages (make-tree "content/tree/" "_site/" page-layout params))
+    (setf all-pages (append all-pages pages))
     (make-meets page-layout params)
     ;; Music
-    (setf posts (make-music "content/music/*.html" page-layout params))
-    (setf all-posts (append all-posts posts))
+    (setf pages (make-music "content/music/*.html" page-layout params))
+    (setf all-pages (append all-pages pages))
     ;; More links.
-    (make-tree-list "_site/" "Tree" page-layout params)
     (make-more-list "_site/" "More" page-layout params)
-    (make-tree-list "_site/maze/" "Maze Tree" page-layout params)
-    (make-more-list "_site/maze/" "More from Maze" page-layout params)
     ;; Blogs.
-    (setf posts (make-blog "content/elog/*.html" "Wall" page-layout params))
-    (setf all-posts (append all-posts posts))
-    (setf posts (make-blog "content/blog/*.html" "Blog" page-layout params))
-    (setf all-posts (append all-posts posts))
+    (setf pages (make-blog "content/elog/*.html" "Wall" page-layout params))
+    (setf all-pages (append all-pages pages))
+    (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
+    (setf all-pages (append all-pages pages))
     ;; Home page.
-    (make-home posts page-layout params)
+    (make-home pages page-layout params)
     ;; Aggregates.
-    (setf all-posts (sort-posts all-posts))
-    (make-tags all-posts page-layout params)
-    (make-full all-posts page-layout params)
-    (make-feed all-posts params)
+    (setf all-pages (sort-pages all-pages))
+    (make-tags all-pages page-layout params)
+    (make-full all-pages page-layout params)
+    (make-feed all-pages params)
     ;; Directory indices.
+    (make-tree-list "_site/" "Tree" page-layout params)
     (make-directory-lists "_site/" page-layout params))
   t)
 

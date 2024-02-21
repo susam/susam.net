@@ -417,10 +417,10 @@
 (test-case extra-markup-format-control-in-text
   (assert (string= (extra-markup "~a") "~a")))
 
-(test-case read-post
+(test-case read-page
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- title: Foo Bar -->~%Baz Qux"))
-  (let ((post (read-post "test-tmp/2020-06-01-quux-quuz.html")))
+  (let ((post (read-page "test-tmp/2020-06-01-quux-quuz.html")))
     (assert (string= (aget "date" post) "2020-06-01"))
     (assert (string= (aget "slug" post) "quux-quuz"))
     (assert (string= (aget "title" post) "Foo Bar"))
@@ -428,32 +428,32 @@
     (assert (string= (aget "rss-date" post) "Mon, 01 Jun 2020 00:00:00 +0000"))
     (assert (string= (aget "simple-date" post) "01 Jun 2020"))))
 
-(test-case read-post-without-date
+(test-case read-page-without-date
   (write-file "test-tmp/quux-quuz.html" "Baz Qux")
-  (let ((params (read-post "test-tmp/quux-quuz.html")))
+  (let ((params (read-page "test-tmp/quux-quuz.html")))
     (assert (eq (aget "date" params) nil))
     (assert (string= (aget "slug" params) "quux-quuz"))
     (assert (string= (aget "body" params) "Baz Qux"))))
 
-(test-case read-post-date-in-filename-only
+(test-case read-page-date-in-filename-only
   (write-file "test-tmp/2020-06-01-quux-quuz.html" "Baz Qux")
-  (let ((params (read-post "test-tmp/2020-06-01-quux-quuz.html")))
+  (let ((params (read-page "test-tmp/2020-06-01-quux-quuz.html")))
     (assert (string= (aget "date" params) "2020-06-01"))
     (assert (string= (aget "slug" params) "quux-quuz"))
     (assert (string= (aget "body" params) "Baz Qux"))))
 
-(test-case read-post-date-in-header-only
+(test-case read-page-date-in-header-only
   (write-file "test-tmp/quux-quuz.html"
               (format nil "<!-- date: 2020-06-02 -->~%Baz Qux"))
-  (let ((params (read-post "test-tmp/quux-quuz.html")))
+  (let ((params (read-page "test-tmp/quux-quuz.html")))
     (assert (string= (aget "date" params) "2020-06-02"))
     (assert (string= (aget "slug" params) "quux-quuz"))
     (assert (string= (aget "body" params) "Baz Qux"))))
 
-(test-case read-post-date-in-filename-and-header
+(test-case read-page-date-in-filename-and-header
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- date: 2020-06-02 -->~%Baz Qux"))
-  (let ((params (read-post "test-tmp/2020-06-01-quux-quuz.html")))
+  (let ((params (read-page "test-tmp/2020-06-01-quux-quuz.html")))
     (assert (string= (aget "date" params) "2020-06-02"))
     (assert (string= (aget "slug" params) "quux-quuz"))
     (assert (string= (aget "body" params) "Baz Qux"))))
@@ -548,59 +548,60 @@
   (assert (string= (relative-root-path "_site/foo/bar/") "../../"))
   (assert (string= (relative-root-path "_site/foo/bar/index.html") "../../")))
 
-(test-case add-page-params-imports
+(test-case add-output-params-imports
   (let ((params (list (cons "import" "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
-    (add-page-params "_site/" params)
+    (add-output-params "_site/" params)
     (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-page-params "_site/foo.html" params)
+    (add-output-params "_site/foo.html" params)
     (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-page-params "_site/foo/" params)
+    (add-output-params "_site/foo/" params)
     (assert (string= (aget "imports" params) (format nil result "../")))
-    (add-page-params "_site/foo/bar.html" params)
+    (add-output-params "_site/foo/bar.html" params)
     (assert (string= (aget "imports" params) (format nil result "../")))))
 
-(test-case add-page-params-canonical-url
-  (let ((params (list (cons "site-url" "https://example.com/"))))
-    (add-page-params "_site/" params)
-    (assert (string= (aget "canonical-url" params) "https://example.com/"))
-    (add-page-params "_site/foo/" params)
-    (assert (string= (aget "canonical-url" params) "https://example.com/foo/"))
-    (add-page-params "_site/foo/bar/" params)
-    (assert (string= (aget "canonical-url" params)
+(test-case add-page-params-neat-url
+  (let ((params (list (cons "site-url" "https://example.com/")))
+        (page))
+    (add-page-params "_site/" page params)
+    (assert (string= (aget "neat-url" page) "https://example.com/"))
+    (add-page-params "_site/foo/" page params)
+    (assert (string= (aget "neat-url" page) "https://example.com/foo/"))
+    (add-page-params "_site/foo/bar/" page params)
+    (assert (string= (aget "neat-url" page) "https://example.com/foo/bar/"))))
+
+(test-case add-page-params-neat-url-index
+  (let ((params (list (cons "site-url" "https://example.com/")))
+        (page))
+    (add-page-params "_site/index.html" page params)
+    (assert (string= (aget "neat-url" page) "https://example.com/"))
+    (add-page-params "_site/foo/index.html" page params)
+    (assert (string= (aget "neat-url" page) "https://example.com/foo/"))
+    (add-page-params "_site/foo/bar/index.html" page params)
+    (assert (string= (aget "neat-url" page)
                      "https://example.com/foo/bar/"))))
 
-(test-case add-page-params-canonical-url-index
-  (let ((params (list (cons "site-url" "https://example.com/"))))
-    (add-page-params "_site/index.html" params)
-    (assert (string= (aget "canonical-url" params) "https://example.com/"))
-    (add-page-params "_site/foo/index.html" params)
-    (assert (string= (aget "canonical-url" params) "https://example.com/foo/"))
-    (add-page-params "_site/foo/bar/index.html" params)
-    (assert (string= (aget "canonical-url" params)
-                     "https://example.com/foo/bar/"))))
-
-(test-case make-posts-single
+(test-case make-pages-single
   (write-file "test-tmp/content/foo.txt" "foo")
-  (make-posts "test-tmp/content/foo.txt" "test-tmp/output/out.txt"
+  (make-pages "test-tmp/content/foo.txt" "test-tmp/output/out.txt"
               "[{{ body }}]" nil)
   (assert (string= (read-file "test-tmp/output/out.txt") "[foo]")))
 
-(test-case make-posts-multiple
+(test-case make-pages-multiple
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
   (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (make-posts "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
+  (make-pages "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
               "[{{ body }}]" nil)
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo]"))
   (assert (string= (read-file "test-tmp/output/bar.txt") "[bar]"))
   (assert (string= (read-file "test-tmp/output/baz.txt") "[baz]")))
 
-(test-case make-posts-multiple-sort
+(test-case make-pages-multiple-sort
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
   (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (let ((posts (make-posts "test-tmp/content/*.txt"
+  (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]" nil)))
     (assert (= (length posts) 3))
@@ -608,65 +609,65 @@
     (assert (string= (aget "date" (second posts)) "2020-06-02"))
     (assert (string= (aget "date" (third posts)) "2020-06-03"))))
 
-(test-case make-posts-filename-params
+(test-case make-pages-filename-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (make-posts "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
+  (make-pages "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
               "[{{ date }} {{ slug }} {{ body }}]" nil)
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[2020-06-01 foo foo]")))
 
-(test-case make-posts-filename-params-overrides-call-params
+(test-case make-pages-filename-params-overrides-call-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (make-posts "test-tmp/content/*.txt"
+  (make-pages "test-tmp/content/*.txt"
               "test-tmp/output/{{ slug }}.txt"
               "[{{ date }} {{ slug }} {{ body }}]"
               (list (cons "date" "2020-06-01") (cons "slug" "quux")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[2020-06-01 foo foo]")))
 
-(test-case make-posts-callback
+(test-case make-pages-callback
   (defun callback (params)
     (declare (ignore params))
     (list (cons "a" "apple")))
   (write-file "test-tmp/content/foo.txt" "foo")
-  (make-posts "test-tmp/content/foo.txt"
+  (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
               (list (cons "callback" #'callback)))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo apple]")))
 
-(test-case make-posts-callback-params-overrides-call-params
+(test-case make-pages-callback-params-overrides-call-params
   (defun callback (params)
     (declare (ignore params))
     (list (cons "a" "ant")))
   (write-file "test-tmp/content/foo.txt" "foo")
-  (make-posts "test-tmp/content/foo.txt"
+  (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
               (list (cons "a" "apple") (cons "callback" #'callback)))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo ant]")))
 
-(test-case make-posts-no-content-rendering
+(test-case make-pages-no-content-rendering
   (write-file "test-tmp/content/foo.txt" "foo {{ a }} bar")
-  (make-posts "test-tmp/content/foo.txt"
+  (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }}]"
               (list (cons "a" "apple")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo {{ a }} bar]")))
 
-(test-case make-posts-content-rendering
+(test-case make-pages-content-rendering
   (write-file "test-tmp/content/foo.txt" "foo {{ a }} bar")
-  (make-posts "test-tmp/content/foo.txt"
+  (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }}]"
               (list (cons "a" "apple") (cons "render" "yes")))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo apple bar]")))
 
-(test-case make-posts-import-css
+(test-case make-pages-import-css
   (write-file "test-tmp/content/foo.txt" "foo")
-  (make-posts "test-tmp/content/foo.txt"
+  (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
               (list (cons "import" "foo.css") (cons "root" "")))
@@ -674,9 +675,9 @@
 foo]"))
     (assert (string= (read-file "test-tmp/output/foo.txt") s))))
 
-(test-case make-posts-import-js
+(test-case make-pages-import-js
   (write-file "test-tmp/content/foo.txt" "foo")
-  (make-posts "test-tmp/content/foo.txt"
+  (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
               (list (cons "import" "foo.js")))
@@ -684,47 +685,47 @@ foo]"))
                    "[  <script src=\"../../js/foo.js\"></script>
 foo]")))
 
-(test-case make-post-list
+(test-case make-page-list
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
   (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (let ((posts (make-posts "test-tmp/content/*.txt"
+  (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]" nil)))
-    (make-post-list posts "test-tmp/list.html"
-                    "[{{ count }} {{ post-label }} {{ body }}]"
+    (make-page-list posts "test-tmp/list.html"
+                    "[{{ count }} {{ page-label }} {{ body }}]"
                     "[{{ body }}]" nil))
   (assert (string= (read-file "test-tmp/list.html")
-                   "[3 posts [baz][bar][foo]]")))
+                   "[3 pages [baz][bar][foo]]")))
 
-(test-case make-post-list-post-call-params
+(test-case make-page-list-post-call-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
   (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (let ((posts (make-posts "test-tmp/content/*.txt"
+  (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]" nil)))
-    (make-post-list posts "test-tmp/list.html"
+    (make-page-list posts "test-tmp/list.html"
                     "[{{ a }} {{ body }}]"      ; Param used here
                     "[{{ a }} {{ body }}]"      ; and here.
                     (list (cons "a" "apple")))) ; Call param.
   (assert (string= (read-file "test-tmp/list.html")
                    "[apple [apple baz][apple bar][apple foo]]")))
 
-(test-case make-post-list-post-params-override-call-params
+(test-case make-page-list-post-params-override-call-params
   (write-file "test-tmp/content/2020-06-01-foo.txt"
               (format nil "<!-- a: air -->~%foo")) ; Post param.
   (write-file "test-tmp/content/2020-06-02-bar.txt"
               (format nil "<!-- a: ant -->~%bar")) ; Post param.
   (write-file "test-tmp/content/2020-06-03-baz.txt"
               (format nil "<!-- a: ash -->~%baz")) ; Post param.
-  (let ((posts (make-posts "test-tmp/content/*.txt"
+  (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]"
                            nil)))
     ;; The call below passes a call param but it is going to be
     ;; overridden by post params.
-    (make-post-list posts "test-tmp/list.html"
+    (make-page-list posts "test-tmp/list.html"
                     "[{{ a }} {{ body }}]"  ; Param used here
                     "[{{ a }} {{ body }}]"  ; and here.
                     (list (cons "a" "apple"))))

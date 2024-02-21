@@ -1,12 +1,12 @@
 <item>
 <title>{{ title }}</title>
-<link>{{ site-url }}{{ path }}</link>
-<guid>{{ site-url }}{{ path }}</guid>
+<link>{{ neat-url }}</link>
+<guid>{{ neat-url }}</guid>
 <description>
 <![CDATA[
 {{ body }}<!-- ### -->
 <p>
-  <a href="{{ site-url }}{{ path }}">Read on website</a> |
+  <a href="{{ neat-url }}">Read on website</a> |
   {{ tags-for-feed }}
 </p>
 ]]>
