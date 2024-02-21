@@ -1,7 +1,6 @@
 <h1>{{ title }}</h1>
 <div class="status {{ class }}">
-  {{ status }}
-</div>
+{{ status }}</div>
 <p>
   Enter your email address below to {{ intention }}
   newsletters from this website.
@@ -9,6 +8,7 @@
 <form method="post" action="">
   <input type="email" id="email" name="email" value="{{ email }}"
          placeholder="Your email address" required>
+  <input type="hidden" name="{{ xkey }}" value="{{ xval }}">
   <input type="hidden" name="{{ ykey }}" value="{{ yval }}">
   <button>{{ submit }}</button>
 </form>

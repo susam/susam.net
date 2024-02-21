@@ -225,7 +225,8 @@
 (defun dodgy-comment-p (params)
   "Check if post content has invalid fields."
   (or (string/= (aget "p" params) (aget "slug" params))
-      (string/= (from-post (aget "xkey" params)) (aget "xval" params))))
+      (string/= (from-post (aget "ukey" params)) (aget "uval" params))
+      (string/= (from-post (aget "vkey" params)) (aget "vval" params))))
 
 (defun reject-comment (layout errors params)
   "Reject post with error messages."
@@ -281,13 +282,13 @@
          (form-layout (read-file "layout/form/comment.html"))
          (method (hunchentoot:request-method*))
          (options (read-options directory))
-         (xkey (getf options :xkey "k"))
-         (xval (getf options :xval "v"))
          (params))
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (add-page-params params)
-    (aput "xkey" xkey params)
-    (aput "xval" xval params)
+    (aput "ukey" (getf options :ukey "uk") params)
+    (aput "uval" (getf options :uval "uv") params)
+    (aput "vkey" (getf options :vkey "vk") params)
+    (aput "vval" (getf options :vval "vv") params)
     (if (eq method :post)
         (comment-form-post directory form-layout options params)
         (comment-form-get form-layout params))))
@@ -331,7 +332,8 @@
 
 (defun dodgy-subscriber-p (params)
   "Check if subscriber has invalid fields."
-  (string/= (from-post (aget "ykey" params)) (aget "yval" params)))
+  (or (string/= (from-post (aget "xkey" params)) (aget "xval" params))
+      (string/= (from-post (aget "ykey" params)) (aget "yval" params))))
 
 (defun reject-subscriber (layout errors action params)
   "Reject subscriber with error messages."
@@ -381,16 +383,16 @@
          (form-layout (read-file "layout/form/subscribe.html"))
          (method (hunchentoot:request-method*))
          (options (read-options directory))
-         (ykey (getf options :ykey "k"))
-         (yval (getf options :yval "v"))
          (params))
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
     (add-page-params params)
     (aput "intention" (subscriber-intention action) params)
     (aput "submit" (subscriber-button action) params)
     (aput "purpose" (subscriber-purpose action) params)
-    (aput "ykey" ykey params)
-    (aput "yval" yval params)
+    (aput "xkey" (getf options :xkey "xk") params)
+    (aput "xval" (getf options :xval "xv") params)
+    (aput "ykey" (getf options :ykey "yk") params)
+    (aput "yval" (getf options :yval "yv") params)
     (if (eq method :post)
         (subscriber-form-post directory form-layout options action params)
         (subscriber-form-get form-layout action params))))

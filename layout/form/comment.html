@@ -1,7 +1,6 @@
 <h1>{{ title }}</h1>
 <div class="status {{ class }}">
-  {{ status }}
-</div>
+{{ status }}</div>
 <form method="post" action="?p={{ p }}">
   <input id="name" name="name" value="{{ name }}" required
          placeholder="Your name">
@@ -10,7 +9,8 @@
   <textarea id="comment" name="comment" required
             placeholder="Your comment">{{ comment }}</textarea>
   <input type="hidden" name="slug" value="{{ slug }}">
-  <input type="hidden" name="{{ xkey }}" value="{{ xval }}">
+  <input type="hidden" name="{{ ukey }}" value="{{ uval }}">
+  <input type="hidden" name="{{ vkey }}" value="{{ vval }}">
   <button>Submit Comment</button>
 </form>
 <div class="privacy">
