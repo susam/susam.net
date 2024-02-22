@@ -184,6 +184,19 @@
         (return)))
     result))
 
+(defun calc-token (a)
+  "Calculate token from given integer."
+  (let ((b (mod a 97))
+        (c (mod a 71)))
+    (+ (* 1000000 a) (* 1000 b) c)))
+
+(defun dodgy-post-p (token)
+  "Check if post content contains invalid token."
+  (let* ((digits (and (string/= token "") (every #'digit-char-p token)))
+         (x (if digits (parse-integer token) 0))
+         (a (floor x 1000000))
+         (xx (calc-token a)))
+    (or (< x 403) (/= x xx))))
 
 ;;; Comment Form
 ;;; ------------
@@ -225,7 +238,8 @@
   "Check if post content has invalid fields."
   (or (string/= (aget "p" params) (aget "slug" params))
       (string/= (from-post (aget "ukey" params)) (aget "uval" params))
-      (string/= (from-post (aget "vkey" params)) (aget "vval" params))))
+      (string/= (from-post (aget "vkey" params)) (aget "vval" params))
+      (dodgy-post-p (or (from-post "token") ""))))
 
 (defun reject-comment (layout errors params)
   "Reject post with error messages."
@@ -253,6 +267,15 @@
 
 (defun comment-form-post (directory layout options params)
   "Return processed form page."
+  (write-form-log "Data ~a=~a ~a=~a token=~a slug=~a name=~a url=~a comment=~a"
+                  (aget "ukey" params) (from-post (aget "ukey" params))
+                  (aget "vkey" params) (from-post (aget "vkey" params))
+                  (from-post "token")
+                  (from-post "slug")
+                  (from-post "name")
+                  (from-post "url")
+                  (let ((comment (from-post "comment")))
+                    (subseq comment 0 (min 40 (length comment)))))
   (let ((ip (real-ip))
         (current-time (get-universal-time))
         (errors))
@@ -332,7 +355,8 @@
 (defun dodgy-subscriber-p (params)
   "Check if subscriber has invalid fields."
   (or (string/= (from-post (aget "xkey" params)) (aget "xval" params))
-      (string/= (from-post (aget "ykey" params)) (aget "yval" params))))
+      (string/= (from-post (aget "ykey" params)) (aget "yval" params))
+      (dodgy-post-p (or (from-post "token") ""))))
 
 (defun reject-subscriber (layout errors action params)
   "Reject subscriber with error messages."
@@ -360,6 +384,11 @@
 
 (defun subscriber-form-post (directory layout options action params)
   "Return processed subscriber form page."
+  (write-form-log "Data ~a=~a ~a=~a token=~a email=~a"
+                  (aget "xkey" params) (from-post (aget "xkey" params))
+                  (aget "ykey" params) (from-post (aget "ykey" params))
+                  (from-post "token")
+                  (from-post "email"))
   (aput "email" (or (from-post "email") "") params)
   (let ((ip (real-ip))
         (current-time (get-universal-time))
