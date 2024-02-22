@@ -178,7 +178,7 @@ top-ref:
 	sudo zgrep ' 200 ' /var/log/nginx/access.log* | awk '{print $$11}' | grep -vE '^"https?://susam\.net/?' | sort | uniq -c | sort -nr | nl | less
 
 post-log:
-	tail -F /opt/log/form/form.log | grep written
+	tail -F /opt/log/form/form.log | grep Written
 
 count-log:
 	sudo zgrep -c . /var/log/nginx/access.log* | awk -F : '{printf "%10s  %s\n", $$2, $$1}'
