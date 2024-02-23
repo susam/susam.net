@@ -109,7 +109,7 @@
      (aput "index" "" ,params)
      (aput "zone-link" "" ,params)
      (aput "current-year" (nth-value 5 (get-decoded-time)) ,params)
-     (aput "canonical-url" "" ,params)
+     (aput "neat-url" (fstr "https://susam.net~a" (hunchentoot:request-uri*)) ,params)
      (aput "heads" (head-html "main.css" ,params) ,params)
      (aput "imports" (head-html "form.css" ,params) ,params)
      (when (probe-file "params.lisp")
