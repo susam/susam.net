@@ -466,9 +466,12 @@ value, next-index."
               (setf next-index (+ h-close-index 3)))
              (t
               (setf next-index (+ h-begin-index 2)))))
-      (dotimes (n indent)
+      (when init
         (format tt "</li>~%")
-        (format tt "~a</ul>" (toc-indent (decf indent)))))))
+        (dotimes (n (floor indent 2))
+          (format tt "~a</ul>~%" (toc-indent (decf indent)))
+          (format tt "~a</li>~%" (toc-indent (decf indent))))
+        (format tt "</ul>")))))
 
 (defun format-size (size)
   "Convert size in bytes to human-readable size."

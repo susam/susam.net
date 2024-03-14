@@ -417,6 +417,70 @@
 (test-case extra-markup-format-control-in-text
   (assert (string= (extra-markup "~a") "~a")))
 
+(test-case toc-html-none
+  (let ((toc (fstr "<h2 id=\"contents\">Contents</h2>~%")))
+    (assert (string= (toc-html "") toc))
+    (assert (string= (toc-html "foo bar") toc))
+    (assert (string= (toc-html "<h2>H2</h2>") toc))))
+
+(test-case toc-html-single
+  (let ((body "<h2 id=\"h2\">H2</h2>")
+        (toc "<h2 id=\"contents\">Contents</h2>
+<ul>
+  <li><a href=\"#h2\">H2</a></li>
+</ul>"))
+    (assert (string= (toc-html body) toc))))
+
+(test-case toc-html-multiple
+  (let ((body "<h2 id=\"h2\">H2</h2>
+
+Foo
+
+<h2 id=\"h2\">H2</h2>
+<h3 id=\"h3\">H3</h3>
+<h3 id=\"h3\">H3</h3>
+<h4 id=\"h4\">H4</h4>
+<h5 id=\"h5\">H5</h5>
+<h2 id=\"h2\">H2</h2>")
+        (toc "<h2 id=\"contents\">Contents</h2>
+<ul>
+  <li><a href=\"#h2\">H2</a></li>
+  <li><a href=\"#h2\">H2</a>
+    <ul>
+      <li><a href=\"#h3\">H3</a></li>
+      <li><a href=\"#h3\">H3</a>
+        <ul>
+          <li><a href=\"#h4\">H4</a>
+            <ul>
+              <li><a href=\"#h5\">H5</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href=\"#h2\">H2</a></li>
+</ul>"))
+    (assert (string= (toc-html body) toc))))
+
+(test-case toc-html-deep-end
+  (let ((body "<h2 id=\"h2\">H2</h2>
+<h3 id=\"h3\">H3</h3>
+<h4 id=\"h4\">H4</h4>")
+        (toc "<h2 id=\"contents\">Contents</h2>
+<ul>
+  <li><a href=\"#h2\">H2</a>
+    <ul>
+      <li><a href=\"#h3\">H3</a>
+        <ul>
+          <li><a href=\"#h4\">H4</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>"))
+    (assert (string= (toc-html body) toc))))
+
 (test-case read-page
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
               (format nil "<!-- title: Foo Bar -->~%Baz Qux"))
