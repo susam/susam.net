@@ -415,16 +415,16 @@ value, next-index."
 (defun toc-html (text)
   "Generate HTML for table of contents."
   (with-output-to-string (tt)
-    (let* ((h-begin-index)              ; -> <h1 id="foo">
-           (h-close-index)              ; -> </h1>
-           (id-end-index)               ; <h1 id="foo" <-
-           (title-begin-index)          ; <h1 id="foo">F <-
+    (let* ((h-begin-index)              ; -> <h2 id="foo">
+           (h-close-index)              ; -> </h2>
+           (id-end-index)               ; <h2 id="foo" <-
+           (title-begin-index)          ; <h2 id="foo">F <-
+           (next-index 0)               ; <h2 <-
+           (indent -1)                  ; We want the first indent to be 0.
+           (new-level 1)                ; We want the first heading to be <h2>.
+           (old-level)
            (href)
            (title)
-           (next-index 0)               ; <h1 <-
-           (old-level 0)
-           (new-level 0)
-           (indent -1)
            (init))
       (format tt "<h2 id=\"contents\">Contents</h2>~%")
       (loop
@@ -441,17 +441,15 @@ value, next-index."
               (setf href (fstr "#~a" (subseq text (+ h-begin-index 8) id-end-index)))
               (setf title (subseq text title-begin-index h-close-index))
               (cond ((string= href "#contents"))
-                    ((not init)
+                    ((> new-level (1+ old-level))
+                     (error "Incorrect heading level ~a after ~a: ~a (~a)"
+                            new-level old-level href title))
+                    ((= new-level (1+ old-level))
+                     (format tt (if init "~%" ""))
                      (format tt "~a<ul>~%" (toc-indent (incf indent)))
                      (format tt "~a<li><a href=\"~a\">~a</a>"
                              (toc-indent (incf indent)) href title)
                      (setf init t))
-                    ((= new-level (1+ old-level))
-                     (format tt "~%~a<ul>~%" (toc-indent (incf indent)))
-                     (format tt "~a<li><a href=\"~a\">~a</a>"
-                             (toc-indent (incf indent)) href title))
-                    ((> new-level (1+ old-level))
-                     (error "Incorrect heading level: ~a: ~a" href title))
                     ((= new-level old-level)
                      (format tt "</li>~%")
                      (format tt "~a<li><a href=\"~a\">~a</a>"
