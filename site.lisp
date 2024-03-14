@@ -386,30 +386,89 @@ value, next-index."
 
 (defun extra-markup (text)
   "Add extra markup to the page to create heading anchor links."
-  (with-output-to-string (s)
-    (let* ((begin-tag-index)
-           (end-id-index)
-           (end-tag-index)
-           (next-index 0))
+  (with-output-to-string (ss)
+    (let* ((h-begin-index)              ; ->  <h1 id="foo">
+           (h-close-index)              ; ->  </h1>
+           (id-end-index)               ;     <h1 id="foo"   <-
+           (next-index 0))              ;     <h1            <-
       (loop
-        (setf begin-tag-index (search "<h" text :start2 next-index))
-        (unless begin-tag-index
-          (return))
-        (cond ((and (digit-char-p (char text (+ begin-tag-index 2)))
-                    (substring-at "id=\"" text (+ begin-tag-index 4)))
+       (setf h-begin-index (search "<h" text :start2 next-index))
+       (unless h-begin-index
+         (return))
+       (cond ((and (digit-char-p (char text (+ h-begin-index 2)))
+                   (substring-at "id=\"" text (+ h-begin-index 4)))
+              (setf id-end-index (search "\"" text :start2 (+ h-begin-index 8)))
+              (setf h-close-index (search "</h" text :start2 (+ id-end-index 2)))
+              (format ss "~a<a href=\"#~a\"></a></h"
+                      (subseq text next-index h-close-index)
+                      (subseq text (+ h-begin-index 8) id-end-index))
+              (setf next-index (+ h-close-index 3)))
+             (t
+              (format ss "~a" (subseq text next-index (+ h-begin-index 2)))
+              (setf next-index (+ h-begin-index 2)))))
+      (format ss "~a" (subseq text next-index)))))
 
-               (setf end-id-index (search "\"" text
-                                          :start2 (+ begin-tag-index 8)))
-               (setf end-tag-index (search "</h" text
-                                           :start2 (+ end-id-index 2)))
-               (format s "~a" (subseq text next-index end-tag-index))
-               (format s "<a href=\"#~a\"></a></h"
-                       (subseq text (+ begin-tag-index 8) end-id-index))
-               (setf next-index (+ end-tag-index 3)))
-              (t
-               (format s "~a" (subseq text next-index (+ begin-tag-index 2)))
-               (setf next-index (+ begin-tag-index 2)))))
-      (format s "~a" (subseq text next-index)))))
+(defun toc-indent (level)
+  "Create leading indentation items in table of contents."
+  (repeat-string (* 2 level) " "))
+
+(defun toc-html (text)
+  "Generate HTML for table of contents."
+  (with-output-to-string (tt)
+    (let* ((h-begin-index)              ; -> <h1 id="foo">
+           (h-close-index)              ; -> </h1>
+           (id-end-index)               ; <h1 id="foo" <-
+           (title-begin-index)          ; <h1 id="foo">F <-
+           (href)
+           (title)
+           (next-index 0)               ; <h1 <-
+           (old-level 0)
+           (new-level 0)
+           (indent -1)
+           (init))
+      (format tt "<h2 id=\"contents\">Contents</h2>~%")
+      (loop
+       (setf h-begin-index (search "<h" text :start2 next-index))
+       (unless h-begin-index
+         (return))
+       (cond ((and (digit-char-p (char text (+ h-begin-index 2)))
+                   (substring-at "id=\"" text (+ h-begin-index 4)))
+              (setf old-level new-level)
+              (setf new-level (parse-integer (string (char text (+ h-begin-index 2)))))
+              (setf id-end-index (search "\"" text :start2 (+ h-begin-index 8)))
+              (setf title-begin-index (1+ (search ">" text :start2 (1+ id-end-index))))
+              (setf h-close-index (search "</h" text :start2 (+ id-end-index 2)))
+              (setf href (fstr "#~a" (subseq text (+ h-begin-index 8) id-end-index)))
+              (setf title (subseq text title-begin-index h-close-index))
+              (cond ((string= href "#contents"))
+                    ((not init)
+                     (format tt "~a<ul>~%" (toc-indent (incf indent)))
+                     (format tt "~a<li><a href=\"~a\">~a</a>"
+                             (toc-indent (incf indent)) href title)
+                     (setf init t))
+                    ((= new-level (1+ old-level))
+                     (format tt "~%~a<ul>~%" (toc-indent (incf indent)))
+                     (format tt "~a<li><a href=\"~a\">~a</a>"
+                             (toc-indent (incf indent)) href title))
+                    ((> new-level (1+ old-level))
+                     (error "Incorrect heading level: ~a: ~a" href title))
+                    ((= new-level old-level)
+                     (format tt "</li>~%")
+                     (format tt "~a<li><a href=\"~a\">~a</a>"
+                             (toc-indent indent) href title))
+                    ((< new-level old-level)
+                     (format tt "</li>~%")
+                     (dotimes (n (- old-level new-level))
+                       (format tt "~a</ul>~%" (toc-indent (decf indent)))
+                       (format tt "~a</li>~%" (toc-indent (decf indent))))
+                     (format tt "~a<li><a href=\"~a\">~a</a>"
+                             (toc-indent indent) href title)))
+              (setf next-index (+ h-close-index 3)))
+             (t
+              (setf next-index (+ h-begin-index 2)))))
+      (dotimes (n indent)
+        (format tt "</li>~%")
+        (format tt "~a</ul>" (toc-indent (decf indent)))))))
 
 (defun format-size (size)
   "Convert size in bytes to human-readable size."
@@ -464,6 +523,7 @@ value, next-index."
   (write-log "Writing ~a ..." dst-path)
   (add-output-params dst-path params)
   (add-zone-params dst-path params)
+  ;; Perform extra-markup only for .html pages.
   (write-file dst-path (extra-markup (render layout params))))
 
 
@@ -497,6 +557,7 @@ value, next-index."
     (invoke-callback params)
     ;; Render placeholder in page body if requested.
     (when (string= (aget "render" params) "yes")
+      (aput "toc" (toc-html (aget "body" params)) params)
       (setf body (render (aget "body" params) params))
       (aput "body" body params)
       ;; Update body in page to the rendered body.
