@@ -281,7 +281,7 @@ ddiff:
 	rm -rf _new/dist/
 	mkdir -p _new/
 	mv _site/ _new/dist/
-	diff -ru _ref/dist/ _new/dist/ | vim -
+	diff -ru _ref/dist/ _new/dist/
 	@echo Done; echo
 
 sdiff:
