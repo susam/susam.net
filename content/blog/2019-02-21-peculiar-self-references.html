@@ -66,7 +66,7 @@ a[0] = new</code>
 </pre>
 <p>
   which would indeed create a self-referential list.
-</pre>
+</p>
 <p>
   <a href="https://docs.python.org/3.7/reference/simple_stmts.html#assignment-statements">Section
   7.2 (Assignment statements)</a> of <em>The Python Language
@@ -147,7 +147,7 @@ target          ::=  identifier
 <pre>
 <samp>&gt;&gt;&gt; <kbd>a[0] = a = [0]</kbd>
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 NameError: name 'a' is not defined</samp>
 </pre>
 <p>
@@ -161,7 +161,7 @@ NameError: name 'a' is not defined</samp>
 <pre>
 <samp>&gt;&gt;&gt; <kbd>a = a[0] = 0</kbd>
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 TypeError: 'int' object does not support item assignment</samp>
 </pre>
 <p>

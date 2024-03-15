@@ -47,6 +47,7 @@ help:
 	@echo '  run-deep-dist     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
 	@echo '  checks            Run checks suitable to be run before push.'
+	@echo '  tidy              Run HTML Tidy on the generated website.'
 	@echo '  check-links       Check broken links in a locally running website.'
 	@echo '  check-paths       Check live website paths and redirects.'
 	@echo '  check-form-rate   Check rate-limiting of form.'
@@ -309,8 +310,15 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: check-copyright check-rendering check-sentence-space check-math-punct \
+checks: tidy check-copyright check-rendering check-sentence-space check-math-punct \
 check-entities check-newlines check-comment-files check-copyright check-nginx
+
+tidy: dist
+	find _site -name "*.html" | while read -r page; do \
+	  echo Checking "$$page"; \
+	  tidy -q --markup no --warn-proprietary-attributes no "$$page" || exit 1; \
+	done
+	@echo Done; echo
 
 check-copyright:
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" content/tree/cv.html content/tree/foss.html

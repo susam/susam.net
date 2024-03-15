@@ -1057,7 +1057,7 @@ tar -xOf /tmp/foo.tgz</code>
   to see how this command and the next command affect the tags for
   each thumbnail.  Alternatively, type <code>C-t e</code> in a Dired
   buffer to view and edit the tags of the target files.
-<p>
+</p>
 <p>
   The key sequence <code>t r trip RET</code> removes the
   tag <code>trip</code> from the target images.  By virtue of how this
@@ -1100,7 +1100,7 @@ tar -xOf /tmp/foo.tgz</code>
   is more powerful than the display buffer we get when we open an
   image from the thumbnail preview window.
 </p>
-<h2 id="docview">DocView</h3>
+<h2 id="docview">DocView</h2>
 <p>
   When a PDF or another document of a supported format is opened in
   Emacs, they are converted to images on the fly and displayed in
@@ -1239,7 +1239,7 @@ tar -xOf /tmp/foo.tgz</code>
     directly.
   </li>
 </ul>
-<h3 id="docview-resolution">DocView Resolution</h4>
+<h3 id="docview-resolution">DocView Resolution</h3>
 <p>
   If the text in the document looks pixelated in Emacs, set
   the <code>doc-view-resolution</code> variable to 300 as follows:
@@ -1269,7 +1269,7 @@ tar -xOf /tmp/foo.tgz</code>
   manner regenerates the images from the documents with the updated
   resolution.
 </p>
-<h2 id="tramp">TRAMP</h4>
+<h2 id="tramp">TRAMP</h2>
 <p>
   TRAMP stands for Transparent Remote Access, Multiple Protocol.  The
   general syntax of paths supported by TRAMP is:
@@ -1302,11 +1302,11 @@ tar -xOf /tmp/foo.tgz</code>
     <code>C-x C-f /ssh:alice@:~/foo.txt RET</code>: Edit file in
     localhost via SSH after logging into it as a specific user.
   </li>
-  <code>
+  <li>
     <code>C-x C-f /ssh::~/foo.txt RET</code>: Edit file in localhost
     via SSH after logging into it with the username of the current
     user in current shell.
-  </code>
+  </li>
   <li>
     <code>C-x C-f /sudo::/etc/hosts</code>: Edit file as superuser.
   </li>
@@ -1360,7 +1360,7 @@ tar -xOf /tmp/foo.tgz</code>
   reach the correct node that describes the various connection
   methods.
 </p>
-<h3 id="default-directory">Default Directory</h2>
+<h3 id="default-directory">Default Directory</h3>
 <p>
   The variable <code>default-directory</code> is buffer local.
   Typically, this is automatically set to the directory where Emacs
@@ -1418,7 +1418,7 @@ Darwin
 debian
 /ssh:alice@box:/home/alice/foo $</samp>
 </pre>
-<h3 id="multi-hops">Multi-Hops</h2>
+<h3 id="multi-hops">Multi-Hops</h3>
 <p>
   Here are some commands that illustrate how multi-hops work:
 </p>
@@ -2041,14 +2041,14 @@ Linux
 </p>
 <p>
   To understand the difference between <code>!</code>
-  and <code>&</code> mark five files and then type the key
+  and <code>&amp;</code> mark five files and then type the key
   sequence <code>! sleep 1; echo</code>.  Emacs blocks (i.e., does not
   react to our keystrokes) for 5 seconds while it runs the given
   command for each file.  When the <code>echo</code> output for all
   files is obtained after 5 seconds, the output appears and Emacs
-  unblocks again.  Now type <code>& sleep 1; echo</code>.  Now Emacs
-  remains unblocked while the output of each e>echo</command> command
-  appears at one second intervals in the output buffer.
+  unblocks again.  Now type <code>&amp; sleep 1; echo</code>.  Now
+  Emacs remains unblocked while the output of each <code>echo</code>
+  command appears at one second intervals in the output buffer.
 </p>
 <h3 id="dired-x">Dired-X</h3>
 <p>
@@ -2146,8 +2146,8 @@ Linux
       expression <code>..</code> is found.  The result is shown in a
       the buffer named <code>*Find</code> with Dired mode enabled in
       it.  Emacs runs the following command to get the results:
-      <pre><code>find . \( -type f -exec grep -q -e f.. \{\} \; \) -ls</code></pre>
-    <p>
+    </p>
+    <pre><code>find . \( -type f -exec grep -q -e f.. \{\} \; \) -ls</code></pre>
   </li>
   <li>
     <p>
@@ -2165,6 +2165,7 @@ Linux
       glob pattern).  Further this command is implemented purely in
       Elisp and does not have any external dependencies on tools
       like <code>find</code> and <code>grep</code>.
+    </p>
   </li>
 </ul>
 <h2 id="shell-commands">Shell Commands</h2>
