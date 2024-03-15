@@ -95,7 +95,7 @@ void (*f(void (*a[10])(int *)))(int *)
 {
     int i;
     for (i = 0; i &lt; 10; i++)
-        a[i](&i);
+        a[i](&amp;i);
     return g;
 }
 
@@ -111,7 +111,7 @@ int main()
     void (*y)(int *a) = x(a);
 
     int i = 10;
-    y(&i);
+    y(&amp;i);
     return 0;
 }</code>
 </pre>
