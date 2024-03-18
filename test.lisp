@@ -192,6 +192,23 @@
   (assert (string= (string-replace "foo" "x" "foo:foo") "x:x"))
   (assert (string= (string-replace "foo" "x" "foo:foo:") "x:x:")))
 
+(test-case string-split
+  (assert (not (string-split "" "")))
+  (assert (not (string-split "" ":")))
+  (assert (not (string-split "" ": ")))
+  (assert (equal (string-split "foo" "") '("f" "o" "o")))
+  (assert (equal (string-split "foo" ":") '("foo")))
+  (assert (equal (string-split "foo:" ":") '("foo")))
+  (assert (equal (string-split "foo:bar" ":") '("foo" "bar")))
+  (assert (equal (string-split "foo:bar" ":") '("foo" "bar")))
+  (assert (equal (string-split "foo" ": ") '("foo")))
+  (assert (equal (string-split "foo:" ": ") '("foo:")))
+  (assert (equal (string-split "foo: " ": ") '("foo")))
+  (assert (equal (string-split "foo:bar" ": ") '("foo:bar")))
+  (assert (equal (string-split "foo: bar" ": ") '("foo" "bar")))
+  (assert (equal (string-split "foo: bar: baz" ": ") '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo: bar: baz: " ": ") '("foo" "bar" "baz"))))
+
 (test-case join-strings
   (assert (string= (join-strings '()) ""))
   (assert (string= (join-strings '("")) ""))
@@ -584,7 +601,7 @@ Foo
 
 (test-case render-head-html-js-css-inc
   (assert (string=
-           (head-html "foo.css bar.js test.inc baz.css qux.js test.inc"
+           (head-html "foo.css, bar.js, test.inc, baz.css, qux.js, test.inc"
                       '(("root" . "") ("a" . "apple")))
            "  <link rel=\"stylesheet\" href=\"css/foo.css\">
   <script src=\"js/bar.js\"></script>
