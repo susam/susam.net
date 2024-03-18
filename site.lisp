@@ -502,12 +502,16 @@ value, next-index."
         (return)))
     (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
 
+(defun tag-slug (tag)
+  "Convert tag title to tag slug."
+  (string-replace " " "-" (string-downcase tag)))
+
 (defun format-tags-for-html (page indent)
   "Create HTML to display tags."
   (let ((html "")
         (sep ""))
     (dolist (tag (string-split (aget "tag" page) ", "))
-      (setf tag (string-downcase tag))
+      (setf tag (tag-slug tag))
       (setf html (fstr "~a~a<a href=\"tag/~a.html\">#~a</a>" html sep tag tag))
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
@@ -527,7 +531,7 @@ value, next-index."
         (site-url (aget "site-url" params))
         (tags (string-split (aget "tag" page) ", ")))
     (dolist (tag tags)
-      (setf tag (string-downcase tag))
+      (setf tag (tag-slug tag))
       (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
                        html sep site-url tag tag))
       (setf sep (fstr " |~%  ")))
@@ -1163,7 +1167,7 @@ value, next-index."
       (setf tag (car tag-entry))
       (setf pages (cdr tag-entry))
       (setf count (length pages))
-      (aput "tag-slug" (string-downcase tag) params)
+      (aput "tag-slug" (tag-slug tag) params)
       (aput "tag" tag params)
       (aput "count" count params)
       (aput "page-label" (if (= count 1) "page" "pages") params)
@@ -1198,7 +1202,7 @@ value, next-index."
       (setf tag (car tag-entry))
       (setf pages (cdr tag-entry))
       (aput "tag" tag params)
-      (aput "tag-slug" (string-downcase tag) params)
+      (aput "tag-slug" (tag-slug tag) params)
       (aput "title" (render "{{ nick }}'s {{ tag }} Pages" params) params)
       (aput "subtitle" "" params)
       (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
