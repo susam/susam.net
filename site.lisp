@@ -115,6 +115,22 @@
               (t
                (setf next-index (+ match-index (length old)))))))))
 
+(defun string-split (string separator)
+  "Split a string into a list of strings using the given separator."
+  (let ((next-index 0)
+        (match-index)
+        (result))
+    (loop
+      (setf match-index (search separator string :start2 next-index))
+      (when (or (not match-index) (= match-index (length string)))
+        (return))
+      (setf match-index (max (1+ next-index) match-index))
+      (push (subseq string next-index match-index) result)
+      (setf next-index (+ match-index (length separator))))
+    (when (< next-index (length string))
+      (push (subseq string next-index) result))
+    (reverse result)))
+
 (defun join-strings (strings)
   "Join strings into a single string."
   (apply #'concatenate 'string strings))
@@ -126,7 +142,7 @@
 (defun indent-lines (count string)
   "Indent lines by count spaces."
   (let* ((clean-string (string-right-trim '(#\Newline) string))
-         (lines (uiop:split-string clean-string :separator (fstr "~%")))
+         (lines (string-split clean-string (fstr "~%")))
          (indent (repeat-string count " ")))
     (join-strings (loop for line in lines
                         collect (if (zerop (length line))
@@ -312,7 +328,7 @@ value, next-index."
 
 (defun head-html (import-header params)
   "Given the value of an import header, return HTML code for it."
-  (let ((names (uiop:split-string import-header))
+  (let ((names (string-split import-header ", "))
         (root (aget "root" params))
         (snippets))
     (dolist (name names)
@@ -490,7 +506,7 @@ value, next-index."
   "Create HTML to display tags."
   (let ((html "")
         (sep ""))
-    (dolist (tag (uiop:split-string (aget "tag" page)))
+    (dolist (tag (string-split (aget "tag" page) ", "))
       (setf tag (string-downcase tag))
       (setf html (fstr "~a~a<a href=\"tag/~a.html\">#~a</a>" html sep tag tag))
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
@@ -509,7 +525,7 @@ value, next-index."
   (let ((html "")
         (sep "")
         (site-url (aget "site-url" params))
-        (tags (uiop:split-string (aget "tag" page))))
+        (tags (string-split (aget "tag" page) ", ")))
     (dolist (tag tags)
       (setf tag (string-downcase tag))
       (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
@@ -687,7 +703,7 @@ value, next-index."
              (push (render item-layout comment) rendered-comments))
     ;; Inherit imports from post.
     (if post-import
-        (setf post-import (fstr "comment.css ~a" post-import))
+        (setf post-import (fstr "comment.css, ~a" post-import))
         (setf post-import "comment.css"))
     (aput "import" post-import params)
     ;; Determine destination path and URL.
@@ -985,7 +1001,7 @@ value, next-index."
          (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
          (dst (if slug "_site/cc/{{ slug }}/log.html" "_site/cc/log.html")))
-    (aput "head" (fstr "~a extra.css meets.css math.inc"
+    (aput "head" (fstr "~a, extra.css, meets.css, math.inc"
                        (aget "head" params)) params)
     (aput "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
     (aput "subtitle" "" params)
@@ -1109,7 +1125,7 @@ value, next-index."
              (rendered-widget (render widget-layout widget-params)))
         (list (cons "widget" rendered-widget))))
     ;; Add parameters for music page rendering.
-    (aput "import" "extra.css music.css" params)
+    (aput "import" "extra.css, music.css" params)
     (aput "callback" #'make-widget-callback params)
     ;; Render all music pages.
     (setf pages (make-pages src "_site/music/{{ slug }}.html"
@@ -1129,7 +1145,7 @@ value, next-index."
   (setf pages (only-list-pages pages))
   (let ((tags))
     (dolist (page pages)
-      (dolist (tag (uiop:split-string (aget "tag" page)))
+      (dolist (tag (string-split (aget "tag" page) ", "))
         (aput-list tag page tags)))
     (dolist (tag-entry tags)
       (setf (cdr tag-entry) (sort-pages (cdr tag-entry))))
