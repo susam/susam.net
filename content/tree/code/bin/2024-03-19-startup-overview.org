@@ -1,0 +1,64 @@
+#+title: Org Mode Startup Overview Demo
+
+* Introduction
+This document demonstrates an Org mode feature.
+
+* Code Blocks
+This section presents a few code examples.
+
+** Hello World Program
+Here is a code block with the famous "hello, world" program written in
+C:
+
+#+begin_src c
+  #include <stdio.h>
+
+  int main()
+  {
+      printf("hello, world\n");
+      return 0;
+  }
+#+end_src
+
+** Running the Program
+On a Unix or Unix-like system, this program can be compiled to a binary
+executable with the following command:
+
+#+begin_example
+  $ cc hello.c && ./a.out
+  hello, world
+#+end_example
+
+* Quotes
+Issac Newton was relatively modest about his achievements, writing in a
+letter to Robert Hooke in February 1676:
+
+#+begin_quote
+If I have seen further it is by standing on the shoulders of giants.
+#+end_quote
+
+In a later memoir, Newton wrote:
+
+#+begin_quote
+I do not know what I may appear to the world, but to myself I seem to
+have been only like a boy playing on the sea-shore, and diverting
+myself in now and then finding a smoother pebble or a prettier shell
+than ordinary, whilst the great ocean of truth lay all undiscovered
+before me.
+#+end_quote
+
+To read more about Newton, see the [[https://en.wikipedia.org/wiki/Issac_Newton][Wikipedia entry on Issac Newton]].
+
+* References
+The documentation for the in-buffer setting =+startup:= can be found
+in the following manual pages:
+
+- https://orgmode.org/manual/Initial-visibility.html
+- https://orgmode.org/manual/In_002dbuffer-Settings.html
+
+These manual pages can also be seen in Emacs using:
+
+- =M-: (info "(org) Initial Visibility") RET=
+- =M-: (info "(org) In-Buffer Settings") RET=
+
+#+startup: overview

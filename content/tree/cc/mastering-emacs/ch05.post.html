@@ -12,6 +12,7 @@
   An index of notes for all chapters are available
   at <a href="notes.html">notes.html</a>.
 </p>
+{{ toc }}
 <h2 id="killing-text">Killing Text</h2>
 <p>
   Killing text is equivalent to what we call as cutting text in other
@@ -268,11 +269,11 @@
 <pre><code>M-x package-install whole-line-or-region RET</code></pre>
 <p>
   Then a mode offered by this package can be enabled by adding this
-  line to the Emacs initialization file:
+  line to the Emacs initialisation file:
 </p>
 <pre><code>(whole-line-or-region-global-mode)</code></pre>
 <p>
-  After Emacs is started with the updated initialization file,
+  After Emacs is started with the updated initialisation file,
   typing <code>C-w</code> kills the current line if there is no active
   region.  However, if there is an active region then <code>C-w</code>
   retains the default behaviour of killing the region.
@@ -293,11 +294,11 @@
   It is possible to change the default behaviour of <code>C-k</code>
   such that when we type it at the beginning of a line, the trailing
   newline is included in the kill.  To do so, add this to the Emacs
-  initialization file:
+  initialisation file:
 </p>
 <pre><code>(setq kill-whole-line t)</code></pre>
 <p>
-  After Emacs is started with this initialization
+  After Emacs is started with this initialisation
   file, <code>C-k</code> kills a whole line along with the trailing
   newline only if cursor is at the start of a line.  In other words,
   with this setting, <code>C-a C-k</code> always kills a whole line
@@ -811,7 +812,7 @@ web-server-port-HTTP-80
     uppercase.
   </li>
   <li>
-    <code>M-c</code>: Capitalize string from point to the end of word.
+    <code>M-c</code>: Capitalise string from point to the end of word.
   </li>
   <li>
     <code>C-x C-l</code>: Convert region to lower case.
@@ -820,7 +821,7 @@ web-server-port-HTTP-80
     <code>C-x C-u</code>: Convert region to upper case.
   </li>
   <li>
-    <code>M-x upcase-initials-region RET</code>: Capitalize region.
+    <code>M-x upcase-initials-region RET</code>: Capitalise region.
   </li>
 </ul>
 <p>
@@ -829,7 +830,7 @@ web-server-port-HTTP-80
   (<code>upcase-region</code>) are disabled by default.  Follow the
   prompts to try it or enable it.  A quick way to try it is to
   type <code>SPC</code>.  Also, adding the following to the Emacs
-  initialization file permanently enables it.
+  initialisation file permanently enables it.
 </p>
 <pre>
 <code>(put 'downcase-region 'disabled nil)
@@ -995,13 +996,13 @@ baz</code>
 </p>
 <ul>
   <li>
-    <code>M-x whitespace-mode RET</code>: Toggle visualization of
+    <code>M-x whitespace-mode RET</code>: Toggle visualisation of
     spaces, tabs, newlines, and lines longer
     than <code>whitespace-line-column</code> number of columns (80 by
     default) with special glyphs and colour.
   </li>
   <li>
-    <code>M-x whitespace-newline-mode RET</code>: Toggle visualization
+    <code>M-x whitespace-newline-mode RET</code>: Toggle visualisation
     of newlines.
   </li>
   <li>
@@ -1013,7 +1014,7 @@ baz</code>
   After typing <code>M-x whitespace-toggle-options RET</code>, type a
   key to tell it what to do.  For example, type <code>N</code> and it
   will start or restart <code>whitespace-mode</code> with the
-  visualization of newline toggled.  Type <code>?</code> to see the
+  visualisation of newline toggled.  Type <code>?</code> to see the
   list of all key inputs it supports.
 </p>
 <p>
@@ -1245,14 +1246,14 @@ baz</code>
   <li>
     Type <code>C-a F3 . SPC M-c C-n</code> to insert macro counter
     which <code>0</code> by default, followed by dot and space at the
-    beginning of the line, capitalize the first word, and move to the
+    beginning of the line, capitalise the first word, and move to the
     next line.
   </li>
   <li>
     Type <code>C-x e</code> to stop macro recording and call the
     recorded macro.  Now <code>1</code>, dot, and space is inserted at
     the beginning of the line, the first word of the current line is
-    capitalized, and the cursor moves to the next line.
+    capitalised, and the cursor moves to the next line.
   </li>
   <li>
     Type <code>e</code> to repeat the macro call.  Keep
@@ -1700,7 +1701,7 @@ baz</code>
   would insert as many tabs as it can followed by a few spaces if
   necessary to attain the desired alignment.  To force Emacs to always
   use spaces for indentation and alignment, add the following Elisp
-  code to the Emacs initialization file:
+  code to the Emacs initialisation file:
 </p>
 <pre><code>(setq-default indent-tabs-mode nil)</code></pre>
 <h3 id="tab-width">Tab Width</h3>

@@ -122,7 +122,7 @@ FC: no differences encountered</samp>
 <p>
   While reading the description of the self-printing program presented
   earlier, one might wonder if it is a quine.  While there is no
-  standardized definition of the term <em>quine</em>, it is generally
+  standardised definition of the term <em>quine</em>, it is generally
   accepted that a quine is a computer program that takes no input and
   produces an exact copy of its own source code as its output.  Since
   a quine cannot take any input, tricks involving reading its own
@@ -391,7 +391,7 @@ C:\&gt;</samp>
   chart for code page 437 and confirm that the byte value of each
   symbol matches each byte value in the program.  Here is one such
   chart that approximates the symbols in code page 437 with Unicode
-  symbols: <a href="maze/cp437/cp437.html">cp437.html</a>.
+  symbols: <a href="code/cp437/cp437.html">cp437.html</a>.
 </p>
 <p>
   Here is the disassembly of the above program:
@@ -559,7 +559,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
   corresponds to a byte of the program mentioned earlier.  For
   example, the first symbol (omega) represents the byte value 0xea,
   the second symbol (club) represents the byte value 0x05, and so on.
-  The chart at <a href="maze/cp437/cp437.html">cp437.html</a> can be
+  The chart at <a href="code/cp437/cp437.html">cp437.html</a> can be
   used to confirm that every symbol in the output indeed represents
   every byte of the program.
 </p>
@@ -612,12 +612,12 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <p>
   The remainder of the program is similar to the one in the previous
   section.  However, there are some small but important differences.
-  While the DOS environment guarantees that AH and CH are initialized
+  While the DOS environment guarantees that AH and CH are initialised
   to 0 when a .COM program starts, the BIOS offers no such guarantee
   while loading and executing a boot program.  This is why we use the
   registers AX and CX (as opposed to only AH and CL) in
-  the <code>mov</code> instructions to initialize them.  Similarly,
-  while DOS initializes SI to 0x100 when a .COM program starts, for a
+  the <code>mov</code> instructions to initialise them.  Similarly,
+  while DOS initialises SI to 0x100 when a .COM program starts, for a
   boot program, we set the register SI ourselves.
 </p>
 <p>

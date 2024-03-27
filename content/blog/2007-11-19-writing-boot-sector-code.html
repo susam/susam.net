@@ -19,7 +19,7 @@
   address begins the boot sequence.  In practice, this memory address
   contains a <code>JMP</code> instruction to another address,
   typically 0xf000:0xe05b.  This latter address contains the code to
-  perform power-on self test (POST), perform several initializations,
+  perform power-on self test (POST), perform several initialisations,
   find the boot device, load the code from the boot sector into
   memory, and execute it.  From here, the code in the boot sector
   takes control.  In IBM-compatible PCs, the boot sector is the first
@@ -117,18 +117,19 @@ ld --oformat binary -o a.com a.o</code>
 </p>
 <p>
   The video memory of the VGA is mapped to various segments between
-  0xa000 and 0xc000 in the main memory.  The color text mode is mapped
-  to the segment 0xb800.  The first two instructions copy 0xb800 into
-  the data segment register, so that any data offsets specified is an
-  offset in this segment.  Then the ASCII code for the character 'A'
-  (i.e., 0x41 or 65) is copied into the first location in this segment
-  and the attribute (0x1e) of this character to the second location.
-  The higher nibble (0x1) is the attribute for background color and
-  the lower nibble (0xe) is that of the foreground color.  The highest
-  bit of each nibble is the intensifier bit.  Depending on the video
-  mode setup, the highest bit may also represent a blinking character.
-  The other three bits represent red, green, and blue.  This is
-  represented in a tabular form below.
+  0xa000 and 0xc000 in the main memory.  The colour text mode is
+  mapped to the segment 0xb800.  The first two instructions copy
+  0xb800 into the data segment register, so that any data offsets
+  specified is an offset in this segment.  Then the ASCII code for the
+  character 'A' (i.e., 0x41 or 65) is copied into the first location
+  in this segment and the attribute (0x1e) of this character to the
+  second location.  The higher nibble (0x1) is the attribute for
+  background colour and the lower nibble (0xe) is that of the
+  foreground colour.  The highest bit of each nibble is the
+  intensifier bit.  Depending on the video mode setup, the highest bit
+  may also represent a blinking character.  The other three bits
+  represent red, green, and blue.  This is represented in a tabular
+  form below.
 </p>
 <table class="grid center textcenter">
   <tr>
@@ -164,11 +165,11 @@ ld --oformat binary -o a.com a.o</code>
   </tr>
 </table>
 <p>
-  We can be see from the table that the background color is dark blue
-  and the foreground color is bright yellow.  We assemble and link the
-  code with the <code>as</code> and <code>ld</code> commands mentioned
-  earlier and generate an executable binary consisting of machine
-  code.
+  We can be see from the table that the background colour is dark blue
+  and the foreground colour is bright yellow.  We assemble and link
+  the code with the <code>as</code> and <code>ld</code> commands
+  mentioned earlier and generate an executable binary consisting of
+  machine code.
 </p>
 <p>
   Before writing the executable binary into the boot sector, we might

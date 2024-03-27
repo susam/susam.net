@@ -1,5 +1,5 @@
 types {
-    text/plain asm c cc el lisp md py yaml yml;
+    text/plain asm c cc el lisp md org py yaml yml;
 }
 limit_req_zone $binary_remote_addr zone=formlimit:10m rate=4r/m;
 limit_req_status 429;
@@ -29,6 +29,7 @@ server {
     rewrite ^/cfrs$ /cfrs.html permanent;
     rewrite ^/fxyt$ /fxyt.html permanent;
     rewrite ^/inv$ /invaders.html permanent;
+    rewrite ^/invaders$ /invaders.html permanent;
     # Redirects.
     rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /feed.xml redirect;
     rewrite ^/blog/obfuscating-main/$ /obfuscated-main.html permanent;
@@ -38,6 +39,7 @@ server {
     rewrite ^/blog/x86-quine.html$ /self-printing-machine-code.html permanent;
     rewrite ^/blog/from-uuid-to-infinite-loops.html$ /fixed-bits-of-version-4-uuid.html permanent;
     rewrite ^/blog/(.*)$ /$1 redirect;
+    rewrite ^/maze/from-fill-prefix-to-tramp.html$ /from-fill-prefix-to-tramp.html redirect;
     rewrite ^/maze/elisp-in-replacement-string.html$ /elisp-in-replacement-string.html redirect;
     rewrite ^/cfr.html$ /cfrs.html permanent;
 }

@@ -49,6 +49,7 @@
   most members of our book club were not familiar with earlier but
   were found to be very useful after having learnt them.
 </p>
+{{ toc }}
 <h2 id="fill-prefix">Fill Prefix</h2>
 <p>
   Most of us in the book discussion group knew about filling
@@ -92,9 +93,9 @@ vitae elementum curabitur vitae.</code>
 :::: elementum curabitur vitae.</code>
 </pre>
 <p>
-  For some reason each line has a prefix consisting of four colons and
-  a space.  After we reformat this paragraph with <code>M-q</code>, we
-  get something like this:
+  Each line has a prefix consisting of four colons and a space.  After
+  we reformat this paragraph with <code>M-q</code>, we get something
+  like this:
 </p>
 <pre>
 <code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -133,7 +134,7 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
 <p>
   To turn off the fill prefix, simply set it to an empty prefix by
   typing <code>C-x .</code> at the beginning of the line.
-  Thus, <code>C-a C-x .</code> becomes an idiom for turning off the
+  Thus <code>C-a C-x .</code> becomes an idiom for turning off the
   fill prefix.
 </p>
 <h2 id="elisp-expressions-in-replacement-strings">Elisp Expressions in Replacement Strings</h2>
@@ -246,7 +247,7 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
   Keyboard Macros") RET</code> to open this section using the Info
   documentation browser.  In this blog post though, we will very
   briefly talk about keyboard macros that should be enough to get
-  someone very new to it get started with them quickly.
+  someone very new to it started with them quickly.
 </p>
 <p>
   Say, we have a buffer that looks like this:
@@ -304,7 +305,7 @@ garply:waldo:fred</code>
   To summarise, <code>C-x (</code> starts recording a new keyboard
   macro, <code>C-x )</code> stops recording the keyboard macro,
   and <code>C-x e</code> replays the last keyboard macro.
-  Alternatively, we could also use the functions keys <code>F3</code>
+  Alternatively, we could also use the function keys <code>F3</code>
   and <code>F4</code>.  To start recording a keyboard macro,
   type <code>F3</code>.  Type <code>F4</code> to stop recording a
   keyboard macro.  Then type <code>F4</code> again to replay the last
@@ -351,9 +352,9 @@ garply:waldo:fred</code>
     <p>
       <code>M-/</code>: Expand the word before the point to the
       nearest preceding word for which the current word is a prefix.
-      In case, no suitable preceding word is found, then expand the
-      current word to the nearest succeeding word for which the
-      current word is a prefix.
+      If no suitable preceding word is found, then expand the current
+      word to the nearest succeeding word for which the current word
+      is a prefix.
     </p>
   </li>
   <li>
