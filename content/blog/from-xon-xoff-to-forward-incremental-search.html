@@ -1,0 +1,383 @@
+<!-- date: 2022-08-13 -->
+<!-- title: From XON/XOFF to Forward Incremental Search -->
+<!-- tag: Unix, Shell, Technology -->
+<!-- import: extra.css -->
+<h2 id="xon-xoff">XON/XOFF</h2>
+<p>
+  In the olden days of computing, software flow control with control
+  codes XON and XOFF was a necessary feature that dumb terminals
+  needed to support.  When a terminal received more data than it could
+  display, there needed to be a way for the terminal to tell the
+  remote host to pause sending more data.  The control code 19 was
+  chosen for this.  The control code 17 was chosen to tell the remote
+  host to resume transmission of data.
+</p>
+<p>
+  The control code 19 is called Device Control 3 (DC3) in the ASCII
+  chart.  It is also known as "transmit off" (XOFF).  The control code
+  17 is called Device Control 1 (DC1) as well as "transmit on" (XON).
+  Now how does a user of the terminal really send these control codes?
+  Well, how do they send any control code?  Using the <kbd>ctrl</kbd>
+  key of course.
+</p>
+<p>
+  Let us take a step back and see how a user can send familiar control
+  codes on modern terminal emulators, like say, the terminal software
+  we find on a Unix or Linux desktop environment.  While any sane
+  computer user would just type the <kbd>tab</kbd> key to insert a tab
+  character, one could also type <kbd>ctrl</kbd>+<kbd>i</kbd> to
+  insert a tab character.  The character <code>I</code> has code 73
+  (binary 1001001) and holding the <kbd>ctrl</kbd> key while typing it
+  results in a control code made by taking 73 (binary 1001001),
+  keeping its five least significant bits, and discarding the rest to
+  get the control code 9 (binary 1001) which is the code of the tab
+  character.  In other words, we get the control code by performing a
+  bitwise AND operation on the code of the character being modified
+  with binary code of 31 (binary 0011111).
+</p>
+<p>
+  In case you are wondering, if we get the same result if we choose
+  the binary code of the lowercase <code>i</code> to perform the
+  aforementioned operation, the answer is, yes.  While the code of
+  uppercase <code>I</code> is 73 (binary 1001001), that of
+  lowercase <code>i</code> is 105 (binary 1101001).  The right-most
+  five bits are same for both.  Thus when we preserve the five least
+  significant bits and discard the rest, we get the control code 9
+  (binary 1001) in both cases.  This is a neat result due to the fact
+  that the five least significant bits of the code of a lowercase
+  character is exactly the same as that of the corresponding uppercase
+  character.  They differ only in their sixth least significant bit.
+  That bit is on for the lowercase character but off for the
+  corresponding uppercase character.  This is just an interesting
+  observation as far as this post is concerned.  The very early
+  keyboards did not have lowercase letters.  They only had uppercase
+  letters and when the <kbd>ctrl</kbd> key is pressed together with a
+  letter on such keyboards, the 7th bit of the character code was
+  flipped to get the control code.
+</p>
+<p>
+  The bitwise operation mentioned earlier explains why
+  typing <kbd>ctrl</kbd>+<kbd>h</kbd> sends a backspace,
+  typing <kbd>ctrl</kbd>+<kbd>j</kbd> sends a newline, and
+  typing <kbd>ctrl</kbd>+<kbd>g</kbd> plays a bell.  In modern
+  terminal emulators these days, the bell often manifests in the form
+  of an audible beep or a visual flash.  Here is a table that
+  summarises these control codes and a few more:
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th rowspan="2">Key</th>
+      <th colspan="3">Modified Character</th>
+      <th colspan="3">Control Character</th>
+    </tr>
+    <tr>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>@</kbd></td>
+      <td>1000000</td>
+      <td>64</td>
+      <td>@</td>
+      <td>00000</td>
+      <td>0</td>
+      <td>Null</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>g</kbd></td>
+      <td>1000111</td>
+      <td>71</td>
+      <td>G</td>
+      <td>00111</td>
+      <td>7</td>
+      <td>Bell</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>h</kbd></td>
+      <td>1001000</td>
+      <td>72</td>
+      <td>H</td>
+      <td>01000</td>
+      <td>8</td>
+      <td>Backspace</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>i</kbd></td>
+      <td>1001001</td>
+      <td>73</td>
+      <td>I</td>
+      <td>01001</td>
+      <td>9</td>
+      <td>Horizontal Tab</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>j</kbd></td>
+      <td>1001010</td>
+      <td>74</td>
+      <td>I</td>
+      <td>01010</td>
+      <td>10</td>
+      <td>Line Feed</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>m</kbd></td>
+      <td>1001101</td>
+      <td>77</td>
+      <td>M</td>
+      <td>01101</td>
+      <td>13</td>
+      <td>Carriage Return</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>[</kbd></td>
+      <td>1011011</td>
+      <td>91</td>
+      <td>[</td>
+      <td>11011</td>
+      <td>27</td>
+      <td>Escape</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  The last row in the table above explains why we can also
+  type <kbd>ctrl</kbd>+<kbd>[</kbd> in Vim to escape from insert mode
+  to normal mode.  This is, in fact, one of the convenient ways for
+  touch-typists to return to normal mode in Vim instead of clumsily
+  stretching the left hand fingers out to reach the <kbd>esc</kbd> key
+  which is usually poorly located at the corner of most keyboards.
+</p>
+<p>
+  There is a bit of oversimplication in the description above.
+  Throughout the history of computing, different systems have used
+  slightly different methods to compute the resulting control code
+  when the <kbd>ctrl</kbd> modifier key is held.  Toggling the 7th
+  least significant bit was an early method.  Turning off both the 6th
+  and 7th least significant bits is another method.  Subtracting 64
+  from the character code is yet another method.  These are
+  implementation details and these various implementation methods lead
+  to the same results for the examples in the table above.  Then there
+  are some special rules too.  For example, many terminals implement a
+  special rule to make <kbd>ctrl</kbd>+<kbd>space</kbd> behave the
+  same as <kbd>ctrl</kbd>+<kbd>@</kbd> thus producing the null
+  character.  Further <kbd>ctrl</kbd>+<kbd>?</kbd> produces the delete
+  character in some terminals.  These special rules are summarised in
+  the table below.
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th rowspan="2">Key</th>
+      <th colspan="3">Modified Character</th>
+      <th colspan="3">Resulting Character</th>
+    </tr>
+    <tr>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>space</kbd></td>
+      <td>0100000</td>
+      <td>32</td>
+      <td>Space</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Null</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>?</kbd></td>
+      <td>0111111</td>
+      <td>63</td>
+      <td>?</td>
+      <td>1111111</td>
+      <td>127</td>
+      <td>Delete</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  For the purpose of this blog post, we don't need to worry about
+  these special rules.  Let us get back to the control codes 19 and 17
+  that represent XOFF and XON.  Here is how the table looks for them:
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th rowspan="2">Key</th>
+      <th colspan="3">Modified Character</th>
+      <th colspan="3">Resulting Character</th>
+    </tr>
+    <tr>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>q</kbd></td>
+      <td>1010001</td>
+      <td>81</td>
+      <td>Q</td>
+      <td>10001</td>
+      <td>17</td>
+      <td>DC1 (XON)</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>s</kbd></td>
+      <td>1010011</td>
+      <td>83</td>
+      <td>S</td>
+      <td>10011</td>
+      <td>19</td>
+      <td>DC3 (XOFF)</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  We see that a user can type <kbd>ctrl</kbd>+<kbd>s</kbd> to send the
+  control code XOFF and then <kbd>ctrl</kbd>+<kbd>q</kbd> to send the
+  control code XON.  Although we do not use dumb terminals anymore,
+  these conventions have survived in various forms in our modern
+  terminal emulators.  To see a glimpse of it, launch the terminal
+  that comes with a modern operating system, then run <code>ping
+  localhost</code> and while this command is printing its output,
+  type <kbd>ctrl</kbd>+<kbd>s</kbd>.  The terminal should pause
+  printing the output of the command.  Then
+  type <kbd>ctrl</kbd>+<kbd>q</kbd> and the terminal should resume
+  printing the output.
+</p>
+<h2 id="incremental-search-in-bash-zsh">Incremental Search in Bash/Zsh</h2>
+<p>
+  Let us now take a look at the shells that run within the terminals.
+  Both Bash and Zsh are very popular these days.  Both these shells
+  have excellent support for performing incremental searches through
+  the input history.  To see a quick demonstration of this, open a new
+  terminal that runs either Bash or Zsh and run these commands:
+</p>
+<pre>
+<code>echo foo
+echo bar
+cal
+uname
+echo baz</code>
+</pre>
+<p>
+  Now type <kbd>ctrl</kbd>+<kbd>r</kbd> followed by <code>echo</code>.
+  This should invoke the reverse search feature of the shell and
+  automatically complete the partial command <code>echo</code>
+  to <code>echo baz</code>.  Type <kbd>ctrl</kbd>+<kbd>r</kbd> again
+  to move back in the input history and autocomplete the command
+  to <code>echo bar</code>.  We can type <kbd>enter</kbd> anytime we
+  use the reverse search feature to execute the automatically
+  completed command.  Typing <kbd>ctrl</kbd>+<kbd>r</kbd> yet another
+  time should bring the <code>echo foo</code> command at the shell
+  prompt.
+</p>
+<p>
+  What if we went too far back in the input history and now want to go
+  forward?  There is a good news and there is some bad news.  The good
+  news is that both Bash and Zsh support forward search using
+  the <kbd>ctrl</kbd>+<kbd>s</kbd> key sequence.  The bad news is that
+  this key sequence may not reach the shell.  Most terminal emulators
+  consume this key sequence and interpret it as the control code XOFF.
+</p>
+
+<h2 id="conflict">The Conflict</h2>
+<p>
+  In the previous two sections, we have seen that the
+  <kbd>ctrl</kbd>+<kbd>s</kbd> key sequence is used to send the
+  control code XOFF.  But the same key sequence is also used for
+  forward incremental search in Bash and Zsh.  Since the terminal
+  consumes this key sequence and interprets it as the control code
+  XOFF, the shell never sees the key sequence.  As a result, the
+  forward incremental search functionality does not work when we type
+  this key sequence in the shell.
+</p>
+<p>
+  Bash offers the incremental search facility via a wonderful piece of
+  library known as the the GNU Readline Library.  ZSH offers this
+  facility with its own Zsh Line Editor (ZLE).  So other tools that
+  rely on these libraries to offer line editing and history capability
+  are also affected by this conflict.  For example, many builds of
+  Python offer line editing and history capability using GNU Readline,
+  so while <kbd>ctrl</kbd>+<kbd>r</kbd> works fine to perform reverse
+  search in the Python interpreter, it is very likely
+  that <kbd>ctrl</kbd>+<kbd>s</kbd> does not work to perform forward
+  search.
+</p>
+<h2 id="reclaim-forward-incremental-search">Reclaim Forward Incremental Search</h2>
+<p>
+  We can forfeit the usage of control codes XON/XOFF to reclaim
+  forward incremental search.  Here is the command to disable XON/XOFF
+  output control in the terminal:
+</p>
+<pre><code>stty -ixon</code></pre>
+<p>
+  After running the command, <kbd>ctrl</kbd>+<kbd>s</kbd> is no longer
+  consumed by the terminal to pause the output.  To confirm that
+  forward incremental search works now, first run the above command,
+  and then run the following commands:
+</p>
+<pre>
+<code>echo foo
+echo bar
+cal
+uname
+echo baz</code>
+</pre>
+<p>
+  Now type <kbd>ctrl</kbd>+<kbd>r</kbd> followed by <code>echo</code>
+  and the input line should be automatically completed to <code>echo
+  baz</code>.  Type <kbd>ctrl</kbd>+<kbd>r</kbd> again and <code>echo
+  bar</code> should appear at the shell prompt.
+  Type <kbd>ctrl</kbd>+<kbd>r</kbd> one more time to bring the
+  command <code>echo foo</code> at the shell prompt.
+</p>
+<p>
+  Now type <kbd>ctrl</kbd>+<kbd>s</kbd> once and the search facility
+  should switch itself to forward incremental search.  The search
+  prompt should change to show this.  For example, in Bash the search
+  prompt changes from <code>reverse-i-search:</code>
+  to <code>i-search:</code> to indicate this.  In Zsh, the search
+  prompt changes from <code>bck-i-search:</code>
+  to <code>fwd-i-search:</code>.
+</p>
+<p>
+  Now type <kbd>ctrl</kbd>+<kbd>s</kbd> again and the input line
+  should be automatically completed to <code>echo bar</code>.
+  Type <kbd>ctrl</kbd>+<kbd>s</kbd> again to bring back <code>echo
+  baz</code> at the shell prompt.  This is the forward incremental
+  search in action.
+</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>
+  I believe the forward incremental search facility offered in shells
+  and other tools with line editing and history capabilities is a very
+  useful feature that can make navigating the input history very
+  convenient.  However due to the default setting of most terminals,
+  this rather splendid feature remains unusable.
+</p>
+<p>
+  I believe heavy terminal users should add the command <code>stty
+  -ixon</code> to their <code>~/.bash_profile</code>
+  or <code>~/.zshrc</code>, so that the <kbd>ctrl</kbd>+<kbd>s</kbd>
+  key sequence can be used for forward incremental search.  Forfeit
+  XON/XOFF to reclaim forward incremental search!
+</p>

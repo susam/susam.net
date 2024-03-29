@@ -1,0 +1,141 @@
+<!-- date: 2010-05-13 -->
+<!-- title: Coefficient of Variation Function in PostgreSQL -->
+<!-- tag: SQL, Mathematics, Technology -->
+<p>
+  Today I learnt how to create an aggregate function in PostgreSQL
+  function that wraps the functionality provided by other aggregate
+  functions in PosgreSQL.  In this experiment, I created
+  a <code>cv()</code> function that calculates the coefficient of
+  variation.  The function <code>cv(x)</code> is equivalent
+  to <code>stddev(x)</code> / <code>avg(x)</code> where <code>x</code>
+  represents the list of data points.
+</p>
+<h2 id="example-data-table">Example Data Table</h2>
+<pre>
+<samp>$ <kbd>cat perf.sql</kbd>
+CREATE TABLE performance
+(
+    name VARCHAR,
+    duration DOUBLE PRECISION
+);
+
+INSERT INTO performance VALUES ('RAND', 101.0);
+INSERT INTO performance VALUES ('ZERO', 157.0);
+INSERT INTO performance VALUES ('NONE', 209.0);
+INSERT INTO performance VALUES ('TEST', 176.0);
+INSERT INTO performance VALUES ('UNIT', 197.0);
+INSERT INTO performance VALUES ('LOAD', 193.0);
+INSERT INTO performance VALUES ('FREE', 198.0);
+$ <kbd>psql statistics</kbd>
+psql (8.4.3)
+Type "help" for help.
+statistics=# <kbd>\i perf.sql</kbd>
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+statistics=# <kbd>select * from performance;</kbd>
+ name | duration
+------+----------
+ RAND |      101
+ ZERO |      157
+ NONE |      209
+ TEST |      176
+ UNIT |      197
+ LOAD |      193
+ FREE |      198
+(7 rows)
+
+statistics=#</samp>
+</pre>
+<h2 id="useful-details-to-create-our-function">Useful Details to Create Our Function</h2>
+<pre>
+<samp>statistics=# <kbd>SELECT aggtransfn, aggfinalfn, aggtranstype::regtype, agginitval</kbd>
+statistics-# <kbd>FROM pg_aggregate</kbd>
+statistics-# <kbd>WHERE aggfnoid='stddev(double precision)'::regprocedure;</kbd>
+  aggtransfn  |     aggfinalfn     |    aggtranstype    | agginitval
+--------------+--------------------+--------------------+------------
+ float8_accum | float8_stddev_samp | double precision[] | {0,0,0}
+(1 row)
+
+statistics=# <kbd>SELECT aggtransfn, aggfinalfn, aggtranstype::regtype, agginitval</kbd>
+statistics-# <kbd>FROM pg_aggregate</kbd>
+statistics-# <kbd>WHERE aggfnoid='avg(double precision)'::regprocedure;</kbd>
+  aggtransfn  | aggfinalfn |    aggtranstype    | agginitval
+--------------+------------+--------------------+------------
+ float8_accum | float8_avg | double precision[] | {0,0,0}
+(1 row)
+
+statistics=#</samp>
+</pre>
+<h2 id="function-definition">Function Definition</h2>
+<pre>
+<samp>$ <kbd>cat cv.sql</kbd>
+CREATE OR REPLACE FUNCTION finalcv(double precision[])
+RETURNS double precision
+AS $$
+    SELECT float8_stddev_samp($1) / float8_avg($1);
+$$ LANGUAGE SQL;
+
+CREATE AGGREGATE cv(double precision)
+(
+    sfunc = float8_accum,
+    stype = double precision[],
+    finalfunc = finalcv,
+    initcond = '{0, 0, 0}'
+);</samp>
+</pre>
+<h2 id="usage">Usage</h2>
+<pre>
+<samp>$ <kbd>psql statistics</kbd>
+psql (8.4.3)
+Type "help" for help.
+
+statistics=# <kbd>select stddev(duration), avg(duration) from performance;</kbd>
+      stddev      |       avg
+------------------+------------------
+ 37.1682147873178 | 175.857142857143
+(1 row)
+
+statistics=# <kbd>select stddev(duration) / avg(duration) as cv from performance;</kbd>
+        cv
+-------------------
+ 0.211354592616754
+(1 row)
+
+statistics=# <kbd>\i cv.sql</kbd>
+CREATE FUNCTION
+CREATE AGGREGATE
+statistics=# <kbd>select cv(duration) from performance;</kbd>
+        cv
+-------------------
+ 0.211354592616754
+(1 row)
+
+statistics=#</samp>
+</pre>
+<h2 id="bessel-correction">Bessel's Correction</h2>
+<p>
+  Checked whether
+  <a href="http://en.wikipedia.org/wiki/Bessel's_correction">Bessel's
+  correction</a> was used in the <code>stddev()</code> function of
+  PostgreSQL.  Yes, it was used.
+</p>
+<pre>
+<samp>$ <kbd>octave -q</kbd>
+octave:1&gt; <kbd>std([101, 157, 209, 176, 197, 193, 198], 0)</kbd>
+ans =  37.168
+octave:2&gt; <kbd>std([101, 157, 209, 176, 197, 193, 198], 1)</kbd>
+ans =  34.411
+octave:3&gt;</samp>
+</pre>
+<p>
+  The <code>std()</code> function in MATLAB and GNU Octave applies
+  Bessel's correction when invoked with the second argument
+  as <code>0</code>.
+</p>

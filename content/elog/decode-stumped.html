@@ -1,0 +1,59 @@
+<!-- date: 2003-11-02 -->
+<!-- title: Decode Stumped -->
+<!-- tag: C, Programming, Technology, Puzzle -->
+<p>
+  A few weeks ago, someone posted a C programming puzzle to
+  the <a href="mailto:ncoders@yahoogroups.com">ncoders</a> mailing
+  list.  This is a mailing list I formed a few months ago to host
+  discussions on computers, programming, and network protocols among
+  university students.  The programming puzzle that was posted asked
+  if we could write a C program such that the <code>main()</code>
+  function <em>does not seem to appear</em> in the code.  Here is a
+  solution I could come up with that involves obfuscating the
+  identifer <code>main</code> using preprocessor macros and
+  the <code>##</code> preprocessing operator for token concatenation.
+</p>
+<pre>
+<code>#include &lt;stdio.h&gt;
+
+#define decode(s,t,u,m,p,e,d) m ## s ## u ## t
+#define begin decode(a,n,i,m,a,t,e)
+
+int begin()
+{
+    printf("Stumped?\n");
+}</code>
+</pre>
+<p>
+  This program compiles and runs successfully.  Here is the output:
+</p>
+<pre><samp>Stumped?</samp></pre>
+<p>
+  Let me explain how this code works.  When the C preprocessor runs on
+  this code, the following preprocessing steps occur:
+</p>
+<ul>
+  <li>
+    <code>begin</code> is replaced with <code>decode(a,n,i,m,a,t,e)</code>,
+  </li>
+  <li>
+    <code>decode(a,n,i,m,a,t,e)</code> is replaced with <code>m ## a
+    ## i ## n</code>, and
+  </li>
+  <li>
+    <code>m ## a ## i ## n</code> is replaced with <code>main</code>.
+  </li>
+</ul>
+<p>
+  Thus <code>begin()</code> is replaced with <code>main()</code>.
+</p>
+<p>
+  <strong>Update on 31 Jul 2007:</strong> Although the mailing list
+  referred to in this post no longer exists, this tiny piece of code
+  seems to have survived on the web.  A
+  <a href="https://www.google.com/search?q=decode(s%2Ct%2Cu%2Cm%2Cp%2Ce%2Cd)">quick
+  search</a> shows so many occurrences of this code on the web.  It is
+  quite surprising to me that a rather silly piece of code written
+  during a Sunday afternoon to solve an equally silly puzzle has been
+  the subject of much discussion!
+</p>

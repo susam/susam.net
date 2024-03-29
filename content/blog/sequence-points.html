@@ -1,0 +1,202 @@
+<!-- date: 2010-05-26 -->
+<!-- title: Sequence Points -->
+<!-- tag: C, Programming, Technology -->
+<h2 id="code-examples">Code Examples</h2>
+<p>
+  A particular type of question comes up often in C programming
+  forums.  Here is an example of such a question:
+</p>
+<pre>
+<code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int i = 5;
+    printf("%d %d %d\n", i, i--, ++i);
+    return 0;
+}</code>
+</pre>
+<p>
+  The output is <code>5 6 5</code> when compiled with GCC and
+  <code>6 6 6</code> when compiled with the C compiler that comes with
+  Microsoft Visual Studio.  The versions of the compilers with which I
+  got these results are:
+</p>
+<ul>
+  <li>
+    gcc (Debian 4.3.2-1.1) 4.3.2
+  </li>
+  <li>
+    Microsoft Visual Studio 2005 32-Bit C/C++ Optimizing Compiler
+    Version 14.00.50727.42 for 80x86
+  </li>
+</ul>
+<p>
+  Here is another example of such a question:
+</p>
+<pre>
+<code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int a = 5;
+    a += a++ + a++;
+    printf("%d\n", a);
+    return 0;
+}</code>
+</pre>
+<p>
+  In this case, I got the output <code>17</code> with both the
+  compilers.
+</p>
+<p>
+  The behaviour of such C programs is undefined.  Consider the
+  following two statements:
+</p>
+<ul>
+  <li><code>printf("%d %d %d\n", i, i--, ++i);</code></li>
+  <li><code>a += a++ + a++;</code></li>
+</ul>
+<p>
+  We will see below that in both the statements, the variable is
+  modified twice between two consecutive sequence points.  If the
+  value of a variable is modified more than once between two
+  consecutive sequence points, the behaviour is undefined.  Such code
+  may behave differently when compiled with different compilers.
+</p>
+<h2 id="knr">K&amp;R</h2>
+<p>
+  Before looking at the relevant sections of the C99 standard, let us
+  see what the book
+  <em><a href="https://en.wikipedia.org/wiki/The_C_Programming_Language_(book)">The
+  C Programming Language</a></em>, Second Edition says about such C
+  statements.  In Section 2.12 (Precedence and Order of Evaluation) of
+  the book, the authors write:
+</p>
+<blockquote>
+  <p>
+    C, like most languages, does not specify the order in which the
+    operands of an operator are evaluated.  (The exceptions are
+    <code>&amp;&amp;</code>, <code>||</code>, <code>?:</code>, and
+    '<code>,</code>'.)  For example, in a statement like
+  </p>
+  <pre><code>x = f() + g();</code></pre>
+  <p>
+    <code>f</code> may be evaluated before <code>g</code> or vice
+    versa; thus if either <code>f</code> or <code>g</code> alters a
+    variable on which the other depends, <code>x</code> can depend on
+    the order of evaluation.  Intermediate results can be stored in
+    temporary variables to ensure a particular sequence.
+  </p>
+</blockquote>
+<p>
+  In the next paragraph, they write,
+</p>
+<blockquote>
+  <p>
+    Similarly, the order in which function arguments are evaluated is
+    not specified, so the statement
+  </p>
+  <pre><code>printf("%d %d\n", ++n, power(2, n));    /* WRONG */</code></pre>
+  <p>
+    can produce different results with different compilers, depending
+    on whether <code>n</code> is incremented before <code>power</code>
+    is called.  The solution, of course, is to write
+  </p>
+<pre>
+<code>++n;
+printf("%d %d\n", n, power(2, n));</code>
+</pre>
+</blockquote>
+<p>
+  They provide one more example in this section:
+</p>
+<blockquote>
+  <p>
+    One unhappy situation is typified by the statement
+  </p>
+<pre>
+<code>a[i] = i++;</code>
+</pre>
+  <p>
+    The question is whether the subscript is the old value
+    of <code>i</code> or the new.  Compilers can interpret this in
+    different ways, and generate different answers depending on their
+    interpretation.
+  </p>
+</blockquote>
+<h2 id="c99">C99</h2>
+<p>
+  To read more about this, download the
+  <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf">C99
+  standard</a>, go to section 5.1.2.3 (Program execution), and see the
+  second point which mentions:
+</p>
+<blockquote>
+  Accessing a volatile object, modifying an object, modifying a file,
+  or calling a function that does any of those operations are
+  all <em>side effects</em>,<sup>11)</sup> which are changes in the
+  state of the execution environment.  Evaluation of an expression may
+  produce side effects.  At certain specified points in the execution
+  sequence called <em>sequence points</em>, all side effects of
+  previous evaluations shall be complete and no side effects of
+  subsequent evaluations shall have taken place.  (A summary of the
+  sequence points is given in annex C.)
+</blockquote>
+<p>
+  Then go to section 6.5 and see the second point which mentions:
+</p>
+<blockquote>
+  Between the previous and next sequence point an object shall have
+  its stored value modified at most once by the evaluation of an
+  expression.<sup>72)</sup> Furthermore, the prior value shall be read
+  only to determine the value to be stored.<sup>73)</sup>
+</blockquote>
+<p>
+  Finally go to Annex C (Sequence Points).  It lists all the sequence
+  points.  For example, the following is mentioned as a sequence point:
+</p>
+<blockquote>
+  The call to a function, after the arguments have been evaluated
+  (6.5.2.2).
+</blockquote>
+<p>
+  This means that in the statement
+</p>
+<pre><code>printf("%d %d %d\n", i, i--, ++i);</code></pre>
+<p>
+  there is a sequence point after the evaluation of the three
+  arguments (<code>i</code>, <code>i--</code>, and <code>++i</code>)
+  and before the <code>printf()</code> function is called.  But none
+  of the items specified in Annex C implies that there is a sequence
+  point between the evaluation of the arguments.  Yet the value
+  of <code>i</code> is modified more than once during the evaluation
+  of these arguments.  This makes the behaviour of this statement
+  undefined.  Further, the value of <code>i</code> is being read not
+  only for determining what it must be updated to but also for using
+  as arguments to the <code>printf()</code> call.  This also makes the
+  behaviour of this code undefined.
+</p>
+<p>
+  Let us see another example of a sequence point from Annex C.
+</p>
+<blockquote>
+  The end of a full expression: an initializer (6.7.8); the expression
+  in an expression statement (6.8.3); the controlling expression of a
+  selection statement (<code>if</code> or <code>switch</code>)
+  (6.8.4); the controlling expression of a <code>while</code>
+  or <code>do</code> statement (6.8.5); each of the expressions of
+  a <code>for</code> statement (6.8.5.3); the expression in
+  a <code>return</code> statement (6.8.6.4).
+</blockquote>
+<p>
+  Therefore in the statement
+</p>
+<pre><code>a += a++ + a++;</code></pre>
+<p>
+  there is a sequence point at the end of the complete expression
+  (marked with a semicolon) but there is no other sequence point
+  before it.  Yet the value of <code>a</code> is modified twice before
+  the sequence point.  Thus the behaviour of this statement is
+  undefined.
+</p>
