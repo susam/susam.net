@@ -1,5 +1,5 @@
 <!--
-  FXYT 0.2.0
+  FXYT 0.3.0-dev1
   Copyright (c) 2023 Susam Pal
   Source: https://github.com/susam/cfr
   License: MIT
@@ -187,6 +187,7 @@
 
         // Initialize the user interface.
         createButtons()
+        clearHelp()
         resize()
         actionHash()
         text.setSelectionRange(text.value.length, text.value.length)
@@ -506,7 +507,7 @@
             ++idx
           } else if (op === 'R') { // Rotate.
             if (dCount < 3) {
-              stackUnderflowError(x, y, t, idx, op, dCount, 2)
+              stackUnderflowError(x, y, t, idx, op, dCount, 3)
               return null
             }
             const a = ds[dCount - 3]
@@ -768,7 +769,8 @@
       }
 
       function actionHash () {
-        if (window.location.hash.length > 1) {
+        const hashLen = window.location.hash.length
+        if (hashLen > 1) {
           const code = urlDecode(window.location.hash.substring(1))
           if (code === null) {
             return
@@ -989,6 +991,10 @@
 
       function urlDecode (s) {
         let result = ''
+        if (s.length > MAX_DIST_LEN) {
+          error('Code embedded in URL exceeds ' + MAX_DIST_LEN + ' bytes')
+          return null
+        }
         for (let i = 0; i < s.length; i++) {
           const op = OP[s.charAt(i)]
           if (typeof op === 'undefined') {

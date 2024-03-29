@@ -43,8 +43,8 @@ help:
 	@echo '  test              Test Common Lisp program.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
 	@echo '  run-dist          Serve distribution locally via a local HTTP server.'
-	@echo '  run-deep-site     Serve website from a subdirectory path.'
-	@echo '  run-deep-dist     Serve distribution from a subdirectory path.'
+	@echo '  run-site-deep     Serve website from a subdirectory path.'
+	@echo '  run-dist-deep     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
 	@echo '  checks            Run checks suitable to be run before push.'
 	@echo '  tidy              Run HTML Tidy on the generated website.'
@@ -156,10 +156,10 @@ follow-visit:
 	    echo "Log file truncated; following from the beginning"; \
 	  fi; \
 	  if [ "$$curr_lines" -ne "$$prev_lines" ]; then \
-	    echo "[$$(date +"%Y-%m-%d %H:%M:%S")] new visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	    echo; \
 	    tail -n +"$$(( $$prev_lines + 1 ))" /tmp/visits.txt; \
 	    echo; \
+	    echo "[$$(date +"%Y-%m-%d %H:%M:%S")] new visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	  fi; \
 	  sleep 60; \
 	done
@@ -194,6 +194,7 @@ grepd:
 
 grepv:
 	[ -n "$$re" ]
+	make cache-visits FILE=/var/log/nginx/access.log*
 	sudo grep -h $(re) /tmp/visits.txt
 
 filter-visitors:
@@ -299,9 +300,9 @@ run-dist: dist serve
 
 run-site: site serve
 
-run-deep-dist: dist deep serve
+run-dist-deep: dist deep serve
 
-run-deep-site: site deep serve
+run-site-deep: site deep serve
 
 run-form: site
 	sbcl --load form.lisp
@@ -310,18 +311,51 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: tidy check-copyright check-rendering check-sentence-space check-math-punct \
-check-entities check-newlines check-comment-files check-copyright check-nginx
+checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space tidy
 
-tidy: dist
-	find _site -name "*.html" | while read -r page; do \
-	  echo Checking "$$page"; \
-	  tidy -q --markup no --warn-proprietary-attributes no "$$page" || exit 1; \
-	done
+check-bre:
+	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude-dir content/comments 'iz[a-z]' content layout | \
+	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(s|of)?\>|\<sizing\>|:topic'; [ $$? = 1 ]
+	grep -IErn --exclude-dir content/comments 'yze' content layout | \
+	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
+	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude-dir content/comments 'color|center' content layout | \
+	  grep -vE '\.center\>|-color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]
+	sed -n '/Susam Pal/,/date:/p' content/comments/*.html | \
+	  grep -E 'iz[a-z]|yze|center|color' | grep -vE '\<color:|\<size\>'; [ $$? = 1 ]
+	@echo Done; echo
+
+check-comment-files:
+	# Ensure every comment file has a post file.
+	ls -1 content/comments/ | while read -r f; do \
+	    echo Checking post file for "$$f"; \
+		if ! [ -e "content/blog/$$f" ] && ! [ -e "content/elog/$$f" ]; then \
+			echo No post file for comment file: "$$f"; exit 1; fi; done
 	@echo Done; echo
 
 check-copyright:
 	grep -q "&copy; 2005-$$(date +"%Y") Susam Pal" content/tree/cv.html content/tree/foss.html
+	@echo Done; echo
+
+check-entities:
+	grep -IErn --include='*.html' --exclude=invaders.html --exclude=cfrs.html --exclude=fxyt.html ' [<>&] ' content; [ $$? = 1 ]
+	@echo Done; echo
+
+check-mathjax:
+	grep -IErn '\\)[^- :t"<)}]' content | grep -vE '<code>'; [ $$? = 1 ]
+	@echo Done; echo
+
+check-newlines:
+	grep -IErn '(<br>|\\\[).' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
+	@echo Done; echo
+
+check-nginx:
+	# Ensure http.susam.net and https.susam.net are consistent.
+	sed -n '1,/limit_req_status/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '1,/limit_req_status/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	diff -u /tmp/http.susam.net /tmp/https.susam.net
+	sed -n '/server_name [^w]/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
+	sed -n '/server_name [^w]/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
+	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	@echo Done; echo
 
 check-rendering:
@@ -335,34 +369,11 @@ check-sentence-space:
 	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.'; [ $$? = 1 ]
 	@echo Done; echo
 
-check-math-punct:
-	grep -IErn '\\)[^- :t"<)}]' content | grep -vE '<code>'; [ $$? = 1 ]
-	@echo Done; echo
-
-check-entities:
-	grep -IErn --include='*.html' --exclude=invaders.html --exclude=cfrs.html --exclude=fxyt.html ' [<>&] ' content; [ $$? = 1 ]
-	@echo Done; echo
-
-check-newlines:
-	grep -IErn '(<br>|\\\[).' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
-	@echo Done; echo
-
-check-comment-files:
-	# Ensure every comment file has a post file.
-	ls -1 content/comments/ | while read -r f; do \
-	    echo Checking post file for "$$f"; \
-		if ! [ -e "content/blog/$$f" ] && ! [ -e "content/elog/$$f" ]; then \
-			echo No post file for comment file: "$$f"; exit 1; fi; done
-	@echo Done; echo
-
-check-nginx:
-	# Ensure http.susam.net and https.susam.net are consistent.
-	sed -n '1,/limit_req_status/p' etc/nginx/http.susam.net > /tmp/http.susam.net
-	sed -n '1,/limit_req_status/p' etc/nginx/https.susam.net > /tmp/https.susam.net
-	diff -u /tmp/http.susam.net /tmp/https.susam.net
-	sed -n '/server_name [^w]/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
-	sed -n '/server_name [^w]/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
-	diff -u /tmp/http.susam.net /tmp/https.susam.net
+tidy: dist
+	find _site -name "*.html" | while read -r page; do \
+	  echo Tidying "$$page"; \
+	  tidy -q --markup no --warn-proprietary-attributes no "$$page" || exit 1; \
+	done
 	@echo Done; echo
 
 check-links:

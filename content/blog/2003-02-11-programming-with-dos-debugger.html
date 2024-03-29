@@ -80,7 +80,7 @@ C:\&gt;</samp>
   file.  The command <code>W</code> is used to write the machine code
   to the file.  This command expects the registers BX and CX to contain
   the number of bytes to be written to the file.  When the DOS debugger
-  starts, BX is already initialized to 0, so we only set the register
+  starts, BX is already initialised to 0, so we only set the register
   CX to 7 with the <code>R CX</code> command.  Finally, we use the
   command <code>Q</code> to quit the debugger and return to MS-DOS.
 </p>
@@ -289,11 +289,11 @@ SP FFFE
   program with <code>RET</code>, we cannot run the program repeatedly
   in this manner.  The program runs and terminates successfully the
   first time we run it in the debugger but the stack does not get
-  reinitialized with zeros to prepare it for another execution of the
+  reinitialised with zeros to prepare it for another execution of the
   program within the debugger.  Therefore when we try to run the
   program the second time using the <code>G</code> command, the
   program does not terminate successfully.  It hangs instead.  It is
-  possible to work around this by reinitializing the stack with the
+  possible to work around this by reinitialising the stack with the
   debugger command <code>E FFFE 0 0</code> before
   running <code>G</code> again.
 </p>

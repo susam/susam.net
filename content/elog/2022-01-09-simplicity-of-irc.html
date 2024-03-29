@@ -26,15 +26,15 @@
   In the early days of IRC, it was quite common for someone with basic
   programming skills to write a simple IRC bot within a matter of
   hours.  Such IRC bots typically responded to requests from users,
-  answered frequently asked questions, hosted live quiz contests in a
-  channel, etc.  The simplicity of the protocol made it very enticing
-  to write programs that could talk to IRC servers directly.  In fact,
-  many people chose to write the code to parse and create IRC payloads
-  from scratch.  Observing the TCP/IP packets with a packet analyzer
-  such as Wireshark or Tcpdump was all one needed to learn about the
-  various payload formats.
-  Additionally, <a href="https://www.rfc-editor.org/rfc/rfc1459">RFC
-  1459</a> served as a good reference to learn the IRC specification.
+  answered frequently asked questions, hosted trivia quiz, etc.  The
+  simplicity of the protocol made it very enticing to write programs
+  that could talk to IRC servers directly.  In fact, many people chose
+  to write the code to parse and create IRC payloads from scratch.
+  Observing the TCP/IP packets with a packet analyser such as
+  Wireshark or Tcpdump was all one needed to learn about the various
+  payload formats.  Additionally,
+  <a href="https://www.rfc-editor.org/rfc/rfc1459">RFC 1459</a> served
+  as a good reference to learn the IRC specification.
 </p>
 <p>
   As a result of the simplicity of the IRC protocol, sometimes when I
@@ -93,16 +93,16 @@
 :strontium.libera.chat 376 humpty :End of /MOTD command.
 :humpty MODE humpty :+iw
 <kbd>JOIN #test</kbd>
-:humpty!~humpty@49.207.204.32 JOIN #test
+:humpty!~humpty@178.79.176.169 JOIN #test
 :strontium.libera.chat 353 humpty = #test :humpty susam coolnickname ptl-tab edcragg
 :strontium.libera.chat 366 humpty #test :End of /NAMES list.
 <kbd>PRIVMSG #test :Hello, World!</kbd>
 :susam!~susam@user/susam PRIVMSG #test :Hello, Humpty!
 <kbd>PART #test</kbd>
-:humpty!~humpty@49.207.204.32 PART #test
+:humpty!~humpty@178.79.176.169 PART #test
 <kbd>QUIT</kbd>
-:humpty!~humpty@49.207.204.32 QUIT :Client Quit
-ERROR :Closing Link: 49.207.204.32 (Client Quit)</samp>
+:humpty!~humpty@178.79.176.169 QUIT :Client Quit
+ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp>
 </pre>
 <p>
   In the above session, the user connects to the Libera Chat network
@@ -151,9 +151,9 @@ USER humpty humpty irc.libera.chat :Humpty Dumpty
 <p>
   In case you have never used IRC but this post has piqued your
   interest and you want to try it out, you probably don't want to be
-  typing out IRC payloads by hand.  You probably want a good IRC
-  client instead.  Let me share some convenient ways to connect to the
-  Libera Chat network.  Say, you want to join the <code>#python</code>
+  typing out IRC payloads by hand.  You would want a good IRC client
+  instead.  Let me share some convenient ways to connect to the Libera
+  Chat network.  Say, you want to join the <code>#python</code>
   channel on Libera Chat network.  Here are some ways to do it:
 </p>
 <ul>
@@ -161,12 +161,6 @@ USER humpty humpty irc.libera.chat :Humpty Dumpty
     <p>
       Join via web interface:
       <a href="https://web.libera.chat/#python">web.libera.chat/#python</a>.
-    </p>
-  </li>
-  <li>
-    <p>
-      Join via Matrix bridge:
-      <a href="https://app.element.io/#/room/#python:libera.chat">#python:libera.chat</a>
     </p>
   </li>
   <li>
