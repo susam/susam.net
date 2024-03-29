@@ -1,7 +1,7 @@
 <!-- title: Rebooting With JMP Instruction -->
 <!-- tag: Assembly, Programming, DOS, Technology -->
 <p>
-  While learning about x86 microprocessors, I realized that it is
+  While learning about x86 microprocessors, I realised that it is
   possible to reboot a computer running MS-DOS or Windows 98 by
   jumping to the memory address FFFF:0000.  Here is an
   example <code>DEBUG.EXE</code> session from MS-DOS 6.22:
@@ -29,7 +29,7 @@ FFFF:0000 EA5BE000F0    JMP     F000:E05B</samp>
 </pre>
 <p>
   The address F000:E05B contains the BIOS start-up program which
-  performs a power-on self-test (POST), initializes the peripheral
+  performs a power-on self-test (POST), initialises the peripheral
   devices, loads the boot sector code, and executes it.  These
   operations complete the booting sequence.
 </p>
@@ -68,7 +68,7 @@ C:\&gt;</samp>
   the file where we write the binary machine code to.  Also, note that
   the <code>W</code> (write) command expects the registers BX and CX
   to contain the number of bytes to be written to the file.  When the
-  DOS debugger starts, it already initializes BX to 0 automatically,
+  DOS debugger starts, it already initialises BX to 0 automatically,
   so we only set the register CX to 5 with the <code>R CX</code>
   command above.
 </p>
