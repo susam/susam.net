@@ -1,0 +1,182 @@
+<!-- date: 2011-11-07 -->
+<!-- title: AUTH CRAM-MD5 -->
+<!-- tag: Networking, Protocol, Technology -->
+<h2 id="introduction">Introduction</h2>
+<p>
+  Last night, while I was setting up my SMTP server, I decided to dig
+  deeper into CRAM-MD5 authentication mechanism.  It is a
+  challenge-response authentication mechanism and involves HMAC-MD5.
+  We don't use SSL/TLS in the SMTP session examples below in order to
+  show the underlying protocol in clear.  In practice, any email
+  program should be configured to use SSL/TLS while having a session
+  with an SMTP server.  We will first see a few examples of other
+  authentication mechanisms before discussing the CRAM-MD5 mechanism.
+</p>
+<h2 id="auth-plain">AUTH PLAIN</h2>
+<p>
+  Here is an example of a session that uses the PLAIN authentication
+  mechanism:
+</p>
+<pre>
+<samp>$ <kbd>telnet susam.in 25</kbd>
+Trying 106.187.41.241...
+Connected to susam.in.
+Escape character is '^]'.
+220 tesseract.susam.in ESMTP Exim 4.72 Mon, 07 Nov 2011 20:27:56 +0530
+<kbd>EHLO nifty.localdomain</kbd>
+250-tesseract.susam.in Hello nifty.localdomain [122.167.80.194]
+250-SIZE 52428800
+250-PIPELINING
+250-AUTH PLAIN LOGIN CRAM-MD5
+250-STARTTLS
+250 HELP
+<kbd>AUTH PLAIN AGFsaWNlAHdvbmRlcmxhbmQ=</kbd>
+235 Authentication succeeded
+<kbd>MAIL FROM:&lt;alice@susam.in&gt;</kbd>
+250 OK
+<kbd>RCPT TO:&lt;example.recipient@gmail.com&gt;</kbd>
+250 Accepted
+<kbd>DATA</kbd>
+354 Enter message, ending with "." on a line by itself
+<kbd>Date: Mon, 07 Nov 2011 20:28:00 +0530
+From: Alice &lt;alice@susam.in&gt;
+To: Example Recipient &lt;example.recipient@gmail.com&gt;
+Subject: Test email
+
+This is a test email.
+.</kbd>
+250 OK id=1RNQef-0004e7-7s
+<kbd>QUIT</kbd>
+221 tesseract.susam.in closing connection
+Connection closed by foreign host.</samp>
+</pre>
+<p>
+  The string <code>"AGFsaWNlAHdvbmRlcmxhbmQ="</code> in the <code>AUTH
+  PLAIN</code> command is the the base64 encoding of the string
+  <code>"\0alice\0wonderland"</code> where <code>"\0"</code> indicates
+  a null character, <code>"alice"</code> is the sender's user name and
+  <code>"wonderland"</code> is the sender's password.  If an
+  eavesdropper intercepts this traffic, he or she can easily find the
+  user's password by simply decoding the base64 response sent by the
+  client.  Here is an example of decoding the base64 response with
+  Python 2.7:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>'AGFsaWNlAHdvbmRlcmxhbmQ='.decode('base64')</kbd>
+'\x00alice\x00wonderland'</samp>
+</pre>
+<p>
+  This is also susceptible to replay attacks as the eavesdropper can
+  use the <code>AUTH PLAIN</code> line containing the base64 encoded
+  credentials to log into the server in future.  This is why it is
+  very important to secure the connection with SSL/TLS while having a
+  session with the SMTP server.
+</p>
+<h2 id="auth-login">AUTH LOGIN</h2>
+<p>
+  Here is another example snippet that shows the LOGIN mechanism:
+</p>
+<pre>
+<samp><kbd>AUTH LOGIN</kbd>
+334 VXNlcm5hbWU6
+<kbd>YWxpY2U=</kbd>
+334 UGFzc3dvcmQ6
+<kbd>d29uZGVybGFuZA==</kbd>
+235 Authentication succeeded</samp>
+</pre>
+<p>
+  Here are the base64 responses decoded with Python 2.7:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>'VXNlcm5hbWU6'.decode('base64')</kbd>
+'Username:'
+&gt;&gt;&gt; <kbd>'YWxpY2U='.decode('base64')</kbd>
+'alice'
+&gt;&gt;&gt; <kbd>'UGFzc3dvcmQ6'.decode('base64')</kbd>
+'Password:'
+&gt;&gt;&gt; <kbd>'d29uZGVybGFuZA=='.decode('base64')</kbd>
+'wonderland'</samp>
+</pre>
+<p>
+  If the session isn't encrypted, LOGIN authentication mechanism is
+  susceptible to the same problems that PLAIN authentication mechanism
+  is susceptible to.
+</p>
+<h2 id="auth-cram-md5">AUTH CRAM-MD5</h2>
+<p>
+  Let us take a look at the CRAM-MD5 authentication mechanism now.
+  When the client selects the CRAM-MD5 authentication mechanism, the
+  server sends a base64 encoded challenge like this:
+</p>
+<pre>
+<samp><kbd>AUTH CRAM-MD5</kbd>
+334 PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg==</samp>
+</pre>
+<p>
+  An HMAC is calculated for this challenge with the password as the
+  key and MD5 as the hash function.  A string is formed by
+  concatenating the user name, a space and the hexadecimal
+  representation of the HMAC.  The base64 encoding of this string is
+  sent as the response by the client.  The following statements in
+  Python 2.7 show how a response can be formed for the above
+  challenge:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>'PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg=='.decode('base64')</kbd>
+'&lt;17893.1320679123@tesseract.susam.in&gt;'
+&gt;&gt;&gt; <kbd>import hmac, hashlib</kbd>
+&gt;&gt;&gt; <kbd>hmac.new('wonderland', '&lt;17893.1320679123@tesseract.susam.in&gt;', hashlib.md5).hexdigest()</kbd>
+'64b2a43c1f6ed6806a980914e23e75f0'
+&gt;&gt;&gt; <kbd>'alice 64b2a43c1f6ed6806a980914e23e75f0'.encode('base64')</kbd>
+'YWxpY2UgNjRiMmE0M2MxZjZlZDY4MDZhOTgwOTE0ZTIzZTc1ZjA=\n'</samp>
+</pre>
+<p>
+  Of course, this can be written as a small function:
+</p>
+<pre>
+<code>import hmac, hashlib
+def cram_md5_response(username, password, base64challenge):
+    return (username + ' ' +
+            hmac.new(password,
+                     base64challenge.decode('base64'),
+                     hashlib.md5).hexdigest()).encode('base64')</code>
+</pre>
+<p>
+  The following snippet shows the SMTP server accepting the
+  client-response:
+</p>
+<pre>
+<samp><kbd>AUTH CRAM-MD5</kbd>
+334 PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg==
+<kbd>YWxpY2UgNjRiMmE0M2MxZjZlZDY4MDZhOTgwOTE0ZTIzZTc1ZjA=</kbd>
+235 Authentication succeeded</samp>
+</pre>
+<p>
+  When the connection is not secured, CRAM-MD5 authentication
+  mechanism is relatively more secure than the other two mechanisms
+  because the password cannot be retrieved by decoding the base64
+  encoded response from the client.  The password is used as the key
+  to calculate the HMAC but the password itself is not present in the
+  response.  It prevents replay attacks too because the server sends
+  an unpredictable challenge for every authentication.  The response
+  sent by the client for a certain challenge is invalid for another
+  instance of authentication because the other instance would involve
+  a different unpredictable challenge.
+</p>
+<h2 id="further-reading">Further Reading</h2>
+<p>
+  Here is a list of hyperlinks for further reading:
+</p>
+<ol>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4954">RFC 4954</a>:
+    SMTP Service Extension for Authentication
+</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4616">RFC 4616</a>:
+    The PLAIN Simple Authentication and Security Layer (SASL) Mechanism
+</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2195">RFC 2195</a>:
+    IMAP/POP AUTHorize Extension for Simple Challenge/Response
+</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2104">RFC 2104</a>:
+    HMAC: Keyed-Hashing for Message Authentication</li>
+</ol>

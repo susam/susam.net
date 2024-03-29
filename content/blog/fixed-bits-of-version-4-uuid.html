@@ -1,0 +1,96 @@
+<!-- date: 2015-04-10 -->
+<!-- title: Fixed Bits of Version 4 UUID -->
+<!-- tag: Python, Programming, Technology -->
+<!-- import: extra.css -->
+<p>
+  <em>Universally Unique Identifiers</em> or UUIDs are a popular way
+  creating identifiers that are unique for <em>practical</em>
+  purposes.  Quoting from
+  <a href="https://www.rfc-editor.org/rfc/rfc4122">RFC 4122</a>
+  below:
+</p>
+<blockquote>
+  This specification defines a Uniform Resource Name namespace for
+  UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally
+  Unique IDentifier).  A UUID is 128 bits long, and requires no
+  central registration process.
+</blockquote>
+<p>
+  These 128-bit identifiers are typically represented as 32
+  hexadecimal digits, displayed in five groups separated by hyphens.
+  There are various variants and versions of UUIDs which differ in how
+  the identifiers are encoded in binary and how they are generated.
+  In this post, we are going to focus only on variant 1 of version 4
+  UUIDs, also known simply as version 4 UUIDs or random UUIDs.  Here
+  are a couple examples of version 4 UUIDs generated using Python:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>import uuid</kbd>
+&gt;&gt;&gt; <kbd>str(uuid.uuid4())</kbd>
+'980ddc6a-2c56-44da-ac71-9e6bfc924e25'
+&gt;&gt;&gt; <kbd>str(uuid.uuid4())</kbd>
+'10c3fcde-96a0-4c9e-905b-443b00ceeb01'</samp>
+</pre>
+<p>
+  Version 4 UUID is one of the most popular type of UUIDs in use
+  today.  Unlike the other versions, this version does not require
+  external inputs like MAC address, sequence number, current time,
+  etc.  All except six bits are generated randomly in version 4 UUIDs.
+  The six non-random bits are fixed.  They represent the version and
+  variant of the UUID.  Here is a tiny Python program that
+  demonstrates the first set of fixed bits:
+</p>
+<pre><code>while str(uuid.uuid4())[14] == '4': pass</code></pre>
+<p>
+  The above program is an infinite loop.  So is this:
+</p>
+<pre><code>while str(uuid.uuid4())[19] in ['8', '9', 'a', 'b']: pass</code></pre>
+<p>
+  The above infinite loops show that the hexademical digit at index 14
+  must always be 4.  Similarly, the hexadecimal digit at index 19 must
+  always be one of 8, 9, a, and b.  We can see the two examples of
+  version 4 UUIDs mentioned earlier and confirm that this is indeed
+  the case.  Here are a few more examples that illustrate this
+  pattern:
+</p>
+<pre>
+<code>527218be-a09e-<span class="hl">4</span>d0e-<span class="hl">8</span>6ce-c39d1348d953
+14163389-2eea-<span class="hl">4</span>e30-<span class="hl">9</span>124-fcf2451eb9fc
+c21b57cc-2a4e-<span class="hl">4</span>425-<span class="hl">a</span>2f4-129256562599
+37700270-6deb-<span class="hl">4</span>a73-<span class="hl">b</span>bcd-d47c6e20b567</code>
+</pre>
+<p>
+  The digit after the second hyphen is at index 14 and indeed this
+  digit is always 4.  Similarly, the hexadecimal digit after the third
+  hyphen is at index 19 and indeed it is always one of 8, 9, a, and b.
+</p>
+<p>
+  If we number the octets in the identifiers as 0, 1, 2, etc. where 0
+  represents the most significant octet (the leftmost pair of
+  hexadecimal digits in the string representations above), then with a
+  careful study of
+  <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.1.1">section
+  4.1.1</a> of RFC 4122 we know that the first two most significant
+  bits of octet 8 represent the variant number.  Since we are working
+  with variant 1 of version 4 UUIDs, these two bits must be 1 and 0.
+  As a result, octet 8 must be of the form 10xx xxxx in binary where
+  each x represents an independent random bit.  Thus, in binary, the
+  four most significant bits of octet 8 must be one of 1000, 1001,
+  1010, and 1011.  This explains why we always see the hexadecimal
+  digit 8, 9, a, or b at this position.
+</p>
+<p>
+  Similarly, a study of
+  <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.1.2">section 4.1.2</a>
+  and <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.1.3">section 4.1.3</a>
+  of the RFC shows that the four most significant bits of octet 6 must
+  be set to 0100 to represent the version number 4.  This explains why
+  we always see the hexadecimal digit 4 here.
+</p>
+<p>
+  <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.4">Section
+  4.4</a> of RFC 4122 further summarises these points.  To summarise,
+  version 4 UUIDs, although 128 bits in length, have 122 bits of
+  randomness.  They have six fixed bits that represent its version and
+  variant.
+</p>
