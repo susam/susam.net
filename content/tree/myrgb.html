@@ -1,5 +1,5 @@
 <!--
-  MyRGB 0.1.0
+  Guess My RGB 0.1.0
   Copyright (c) 2024 Susam Pal
   Source: https://github.com/susam/myrgb
   License: MIT
@@ -7,16 +7,24 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>RGB Game</title>
+    <title>Guess My RGB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A simple RGB color guessing game.">
     <style>
+      html {
+        height: 100%;
+      }
       body {
         font-family: monospace,monospace;
         font-size: large;
         margin: 0;
         padding: 1em;
         text-align: center;
+        box-sizing: border-box;
+        height: 100%;
+      }
+      main {
+        min-height: calc(100% - 4em);
       }
       h1 {
         margin: 0 0 1em 0;
@@ -53,11 +61,20 @@
         max-width: 20em;
         padding: 0.5em;
       }
+      footer {
+        line-height: 4em;
+      }
+      footer a {
+        margin-right: 1.5em;
+      }
+      footer a:last-child {
+        margin-right: 0;
+      }
     </style>
     <script>
       'use strict'
 
-      const LOGGING = true
+      const LOGGING = false
       const MAX_ATTEMPTS = 99
 
       let r = 0
@@ -88,6 +105,25 @@
       }
 
       function newGame () {
+        pickRGB()
+        setupGame(r, g, b)
+      }
+
+      function setGame (rr, gg, bb) { // eslint-disable-line no-unused-vars
+        // Useful to set arbitrary colors for local testing.
+        r = rr
+        g = gg
+        b = bb
+        setupGame(r, g, b)
+      }
+
+      function pickRGB () {
+        r = Math.floor(Math.random() * 16)
+        g = Math.floor(Math.random() * 16)
+        b = Math.floor(Math.random() * 16)
+      }
+
+      function setupGame (r, g, b) {
         log('setting up new game')
         info.style.display = 'inline-block'
         submit.style.display = 'none'
@@ -96,15 +132,8 @@
         attempts = 0
         rin.disabled = gin.disabled = bin.disabled = false
         rin.value = bin.value = gin.value = 7
-        pickRGB()
         paintGame(r, g, b)
         log('new game is ready')
-      }
-
-      function pickRGB () {
-        r = Math.floor(Math.random() * 16)
-        g = Math.floor(Math.random() * 16)
-        b = Math.floor(Math.random() * 16)
       }
 
       function paintGame (r, g, b) {
@@ -114,6 +143,11 @@
         rin.style.accentColor = dark ? '#f99' : '#900'
         gin.style.accentColor = dark ? '#0c0' : '#050'
         bin.style.accentColor = dark ? '#0cf' : '#00f'
+        const anchors = document.getElementsByTagName('a')
+        for (let i = 0; i < anchors.length; ++i) {
+          const a = anchors[i]
+          a.style.color = dark ? '#eef' : '#006'
+        }
       }
 
       function readInput () {
@@ -139,7 +173,7 @@
         const div = document.createElement('div')
         scored = (scored < 10 ? '0' : '') + scored
         div.style.background = rgbHex
-        div.style.color = dark ? '#fff' : '000'
+        div.style.color = dark ? '#fff' : '#000'
         div.innerHTML = lPad + attempts + ') ' + rgbHex
         log('input=' + rr + ',' + gg + ',' + bb + ' hex=' + rgbHex +
             ' scored=' + scored + ' won=' + won)
@@ -223,61 +257,68 @@
     </script>
   </head>
   <body>
-    <h1>Guess My RGB</h1>
-    <div class="ruler">
-      <label>&nbsp;</label>
-      <div>
-        <span>0</span>
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
-        <span>4</span>
-        <span>5</span>
-        <span>6</span>
-        <span>7</span>
-        <span>8</span>
-        <span>9</span>
-        <span>A</span>
-        <span>B</span>
-        <span>C</span>
-        <span>D</span>
-        <span>E</span>
-        <span>F</span>
+    <main>
+      <h1>Guess My RGB</h1>
+      <div class="ruler">
+        <label>&nbsp;</label>
+        <div>
+          <span>0</span>
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
+          <span>6</span>
+          <span>7</span>
+          <span>8</span>
+          <span>9</span>
+          <span>A</span>
+          <span>B</span>
+          <span>C</span>
+          <span>D</span>
+          <span>E</span>
+          <span>F</span>
+        </div>
       </div>
-    </div>
-    <div class="slider">
-      <label for="rin">R</label>
-      <input type="range" id="rin" name="rin" max="15" list="values">
-    </div>
-    <div class="slider">
-      <label for="gin">G</label>
-      <input type="range" id="gin" name="gin" max="15" list="values">
-    </div>
-    <div class="slider">
-      <label for="bin">B</label>
-      <input type="range" id="bin" name="bin" max="15" list="values">
-    </div>
-    <datalist id="values">
-      <option value="0" label="0"></option>
-      <option value="1" label="1"></option>
-      <option value="2" label="2"></option>
-      <option value="3" label="3"></option>
-      <option value="4" label="4"></option>
-      <option value="5" label="5"></option>
-      <option value="6" label="6"></option>
-      <option value="7" label="7"></option>
-      <option value="8" label="8"></option>
-      <option value="9" label="9"></option>
-      <option value="10" label="A"></option>
-      <option value="11" label="B"></option>
-      <option value="12" label="C"></option>
-      <option value="13" label="D"></option>
-      <option value="14" label="E"></option>
-      <option value="15" label="F"></option>
-    </datalist>
-    <div id="info">Move the sliders above to guess the background RGB color.</div>
-    <button id="submit"></button>
-    <button id="restart">New Game</button>
-    <div id="result"></div>
+      <div class="slider">
+        <label for="rin">R</label>
+        <input type="range" id="rin" name="rin" max="15" list="values">
+      </div>
+      <div class="slider">
+        <label for="gin">G</label>
+        <input type="range" id="gin" name="gin" max="15" list="values">
+      </div>
+      <div class="slider">
+        <label for="bin">B</label>
+        <input type="range" id="bin" name="bin" max="15" list="values">
+      </div>
+      <datalist id="values">
+        <option value="0" label="0"></option>
+        <option value="1" label="1"></option>
+        <option value="2" label="2"></option>
+        <option value="3" label="3"></option>
+        <option value="4" label="4"></option>
+        <option value="5" label="5"></option>
+        <option value="6" label="6"></option>
+        <option value="7" label="7"></option>
+        <option value="8" label="8"></option>
+        <option value="9" label="9"></option>
+        <option value="10" label="A"></option>
+        <option value="11" label="B"></option>
+        <option value="12" label="C"></option>
+        <option value="13" label="D"></option>
+        <option value="14" label="E"></option>
+        <option value="15" label="F"></option>
+      </datalist>
+      <div id="info">Move the sliders above to guess the background RGB color.</div>
+      <button id="submit"></button>
+      <button id="restart">New Game</button>
+      <div id="result"></div>
+    </main>
+    <footer>
+      <a href="https://github.com/susam/myrgb">GitHub</a>
+      <a href="https://mastodon.social/@susam">Mastodon</a>
+      <a href="https://susam.net/links.html">Links</a>
+    </footer>
   </body>
 </html>
