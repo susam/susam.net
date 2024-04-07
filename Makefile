@@ -318,7 +318,7 @@ check-bre:
 	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(s|of)?\>|\<sizing\>|:topic'; [ $$? = 1 ]
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
-	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude-dir content/comments 'color|center' content layout | \
+	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude-dir content/comments 'color|center' content layout | \
 	  grep -vE '\.center\>|-color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]
 	sed -n '/Susam Pal/,/date:/p' content/comments/*.html | \
 	  grep -E 'iz[a-z]|yze|center|color' | grep -vE '\<color:|\<size\>'; [ $$? = 1 ]
@@ -337,7 +337,7 @@ check-copyright:
 	@echo Done; echo
 
 check-entities:
-	grep -IErn --include='*.html' --exclude=invaders.html --exclude=cfrs.html --exclude=fxyt.html ' [<>&] ' content; [ $$? = 1 ]
+	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html ' [<>&] ' content; [ $$? = 1 ]
 	@echo Done; echo
 
 check-mathjax:
