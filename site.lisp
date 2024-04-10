@@ -363,9 +363,9 @@ value, next-index."
          (zone-link "")
          (zone-name)
          (zone-index))
-     (cond ((string-starts-with "_site/maze/" ,dst-path)
-            (setf zone-index (render "maze/{{ index }}" ,params))
-            (setf zone-name "Maze"))
+     (cond ((string-starts-with "_site/mix/" ,dst-path)
+            (setf zone-index (render "mix/{{ index }}" ,params))
+            (setf zone-name "Mix"))
            ((string-starts-with "_site/cc/" ,dst-path)
             (setf zone-index (render "cc/{{ index }}" ,params))
             (setf zone-name "Club"))
@@ -385,8 +385,9 @@ value, next-index."
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
 
 (defmacro add-page-params (dst page params)
-  `(let ((dst-path (render ,dst ,page)))
-     (aput "tags-for-page" (format-tags-for-page ,page) ,page)
+  `(let* ((dst-path (render ,dst (append ,page ,params)))
+          (root (relative-root-path dst-path)))
+     (aput "tags-for-page" (format-tags-for-page ,page root) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
@@ -506,23 +507,23 @@ value, next-index."
   "Convert tag title to tag slug."
   (string-replace " " "-" (string-downcase tag)))
 
-(defun format-tags-for-html (page indent)
+(defun format-tags-for-html (page indent root)
   "Create HTML to display tags."
   (let ((html "")
         (sep ""))
     (dolist (tag (string-split (aget "tag" page) ", "))
       (setf tag (tag-slug tag))
-      (setf html (fstr "~a~a<a href=\"tag/~a.html\">#~a</a>" html sep tag tag))
+      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>" html sep root tag tag))
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
 
-(defun format-tags-for-page (page)
+(defun format-tags-for-page (page root)
   "Create HTML to display tags on a page."
-  (format-tags-for-html page 2))
+  (format-tags-for-html page 2 root))
 
 (defun format-tags-for-list (page)
   "Create HTML to display tags on the full page list."
-  (format-tags-for-html page 4))
+  (format-tags-for-html page 4 ""))
 
 (defun format-tags-for-feed (page params)
   "Create HTML to display tags for the given page."
@@ -887,13 +888,11 @@ value, next-index."
 ;;; Blog
 ;;; ----
 
-(defun make-posts (src page-layout params)
+(defun make-posts (src page-dst list-dst page-layout params)
   "Generate blog post pages for all posts in a blog directory."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
-        (page-dst "_site/{{ slug }}.html")
-        (list-dst (render "_site/{{ blog-slug }}.html" params))
         (pages))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
@@ -906,13 +905,12 @@ value, next-index."
     (make-page-list pages list-dst list-layout item-layout params)
     pages))
 
-(defun make-comments (pages src page-layout &optional params)
+(defun make-comments (pages src dst page-layout &optional params)
   "Generate comment list pages or no comments pages for all pages."
   (let ((none-layout (read-file "layout/comment/none.html"))
         (list-layout (read-file "layout/comment/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
-        (comment-dst (render "_site/comments/{{ slug }}.html"
-                             params))
+        (comment-dst (render dst params))
         (comment-map))
     ;; Combine layouts to form final layouts.
     (set-nested-template none-layout page-layout)
@@ -933,12 +931,31 @@ value, next-index."
             (make-comment-none page comment-dst none-layout params))))))
 
 (defun make-blog (src name page-layout params)
-  "Create a complete blog with blog, tags, and list page."
+  "Create a complete top-level blog with blog, tags, and list page."
   (aput "blog-name" name params)
   (aput "blog-slug" (string-downcase name) params)
-  (let* ((pages))
-    (setf pages (make-posts src page-layout params))
-    (make-comments pages "content/comments/*.html" page-layout params)
+  (let* ((page-dst "_site/{{ slug }}.html")
+         (list-dst "_site/{{ blog-slug }}.html")
+         (comments-src "content/comments/*.html")
+         (comments-dst "_site/comments/{{ slug }}.html")
+         (pages))
+    (setf pages (make-posts src page-dst list-dst page-layout params))
+    (make-comments pages comments-src comments-dst page-layout params)
+    pages))
+
+
+(defun make-sublog (src-dir name page-layout params)
+  "Create a complete directory blog with blog, tags, and list page."
+  (aput "blog-name" name params)
+  (aput "blog-slug" (string-downcase name) params)
+  (let* ((posts-src (fstr "~aposts/*.html" src-dir))
+         (comments-src (fstr "~acomments/*.html" src-dir))
+         (page-dst "_site/{{ blog-slug }}/{{ slug }}.html")
+         (comments-dst "_site/{{ blog-slug }}/comments/{{ slug }}.html")
+         (list-dst "_site/{{ blog-slug }}/index.html")
+         (pages))
+    (setf pages (make-posts posts-src page-dst list-dst page-layout params))
+    (make-comments pages comments-src comments-dst page-layout params)
     pages))
 
 
@@ -1284,6 +1301,8 @@ value, next-index."
     ;; More links.
     (make-more-list "_site/" "More" page-layout params)
     ;; Blogs.
+    (setf pages (make-sublog "content/mix/" "Mix" page-layout params))
+    (setf all-pages (append all-pages pages))
     (setf pages (make-blog "content/elog/*.html" "Wall" page-layout params))
     (setf all-pages (append all-pages pages))
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
