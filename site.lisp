@@ -620,6 +620,8 @@ value, next-index."
     (dolist (page pages)
       (setf page (append page params))
       (invoke-callback page)
+      (when (aget "retitle" params)
+        (aput "title" (render (aget "retitle" page) page) page))
       (push (render item-layout page) rendered-pages))
     ;; Add list parameters.
     (aput "body" (join-strings rendered-pages) params)
@@ -954,6 +956,7 @@ value, next-index."
          (comments-dst "_site/{{ blog-slug }}/comments/{{ slug }}.html")
          (list-dst "_site/{{ blog-slug }}/index.html")
          (pages))
+    (aput "retitle" "{{ blog-name }} #{{ slug }}: {{ title }}" params)
     (setf pages (make-posts posts-src page-dst list-dst page-layout params))
     (make-comments pages comments-src comments-dst page-layout params)
     pages))
