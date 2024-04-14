@@ -1238,7 +1238,7 @@ value, next-index."
         (item-layout (read-file "layout/full/item.html")))
     (set-nested-template list-layout page-layout)
     (aput "title" "All Pages" params)
-    (make-page-list pages "_site/pages.html" list-layout item-layout params)))
+    (make-page-list pages "_site/feed.html" list-layout item-layout params)))
 
 (defun make-feed (pages params)
   "Generate feed for the complete website."
