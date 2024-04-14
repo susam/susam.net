@@ -1,0 +1,52 @@
+2024-04-14 19:26:04,898 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2024-04-14 19:26:04,898 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("person")
+2024-04-14 19:26:04,898 INFO sqlalchemy.engine.Engine [raw sql] ()
+2024-04-14 19:26:04,898 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("person")
+2024-04-14 19:26:04,898 INFO sqlalchemy.engine.Engine [raw sql] ()
+2024-04-14 19:26:04,899 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("book")
+2024-04-14 19:26:04,899 INFO sqlalchemy.engine.Engine [raw sql] ()
+2024-04-14 19:26:04,899 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("book")
+2024-04-14 19:26:04,899 INFO sqlalchemy.engine.Engine [raw sql] ()
+2024-04-14 19:26:04,899 INFO sqlalchemy.engine.Engine
+CREATE TABLE person (
+	serial INTEGER NOT NULL,
+	name VARCHAR NOT NULL,
+	city VARCHAR NOT NULL,
+	PRIMARY KEY (serial)
+)
+
+
+2024-04-14 19:26:04,899 INFO sqlalchemy.engine.Engine [no key 0.00003s] ()
+2024-04-14 19:26:04,900 INFO sqlalchemy.engine.Engine
+CREATE TABLE book (
+	serial INTEGER NOT NULL,
+	title VARCHAR NOT NULL,
+	author VARCHAR NOT NULL,
+	person INTEGER NOT NULL,
+	PRIMARY KEY (serial),
+	FOREIGN KEY(person) REFERENCES person (serial)
+)
+
+
+2024-04-14 19:26:04,900 INFO sqlalchemy.engine.Engine [no key 0.00004s] ()
+2024-04-14 19:26:04,901 INFO sqlalchemy.engine.Engine COMMIT
+2024-04-14 19:26:04,902 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine INSERT INTO person (name, city) VALUES (?, ?)
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine [generated in 0.00006s] ('Alice', 'London')
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine INSERT INTO book (title, author, person) VALUES (?, ?, ?) RETURNING serial
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine [generated in 0.00004s (insertmanyvalues) 1/2 (ordered; batch not supported)] ('The Code Book', 'Simon Singh', 1)
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine INSERT INTO book (title, author, person) VALUES (?, ?, ?) RETURNING serial
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/2 (ordered; batch not supported)] ('The Calculus Wars', 'Jason Bardi', 1)
+2024-04-14 19:26:04,904 INFO sqlalchemy.engine.Engine COMMIT
+2024-04-14 19:26:04,904 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2024-04-14 19:26:04,905 INFO sqlalchemy.engine.Engine SELECT person.serial, person.name, person.city
+FROM person
+WHERE person.name = ?
+2024-04-14 19:26:04,905 INFO sqlalchemy.engine.Engine [generated in 0.00005s] ('Alice',)
+2024-04-14 19:26:04,905 INFO sqlalchemy.engine.Engine SELECT book.serial AS book_serial, book.title AS book_title, book.author AS book_author, book.person AS book_person
+FROM book
+WHERE ? = book.person
+2024-04-14 19:26:04,906 INFO sqlalchemy.engine.Engine [generated in 0.00006s] (1,)
+Alice, London, The Code Book, Simon Singh
+Alice, London, The Calculus Wars, Jason Bardi
+2024-04-14 19:26:04,906 INFO sqlalchemy.engine.Engine COMMIT
