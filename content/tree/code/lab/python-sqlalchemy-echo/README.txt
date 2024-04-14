@@ -2,6 +2,11 @@ Software Versions
 -----------------
 
 ```
+$ python3 --version
+Python 3.11.5
+```
+
+```
 $ /tmp/venv/bin/pip3 freeze
 mypy==1.9.0
 mypy-extensions==1.0.0
