@@ -1,0 +1,140 @@
+<!-- date: 2024-04-14 -->
+<!-- title: Perron's Paradox, Light Through the Ages, Etc. -->
+<!-- tag: Technology -->
+<!-- import: math.inc -->
+<p>
+  Hello and welcome to the second update from my
+  <a href="./{{ index }}">random weekly explorations</a>.  These
+  updates contain an assortment of topics with bits and pieces of
+  stuff I have been reading, writing, or exploring over the past few
+  weeks.  These updates tend to be short and insubstantial.  If you
+  would rather read more wholesome posts, please visit
+  <a href="../{{ index }}">my blog</a> instead.
+</p>
+{{ toc }}
+<h2 id="perrons-paradox">Perron's Paradox</h2>
+<p>
+  Oskar Perron, a German mathematician, introduced Perron's paradox to
+  illustrate the danger of assuming the existence of a solution to an
+  optimisation problem.  The paradox works like this:
+</p>
+<div class="highlight">
+  Let \( n \) be the largest positive integer.  Then either \( n = 1
+  \) or \( n &gt; 1.  \) If \( n &gt; 1, \) then \( n^2 &gt; n, \)
+  contradicting the definition of \( n. \) Hence \( n = 1. \)
+</div>
+<p>
+  We get this absurd result because of the incorrect assumption that
+  there exists an integer that is the largest of all the integers.
+</p>
+<h2 id="light-through-the-ages">Light Through the Ages</h2>
+<p>
+  <a href="https://mathshistory.st-andrews.ac.uk/HistTopics/Light_1/">Light
+  Through the Ages: Ancient Greece to Maxwell</a> is a very
+  fascinating article written by J J O'Connor and E F Robertson in
+  2002 that takes us through a journey of how our understanding of
+  light has evolved over the last few millennia.  Here is an excerpt
+  from the article:
+</p>
+<blockquote>
+  The biggest breakthrough in ancient times was made by al-Haytham
+  around 1000 AD. He argued that sight is due only to light entering
+  the eye from an outside source and there is no beam from the eye
+  itself.
+</blockquote>
+<p>
+  The article then goes on to say:
+</p>
+<blockquote>
+  He gave a number of arguments to support this claim, the most
+  persuasive being the camera obscura, or pinhole camera.  Here light
+  passes through a pinhole shining on a screen where an inverted image
+  is observed.  Anyone visiting Edinburgh in Scotland should go to see
+  the camera obscura there near the top of the Royal Mile and marvel
+  at just how effective the camera obscura is in this enjoyable
+  tourist attraction.
+</blockquote>
+<p>
+  By the way, there is a camera obscura in the London too at Royal
+  Observatory, Greenwich which offers pretty good view of the
+  surroundings that includes Greenwich Park, the University of
+  Greenwich, the River Thames, etc.  Here is a picture I took the last
+  time I was there.
+</p>
+<h2 id="sqlalchemy-echo">SQLAlchemy Echo</h2>
+<p>
+  I often work with SQLAlchemy, an object-relational mapper (ORM)
+  package available for Python, in order to read/write data from/to
+  database.  While working with SQLAlchemy, I sometimes want to see
+  the SQL statements that SQLAlchemy generates behind the scenes.  One
+  of the simplest ways to do this during development time is to simply
+  use the <code>echo</code> keyword argument while creating
+  the <code>Engine</code> object.  Here is an example:
+</p>
+<pre><code>engine = create_engine("sqlite:///example.db", echo=True)</code></pre>
+<p>
+  Now whenever we use this <code>engine</code> to interact with the
+  database, it logs all SQL statements along with the parameter lists
+  for the SQL statements.  For example, if we define
+  a <code>person</code> column with two columns,
+  say, <code>name</code> and <code>city</code>, and use SQLAlchemy to
+  insert data into this table, we may see a few lines of log that look
+  like this:
+</p>
+<pre>
+<code>2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine INSERT INTO person (name, city) VALUES (?, ?)
+2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine [generated in 0.00006s] ('Alice', 'London')</code>
+</pre>
+<p>
+  If you would rather see a minimal but complete code example that
+  demonstrates this, visit this directory:
+  <a href="../code/lab/python-sqlalchemy-echo/{{ index }}">python-sqlalchemy-echo</a>.
+</p>
+<h2 id="emacs-info-expressions">Emacs Info Expressions</h2>
+<p>
+  On <code>#emacs</code> IRC or Matrix channels, we often share
+  references to the built-in Emacs documentation as Elisp expressions
+  that look like this:
+</p>
+<pre><code>(info "(emacs) Basic Undo")</code></pre>
+<p>
+  The person who receives this info expression can visit the
+  corresponding section of the manual simply by evaluating it.  For
+  example, after copying the expression in Emacs, they could simply
+  type <code>C-y C-x C-e</code> to paste the expression into a buffer
+  and evaluate it immediately.  Of course, if they are logged into IRC
+  via Emacs itself, then they can simply place the cursor right after
+  the closing parenthesis and type <code>C-x C-e</code> to evaluate
+  it.
+</p>
+<p>
+  The sender can generate these Elisp expressions automatically by
+  typing <code>C-0 c</code> in <code>Info-mode</code>.  Say, while
+  helping another Emacs user we type <code>M-x info-apropos RET
+  version control RET</code> and land on the section "Branches" and
+  realise that this is the section that the person we are trying to
+  help should read.  Now when we are on this section, we can simply
+  type <code>C-0 c</code> and Emacs will copy the following expression to the kill ring:
+</p>
+<pre><code>(info "(emacs) Branches")</code></pre>
+<h2 id="unix-line-discard">Unix Line Discard</h2>
+<p>
+  Type <code>C-u</code> (i.e., <kbd>ctrl</kbd>+<kbd>u</kbd>) in Bash
+  or Zsh to discard the current line of input.  To read more about it,
+  enter <code>man bash</code> and then
+  type <code>/unix-line-discard</code> to locate the relevant section
+  of the manual.  Here is an excerpt:
+</p>
+<pre>
+<code>unix-line-discard (C-u)
+       Kill backward from point to the beginning of the line.
+       The killed text is saved on the kill-ring.</code>
+</pre>
+<p>
+  Similarly, for Zsh, type <code>man zshzle</code> and then
+  type <code>/kill-whole-line</code>.  We find this:
+</p>
+<pre>
+<code>kill-whole-line (^U) (unbound) (unbound)
+       Kill the current line.</code>
+</pre>
