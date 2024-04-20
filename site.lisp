@@ -385,8 +385,12 @@ value, next-index."
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
 
 (defmacro add-page-params (dst page params)
-  `(let* ((dst-path (render ,dst (append ,page ,params)))
-          (root (relative-root-path dst-path)))
+  `(let* ((all-params (append ,page ,params))
+          (dst-path (render ,dst all-params))
+          (root (relative-root-path dst-path))
+          (retitle (aget "retitle" ,params)))
+     (when retitle
+       (aput "retitle" (render retitle all-params) ,page))
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
@@ -620,8 +624,8 @@ value, next-index."
     (dolist (page pages)
       (setf page (append page params))
       (invoke-callback page)
-      (when (aget "retitle" params)
-        (aput "title" (render (aget "retitle" page) page) page))
+      (when (aget "retitle" page)
+        (aput "title" (aget "retitle" page) page))
       (push (render item-layout page) rendered-pages))
     ;; Add list parameters.
     (aput "body" (join-strings rendered-pages) params)
@@ -895,7 +899,11 @@ value, next-index."
   (let ((post-layout (read-file "layout/blog/post.html"))
         (list-layout (read-file "layout/blog/list.html"))
         (item-layout (read-file "layout/blog/item.html"))
+        (list-override (render "layout/{{ blog-slug }}/list.html" params))
         (pages))
+    ;; Look for overriding layouts.
+    (when (probe-file list-override)
+      (setf list-layout (read-file list-override)))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
     (set-nested-template list-layout page-layout)
