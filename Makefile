@@ -345,7 +345,7 @@ check-mathjax:
 	@echo Done; echo
 
 check-newlines:
-	grep -IErn '(<br>|\\\[).' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
+	grep -IErn '(<br>[^&]|\\\[.)' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-nginx:
