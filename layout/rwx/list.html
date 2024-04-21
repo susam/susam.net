@@ -1,5 +1,5 @@
 <h1>{{ title }}</h1>
-<div id="desc">Read, Write, E<em>x</em>ecute</div>
+<div id="sub">Read, Write, Execute</div>
 <p>
   Welcome to RWX, a quirky corner of my website where a diverse mix of
   topics come together.  Each post here contains a collection of very
@@ -9,10 +9,44 @@
 <ul class="blog">
 {{ body }}</ul>
 <script>
-  const subtitles = [
-    'Read, Write, E<em>x</em>ecute',
-    'Reading, Writing, E<em>x</em>ploring',
-    'Recent Weekly E<em>x</em>plorations',
+  const messages = [
+    'Read, Write, Execute',
+    'Read, Write, Explore',
+    'Random Weekly Explorations',
+    'Recent Weekly Explorations',
+    'Read, Write, Execute',
   ]
-  const desc = document.getElementById('desc')
+
+  let idx = 0
+  let len = 0
+  let blink = 1
+
+  const sub = document.getElementById('sub')
+  let cursor = '<span style="border-left: thin solid; margin-left: 2px">&nbsp;</span>'
+
+  function iterate () {
+    const msg = messages[idx]
+    sub.innerHTML = msg.substring(0, len) + ((blink % 2 === 1) ? cursor : '')
+    let interval
+    if (len < msg.length) {
+      blink = 1
+      interval = len < 4 ? 500 : 100
+      ++len
+    } else if (blink < 8) {
+      ++blink
+      interval = 500;
+    } else if (idx < messages.length - 1) {
+      ++idx
+      len = 0
+      blink = 1
+      interval = 500
+    } else {
+      return
+    }
+
+    setTimeout(iterate, interval)
+  }
+
+  sub.innerHTML = cursor
+  setTimeout(iterate, 1)
 </script>
