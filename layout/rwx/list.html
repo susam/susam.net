@@ -6,11 +6,17 @@
   brief updates spanning from interesting books and articles I have
   recently encountered to handy code snippets and commands.
 </p>
+<p>
+  See this <a href="README.html">README</a> for more details about
+  RWX.  Subscribe to <a href="../tag/rwx.xml">rwx.xml</a> for RSS feed
+  for this section of the website.  Alternatively, subscribe
+  to <a href="../feed.xml">feed.xml</a> for a feed for the whole
+  website.
+</p>
 <ul class="blog">
 {{ body }}</ul>
 <script>
   const messages = [
-    'Read, Write, Execute',
     'Read, Write, Explore',
     'Random Weekly Explorations',
     'Recent Weekly Explorations',
@@ -47,6 +53,5 @@
     setTimeout(iterate, interval)
   }
 
-  sub.innerHTML = cursor
-  setTimeout(iterate, 1)
+  setTimeout(iterate, 5000)
 </script>

@@ -1,6 +1,6 @@
 <!-- date: 2024-04-07 -->
 <!-- title: Grothendieck Prime, Logarithm Notation, Etc. -->
-<!-- tag: Mathematics, Unix, Shell, Technology, Humour -->
+<!-- tag: RWX, Technology, Humour -->
 <!-- import: math.inc -->
 <p>
   Hello!  With this post, I am starting a new section on this website
@@ -90,12 +90,12 @@
 <samp>$ <kbd>LC_CTYPE=C tr -dc '[:alnum:]' &lt; /dev/urandom | head -c 20; echo</kbd>
 T1WK1ni9BcWAr0cR44VA</samp>
 </pre>
-<h2 id="joke-sorts">Joke Sorts</h2>
+<h2 id="joke-sorting-algorithms">Joke Sorting Algorithms</h2>
 <p>
   Sleepsort in shell:
 </p>
 <pre>
-<samp>$ <kbd>nums="5 1 3 6 2 4" sh -c 'for n in $nums; do sleep "$n" && echo "$n" &amp; done; wait'</kbd>
+<samp>$ <kbd>nums="5 1 3 6 2 4" sh -c 'for n in $nums; do sleep "$n" &amp;&amp; echo "$n" &amp; done; wait'</kbd>
 1
 2
 3
