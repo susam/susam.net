@@ -359,7 +359,7 @@ check-nginx:
 	@echo Done; echo
 
 check-rendering:
-	grep -r --include '*.html' --include '*.xml' '{{' _site; [ $$? = 1 ]
+	grep -r --include '*.html' --include '*.xml' --include '*.css' '{{' _site; [ $$? = 1 ]
 	@echo Done; echo
 
 check-sentence-space:
