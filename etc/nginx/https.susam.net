@@ -38,11 +38,10 @@ server {
     rewrite ^/blog/infosys-tcs-or-wipro/$ /infosys-tcs-or-wipro.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /lisp-in-vim.html permanent;
     rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /lisp-in-vim.html permanent;
-    rewrite ^/blog/x86-quine.html$ /self-printing-machine-code.html permanent;
-    rewrite ^/blog/from-uuid-to-infinite-loops.html$ /fixed-bits-of-version-4-uuid.html permanent;
     rewrite ^/blog/(.*)$ /$1 redirect;
     rewrite ^/maze/from-fill-prefix-to-tramp.html$ /from-fill-prefix-to-tramp.html redirect;
     rewrite ^/maze/elisp-in-replacement-string.html$ /elisp-in-replacement-string.html redirect;
+    rewrite ^/print-http-headers-and-pretty-print-json-response.html$ /print-http-headers-while-pretty-printing-json-response-with-curl.html redirect;
     rewrite ^/cfr.html$ /cfrs.html permanent;
 }
 

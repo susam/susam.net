@@ -1,15 +1,14 @@
 <!-- date: 2024-04-14 -->
 <!-- title: Perron's Paradox, Light Through the Ages, Etc. -->
-<!-- tag: Technology -->
+<!-- tag: RWX, Technology -->
 <!-- import: math.inc -->
 <p>
-  Hello and welcome to the second update from my
-  <a href="./{{ index }}">random weekly explorations</a>.  These
-  updates contain an assortment of topics with bits and pieces of
-  stuff I have been reading, writing, or exploring over the past few
-  weeks.  These updates tend to be short and insubstantial.  If you
-  would rather read more wholesome posts, please visit
-  <a href="../{{ index }}">my blog</a> instead.
+  Hello and welcome to the second installment of
+  <a href="./{{ index }}">RWX</a>.  These posts contain an assortment
+  of topics drawn from my recent readings, writings, and explorations.
+  The updates here tend to be brief, offering only bits and fragments
+  of my recent explorations.  To read more detailed articles, please
+  visit <a href="../{{ index }}">my blog</a>.
 </p>
 {{ toc }}
 <h2 id="perrons-paradox">Perron's Paradox</h2>
@@ -59,7 +58,8 @@
   Observatory, Greenwich which offers pretty good view of the
   surroundings that includes Greenwich Park, the University of
   Greenwich, the River Thames, etc.  Here is a picture I took the last
-  time I was there.
+  time I was there:
+  <a href="https://susam.github.io/blob/pix/2023-12-camera-obscura.jpg">Camera Obscura, Royal Observatory, Greenwich</a>.
 </p>
 <h2 id="sqlalchemy-echo">SQLAlchemy Echo</h2>
 <p>
@@ -86,8 +86,7 @@
 2024-04-14 19:26:04,903 INFO sqlalchemy.engine.Engine [generated in 0.00006s] ('Alice', 'London')</code>
 </pre>
 <p>
-  If you would rather see a minimal but complete code example that
-  demonstrates this, visit this directory:
+  To see a minimal, complete code example, visit this directory:
   <a href="../code/lab/python-sqlalchemy-echo/{{ index }}">python-sqlalchemy-echo</a>.
 </p>
 <h2 id="emacs-info-expressions">Emacs Info Expressions</h2>
@@ -138,3 +137,23 @@
 <code>kill-whole-line (^U) (unbound) (unbound)
        Kill the current line.</code>
 </pre>
+<p>
+  By the way, Emacs-style key sequence like <code>C-a C-k</code> works
+  too.
+</p>
+<p>
+  Furthermore, it is quite likely that <code>C-u</code> is mapped to
+  delete the current line of input in the terminal itself.  To confirm
+  this, type the command <code>stty -a</code> and check the output.
+  If the output contains the text <code>kill = ^U</code>, then
+  typing <code>C-u</code> anytime in the terminal would delete the
+  current line of input.  This would happen regardless of what program
+  is running in the terminal.  For example, programs
+  like <code>cat</code>, <code>sbcl</code>, etc. do not support key
+  sequences like <code>C-a</code>, <code>C-k</code>, <code>C-u</code>,
+  etc. the way Bash or Zsh does.  Despite this limitation,
+  typing <code>C-u</code> in <code>sbcl</code> would delete the
+  current line of input if the output of <code>stty -a</code>
+  indicates that the terminal has mapped this key sequence to the
+  operation of deleting the current line.
+</p>

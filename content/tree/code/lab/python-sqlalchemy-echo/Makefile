@@ -8,6 +8,7 @@ help:
 	@echo 'make run     Run this project.'
 	@echo 'make txt     Run the project and record output in out.txt.'
 	@echo 'make retxt   Reinitialise the project and record output in out.txt.'
+	@echo 'make clean   Clean up current working directory.'
 
 venv:
 	rm -rf $(VENV)/
@@ -34,3 +35,6 @@ txt:
 	cat sql.txt
 
 retxt: venv checks txt
+
+clean:
+	rm -rf .mypy_cache/ .ruff_cache/
