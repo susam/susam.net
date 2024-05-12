@@ -314,11 +314,11 @@ test:
 checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space tidy
 
 check-bre:
-	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude-dir content/comments 'iz[a-z]' content layout | \
+	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'iz[a-z]' content layout | \
 	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(s|of)?\>|\<sizing\>|:topic'; [ $$? = 1 ]
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
-	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude-dir content/comments 'color|center' content layout | \
+	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
 	  grep -vE '\.center\>|-color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]
 	sed -n '/Susam Pal/,/date:/p' content/comments/*.html | \
 	  grep -E 'iz[a-z]|yze|center|color' | grep -vE '\<color:|\<size\>'; [ $$? = 1 ]
