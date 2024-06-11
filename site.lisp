@@ -363,10 +363,7 @@ value, next-index."
          (zone-link "")
          (zone-name)
          (zone-index))
-     (cond ((string-starts-with "_site/rwx/" ,dst-path)
-            (setf zone-index (render "rwx/{{ index }}" ,params))
-            (setf zone-name "RWX"))
-           ((string-starts-with "_site/cc/" ,dst-path)
+     (cond ((string-starts-with "_site/cc/" ,dst-path)
             (setf zone-index (render "cc/{{ index }}" ,params))
             (setf zone-name "Club"))
            ((string/= blog-name "Blog")
@@ -387,10 +384,7 @@ value, next-index."
 (defmacro add-page-params (dst page params)
   `(let* ((all-params (append ,page ,params))
           (dst-path (render ,dst all-params))
-          (root (relative-root-path dst-path))
-          (retitle (aget "retitle" ,params)))
-     (when retitle
-       (aput "retitle" (render retitle all-params) ,page))
+          (root (relative-root-path dst-path)))
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
@@ -624,8 +618,6 @@ value, next-index."
     (dolist (page pages)
       (setf page (append page params))
       (invoke-callback page)
-      (when (aget "retitle" page)
-        (aput "title" (aget "retitle" page) page))
       (push (render item-layout page) rendered-pages))
     ;; Add list parameters.
     (aput "body" (join-strings rendered-pages) params)
@@ -776,7 +768,6 @@ value, next-index."
         (setf pages (append pages (make-tree-recursively pathname destpath
                                                          page-layout post-layout
                                                          params)))))
-    (validate-pages pages)
     pages))
 
 (defun make-tree (src dst page-layout params)
@@ -950,22 +941,6 @@ value, next-index."
          (comments-dst "_site/comments/{{ slug }}.html")
          (pages))
     (setf pages (make-posts src page-dst list-dst page-layout params))
-    (make-comments pages comments-src comments-dst page-layout params)
-    pages))
-
-
-(defun make-sublog (src-dir name page-layout params)
-  "Create a complete directory blog with blog, tags, and list page."
-  (aput "blog-name" name params)
-  (aput "blog-slug" (string-downcase name) params)
-  (let* ((posts-src (fstr "~aposts/*.html" src-dir))
-         (comments-src (fstr "~acomments/*.html" src-dir))
-         (page-dst "_site/{{ blog-slug }}/{{ slug }}.html")
-         (comments-dst "_site/{{ blog-slug }}/comments/{{ slug }}.html")
-         (list-dst "_site/{{ blog-slug }}/index.html")
-         (pages))
-    (aput "retitle" "{{ blog-name }} #{{ slug }}: {{ title }}" params)
-    (setf pages (make-posts posts-src page-dst list-dst page-layout params))
     (make-comments pages comments-src comments-dst page-layout params)
     pages))
 
@@ -1312,8 +1287,6 @@ value, next-index."
     ;; More links.
     (make-more-list "_site/" "More" page-layout params)
     ;; Blogs.
-    (setf pages (make-sublog "content/rwx/" "RWX" page-layout params))
-    (setf all-pages (append all-pages pages))
     (setf pages (make-blog "content/elog/*.html" "Wall" page-layout params))
     (setf all-pages (append all-pages pages))
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
@@ -1322,6 +1295,7 @@ value, next-index."
     (make-home pages page-layout params)
     ;; Aggregates.
     (setf all-pages (sort-pages all-pages))
+    (validate-pages all-pages)
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
     (make-feed all-pages params)
