@@ -1,0 +1,14 @@
+<!-- date: 2021-05-26 -->
+<!-- title: Random String in Shell -->
+<!-- tag: Unix, Technology -->
+<p>
+  Here is a quick way to generate a random alphanumeric string in the shell:
+</p>
+<pre><code>LC_CTYPE=C tr -dc '[:alnum:]' &lt; /dev/urandom | head -c 20; echo</code></pre>
+<p>
+  Here is an example output:
+</p>
+<pre>
+<samp>$ <kbd>LC_CTYPE=C tr -dc '[:alnum:]' &lt; /dev/urandom | head -c 20; echo</kbd>
+T1WK1ni9BcWAr0cR44VA</samp>
+</pre>
