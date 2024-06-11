@@ -1287,7 +1287,7 @@ value, next-index."
     ;; More links.
     (make-more-list "_site/" "More" page-layout params)
     ;; Blogs.
-    (setf pages (make-blog "content/elog/*.html" "Wall" page-layout params))
+    (setf pages (make-blog "content/elog/*.html" "Notes" page-layout params))
     (setf all-pages (append all-pages pages))
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
     (setf all-pages (append all-pages pages))
