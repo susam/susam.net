@@ -377,7 +377,7 @@ tidy: dist
 	@echo Done; echo
 
 check-links:
-	@echo "NOTE: Ensure 'make run-site' is running before running this target"; echo
+	@echo "NOTE: Ensure 'make run-site-deep' is running before running this target"; echo
 	-wget -r -l 0 --spider -nd -nv http://localhost:8000/ -o run.log
 	grep -B1 broken run.log
 	@echo Done; echo
