@@ -825,7 +825,7 @@ value, next-index."
     (unless (equal apex-pathname current-pathname)
       (push (cons "../" "-") paths-and-sizes))
     (push (cons "./" (format-size total-size)) paths-and-sizes)
-    (aput "url-path" url-path params)
+    (aput "url-path" (if (string= url-path "") "/" url-path) params)
     (aput "title" (render title params) params)
     (when (plusp max-render-depth)
       (make-directory-index current-pathname paths-and-sizes dst-filenames

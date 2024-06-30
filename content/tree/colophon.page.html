@@ -1,0 +1,139 @@
+<!-- date: 2024-06-15 -->
+<!-- title: Colophon -->
+<!-- tag: Meta -->
+<!-- unlist: yes -->
+<h1>Colophon</h1>
+<p>
+  Here are some details about how this website is maintained and
+  published:
+</p>
+<ul>
+  <li>
+    <p>
+      This website runs on a <a href="https://www.debian.org/">Debian</a> system.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website is served
+      using <a href="https://packages.debian.org/stable/nginx">Nginx</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website is generated statically using a small
+      <a href="https://github.com/susam/susam.net/blob/main/site.lisp">Common
+        Lisp program</a>.  This program is available under the terms of
+      the MIT license.
+    </p>
+  </li>
+  <li>
+    <p>
+      Every line of HTML and CSS that makes this website is
+      handcrafted.  Yes, the final HTML pages are generated using a
+      Common Lisp program.  However, this program merely combines the
+      HTML content with a common HTML layout to generate the pages
+      that are served over the web.  The content HTML, layout HTML,
+      and the Common Lisp program were written from scratch.
+    </p>
+  </li>
+  <li>
+    <p>
+      All web pages on this website are
+      <a href="https://github.com/susam/susam.net/blob/08a2d7b/Makefile#L372-L377">validated
+      using HTML Tidy</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      While most of this website is made of static HTML pages served
+      via Nginx, the pages for the comment and subcriber forms are
+      dynamic in nature.  They are implemented using Common Lisp and
+      Hunchentoot.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website provides a consolidated <a href="feed.xml">web
+      feed</a>.  The Common Lisp program mentioned earlier ensures that
+      every new web page that appears on this website also appears in
+      this web feed.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website has a <a href="tag/{{ index }}">list of tags</a>
+      that can be used to browse this website by topics.  Clicking on
+      any tag on the tag list page, presents a list of all web pages
+      that have been marked with that tag.
+    </p>
+  </li>
+  <li>
+    <p>
+      Every tag has its own web feed.  For example,
+      see <a href="tag/technology.html">tag/technology.html</a> for a
+      list of all pages tagged "Technology" and then
+      see <a href="tag/technology.xml">tag/technology.xml</a> for the
+      corresponding web feed.
+    </p>
+  </li>
+  <li>
+    <p>
+      The web feeds are sparingly styled with
+      <a href="feed.xsl">XSLT</a>.  Web browsers that support XSL
+      transformation for web feeds render the feeds as HTML (rather
+      than raw XML) as determined by the stylesheet.
+    </p>
+  </li>
+  <li>
+    <p>
+      Every directory and subdirectory on this website has a directory
+      listing page that lists all its files and subdirectories.
+      See <a href="ls.html">ls.html</a> for an example.  Subdirectory
+      names are marked with a trailing slash.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website loads MathJax to render LaTeX snippets on web pages
+      that contain mathematical formulas.  For example, see the page
+      <a href="integrating-factor.html">integrating-factor.html</a>.
+      MathJax is not loaded on other web pages.
+    </p>
+  </li>
+  <li>
+    <p>
+      All internal links on this website are relative links.  In fact,
+      all internal resources like the stylesheet, MathJax, etc. too
+      are loaded using relative links.  Doing so allows me to browse
+      this website locally from my local drive without having to run a
+      web server on my development system.  (Exceptions to this rule
+      are the links to the comment form and subscriber form because
+      these links need to point to the live forms on my web server.)
+    </p>
+  </li>
+  <li>
+    All web pages on this website have been
+    <a href="https://github.com/susam/susam.net/blob/08a2d7b/Makefile#L379-L383">validated
+    to ensure that there are no broken internal links</a>.
+  </li>
+  <li>
+    <p>
+      When you visit any web page on this website, all resources are
+      loaded from this website and only this website.  No external
+      resources are loaded.  This ensures that when you visit this
+      website, no data about your client is transmitted to another web
+      server.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website does not load analytics scripts.
+    </p>
+  </li>
+  <li>
+    <p>
+      This website does not use cookies.
+    </p>
+  </li>
+</ul>

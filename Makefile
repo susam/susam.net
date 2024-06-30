@@ -164,12 +164,10 @@ follow-visit:
 	  sleep 60; \
 	done
 
-top-visit-get:
-	make cache-visits FILE=/var/log/nginx/access.log*
+top-visit-get: lazy-cache-visits
 	grep -o 'GET /[^ ]*' /tmp/visits.txt | sort | uniq -c | sort -nr | nl | less
 
-top-visit-ref:
-	make cache-visits FILE=/var/log/nginx/access.log*
+top-visit-ref: lazy-cache-visits
 	awk '{print $$11}' /tmp/visits.txt | grep -vE '^"https?://susam\.net/?' | sort | uniq -c | sort -nr | nl | less
 
 top-get:
@@ -192,9 +190,8 @@ grepd:
 	[ -n "$$re" ]
 	sudo grep -h $(re) /var/log/nginx/access.log
 
-grepv:
+grepv: lazy-cache-visits
 	[ -n "$$re" ]
-	make cache-visits FILE=/var/log/nginx/access.log*
 	sudo grep -h $(re) /tmp/visits.txt
 
 filter-visitors:
@@ -202,6 +199,10 @@ filter-visitors:
 
 filter-visits:
 	sudo zgrep -f /tmp/visitors.txt | grep -vE '\.(css|js|ico|png|jpg|gif|woff|xml|xsl)'
+
+lazy-cache-visits:
+	if [ -f /tmp/visits.txt ]; then echo Visits already cached; \
+	else make cache-visits FILE=/var/log/nginx/access.log*; fi
 
 cache-visits:
 	sudo zgrep -h ' 200 ' $(FILE) | make filter-visitors > /tmp/visitors.txt
