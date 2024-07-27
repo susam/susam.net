@@ -366,6 +366,7 @@ check-rendering:
 check-sentence-space:
 	grep --exclude invaders.html --exclude cfrs.html -IErn "[^0-9A-Z.][.?!][])\"']? [A-Z]" content | grep -vE "No soup for you|Mr\. T\.|function!|RET|SPC"; [ $$? = 1 ]
 	@#                      ^-----^
+	grep -IERn '\. \\' content | grep -vE '<code>|\\left\.'; [ $$? = 1 ]
 	grep -IERn '\.  [a-z]' content | grep -vE '\.  freenode'; [ $$? = 1 ]
 	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.'; [ $$? = 1 ]
 	@echo Done; echo

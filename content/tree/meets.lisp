@@ -958,4 +958,9 @@
   :slug "mastering-emacs"
   :topic "Chapter 6: Pages 299-308: The Practical of Emacs: Dired: Working Across Directories, Shell Commands, Compiling in Emacs, Shells in Emacs: M-x shell, M-x ansi-term, M-x eshell; Chapter 7: Pages 319-314: Conclusion"
   :duration 90
-  :members 9))
+  :members 9)
+ (:date "2024-07-27 20:00"
+  :slug "real-analysis"
+  :topic "Preface; Sections 1.1-1.2: Pages 1-4: Foreword, The Concept of Number"
+  :duration 40
+  :members -1))

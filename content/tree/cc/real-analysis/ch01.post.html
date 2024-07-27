@@ -1,0 +1,107 @@
+<!-- date: 2024-07-27 -->
+<!-- title: Notes on Chapter 1: Introductory Ideas -->
+<!-- tag: Mathematics, Real Analysis, Book, Meetup -->
+<!-- import: math.inc -->
+<!-- unlist: yes -->
+{{ toc }}
+<!-- Section 1.1 -->
+<h2 id="1.1">&sect; 1.1 Foreword for the Student: Is Analysis Necessary?</h2>
+<h3 id="example-of-non-differentiable-function">Example of Non-Differentiable Function</h3>
+<p>
+  It is not obvious from the graph that
+
+  \[
+    f(x) = \begin{cases}
+    x \sin(1/x) &amp; \text{ if } x \neq 0 \\
+    0           &amp; \text{ if } x = 0
+    \end{cases}
+  \]
+
+  is continuous but not differentiable at \( x = 0.  \)
+</p>
+<h3 id="example-of-discontinuous-function">Example of Discontinuous Function</h3>
+<p>
+  Although the \( \sin \) function is continuous, the function
+
+  \[
+    S(x) = \frac{\sin x}{1} - \frac{\sin 2x}{2} + \frac{\sin 3x}{3} - \dots
+  \]
+
+  is discontinuous.
+</p>
+<!-- Section 1.2 -->
+<h2 id="1.2">&sect; 1.2 The Concept of Numbers</h2>
+<h3 id="irrationality-of-square-root-of-2">Irrationality of \( \sqrt{2} \)</h3>
+<p>
+  Let \( \sqrt{2} = m/n \) where \( m \) and \( n \) be positive
+  integers with no common factor.  Then
+
+  \begin{align}
+    (m / n)^2 = 2
+    &amp; \implies m^2 = 2n^2 \notag \\
+    &amp; \implies 2 \mid m^2 \notag \\
+    &amp; \implies 2 \mid m \label{div1.2.1} \\
+    &amp; \implies m = 2l \; \text{ for some positive integer } l \notag \\
+    &amp; \implies m^2 = 4l^2 \notag \\
+    &amp; \implies 2n^2 = 4l^2 \notag \\
+    &amp; \implies n^2 = 2l^2 \notag \\
+    &amp; \implies 2 \mid n^2 \notag \\
+    &amp; \implies 2 \mid n.  \label{div1.2.2} \\
+  \end{align}
+
+  But \eqref{div1.2.1} and \eqref{div1.2.2} contradict the assumption
+  that \( m \) and \( n \) have no common factor.
+</p>
+<h3 id="irrationality-of-non-integer-square-root-of-n">Irrationality of Non-Integer \( \sqrt{n} \)</h3>
+<p>
+  Let \( n \) be a natural number such that \( n \) is not a perfect
+  square.  Then there exists a prime number \( p \) such that
+
+  \[
+    n = p^{2k + 1} l
+  \]
+
+  where \( k \) is a nonnegative integer, \( l \) is a positive
+  integer, and \( p \nmid l.  \)  Note that the power of \( p \) cannot
+  be even because \( n \) is not a perfect square.
+</p>
+<p>
+  Let \( \sqrt{n} = r/s \) such that \( r \) and \( s \) are positive
+  integers with no common factor.  Then
+
+  \begin{align*}
+  (r / s)^2 = n
+  &amp; \implies r^2 = n s^2 \\
+  &amp; \implies r^2 = p^{2k + 1} l s^2 \\
+  &amp; \implies r^2 = p^{2k + 1} l s^2 \\
+  &amp; \implies p^{2k + 1} \mid r^2.
+  \end{align*}
+
+  Since \( r^2 \) is a perfect square, \( p \) must divide it an even
+  number of times.  Therefore we get,
+
+  \begin{align}
+  p^{2k + 1} \mid r^2
+  &amp; \implies p^{2k + 2} \mid r^2 \notag \\
+  &amp; \implies p^{k + 1} \mid r \notag \\
+  &amp; \implies p \mid r.  \label{div1.2.3}
+  \end{align}
+
+  Also
+
+  \begin{align}
+    p^{2k + 2} \mid r^2
+    &amp; \implies p^{k + 1} \mid r \notag \\
+    &amp; \implies r = p^{k + 1} j \; \text{ for some positive integer } j \notag \\
+    &amp; \implies r^2 = p^{2k + 2} j^2 \notag \\
+    &amp; \implies n s^2 = p^{2k + 2} j^2 \notag \\
+    &amp; \implies p^{2k + 1} l s^2 = p^{2k + 2} j^2 \notag \\
+    &amp; \implies l s^2 = p j^2 \notag \\
+    &amp; \implies p \mid l s^2 \notag \\
+    &amp; \implies p \mid s^2 \; \text{ (since } p \nmid l \text{)} \\
+    &amp; \implies p \mid s.  \label{div1.2.4}
+  \end{align}
+
+  But \eqref{div1.2.3} and \eqref{div1.2.4} contradict the assumption
+  that \( r \) and \( s \) have no common factor.
+</p>
