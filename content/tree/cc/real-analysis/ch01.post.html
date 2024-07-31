@@ -105,3 +105,46 @@
   But \eqref{div1.2.3} and \eqref{div1.2.4} contradict the assumption
   that \( r \) and \( s \) have no common factor.
 </p>
+<h3 id="exercise-1.1">Irrationality of \( \sqrt{2} + \sqrt{3} \)</h3>
+<p>
+  If \( x = m / n \) where \( m \) and \( n \) are integers, then \(
+  x^2 = m^2 / n ^2.  \)  We have shown that if \( x \) is rational,
+  then \( x^2 \) is rational too.  Taking its contrapositive, we find
+  that if \( x^2 \) is irrational, then \( x \) is irrational.
+</p>
+<p>
+  Let \( x = \sqrt{2} + \sqrt{3}.  \) Then \( x^2 = 5 + 2 \sqrt{6}.
+  \)  If \( x^2 = 5 + 2 \sqrt{6} = m / n \) for some integers \( m \)
+  and \( n, \) then \( \sqrt{6} = (m - 5n) / 10n.  \) But this is a
+  contradiction since \( \sqrt{6} \) is irrational (by the discussion
+  in the previous section).  Thus \( x^2 \) is irrational.  Therefore
+  \( x = \sqrt{2} + \sqrt{3} \) is irrational.
+</p>
+<!-- Section 1.3 -->
+<h2 id="1.3">&sect; 1.3 The Language of Set Theory</h2>
+<h3 id="notations-for-sets">Notations for Sets</h3>
+<p>
+  The following notations are introduced in this section:
+</p>
+<ol>
+  <li>\( \mathbb{N} \): the set of natural numbers (positive integers)</li>
+  <li>\( \mathbb{Z} \): the set of all integers</li>
+  <li>\( \mathbb{Q} \): the set of all rational numbers</li>
+  <li>\( \mathbb{R} \): the set of all real numbers</li>
+  <li>\( \mathbb{C} \): the set of all complex numbers</li>
+</ol>
+<p>
+  In one of the paragraphs, the book states that
+
+  \[
+    X \cup (A \setminus X) = A
+  \]
+
+  This is not true in general but this is true when \( X \subseteq A.
+  \) as is the assumption made in the book just before stating the
+  above formula.  In general though, the following is true instead:
+
+  \[
+    X \cup (A \setminus X) = A \cup X.
+  \]
+</p>
