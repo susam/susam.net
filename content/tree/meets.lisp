@@ -959,8 +959,23 @@
   :topic "Chapter 6: Pages 299-308: The Practical of Emacs: Dired: Working Across Directories, Shell Commands, Compiling in Emacs, Shells in Emacs: M-x shell, M-x ansi-term, M-x eshell; Chapter 7: Pages 319-314: Conclusion"
   :duration 90
   :members 9)
- (:date "2024-07-27 20:00"
+ (:date "2024-07-27 19:00"
   :slug "real-analysis"
-  :topic "Preface; Sections 1.1-1.2: Pages 1-4: Foreword, The Concept of Number"
+  :topic "Preface; Sections 1.1-1.2: Pages 1-3: Foreword, The Concept of Number"
+  :duration 45
+  :members 5)
+ (:date "2024-08-02 19:00"
+  :slug "real-analysis"
+  :topic "Sections 1.2-1.3: Pages 4-7: The Concept of Number, The Language of Set Theory"
+  :duration 40
+  :members -1)
+ (:date "2024-08-03 19:00"
+  :slug "real-analysis"
+  :topic "Sections 1.4: Pages 7-10: Real Numbers"
+  :duration 40
+  :members -1)
+ (:date "2024-08-04 19:00"
+  :slug "real-analysis"
+  :topic "Sections 1.4: Pages 11-12: Real Numbers"
   :duration 40
   :members -1))
