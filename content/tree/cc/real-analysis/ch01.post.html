@@ -73,7 +73,6 @@
   (r / s)^2 = n
   &amp; \implies r^2 = n s^2 \\
   &amp; \implies r^2 = p^{2k + 1} l s^2 \\
-  &amp; \implies r^2 = p^{2k + 1} l s^2 \\
   &amp; \implies p^{2k + 1} \mid r^2.
   \end{align*}
 
@@ -147,4 +146,134 @@
   \[
     X \cup (A \setminus X) = A \cup X.
   \]
+</p>
+<!-- Section 1.4 -->
+<h2 id="1.4">&sect; 1.4 Real Numbers</h2>
+<h3 id="field-axioims">Field Axioms</h3>
+<p>
+  The set \( \mathbb{Q}, \) the addition operation and the
+  multiplication operation on \( \mathbb{Q} \) satisfy the field
+  axioms presented below:
+</p>
+<ol>
+  <li>
+    <p>
+      Associative law for addition:<br>
+      \( (a + b) + c = a + (b + c) \) where \( a, b, c \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Commutative law for addition:<br>
+      \( a + b = b + a \) where \( a, b \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Existence of additive identity:<br>
+      There exists \( 0 \in \mathbb{Q} \) such that for every \( a \in
+      \mathbb{Q}, \) \( a + 0 = a.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Existence of additive inverse:<br>
+      There exists an element \( -a \in \mathbb{Q} \) for every \( a
+      \in F \) such that \( a + (-a) = 0.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Associative law for multiplication:<br>
+      \( (ab)c = a(bc) \) where \( a, b, c \in mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Commutative law for multiplication:<br>
+      \( ab = ba \) where \( a, b \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Existence of multiplicative identity:<br>
+      There exists \( 1 \in \mathbb{Q} \) such that for every \( a \in
+      \mathbb{Q}, \) \(a1 = a.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Law of the reciprocal:<br>
+      There exists an element \( 1/a \in \mathbb{Q} \) for every \( a
+      \neq 0 \in Q \) such that \( a(1/a) = 1.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Distributive law:<br>
+      \( a(b + c) = ab + ac \) for every \( a, b, c \in \mathbb{Q}.  \)
+    </p>
+  </li>
+</ol>
+<h3 id="order-axioims">Order Axioms</h3>
+<p>
+  The set \( \mathbb{Q}, \) together with the addition and
+  multiplication operations and a relation \( &lt; \) satisfy the
+  order axioms presented below:
+</p>
+<ol>
+  <li>
+    <p>
+      Transitive law:<br>
+      For all \( a, b, c \in \mathbb{Q}, \) \( a &lt; b \) and \( b
+      &lt; c \) implies \( a &lt; c.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Trichotomy law:<br>
+      For all \( a, b \in \mathbb{Q}, \) exactly one of the following
+      holds: \( a &lt; b, \) \( b &lt; a, \) or \( a = b.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Compatibility with addition:<br>
+      For all \( a, b, c \in \mathbb{Q}, \) \( a &lt; b \) implies \(
+      a + c &lt; b + c.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Compatibility with multiplication:<br>
+      For all \( a, b, c \in \mathbb{Q}, \) \( a &lt; b \) and \( c
+      &lt; 0 \) implies \( ac &lt; bc.  \)
+    </p>
+  </li>
+</ol>
+<h3 id="order-relation-in-q">Order Relation in \( \mathbb{Q} \)</h3>
+<p>
+  Let \( m, p \in \mathbb{Z} \) and \( n, q \in \mathbb{N}.  \) Then
+
+  \[
+    \frac{m}{n} &lt; \frac{p}{q}
+    \iff \frac{mq}{nq} &lt; \frac{np}{nq}
+    \iff mq &lt; np.
+  \]
+</p>
+<h3 id="density-property">Density Property</h3>
+<p>
+  The set \( \mathbb{Q} \) has the property of the density.  For all
+  \( q, r \in \mathbb{Q} \) where \( q &lt; r, \) there is \( s \in
+  \mathbb{Q} \) such that \( q &lt; s &lt; r.  \) This is trivial to
+  demonstrate by taking \( s = (q + r) / 2.  \)
+</p>
+<p>
+  There are infinitely many rational numbers between \( q \) and \( r.
+  \) This follows directly from the density property.
+</p>
+<h3 id="archimedean-property">Archimedean Property</h3>
+<p>
+  For all \( q &gt; 0 \in \mathbb{Q}, \) there exists \( n \in
+  \mathbb{N} \) such that \( n &gt; q.  \)
 </p>
