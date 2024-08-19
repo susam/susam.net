@@ -73,7 +73,6 @@
   (r / s)^2 = n
   &amp; \implies r^2 = n s^2 \\
   &amp; \implies r^2 = p^{2k + 1} l s^2 \\
-  &amp; \implies r^2 = p^{2k + 1} l s^2 \\
   &amp; \implies p^{2k + 1} \mid r^2.
   \end{align*}
 
@@ -147,4 +146,317 @@
   \[
     X \cup (A \setminus X) = A \cup X.
   \]
+</p>
+<!-- Section 1.4 -->
+<h2 id="1.4">&sect; 1.4 Real Numbers</h2>
+<h3 id="field-axioims">Field Axioms</h3>
+<p>
+  The set \( \mathbb{Q}, \) the addition operation and the
+  multiplication operation on \( \mathbb{Q} \) satisfy the field
+  axioms presented below:
+</p>
+<ol>
+  <li>
+    <p>
+      Associative law for addition:<br>
+      \( (a + b) + c = a + (b + c) \) where \( a, b, c \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Commutative law for addition:<br>
+      \( a + b = b + a \) where \( a, b \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Existence of additive identity:<br>
+      There exists \( 0 \in \mathbb{Q} \) such that for every \( a \in
+      \mathbb{Q}, \) \( a + 0 = a.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Existence of additive inverse:<br>
+      There exists an element \( -a \in \mathbb{Q} \) for every \( a
+      \in F \) such that \( a + (-a) = 0.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Associative law for multiplication:<br>
+      \( (ab)c = a(bc) \) where \( a, b, c \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Commutative law for multiplication:<br>
+      \( ab = ba \) where \( a, b \in \mathbb{Q}.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Existence of multiplicative identity:<br>
+      There exists \( 1 \in \mathbb{Q} \) such that for every \( a \in
+      \mathbb{Q}, \) \(a1 = a.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Law of the reciprocal:<br>
+      There exists an element \( 1/a \in \mathbb{Q} \) for every \( a
+      \neq 0 \in Q \) such that \( a(1/a) = 1.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Distributive law:<br>
+      \( a(b + c) = ab + ac \) for every \( a, b, c \in \mathbb{Q}.  \)
+    </p>
+  </li>
+</ol>
+<h3 id="order-axioims">Order Axioms</h3>
+<p>
+  The set \( \mathbb{Q}, \) together with the addition and
+  multiplication operations and a relation \( &lt; \) satisfy the
+  order axioms presented below:
+</p>
+<ol>
+  <li>
+    <p>
+      Transitive law:<br>
+      For all \( a, b, c \in \mathbb{Q}, \) \( a &lt; b \) and \( b
+      &lt; c \) implies \( a &lt; c.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Trichotomy law:<br>
+      For all \( a, b \in \mathbb{Q}, \) exactly one of the following
+      holds: \( a &lt; b, \) \( b &lt; a, \) or \( a = b.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Compatibility with addition:<br>
+      For all \( a, b, c \in \mathbb{Q}, \) \( a &lt; b \) implies \(
+      a + c &lt; b + c.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Compatibility with multiplication:<br>
+      For all \( a, b, c \in \mathbb{Q}, \) \( a &lt; b \) and \( c
+      &gt; 0 \) implies \( ac &lt; bc.  \)
+    </p>
+  </li>
+</ol>
+<h3 id="order-relation-in-q">Order Relation in \( \mathbb{Q} \)</h3>
+<p>
+  Let \( m, p \in \mathbb{Z} \) and \( n, q \in \mathbb{N}.  \) Then
+
+  \[
+    \frac{m}{n} &lt; \frac{p}{q}
+    \iff \frac{mq}{nq} &lt; \frac{np}{nq}
+    \iff mq &lt; np.
+  \]
+</p>
+<h3 id="density-property">Density Property</h3>
+<p>
+  The set \( \mathbb{Q} \) has the property of the density.  For all
+  \( q, r \in \mathbb{Q} \) where \( q &lt; r, \) there is \( s \in
+  \mathbb{Q} \) such that \( q &lt; s &lt; r.  \) This is trivial to
+  demonstrate by taking \( s = (q + r) / 2.  \)
+</p>
+<p>
+  Example: Between \( 5/10 \) and \( 7/10, \) there exists \( 6/10, \)
+  i.e., \( 5/10 &lt; 6/10 &lt; 7/10.  \)
+</p>
+<p>
+  There are infinitely many rational numbers between \( q \) and \( r.
+  \) This follows directly from the density property.
+</p>
+<h3 id="archimedean-property">Archimedean Property</h3>
+<p>
+  For all \( q &gt; 0 \) in \( \mathbb{Q}, \) there exists \( n \in
+  \mathbb{N} \) such that \( n &gt; q.  \)
+</p>
+<p>
+  Example: For \( q = 7/3, \) there exists \( n = 5 &gt; 7/3.  \) In
+  fact, there also exists \( n = 3 &gt; 7/3.  \)
+</p>
+<h3 id="upper-bound">Upper Bound</h3>
+<p>
+  A subset \( B \) of \( \mathbb{Q} \) is said to be bounded above if
+  there exists an upper bound \( K \in \mathbb{Q} \) such that \( K
+  \ge b \) for all \( b \in B.  \)
+</p>
+<p>
+  Example: The set \( \{ a \in Q : a &lt; 4 \} \) is bounded above by
+  \( 4.  \) It is also bounded above by \( 5, \) by \( 6, \) by \(
+  100, \) etc.  The least upper bound is \( 4.  \)
+</p>
+<p>
+  Example: The set \( \mathbb{N} \subset \mathbb{Q} \) is not bounded
+  above.
+</p>
+<h3 id="least-upper-bound">Least Upper Bound</h3>
+<p>
+  If \( B \subset \mathbb{Q} \) and \( B \ne \emptyset \) and \( B \)
+  is bounded above then a least upper bound of \( B \) is a number \(
+  k \in \mathbb{Q} \) such that:
+</p>
+<ul>
+  <li>
+    \( k \) is an upper bound of \( B; \)
+  </li>
+  <li>
+    \( c \) is an upper bound of \( B \) \( \implies \) \( c \ge k.  \)
+  </li>
+</ul>
+<p>
+  Here is an equivalent definition of least upper bound purely in
+  symbols without relying on the definition of "upper bound":
+</p>
+<ul>
+  <li>
+    \( k \ge b \) for all \( b \in B; \)
+  </li>
+  <li>
+    \( c \) satisfies \( c \ge b \) for all \( b \in B \) \( \implies
+    \) \( c \ge k.  \)
+  </li>
+</ul>
+<h3 id="uniqueness-of-least-upper-bound">Uniqueness of Least Upper Bound</h3>
+<p>
+  Let \( k_1 \) and \( k_2 \) be the least upper bounds of \( B.  \)
+</p>
+<p>
+  Since \( k_1 \) is a least upper bound and \( k_2 \) is an upper
+  bound, we get \( k_1 \le k_2.  \)
+</p>
+<p>
+  Since \( k_2 \) is a least upper bound and \( k_1 \) is an upper
+  bound, we get \( k_2 \le k_1.  \)
+</p>
+<p>
+  Thus \( k_1 = k_2.  \)
+</p>
+<h3 id="properties-of-real-numbers">Properties of Real Numbers</h3>
+<p>
+  The set \( \mathbb{R} \) is an ordered field satisfying the
+  following axioms:
+</p>
+<ul>
+  <li>
+    Axiom of Archimedes: For all \( x &gt; 0 \in \mathbb{R}, \) there
+    exists \( n \in \mathbb{N} \) such that \( n &gt; x.  \)
+  </li>
+  <li>
+    Axiom of Completeness: Every non-empty subset of \( \mathbb{R} \)
+    that is bounded above has a least upper bound in \( \mathbb{R}.
+    \)
+  </li>
+</ul>
+<p>
+  Note that the set \( \mathbb{Q} \) does not satisfy the axiom of
+  completeness.  For example, the set
+
+  \[
+    C = \{ a \in \mathbb{Q} : a &gt; 0 \text{ and } a^2 &lt; 2 \}
+  \]
+
+  is a non-empty subset of \( \mathbb{Q} \) that is bounded above but
+  its least upper bound is \( \sqrt{2} \not\in \mathbb{Q}.  \)
+</p>
+<h3 id="greatest-lower-bound-of-r">Greatest Lower Bound</h3>
+<p>
+  <strong>Theorem.</strong>
+  <em>
+    If the set \( A \subset \mathbb{R} \) and \( A \ne \emptyset \)
+    and \( A \) is bounded below, then \( A \) has a greatest lower
+    bound in \( \mathbb{R}.  \)
+  </em>
+</p>
+<p>
+  <em>Proof.</em>  First let \( A' = \{ -a : a \in A \}.  \) We will
+  use this set in a moment.
+</p>
+<p>
+  Since \( A \) is bounded below, there exists a lower bound \( k \in
+  \mathbb{R} \) such that \( k \le a \) for all \( a \in A.  \) Thus
+  \( -k \ge -a \) all \( a \in A.  \) Therefore \( -k \ge a' \) for
+  all \( a' \in A'.  \) Thus \( -k \) is an upper bound of \( A'.  \)
+</p>
+<p>
+  We have shown that the set \( A' \) is bounded above.  Therefore by
+  the axiom of completeness, \( A' \) has a least upper bound \( c \in
+  \mathbb{R}.  \)  This means the following:
+</p>
+<ul>
+  <li>
+    \( c \) is an upper bound of \( A' \)
+    (i.e., \( c \ge a' \) for all \( a' \in A' \));
+  </li>
+  <li>
+    \( d \) is an upper bound of \( A' \) \( \implies \) \( d \ge c \)
+    (i.e., \( d \) satisfies \( d \ge a' \) for all \( a' \in A' \) \(
+    \implies \) \( d \ge c \)).
+  </li>
+</ul>
+<p>
+  The above properties imply:
+</p>
+<ul>
+  <li>
+    \( -c \le a \) for all \( a \in A; \)
+  </li>
+  <li>
+    \( -d \) satisfies \( -d \le a \) for all \( a \in A \) \(
+    \implies \) \( -d \le -c.  \)
+  </li>
+</ul>
+<p>
+  Therefore \( -d \) is the greatest lower bound of \( A.  \)
+</p>
+<h3 id="supremum-and-infimum">Supremum and Infimum</h3>
+<p>
+  A non-empty set \( A \in \mathbb{R} \) that is bounded above has a
+  least upper bound in \( \mathbb{R} \) by the axiom of completeness.
+  If \( A \) is bounded below, it has a greatest lower bound in \(
+  \mathbb{R} \) as demonstrated earlier.
+</p>
+<p>
+  The least upper bound of \( A \) (when it is bounded above) is known
+  as the supremum of A.  This is denoted as \( \sup A.  \)
+</p>
+<p>
+  The greatest lower bound of \( A \) (when it is bounded below) is
+  known as the infimum.  This is denoted as \( \inf A.  \)
+</p>
+<p>
+  For open and closed intervals, we have
+
+  \begin{align*}
+    \sup (a, b) &amp; = \sup [a, b] = b, \\
+    \inf (a, b) &amp; = \inf [a, b] = a.
+  \end{align*}
+</p>
+<h3 id="irrationality-of-x-plus-y-for-x-in-Q-and-y-not-in-Q">Irrationality of \( x + y \) for \( x \in \mathbb{Q} \) and \( y \not\in \mathbb{Q} \)</h3>
+<p>
+  If \( x \) is rational and \( y \) is irrational, then \( x + y \)
+  is irrational.  To show this first let \( x = m/n \in \mathbb{Q}.
+  \) Now suppose \( x + y = p/q \in \mathbb{Q}.  \) Then
+
+  \[
+    y = \frac{p}{q} - \frac{m}{n} = \frac{pn - qm}{qn} \in \mathbb{Q}.
+  \]
+
+  This is a contradiction since \( y \) is irrational.  Therefore \( x
+  + y \not\in \mathbb{Q}.  \)
+</p>
+<h3 id="irrational-between-rationals">Irrational Between Rationals</h3>
+<p>
+  If \( x, y \in \mathbb{Q} \) and \( x &lt; y, \) then there exists
+  an irrational number \( u \) such that \( x &lt; u &lt; y.  \)
 </p>
