@@ -966,16 +966,22 @@
   :members 5)
  (:date "2024-08-02 19:00"
   :slug "real-analysis"
-  :topic "Sections 1.2-1.3: Pages 4-7: The Concept of Number, The Language of Set Theory"
+  :topic "Sections 1.2-1.3: Pages 3-4: Irrationality of \\( \\sqrt{2} + \\sqrt{3} \\)"
   :duration 40
-  :members -1)
+  :members 5)
  (:date "2024-08-03 19:00"
   :slug "real-analysis"
-  :topic "Sections 1.4: Pages 7-10: Real Numbers"
+  :topic "Section 1.3: Pages 4-7: The Language of Set Theory"
   :duration 40
-  :members -1)
+  :members 11)
  (:date "2024-08-04 19:00"
   :slug "real-analysis"
-  :topic "Sections 1.4: Pages 11-12: Real Numbers"
+  :topic "Section 1.4: Pages 7-9: Real Numbers: Field, Ordered Field"
   :duration 40
-  :members -1))
+  :members 13)
+ (:date "2024-08-17 19:00"
+  :slug "real-analysis"
+  :topic "Section 1.4: Pages 9-10: Real Numbers: Density Property, Archimedean Property, Completeness Property"
+  :duration 40
+  :members 7
+  ))
