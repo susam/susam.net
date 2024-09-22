@@ -127,6 +127,128 @@
   Let us start from the bottom of the list and share some experimental
   results that illustrate how the major mode detection works.
 </p>
+<h3 id="file-local-variables">File-Local Variables</h3>
+<ol>
+  <li>
+    <p>
+      Create a text file named <code>foo.txt</code> with the following
+      content:
+    </p>
+    <pre>
+<code>#include &lt;iostream&gt;
+
+int main() {
+  std::cout << "hello, world\n";
+  return 0;
+}</code>
+</pre>
+    <p>
+      Then open this file in Emacs (say, with <code>C-x C-f foo.txt
+      RET</code>).  Emacs sets the major mode to <code>Text</code>
+      (i.e., <code>text-mode</code>).
+    </p>
+    <p>
+      Type <code>M-: major-mode RET</code> to confirm that indeed the
+      value of <code>major-mode</code> is <code>text-mode</code>.
+      This happens due to automatic mode detection which determines
+      the major mode based on the file name.  In this case it sees
+      that the file name ends with <code>.txt</code> and
+      enables <code>text-mode</code>.  We will discuss automatic mode
+      detection further in the
+      section <a href="#automatic-mode-detection">Automatic Mode
+      Detection</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Now edit the previous file to add file-local variables in the
+      header as follows:
+    </p>
+    <pre>
+<code>// -*- mode: c++; c-basic-offset: 4 -*-
+
+#include &lt;iostream&gt;
+
+int main() {
+  std::cout << "hello, world\n";
+  return 0;
+}</code>
+</pre>
+    <p>
+      Now reload the buffer.  You could simply kill the buffer
+      with <code>C-x k</code> and reopen the file with <code>C-x C-f
+      foo.txt RET</code> or alternatively, reload the buffer
+      with <code>M-x revert-buffer RET yes RET</code>.
+    </p>
+    <p>
+      After reloading the buffer, you should see that
+      the <code>C++</code> mode (i.e., <code>c++-mode</code>) is
+      enabled.  As a result, C++ syntax highlighting should be
+      visible.  Further <code>C-x h TAB</code> should reformat the
+      code to use 4 spaces for each level of indentation.
+    </p>
+  </li>
+  <li>
+    <p>
+      File-local variables may be specified in the footer too as shown
+      below:
+    </p>
+    <pre>
+<code>#include &lt;iostream&gt;
+
+int main() {
+    std::cout << "hello, world\n";
+    return 0;
+}
+
+// Local Variables:
+// mode: c++
+// c-basic-offset: 6
+// End:</code>
+</pre>
+    <p>
+      Now reloading the buffer should show that <code>c++-mode</code>
+      is enabled and typing <code>C-x h TAB</code> should reformat the
+      code to use 6 spaces for each level of indentation.
+    </p>
+  </li>
+  <li>
+    <p>
+      What happens if the file-local variables in the header and
+      footer contradict each other?  To test this out, edit the buffer
+      to have the following content:
+    </p>
+    <pre>
+<code>// -*- mode: c++; c-basic-offset: 4 -*-
+
+#include &lt;iostream&gt;
+
+int main() {
+      std::cout << "hello, world\n";
+      return 0;
+}
+
+// Local Variables:
+// mode: python
+// c-basic-offset: 6
+// End:</code>
+</pre>
+    <p>
+      Reloading the buffer should show that <code>c++-mode</code> is
+      active.  Typing <code>C-x h TAB</code> should reformat the code
+      to use 6 spaces for each level of indentation.  Therefore the
+      mode specified in the header remains effective.  For other
+      variables, the ones specified in the footer have precedence.
+    </p>
+    <p>
+      Of course, the example above is intended for curiosity and
+      exploration.  In practical use, however, it is best to avoid
+      assigning conflicting values to file-local variables in both the
+      header and footer.  Such inconsistencies can lead to confusion
+      and make the effect of the variables difficult to understand.
+    </p>
+  </li>
+</ol>
 <h2 id="occur-mode">Occur Mode</h2>
 <p>
   TODO: More notes coming up here soon!

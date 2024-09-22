@@ -983,5 +983,10 @@
   :slug "real-analysis"
   :topic "Section 1.4: Pages 9-10: Real Numbers: Density Property, Archimedean Property, Completeness Property"
   :duration 40
-  :members 7
-  ))
+  :members 7)
+ (:date "2024-09-21 19:00"
+  :slug "real-analysis"
+  :topic "Section 1.4: Pages 10-11: Real Numbers: Supremum and Infimum"
+  :duration 25
+  :members 3)
+ )
