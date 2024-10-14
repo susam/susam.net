@@ -611,7 +611,7 @@ value, next-index."
 
 (defun make-page-list (pages dst list-layout item-layout params)
   "Generate list page for a list of content pages."
-  (setf pages (only-list-pages pages))
+  (setf pages (only-listed-pages pages))
   (let ((count (length pages))
         (rendered-pages))
     ;; Render each page.
@@ -731,7 +731,7 @@ value, next-index."
         (last-updated ""))
     (when updated
       (setf last-updated
-            (fstr "&nbsp;&bull;&nbsp;(last updated on ~a)" (simple-date updated))))
+            (fstr " (updated on ~a)" (simple-date updated))))
     (list (cons "last-updated" last-updated))))
 
 (defun validate-pages (pages)
