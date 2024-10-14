@@ -605,12 +605,16 @@ value, next-index."
       (push (make-page src-path dst layout params) pages))
     (sort-pages pages)))
 
-(defun only-list-pages (pages)
-  "Select pages that can be listed in page lists."
+(defun only-listed-pages (pages)
+  "Select pages that are allowed to be listed in page lists."
   (remove-if (lambda (page) (string= (aget "unlist" page) "yes")) pages))
 
+(defun only-completed-pages (pages)
+  "Select pages that are not drafts."
+  (remove-if (lambda (page) (string= (aget "draft" page) "yes")) pages))
+
 (defun make-page-list (pages dst list-layout item-layout params)
-  "Generate list page for a list of content pages."
+  "Generate list page for content pages that are allowed to be listed."
   (setf pages (only-listed-pages pages))
   (let ((count (length pages))
         (rendered-pages))
@@ -625,6 +629,10 @@ value, next-index."
     (aput "page-label" (if (= count 1) "page" "pages") params)
     ;; Determine destination path and URL.
     (write-page dst list-layout params)))
+
+(defun make-feed-list (pages dst list-layout item-layout params)
+  "Generate feed list for pages that are not draft and allowed to be listed."
+  (make-page-list (only-completed-pages pages) dst list-layout item-layout params))
 
 
 ;;; Comments
@@ -1149,7 +1157,7 @@ value, next-index."
 
 (defun collect-tags (pages)
   "Group page by tags and return an alist of tag and page list."
-  (setf pages (only-list-pages pages))
+  (setf pages (only-listed-pages pages))
   (let ((tags))
     (dolist (page pages)
       (dolist (tag (string-split (aget "tag" page) ", "))
@@ -1212,8 +1220,8 @@ value, next-index."
       (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Pages" params)
             params)
       (make-page-list pages list-dst list-layout item-layout params)
-      (make-page-list (last-n 20 pages) mini-feed-dst feed-xml item-xml params)
-      (make-page-list pages full-feed-dst feed-xml item-xml params))))
+      (make-feed-list (last-n 20 pages) mini-feed-dst feed-xml item-xml params)
+      (make-feed-list pages full-feed-dst feed-xml item-xml params))))
 
 (defun make-full (pages page-layout params)
   "Generate page list for the full website."
@@ -1230,8 +1238,8 @@ value, next-index."
     (aput "title" (aget "author" params) params)
     (aput "link" (aget "site-url" params) params)
     (aput "description" (render "{{ nick }}'s Feed" params) params)
-    (make-page-list (last-n 20 pages) "_site/feed.xml" feed-xml item-xml params)
-    (make-page-list pages "_site/feed-full.xml" feed-xml item-xml params)))
+    (make-feed-list (last-n 20 pages) "_site/feed.xml" feed-xml item-xml params)
+    (make-feed-list pages "_site/feed-full.xml" feed-xml item-xml params)))
 
 
 ;;; Home Page
