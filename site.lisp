@@ -391,13 +391,10 @@ value, next-index."
      (aput "neat-url" (neat-url dst-path ,params) ,page)
      (aput "path" (neat-path dst-path ,params) ,page)))
 
-(defmacro invoke-callback (params)
-  "Run callback and add the parameters returned by it to params."
-  `(let ((callback (aget "callback" ,params))
-         (callback-params))
-     (when callback
-       (setf callback-params (funcall callback ,params))
-       (setf ,params (append callback-params ,params)))))
+(defmacro invoke-callbacks (params)
+  "Run callbacks and add the parameters returned by it to params."
+  `(dolist (callback (aget "callbacks" ,params))
+     (setf ,params (append (funcall callback ,params) ,params))))
 
 (defun extra-markup (text)
   "Add extra markup to the page to create heading anchor links."
@@ -554,17 +551,27 @@ value, next-index."
   "Parse content file."
   (let ((text (read-file filename))
         (page)
-        (date))
+        (date)
+        (updated)
+        (draft))
     (multiple-value-bind (date slug) (date-slug filename)
       (aput "date" date page)
       (aput "slug" slug page))
     (multiple-value-bind (headers next-index) (read-headers text 0)
       (setf page (append headers page))
       (aput "body" (subseq text next-index) page))
+    ;; Date.
     (setf date (aget "date" page))
-    (when date
+    (when (aget "date" page)
       (aput "rss-date" (rss-date date) page)
       (aput "simple-date" (simple-date date) page))
+    ;; Updated date.
+    (setf updated (aget "updated" page))
+    (aput "update-mark"
+          (if updated (fstr " (updated on ~a)" (simple-date updated)) "") page)
+    ;; Draft status.
+    (setf draft (aget "draft" page))
+    (aput "draft-mark" (if draft " [draft]" "") page)
     page))
 
 (defun make-page (src-path dst layout params)
@@ -574,8 +581,9 @@ value, next-index."
     ;; Read content and merge its parameters with call parameters.
     (add-page-params dst page params)
     (setf params (append page params))
-    (invoke-callback params)
-    ;; Render placeholder in page body if requested.
+    ;; Run callbacks.
+    (invoke-callbacks params)
+    ;; Render placeholders in page body if requested.
     (when (string= (aget "render" params) "yes")
       (aput "toc" (toc-html (aget "body" params)) params)
       (setf body (render (aget "body" params) params))
@@ -621,7 +629,7 @@ value, next-index."
     ;; Render each page.
     (dolist (page pages)
       (setf page (append page params))
-      (invoke-callback page)
+      (invoke-callbacks page)
       (push (render item-layout page) rendered-pages))
     ;; Add list parameters.
     (aput "body" (join-strings rendered-pages) params)
@@ -733,15 +741,6 @@ value, next-index."
 ;;; Tree
 ;;; ----
 
-(defun updated-date-callback (page)
-  "Create last-updated parameter if page contains updated date."
-  (let ((updated (aget "updated" page))
-        (last-updated ""))
-    (when updated
-      (setf last-updated
-            (fstr " (updated on ~a)" (simple-date updated))))
-    (list (cons "last-updated" last-updated))))
-
 (defun validate-pages (pages)
   "Validate pages to ensure required metadata is present."
   (dolist (page pages)
@@ -752,7 +751,6 @@ value, next-index."
 (defun make-tree-recursively (src dst page-layout post-layout params)
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
-  (aput "callback" #'updated-date-callback params)
   (let ((pages))
     (dolist (pathname (uiop:directory-files src))
       (let* ((basename (file-namestring pathname))
@@ -902,6 +900,7 @@ value, next-index."
         (pages))
     ;; Look for overriding layouts.
     (when (probe-file list-override)
+      (write-log "Using list layout override ~a ..." list-override)
       (setf list-layout (read-file list-override)))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
@@ -1141,7 +1140,7 @@ value, next-index."
         (list (cons "widget" rendered-widget))))
     ;; Add parameters for music page rendering.
     (aput "import" "extra.css, music.css" params)
-    (aput "callback" #'make-widget-callback params)
+    (aput-list "callbacks" #'make-widget-callback params)
     ;; Render all music pages.
     (setf pages (make-pages src "_site/music/{{ slug }}.html"
                             post-layout params))
