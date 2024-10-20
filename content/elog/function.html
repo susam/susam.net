@@ -1,0 +1,157 @@
+<!-- date: 2024-10-20 -->
+<!-- title: Function -->
+<!-- tag: Mathematics, Definition -->
+<!-- import: math.inc -->
+<h2 id="introduction">Introduction</h2>
+<p>
+  In mathematics, a function \( f \) from a set \( X \) to a set \( Y
+  \) is a relation that associates each element of \( X \) with
+  exactly one element of \( Y.  \) This page describes the commonly
+  used notation, terminology, and concepts pertaining to functions.
+</p>
+{{ toc }}
+<h2 id="definition">Definition</h2>
+<p>
+  A function \( f \) from a set \( X \) to a set \( Y \) is a binary
+  relation \( R \) that satisfies the following conditions:
+</p>
+<ul>
+  <li>
+    \( R \subseteq \{ (x, y) \mid x \in X, y \in Y \} = X \times Y.
+    \)
+  </li>
+  <li>
+    For every \( x \in X, \) there exists \( y \in Y \) such that \(
+    (x, y) \in R.  \)
+  </li>
+  <li>
+    If \( (x, y) \in R \) and \( (x, z) \in R, \) then \( y = z.  \)
+  </li>
+</ul>
+<p>
+  The set \( X \) is called the domain of \( f \) and the set \( Y \)
+  is called the codomain of \( f.  \) The relation \( R \) is also
+  known as the graph of \( f.  \)
+</p>
+<h2 id="notation">Notation</h2>
+<p>
+  Let \( f \) be a function from a set \( X \) to a set \( Y.  \) Then
+  the name \( f \) represents the function and the notation \( f(x) \)
+  represents the application of the function to the argument \( x, \)
+  i.e., \( f(x) \) represents the value of \( f \) for the element \(
+  x \in X.  \) In other words, for all \( x \in X, \) we have \( (x,
+  f(x)) \in R.  \)
+</p>
+<p>
+  A function \( f \) with domain \( X \) and codomain \( Y \) is also
+  written as \( f : X \to Y.  \) The function \( f \) may also be
+  written as \( x \mapsto f(x).  \) This notation specifies a function
+  that maps \( x \) to \( f(x).  \)
+</p>
+<p>
+  Formally, \( f(x) \) denotes the application of the function \( f \)
+  to the argument \( x.  \) However, in practice, it is common to use
+  the expression \( f(x) \) to refer to both the function itself and
+  its output for a given \( x, \) which is a slight deviation from
+  strict notation.  Similarly, the function \( x \mapsto g(x) \) is
+  often written as \( f(x) = g(x).  \) For example, the function \( x
+  \mapsto x^2 - 1 \) may also be written as \( f(x) = x^2 - 1.  \)
+</p>
+<p>
+  Consider a function \( f \) that returns the square of a real
+  number.  The following are common notations used to define this
+  function, roughly ordered from the most formal form to the least
+  formal one:
+</p>
+<ul>
+  <li>
+    \( f : \mathbb{R} \to \mathbb{R} ; \; x \mapsto x^2,  \)
+  </li>
+  <li>
+    \( f : \mathbb{R} \to \mathbb{R} : x \mapsto x^2,  \)
+  </li>
+  <li>
+    \( f : x \mapsto x^2,  \)
+  </li>
+  <li>
+    \( f: \mathbb{R} \to \mathbb{R} \) where \( f(x) = x^2,  \)
+  </li>
+  <li>
+    \( f(x) = x^2.  \)
+  </li>
+</ul>
+<h2 id="domain-codomain-and-image">Domain, Codomain, and Image</h2>
+<p>
+  The <em>domain</em> of a function is the set of all values for which
+  the function is defined.
+</p>
+<p>
+  A <em>codomain</em> of a function \( f \) is a set within which the
+  values \( f(x) \) for all \( x \in X \) must lie, where \( X \) is
+  the domain of \( f.  \)
+</p>
+<p>
+  The <em>image</em> of a function \( f \) is the set \( \{ f(x) \mid
+  x \in X \} \) where \( X \) is the domain of \( f.  \)
+</p>
+<p>
+  The term <em>range</em> is often used as a synonym of image.
+  However the use of this term is inconsistent across literature.
+  Some old books use the term range to mean codomain while other books
+  use this term to mean the image.  Therefore it is best to use the
+  term image because it is free from such ambiguity.
+</p>
+<h2 id="injection-surjection-and-bijection">Injection, Surjection, and Bijection</h2>
+<p>
+  A function \( f : X \to Y \) is <em>injective</em> if \( \forall a,
+  b \in X, a \neq b \implies f(a) \neq f(b).  \) A function is
+  injective, if each element of the codomain is mapped to by <em>at
+  most</em> one element of the domain.  An injective function is also
+  known as a <em>one-to-one</em> function or an injection.
+</p>
+<p>
+  A function \( f : X \to Y \) is <em>surjective</em> if \( \forall y
+  \in Y, \exists x \in X \) such that \( y = f(x).  \) A function is
+  surjective, if each element of the codomain is mapped to <em>at
+  least</em> one element of the domain.  A surjective function is also
+  known as an <em>onto</em> function or a surjection.
+</p>
+<p>
+  A function \( f : X \to Y \) is <em>bijective</em> if \( \forall y
+  \in Y, \) there exists exactly one \( x \in X, \) such that \( y =
+  f(x).  \) A function is bijective, if each element of the codomain
+  is mapped to <em>exactly</em> one element of the domain.  A
+  bijective function is also known as a <em>one-to-one</em>
+  correspondence or bijection.  A bijection is both injective and
+  surjective.
+</p>
+<p>
+  The function \( f : \mathbb{R} \to \mathbb{R}; \; x \mapsto e^x \)
+  is injective but not surjective.  It is injective because distinct
+  values of \( x \) produce distinct values of \( e^x.  \) However, it
+  is not surjective as no value in the domain maps to negative numbers
+  in the codomain, leaving some elements in the codomain unmapped.
+</p>
+<p>
+  The function \( f : \mathbb{R} \to \mathbb{R}; \; x \mapsto x^3 - x
+  \) is surjective but not injective.  It is surjective because every
+  value in the codomain is mapped to by at least one value in the
+  domain.  However, it is not injective, as some values in the
+  codomain are mapped to by multiple distinct values in the domain.
+  For example, the elements \( -1, \) \( 0, \) and \( 1 \) in the
+  domain all map to the element \( 0 \) in the codomain.
+</p>
+<p>
+  The function \( f : \mathbb{R} \to \mathbb{R}; \; x \mapsto x + 1 \)
+  is bijective.  It is both injective and surjective.  This function
+  is invertible with the inverse given by the function \( x \mapsto x
+  - 1.  \)
+</p>
+<p>
+  The function \( f : \mathbb{R} \to \mathbb{R}; \; x \mapsto x^2 \)
+  is neither injective nor surjective.  First, the function is not
+  injective because distinct values in the domain can map to the same
+  value in the codomain.  For example, \( f(-2) = f(2) = 4.  \)
+  Additionally, the function is not surjective because no value in the
+  domain maps to the negative numbers in the codomain.
+</p>
