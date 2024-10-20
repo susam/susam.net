@@ -1,0 +1,181 @@
+<!-- date: 2024-10-21 -->
+<!-- title: Algebraic Structures -->
+<!-- tag: Mathematics -->
+<!-- import: math.inc -->
+<!-- draft: yes -->
+<h2 id="introduction">Introduction</h2>
+An algebraic structure consists of a nonempty set, a collection of
+operations on the set, and a finite set of axioms that the operations
+must satisfy.
+{{ toc }}
+<h2 id="group">Group</h2>
+<h3 id="group-axioms">Group Axioms</h3>
+<p>
+  A group is an ordered pair \( (G, \cdot) \) where \( G \) is a set
+  and \( \cdot \) is a binary operation on \( G \) satisfying the
+  following properties:
+</p>
+<ol>
+  <li>
+    <p>
+      Associativity:<br>
+      \( (a \cdot b) \cdot c = a \cdot (b \cdot c) \) for all \( a, b,
+      c \in G.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Identity:<br>
+      There exists an element \( e \in G \) such that \( a \cdot e = a
+      = e \cdot a \) for all \( a \in G.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Inverse:<br>
+      There exists \( a^{-1} \in G \) for every \( a \in G \) such
+      that \( a \cdot a^{-1} = e = a^{-1} \cdot a.  \)
+    </p>
+</ol>
+<h3 id="group-closure-property">Group Closure Property</h3>
+<p>
+  Some texts include an additional fourth axiom for the closure
+  property, stated as:
+</p>
+<ul>
+  <li>
+    Closure:<br>
+    \( a \cdot b \in G \) for all \( a, b \in G.  \)
+  </li>
+</ul>
+<p>
+  However many texts omit this axiom because explicitly stating the
+  closure property is redundant.  The binary operation \( \cdot \) on
+  \( G \) inherently guarantees the closure property.  By definition,
+  a binary operation on a set \( G \) is a function
+
+  \[
+    \cdot : G \times G \to G; \; (x, y) \mapsto x \cdot y,
+  \]
+
+  which automatically implies the closure property.  In practice, we
+  should always verify that the binary operation defined does indeed
+  have the codomain \( G \) to confirm that the closure property
+  holds.
+</p>
+<h3 id="group-terminology">Group Terminology</h3>
+<p>
+  The binary operation \( \cdot \) is called the <em>group
+  operation</em> or <em>group law</em>.  The set \( G \) is called
+  the <em>underlying set</em> of the group.  The set \( G \) is also
+  called a group <em>under</em> the binary operation.
+</p>
+<h3 id="group-examples">Group Examples</h3>
+<p>
+  The ordered pair \( (\mathbb{Z}, + \) forms a group, i.e., the set
+  of integers form a group under addition.  However it does not form a
+  group under multiplication, i.e., \( (\mathbb{Z}, \cdot) \) does not
+  form a group since there is no multiplicative inverse of \( 2 \) in
+  the set of integers.
+</p>
+<h2 id="field">Field</h2>
+<h3 id="field-axioms">Field Axioms</h3>
+<p>
+  A field is a triple \( (F, +, \cdot), \) where \( F \) is a set, and
+  \( + \) and \( \cdot \) are binary operations on \( F, \) called
+  addition and multiplication respectively, that satisfies the
+  following properties:
+</p>
+<ol>
+  <li>
+    <p>
+      Associativity of addition:<br>
+      \( a + (b + c) = (a + b) + c \) for all \( a, b, c \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Commutativity of addition:<br>
+      \( a + b = b + a \) for all \( a, b \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Additive identity:<br>
+      There is an element \( 0 \in F \) such that \( a + 0 = a \) for
+      all \( a \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Additive inverse:<br>
+      There exists an element \( -a \in F \) for every \( a \in F \)
+      such that \( a + (-a) = 0.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Associativity of multiplication:<br>
+      \( a \cdot (b \cdot c) = (a \cdot b) \cdot c \) for all \( a, b,
+      c \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Commutativity of multiplication:<br>
+      \( a \cdot b = b \cdot a \) for all \( a, b \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Multiplicative identity:<br>
+      There is an element \( 1 \in F \) such that \( a \cdot 1 = a \)
+      for all \( a \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Multiplicative inverse:<br>
+      There exists an element \( a^{-1} \in F \) for every \( a \neq 0
+      \in F \) such that \( a \cdot a^{-1} = 1.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Distributivity of multiplication over addition:<br>
+      \( a \cdot (b + c) = (a \cdot b) + (a \cdot c) \) for all \( a,
+      b, c \in F.  \)
+    </p>
+  </li>
+</ol>
+<p>
+  Some texts include the following additional axioms for the closure
+  properties:
+</p>
+<h3 id="field-closure-properties">Field Closure Properties</h3>
+<ol>
+  <li>
+    <p>
+      Closure under additon:<br>
+      \( a + b \in F \) for all \( a, b \in F.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      Closure under multiplication:<br>
+      \( a \cdot b \in F \) for all \( a, b \in F.  \)
+    </p>
+  </li>
+</ol>
+<p>
+  However many texts omit these two axioms because these axioms are
+  already implied by the fact that \( + \) and \( \cdot \) are binary
+  operations on \( F.  \)
+</p>
+<!--
+<p>
+  TODO: Uniqueness of the identity element.
+  TODO: What if 0 = 1?
+  TODO: Elaborate additive identity for vector spaces post.
+</p>
+-->
