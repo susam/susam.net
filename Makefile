@@ -139,7 +139,7 @@ backup:
 	df -h /
 
 follow-log:
-	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|woff|xml)|tt-rss|bot|netnewswire|FeedFetcher-Google|AppEngine-Google"
+	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|woff|xml)|tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google"
 
 follow-post:
 	tail -F /opt/log/form/form.log | grep POST
