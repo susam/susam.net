@@ -1,0 +1,23 @@
+<!-- date: 2024-11-20 -->
+<!-- title: Negative Lookahead Assertion -->
+<!-- tag: Technology -->
+<p>
+  Here is an example of negative lookahead assertion in regular
+  expression using Python:
+</p>
+<pre>
+<code>import re
+strings = ['foo', 'bar', 'baz', 'foo-bar', 'bar-baz', 'baz-foo']
+matches = [s for s in strings if re.search('^(?!.*foo)', s)]
+print(matches)</code>
+</pre>
+<p>
+  The regular expression <code>^(?!.*foo)</code> in the above example
+  matches strings that do not contain the pattern <code>foo</code>.
+  The above code example produces the following output:
+</p>
+<pre><samp>['bar', 'baz', 'bar-baz']</samp></pre>
+<p>
+  See <a href="https://docs.python.org/3/library/re.html">docs.python.org/3/library/re.html</a>
+  for more details on various lookahead assertions.
+</p>
