@@ -10,6 +10,10 @@
   algebraic structures.
 </p>
 {{ toc }}
+<!--
+  Order of presentation:
+  Definition, Closure, Alternative Definitions, Variations, Examples.
+-->
 <h2 id="magma">Magma</h2>
 <h3 id="magma-definition">Magma Definition</h3>
 <p>
@@ -48,7 +52,7 @@
 <p>
   A magma may satisfy the following additional properties:
 </p>
-<ol>
+<ul>
   <li>
     <p>
       <strong>Commutativity:</strong> For all \( a, b \in M, \) we
@@ -62,40 +66,99 @@
       e \cdot a.  \)
     </p>
   </li>
-</ol>
+</ul>
 <p>
   A magma satisfying the commutativity property is known as
   a <em>commutative magma</em>.  A magma satisfying the identity
-  property is known as a <em>unital magma</em>.
+  property is known as a <em>unital magma</em>.  A magma satisfying
+  both properties is known as <em>commutative unital magma</em>.
 </p>
 <h2 id="semigroup">Semigroup</h2>
 <h3 id="semigroup-axioms">Semigroup Definition</h3>
 <p>
-  A semigroup is an ordered pair \( S, \cdot \) where \( S \) is a set
-  and \( \cdot \) is a binary operation on \( M \) satisfying the
+  A semigroup is an ordered pair \( (S, \cdot) \) where \( S \) is a
+  set and \( \cdot \) is a binary operation on \( M \) satisfying the
   following property:
 </p>
+<p>
+  <strong>Associativity:</strong> For all \( a, b, c \in S, \) we have
+  \( (a \cdot b) \cdot c = a \cdot (b \cdot c).  \)
+</p>
+<h3 id="semigroup-closure-property">Semigroup Closure Property</h3>
+<p>
+  Some texts explicitly specify the closure property, i.e., for all \(
+  a, b \in S, \) we must have \( a \cdot b \in S.  \) However, stating
+  this propery explicity is redundant because a binary operation is
+  closed by definition.
+</p>
+<h3 id="semigroup-variations">Semigroup Variations</h3>
+<p>
+  A semigroup may satisfy the following additional properties:
+</p>
 <ul>
+  <li>
+    <p>
+      <strong>Commutativity:</strong> For all \( a, b \in S, \) we
+      have \( a \cdot b = b \cdot a.  \)
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>Identity:</strong> There exists an element \( e \in S,
+      \) such that, for all \( a \in S, \) we have \( a \cdot e = a =
+      e \cdot a.  \)
+    </p>
+  </li>
+</ul>
+<p>
+  A semigroup satisfying the commutativity property is known as
+  a <em>commutative semigroup</em> or <em>abelian semigroup</em>.  A
+  semigroup satisfying the identity property is known as
+  a <em>monoid</em>.  A semigroup satisfying both properties is known
+  as a <em>commutative monoid</em>.  Monoid is discussed in detail in
+  the next section.
+</p>
+<h2 id="monoid">Monoid</h2>
+<h3 id="monoid-definition">Monoid Definition</h3>
+<p>
+  A monoid is an ordered pair \( (S, \cdot) \) where \( S \) is a set
+  and \( \cdot \) is a binary operation on \( S \) satisfying the
+  following properties:
+</p>
+<ol>
   <li>
     <p>
       <strong>Associativity:</strong> For all \( a, b, c \in S, \) we
       have \( (a \cdot b) \cdot c = a \cdot (b \cdot c).  \)
     </p>
   </li>
-</ul>
-<h3 id="semigroup-closure-property">Semigroup Closure Property</h3>
+  <li>
+    <p>
+      <strong>Identity:</strong> There exists an element \( e \in S,
+      \) such that, for all \( a \in S, \) we have \( a \cdot e = a =
+      e \cdot a.  \)
+    </p>
+  </li>
+</ol>
+<h3 id="monoid-closure-property">Monoid Closure Property</h3>
 <p>
   Some texts explicitly specify the closure property, i.e., for all \(
   a, b \in S, \) we must have \( a \cdot b \in S.  \) However, stating
-  this propery explicity is redundant because this property is already
-  implied by the fact that \( \cdot \) is a binary operation.  See
-  also <a href="#magma-closure-property">Magma Closure Property</a>
-  for details.
+  this propery explicity is redundant because a binary operation is
+  closed by definition.
 </p>
-<h3 id="semigroup-definition-alternatives">Semigroup Definition Alternatives</h3>
+<h3 id="monoid-variations">Monoid Variations</h3>
 <p>
-  A semigroup is an associative magma.
+  A monoid may satisfy the following additional property:
 </p>
+<p>
+  <strong>Commutativity:</strong> For all \( a, b \in S, \) we have \(
+  a \cdot b = b \cdot a.  \)
+</p>
+<p>
+  A monoid satisfying the commutative property is known
+  as <em>commutative monoid</em> or, less commonly, <em>abelian
+  monoid</em>.
 <h2 id="group">Group</h2>
 <h3 id="group-axioms">Group Axioms</h3>
 <p>
@@ -126,28 +189,10 @@
 </ol>
 <h3 id="group-closure-property">Group Closure Property</h3>
 <p>
-  Some texts include an additional fourth axiom for the closure
-  property, stated as:
-</p>
-<ul>
-  <li>
-    <p>
-      <strong>Closure:</strong> For all \( a, b \in G, \) we have \( a
-      \cdot b \in G.  \)
-    </p>
-  </li>
-</ul>
-<p>
-  However many texts omit this axiom because explicitly stating the
-  closure property is redundant.  The binary operation \( \cdot \) on
-  \( G \) inherently guarantees the closure property.  By definition,
-  a binary operation on a set \( G \) is a function
-
-  \[
-    \cdot : G \times G \to G; \; (x, y) \mapsto x \cdot y
-  \]
-
-  which automatically implies the closure property.
+  Some texts explicitly specify the closure property, i.e., for all \(
+  a, b \in G, \) we must have \( a \cdot b \in G.  \) However, stating
+  this propery explicity is redundant because a binary operation is
+  closed by definition.
 </p>
 <h3 id="group-variations">Group Variations</h3>
 <p>
