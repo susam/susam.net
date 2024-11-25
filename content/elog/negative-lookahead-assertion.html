@@ -1,6 +1,6 @@
 <!-- date: 2024-11-20 -->
 <!-- title: Negative Lookahead Assertion -->
-<!-- tag: Technology -->
+<!-- tag: Python, Programming, Technology -->
 <p>
   Here is an example of negative lookahead assertion in regular
   expression using Python:
@@ -18,6 +18,20 @@ print(matches)</code>
 </p>
 <pre><samp>['bar', 'baz', 'bar-baz']</samp></pre>
 <p>
-  See <a href="https://docs.python.org/3/library/re.html">docs.python.org/3/library/re.html</a>
-  for more details on various lookahead assertions.
+  Of course, it is much simpler to use an ordinary regular expression
+  that matches <code>foo</code> and then invert the result of the
+  match to ignore strings that contain <code>foo</code>.  For example,
+  consider the following straightforward solution:
+</p>
+<pre><code>matches = [s for s in strings if not re.search('foo', s)]</code></pre>
+<p>
+  This example produces the same result as the earlier example but
+  with less complexity.  However, there are situations where, as a
+  user of certain software tool, we might not have control over how
+  the tool applies the regular expression.  Some tools only allow us
+  to provide a pattern, and they automatically select strings that
+  match it.  In such cases, if we need to select strings that <em>do
+  not</em> match a given pattern, negative lookahead assertions become
+  quite useful, provided the regular expression flavour supported by
+  the tool allows the use of negative lookahead assertions.
 </p>
