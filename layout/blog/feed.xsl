@@ -10,57 +10,44 @@
           <xsl:value-of select="description"/>
         </title>
         <style>{{ css }}        </style>
+        <style>details { margin: 1em 0 }</style>
       </head>
       <body>
-        <h1>
-          <xsl:value-of select="description"/>
-        </h1>
+        <h1><xsl:value-of select="description"/></h1>
+        <div>(<xsl:value-of select="count(item)"/> items)</div>
+        <p>
+          This is an RSS news feed from
+          <a href="https://susam.net/">susam.net</a>.
+          This document is intended for feed readers, not humans.
+          Please copy the URL of this document into your feed reader.
+        </p>
         <xsl:for-each select="item">
-          <!-- <h2 id="[guid]">title<a href="#[guid]"></a></h2> -->
-          <h2>
-            <xsl:attribute name="id">
-              <xsl:value-of select="translate(guid, ':/.?', '---')"/>
-            </xsl:attribute>
-            <a>
-              <xsl:attribute name="href">
-                <xsl:value-of select="link"/>
-              </xsl:attribute>
-              <xsl:value-of select="title"/>
-            </a>
-            <a>
-              <xsl:attribute name="href">
-                <xsl:value-of select="concat('#', translate(guid, ':/.?', '---'))"/>
-              </xsl:attribute>
-            </a>
-          </h2>
-          <!-- <div>Published on [date]</div> -->
-          <div>
-            <xsl:text>Published on </xsl:text>
-            <xsl:value-of select="substring(pubDate, 6, 11)"/>
-          </div>
-          <!-- <p>[first paragraph]</p> -->
-          <p>
-            <xsl:value-of
-                select="substring-after(substring-before(description, '&lt;/p&gt;'), '&lt;p&gt;')"
-                disable-output-escaping="yes"/> ...
-          </p>
-          <!-- <p><a href="[link]">Read on website</a> | <a href="[first-tag]">#[first-tag]</a></p>-->
-          <p>
-            <a>
-              <xsl:attribute name="href">
-                <xsl:value-of select="link"/>
-              </xsl:attribute>
-              <xsl:text>Read on website</xsl:text>
-            </a>
-            <xsl:text> | </xsl:text>
-            <a>
-              <xsl:attribute name="href">
-                <xsl:value-of select="substring-before(substring-after(substring-after(substring-after(description, '&lt;!-- ### --&gt;'), '|'), '&lt;a href=&quot;'), '&quot;')"/>
-              </xsl:attribute>
-              <xsl:value-of select="substring-before(substring-after(substring-after(substring-after(description, '&lt;!-- ### --&gt;'), '|'), '&gt;'), '&lt;')"/>
-            </a>
-          </p>
+          <details>
+            <summary>
+              <a>
+                <xsl:attribute name="href">
+                  <xsl:value-of select="link"/>
+                </xsl:attribute>
+                <xsl:value-of select="title"/>
+              </a>
+              (<xsl:value-of select="substring(pubDate, 6, 11)"/>)
+            </summary>
+            <xsl:value-of select="description" disable-output-escaping="yes"/>
+          </details>
         </xsl:for-each>
+        <footer>
+          <hr/>
+          <nav>
+            <a href="{{ root }}{{ index }}">Home</a>
+            <a href="{{ root }}links.html">Links</a>
+            <a href="{{ root }}about.html">About</a>
+            <a href="https://github.com/susam">GitHub</a>
+            <a href="https://mastodon.social/@susam">Mastodon</a>
+          </nav>
+          <p>
+            &#xa9; 2001&#x2013;{{ current-year }} {{ author }}
+          </p>
+        </footer>
       </body>
     </html>
   </xsl:template>
