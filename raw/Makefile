@@ -9,13 +9,13 @@ venv: FORCE
 
 clumsy-equations: clean
 	. ./venv && python clumsy-equations.py
-	cp clumsy-equations-1.png ../static/files/blog
-	cp clumsy-equations-2.png ../static/files/blog
-	cp clumsy-equations-3.png ../static/files/blog
+	cp clumsy-equations-1.png ../content/tree/files/blog/
+	cp clumsy-equations-2.png ../content/tree/files/blog/
+	cp clumsy-equations-3.png ../content/tree/files/blog/
 
 channel-capacity: clean
 	. ./venv && python channel-capacity.py
-	cp channel-capacity.png ../static/files/blog
+	cp channel-capacity.png ../content/tree/files/blog/
 
 dosbox-logo: clean
 	# PNGs
@@ -31,10 +31,10 @@ dosbox-logo: clean
 	       -lavfi 'fps=30,scale=640:480:flags=neighbor,paletteuse' \
 	       dosbox-logo-circles.gif
 	# Copy
-	cp dosbox-logo-0.png ../static/files/blog
-	cp dosbox-logo-1.png ../static/files/blog
-	cp dosbox-logo-circles.mp4 ../static/files/blog
-	cp dosbox-logo-circles.gif ../static/files/blog
+	cp dosbox-logo-0.png ../content/tree/files/blog/
+	cp dosbox-logo-1.png ../content/tree/files/blog/
+	cp dosbox-logo-circles.mp4 ../content/tree/files/blog/
+	cp dosbox-logo-circles.gif ../content/tree/files/blog/
 
 fd-100-logo: clean
 	convert logo_001.png -sample '1920x1500!' logo-circles.png
@@ -47,16 +47,24 @@ fd-100-logo: clean
 	convert logo_008.png -sample '1920x1500!' logo-star-centre.png
 	convert logo_009.png -sample '1920x1500!' logo-circle.png
 	convert logo_010.png -sample '1920x1500!' logo-circle-centre.png
-	cp logo-circles.png ../static/files/blog
-	cp logo-line.png ../static/files/blog
-	cp logo-square.png ../static/files/blog
-	cp logo-pentagon.png ../static/files/blog
-	cp logo-star.png ../static/files/blog
-	cp logo-square-centre.png ../static/files/blog
-	cp logo-pentagon-centre.png ../static/files/blog
-	cp logo-star-centre.png ../static/files/blog
-	cp logo-circle.png ../static/files/blog
-	cp logo-circle-centre.png ../static/files/blog
+	cp logo-circles.png ../content/tree/files/blog/
+	cp logo-line.png ../content/tree/files/blog/
+	cp logo-square.png ../content/tree/files/blog/
+	cp logo-pentagon.png ../content/tree/files/blog/
+	cp logo-star.png ../content/tree/files/blog/
+	cp logo-square-centre.png ../content/tree/files/blog/
+	cp logo-pentagon-centre.png ../content/tree/files/blog/
+	cp logo-star-centre.png ../content/tree/files/blog/
+	cp logo-circle.png ../content/tree/files/blog/
+	cp logo-circle-centre.png ../content/tree/files/blog/
+
+gwbasic-ega-color: clean
+	magick gwbasic_000.png -sample '1920x1440!' gwbasic-color.png
+	cp gwbasic-color.png ../content/tree/files/blog/
+
+debug-ega-color: clean
+	magick debug_000.png  -sample '1920x1440!' debug-color.png
+	cp debug-color.png ../content/tree/files/blog/
 
 view:
 	for f in *.png; do xdg-open "$$f"; done
@@ -74,5 +82,6 @@ clean:
 	rm -f dosbox-logo-circles.mp4
 	rm -f dosbox-logo-circles.gif
 	rm -f palette.png
+	rm -f gwbasic-color.png
 
 FORCE:
