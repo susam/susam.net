@@ -1,7 +1,7 @@
 ;;;; Site Generator
 ;;;; ==============
 
-;;;; Copyright (c) 2021-2022 Susam Pal
+;;;; Copyright (c) 2021-2025 Susam Pal
 ;;;;
 ;;;; You can use, copy, modify, merge, publish, distribute,
 ;;;; sublicense, and/or sell copies of it, under the terms of the MIT
@@ -372,7 +372,12 @@ value, next-index."
      (when (and zone-index zone-name)
        (setf zone-link (fstr "~%    <a href=\"~a~a\">~a</a>"
                              root zone-index zone-name)))
-     (aput "zone-link" zone-link ,params)))
+     (aput "zone-link" zone-link ,params)
+     (when (string= blog-name "Notes")
+       (let ((zone-title (render "{{ nick }}'s Quick Notes" ,params)))
+         (if (string= ,dst-path (render "_site/{{ blog-slug }}.html" ,params))
+             (aput "title" zone-title ,params)
+             (aput "subtitle" (fstr " - ~a" zone-title) ,params))))))
 
 (defmacro add-output-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
