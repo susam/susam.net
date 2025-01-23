@@ -82,10 +82,10 @@
   <p>
     This page records some of the associations between various
     numbers, letters of the alphabet, and colours that occur in my
-    mind.  I must mention here that I do not have synaesthesia.
-    Nevertheless, many of these associations are deeply ingrained in
-    my mind due to childhood experiences I've had while learning
-    computers and various mnemonic systems.
+    mind.&nbsp; I must mention here that I do not have
+    synaesthesia.&nbsp; Nevertheless, many of these associations are
+    deeply ingrained in my mind due to childhood experiences I've had
+    while learning computers and various mnemonic systems.
   </p>
   <table class="grid">
     <thead>
@@ -147,48 +147,89 @@
         <td class="c9">/p/, /b/</td>
       </tr>
       <tr>
-        <td class="ca">10</td>
+        <td class="ca">0xA</td>
         <td class="ba">Light Green</td>
         <td class="ca">-</td>
       </tr>
       <tr>
-        <td class="cb">11</td>
+        <td class="cb">0xB</td>
         <td class="bb">Light Cyan</td>
         <td class="cb">-</td>
       </tr>
       <tr>
-        <td class="cc">12</td>
+        <td class="cc">0xC</td>
         <td class="bc">Light Red</td>
         <td class="cc">-</td>
       </tr>
       <tr>
-        <td class="cd">13</td>
+        <td class="cd">0xD</td>
         <td class="bd">Light Magenta</td>
         <td class="cd">-</td>
       </tr>
       <tr>
-        <td class="ce">14</td>
+        <td class="ce">0xE</td>
         <td class="be">Yellow</td>
         <td class="ce">-</td>
       </tr>
       <tr>
-        <td class="cf">15</td>
+        <td class="cf">0xF</td>
         <td class="bf">Bright White</td>
         <td class="cf">-</td>
       </tr>
     </tbody>
   </table>
+  <p>
+    The sections below describe the source of some of these
+    associations.
+  </p>
+  <h2 id="ibm-ega">IBM CGA Colours</h2>
+  <p>
+    The number-colour associations come from early exposure to GWBASIC
+    running on IBM machines with Colour Graphics Adapter (CGA) and
+    Enhanced Graphics Adapter (EGA).&nbsp; On these systems, each
+    supported colour was represented by an integer code: 0 for black,
+    1 for blue, 2 for green, and so on.
+  </p>
   <figure id="gwbasic-color-screenshot">
     <a href="files/blog/gwbasic-color.png"><img src="files/blog/gwbasic-color.png" alt="A screenshot of a GWBASIC program demonstrating the 16 colours in SCREEN 0"></a>
     <figcaption>
-      A GWBASIC program that shows the 16 colours supported in SCREEN 0
+      GWBASIC program demonstrating the colours supported in SCREEN 0
     </figcaption>
   </figure>
+  <p>
+    On IBM CGA machines set to video mode 3, each colour was encoded
+    as a 4-bit number.&nbsp; From the most significant bit to the
+    least significant one, the bits represented intensity, red, green,
+    and blue.&nbsp; For example, the number 1 (binary 0001)
+    represented blue whereas 9 (binary 1001) represented light
+    blue.&nbsp; Further, CGA monitors had special circuit to treat
+    colour 6 in a special way.&nbsp; Normally the number 6 (binary
+    0110) would represent yellow since the red and green signals are
+    turned on.&nbsp; However, the special circuit of CGA monitors
+    reduced the amplitude of the green signal to make the output look
+    brown instead of yellow.
+  </p>
+  <p>
+    The EGA machines supported a total of 64 colours but only a
+    maximum of 16 colours could be used at a time.&nbsp; These chosen
+    colours constitute the palette.&nbsp; The default palette was
+    backward compatible with CGA.
+  </p>
+  <p>
+    Programs that wrote text directly to video memory at address
+    B800:0000 also used these integer codes to display text in
+    different colors.
+  </p>
   <figure id="debug-color-screenshot">
     <a href="files/blog/debug-color.png"><img src="files/blog/debug-color.png" alt="A screenshot of a DEBUG.EXE session demonstrating the 16 colours supported by IBM EGA machines"></a>
     <figcaption>
-      A DEBUG.EXE session that shows the 16 colours supported by IBM EGA machines in MODE 3
+      DEBUG.EXE demonstrating the colours supported in MODE 3
     </figcaption>
   </figure>
+  <p>
+    I still remember quite vividly how exciting it was to use the
+    colour commands to paint the background blue and write text on it
+    in various colours.
+  </p>
 </body>
 </html>
