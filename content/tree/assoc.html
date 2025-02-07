@@ -6,21 +6,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      background: #222;
-      color: #ccc;
-      font-family: courier, monospace;
+      background: #fff;
+      color: #333;
+      font-family: georgia,serif;
       font-size: large;
       line-height: 1.5;
       margin: 0 auto;
       max-width: 40em;
       padding: 0 1em;
     }
+    code {
+      color: #006;
+      font-family: courier,monospace;
+    }
     h1, h2 {
       margin: 1.25em 0 0.25em 0;
       line-height: 1.2;
     }
+    a:link {
+      color: #00e;
+    }
+    a:visited {
+      color: #518;
+    }
+    a:focus, a:hover {
+      color: #03f;
+    }
+    a:active {
+      color: #a00;
+    }
+    a:empty:before {
+      content: "#";
+    }
+    a:empty {
+      visibility: hidden;
+      padding-left: 0.25em;
+    }
+    :hover > a:empty {
+      visibility: visible;
+    }
     table.grid {
       border-collapse: collapse;
+      min-width: 100%;
     }
     table.grid th, table.grid td {
       border-width: thin;
@@ -29,6 +56,12 @@
     table.grid th, table.grid td {
       padding: 0.3em 0.4em;
       border-color: #666;
+    }
+    td {
+      text-align: center;
+    }
+    td.dark {
+      background: #111;
     }
     figure {
       text-align: center;
@@ -41,51 +74,98 @@
       font-size: medium;
       margin: 0.5em 0;
     }
-    .c0 {color: #000; background: #aaa} /*  9.03 */
-    .c1 {color: #00a; background: #aaa} /*  5.71 */
-    .c2 {color: #0a0}                   /*  5.11 */
-    .c3 {color: #0aa}                   /*  5.55 */
-    .c4 {color: #a00; background: #aaa} /*  3.33 */
-    .c5 {color: #a0a; background: #000} /*  3.28 */
-    .c6 {color: #a50}                   /*  3.03 */
-    .c7 {color: #aaa}                   /*  6.84 */
-    .c8 {color: #555; background: #aaa} /*  3.20 */
-    .c9 {color: #55f}                   /*  3.12 */
-    .ca {color: #5f5}                   /* 11.98 */
-    .cb {color: #5ff}                   /* 12.98 */
-    .cc {color: #f55}                   /*  5.06 */
-    .cd {color: #f5f}                   /*  6.05 */
-    .ce {color: #ff5}                   /* 14.91 */
-    .cf {color: #fff}                   /* 15.90 */
-
-    .b0 {background: #000; color: #ccc} /* 13.07 */
-    .b1 {background: #00a; color: #ccc} /*  8.27 */
-    .b2 {background: #0a0; color: #000} /*  6.74 */
-    .b3 {background: #0aa; color: #000} /*  7.33 */
-    .b4 {background: #a00; color: #fff} /*  7.75 */
-    .b5 {background: #a0a; color: #fff} /*  6.38 */
-    .b6 {background: #a50; color: #fff} /*  5.23 */
-    .b7 {background: #aaa; color: #000} /*  9.03 */
-    .b8 {background: #555; color: #fff} /*  7.45 */
-    .b9 {background: #55f; color: #fff} /*  5.08 */
-    .ba {background: #5f5; color: #000} /* 15.82 */
-    .bb {background: #5ff; color: #000} /* 17.13 */
-    .bc {background: #f55; color: #000} /*  6.68 */
-    .bd {background: #f5f; color: #000} /*  7.99 */
-    .be {background: #ff5; color: #000} /* 19.68 */
-    .bf {background: #fff; color: #000} /* 21.00 */
+    .c0 {color: #000; background: #bbb} /* 10.93 */
+    .c1 {color: #00a; background: #ddf} /* 10.03 */
+    .c2 {color: #0a0; background: #dfd} /*  2.87 */
+    .c3 {color: #0aa; background: #dff} /*  2.70 */
+    .c4 {color: #a00; background: #fdd} /*  6.14 */
+    .c5 {color: #a0a; background: #fdf} /*  5.17 */
+    .c6 {color: #a50; background: #fdc} /*  4.10 */
+    .c7 {color: #aaa; background: #eee} /*  2.00 */
+    .c8 {color: #555; background: #ddd} /*  5.48 */
+    .c9 {color: #55f; background: #ddf} /*  3.84 */
+    .ca {color: #5f5}
+    .cb {color: #5ff}
+    .cc {color: #f55}
+    .cd {color: #f5f}
+    .ce {color: #ff5}
+    .cf {color: #fff}
+    .cs {color: #fff}
+    .c0, .c1, .c2, .c3, .c4, .c5, .c6, .c7, .c8,
+    .c9, .ca, .cb, .cc, .cd, .ce, .cf, .cs, .cx, .cks {
+      padding: 0.1em 0.2em;
+      border: medium solid;
+      white-space: nowrap;
+    }
+    .cks {
+      color: linear-gradient(red, blue);
+      background: linear-gradient(90deg, #eee, #444);
+    }
+    .b0 {background: #000; color: #fff}
+    .b1 {background: #00a; color: #fff}
+    .b2 {background: #0a0; color: #fff}
+    .b3 {background: #0aa; color: #fff}
+    .b4 {background: #a00; color: #fff}
+    .b5 {background: #a0a; color: #fff}
+    .b6 {background: #a50; color: #fff}
+    .b7 {background: #aaa; color: #fff}
+    .b8 {background: #555; color: #fff}
+    .b9 {background: #55f; color: #fff}
+    .ba {background: #5f5; color: #000}
+    .bb {background: #5ff; color: #000}
+    .bc {background: #f55; color: #000}
+    .bd {background: #f5f; color: #000}
+    .be {background: #ff5; color: #000}
+    .bf {background: #fff; color: #000}
+    span span + span, div span + span {
+      margin-left: 0.2em;
+    }
+    .example {
+      text-align: center;
+      margin: 1.5em 0;
+    }
+    .example div {
+      margin: 0.25em 0;
+    }
+    table,
+    .c0, .c1, .c2, .c3, .c4, .c5, .c6, .c7,
+    .c8, .c9, .ca, .cb, .cc, .cd, .ce, .cf,
+    .cs, .cx, .cks {
+      font-family: courier,monospace;
+    }
   </style>
 </head>
 <body>
   <h1>Associations</h1>
-  <div>By Susam Pal on 09 Dec 2024</div>
+  <div>By Susam Pal on 07 Feb 2025</div>
   <p>
-    This page records some of the associations between various
-    numbers, letters of the alphabet, and colours that occur in my
-    mind.  I must mention here that I do not have synaesthesia.
-    Nevertheless, many of these associations are deeply ingrained in
-    my mind due to childhood experiences I've had while learning
-    computers and various mnemonic systems.
+    This is a vanity page that records some of the associations
+    between various numbers, phonemes, and colours that occur in my
+    mind.  I must mention here that I do not have synaesthesia.  Many
+    of these connections were shaped by childhood experiences.
+    Notably, two unrelated influences, learning about computers and
+    studying mnemonic systems, have played a significant role in
+    forming these associations.
+  </p>
+  <h2 id="contents">Contents</h2>
+  <ul>
+    <li><a href="#association-table">Association Table</a></li>
+    <li><a href="#ibm-cga-colours">IBM CGA Colours</a></li>
+    <li><a href="#phonetic-number-system">Phonetic Number System</a></li>
+    <li><a href="#colourful-words">Colourful Words</a></li>
+    <li><a href="#colourful-examples">Colourful Examples</a></li>
+    <li><a href="#story-time">Story Time</a>
+      <ul>
+        <li><a href="#bus-route-277">Bus Route 277</a></li>
+        <li><a href="flight-to-boston">Flight to Boston</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+  <h2 id="association-table">Association Table<a href="#association-table"></a></h2>
+  <p>
+    The following table presents a quick summary of these
+    associations.
   </p>
   <table class="grid">
     <thead>
@@ -97,98 +177,1007 @@
     </thead>
     <tbody>
       <tr>
-        <td class="c0">0</td>
+        <td><span class="c0">0</span></td>
         <td class="b0">Black</td>
-        <td class="c0">/s/, /z/</td>
+        <td>
+          <span class="c0">/s/</span>,
+          <span class="c0">/z/</span>
+        </td>
       </tr>
       <tr>
-        <td class="c1">1</td>
+        <td><span class="c1">1</span></td>
         <td class="b1">Blue</td>
-        <td class="c1">/t/, /d/, /θ/, /ð/</td>
+        <td>
+          <span class="c1">/t/</span>,
+          <span class="c1">/d/</span>,
+          <span class="c1">/θ/</span>,
+          <span class="c1">/ð/</span>
+        </td>
       </tr>
       <tr>
-        <td class="c2">2</td>
+        <td><span class="c2">2</span></td>
         <td class="b2">Green</td>
-        <td class="c2">/n/</td>
+        <td>
+          <span class="c2">/n/</span>,
+          <span class="c2">/ŋ/</span>
+        </td>
       </tr>
       <tr>
-        <td class="c3">3</td>
+        <td><span class="c3">3</span></td>
         <td class="b3">Cyan</td>
-        <td class="c3">/m/</td>
+        <td><span class="c3">/m/</span></td>
       </tr>
       <tr>
-        <td class="c4">4</td>
+        <td><span class="c4">4</span></td>
         <td class="b4">Red</td>
-        <td class="c4">/r/</td>
+        <td><span class="c4">/r/</span></td>
       </tr>
       <tr>
-        <td class="c5">5</td>
+        <td><span class="c5">5</span></td>
         <td class="b5">Magenta</td>
-        <td class="c5">/l/</td>
+        <td><span class="c5">/l/</span></td>
       </tr>
       <tr>
-        <td class="c6">6</td>
+        <td><span class="c6">6</span></td>
         <td class="b6">Brown</td>
-        <td class="c6">/tʃ/, /dʒ/, /ʃ/, /ʒ/</td>
+        <td>
+          <span class="c6">/tʃ/</span>,
+          <span class="c6">/dʒ/</span>,
+          <span class="c6">/ʃ/</span>,
+          <span class="c6">/ʒ/</span>
+        </td>
       </tr>
       <tr>
-        <td class="c7">7</td>
+        <td><span class="c7">7</span></td>
         <td class="b7">White</td>
-        <td class="c7">/k/, /g/</td>
+        <td>
+          <span class="c7">/k/</span>,
+          <span class="c7">/g/</span>
+        </td>
       </tr>
       <tr>
-        <td class="c8">8</td>
+        <td><span class="c8">8</span></td>
         <td class="b8">Gray</td>
-        <td class="c8">/f/, /v/</td>
+        <td>
+          <span class="c8">/f/</span>,
+          <span class="c8">/v/</span>
+        </td>
       </tr>
       <tr>
-        <td class="c9">9</td>
+        <td><span class="c9">9</span></td>
         <td class="b9">Light Blue</td>
-        <td class="c9">/p/, /b/</td>
+        <td>
+          <span class="c9">/p/</span>,
+          <span class="c9">/b/</span>
+        </td>
       </tr>
       <tr>
-        <td class="ca">10</td>
+        <td class="dark"><span class="ca">0xA</span></td>
         <td class="ba">Light Green</td>
-        <td class="ca">-</td>
+        <td>-</td>
       </tr>
       <tr>
-        <td class="cb">11</td>
+        <td class="dark"><span class="cb">0xB</span></td>
         <td class="bb">Light Cyan</td>
-        <td class="cb">-</td>
+        <td>-</td>
       </tr>
       <tr>
-        <td class="cc">12</td>
+        <td class="dark"><span class="cc">0xC</span></td>
         <td class="bc">Light Red</td>
-        <td class="cc">-</td>
+        <td>-</td>
       </tr>
       <tr>
-        <td class="cd">13</td>
+        <td class="dark"><span class="cd">0xD</span></td>
         <td class="bd">Light Magenta</td>
-        <td class="cd">-</td>
+        <td>-</td>
       </tr>
       <tr>
-        <td class="ce">14</td>
+        <td class="dark"><span class="ce">0xE</span></td>
         <td class="be">Yellow</td>
-        <td class="ce">-</td>
+        <td>-</td>
       </tr>
       <tr>
-        <td class="cf">15</td>
+        <td class="dark"><span class="cf">0xF</span></td>
         <td class="bf">Bright White</td>
-        <td class="cf">-</td>
+        <td>-</td>
       </tr>
     </tbody>
   </table>
+  <p>
+    I should clarify here that the associations for the hexadecimal
+    numbers 0xA to 0xF are quite weak in my mind.  I rarely ever have
+    a need to think about them in my day-to-day life these days.  But
+    the associations for the numbers 0 to 9 remain quite intact.
+  </p>
+  <h2 id="ibm-cga-colours">IBM CGA Colours<a href="#ibm-cga-colours"></a></h2>
+  <p>
+    The number-colour associations in the
+    <a href="#association-table">assocation table</a> come from early
+    exposure to GWBASIC running on IBM machines with Colour Graphics
+    Adapter (CGA) and Enhanced Graphics Adapter (EGA).  On these
+    systems, each supported colour was represented by an integer code:
+    0 for black, 1 for blue, 2 for green, and so on.
+  </p>
   <figure id="gwbasic-color-screenshot">
     <a href="files/blog/gwbasic-color.png"><img src="files/blog/gwbasic-color.png" alt="A screenshot of a GWBASIC program demonstrating the 16 colours in SCREEN 0"></a>
     <figcaption>
-      A GWBASIC program that shows the 16 colours supported in SCREEN 0
+      GWBASIC program demonstrating the colours supported in SCREEN 0
     </figcaption>
   </figure>
+  <p>
+    On IBM CGA machines set to video mode 3, each colour was encoded
+    as a 4-bit number.  From the most significant bit to the least
+    significant one, the bits represented intensity, red, green, and
+    blue (IRGB).  For example, the number 1 (binary 0001) represented
+    blue whereas 9 (binary 1001) represented light blue.  Further, CGA
+    monitors had special circuit to treat colour 6 in a special way.
+    Normally the number 6 (binary 0110) would represent yellow since
+    the red and green signals are turned on.  However, the special
+    circuit of CGA monitors reduced the amplitude of the green signal
+    to make the output look brown instead of yellow.
+  </p>
+  <p>
+    The EGA machines supported a total of 64 colours but only a
+    maximum of 16 colours could be used at a time.  These 16 colors
+    formed a customisable palette.  The default palette was backward
+    compatible with CGA.
+  </p>
+  <p>
+    Programs that wrote text directly to video memory at address
+    B800:0000 also used these integer codes to display text in
+    different colors.
+  </p>
   <figure id="debug-color-screenshot">
     <a href="files/blog/debug-color.png"><img src="files/blog/debug-color.png" alt="A screenshot of a DEBUG.EXE session demonstrating the 16 colours supported by IBM EGA machines"></a>
     <figcaption>
-      A DEBUG.EXE session that shows the 16 colours supported by IBM EGA machines in MODE 3
+      DEBUG.EXE demonstrating the colours supported in MODE 3
     </figcaption>
   </figure>
+  <p>
+    I still remember quite vividly the excitement of using colour
+    commands to paint the background blue and write text on it with
+    various colours.  As a result of this childhood bias for certain
+    integers representing certain colours, it is a bit disconcerting
+    to me that ANSI control sequences, sort of, use the least
+    significant bit to represent red rather than blue.
+  </p>
+  <figure id="ansi-color-screenshot">
+    <a href="files/blog/ansi-color.png"><img src="files/blog/ansi-color.png" alt="A screenshot of a shell commands demonstrating the 16 ANSI colours"></a>
+    <figcaption>
+      Demonstration of colours produced by ANSI control sequences
+    </figcaption>
+  </figure>
+  <p>
+    In ANSI control sequences for select graphic rendition (SGR), the
+    paremeter value 31 is red, 32 is green, 33 is yellow, 34 is blue,
+    and so on.  I find this reversal of the order of colours a little
+    unsettling.
+  </p>
+  <h2 id="phonetic-number-system">Phonetic Number System<a href="#phonetic-number-system"></a></h2>
+  <p>
+    The number-sound associations in the
+    <a href="#association-table">association table</a> come from a
+    phonetic mnemonic system I learnt as a kid.  I first discovered
+    this system in a book on memory techniques by Harry Lorayne, which
+    I borrowed from a friend.  This mnemonic system assigns a specific
+    set of consonant sounds to each number.  The vowel sounds play no
+    role in this system.
+  </p>
+  <p>
+    As we can see in the table, the sounds /s/ and /z/ are assigned to
+    the number 0, the sounds /t/, /d/, /θ/, and /ð/ are assigned to
+    the number 1, /n/ and /ŋ/ are assigned to 2, /m/ to 3, /r/ to 4,
+    /l/ to 5, /tʃ/, /dʒ/, /ʃ/, and /ʒ/ are all assigned to 6, /k/ and
+    /g/ are assigned to 7, /f/ and /v/ to 8, and finally, /p/ and /b/
+    to 9.
+  </p>
+  <p>
+    There is also a meta-mnemonic system that provides some visual
+    cues to remember these assignments.  I'll briefly describe it
+    here.  The letter "<code>z</code>" is the first letter of "zero"
+    (0).  Typewritten "<code>t</code>" has one downstroke (1), while
+    "<code>n</code>" has two (2), and "<code>m</code>" has three (3).
+    The letter "<code>r</code>" is the last letter of "four" (4).
+    "<code>L</code>" is the roman numeral for 50.  Typewritten
+    "<code>g</code>" when turned around looks like 6.
+    "<code>K</code>" can be imagined as two 7s lying next to each
+    other, with the top one flipped.  A cursive "<code>f</code>" has
+    two loops, just like the shape of 8.  Flipping "<code>P</code>"
+    horizontally makes it look like 9.
+  </p>
+  <p>
+    This meta-mnemonic system is a helpful aid when first learning the
+    phonetic number system, but with practice, it becomes
+    redundant.&nbsp;From here on, I will not discuss it any further
+    and will focus solely on the phonetic number system itself.
+  </p>
+  <p>
+    Since there is a set of consonant sounds assigned to each number,
+    this system allows us to translate words and sentences to numbers
+    and vice versa quite easily.  For example, the word "train"
+    becomes the number 142.  The number 3402 may be translated to the
+    words "more sun" or "mario zone" or whatever else comes to your
+    mind for the sounds /m/, /r/, /s/ or /z/, and /n/ or /ŋ/.
+  </p>
+  <p>
+    Although the primary purpose of this mnemonic system is to
+    translate numbers to memorable words and then later recall the
+    numbers by reversing the process, frequent use of this technique
+    in my childhood days had an unintended side effect.  My mind now
+    instinctively translates arbitrary words into numbers.&nbsp; While
+    this effect has weakened with age, it still lingers, especially
+    when I read signboards, product labels, street names, etc.  The
+    reverse effect remains as well.  For example, if I look at bus
+    numbers or flight numbers or dates, my mind automatically converts
+    them to matching words.
+  </p>
+  <h2 id="colourful-words">Colourful Words<a href="#colourful-words"></a></h2>
+  <p>
+    Although there is no direct mapping between colours and sounds,
+    they can be linked indirectly.  Each consonant sound is associated
+    with a digit and each digit is associated with a colour.  As a
+    result, each consonant sound is indirectly associated with a
+    colour.  For example, the word "planet" can be translated to 9521.
+    The colours associated with this number are light blue, magenta,
+    green, and blue, respectively.  So my mind visualises the word
+    "planet" as
+
+    <!-- PLANET -->
+
+    <span><!--
+      --><span class="c9">9</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c1">1</span><!--
+    --></span>
+
+    or
+
+    <span><!--
+      --><span class="c9">P</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c1">T</span><!--
+    --></span>
+
+    in my mind.
+  </p>
+  <p>
+    My name "Susam" becomes
+
+    <!-- SUSAM -->
+
+    <span><!--
+      --><span class="c0">0</span><!--
+      --><span class="c0">0</span><!--
+      --><span class="c3">3</span><!--
+    --></span>
+
+    or
+
+    <span><!--
+      --><span class="c0">S</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="c0">S</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c3">M</span><!--
+    --></span>.
+
+    It is mostly black and a little bit of cyan.  Apparently, my name
+    is not too colourful.
+  </p>
+  <p>
+    As another example, the word "hydrogen" is visualised as the
+    number
+
+    <!-- HYDROGEN -->
+
+    <span><!--
+      --><span class="c1">1</span><!--
+      --><span class="c4">4</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="c2">2</span><!--
+    --></span>
+
+    or the coloured word
+
+    <span><!--
+      --><span class="cx">H</span><!--
+      --><span class="cx">Y</span><!--
+      --><span class="c1">D</span><!--
+      --><span class="c4">R</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c6">G</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c2">N</span><!--
+    --></span>.&nbsp;
+
+    The colours here are blue, red, brown, and green.
+  </p>
+  <p>
+    Similarly, the word "computer" is visualised as the number
+
+    <!-- COMPUTER -->
+
+    <span><!--
+      --><span class="c7">7</span><!--
+      --><span class="c3">3</span><!--
+      --><span class="c9">9</span><!--
+      --><span class="c1">1</span><!--
+    --></span>
+    or the coloured word
+    <span><!--
+      --><span class="c7">C</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c3">M</span><!--
+      --><span class="c9">P</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="c1">T</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="cx">R</span><!--
+    --></span>.&nbsp;
+
+    The colours here are white, cyan, light blue, and blue.  In case
+    you're wondering why the final "r" is not visualised, that's
+    because I do not always pronounce it.
+  </p>
+  <h2 id="colourful-examples">Colourful Examples<a href="#colourful-examples"></a></h2>
+  <p>
+    The list below presents some more examples of words, numbers, and
+    their colours:
+  </p>
+  <!-- APPLE -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">A</span><!--
+      --><span class="c9">P</span><!--
+      --><span class="c9">P</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c9">9</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- BLUE -->
+  <div class="example">
+    <div><!--
+      --><span class="c9">B</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="c9">9</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- CAT -->
+  <div class="example">
+    <div><!--
+      --><span class="c7">C</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c1">T</span>
+    </div>
+    <div><!--
+      --><span class="c7">7</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span>
+    </div>
+  </div>
+  <!-- DIGIT -->
+  <div class="example">
+    <div><!--
+      --><span class="c1">D</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c6">G</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c1">T</span>
+    </div>
+    <div><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span>
+    </div>
+  </div>
+  <p>
+    Note that the "pp" in "apple" is pronounced as /p/, which
+    corresponds to a single number 9.  That's why "apple" is
+    translated to 95 (not 995).  There is also a certain harmony in
+    the second example.  The word "blue" begins with a blue colour!
+  </p>
+  <!-- ENOUGH -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">E</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="c8">G</span><!--
+      --><span class="c8">H</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c8">8</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- FUNCTION -->
+  <div class="example">
+    <div><!--
+      --><span class="c8">F</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="c7">C</span><!--
+      --><span class="c6">T</span><!--
+      --><span class="c6">I</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c2">N</span>
+    </div>
+    <div><!--
+      --><span class="c8">8</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c7">7</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span>
+    </div>
+  </div>
+  <!-- GREEN -->
+  <div class="example">
+    <div><!--
+      --><span class="c7">G</span><!--
+      --><span class="c4">R</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c2">N</span>
+    </div>
+    <div><!--
+      --><span class="c7">7</span><!--
+      --><span class="c4">4</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span>
+    </div>
+  </div>
+  <!-- HOME -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">H</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c3">M</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c3">3</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <p>
+    The "gh" in "enough" is pronounced /f/, so it is assigned the
+    number 8.  Likewise, the "ti" in "function" produces the sound
+    /ʃ/, which corresponds to the number 6.
+  </p>
+  <!-- ICE -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">I</span><!--
+      --><span class="c0">C</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c0">0</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- JUNE -->
+  <div class="example">
+    <div><!--
+      --><span class="c6">J</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- KNOWLEDGE -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">K</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="cx">W</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="cx">D</span><!--
+      --><span class="c6">G</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- LONDON -->
+  <div class="example">
+    <div><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="c1">D</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c2">N</span>
+    </div>
+    <div><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span>
+    </div>
+  </div>
+  <!-- MATHEMATICS -->
+  <p>
+    The "c" of "ice" is pronounced /s/, so it is assigned the number
+    0.  It is interesting how a long word like "knowledge" yields a
+    small number like 256.
+  </p>
+  <div class="example">
+    <div><!--
+      --><span class="c3">M</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c1">T</span><!--
+      --><span class="c1">H</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c3">M</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c1">T</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c7">C</span><!--
+      --><span class="c0">S</span>
+    </div>
+    <div><!--
+      --><span class="c3">3</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c3">3</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c7">7</span><!--
+      --><span class="c0">0</span>
+    </div>
+  </div>
+  <!-- NUMBER -->
+  <div class="example">
+    <div><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="c3">M</span><!--
+      --><span class="c9">B</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="cx">R</span>
+    </div>
+    <div><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c3">3</span><!--
+      --><span class="c9">9</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- OXYGEN -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">O</span><!--
+      --><span class="cks">X</span><!--
+      --><span class="cx">Y</span><!--
+      --><span class="c6">G</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c2">N</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c7">7</span><!--
+      --><span class="c0">0</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span>
+    </div>
+  </div>
+  <!-- PARADOX -->
+  <div class="example">
+    <div><!--
+      --><span class="c9">P</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c4">R</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c1">D</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="cks">X</span>
+    </div>
+    <div><!--
+      --><span class="c9">9</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c4">4</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span><!--
+      --><span class="c7">7</span><!--
+      --><span class="c0">0</span>
+    </div>
+  </div>
+  <p>
+    The "th" in "mathematics" produces the sound /θ/, which
+    corresponds to the number 1.  The word "number" has the number
+    239.  Like I mentioned earlier, I do not always pronounce the
+    final "r", so I do not assign a number to it.&nbsp; However,
+    someone who does pronounce it might assign 2394 to the word
+    "number".
+  </p>
+  <p>
+    The "x" in "oxygen" and "paradox" requires some discussion.&nbsp;
+    In both words, the "x" is pronounced as /ks/, so the number 70 is
+    assigned to it.  The colours associated with 70 are white and
+    black.  While I personally visualise "x" in black in this case,
+    its connection to both white and black is represented by a grey
+    gradient in the above list.
+  </p>
+  <!-- QUIZ -->
+  <div class="example">
+    <div><!--
+      --><span class="c7">Q</span><!--
+      --><span class="cx">U</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c0">Z</span>
+    </div>
+    <div><!--
+      --><span class="c7">7</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c0">0</span>
+    </div>
+  </div>
+  <!-- RED -->
+  <div class="example">
+    <div><!--
+      --><span class="c4">R</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c1">D</span>
+    </div>
+    <div><!--
+      --><span class="c4">4</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span>
+    </div>
+  </div>
+  <!-- SILICON -->
+  <div class="example">
+    <div><!--
+      --><span class="c0">S</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c7">C</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c2">N</span>
+    </div>
+    <div><!--
+      --><span class="c0">0</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c7">7</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span>
+    </div>
+  </div>
+  <!-- TINT -->
+  <div class="example">
+    <div><!--
+      --><span class="c1">T</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="c1">T</span>
+    </div>
+    <div><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c1">1</span>
+    </div>
+  </div>
+  <p>
+    The word "red" begins with red colour!  The "c" in "silicon" is
+    pronounced /k/, so the number 7 is assigned to it.
+  </p>
+  <!-- UNIVERSE -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">U</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c8">V</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c4">R</span><!--
+      --><span class="c0">S</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c8">8</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c4">4</span><!--
+      --><span class="c0">0</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- VINTAGE -->
+  <div class="example">
+    <div><!--
+      --><span class="c8">V</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="c1">T</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c6">G</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="c8">8</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <!-- WIND -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">W</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="c1">D</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c1">1</span>
+    </div>
+  </div>
+  <!-- XENON -->
+  <div class="example">
+    <div><!--
+      --><span class="c0">X</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c2">N</span>
+    </div>
+    <div><!--
+      --><span class="c0">0</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span>
+    </div>
+  </div>
+  <!-- YACHT -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">Y</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="cx">C</span><!--
+      --><span class="cx">H</span><!--
+      --><span class="c1">T</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c1">1</span>
+    </div>
+  </div>
+  <!-- ZERO -->
+  <div class="example">
+    <div><!--
+      --><span class="c0">Z</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="c4">R</span><!--
+      --><span class="cx">O</span>
+    </div>
+    <div><!--
+      --><span class="c0">0</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c4">4</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <p>
+    Here, the "x" in "xenon" is pronounced /z/, so it is assigned the
+    number 0.  It is interesting how the entire word "yacht" reduces
+    to the single-digit number 1.
+  </p>
+  <h2 id="story-time">Story Time<a href="#story-time"></a></h2>
+  <p>
+    Do these associations offer real benefits in daily life?  I doubt
+    it.  Even if they do, I'm sure the advantage is not too
+    significant.  However, they do make arbitrary numbers, words, IP
+    addresses, etc. more engaging and vivid.  That said, they can
+    sometimes be surprisingly effective in retaining obscure facts for
+    a very long time.  In the next sections, I'll share a few
+    examples.
+  </p>
+  <h3 id="bus-route-277">Bus Route 277<a href="#bus-route-277"></a></h3>
+  <p>
+    One way to travel from Dalston to the Isle of Dogs in London is by
+    taking bus 277.  However, if you don't use this route frequently,
+    you might forget the bus number after a few months.  Even if you
+    vaguely recall it, there's a chance for confusion.  Was it 227? Or
+    277? Or maybe 217?
+  </p>
+  <p>
+    This is where number-sound associations can come in handy.  When I
+    first stumbled upon this bus number, the following words
+    immediately popped into my mind.
+  </p>
+  <!-- NEW COOK -->
+  <div class="example">
+    <div><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">E</span><!--
+      --><span class="cx">W</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c7">C</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="cx">O</span><!--
+      --><span class="c7">K</span>
+    </div>
+    <div><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c7">7</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c7">7</span>
+    </div>
+  </div>
+  <p>
+    There is bit of green and there is a "new cook".  It is not hard
+    to link this colour and the words to the route with some playful
+    imagination.  Perhaps this bus delivers a new cook every week to a
+    picturesque island filled with cheerful dogs.  This cook, sporting
+    a dull stone hat, arrives with one mission: to prepare fresh
+    vegetables for the dogs!  The scene does not need to make logical
+    sense.  In fact, the more absurd it is, the easier it becomes to
+    recall it!
+  </p>
+  <p>
+    Now anytime, we think of Dalston and Isle of Dogs, we might recall
+    <em>dull stone</em> and an <em>island filled with cheerful
+    dogs</em>, and that might immediately remind us of the <em>new
+    cook</em> who must prepare green vegetables for the dogs.  We now
+    have everything we need to reconstruct the bus number.  We can
+    translate "new cook" to 277.  The fact that 2 is associated with
+    green serves as an additional confirmation if we recall that the
+    new cook's task is to cook green vegetables.
+  </p>
+  <h3 id="flight-to-boston">Flight to Boston</h3>
+  <p>
+    My first-ever international flight was to Boston more than 14
+    years ago, arriving on flight BA 215.  I still remember that
+    flight number because when I first saw the number, the following
+    words popped up in my mind:
+  </p>
+  <!-- ANT HILL -->
+  <div class="example">
+    <div><!--
+      --><span class="cx">A</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="c1">T</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cx">H</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="c5">L</span>
+    </div>
+    <div><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <p>
+    The departure time was 16:25 which brought up the following words:
+  </p>
+  <!-- TAJ NILE -->
+  <div class="example">
+    <div><!--
+      --><span class="c1">T</span><!--
+      --><span class="cx">A</span><!--
+      --><span class="c6">J</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">N</span><!--
+      --><span class="cx">I</span><!--
+      --><span class="c5">L</span><!--
+      --><span class="cx">E</span>
+    </div>
+    <div><!--
+      --><span class="c1">1</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c6">6</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c2">2</span><!--
+      --><span class="cs">&nbsp;</span><!--
+      --><span class="c5">5</span><!--
+      --><span class="cs">&nbsp;</span>
+    </div>
+  </div>
+  <p>
+    Perhaps the boss of the flight crew lives in an ant hill and holds
+    the world record for the fastest flight from the Taj Mahal to the
+    Nile!  Now Boston might remind us of BOS (the airport code) which
+    would remind us of <em>boss</em>.  What's peculiar about this
+    boss?  The boss lives in an <em>ant hill</em> which we translate
+    to 215.  The boss also holds a world record, linking us to the
+    words <em>Taj</em> and <em>Nile</em> which we can now convert to
+    16:25.
+  </p>
+  <h2 id="conclusion">Conclusion<a href="#conclusion"></a></h2>
+  <p>
+    In the end, these number-colour-sound connections are simply a fun
+    little habit of mine.  It's not something I really rely on every
+    day, but it definitely makes arbitrary numbers and words feel a
+    bit more alive!  It's kind of like creating a little imaginary
+    world where everything is connected, making even the most boring
+    facts a bit more fun.  Maybe it doesn't offer huge benefits, but
+    it's certainly a quirky way to keep things interesting!
+  </p>
 </body>
 </html>
