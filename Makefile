@@ -338,7 +338,7 @@ check-copyright:
 	@echo Done; echo
 
 check-entities:
-	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html ' [<>&] ' content; [ $$? = 1 ]
+	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-mathjax:

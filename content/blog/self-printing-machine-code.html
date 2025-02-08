@@ -82,12 +82,12 @@ FC: no differences encountered</samp>
   clears the direction flag.  The purpose of this instruction is
   explained later.  The next instruction sets the register CL to 0xc
   (decimal 12).  The register CH is already set to 0 by default when a
-  .COM program starts.  Thus setting the register CL to 0 effectively
-  sets the entire register CX to 0xc.  The register CX is used as a
-  loop counter for the <code>loop 0x103</code> instruction that comes
-  later.  Everytime this loop instruction executes, it decrements CX
-  and makes a near jump to offset 0x103 if CX is not 0.  This results
-  in 12 iterations of the loop.
+  .COM program starts.  Thus setting the register CL to 0xc
+  effectively sets the entire register CX to 0xc.  The register CX is
+  used as a loop counter for the <code>loop 0x103</code> instruction
+  that comes later.  Everytime this loop instruction executes, it
+  decrements CX and makes a near jump to offset 0x103 if CX is not 0.
+  This results in 12 iterations of the loop.
 </p>
 <p>
   In each iteration of the loop, the instructions from offset 0x103 to
@@ -382,16 +382,18 @@ C:\&gt;</samp>
   This output looks very similar to the previous one except that the
   byte value 0x0a is rendered as a line break in this output whereas
   in the previous output this byte value is represented as a circle in
-  a box.  This method would not have worked if there were any control
-  characters such as backspace or carriage return that result in
-  characters being erased in the displayed output.
+  a box.  This method of visually inspecting the output would not have
+  worked very well if there were any control characters such as
+  backspace or carriage return that result in characters being erased
+  in the displayed output.
 </p>
 <p>
   A proper way to verify that the output of the program represents the
-  bytes of the program would be to find each symbol in the output in a
-  chart for code page 437 and confirm that the byte value of each
-  symbol matches each byte value in the program.  Here is one such
-  chart that approximates the symbols in code page 437 with Unicode
+  bytes of the program would be to take each symbol from the output of
+  the program, then look it up in a chart for code page 437, and
+  confirm that the byte value of each symbol matches each byte value
+  that makes the program.  Here is one such chart that approximates
+  the symbols in code page 437 with Unicode
   symbols: <a href="code/cp437/cp437.html">cp437.html</a>.
 </p>
 <p>
