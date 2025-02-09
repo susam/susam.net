@@ -1,0 +1,33 @@
+<!-- date: 2023-12-24 -->
+<!-- title: FXYT 0.2.0 -->
+<!-- tag: Web, Graphics, Programming, Technology, Release -->
+<p>
+  FXYT 0.2.0 is a minor update of FXYT, a tiny, stack-oriented, canvas
+  colouring language written in postfix notation with only 36 simple
+  commands.  This update specifies and implements a much stricter
+  definition of the <code>F</code> command that sets the frame
+  interval.  The problem with the earlier definition as well as
+  implementation was that the <code>F</code> command was evaluated for
+  every cell in the canvas and the frame interval was set for every
+  such interval.  This meant that the frame interval that would be set
+  for the next frame would depend on the order in which the evaluation
+  occurred.  See section
+  <a href="https://github.com/susam/fxyt#frame-interval">Frame
+  Interval</a> of the README for the complete details.
+</p>
+<p>
+  This update now ensures that a coordinate-dependent frame interval
+  set with the <code>F</code> command behaves uniformly across any
+  implementation of FXYT regardless of the order of evaluation.  This
+  is done by ensuring that while the command <code>F</code> is
+  evaluated for all cells, it is only the frame interval value found
+  during the evaluation of cell (0, 0) that is honoured as the frame
+  interval for the next frame.
+</p>
+<p>
+  The new update is now available at
+  <a href="../../../fxyt.html">fxyt.html</a>.  You are very welcome to
+  try it out and play with it.  If you come up with any interesting
+  demos, please do
+  <a href="https://github.com/susam/fxyt/issues">share them here</a>.
+</p>
