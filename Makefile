@@ -138,8 +138,10 @@ backup:
 	ls -lh /opt/cache/
 	df -h /
 
+BOT_RE = tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
+
 follow-log:
-	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|woff|xml)|tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google"
+	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|woff|xml)|$(BOT_RE)"
 
 follow-post:
 	tail -F /opt/log/form/form.log | grep POST
@@ -160,6 +162,8 @@ follow-visit:
 	    tail -n +"$$(( $$prev_lines + 1 ))" /tmp/visits.txt; \
 	    echo; \
 	    echo "[$$(date +"%Y-%m-%d %H:%M:%S")] new visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
+	  else \
+	    printf '.'; \
 	  fi; \
 	  sleep 60; \
 	done
@@ -205,8 +209,8 @@ lazy-cache-visits:
 	else make cache-visits FILE=/var/log/nginx/access.log*; fi
 
 cache-visits:
-	sudo zgrep -h ' 200 ' $(FILE) | make filter-visitors > /tmp/visitors.txt
-	sudo zgrep -h ' 200 ' $(FILE) | make filter-visits > /tmp/visits.txt
+	sudo zgrep -h ' 200 ' $(FILE) | grep -vE "$(BOT_RE)" | make filter-visitors > /tmp/visitors.txt
+	sudo zgrep -h ' 200 ' $(FILE) | grep -vE "$(BOT_RE)" | make filter-visits > /tmp/visits.txt
 
 clean-visits:
 	rm -f /tmp/visitors.txt /tmp/visits.txt
@@ -374,7 +378,7 @@ check-sentence-space:
 tidy: dist
 	find _site -name "*.html" | while read -r page; do \
 	  echo Tidying "$$page"; \
-	  tidy -q --markup no --warn-proprietary-attributes no "$$page" || exit 1; \
+	  tidy -q -e --warn-proprietary-attributes no "$$page" || exit 1; \
 	done
 	@echo Done; echo
 
@@ -540,10 +544,6 @@ post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
 pub: cu mirror
-
-main:
-	git push -f origin main
-	ssh -t susam.net "cd /opt/susam.net/ && sudo git checkout main && sudo git reset --hard HEAD~5 && sudo git pull && sudo make live && sudo systemctl restart nginx form && sudo systemctl --no-pager status nginx form"
 
 cu:
 	git push origin main
