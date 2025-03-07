@@ -19,7 +19,7 @@
       color: #006;
       font-family: courier,monospace;
     }
-    h1, h2 {
+    h1, h2, h3 {
       margin: 1.25em 0 0.25em 0;
       line-height: 1.2;
     }
@@ -61,7 +61,7 @@
       text-align: center;
     }
     td.dark {
-      background: #111;
+      background: #333;
     }
     figure {
       text-align: center;
@@ -133,6 +133,22 @@
     .cs, .cx, .cks {
       font-family: courier,monospace;
     }
+    hr {
+      margin-top: 1.5em;
+      margin-bottom: 1em;
+      border: 0;
+      border-bottom: 0.15em dotted #999;
+    }
+    footer {
+      text-align: center;
+    }
+    nav a {
+      margin-right: 1.5em;
+      line-height: 2.5;
+    }
+    nav a:last-child  {
+      margin-right: 0;
+    }
   </style>
 </head>
 <body>
@@ -140,9 +156,9 @@
   <div>By Susam Pal on 07 Feb 2025</div>
   <p>
     This is a vanity page that records some of the associations
-    between various numbers, phonemes, and colours that occur in my
-    mind.  I must mention here that I do not have synaesthesia.  Many
-    of these connections were shaped by childhood experiences.
+    between various numbers, colours, and phonemes as they appear in
+    my mind.  I must mention here that I do not have synaesthesia.
+    Many of these connections were shaped by childhood experiences.
     Notably, two unrelated influences, learning about computers and
     studying mnemonic systems, have played a significant role in
     forming these associations.
@@ -153,19 +169,16 @@
     <li><a href="#ibm-cga-colours">IBM CGA Colours</a></li>
     <li><a href="#phonetic-number-system">Phonetic Number System</a></li>
     <li><a href="#colourful-words">Colourful Words</a></li>
-    <li><a href="#colourful-examples">Colourful Examples</a></li>
-    <li><a href="#story-time">Story Time</a>
-      <ul>
-        <li><a href="#bus-route-277">Bus Route 277</a></li>
-        <li><a href="flight-to-boston">Flight to Boston</a></li>
-      </ul>
-    </li>
+    <li><a href="#more-examples">More Examples</a></li>
+    <li><a href="#story-time">Story Time</a></li>
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
   <h2 id="association-table">Association Table<a href="#association-table"></a></h2>
   <p>
-    The following table presents a quick summary of these
-    associations.
+    The following table presents a quick summary of the associations
+    between numbers, colours, and sounds.  The sounds in the third
+    column are represented using the International Phonetic Alphabet
+    (IPA) notation.
   </p>
   <table class="grid">
     <thead>
@@ -284,19 +297,27 @@
     </tbody>
   </table>
   <p>
+    You might notice that the shade chosen for white in the table
+    above looks more like grey.  That's because it approximates the
+    colour of white text on IBM CGA monitors.  On a bright white
+    background, this shade indeed appears grey.  However, on the dark
+    backgrounds common in early computing, it looked white, as
+    demonstrated in the screenshots in the next section.
+  </p>
+  <p>
     I should clarify here that the associations for the hexadecimal
-    numbers 0xA to 0xF are quite weak in my mind.  I rarely ever have
+    numbers 0xA to 0xF are rather weak in my mind.  I rarely ever have
     a need to think about them in my day-to-day life these days.  But
-    the associations for the numbers 0 to 9 remain quite intact.
+    the associations for the numbers 0 to 9 remain fairly intact.
   </p>
   <h2 id="ibm-cga-colours">IBM CGA Colours<a href="#ibm-cga-colours"></a></h2>
   <p>
     The number-colour associations in the
-    <a href="#association-table">assocation table</a> come from early
-    exposure to GWBASIC running on IBM machines with Colour Graphics
-    Adapter (CGA) and Enhanced Graphics Adapter (EGA).  On these
-    systems, each supported colour was represented by an integer code:
-    0 for black, 1 for blue, 2 for green, and so on.
+    <a href="#association-table">assocation table</a> come from my
+    early exposure to GWBASIC running on IBM machines with Colour
+    Graphics Adapter (CGA) and Enhanced Graphics Adapter (EGA).  On
+    these systems, each supported colour was represented by an integer
+    code: 0 for black, 1 for blue, 2 for green, and so on.
   </p>
   <figure id="gwbasic-color-screenshot">
     <a href="files/blog/gwbasic-color.png"><img src="files/blog/gwbasic-color.png" alt="A screenshot of a GWBASIC program demonstrating the 16 colours in SCREEN 0"></a>
@@ -310,22 +331,22 @@
     significant one, the bits represented intensity, red, green, and
     blue (IRGB).  For example, the number 1 (binary 0001) represented
     blue whereas 9 (binary 1001) represented light blue.  Further, CGA
-    monitors had special circuit to treat colour 6 in a special way.
-    Normally the number 6 (binary 0110) would represent yellow since
+    monitors had special circuits to treat colour 6 differently.
+    Normally, the number 6 (binary 0110) would represent yellow since
     the red and green signals are turned on.  However, the special
     circuit of CGA monitors reduced the amplitude of the green signal
     to make the output look brown instead of yellow.
   </p>
   <p>
     The EGA machines supported a total of 64 colours but only a
-    maximum of 16 colours could be used at a time.  These 16 colors
-    formed a customisable palette.  The default palette was backward
-    compatible with CGA.
+    maximum of 16 colours could be used at a time.  These 16 colours
+    formed a customisable palette, with the default palette being
+    backward compatible with CGA.
   </p>
   <p>
     Programs that wrote text directly to video memory at address
     B800:0000 also used these integer codes to display text in
-    different colors.
+    different colours.
   </p>
   <figure id="debug-color-screenshot">
     <a href="files/blog/debug-color.png"><img src="files/blog/debug-color.png" alt="A screenshot of a DEBUG.EXE session demonstrating the 16 colours supported by IBM EGA machines"></a>
@@ -334,12 +355,13 @@
     </figcaption>
   </figure>
   <p>
-    I still remember quite vividly the excitement of using colour
-    commands to paint the background blue and write text on it with
-    various colours.  As a result of this childhood bias for certain
-    integers representing certain colours, it is a bit disconcerting
-    to me that ANSI control sequences, sort of, use the least
-    significant bit to represent red rather than blue.
+    I still fondly remember the excitement of using colour commands to
+    paint the background blue and write text on it with various
+    colours.  That early experience left me with a preference for
+    certain numbers corresponding to certain colours.  Because of
+    this, I find it a bit disconcerting that ANSI control sequences,
+    in a way, use the least significant bit to represent red rather
+    than blue.
   </p>
   <figure id="ansi-color-screenshot">
     <a href="files/blog/ansi-color.png"><img src="files/blog/ansi-color.png" alt="A screenshot of a shell commands demonstrating the 16 ANSI colours"></a>
@@ -349,9 +371,9 @@
   </figure>
   <p>
     In ANSI control sequences for select graphic rendition (SGR), the
-    paremeter value 31 is red, 32 is green, 33 is yellow, 34 is blue,
-    and so on.  I find this reversal of the order of colours a little
-    unsettling.
+    parameter value 31 represents red, 32 represents green, 33
+    represents yellow, 34 represents blue, and so on.  I find this
+    reversal of the order of colours a little unsettling.
   </p>
   <h2 id="phonetic-number-system">Phonetic Number System<a href="#phonetic-number-system"></a></h2>
   <p>
@@ -359,9 +381,9 @@
     <a href="#association-table">association table</a> come from a
     phonetic mnemonic system I learnt as a kid.  I first discovered
     this system in a book on memory techniques by Harry Lorayne, which
-    I borrowed from a friend.  This mnemonic system assigns a specific
-    set of consonant sounds to each number.  The vowel sounds play no
-    role in this system.
+    I had borrowed from a friend.  This mnemonic system assigns a
+    specific set of consonant sounds to each number.  The vowel sounds
+    play no role in this system.
   </p>
   <p>
     As we can see in the table, the sounds /s/ and /z/ are assigned to
@@ -380,16 +402,16 @@
     The letter "<code>r</code>" is the last letter of "four" (4).
     "<code>L</code>" is the roman numeral for 50.  Typewritten
     "<code>g</code>" when turned around looks like 6.
-    "<code>K</code>" can be imagined as two 7s lying next to each
+    "<code>K</code>" can be imagined as two 7s placed next to each
     other, with the top one flipped.  A cursive "<code>f</code>" has
     two loops, just like the shape of 8.  Flipping "<code>P</code>"
     horizontally makes it look like 9.
   </p>
   <p>
-    This meta-mnemonic system is a helpful aid when first learning the
-    phonetic number system, but with practice, it becomes
-    redundant.&nbsp;From here on, I will not discuss it any further
-    and will focus solely on the phonetic number system itself.
+    While helpful in the beginning, this meta-mnemonic system becomes
+    unnecessary as one gains fluency in the phonetic number system.
+    The meta-mnemonic system is not the focus of this article.  I'll
+    focus solely on the phonetic number system here.
   </p>
   <p>
     Since there is a set of consonant sounds assigned to each number,
@@ -403,13 +425,13 @@
     Although the primary purpose of this mnemonic system is to
     translate numbers to memorable words and then later recall the
     numbers by reversing the process, frequent use of this technique
-    in my childhood days had an unintended side effect.  My mind now
-    instinctively translates arbitrary words into numbers.&nbsp; While
+    in my childhood days had an unintended side effect.  My mind began
+    instinctively translating arbitrary words into numbers.  While
     this effect has weakened with age, it still lingers, especially
     when I read signboards, product labels, street names, etc.  The
     reverse effect remains as well.  For example, if I look at bus
-    numbers or flight numbers or dates, my mind automatically converts
-    them to matching words.
+    route numbers, flight numbers, dates, etc. my mind automatically
+    converts them to matching words.
   </p>
   <h2 id="colourful-words">Colourful Words<a href="#colourful-words"></a></h2>
   <p>
@@ -419,8 +441,8 @@
     result, each consonant sound is indirectly associated with a
     colour.  For example, the word "planet" can be translated to 9521.
     The colours associated with this number are light blue, magenta,
-    green, and blue, respectively.  So my mind visualises the word
-    "planet" as
+    green, and blue, respectively.  The word "planet" is thus
+    visualised as
 
     <!-- PLANET -->
 
@@ -440,9 +462,7 @@
       --><span class="c2">N</span><!--
       --><span class="cx">E</span><!--
       --><span class="c1">T</span><!--
-    --></span>
-
-    in my mind.
+    --></span>.
   </p>
   <p>
     My name "Susam" becomes
@@ -466,7 +486,24 @@
     --></span>.
 
     It is mostly black and a little bit of cyan.  Apparently, my name
-    is not too colourful.
+    isn't bursting with colour.  I do like the cyan in it though.  I
+    quite like the fact that my initials "SP" translate to
+
+    <!-- SP -->
+    <span><!--
+      --><span class="c0">0</span><!--
+      --><span class="c9">9</span><!--
+    --></span>
+
+    and
+
+    <span><!--
+      --><span class="c0">S</span><!--
+      --><span class="c9">P</span><!--
+    --></span>,
+
+    as they contain my favourite numbers, 0 and 9, along with my
+    favourite colors, black and light blue!
   </p>
   <p>
     As another example, the word "hydrogen" is visualised as the
@@ -492,7 +529,7 @@
       --><span class="c6">G</span><!--
       --><span class="cx">E</span><!--
       --><span class="c2">N</span><!--
-    --></span>.&nbsp;
+    --></span>.
 
     The colours here are blue, red, brown, and green.
   </p>
@@ -517,13 +554,13 @@
       --><span class="c1">T</span><!--
       --><span class="cx">E</span><!--
       --><span class="cx">R</span><!--
-    --></span>.&nbsp;
+    --></span>.
 
     The colours here are white, cyan, light blue, and blue.  In case
     you're wondering why the final "r" is not visualised, that's
     because I do not always pronounce it.
   </p>
-  <h2 id="colourful-examples">Colourful Examples<a href="#colourful-examples"></a></h2>
+  <h2 id="more-examples">More Examples<a href="#more-examples"></a></h2>
   <p>
     The list below presents some more examples of words, numbers, and
     their colours:
@@ -594,7 +631,7 @@
     Note that the "pp" in "apple" is pronounced as /p/, which
     corresponds to a single number 9.  That's why "apple" is
     translated to 95 (not 995).  There is also a certain harmony in
-    the second example.  The word "blue" begins with a blue colour!
+    the second example.  The word "blue" begins with blue!
   </p>
   <!-- ENOUGH -->
   <div class="example">
@@ -844,13 +881,13 @@
     The "th" in "mathematics" produces the sound /θ/, which
     corresponds to the number 1.  The word "number" has the number
     239.  Like I mentioned earlier, I do not always pronounce the
-    final "r", so I do not assign a number to it.&nbsp; However,
+    final "r", so I do not assign a number to it.  However,
     someone who does pronounce it might assign 2394 to the word
     "number".
   </p>
   <p>
-    The "x" in "oxygen" and "paradox" requires some discussion.&nbsp;
-    In both words, the "x" is pronounced as /ks/, so the number 70 is
+    The "x" in "oxygen" and "paradox" requires some discussion.  In
+    both words, the "x" is pronounced as /ks/, so the number 70 is
     assigned to it.  The colours associated with 70 are white and
     black.  While I personally visualise "x" in black in this case,
     its connection to both white and black is represented by a grey
@@ -921,7 +958,7 @@
     </div>
   </div>
   <p>
-    The word "red" begins with red colour!  The "c" in "silicon" is
+    The word "red" begins with red!  The "c" in "silicon" is
     pronounced /k/, so the number 7 is assigned to it.
   </p>
   <!-- UNIVERSE -->
@@ -1041,17 +1078,16 @@
   <p>
     Do these associations offer real benefits in daily life?  I doubt
     it.  Even if they do, I'm sure the advantage is not too
-    significant.  However, they do make arbitrary numbers, words, IP
-    addresses, etc. more engaging and vivid.  That said, they can
-    sometimes be surprisingly effective in retaining obscure facts for
-    a very long time.  In the next sections, I'll share a few
-    examples.
+    significant.  However, they do make arbitrary numbers, words,
+    etc. more engaging and vivid.  That said, they can sometimes be
+    surprisingly effective in retaining obscure facts for a very long
+    time.  Let me share a few examples in the next few sections.
   </p>
-  <h3 id="bus-route-277">Bus Route 277<a href="#bus-route-277"></a></h3>
+  <h3 id="bus-to-the-isle">Bus to the Isle<a href="#bus-to-the-isle"></a></h3>
   <p>
     One way to travel from Dalston to the Isle of Dogs in London is by
     taking bus 277.  However, if you don't use this route frequently,
-    you might forget the bus number after a few months.  Even if you
+    you might forget the route number after a few months.  Even if you
     vaguely recall it, there's a chance for confusion.  Was it 227? Or
     277? Or maybe 217?
   </p>
@@ -1089,26 +1125,26 @@
     imagination.  Perhaps this bus delivers a new cook every week to a
     picturesque island filled with cheerful dogs.  This cook, sporting
     a dull stone hat, arrives with one mission: to prepare fresh
-    vegetables for the dogs!  The scene does not need to make logical
-    sense.  In fact, the more absurd it is, the easier it becomes to
-    recall it!
+    vegetables for the dogs!
   </p>
   <p>
-    Now anytime, we think of Dalston and Isle of Dogs, we might recall
-    <em>dull stone</em> and an <em>island filled with cheerful
-    dogs</em>, and that might immediately remind us of the <em>new
-    cook</em> who must prepare green vegetables for the dogs.  We now
-    have everything we need to reconstruct the bus number.  We can
-    translate "new cook" to 277.  The fact that 2 is associated with
-    green serves as an additional confirmation if we recall that the
-    new cook's task is to cook green vegetables.
+    The scene does not need to make logical sense.  In fact, the more
+    absurd it is, the easier it is to remember!  Now anytime, we think
+    of Dalston and Isle of Dogs, we might recall <em>dull stone</em>
+    and an <em>island filled with cheerful dogs</em>, and that might
+    immediately remind us of the <em>new cook</em> who must prepare
+    green vegetables for the dogs.  We now have everything we need to
+    reconstruct the bus number.  We can translate "new cook" to 277.
+    The fact that 2 is associated with green serves as an additional
+    confirmation if we recall that the new cook's task is to cook
+    green vegetables.
   </p>
-  <h3 id="flight-to-boston">Flight to Boston</h3>
+  <h3 id="flight-to-boston">Flight to Boston<a href="#flight-to-boston"></a></h3>
   <p>
-    My first-ever international flight was to Boston more than 14
-    years ago, arriving on flight BA 215.  I still remember that
-    flight number because when I first saw the number, the following
-    words popped up in my mind:
+    My first international trip was to Boston more than 14 years ago.
+    I flew to Boston on flight BA 215.  I still remember that flight
+    number because when I first saw it, the following translation came
+    to mind:
   </p>
   <!-- ANT HILL -->
   <div class="example">
@@ -1134,7 +1170,8 @@
     </div>
   </div>
   <p>
-    The departure time was 16:25 which brought up the following words:
+    The departure time was 16:25 which brought up the following
+    translation:
   </p>
   <!-- TAJ NILE -->
   <div class="example">
@@ -1162,22 +1199,31 @@
   <p>
     Perhaps the boss of the flight crew lives in an ant hill and holds
     the world record for the fastest flight from the Taj Mahal to the
-    Nile!  Now Boston might remind us of BOS (the airport code) which
-    would remind us of <em>boss</em>.  What's peculiar about this
-    boss?  The boss lives in an <em>ant hill</em> which we translate
-    to 215.  The boss also holds a world record, linking us to the
-    words <em>Taj</em> and <em>Nile</em> which we can now convert to
-    16:25.
+    Nile!  Now Boston might remind us of the imaginary <em>boss</em>.
+    What's peculiar about this boss?  The boss lives in an <em>ant
+    hill</em> which we translate to 215.  The boss also holds a world
+    record reminding us of <em>Taj</em> and <em>Nile</em> which we
+    then convert to 16:25.
   </p>
   <h2 id="conclusion">Conclusion<a href="#conclusion"></a></h2>
   <p>
-    In the end, these number-colour-sound connections are simply a fun
-    little habit of mine.  It's not something I really rely on every
-    day, but it definitely makes arbitrary numbers and words feel a
-    bit more alive!  It's kind of like creating a little imaginary
-    world where everything is connected, making even the most boring
-    facts a bit more fun.  Maybe it doesn't offer huge benefits, but
-    it's certainly a quirky way to keep things interesting!
+    At the end of the day, these number-colour-sound connections are
+    part of a little personal habit of mine.  I do not rely on them
+    every day but they do make arbitrary words and numbers more
+    memorable.  They weave a layer of imagination into the mundane.
+    This quirky habit may not serve any real purpose but it certainly
+    makes ordinary information more vivid and interesting.
   </p>
+<footer>
+  <hr>
+  <nav>
+    <a href="./">Home</a>
+    <a href="./links.html">Links</a>
+    <a href="./about.html">About</a>
+    <a href="https://github.com/susam">GitHub</a>
+    <a href="https://mastodon.social/@susam">Mastodon</a>
+  </nav>
+  <p>&copy; 2025 Susam Pal</p>
+</footer>
 </body>
 </html>
