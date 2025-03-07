@@ -32,6 +32,7 @@ server {
     rewrite ^/fxyt$ /fxyt.html permanent;
     rewrite ^/inv$ /invaders.html permanent;
     rewrite ^/invaders$ /invaders.html permanent;
+    rewrite ^/myrgb$ /myrgb.html permanent;
     # Redirects.
     rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /feed.xml redirect;
     rewrite ^/blog/obfuscating-main/$ /obfuscated-main.html permanent;

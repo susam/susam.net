@@ -1,70 +1,124 @@
 <!-- date: 2025-02-23 -->
 <!-- title: MathB.in Is Shutting Down -->
 <!-- tag: Web, Technology -->
+<!-- import: extra.css -->
 <p>
-  About 13 years ago, on a quiet Saturday night, I sat down and began
-  developing MathB.in.  Eight hours of coding later, as the sun rose
-  on Sunday, 25 March 2012, the website was ready.  I shared it with a
-  few friends who loved mathematics.  Back then, we spent hours
-  discussing fascinating mathematics problems, and this website became
-  a simple way for us to share snippets with each other.  Word spread
-  quickly&mdash;my friends shared it with their friends, who passed it
-  along to others.  The community grew organically.  Then, one day, I
-  announced this project on the MathJax mailing list, and its reach
-  expanded even further.  Within a year, this mathematics pastebin
-  service had users from around the world.  Watching the usage of this
-  little project grow was an incredibly rewarding experience.
+  Thirteen years ago, on a quiet Saturday night, I sat down and began
+  developing MathB.in.  After coding all through the night, as the sun
+  rose on Sunday, 25 March 2012, the website was ready.  I registered
+  a new domain name and shared it with a few friends who loved
+  mathematics.  Back then, we spent hours discussing fascinating
+  mathematics problems, and this website became a simple way for us to
+  share snippets with each other.  Word spread quickly&mdash;my
+  friends shared it with their friends, who passed it along to others.
+  The community grew organically.  Then, one day, I announced the
+  project on the MathJax mailing list, and its reach expanded even
+  further.  Within a year, this mathematics pastebin service had users
+  from around the world.  Watching the usage of this little project
+  grow was an incredibly rewarding experience.
 </p>
+<figure class="soft">
+  <a href="files/blog/mathbin.png"><img
+     src="files/blog/mathbin.png"
+     alt="A screenshot of a mathematics pastebin service displaying Markdown and LaTeX code in the left pane and the rendered content in the right pane."></a>
+  <figcaption>
+    A screenshot of MathB.in, a mathematics pastebin service
+  </figcaption>
+</figure>
 <p>
-  The world has changed a lot since then.  The internet has evolved,
-  and so have I.  Maintaining a mathematics pastebin service like this
-  single-handedly has become increasingly difficult over the years.
-  Over the past 13 years, I have received notices from regulatory
-  authorities whenever someone uploaded content that triggered
-  compliance concerns.  Each time, my web server would be taken
-  offline, forcing me to boot them in rescue mode to remove the
-  offending content before restoring service.
+  The world has changed a lot since I first published MathB.in.  The
+  internet has evolved, and so have I.  Maintaining a mathematics
+  pastebin service like this single-handedly has become increasingly
+  difficult over the years.  Over the past 13 years, I have received
+  notices from regulatory authorities whenever someone submitted
+  content that triggered compliance concerns.  Each time, my server
+  would be taken offline, and I would be given a 7-day deadline to
+  boot it into rescue mode, remove the offending content, and restore
+  service.  Missing the deadline would put my server hosting account
+  at risk of cancellation.
 </p>
 <p>
   To prevent these disruptions, I began reviewing and filtering
-  incoming content as much as possible every few weeks.  The
+  incoming content as much as possible every few days.  The
   appreciation and positive feedback from happy users kept me going.
   However, at this stage of my life, I can no longer afford to spend
   time moderating user content.  On top of that, the growing
   complexity of data protection and digital safety regulations places
-  a significant burden on maintainer of services like this.  I do not
-  want to spend my weekends worrying about what users from around the
-  world might be posting on this little pastebin service.  Nor do I
-  want to be in a constant state of vigilance just to keep my servers
-  running and maintain control.  It takes up more time than I can
-  afford.
+  a significant burden on me as the maintainer of this service.
+  Complying with these regulations requires considerable legal
+  expertise that I cannot afford.
+</p>
+<p>
+  Some might suggest that I could improve the spam-detection
+  capabilities of this service, and indeed, I have done so over the
+  years.  However, all anti-spam measures are inherently
+  probabilistic.  No matter how much automation is in place, a manual
+  review of every post is still necessary to guarantee that all
+  content is legitimate.  It only takes one dodgy submission to
+  trigger compliance alerts.  While I respect the need for these
+  regulations, I do not want to spend my weekends worrying about what
+  users from around the world might be posting on this little pastebin
+  service.  Nor do I want to be in a constant state of vigilance just
+  to keep my server running.  It takes up more time than I can spare.
+</p>
+<p>
+  Some have suggested forming a team of volunteers to review
+  submissions, but that does not solve the core issue: since the
+  server hosting account is in my name, I would still be responsible
+  for remediating any compliance issues or risk having my account
+  cancelled.  Another alternative is to move the service under a
+  non-profit organisation, but with increased responsibilities in
+  other areas of my life, handling the operational demands of such an
+  endeavour is far beyond what I can commit to.  After all, this was
+  meant to be a fun project built for me and my friends, not something
+  that requires me to deal with regulatory issues.
+</p>
+<p>
+  Another alternative would be to encode the content of a MathB.in
+  post and embed it into the URL, which could then be distributed with
+  others.  Upon visiting the URL, the application would read the
+  encoded content from the URL, decode it, and render it.  While this
+  eliminates the need to store user content on my server, it
+  introduces a new concern: the risk of someone sharing URLs with
+  malicious content embedded in them.  I am not comfortable with such
+  content being rendered on a page served from a domain that I am the
+  registrant of.  The regulatory implications of rendering such
+  content are also unclear.  I could still be held accountable for
+  content rendered on the website, regardless of whether it's stored
+  on the server.  This problem could be mitigated to some extent by
+  refusing to render content containing known malicious patterns but
+  no such solution can be foolproof.
 </p>
 <p>
   As a result, after much thought, I have regrettably made the
-  decision to shut down MathB.in on Sunday, 16 March 2025. The
-  website will go offline on that day. If you have any important posts
-  that you would like to keep, now is the time to copy and save them
-  for yourself.
+  decision to shut down MathB.in on Sunday, 16 March 2025.  The
+  website will go offline on that day.  If you have any important
+  posts that you would like to keep, now is the time to copy and save
+  them for yourself.
 </p>
 <p>
   To all of you who have used this project, I want to express my
   sincere gratitude.  Running a project that could serve you in a
-  meaningful way has given me a deep sense of accomplishment and
-  pride.  To those who are disappointed by this pastebin service's
-  closure, I am truly sorry.  I wish I could continue to dedicate the
-  time and effort needed to maintain and develop it, but I must
-  acknowledge my limitations and step away from a project that has
-  become an artefact of my past, not my present.
+  meaningful way has given me a strong sense of accomplishment and
+  pride.  To those who are disappointed by this service's closure, I
+  am sorry.  I wish I could continue to dedicate the time and effort
+  needed to maintain and develop it, but I must acknowledge my
+  limitations and step away from a project that has become an artefact
+  of my past, not my present.
 </p>
 <p>
-  The source code for this website is open source and is available at
+  The source code for this website is available at
   <a href="https://github.com/susam/mathb">github.com/susam/mathb</a>
   under the MIT license.  Feel free to use the code and set up your
-  own instance if you'd like!
+  own instance if you'd like!  Alternatively, consider hosting your
+  mathematical snippets and notes on your own web space using a kit
+  like MathCask available at
+  <a href="https://github.com/susam/mathcask">github.com/susam/mathcask</a>.
 </p>
 <p>
   Finally, I hope you'll hold no hard feelings.  If you have enjoyed
   using MathB.in, I would love to stay connected on the Fediverse.  My
-  Mastodon handle is <a href="https://mastodon.social/@susam">@susam@mastodon.social</a>.
+  Mastodon handle is
+  <a href="https://mastodon.social/@susam">@susam@mastodon.social</a>.
   See you there!
 </p>

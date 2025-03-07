@@ -1,12 +1,13 @@
 types {
     text/plain asm c cc el lisp md org py yaml yml;
 }
-limit_req_zone $binary_remote_addr zone=perip:10m rate=4r/m;
+limit_req_zone $binary_remote_addr zone=pagelimit:10m rate=4r/m;
+limit_req_zone $binary_remote_addr zone=formlimit:10m rate=4r/m;
 limit_req_status 429;
 
 # https://susam.net/
 server {
-    limit_req zone=perip burst=30 nodelay;
+    limit_req zone=pagelimit burst=30 nodelay;
     listen 443 ssl;
     listen [::]:443 ssl;
     ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
@@ -14,7 +15,7 @@ server {
     server_name susam.net susam;
     root /var/www/susam.net;
     location /form/ {
-        limit_req zone=perip burst=10 nodelay;
+        limit_req zone=formlimit burst=10 nodelay;
         proxy_pass http://127.0.0.1:4242;
         proxy_pass_request_headers off;
         proxy_set_header Accept $http_accept;
@@ -29,22 +30,15 @@ server {
     location ~ /Makefile$ {
         default_type text/plain;
     }
-    # Short URLs.
-    rewrite ^/cfrs$ /cfrs.html permanent;
-    rewrite ^/fxyt$ /fxyt.html permanent;
-    rewrite ^/inv$ /invaders.html permanent;
-    rewrite ^/invaders$ /invaders.html permanent;
     # Redirects.
     rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /feed.xml redirect;
-    rewrite ^/blog/obfuscating-main/$ /obfuscated-main.html permanent;
-    rewrite ^/blog/infosys-tcs-or-wipro/$ /infosys-tcs-or-wipro.html permanent;
-    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime/$ /lisp-in-vim.html permanent;
-    rewrite ^/blog/lisp-in-vim-with-slimv-or-vlime.html$ /lisp-in-vim.html permanent;
-    rewrite ^/blog/(.*)$ /$1 redirect;
-    rewrite ^/maze/from-fill-prefix-to-tramp.html$ /from-fill-prefix-to-tramp.html redirect;
-    rewrite ^/maze/elisp-in-replacement-string.html$ /elisp-in-replacement-string.html redirect;
-    rewrite ^/print-http-headers-and-pretty-print-json-response.html$ /print-http-headers-while-pretty-printing-json-response-with-curl.html redirect;
-    rewrite ^/cfr.html$ /cfrs.html permanent;
+    rewrite ^/(?:blog|maze)/([^./]*)(?:\.html|/)?$ /$1.html redirect;
+    # Short URLs.
+    rewrite ^/cfrs$ /cfrs.html redirect;
+    rewrite ^/fxyt$ /fxyt.html redirect;
+    rewrite ^/inv$ /invaders.html redirect;
+    rewrite ^/invaders$ /invaders.html redirect;
+    rewrite ^/myrgb$ /myrgb.html redirect;
 }
 
 # https://(www.susam.net|susam.in)/ => https://susam.net/
