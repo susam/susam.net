@@ -13,8 +13,8 @@
     c &amp; = \frac{5(f - 32)}{9}
   \end{align*}
 
-  where \( f \) represents the temperature value in Fahrenheit and \( c
-  \) represents the temperature value in Celsius.
+  where \( f \) represents the temperature value in Fahrenheit and
+  \( c \) represents the temperature value in Celsius.
 </p>
 <p>
   While the formulas above are accurate, they are not very convenient
@@ -249,16 +249,15 @@
 <ol>
   <li>
     Subtracting one-tenth (floor division by 10) of \( c \) from
-    itself gives us \( c - \left\lfloor \frac{c}{10} \right\rfloor.
-    \)
+    itself gives us \( c - \left\lfloor \frac{c}{10} \right\rfloor \).
   </li>
   <li>
     Doubling the previous result gives us \( 2 \left(c - \left\lfloor
-    \frac{c}{10} \right\rfloor \right).  \)
+    \frac{c}{10} \right\rfloor \right) \).
   </li>
   <li>
     Adding \( 31 \) to the previous result gives us \( 2 \left(c -
-    \left\lfloor \frac{c}{10} \right\rfloor \right) + 31.  \)
+    \left\lfloor \frac{c}{10} \right\rfloor \right) + 31 \).
   </li>
 </ol>
 <p>
@@ -288,15 +287,15 @@
 
   where \( \overset{\sim}{f} \) is an approximation of the value in
   Fahrenheit.  The floor division has the effect of potentially
-  overestimating the final result by a value that is less than \( 2.
-  \) This is the approximation error.
+  overestimating the final result by a value that is less than
+  \( 2 \).  This is the approximation error.
 </p>
 <p>
-  If we define the approximation error as \( \overset{\sim}{f} - f, \)
+  If we define the approximation error as \( \overset{\sim}{f} - f \),
   then the approximation error lies in the half-open interval \( [0,
-  2).  \) To ensure that the magnitude of the error never exceeds \(
-  1, \) i.e., to make the approximation error lie in the half-open
-  interval \( [-1, 1), \) we subtract \( 1 \) from the above formula
+  2) \).  To ensure that the magnitude of the error never exceeds \(
+  1 \), i.e., to make the approximation error lie in the half-open
+  interval \( [-1, 1) \), we subtract \( 1 \) from the above formula
   and get
 
   \[
@@ -327,18 +326,18 @@
 </p>
 <ol>
   <li>
-    Subtracting \( 31 \) from \( f \) gives us \( f - 31.  \)
+    Subtracting \( 31 \) from \( f \) gives us \( f - 31 \).
   </li>
   <li>
     Halving (floor division by \( 2 \)) the previous result gives us
-    \( \left\lfloor \frac{f - 31}{2} \right\rfloor.  \)
+    \( \left\lfloor \frac{f - 31}{2} \right\rfloor \).
   </li>
   <li>
     Adding one-tenth (floor division by \( 10 \)) of the previous
     result to itself gives us \( \left\lfloor \frac{f - 31}{2}
     \right\rfloor + \left\lfloor \frac{1}{10} \left\lfloor \frac{f -
     31}{2} \right\rfloor \right\rfloor = \left\lfloor \frac{f - 31}{2}
-    \right\rfloor + \left\lfloor \frac{f - 31}{20} \right\rfloor.  \)
+    \right\rfloor + \left\lfloor \frac{f - 31}{20} \right\rfloor \).
   </li>
 </ol>
 <p>

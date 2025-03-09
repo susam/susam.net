@@ -262,11 +262,11 @@ garply:waldo:fred</code>
 <p>
   Now suppose we want to swap the first two fields separated by colon
   in each line.  Of course, we could do it using regular expressions,
-  for example, with the key sequence <code>C-M-% ^\(.+?:\)\(.+?:\) RET
-  \2\1 RET</code>.  But we can also solve this problem in a "dumb"
-  way by simply performing the edits necessary to do the swap on one
-  line and then asking Emacs to repeat what we did on the other lines.
-  Here are the steps:
+  for example, with the key sequence
+  <code>C-M-% ^\(.+?:\)\(.+?:\) RET \2\1 RET</code>.  But we can also
+  solve this problem in a "dumb" way by simply performing the edits
+  necessary to do the swap on one line and then asking Emacs to repeat
+  what we did on the other lines.  Here are the steps:
 </p>
 <ol>
   <li>
