@@ -352,7 +352,7 @@ check-mathjax:
 	#
 	# In particular, we do not want to allow ".  \)", ", \)", etc.
 	# But we do want to allow "9 \)", "f(x) \)", "k'", etc.
-	grep -IErn '[^])}+\<0-9A-Za-z] +\\\)' content | grep -vE "' +\\\\)" | grep -vE '\\\( &lt; \\\)|<code>.*\\\).*</code>'; [ $$? = 1 ]
+	grep -IErn '[^])}+\<*0-9A-Za-z] +\\\)' content | grep -vE "' +\\\\)" | grep -vE '\\\( &lt; \\\)|<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-mathjax-site: dist
