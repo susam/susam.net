@@ -46,7 +46,7 @@ help:
 	@echo '  run-site-deep     Serve website from a subdirectory path.'
 	@echo '  run-dist-deep     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
-	@echo '  checks            Run checks suitable to be run before push.'
+	@echo '  checks            Run checks on source suitable to be run before push.'
 	@echo '  tidy              Run HTML Tidy on the generated website.'
 	@echo '  check-links       Check broken links in a locally running website.'
 	@echo '  check-paths       Check live website paths and redirects.'
@@ -316,11 +316,11 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space tidy
+checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space check-mathjax-site tidy
 
 check-bre:
 	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'iz[a-z]' content layout | \
-	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(s|of)?\>|\<sizing\>|:topic'; [ $$? = 1 ]
+	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(s|of)?\>|\<sizing\>|:topic'; [ $$? = 1 ]
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
 	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
@@ -346,7 +346,17 @@ check-entities:
 	@echo Done; echo
 
 check-mathjax:
-	grep -IErn '\\)[^- :t"<)}]' content | grep -vE '<code>'; [ $$? = 1 ]
+	# If the non-whitespace character before "\)" is not an
+	# alphanumeric character or not an allowed character (e.g., ")",
+	# "}", etc.), then it is an error.
+	#
+	# In particular, we do not want to allow ".  \)", ", \)", etc.
+	# But we do want to allow "9 \)", "f(x) \)", "k'", etc.
+	grep -IErn '[^])}+\<0-9A-Za-z] +\\\)' content | grep -vE "' +\\\\)" | grep -vE '\\\( &lt; \\\)|<code>.*\\\).*</code>'; [ $$? = 1 ]
+	@echo Done; echo
+
+check-mathjax-site: dist
+	grep --include="*.html" -IErn '\\\)[^- :t"<)}]' _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-newlines:

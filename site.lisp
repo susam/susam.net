@@ -425,6 +425,26 @@ value, next-index."
               (setf next-index (+ h-begin-index 2)))))
       (format ss "~a" (subseq text next-index)))))
 
+(defun latex-markup (text)
+  "Reformat LaTeX code to make the punctuation stick to formulas."
+  (setf text (string-replace " \\)."
+                             ".  \\)"
+                             text))
+  (setf text (string-replace " \\)?"
+                             "?  \\)"
+                             text))
+  (setf text (string-replace " \\),"
+                             ", \\)"
+                             text))
+  (setf text (string-replace " \\);"
+                             ";  \\)"
+                             text)))
+
+(defun format-markup (text)
+  "Perform final formatting to pages before rendering them."
+  (setf text (extra-markup text))
+  (setf text (latex-markup text)))
+
 (defun toc-indent (level)
   "Create leading indentation items in table of contents."
   (repeat-string (* 2 level) " "))
@@ -545,8 +565,8 @@ value, next-index."
   (write-log "Writing ~a ..." dst-path)
   (add-output-params dst-path params)
   (add-zone-params dst-path params)
-  ;; Perform extra-markup only for .html pages.
-  (write-file dst-path (extra-markup (render layout params))))
+  ;; Perform format-markup only for .html pages.
+  (write-file dst-path (format-markup (render layout params))))
 
 
 ;;; Pages

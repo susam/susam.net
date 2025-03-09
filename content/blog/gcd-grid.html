@@ -34,86 +34,88 @@
   grid?  Here is one I could come up with:
 </p>
 <div class="highlight">
-  <em>Number the columns in the grid 0, 1, 2, and so on from left to
-  right.  Number the rows in the grid 0, 1, 2, and so on from bottom
-  to top.  Let \( (x, y) \) represent the cell at column \( x \) and
-  row \( y.  \) Then a box exists at \( (x, y) \) if and only if \(
-  \gcd(x, y) \ne 1.  \)</em>
+  <em>
+    Number the columns in the grid 0, 1, 2, and so on from left to
+    right.  Number the rows in the grid 0, 1, 2, and so on from bottom
+    to top.  Let \( (x, y) \) represent the cell at column \( x \) and
+    row \( y \).  Then a box exists at \( (x, y) \) if and only if \(
+    \gcd(x, y) \ne 1 \).
+  </em>
 </div>
 <p>
   We define \( \gcd(x, y) \) to be a nonnegative common divisor of \(
-  x \) and \( y \) such that every common divisor of \( x \) and \( y
-  \) also divides \( \gcd(x, y).  \) Let us now see if we can explain
-  some of the interesting properties of this grid using the above
-  rule:
+  x \) and \( y \) such that every common divisor of \( x \) and
+  \( y \) also divides \( \gcd(x, y) \).  Let us now see if we can
+  explain some of the interesting properties of this grid using the
+  above rule:
 </p>
 <ol>
   <li>
     <p>
-      When \( x = 0 \) and \( y \ne 1, \) we get \( \gcd(x, y) =
-      \lvert y \rvert \ne 1, \) so the entire column at \( x = 0 \)
-      has boxes except at \( (0, 1).  \) Similarly, the entire row at
-      \( y = 0 \) has boxes except at \( (1, 0).  \)
+      When \( x = 0 \) and \( y \ne 1 \), we get \( \gcd(x, y) =
+      \lvert y \rvert \ne 1 \), so the entire column at \( x = 0 \)
+      has boxes except at \( (0, 1) \).  Similarly, the entire row at
+      \( y = 0 \) has boxes except at \( (1, 0) \).
     </p>
   </li>
   <li>
     <p>
-      The cell \( (0, 0) \) has a box because \( \gcd(0, 0) \ne 1.  \)
-      In fact, \( \gcd(0, 0) = 0.  \) This follows from the definition
+      The cell \( (0, 0) \) has a box because \( \gcd(0, 0) \ne 1 \).
+      In fact, \( \gcd(0, 0) = 0 \).  This follows from the definition
       of the \( \gcd \) function.  We will discuss this in more detail
       later in this post.
     </p>
   </li>
   <li>
     <p>
-      Every diagonal cell \( (x, x) \) has a box except at \( (1, 1)
-      \) because \( \gcd(x, x) = \lvert x \rvert \) for all integers
-      \( x.  \)
+      Every diagonal cell \( (x, x) \) has a box except at
+      \( (1, 1) \) because \( \gcd(x, x) = \lvert x \rvert \) for all
+      integers \( x \).
     </p>
   </li>
   <li>
     <p>
       The grid is symmetric about the diagonal cells \( (x, x) \)
-      because \( \gcd(x, y) = \gcd(y, x).  \)
+      because \( \gcd(x, y) = \gcd(y, x) \).
     </p>
   </li>
   <li>
     <p>
       A column at \( x \) has exactly one cell below the diagonal if
       and only if \( x \) is prime.  For example, check the column for
-      \( x = 5.  \) It has exactly one cell below the diagonal.  We
-      know that \( 5 \) is prime.  Now check the column for \( x = 6.
-      \) It has four cells below the diagonal.  We know that \( 6 \)
-      is not prime.
+      \( x = 5 \).  It has exactly one cell below the diagonal.  We
+      know that \( 5 \) is prime.  Now check the column for
+      \( x = 6 \).  It has four cells below the diagonal.  We know
+      that \( 6 \) is not prime.
     </p>
   </li>
 </ol>
 <p>
   Let us now elaborate the second point in the list above.  If \(
-  \gcd(0, 0) \) is \( 0, \) then \( 0 \) must divide \( 0.  \) Does \(
-  0 \) really divide \( 0?  \) Isn't \( 0/0 \) undefined?  Yes, even
-  though \( 0/0 \) is undefined, \( 0 \) divides \( 0.  \) We say an
+  \gcd(0, 0) \) is \( 0 \), then \( 0 \) must divide \( 0 \).  Does \(
+  0 \) really divide \( 0 \)?  Isn't \( 0/0 \) undefined?  Yes, even
+  though \( 0/0 \) is undefined, \( 0 \) divides \( 0 \).  We say an
   integer \( d \) divides an integer \( n \) when \( n = cd \) for
-  some integer \( c.  \) We have \( 0 = 0 \cdot 0, \) so indeed \( 0
-  \) divides \( 0.  \)
+  some integer \( c \).  We have \( 0 = 0 \cdot 0 \), so indeed
+  \( 0 \) divides \( 0 \).
 </p>
 <p>
   We have shown that \( 0 \) divides \( 0 \) but we have not shown yet
-  that \( \gcd(0, 0) = 0.  \) Is \( \gcd(0, 0) \) really \( 0?  \)
-  Every integer divides \( 0, \) e.g., \( 1 \) divdes \( 0, \) \( 2 \)
-  divides \( 0, \) \( 3 \) divides \( 0, \) etc.  There does not seem
-  to be a greatest common divisor of \( 0 \) and \( 0.  \) Shouldn't
+  that \( \gcd(0, 0) = 0 \).  Is \( \gcd(0, 0) \) really \( 0 \)?
+  Every integer divides \( 0 \), e.g., \( 1 \) divdes \( 0 \), \( 2 \)
+  divides \( 0 \), \( 3 \) divides \( 0 \), etc.  There does not seem
+  to be a greatest common divisor of \( 0 \) and \( 0 \).  Shouldn't
   \( \gcd(0, 0) \) be called either infinity or undefined?  No, we
   need to look at the definition of \( \gcd \) introduced earlier.  As
   per the definition, every common divisor of integers \( x \) and \(
-  y \) must also divide \( \gcd(x, y).  \) With this requirement in
-  mind, we see that \( \gcd(0, 0) \) must be \( 0.  \) This definition
+  y \) must also divide \( \gcd(x, y) \).  With this requirement in
+  mind, we see that \( \gcd(0, 0) \) must be \( 0 \).  This definition
   also makes \( \gcd(n, 0) = \gcd(0, n) = \lvert n \rvert \) for all
-  integers \( n.  \) Further, this definition makes B&eacute;zout's
+  integers \( n \).  Further, this definition makes B&eacute;zout's
   identity hold for all integers.  B&eacute;zout's identity states
   that there exists integers \( m \) and \( n \) such that \( mx + ny
-  = \gcd(x, y).  \) Indeed if we have \( \gcd(0, 0) = 0, \) we get \(
-  0 \cdot 0 + 0 \cdot 0 = 0 = \gcd(0, 0).  \)
+  = \gcd(x, y) \).  Indeed if we have \( \gcd(0, 0) = 0 \), we get \(
+  0 \cdot 0 + 0 \cdot 0 = 0 = \gcd(0, 0) \).
 </p>
 <p>
   That's all I wanted to share about the front cover of the book.
@@ -121,9 +123,9 @@
   is even more fascinating.  I found chapters 12 and 13 of the book to
   be the most interesting.  In chapter 12, the book teaches how to
   prove that the Riemann zeta function \( \zeta(s) \) vanishes at
-  every negative even integer \( s.  \) Through several contour
+  every negative even integer \( s \).  Through several contour
   integrals and clever use of Cauchy's residue theorem, it shows in
-  the end that \( \zeta(-2n) = 0 \) for \( n = 1, 2, 3, \dots.  \) In
+  the end that \( \zeta(-2n) = 0 \) for \( n = 1, 2, 3, \dots \).  In
   chapter 13, the book shows us how to obtain zero-free regions where
   \( \zeta(s) \) does not vanish.  The book exposes various subtle
   nuances of the zeta function with great rigour and thoroughness.
