@@ -44,7 +44,7 @@
       function textMetrics () {
         // Calculate metrics.
         ctx.font = '32px serif'
-        const text = "Abcdefghijklmnopqrstuvwxyz 0123456789"
+        const text = 'Abcdefghijklmnopqrstuvwxyz 0123456789'
         const metrics = ctx.measureText(text)
         const ascent = metrics.actualBoundingBoxAscent
         const descent = metrics.actualBoundingBoxDescent
@@ -59,11 +59,11 @@
 
         // Draw lines.
         ctx.fillStyle = '#39f'
-        ctx.fillRect(x, y, width, 1)  // baseline
+        ctx.fillRect(x, y, width, 1) // baseline
 
         ctx.fillStyle = '#f63'
-        ctx.fillRect(x, y - ascent, width, 1)  // baseline
-        ctx.fillRect(x, y + descent, width, 1)  // baseline
+        ctx.fillRect(x, y - ascent, width, 1) // baseline
+        ctx.fillRect(x, y + descent, width, 1) // baseline
 
         console.log(`ascent: ${ascent}; descent: ${descent}`)
         console.log(`width: ${width}; height: ${height}`)

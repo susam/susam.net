@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>XOR Map</title>
+    <meta name="author" content="Susam Pal">
+    <meta name="description" content="A simple HTML page that plots bitwise-XOR x and y for each coordinate (x, y) with the coordinate (0, 0) at the bottom-left corner.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background: #111;
+        margin: 0;
+      }
+      canvas {
+        background: #000;
+        box-sizing: border-box;
+        border: 1px solid #333;
+        display: block;
+        margin: 0 auto;
+        image-rendering: pixelated;
+      }
+    </style>
+    <script>
+      'use strict'
+
+      const M = 256
+      const S = 4
+      const PAD = 8
+
+      let canvas
+      let ctx
+
+      function init () {
+        canvas = document.getElementById('canvas')
+        canvas.width = M * S
+        canvas.height = M * S
+        ctx = canvas.getContext('2d')
+        resize()
+        draw()
+      }
+
+      function draw () {
+        for (let y = 0; y < M; y++) {
+          for (let x = 0; x < M; x++) {
+            plot(x, y, 0, x ^ y, 0)
+          }
+        }
+      }
+
+      function plot (x, y, r, g, b) {
+        ctx.fillStyle = 'rgb(' + r + ', ' + g + ', ' + b + ')'
+        ctx.fillRect(x * S, (M - 1 - y) * S, S, S)
+      }
+
+      function resize () {
+        document.body.style.padding = PAD + 'px'
+        const availableWidth = document.documentElement.clientWidth - 2 * PAD
+        const availableHeight = document.documentElement.clientHeight - 2 * PAD
+        const canvasSize = Math.floor(Math.min(availableWidth, availableHeight))
+        canvas.style.width = canvasSize + 'px'
+        canvas.style.height = canvasSize + 'px'
+      }
+
+      window.addEventListener('load', init)
+      window.addEventListener('resize', resize)
+    </script>
+  </head>
+  <body><canvas id="canvas"></canvas></body>
+</html>
