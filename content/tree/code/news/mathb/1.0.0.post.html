@@ -1,0 +1,32 @@
+<!-- date: 2022-09-20 -->
+<!-- title: MathB 1.0.0 -->
+<!-- tag: Web, Programming, Technology, Release -->
+<!-- import: extra.css -->
+<p>
+  MathB 1.0.0 is the first major release of MathB since 2012, bringing
+  significant updates to this web-based mathematics pastebin service.
+</p>
+<p>
+  The most notable change is a complete rewrite in Common Lisp,
+  replacing the original PHP codebase.  This shift reflects my
+  preference for Lisp, a language I truly enjoy.  It also makes the
+  project easier for me to maintain actively.
+</p>
+<p>
+  This release introduces the use of the
+  <a href="https://github.com/susam/texme">TeXMe</a> parser to
+  robustly parse and render posts written using Markdown and LaTeX.
+  Further, now there is support for dark colour scheme for systems
+  that have dark colour scheme enabled.  For those who host this
+  service on their web servers, MathB now supports a runtime control
+  file named <code>opt.lisp</code> where a number of properties of
+  this service can be customised.  These customisable properties
+  include maximum title length, maximum code length, minimum time
+  interval between two posts, etc.  See
+  <a href="https://github.com/susam/mathb/blob/main/CHANGES.md">CHANGES.md</a>
+  for a detailed changelog.
+</p>
+<p>
+  To read more about this project, please see
+  <a href="http://github.com/susam/mathb">github.com/susam/mathb</a>.
+</p>
