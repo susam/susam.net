@@ -23,9 +23,11 @@ help:
 	@echo '  top-ref           Filter access logs to find the top referrers.'
 	@echo '  post-log          Filter form post logs to find all successful posts.'
 	@echo '  count-log         Count hits in each access log file.'
-	@echo '  grepl re=PATTERN   Filter all access logs by regular expression pattern.'
-	@echo '  grepd re=PATTERN   Filter current access log by regular expression pattern.'
-	@echo '  grepv re=PATTERN   Filter visit logs by regular expression pattern.'
+	@echo '  grepl re=PATTERN  Filter all access logs by regular expression pattern.'
+	@echo '  grepd re=PATTERN  Filter current access log by regular expression pattern.'
+	@echo '  grepv re=PATTERN  Filter visit logs by regular expression pattern.'
+	@echo '  lsform            List form data submitted.'
+	@echo '  rdform            Read form data submitted.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -55,6 +57,7 @@ help:
 	@echo '  pub               Publish updated website on live server and mirror.'
 	@echo '  main              Publish main branch on primary server only.'
 	@echo '  cu                Publish content updates on primary server only.'
+	@echo '  cus               Publish content updates on primary server and restart web server.'
 	@echo '  mirror            Publish website on mirror only.'
 	@echo '  pull-backup       Pull a backup of cache from live server.'
 	@echo
@@ -124,6 +127,8 @@ recu: checkroot
 	git reset --hard HEAD~5
 	git pull
 	make live
+
+restart:
 	systemctl restart nginx form
 	systemctl --no-pager status nginx form
 
@@ -214,6 +219,12 @@ cache-visits:
 
 clean-visits:
 	rm -f /tmp/visitors.txt /tmp/visits.txt
+
+lsform:
+	ls -l /opt/data/form/*.txt | less -F
+
+rdform:
+	tail -n +1 /opt/data/form/*.txt | less -F
 
 
 # Low-Level Targets
@@ -352,7 +363,7 @@ check-mathjax:
 	#
 	# In particular, we do not want to allow ".  \)", ", \)", etc.
 	# But we do want to allow "9 \)", "f(x) \)", "k'", etc.
-	grep -IErn '[^])}+\<0-9A-Za-z] +\\\)' content | grep -vE "' +\\\\)" | grep -vE '\\\( &lt; \\\)|<code>.*\\\).*</code>'; [ $$? = 1 ]
+	grep -IErn '[^])}+\<*0-9A-Za-z] +\\\)' content | grep -vE "' +\\\\)" | grep -vE '\\\( &lt; \\\)|<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-mathjax-site: dist
@@ -564,6 +575,11 @@ cu:
 	git push origin main
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
+
+cus:
+	git push origin main
+	git push -f origin cu
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu restart"
 
 pull-backup:
 	mkdir -p ~/bkp/
