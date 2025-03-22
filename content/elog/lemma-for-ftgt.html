@@ -6,7 +6,7 @@
 <p>
   This post illustrates a key lemma that is used in proving
   the <em>fundamental theorem of Galois theory</em> (FTGT).  Note that
-  FTGT is not covered in this post.  The focus here is on
+  FTGT is not covered in this post.  The focus of this post is on
   understanding and proving this lemma only.  Here is the lemma from
   the book <em>Galois Theory</em>, 5th ed. by Stewart (2023):
 </p>
@@ -21,12 +21,15 @@
   </p>
 </div>
 <p>
-  Note that Stewart writes \( \tau(M)^{*} = \tau M^* \tau^{-1} \) in
-  the book but I have flipped the LHS and RHS around so that the
-  equation here is consistent with the discussion below.
+  The notation \( M^* \) denotes the group of all
+  \( M \)-automorphisms of \( L \) with composition as the group
+  operation.  Note that Stewart writes \( \tau(M)^{*} = \tau M^*
+  \tau^{-1} \) while stating the lemma but I have reversed the LHS and
+  RHS to maintain consistency with the equations that appear in the
+  discussion below.
 </p>
 <p>
-  To develop intuition for this lemma, I'll first present an
+  To build intuition for this lemma, I'll first present an
   illustration, followed by a proof.  The discussion below assumes
   familiarity with field extensions and field automorphisms, as
   several notations and results from these areas will be used
@@ -45,30 +48,30 @@
     M &= \{ k + l \sqrt{2} : k, l \in \mathbb{Q} \}.
   \end{align*}
 
-  Now
+  Now the group of \( K \)-automorphisms of \( L \) is
 
   \[
-    \Gamma(L : K) = \{\phi_1, \phi_2, \phi_3, \phi_4 \}
+    K^* = \{\phi_1, \phi_2, \phi_3, \phi_4 \}
   \]
 
-  where each \( \phi_i \) is a \( K\)-automorphism of \( L \) given by
+  where each \( \phi_i \) is given by
 
   \begin{align*}
-    \phi_1 &:
+    \phi_1 &amp;:
     a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6} \mapsto
     a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6}, \\
 
-    \phi_2 &:
+    \phi_2 &amp;:
     a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6} \mapsto
     a - b \sqrt{2} + c \sqrt{3} - d \sqrt{6}, \\
 
-    \phi_3 &:
+    \phi_3 &amp;:
     a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6} \mapsto
     a + b \sqrt{2} - c \sqrt{3} - d \sqrt{6}, \\
 
-    \phi_4 &:
+    \phi_4 &amp;:
     a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6} \mapsto
-    a - b \sqrt{2} - c \sqrt{3} + d \sqrt{6}. \\
+    a - b \sqrt{2} - c \sqrt{3} + d \sqrt{6}.
   \end{align*}
 
   Then \( M^* = \{ \phi_1, \phi_3 \} \).  Let \( \tau = \phi_2 \).
@@ -103,8 +106,8 @@
   \sqrt{3} + d \sqrt{6} \in L \), we get
 
   \begin{align*}
-    \tau \phi_1 \tau^{-1}(a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6})
-    &= \tau \phi_1(a - b\sqrt{2} + c\sqrt{3} - d\sqrt{6}) \\
+    (\tau \phi_1 \tau^{-1})(a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6})
+    &= (\tau \phi_1)(a - b\sqrt{2} + c\sqrt{3} - d\sqrt{6}) \\
     &= \tau (a - b\sqrt{2} + c\sqrt{3} - d\sqrt{6}) \\
     &= a + b\sqrt{2} + c\sqrt{3} + d\sqrt{6}).
   \end{align*}
@@ -118,8 +121,8 @@
   Similarly,
 
   \begin{align*}
-    \tau \phi_3 \tau^{-1}(a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6})
-    &= \tau \phi_3(a - b\sqrt{2} + c\sqrt{3} - d\sqrt{6}) \\
+    (\tau \phi_3 \tau^{-1})(a + b \sqrt{2} + c \sqrt{3} + d \sqrt{6})
+    &= (\tau \phi_3)(a - b\sqrt{2} + c\sqrt{3} - d\sqrt{6}) \\
     &= \tau (a - b\sqrt{2} - c\sqrt{3} + d\sqrt{6}) \\
     &= a + b\sqrt{2} - c\sqrt{3} - d\sqrt{6}.
   \end{align*}
@@ -133,7 +136,7 @@
   We have shown that
 
   \begin{equation}
-    \tau M^* \tau_{-1} = \{ \phi_1, \phi_3 \}.
+    \tau M^* \tau^{-1} = \{ \phi_1, \phi_3 \}.
     \label{eq-tau-coset}
   \end{equation}
 
@@ -148,9 +151,10 @@
   above equality.  However, in a general proof, \( \tau \) is going to
   be an arbitrary \( K \)-automorphism of \( L \), so we cannot know
   exactly how it behaves and as a result, we cannot obtain the above
-  equation directly.  Therefore, in a general proof, we are going to
-  show that \( \tau M^* \tau^{-1} \subseteq \tau(M)^* \)
-  and vice versa to obtain the same result.
+  equation directly.  Therefore, in a general proof, we we will first
+  show that \( \tau M^* \tau^{-1} \subseteq \tau(M)^* \) and then we
+  will show that \( \tau M^* \tau^{-1} \supseteq \tau(M)^* \) in order
+  to prove the above equation.
 </p>
 <h3 id="lhs-subset-of-rhs">LHS &sube; RHS</h3>
 <p>
@@ -161,8 +165,8 @@
   \( \tau(M) \).  For all \( k - l \sqrt{2} \in \tau(M) \), we get
 
   \begin{align*}
-    \tau \phi_1 \tau^{-1}(k - l \sqrt{2})
-    &= \tau \phi_1(k + l \sqrt{2}) \\
+    (\tau \phi_1 \tau^{-1})(k - l \sqrt{2})
+    &= (\tau \phi_1)(k + l \sqrt{2}) \\
     &= \tau(k + l \sqrt{2}) \\
     &= k - l \sqrt{2}.
   \end{align*}
@@ -170,8 +174,8 @@
   Similarly, for all \( k - l \sqrt{2} \in \tau(M) \), we get
 
   \begin{align*}
-    \tau \phi_3 \tau^{-1}(k - l \sqrt{2})
-    &= \tau \phi_3(k + l \sqrt{2}) \\
+    (\tau \phi_3 \tau^{-1})(k - l \sqrt{2})
+    &= (\tau \phi_3)(k + l \sqrt{2}) \\
     &= \tau(k + l \sqrt{2}) \\
     &= k - l \sqrt{2}.
   \end{align*}
@@ -194,8 +198,8 @@
   \sqrt{2} \in M \), we get
 
   \begin{align*}
-    \tau^{-1} \phi_1 \tau(k + l \sqrt{2})
-    &= \tau^{-1} \phi_1(k - \sqrt{2}) \\
+    (\tau^{-1} \phi_1 \tau)(k + l \sqrt{2})
+    &= (\tau^{-1} \phi_1)(k - \sqrt{2}) \\
     &= \tau^{-1}(k - \sqrt{2}) \\
     &= k + l \sqrt{2}.
   \end{align*}
@@ -203,16 +207,21 @@
   Similarly, for all \( k + l \sqrt{2} \in M \), we get
 
   \begin{align*}
-    \tau^{-1} \phi_3 \tau(k + l \sqrt{2})
-    &= \tau^{-1} \phi_3(k - \sqrt{2}) \\
+    (\tau^{-1} \phi_3 \tau)(k + l \sqrt{2})
+    &= (\tau^{-1} \phi_3)(k - \sqrt{2}) \\
     &= \tau^{-1}(k - \sqrt{2}) \\
     &= k + l \sqrt{2}.
   \end{align*}
 
+  Here both \( \phi_1 \) and \( \phi_3 \) fix \( k - l \sqrt{2} \in
+  \tau(M) \) because \( \phi_1, \phi_2 \in \tau(M)^* \), the set of \(
+  \tau(M) \)-automorphisms of \( L \).
+</p>
+<p>
   Since both \( \tau^{-1} \phi_1 \tau \) and
   \( \tau^{-1} \phi_3 \tau \) fix the elements of \( M \), they are
   both \( M \)-automorphisms of \( L \).  Therefore \( \tau^{-1}
-  \tau(M)^* \tau \subseteq M^* \).  Thus \( \tau M^* \tau^{-1}
+  \tau(M)^* \tau \subseteq M^* \) which implies \( \tau M^* \tau^{-1}
   \supseteq \tau(M)^* \).
 </p>
 <h3 id="lhs-equals-rhs">LHS = RHS</h3>
@@ -237,38 +246,40 @@
   </em>
 </p>
 <p>
-  <em>Proof.</em>  For all \( \gamma \in M^* \), \( x' \in \tau(M) \),
-  we denote \( x = \tau^{-1}(x') \in M \) so that \( \tau(x) = x' \).
-  Now
+  <em>Proof.</em>
+
+  For all \( \gamma \in M^* \), \( x' \in \tau(M) \), we use the
+  notation \( x = \tau^{-1}(x') \in M \) and get
 
   \[
     (\tau \gamma \tau^{-1})(x') = (\tau \gamma)(x) = \tau(x) = x'.
   \]
 
-  In the third equality above, we have used the fact that \( \gamma
-  \in M^* \) which implies that \( \gamma \) is an \( M
-  \)-automorphism of \( L \) which allows us to conclude that \(
-  \gamma(x) = x \).  Since every \( \tau \gamma \tau^{-1} \in \tau M^*
+  In the second equality above, we have used the fact that \( \gamma
+  \in M^* \) which implies that \( \gamma \) is an \( M \)-automorphism
+  of \( L \) which allows us to conclude that \( \gamma(x) = x \) for
+  \( x \in M \).  Since every \( \tau \gamma \tau^{-1} \in \tau M^*
   \tau^{-1} \) fixes all elements \( x' \in \tau(M) \), each \( \tau
   \gamma \tau^{-1} \) must be a \( \tau(M) \)-automorphism of \( L \).
   Thus \( \tau M^* \tau^{-1} \subseteq \tau(M)^* \).
 </p>
 <p>
   Similarly, for all \( \gamma' \in \tau(M)^* \), \( x \in M \), we
-  denote \( x' = \tau(x) \in \tau(M) \).  Now
+  use the notation \( x' = \tau(x) \in \tau(M) \) and get
 
   \[
   (\tau^{-1} \gamma' \tau)(x) = (\tau^{-1} \gamma')(x') = \tau^{-1}(x') = x.
   \]
 
-  In the third equality above, we have used the fact that \( \gamma'
-  \in \tau(M)^* \) which implies that \( \gamma' \) is an \( \tau(M)
-  \)-automorphism of \( L \) which allows us to conclude that \(
-  \gamma'(x') = x' \).  Since every \( \tau^{-1} \gamma' \tau \in
-  \tau^{-1} \tau(M)^* \tau \) fixes all elements \( x \in M \), each
-  \( \tau^{-1} \gamma' \tau \) must be a \( M \)-automorphism of \( L
-  \).  Thus \( \tau^{-1} \tau(M)^* \tau \subseteq M^* \).  This
-  implies \( \tau M^* \tau^{-1} \supseteq \tau(M)^* \).
+  In the second equality above, we have used the fact that \( \gamma'
+  \in \tau(M)^* \) which implies that \( \gamma' \) is an
+  \( \tau(M) \)-automorphism of \( L \) which allows us to conclude
+  that \( \gamma'(x') = x' \) for \( x' \in \tau(M) \).  Since every
+  \( \tau^{-1} \gamma' \tau \in \tau^{-1} \tau(M)^* \tau \) fixes all
+  elements \( x \in M \), each \( \tau^{-1} \gamma' \tau \) must be an
+  \( M \)-automorphism of \( L \).  Thus \( \tau^{-1} \tau(M)^* \tau
+  \subseteq M^* \).  This implies \( \tau M^* \tau^{-1} \supseteq
+  \tau(M)^* \).
 </p>
 <p>
   We have shown that \( \tau M^* \tau^{-1} \subseteq \tau(M)^* \) and
