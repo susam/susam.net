@@ -327,7 +327,15 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space check-mathjax-site tidy
+checks: foss check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space check-mathjax-site tidy
+
+foss:
+	: > content/tree/foss.html
+	sed -n '1,/GitHub/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/Mastodon/,/<main>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/Open Source/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/foss.html
 
 check-bre:
 	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
