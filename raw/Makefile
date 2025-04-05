@@ -17,6 +17,10 @@ channel-capacity: clean
 	. ./venv && python channel-capacity.py
 	cp channel-capacity.png ../content/tree/files/blog/
 
+beeper: clean
+	. ./venv && python3 beeper.py
+	cp beeper.png ../content/tree/files/blog/
+
 dosbox-logo: clean
 	# PNGs
 	convert logo_000.png -sample '640x480!' dosbox-logo-0.png

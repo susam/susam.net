@@ -106,6 +106,9 @@ noscript div {
 .hl {
   color: {{ light-hl-color }};
 }
+.wrap {
+  white-space: pre-wrap;
+}
 @media (prefers-color-scheme: dark) {
   .soft img {
     opacity: 0.7; /* (0xbb - 0x11) / (0xff - 0x11) */
