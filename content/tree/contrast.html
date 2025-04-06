@@ -80,6 +80,8 @@
         }
       }
 
+      const LOGGING = false
+
       let fg
       let bg
       let result
@@ -87,8 +89,10 @@
       let pangram
       let previewText
       let previewWidth
+      let oldHash
 
       function init () {
+        log('initialising ...')
         fg = document.getElementById('fg')
         bg = document.getElementById('bg')
         result = document.getElementById('result')
@@ -108,24 +112,43 @@
         bg.addEventListener('paste', calc)
         bg.addEventListener('blur', recalc)
 
+        window.addEventListener('hashchange', actionHash)
+
+        actionHash()
+        calc()
+        log('initialised')
+      }
+
+      function actionHash () {
+        const hash = window.location.hash.toUpperCase()
+        if (!/^#[0-9A-F]{6}-[0-9A-F]{6}$/.test(hash)) {
+          log('ignoring invalid location hash', window.location.hash)
+          return
+        }
+        const splits = window.location.hash.substring(1).split('-')
+        fg.value = '#' + splits[0]
+        bg.value = '#' + splits[1]
+        log('updated inputs from location hash')
         calc()
       }
 
       function recalc (e) {
+        log('recalculating ...')
         let value = normalise(e.target.value).substring(1)
-        if (value.length === 3) {
-          value =
-            value.charAt(0) + value.charAt(0) +
-            value.charAt(1) + value.charAt(1) +
-            value.charAt(2) + value.charAt(2)
-        } else {
-          return value
+        if (value.length !== 3) {
+          return
         }
+        value =
+          value.charAt(0) + value.charAt(0) +
+          value.charAt(1) + value.charAt(1) +
+          value.charAt(2) + value.charAt(2)
         e.target.value = '#' + value
         calc()
+        log('recalculation complete')
       }
 
       function calc () {
+        log('calculating ...')
         fg.value = normalise(fg.value)
         bg.value = normalise(bg.value)
 
@@ -144,6 +167,7 @@
 
         const ratio = contrast(rf, gf, bf, rb, gb, bb)
         show(ratio)
+        log('calculation complete')
       }
 
       function normalise (value) {
@@ -157,15 +181,43 @@
         preview.style.background = '#ffffff';
         preview.innerHTML = '<span class="ellipsis">...</span>'
         preview.style.width = previewWidth + 'px'
+        window.history.replaceState(null, '', '#')
+        log('hidden result')
       }
 
       function show (ratio) {
         const r = Number.isInteger(ratio) ? ratio.toString() : ratio.toFixed(2)
+        const oldHash = window.location.hash
         result.innerHTML = r + ':1'
         preview.style.color = fg.value
         preview.style.background = bg.value
         preview.innerHTML = previewText
         preview.style.width = previewWidth + 'px'
+        updateHash()
+        log('displayed result')
+      }
+
+      function updateHash () {
+        const BOW = '#000000-FFFFFF'
+        const oldHash = window.location.hash
+        const newHash = fg.value + '-' + bg.value.substring(1)
+        if (oldHash === '' && newHash === BOW) {
+          log('skipping hash update on first load')
+          return
+        }
+        if (oldHash === newHash) {
+          log('skipping hash update due to no change')
+          return
+        }
+        window.history.replaceState(null, '', newHash === BOW ? '#' : newHash)
+        log('updated hash')
+      }
+
+      function log () {
+        if (LOGGING) {
+          const args = Array.prototype.slice.call(arguments)
+          console.log('[log] ' + args.join(' '))
+        }
       }
 
       window.addEventListener('load', init)
