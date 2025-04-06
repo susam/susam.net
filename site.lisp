@@ -1079,8 +1079,8 @@ value, next-index."
 
 (defun make-meets (page-layout params)
   "Create meeting log pages for all tracks."
-  (let ((meets (read-list "content/tree/meets.lisp"))
-        (slugs (read-list "content/tree/slugs.lisp"))
+  (let ((meets (read-list "content/lisp/meet.lisp"))
+        (slugs (read-list "content/lisp/slug.lisp"))
         (list-layout (read-file "layout/meets/list.html"))
         (item-layout (read-file "layout/meets/item.html")))
     (set-nested-template list-layout page-layout)

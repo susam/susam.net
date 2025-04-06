@@ -1,3 +1,4 @@
+;;;; Computation Club Meeting Entries
 ((:date "2021-03-05 15:30"
   :slug "iant"
   :topic "Sections 1.1-1.3: Pages 13-16: Principle of Induction; Divisibility"
