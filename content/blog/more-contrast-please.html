@@ -1,0 +1,85 @@
+<!-- date: 2025-04-06 -->
+<!-- title: More Contrast Ratio, Please -->
+<!-- tag: Web, Technology -->
+<p>
+  So you have decided to go with a dark theme for your website &ndash;
+  great choice!  I love dark themes too!  My journey with computers
+  began with monochrome CRT monitors, where white text was displayed
+  on a dark background.  I am still very fond of that colour scheme.
+  However, one thing that bothers me in modern web design is the
+  overuse of low-contrast colour schemes.
+</p>
+<p>
+  Take a look at this example where the text colour
+  is <code>#777777</code> and the background is <code>#222222</code>:
+</p>
+<p style="background: #222222; color: #777777; padding: 1em; text-align: center; font-size: 1rem; font-family: helvetica, sans-serif">
+  The five boxing wizards jump quickly.
+</p>
+<p>
+  I am hoping that most people would agree that the colour contrast
+  above is too low.  I certainly find it uncomfortable to read.
+  However, the situation becomes a bit less clear with the following
+  example, where the text colour is set to <code>#A9A9B3</code> and the background
+  is <code>#2A2A2D</code>:
+</p>
+<p style="background: #2a2a2d; color: #a9a9b3; padding: 1em; text-align: center; font-size: 1rem; font-family: helvetica, sans-serif">
+  The five boxing wizards jump quickly.
+</p>
+<p>
+  The above example is, in fact, based on an real website I came
+  across today.  Now this is definitely better than the first example
+  and I am sure some people would find this perfectly acceptable.
+  However, I still find this uncomfortable to read.  In fact, I've
+  realised that as I get older, I need a higher contrast ratio to make
+  the text more comfortable to read.
+</p>
+<p>
+  I would suggest that any colour choices for foreground text and
+  background page colours should, at the very least, meet
+  the <a href="https://www.w3.org/TR/WCAG21/#contrast-enhanced">Web
+  Content Accessibility Guidelines (WCAG) Level AAA</a>
+  recommendations.  This means the contrast ratio for normal-sized
+  text against the background should be at least 7:1.  There are also
+  the slightly weaker Level AA guidelines, which require that
+  normal-sized text have a contrast ratio of at least 4.5:1.  That
+  said, I personally recommend aiming for a 7:1 contrast ratio
+  regardless.
+</p>
+<p>
+  The first example above has a contrast ratio of just 3.6:1, meaning
+  it fails to meet both the Level AA and Level AAA requirements. The
+  second example, on the other hand, has a contrast ratio of
+  6.1:1. While it satisfies the Level AA requirements, it still falls
+  short of meeting the Level AAA standards.
+</p>
+<p>
+  To calculate the contrast ratio according to the WCAG contrast
+  formula, use one of these tools:
+</p>
+<ul>
+  <li>
+    <a href="contrast.html">My Colour Contrast Calculator</a>
+  </li>
+  <li>
+    <a href="https://webaim.org/resources/contrastchecker/">WebAIM Contrast Checker</a>
+  </li>
+</ul>
+<p>
+  If we improve the contrast for the second example above, we would
+  need to choose a brighter shade for the text, such as
+  <code>#B7B7BE</code>.  On the dark background <code>#2A2A2D</code>,
+  this results in a contrast ratio of 7:2:1.  Here is how it looks:
+</p>
+<p style="background: #2a2a2d; color: #b7b7be; padding: 1em; text-align: center; font-size: 1rem; font-family: helvetica, sans-serif">
+  The five boxing wizards jump quickly.
+</p>
+<p>
+  I definitely find this much easier to read. If you're developing a
+  dark colour theme for your web page or software, I request you to
+  run your colours through a contrast calculator tool and ensure the
+  contrast ratio is greater than 7:1.  Anything less, and the theme
+  might become uncomfortable for people like me.  Small adjustments
+  like these can significantly improve readability and comfort for
+  your readers.
+</p>
