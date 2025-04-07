@@ -50,6 +50,23 @@
       .ellipsis {
         font-family: monospace,monospace;
       }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #111;
+          color: #bbb;
+        }
+        input, button {
+          background: #000;
+          color: #bbb;
+          border-color: #666;
+        }
+        #result {
+          border-color: #999;
+        }
+        #preview {
+          border-color: #666;
+        }
+      }
     </style>
     <script>
       'use script'
@@ -86,10 +103,10 @@
       let bg
       let result
       let preview
-      let pangram
       let previewText
       let previewWidth
-      let oldHash
+      let dark
+      let initialised = false
 
       function init () {
         log('initialising ...')
@@ -99,6 +116,15 @@
         preview = document.getElementById('preview')
         previewText = preview.innerHTML
         previewWidth = preview.clientWidth
+
+        dark = (
+          window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches
+        )
+        if (dark) {
+          fg.value = '#cccccc'
+          bg.value = '#111111'
+        }
 
         fg.addEventListener('change', calc)
         fg.addEventListener('cut', calc)
@@ -114,9 +140,11 @@
 
         window.addEventListener('hashchange', actionHash)
 
-        actionHash()
         calc()
-        log('initialised')
+        initialised = true
+        log('initialised; dark:', dark)
+
+        actionHash()
       }
 
       function actionHash () {
@@ -177,8 +205,8 @@
 
       function hide () {
         result.innerHTML = '...'
-        preview.style.color = '#000000';
-        preview.style.background = '#ffffff';
+        preview.style.color = '#000000'
+        preview.style.background = '#ffffff'
         preview.innerHTML = '<span class="ellipsis">...</span>'
         preview.style.width = previewWidth + 'px'
         window.history.replaceState(null, '', '#')
@@ -187,7 +215,6 @@
 
       function show (ratio) {
         const r = Number.isInteger(ratio) ? ratio.toString() : ratio.toFixed(2)
-        const oldHash = window.location.hash
         result.innerHTML = r + ':1'
         preview.style.color = fg.value
         preview.style.background = bg.value
@@ -198,18 +225,17 @@
       }
 
       function updateHash () {
-        const BOW = '#000000-FFFFFF'
-        const oldHash = window.location.hash
-        const newHash = fg.value + '-' + bg.value.substring(1)
-        if (oldHash === '' && newHash === BOW) {
-          log('skipping hash update on first load')
+        if (!initialised) {
+          log('skipping hash update during initialisation')
           return
         }
+        const oldHash = window.location.hash
+        const newHash = fg.value + '-' + bg.value.substring(1)
         if (oldHash === newHash) {
           log('skipping hash update due to no change')
           return
         }
-        window.history.replaceState(null, '', newHash === BOW ? '#' : newHash)
+        window.history.replaceState(null, '', newHash)
         log('updated hash')
       }
 
