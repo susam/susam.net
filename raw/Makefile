@@ -17,9 +17,23 @@ channel-capacity: clean
 	. ./venv && python channel-capacity.py
 	cp channel-capacity.png ../content/tree/files/blog/
 
+pull-beeper:
+	scp susam@susam.net:~/beeper.log beeper2.log
+
+filter-beeper:
+	grep -a UTC beeper2.log | grep -v 'Thu 10 Apr 2025 09:5' > beeper2.txt
+
 beeper: clean
 	. ./venv && python3 beeper.py
 	cp beeper.png ../content/tree/files/blog/
+
+beeper2: clean
+	. ./venv && python3 beeper2.py
+	cp beeper2.png ../content/tree/files/blog/
+
+push-beeper:
+	scp beeper2.png susam@susam.net:/tmp/
+	ssh -t susam.net 'sudo cp /tmp/beeper2.png /opt/susam.net/_live/files/blog/'
 
 dosbox-logo: clean
 	# PNGs

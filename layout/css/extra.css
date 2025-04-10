@@ -107,6 +107,7 @@ noscript div {
   color: {{ light-hl-color }};
 }
 .wrap {
+  word-break: break-all;
   white-space: pre-wrap;
 }
 @media (prefers-color-scheme: dark) {

@@ -37,6 +37,8 @@ server {
     rewrite ^/inv$ /invaders.html redirect;
     rewrite ^/invaders$ /invaders.html redirect;
     rewrite ^/myrgb$ /myrgb.html redirect;
+    # Short-term redirects.
+    rewrite ^/hn-folks-made-my-terminal-beep.html$ /hn-bell.html redirect;
 }
 
 # http://(www.susam.net|susam.in)/ => http://susam.net/

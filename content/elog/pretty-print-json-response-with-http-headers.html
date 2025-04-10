@@ -7,18 +7,21 @@
   JSON response.  Here is an example that shows how this can be done:
 </p>
 <pre>
-<samp>$ <kbd>curl -sSi https://susam.net/code/lab/json/book.json</kbd>
+<samp>$ <kbd>curl -sSi https://susam.net/code/lab/json/books.json</kbd>
 HTTP/1.1 200 OK
 Server: nginx/1.18.0
-Date: Sun, 14 Apr 2024 22:20:49 GMT
+Date: Sat, 05 Apr 2024 11:53:24 GMT
 Content-Type: application/json
-Content-Length: 80
-Last-Modified: Sun, 14 Apr 2024 22:17:09 GMT
+Content-Length: 172
+Last-Modified: Sat, 05 Apr 2024 11:53:05 GMT
 Connection: keep-alive
-ETag: "661c55e5-50"
+ETag: "67f119a1-ac"
 Accept-Ranges: bytes
 
-{"title": "The Music of the Primes", "author": "Marcus du Satoy", "pages": 366}</samp>
+[
+  {"title": "Gulliver's Travels", "author": "Jonathan Swift", "published": 1726},
+  {"title": "Treasure Island", "author": "Robert Louis Stevenson", "published": 1883}
+]</samp>
 </pre>
 <p>
   The above output is obtained using curl 7.77.0
@@ -47,22 +50,29 @@ Accept-Ranges: bytes
   Here is an example that shows how to do this:
 </p>
 <pre>
-<samp>$ <kbd>curl -sSD head.txt -o out.json https://susam.net/code/lab/json/book.json && cat head.txt && jq . out.json</kbd>
+<samp>$ <kbd>curl -sSD head.txt -o out.json https://susam.net/code/lab/json/books.json && cat head.txt && jq . out.json</kbd>
 HTTP/1.1 200 OK
 Server: nginx/1.18.0
-Date: Sun, 14 Apr 2024 22:31:35 GMT
+Date: Sat, 05 Apr 2024 11:53:51 GMT
 Content-Type: application/json
-Content-Length: 80
-Last-Modified: Sun, 14 Apr 2024 22:17:09 GMT
+Content-Length: 172
+Last-Modified: Sat, 05 Apr 2024 11:53:05 GMT
 Connection: keep-alive
-ETag: "661c55e5-50"
+ETag: "67f119a1-ac"
 Accept-Ranges: bytes
 
-{
-  "title": "The Music of the Primes",
-  "author": "Marcus du Satoy",
-  "pages": 366
-}</samp>
+[
+  {
+    "title": "Gulliver's Travels",
+    "author": "Jonathan Swift",
+    "published": 1726
+  },
+  {
+    "title": "Treasure Island",
+    "author": "Robert Louis Stevenson",
+    "published": 1883
+  }
+]</samp>
 </pre>
 <p>
   Alternatively, we can achieve this using a single command by
@@ -71,20 +81,27 @@ Accept-Ranges: bytes
   then pretty-print using <code>jq</code>.  Here is an example:
 </p>
 <pre>
-<samp>$ <kbd>curl -sSD /dev/stderr https://susam.net/code/lab/json/book.json | jq .</kbd>
+<samp>$ <kbd>curl -sSD /dev/stderr https://susam.net/code/lab/json/books.json | jq .</kbd>
 HTTP/1.1 200 OK
 Server: nginx/1.18.0
-Date: Sun, 14 Apr 2024 22:34:26 GMT
+Date: Sat, 05 Apr 2024 11:54:12 GMT
 Content-Type: application/json
-Content-Length: 80
-Last-Modified: Sun, 14 Apr 2024 22:17:09 GMT
+Content-Length: 172
+Last-Modified: Sat, 05 Apr 2024 11:53:05 GMT
 Connection: keep-alive
-ETag: "661c55e5-50"
+ETag: "67f119a1-ac"
 Accept-Ranges: bytes
 
-{
-  "title": "The Music of the Primes",
-  "author": "Marcus du Satoy",
-  "pages": 366
-}</samp>
+[
+  {
+    "title": "Gulliver's Travels",
+    "author": "Jonathan Swift",
+    "published": 1726
+  },
+  {
+    "title": "Treasure Island",
+    "author": "Robert Louis Stevenson",
+    "published": 1883
+  }
+]</samp>
 </pre>

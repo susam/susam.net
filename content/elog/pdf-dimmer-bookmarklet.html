@@ -1,13 +1,13 @@
 <!-- date: 2025-04-02 -->
 <!-- title: PDF Dimmer Bookmarklet -->
-<!-- tag: Web, Programming -->
+<!-- tag: Web, Technology -->
 <!-- import: extra.css -->
 <p>
   I often read PDF documents in Firefox, and sometimes I prefer to
-  work in dark mode, especially at nightfall when the room lights are
+  work in dark mode, especially at night when the room lights are
   dimmed.  However, the bright white background of the Firefox PDF
   viewer can be glaring and uncomfortable when dark mode is enabled.
-  Further, writing a userscript to invert the background and text
+  Additionally, writing a userscript to invert the background and text
   colours in the PDF viewer does not work.  I have confirmed with
   Firefox version 137.0 that userscripts do not run within the PDF
   viewer.
@@ -27,7 +27,7 @@
   bookmarklet to work around the above limitation.  Here is the
   bookmarklet:
 </p>
-<pre><code>javascript:(() => {['thumbnailView', 'viewer'].map(id => document.getElementById(id).style.filter = 'invert(0.9) saturate(0)')})()</code></pre>
+<pre><code>javascript:(()=&gt;{['thumbnailView','viewer'].map(id=&gt;document.getElementById(id).style.filter='invert(0.9)saturate(0)')})()</code></pre>
 <p>
   To add this to Firefox, from the Firefox menu, select "Bookmarks".
   Then in the left sidebar, right click on either "Bookmarks Toolbar"
@@ -44,7 +44,7 @@
   Firefox toolbar:
 </p>
 <p class="textcenter">
-  <a href="javascript:(() => {['thumbnailView', 'viewer'].map(id => document.getElementById(id).style.filter = 'invert(0.9) saturate(0)')})()">Dim PDF</a>
+  <a href="javascript:(()=%3e%7b%5b'thumbnailView','viewer'%5d.map(id=%3edocument.getElementById(id).style.filter='invert(0.9)saturate(0)')%7d)()">Dim PDF</a>
 </p>
 <p>
   While the default PDF viewer of Firefox does not support
