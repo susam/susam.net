@@ -574,7 +574,7 @@ pub: cu mirror
 cu:
 	git push origin main
 	git push -f origin cu
-	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu && sudo cp -v /tmp/beeper*.png /opt/susam.net/_live/files/blog/"
 
 cus:
 	git push origin main

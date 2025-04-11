@@ -17,9 +17,26 @@ channel-capacity: clean
 	. ./venv && python channel-capacity.py
 	cp channel-capacity.png ../content/tree/files/blog/
 
-beeper: clean
-	. ./venv && python3 beeper.py
-	cp beeper.png ../content/tree/files/blog/
+pull-beeper:
+	scp susam@susam.net:~/beeper.log beeper2.log
+	grep -aE 'UTC|connect' beeper2.log | sed 's/.*\].*\[\(.*\)\].*/\1/' | paste -sd ' \n' - | sed 's/\([^ ]*\) \(.*\)/\2 \1/' > beeper2-ips.txt
+	python3 beeperanon.py > beeper2.txt
+
+beeper1: clean
+	. ./venv && python3 beeper1.py
+	cp beeper1.png ../content/tree/files/blog/
+	open beeper1.png
+
+beeper2: clean
+	. ./venv && python3 beeper2.py
+	cp beeper2.png ../content/tree/files/blog/
+	open beeper2.png
+
+push-beeper:
+	scp beeper1.png beeper2.png susam@susam.net:/tmp/
+	ssh -t susam.net 'sudo cp /tmp/beeper2.png /opt/susam.net/_live/files/blog/'
+
+update-beeper: pull-beeper filter-beeper beeper2 push-beeper
 
 dosbox-logo: clean
 	# PNGs
