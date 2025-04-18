@@ -10,12 +10,12 @@
   commented about a specific topic in some Jira ticket.  How do I find
   that ticket?  Here is the search filter for it:
 </p>
-<pre><code>issueFunction in commented("by alice") and comment ~ 'hello'</code></pre>
+<pre><code>issueFunction in commented("by alice") and comment ~ "hello"</code></pre>
 <p>
   The above example would search all comments by
   user <code>alice</code> that contains the
-  string <code>'hello'</code>.  However one limitation of this
+  string <code>"hello"</code>.  However one limitation of this
   solution is that the <code>issueFunction</code> field is provided by
-  ScriptRunner for Jira to be available, so you need this app to be
-  available on your Jira for this solution to work.
+  ScriptRunner for Jira, so you need this app to be available on your
+  Jira for this solution to work.
 </p>

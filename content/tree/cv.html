@@ -5,27 +5,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body {color: #333; font-family: helvetica, arial, sans-serif;
-            line-height: 1.5; margin: 0 auto; max-width: 52em; padding: 0 1em}
-      header span {margin: 0 0.25em}
-      h1 {margin-bottom: 0}
-      h2 {margin: 1em 0 0.5em 0; line-height: 1.2}
-      a:link, a:visited {color: #03c; text-decoration: none}
-      a:hover, a:active, a:focus {color: #06f; text-decoration: underline}
-      table {border-collapse: collapse}
-      td {vertical-align: top}
-      td {padding-right: 1em; padding-bottom: 0.25em}
-      td:first-child {white-space: nowrap} /* Don't wrap year-ranges in Chrome. */
-      .spaced td {padding-bottom: 0.75em}
-      .spaced tr:last-child td {padding-bottom: 0}
-      footer {margin: 1.5em 0}
-      h2 a:empty:before {content: "#"}
-      h2 a:empty {visibility: hidden; padding-left: 0.25em}
-      h2:hover a:empty {visibility: visible}
+      body {
+        color: #333;
+        font-family: georgia,serif;
+        font-size: large;
+        line-height: 1.5;
+        margin: 0 auto;
+        max-width: 50em;
+        padding: 0 1em;
+      }
+      header span {
+        margin: 0 0.25em
+      }
+      h1, h2 {
+        margin: 1.25em 0 0.25em 0;
+        line-height: 1.2;
+      }
+      a:link {
+        color: #00e;
+      }
+      a:visited {
+        color: #518;
+      }
+      a:focus, a:hover {
+        color: #03f;
+      }
+      a:active {
+        color: #a00;
+      }
+      a:empty:before {
+        content: "#";
+      }
+      a:empty {
+        visibility: hidden;
+        padding-left: 0.25em;
+      }
+      :hover > a:empty {
+        visibility: visible;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        vertical-align: top;
+      }
+      td {
+        padding-right: 1em;
+        padding-bottom: 0.25em;
+      }
+      td:first-child {
+        white-space: nowrap;  /* Don't wrap year-ranges in Chrome. */
+      }
+      .spaced td {
+        padding-bottom: 0.75em;
+      }
+      .spaced tr:last-child td {
+        padding-bottom: 0;
+      }
+      footer {
+        margin: 1.5em 0;
+      }
       @media (prefers-color-scheme: dark) {
-        body {color: #bbb; background: #111}
-        a:link, a:visited {color: #9bf}
-        a:hover, a:active {color: #acf}
+        body {
+          background: #111;
+          color: #bbb;
+        }
+        a:link {
+          color: #9bf;
+        }
+        a:visited {
+          color: #a9f;
+        }
+        a:focus, a:hover {
+          color: #9cf;
+        }
+        a:active {
+          color: #f99;
+        }
       }
     </style>
   </head>
@@ -33,15 +89,10 @@
     <header>
       <h1>Susam Pal</h1>
       <div>
-        <a href="mailto:susam.pal@gmail.com" title="susam.pal@gmail.com">Email</a>
-        <span>&bull;</span>
         <a href="https://susam.net/">Website</a>
-        <span>&bull;</span>
-        <a href="https://github.com/susam">GitHub</a>
-        <span>&bull;</span>
-        <a href="https://www.linkedin.com/in/susam/">LinkedIn</a>
-        <span>&bull;</span>
-        <a href="https://twitter.com/susam">Twitter</a>
+        <span>&bull;</span> <a href="https://github.com/susam">GitHub</a>
+        <span>&bull;</span> <a href="https://www.linkedin.com/in/susam/">LinkedIn</a>
+        <span>&bull;</span> <a href="https://mastodon.social/@susam">Mastodon</a>
       </div>
     </header>
     <main>
@@ -235,7 +286,7 @@
           <td><a href="http://mathb.in/">MathB.in</a></td>
           <td>Author</td>
           <td>
-            Math pastebin with LaTeX and Markdown support
+            Mathematics pastebin with live preview of LaTeX and Markdown
           </td>
         </tr>
         <tr>
@@ -325,7 +376,6 @@
           </td>
         </tr>
       </table>
-
       <h2 id="talks">Talks<a href="#talks"></a></h2>
       <table class="spaced">
         <tr>

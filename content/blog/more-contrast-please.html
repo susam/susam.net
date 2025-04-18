@@ -2,12 +2,14 @@
 <!-- title: More Contrast, Please -->
 <!-- tag: Web, Technology -->
 <p>
-  So you have decided to go with a dark theme for your website &ndash;
-  great choice!  I love dark themes too!  My journey with computers
-  began with monochrome CRT monitors, where white text was displayed
-  on a dark background.  I am still very fond of that colour scheme.
-  However, one thing that bothers me in modern web design is the
-  overuse of low-contrast colour schemes.
+  So you have decided to go with a dark theme for your website.  Great
+  choice!  I love dark themes too!  My journey with computers began
+  with monochrome CRT monitors, where white text was displayed on dark
+  background.  I am still very fond of that colour scheme.  Done well,
+  dark themes can be elegant and easy on the eyes.  But there is a
+  common pitfall that I see all too often in modern web design &ndash;
+  the overuse of low-contrast colour schemes.  This is something worth
+  keeping in mind while crafting a new theme.
 </p>
 <p>
   Take a look at this example where the text colour
@@ -27,17 +29,17 @@
   The five boxing wizards jump quickly.
 </p>
 <p>
-  The above example is, in fact, based on an real website I came
-  across today.  Now this is definitely better than the first example
-  and I am sure some people would find this perfectly acceptable.
-  However, I still find this uncomfortable to read.  In fact, I've
-  realised that as I get older, I need a higher contrast ratio to make
-  the text more comfortable to read.
+  The above example is, in fact, based on a real website I came across
+  today.  Now this is definitely better than the first example and I
+  am sure some people would find this perfectly acceptable.  However,
+  I still find this uncomfortable to read.  In fact, I have realised
+  that as I get older, I need a higher contrast ratio to make the text
+  more comfortable to read.
 </p>
 <p>
   I would suggest that any colour choices for foreground text and
   background page colours should, at the very least, meet
-  the <a href="https://www.w3.org/TR/WCAG21/#contrast-enhanced">Web
+  the <a href="https://www.w3.org/TR/WCAG22/#contrast-enhanced">Web
   Content Accessibility Guidelines (WCAG) Level AAA</a>
   recommendations.  This means the contrast ratio for normal-sized
   text against the background should be at least 7:1.  There are also
@@ -48,14 +50,15 @@
 </p>
 <p>
   The first example above has a contrast ratio of just 3.6:1, meaning
-  it fails to meet both the Level AA and Level AAA requirements. The
+  it fails to meet both the Level AA and Level AAA requirements.  The
   second example, on the other hand, has a contrast ratio of
-  6.1:1. While it satisfies the Level AA requirements, it still falls
+  6.1:1.  While it satisfies the Level AA requirements, it still falls
   short of meeting the Level AAA standards.
 </p>
 <p>
-  To calculate the contrast ratio according to the WCAG contrast
-  formula, use one of these tools:
+  To calculate the contrast ratio according to
+  the <a href="https://www.w3.org/WAI/WCAG22/Techniques/general/G17.html#tests">WCAG
+  contrast formula</a>, use one of these tools:
 </p>
 <ul>
   <li>
@@ -69,13 +72,13 @@
   If we improve the contrast for the second example above, we would
   need to choose a brighter shade for the text, such as
   <code>#B7B7BE</code>.  On the dark background <code>#2A2A2D</code>,
-  this results in a contrast ratio of 7:2:1.  Here is how it looks:
+  this results in a contrast ratio of 7.2:1.  Here is how it looks:
 </p>
 <p style="background: #2a2a2d; color: #b7b7be; padding: 1em; text-align: center; font-size: 1rem; font-family: helvetica, sans-serif">
   The five boxing wizards jump quickly.
 </p>
 <p>
-  I definitely find this much easier to read. If you're developing a
+  I definitely find this much easier to read.  If you are developing a
   dark colour theme for your web page or software, I request you to
   run your colours through a contrast calculator tool and ensure the
   contrast ratio is greater than 7:1.  Anything less, and the theme

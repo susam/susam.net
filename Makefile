@@ -279,10 +279,6 @@ opt:
 	sudo cp raw/opt.lisp /opt/data/form/opt.lisp
 	sudo chown -R "$$USER" /opt/data/form/ /opt/log/form/
 
-comment:
-	[ -n "$(FILE)" ]
-	touch $$(echo "$(FILE)" | sed 's/\/posts\//\/comments\//')
-
 loop:
 	while true; do make dist; sleep 5; done
 
@@ -327,11 +323,19 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space check-mathjax-site tidy
+checks: foss check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-quotes check-rendering check-sentence-space check-mathjax-site tidy
+
+foss:
+	: > content/tree/foss.html
+	sed -n '1,/GitHub/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/Mastodon/,/<main>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/Open Source/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/foss.html
 
 check-bre:
 	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
-	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(s|of)?\>|\<sizing\>|:topic'; [ $$? = 1 ]
+	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|wizard|:topic'; [ $$? = 1 ]
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
 	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
@@ -382,6 +386,10 @@ check-nginx:
 	sed -n '/server_name [^w]/,/^}/p' etc/nginx/http.susam.net > /tmp/http.susam.net
 	sed -n '/server_name [^w]/,/^}/p' etc/nginx/https.susam.net > /tmp/https.susam.net
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
+	@echo Done; echo
+
+check-quotes:
+	grep -r '’' content | grep -vE '‘[a-z-]*\.el’|‘info’'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-rendering:
@@ -574,7 +582,7 @@ pub: cu mirror
 cu:
 	git push origin main
 	git push -f origin cu
-	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu && sudo cp -v /tmp/beeper*.png /opt/susam.net/_live/files/blog/"
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
 cus:
 	git push origin main
