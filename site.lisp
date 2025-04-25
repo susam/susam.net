@@ -1307,7 +1307,7 @@ value, next-index."
     (when *params*
       (setf params (append *params* params)))
     ;; Dependencies.
-    (copy-directory "_cache/mathjax/" "_site/js/mathjax/")
+    (copy-directory "_cache/katex/" "_site/js/katex/")
     ;; Stylesheets.
     (make-css)
     (make-xsl)

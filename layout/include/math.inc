@@ -1,2 +1,28 @@
-  <script>window.MathJax = {tex: {tags: 'ams'}}</script>
-  <script async src="{{ root }}js/mathjax/es5/tex-mml-chtml.js"></script>
+  <link rel="stylesheet" href="{{ root }}js/katex/katex.min.css">
+  <script defer src="{{ root }}js/katex/katex.min.js"></script>
+  <script defer src="{{ root }}js/katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+          {left: '\\begin{align}', right: '\\end{align}', display: true},
+          {left: '\\begin{align*}', right: '\\end{align*}', display: true},
+        ],
+        macros: {
+          '\\eqnref': '\\href{###1}{(\\text{#2})}',
+          '\\label': '\\htmlId{#1}{}'
+        },
+        throwOnError: false,
+        trust: function (context) {
+          return ['\\htmlId', '\\href'].includes(context.command)
+        }
+      })
+    })
+  </script>
+  <style>
+    .katex {font-size: 1.1em }
+    .katex a:link {text-decoration: none}
+  </style>

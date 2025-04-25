@@ -237,12 +237,12 @@ live: site
 	rm -rf _gone
 	@echo Done; echo
 
-site: mathjax
+site: katex
 	@echo Generating website ...
 	sbcl --load site.lisp --quit
 	@echo Done; echo
 
-dist: mathjax
+dist: katex
 	@echo Generating distributable website ...
 	sbcl --noinform \
 	     --eval '(setf *break-on-signals* t)' \
@@ -259,6 +259,16 @@ deep:
 	mkdir -p _prep/foo/bar/baz/qux/
 	mv _site/ _prep/foo/bar/baz/qux/
 	mv _prep/ _site/
+
+katex:
+	mkdir -p _cache/
+	if ! [ -e _cache/katex/ ]; then \
+	    echo Downloading KaTeX ...; \
+	    curl -sSLo _cache/katex.tar.gz https://github.com/KaTeX/KaTeX/releases/download/v0.16.22/katex.tar.gz; \
+	    tar -xvf _cache/katex.tar.gz -C _cache/; \
+	else \
+	    echo KaTeX is already cached.; \
+	fi
 
 mathjax:
 	mkdir -p _cache/
@@ -327,7 +337,7 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: check-bre check-comment-files check-copyright check-entities check-mathjax check-newlines check-nginx check-rendering check-sentence-space check-mathjax-site tidy
+checks: check-bre check-comment-files check-copyright check-entities check-tex-content check-newlines check-nginx check-rendering check-sentence-space check-tex-site tidy
 
 check-bre:
 	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
@@ -356,7 +366,7 @@ check-entities:
 	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
 	@echo Done; echo
 
-check-mathjax:
+check-tex-content:
 	# If the non-whitespace character before "\)" is not an
 	# alphanumeric character or not an allowed character (e.g., ")",
 	# "}", etc.), then it is an error.
@@ -366,7 +376,7 @@ check-mathjax:
 	grep -IErn '[^])}+\<*0-9A-Za-z] +\\\)' content | grep -vE "' +\\\\)" | grep -vE '\\\( &lt; \\\)|<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
-check-mathjax-site: dist
+check-tex-site: dist
 	grep --include="*.html" -IErn '\\\)[^- :t"<)}]' _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
