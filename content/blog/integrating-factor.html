@@ -116,14 +116,14 @@
   Consider once again the linear first-order differential equation
 
   \begin{equation}
-    \label{if-eq-diff}
+    \label{eq-if-diff}
     y' + yP(x) = Q(x).
   \end{equation}
 
   We first find the integrating factor
 
   \begin{equation}
-    \label{if-eq-integrating-factor}
+    \label{eq-if-integrating-factor}
     M(x) = e^{\int P(x)\, dx}.
   \end{equation}
 
@@ -131,12 +131,12 @@
   relationship:
 
   \begin{equation}
-    \label{if-eq-property}
+    \label{eq-if-property}
     M'(x) = M(x) P(x).
   \end{equation}
 
   We can prove this relationship easily by differentiating both sides
-  of \( \eqnref{if-eq-integrating-factor}{2} \) as follows:
+  of \( \eqnref{eq-if-integrating-factor}{2} \) as follows:
 
   \[
     M'(x)
@@ -155,19 +155,19 @@
   \]
 
   This nice property of the exponential function leads to the
-  interesting relationship in \( \eqnref{if-eq-property}{3} \).
+  interesting relationship in \( \eqnref{eq-if-property}{3} \).
 </p>
 <h2 id="simplification-of-lhs">Simplification of LHS</h2>
 <p>
   Now let us multiply both sides of the differential equation \(
-  \eqnref{if-eq-diff}{1} \) by the integrating factor \( M(x) \) By
+  \eqnref{eq-if-diff}{1} \) by the integrating factor \( M(x) \) By
   doing so, we get
 
   \[
     y' M(x) + y P(x) M(x) = Q(x) M(x).
   \]
 
-  But from \( \eqnref{if-eq-property}{3} \) we know that \( P(x) M(x)
+  But from \( \eqnref{eq-if-property}{3} \) we know that \( P(x) M(x)
   = M'(x) \), so the above equation can be written as
 
   \[
@@ -205,7 +205,7 @@
   final solution looks like
 
   \begin{equation}
-    \label{if-eq-general-solution}
+    \label{eq-if-general-solution}
     y = \frac{1}{M(x)} \int Q(x) M(x) \, dx + \frac{C}{M(x)}.
   \end{equation}
 </p>
@@ -271,7 +271,7 @@
   lead to closed-form solutions.  In such cases, we leave the result
   in the form of an expression that contains an unsolved integral.
   Such solutions may resemble the form shown in
-  \( \eqnref{if-eq-general-solution}{4} \).
+  \( \eqnref{eq-if-general-solution}{4} \).
 </p>
 <p>
   The method of using integrating factors to solve differential

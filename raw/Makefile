@@ -32,12 +32,6 @@ beeper2: clean
 	cp beeper2.png ../content/tree/files/blog/
 	open beeper2.png
 
-push-beeper:
-	scp beeper1.png beeper2.png susam@susam.net:/tmp/
-	ssh -t susam.net 'sudo cp /tmp/beeper2.png /opt/susam.net/_live/files/blog/'
-
-update-beeper: pull-beeper filter-beeper beeper2 push-beeper
-
 dosbox-logo: clean
 	# PNGs
 	convert logo_000.png -sample '640x480!' dosbox-logo-0.png

@@ -10,8 +10,8 @@ Timeline
 --------
 
 In 2001, I learnt to write simple HTML pages. Soon I began hosting an
-intranet web portal using Microsoft Personal Web Server out of my dorm
-room at my university.
+intranet web portal using Microsoft Personal Web Server running on a
+Windows 98 machine, out of my dorm room at my university.
 
 Between 2001 and 2005, I continued to grow the intranet server. It was
 named `maze` and it served my fellow students in our university's
