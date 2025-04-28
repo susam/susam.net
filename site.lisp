@@ -373,8 +373,8 @@ value, next-index."
        (setf zone-link (fstr "~%    <a href=\"~a~a\">~a</a>"
                              root zone-index zone-name)))
      (aput "zone-link" zone-link ,params)
-     (when (string= blog-name "Notes")
-       (let ((zone-title (render "{{ nick }}'s Quick Notes" ,params)))
+     (when (string= blog-name "Maze")
+       (let ((zone-title (render "{{ nick }}'s Maze" ,params)))
          (if (string= ,dst-path (render "_site/{{ blog-slug }}.html" ,params))
              (aput "title" zone-title ,params)
              (aput "subtitle" (fstr " - ~a" zone-title) ,params))))))
@@ -1322,7 +1322,7 @@ value, next-index."
     ;; More links.
     (make-more-list "_site/" "More" page-layout params)
     ;; Blogs.
-    (setf pages (make-blog "content/elog/*.html" "Notes" page-layout params))
+    (setf pages (make-blog "content/maze/*.html" "Maze" page-layout params))
     (setf all-pages (append all-pages pages))
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
     (setf all-pages (append all-pages pages))

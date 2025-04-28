@@ -71,7 +71,7 @@
     <script>
       'use script'
 
-      // Reference: https://www.w3.org/TR/WCAG20-TECHS/G17.html
+      // References: https://www.w3.org/WAI/WCAG22/Techniques/general/G17.html#tests
 
       function contrast (r1, g1, b1, r2, g2, b2) {
         const la = luminance(r1, g1, b1)
@@ -90,7 +90,7 @@
 
       function sRGBToLinear (c) {
         c = c / 255
-        if (c <= 0.03928) {
+        if (c <= 0.04045) {
           return c / 12.92
         } else {
           return Math.pow((c + 0.055) / 1.055, 2.4)
@@ -172,7 +172,7 @@
           value.charAt(2) + value.charAt(2)
         e.target.value = '#' + value
         calc()
-        log('recalculation complete')
+        log('recalculated target value to', e.target.value)
       }
 
       function calc () {
@@ -199,7 +199,7 @@
       }
 
       function normalise (value) {
-        value = value.toUpperCase().replace(/[^0-9A-F]/, '')
+        value = value.toUpperCase().replace(/[^0-9A-F]/g, '')
         return value === '' ? '' : '#' + value
       }
 
