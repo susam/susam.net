@@ -1043,7 +1043,7 @@ value, next-index."
          (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
          (dst (if slug "_site/cc/{{ slug }}/log.html" "_site/cc/log.html")))
-    (aput "head" (fstr "~a, extra.css, meets.css, math.inc"
+    (aput "head" (fstr "~a, extra.css, meets.css, math.js"
                        (aget "head" params)) params)
     (aput "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
     (aput "subtitle" "" params)

@@ -329,6 +329,9 @@ run-site-deep: site deep serve
 run-form: site
 	sbcl --load form.lisp
 
+subst:
+	find content -name "*.html" -exec sed -i '' 's/math\.inc/math.js/g' {} +
+
 # Checks
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
@@ -442,6 +445,7 @@ check-paths:
 check-js:
 	npm install --no-save standard eslint-plugin-html
 	find . -name "*.html" | grep -v _site/ | xargs npx standard --plugin html
+	npx standard content/tree/js
 	@echo Done; echo
 
 list-no-meta:
