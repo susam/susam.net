@@ -1,4 +1,8 @@
   <link rel="stylesheet" href="{{ root }}js/katex/katex.min.css">
+  <style>
+    .katex {font-size: 1.1em }
+    .katex a:link {text-decoration: none}
+  </style>
   <script defer src="{{ root }}js/katex/katex.min.js"></script>
   <script defer src="{{ root }}js/katex/contrib/auto-render.min.js"></script>
   <script>
@@ -22,7 +26,3 @@
       })
     })
   </script>
-  <style>
-    .katex {font-size: 1.1em }
-    .katex a:link {text-decoration: none}
-  </style>
