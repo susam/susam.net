@@ -7,6 +7,10 @@ venv: FORCE
 	echo . ~/.venv/susam.net/bin/activate > venv
 	. ./venv && pip install matplotlib
 
+hearts:
+	. ./venv && python3 hearts.py
+	cp heart-cardoid.png ../static/files/blog
+
 clumsy-equations: clean
 	. ./venv && python clumsy-equations.py
 	cp clumsy-equations-1.png ../content/tree/files/blog/
