@@ -1,0 +1,228 @@
+<!-- date: 2025-05-25 -->
+<!-- title: From Finite Integral Domains to Finite Fields -->
+<!-- tag: Mathematics -->
+<!-- import: math.inc -->
+<p>
+  In this article, we explore a few well-known results from abstract
+  algebra pertaining to fields and integral domains.  We ask ourselves
+  whether every field is an integral domain, and whether every
+  integral domain is a field.  We begin with the definition of an
+  integral domain, discuss a few established results, and then proceed
+  to answer these questions.
+</p>
+{{ toc }}
+<h2 id="definition">Definition</h2>
+<p>
+  An integral domain is a non-trivial commutative ring in which the
+  product of any two non-zero elements is also non-zero.
+</p>
+<h2 id="known-results">Known Results</h2>
+<p>
+  Familiarity with basic algebraic structures is assumed.  For the
+  sake of brevity, we also assume the following known results:
+</p>
+<p id="zero-multiplication">
+  <strong>Proposition 1.</strong>
+  <em>
+    Let \( R \) be a ring.  Then, for all \( a \in R \), we have
+
+    \[
+      a \cdot 0 = 0 \cdot a = 0.
+    \]
+  </em>
+</p>
+<p id="cancellation-property">
+  <strong>Proposition 2.</strong>
+  <em>
+    Let \( D \) be an integral domain.  Then, for all \( a, b, c \in D \) such
+    that \( a \ne 0 \), we have
+
+    \[
+      a \cdot b = a \cdot c \implies b = c.
+    \]
+  </em>
+</p>
+<p>
+  The second result is also known as the <em>cancellation property of
+  integral domains</em>.
+</p>
+<h2 id="every-field-is-an-integral-domain">Every Field Is an Integral Domain</h2>
+<p>
+  We now show that every field is indeed an integral domain.  Let \( F
+  \) be a field, and let \( a, b \in F \) such that \( ab = 0 \).
+  There are two cases to consider: \( a = 0 \) and \( a \ne 0 \).  If
+  \( a = 0 \), then indeed \( ab = 0 \)
+  by <a href="#zero-multiplication">Proposition 1</a>.
+</p>
+<p>
+  Now suppose \( a \ne 0 \).  Then by the properties of fields, there exists a
+  multiplicative inverse \( a^{-1} \in F \) such that \( a \cdot
+  a^{-1} = 1 \).  Then using the properties of fields, we get
+
+  \[
+    b = b \cdot 1 = b \cdot (a \cdot a^{-1}) = (a \cdot b) \cdot
+    a^{-1} = 0 \cdot a^{-1} = 0.
+  \]
+
+  The last equality follows from
+  <a href="#zero-multiplication">Proposition 1</a>.  We have shown
+  that if \( ab = 0 \), then either \( a = 0 \) or \( b = 0 \).
+  Therefore, if both \( a \ne 0 \) and \( b \ne 0 \), then it must be
+  that \( ab \ne 0 \).  Therefore \( F \) is an integral domain.
+</p>
+<h2 id="infinite-integral-domains">Infinite Integral Domains</h2>
+<p>
+  Now we arrive at the next natural question.  Is every integral
+  domain a field?
+</p>
+<p>
+  The set of integers \( \mathbb{Z} \) is an integral domain, since
+  the product of any two non-zero integers is a non-zero.  However, \(
+  \mathbb{Z} \) is not a field since \( 2 \in \mathbb{Z} \), but \(
+  2^{-1} \not\in \mathbb{Z} \).  Therefore, not every integral domain
+  is a field.  Here we saw an example of an infinite integral domain
+  that is not a field.
+</p>
+<p>
+  Next we ask ourselves: Is every infinite integral domain not a
+  field?  Not quite!  Some infinite integral domains are, in fact,
+  fields.  This follows directly from the result in the previous
+  section.  Every field is an integral domain, and there are plenty of
+  infinite fields, so they must all be integral domains too.  Consider
+  the set of rational numbers \( \mathbb{Q} \) or the set of complex
+  numbers \( \mathbb{C} \).  These infinite sets are fields and
+  therefore also integral domains.  So, clearly, there are infinite
+  integral domains that are also fields.
+</p>
+<h2 id="every-finite-integral-domain-is-a-field">Every Finite Integral Domain Is a Field</h2>
+<p>
+  We will now turn our attention to finite integral domains.  Is every
+  finite integral domain a field?  Yes!  This can be shown as follows.
+</p>
+<p>
+  Let \( D \) be a finite integral domain.  Let \( a \in D \) with \(
+  a \ne 0 \).  Consider the set
+
+  \[
+    A = \{ a, a^2, a^3, \dots \}.
+  \]
+
+  Since a ring is closed under multiplication, every element of \( A
+  \) belongs to \( D \), so \( A \subseteq D \).  Since \( D \) is
+  finite, \( A \) is finite too.  Therefore, by the pigeonhole
+  principle, there exist integers \( m \gt n \ge 0 \) such that
+
+  \[
+    a^m = a^n
+  \]
+
+  This equation can be rewritten as
+
+  \[
+    a \cdot a^{m - n - 1} \cdot a^n = 1 \cdot a^n.
+  \]
+
+  Since \( a \) is a non-zero element of an integral domain, it
+  follows that \( a^n \ne 0 \). Therefore we can use
+  <a href="#cancellation-property">Proposition 2</a> (the cancellation
+  property of integral domains) to get
+
+  \[
+    a \cdot a^{m - n - 1} = 1.
+  \]
+
+  Since a ring is closed under multiplication and since \( m - n - 1
+  \ge 0 \), it follows that \( a^{m - n - 1} \in D \).  Thus every
+  non-zero element \( a \in D \) has a multiplicative inverse in \( D
+  \).  This establishes the multiplicative inverse property of a
+  field.
+</p>
+<p>
+  Since an integral domain is a non-trivial commutative ring, it has
+  at least two distinct elements: \( 0 \) and \( 1 \).  This
+  establishes two additional field properties: the existence of an
+  additive identity and the existence of a multiplicative identity
+  distinct from the additive identity.
+</p>
+<p>
+  Finally, the remaining field properties are inherited from the ring
+  structure, i.e., associativity and commutativity of addition and
+  multiplication, the existence of additive inverses, and the
+  distributivity of multiplication over addition all hold in \( D \),
+  since they hold in any ring.  Thus, \( D \) satisfies all the field
+  properties.  Therefore \( D \) is a field.
+</p>
+<h3 id="alternate-proof">Alternate Proof</h2>
+<p>
+  The proof in the previous section presents what I initially came up
+  with when working through these concepts and I wanted to prove these
+  facts for myself.  However, I later found that there is another
+  proof that is quite popular in the literature. This alternate proof
+  differs in one key aspect: it does not invoke the cancellation
+  property of integral domains stated in
+  <a href="#cancellation-property">Proposition 2</a>.  Let us now see
+  what this alternate proof looks like.
+</p>
+<p>
+  As before, we consider the set \( A = \{ a, a^2, a^3, \dots \}
+  \subseteq D \), where \( a \in D \) and \( a \ne 0 \), and we obtain
+  the equation
+
+  \[
+    a^m = a^n
+  \]
+
+  for some integers \( m \gt n \ge 0 \).  As before, we use the fact
+  that \( a \) is an element of an integral domain to conclude that \(
+  a^n \ne 0 \).  Now adding the additive inverse of \( a^n \) to both
+  sides and using the distributivity property of rings, we get
+
+  \[
+    a^n (a^{m - n} - 1) = 0
+  \]
+
+  Since a ring is closed under addition and multiplication, both \(
+  a^n \) and \( a^{m - n} - 1 \) belong to \( D \).  As \( D \) is
+  an integral domain and \( a^n \ne 0 \), we conclude that \( a^{m -
+  n} - 1 = 0 \), i.e., \( a^{m - n} = 1 \).  Since \( m - n \gt 1 \),
+  we can write:
+
+  \[
+    a \cdot a^{m - n - 1} = 1.
+  \]
+
+  Therefore every non-zero element \( a \in D \) has a multiplicative
+  inverse in \( D \).  This establishes the multiplicative inverse
+  property of a field.  The remaining properties of a field are
+  established in the same manner as in the previous section.  Hence,
+  if \( D \) is a finite integral domain, then it is also a field.
+</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>
+  We will summarise all the results here before concluding the
+  article:
+</p>
+<ul>
+  <li>
+    Every field is an integral domain.
+  </li>
+  <li>
+    Every <em>finite</em> integral domain is a field.
+  </li>
+  <li>
+    Some infinite integral domains are not fields.  A convenient
+    example is the set of integers \( \mathbb{Z} \).
+  </li>
+  <li>
+    Some infinite integral domains are fields.  Every infinite field,
+    such as \( \mathbb{Q} \), \( \mathbb{R} \), or \( \mathbb{C} \),
+    is an example.
+  </li>
+</ul>
+<p>
+  It is worth reiterating that the final result in the summary above
+  follows from the fact that every field is an integral domain.  These
+  results reveal how structure and size interact in algebraic systems.
+  It is fascinating how simply being finite can turn an integral
+  domain into a field.
+</p>
