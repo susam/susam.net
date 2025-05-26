@@ -333,18 +333,21 @@ run-form: site
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: foss check-bre check-comment-files check-copyright check-entities check-tex-content check-newlines check-nginx check-quotes check-rendering check-sentence-space check-tex-site tidy
+checks: cvsplit check-bre check-comment-files check-copyright check-entities check-tex-content check-newlines check-nginx check-quotes check-rendering check-sentence-space check-tex-site tidy
 
-foss:
+cvsplit:
 	: > content/tree/foss.html
-	sed -n '1,/GitHub/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n 's/CV/FOSS Contributions/; 1,/GitHub/p' content/tree/cv.html >> content/tree/foss.html
 	sed -n '/Mastodon/,/<main>/p' content/tree/cv.html >> content/tree/foss.html
-	sed -n '/Open Source/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
-	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
+	sed -n 's/Open/Free and Open/; /Open Source/,/<\/table>/p' content/tree/cv.html >> content/tree/foss.html
 	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/foss.html
+	: > content/tree/talks.html
+	sed -n 's/CV/Talks/; 1,/<main>/p' content/tree/cv.html >> content/tree/talks.html
+	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/talks.html
+	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/talks.html
 
 check-bre:
-	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
+	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude quickqwerty.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
 	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|wizard|:topic'; [ $$? = 1 ]
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
@@ -367,7 +370,7 @@ check-copyright:
 	@echo Done; echo
 
 check-entities:
-	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
+	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude=quickqwerty.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-tex-content:
@@ -407,7 +410,7 @@ check-rendering:
 	@echo Done; echo
 
 check-sentence-space:
-	grep --exclude invaders.html --exclude cfrs.html -IErn "[^0-9A-Z.][.?!][])\"']? [A-Z]" content | grep -vE "No soup for you|Mr\. T\.|function!|RET|SPC"; [ $$? = 1 ]
+	grep --exclude invaders.html --exclude cfrs.html --exclude quickqwerty.html -IErn "[^0-9A-Z.][.?!][])\"']? [A-Z]" content | grep -vE "No soup for you|Mr\. T\.|function!|RET|SPC"; [ $$? = 1 ]
 	@#                      ^-----^
 	grep -IERn '\. \\' content | grep -vE '<code>|\\left\.'; [ $$? = 1 ]
 	grep -IERn '\.  [a-z]' content | grep -vE '\.  freenode'; [ $$? = 1 ]
