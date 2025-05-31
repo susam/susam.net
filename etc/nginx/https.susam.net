@@ -40,7 +40,7 @@ server {
     rewrite ^/invaders$ /invaders.html redirect;
     rewrite ^/myrgb$ /myrgb.html redirect;
     # Short-term redirects.
-    rewrite ^/hn-folks-made-my-terminal-beep.html$ /hn-bell.html redirect;
+    rewrite ^/fields-and-their-two-ideals.html$ /two-ideals-of-fields.html redirect;
 }
 
 # https://(www.susam.net|susam.in)/ => https://susam.net/
