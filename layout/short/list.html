@@ -1,0 +1,22 @@
+<h1>{{ title }}</h1>
+<div>({{ count }} {{ page-label }})</div>
+<noscript>
+  <div style="border: thick double #c00; margin: 1em 0; padding: 1em; text-align: center">
+    JavaScript must be enabled for the short links on this page to function.
+  </div>
+</noscript>
+<ul class="blog">
+{{ body }}</ul>
+<script>
+  'use strict'
+  if (window.location.search.length > 1) {
+    window.stop()
+    const key = window.location.search.substring(1)
+    const target = document.getElementById(key).href
+    let html = '<div style="font-size: x-large; margin-top: 2em">'
+    html += '<p>Redirecting you automatically to the target page ...</p>'
+    html += '<p>If the automatic redirection fails, <a href="' + target + '">click here</a>.</p>'
+    document.body.innerHTML = html
+    document.location.href = target
+  }
+</script>
