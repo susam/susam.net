@@ -1,7 +1,8 @@
 <item>
 <title>{{ title }}</title>
 <link>{{ neat-url }}</link>
-<guid>{{ neat-url }}</guid>
+<guid>{{ site-url }}p/?{{ pkey }}</guid>
+<pubDate>{{ rss-date }}</pubDate>
 <description>
 <![CDATA[
 {{ body }}<!-- ### -->
@@ -11,5 +12,4 @@
 </p>
 ]]>
 </description>
-<pubDate>{{ rss-date }}</pubDate>
 </item>
