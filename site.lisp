@@ -393,6 +393,7 @@ value, next-index."
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
+     (aput "keys-for-list" (format-keys-for-list ,page) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
      (aput "path" (neat-path dst-path ,params) ,page)))
 
@@ -531,9 +532,18 @@ value, next-index."
   "Create HTML to display tags."
   (let ((html "")
         (sep ""))
-    (dolist (tag (string-split (aget "tag" page) ", "))
+    (dolist (tag (aget "tags" page))
       (setf tag (tag-slug tag))
       (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>" html sep root tag tag))
+      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
+    html))
+
+(defun format-keys-for-html (page indent)
+  "Create HTML to display keys."
+  (let ((html "")
+        (sep ""))
+    (dolist (key (aget "keys" page))
+      (setf html (fstr "~a~a<a href=\"?~a\">~a</a>" html sep key key))
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
 
@@ -545,12 +555,16 @@ value, next-index."
   "Create HTML to display tags on the full page list."
   (format-tags-for-html page 4 ""))
 
+(defun format-keys-for-list (page)
+  "Create HTML to display keys on the short link list."
+  (format-keys-for-html page 4))
+
 (defun format-tags-for-feed (page params)
   "Create HTML to display tags for the given page."
   (let ((html "")
         (sep "")
         (site-url (aget "site-url" params))
-        (tags (string-split (aget "tag" page) ", ")))
+        (tags (aget "tags" page)))
     (dolist (tag tags)
       (setf tag (tag-slug tag))
       (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
@@ -594,6 +608,10 @@ value, next-index."
     (setf updated (aget "updated" page))
     (aput "update-mark"
           (if updated (fstr " (updated on ~a)" (simple-date updated)) "") page)
+    ;; Other metadata to be parsed.
+    (aput "keys" (string-split (aget "key" page) ", ") page)
+    (aput "tags" (string-split (aget "tag" page) ", ") page)
+    (aput "pkey" (car (aget "keys" page)) page)
     ;; Draft status.
     (setf draft (aget "draft" page))
     (aput "draft-mark" (if draft " [draft]" "") page)
@@ -772,7 +790,7 @@ value, next-index."
 (defun validate-pages (pages)
   "Validate pages to ensure required metadata is present."
   (dolist (page pages)
-    (dolist (key '("date" "tag"))
+    (dolist (key '("date" "tag" "key"))
       (when (not (aget key page))
         (error "Missing key ~a for page ~a" key (aget "slug" page))))))
 
@@ -1187,7 +1205,7 @@ value, next-index."
   (setf pages (only-listed-pages pages))
   (let ((tags))
     (dolist (page pages)
-      (dolist (tag (string-split (aget "tag" page) ", "))
+      (dolist (tag (aget "tags" page))
         (aput-list tag page tags)))
     (dolist (tag-entry tags)
       (setf (cdr tag-entry) (sort-pages (cdr tag-entry))))
@@ -1257,6 +1275,14 @@ value, next-index."
     (set-nested-template list-layout page-layout)
     (aput "title" "All Pages" params)
     (make-page-list pages "_site/pages.html" list-layout item-layout params)))
+
+(defun make-short (pages page-layout params)
+  "Generate page list for the full website."
+  (let ((list-layout (read-file "layout/short/list.html"))
+        (item-layout (read-file "layout/short/item.html")))
+    (set-nested-template list-layout page-layout)
+    (aput "title" "Short Links" params)
+    (make-page-list pages "_site/p/index.html" list-layout item-layout params)))
 
 (defun make-feed (pages params)
   "Generate feed for the complete website."
@@ -1333,6 +1359,7 @@ value, next-index."
     (validate-pages all-pages)
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
+    (make-short all-pages page-layout params)
     (make-feed all-pages params)
     ;; Directory indices.
     (make-tree-list "_site/" "Tree" page-layout params)
