@@ -58,7 +58,7 @@ help:
 	@echo '  main              Publish main branch on primary server only.'
 	@echo '  cu                Publish content updates on primary server only.'
 	@echo '  cus               Publish content updates on primary server and restart web server.'
-	@echo '  mirror            Publish website on mirror only.'
+	@echo '  gh                Publish website on GitHub mirror only.'
 	@echo '  pull-backup       Pull a backup of cache from live server.'
 	@echo
 	@echo 'Default target:'
@@ -146,7 +146,7 @@ backup:
 BOT_RE = tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
 
 follow-log:
-	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|woff|xml)|$(BOT_RE)"
+	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)"
 
 follow-post:
 	tail -F /opt/log/form/form.log | grep POST
@@ -207,7 +207,7 @@ filter-visitors:
 	grep -E 'GET /(favicon\.png|favicon\.ico|feed\.xsl|css) .* "https://susam\.net/' | awk '{print $$1}' | sort -u
 
 filter-visits:
-	sudo zgrep -f /tmp/visitors.txt | grep -vE '\.(css|js|ico|png|jpg|gif|woff|xml|xsl)'
+	sudo zgrep -f /tmp/visitors.txt | grep -vE '\.(css|js|ico|png|jpg|gif|ttf|woff|xml|xsl)'
 
 lazy-cache-visits:
 	if [ -f /tmp/visits.txt ]; then echo Visits already cached; \
@@ -590,7 +590,7 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
-pub: cu mirror
+pub: cu gh
 
 cu:
 	git push origin main
@@ -615,9 +615,9 @@ WEB_URL = https://susam.github.io/
 TMP_GIT = /tmp/tmpgit
 README  = $(TMP_GIT)/README.md
 
-mirror: site
+gh: site
 	@echo
-	@echo 'Creating mirror ...'
+	@echo 'Creating GitHub mirror ...'
 	rm -rf $(TMP_GIT)
 	mv _site $(TMP_GIT)
 	git rev-parse --short HEAD > $(TMP_REV)
@@ -632,7 +632,7 @@ mirror: site
 	echo "[WEB_URL]: $(WEB_URL)" >> $(README)
 	echo "[GIT_REV]: $(GIT_SRC)/commit/$$($(CAT_REV))" >> $(README)
 	@echo
-	@echo 'Pushing mirror ...'
+	@echo 'Pushing GitHub mirror ...'
 	cd $(TMP_GIT) && git init
 	cd $(TMP_GIT) && git config user.name "Susam Pal"
 	cd $(TMP_GIT) && git config user.email susam@susam.net
