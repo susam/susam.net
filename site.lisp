@@ -787,12 +787,20 @@ value, next-index."
 ;;; Tree
 ;;; ----
 
-(defun validate-pages (pages)
-  "Validate pages to ensure required metadata is present."
+(defun validate-required-params (pages)
+  "Validate pages to ensure required parameters exist."
   (dolist (page pages)
     (dolist (key '("date" "tag" "key"))
       (when (not (aget key page))
         (error "Missing key ~a for page ~a" key (aget "slug" page))))))
+
+(defun validate-unique-keys (pages)
+  (let ((seen (make-hash-table :test #'equal)))
+    (dolist (page pages)
+      (dolist (key (aget "keys" page))
+        (when (gethash key seen)
+          (error "Duplicate key ~a in page ~a" key (aget "slug" page)))
+        (setf (gethash key seen) t)))))
 
 (defun make-tree-recursively (src dst page-layout post-layout params)
   "Recursively descend into a directory tree and render/copy all files."
@@ -1354,9 +1362,11 @@ value, next-index."
     (setf all-pages (append all-pages pages))
     ;; Home page.
     (make-home pages page-layout params)
-    ;; Aggregates.
+    ;; Aggregates validation.
     (setf all-pages (sort-pages all-pages))
-    (validate-pages all-pages)
+    (validate-required-params all-pages)
+    (validate-unique-keys all-pages)
+    ;; Aggregates rendering.
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
     (make-short all-pages page-layout params)
