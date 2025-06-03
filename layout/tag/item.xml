@@ -1,7 +1,7 @@
 <item>
 <title>{{ title }}</title>
 <link>{{ neat-url }}</link>
-<guid>{{ site-url }}p/?{{ pkey }}</guid>
+<guid isPermaLink="false">{{ pkey }}</guid>
 <pubDate>{{ rss-date }}</pubDate>
 <description>
 <![CDATA[
