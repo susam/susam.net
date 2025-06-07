@@ -743,21 +743,20 @@ value, next-index."
                    (aget "date" comment)
                    (aget "slug" comment))))))
 
-(defun make-comment-list (post comments dst list-layout item-layout params)
+(defun make-comment-list (comments dst list-layout item-layout params)
   "Generate comment list page."
-  (let* ((post-import (aget "import" post))
-         (count (length comments))
-         (comment-label (if (= count 1) "comment" "comments"))
+  (let* ((post-title (aget "title" params))
+         (post-import (aget "import" params))
+         (comment-count (length comments))
+         (comment-label (if (= comment-count 1) "comment" "comments"))
          (rendered-comments))
     ;; Add comment item parameters.
-    (aput "slug" (aget "slug" post) params)
-    (aput "post-path" (aget "path" post) params)
-    (aput "title" (fstr "Comments on ~a" (aget "title" post)) params)
-    (aput "post-title" (aget "title" post) params)
-    (aput "count" count params)
+    (aput "post-title" post-title params)
+    (aput "title" (fstr "Comments on ~a" post-title) params)
+    (aput "comment-count" comment-count params)
     (aput "comment-label" comment-label params)
     ;; Render each comment.
-    (loop for index from count downto 1
+    (loop for index from comment-count downto 1
           for comment in comments
           do (setf comment (append comment params))
              (aput "comment-id" index comment)
@@ -775,13 +774,13 @@ value, next-index."
     (aput "body" (join-strings rendered-comments) params)
     (write-page dst list-layout params)))
 
-(defun make-comment-none (post dst none-layout params)
+(defun make-comment-none (dst none-layout params)
   "Generate a comment page with no comments."
-  (aput "slug" (aget "slug" post) params)
-  (aput "post-path" (aget "path" post) params)
-  (aput "title" (fstr "Comments on ~a" (aget "title" post)) params )
-  (aput "post-title" (aget "title" post) params)
-  (write-page dst none-layout params))
+  (let* ((post-title (aget "title" params)))
+    (aput "import" "" params)           ; Empty list needs no imports.
+    (aput "post-title" post-title params)
+    (aput "title" (fstr "Comments on ~a" post-title) params )
+    (write-page dst none-layout params)))
 
 
 ;;; Tree
@@ -994,11 +993,12 @@ value, next-index."
     ;; For each page, render its comment list page.
     (dolist (page pages)
       (let* ((slug (aget "slug" page))
-             (comments (aget slug comment-map)))
+             (comments (aget slug comment-map))
+             (comment-params (append page params)))
         (if (aget slug comment-map)
-            (make-comment-list page comments comment-dst
-                               list-layout item-layout params)
-            (make-comment-none page comment-dst none-layout params))))))
+            (make-comment-list comments comment-dst
+                               list-layout item-layout comment-params)
+            (make-comment-none comment-dst none-layout comment-params))))))
 
 (defun make-blog (src name page-layout params)
   "Create a complete top-level blog with blog, tags, and list page."
