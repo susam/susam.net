@@ -1010,6 +1010,19 @@ value, next-index."
     (make-comments pages comments-src comments-dst page-layout params)
     pages))
 
+(defun make-guestbook (page-layout params)
+  "Create guestbook page."
+  (let ((list-layout (read-file "layout/guestbook/list.html"))
+        (item-layout (read-file "layout/comment/item.html"))
+        (comments (read-comments "content/guestbook/guestbook.html"))
+        (page (read-page "content/guestbook/guestbook.aux.html"))
+        (dst-path "_site/guestbook.html"))
+    (aput "title" "Guestbook" params)
+    (set-nested-template list-layout page-layout)
+    (make-comment-list comments dst-path list-layout item-layout params)
+    (add-page-params dst-path page params)
+    page))
+
 
 ;;; Meets
 ;;; -----
@@ -1355,6 +1368,9 @@ value, next-index."
     (setf pages (make-tree "content/tree/" "_site/" page-layout params))
     (setf all-pages (append all-pages pages))
     (make-meets page-layout params)
+    ;; Guestbook.
+    (setf pages (list (make-guestbook page-layout params)))
+    (setf all-pages (append all-pages pages))
     ;; Music
     (setf pages (make-music "content/music/*.html" page-layout params))
     (setf all-pages (append all-pages pages))

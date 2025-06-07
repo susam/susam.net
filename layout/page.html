@@ -14,13 +14,18 @@
 <footer>
   <hr>
   <nav>
-    <a href="{{ root }}{{ index }}">Home</a>{{ zone-link }}
-    <a href="{{ root }}links.html">Links</a>
-    <a href="{{ root }}feed.xml">Feed</a>
-    <a href="{{ root }}form/subscribe/{{ index }}">Subscribe</a>
-    <a href="{{ root }}about.html">About</a>
-    <a href="https://github.com/susam">GitHub</a>
-    <a href="https://mastodon.social/@susam">Mastodon</a>
+    <div>
+      <a href="{{ root }}{{ index }}">Home</a>{{ zone-link }}
+      <a href="{{ root }}links.html">Links</a>
+      <a href="{{ root }}feed.xml">Feed</a>
+      <a href="{{ root }}form/subscribe/{{ index }}">Subscribe</a>
+      <a href="{{ root }}guestbook.html">Guestbook</a>
+      <a href="{{ root }}about.html">About</a>
+    </div>
+    <div>
+      <a href="https://github.com/susam">GitHub</a>
+      <a href="https://mastodon.social/@susam">Mastodon</a>
+    </div>
   </nav>
   <p>&copy; {{ initial-year }}&ndash;{{ current-year }} {{ author }}</p>
 </footer>
