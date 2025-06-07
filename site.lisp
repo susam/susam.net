@@ -1369,7 +1369,7 @@ value, next-index."
     ;; Aggregates rendering.
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
-    (make-short all-pages page-layout params)
+    (make-short all-pages page-layout (cons (cons "import" "noindex.inc") params))
     (make-feed all-pages params)
     ;; Directory indices.
     (make-tree-list "_site/" "Tree" page-layout params)

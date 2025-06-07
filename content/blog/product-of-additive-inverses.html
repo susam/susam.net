@@ -1,23 +1,23 @@
 <!-- date: 2025-05-29 -->
 <!-- title: Product of Additive Inverses -->
 <!-- tag: Mathematics -->
-<!-- key: cjini -->
+<!-- key: rxpnz -->
 <!-- import: math.inc -->
 <p>
   A negative number multiplied by another negative number results in a
   positive number.  Most of us learnt this rule during our primary or
   secondary school years.  'Negative times negative equals positive'
-  was a phrase that was drummed into us during mathematics lessons.
-  In this article, we will prove it not just for numbers, but for any
-  algebraic structure that, in a general sense, behaves somewhat like
-  numbers.  We will find out what that means shortly.  First, let us
-  see an illustration of this concept.
+  was a phrase drummed into us during mathematics lessons.  In this
+  article, we will prove this rule &mdash; not just for numbers, but
+  for any algebraic structure that, in a general sense, behaves
+  somewhat like numbers.
 </p>
 {{ toc }}
 <h2 id="illustration">Illustration</h2>
 <p>
-  We now see why the product of two negative numbers must be positive
-  for arithmetic to make sense.  Consider
+  Let us begin with a quick illustration that shows why the product of
+  two negative numbers must be positive for arithmetic to make sense.
+  Consider
 
   \[
     7 \times 8 = 56.
@@ -71,13 +71,13 @@
 <p>
   From this section onwards, we begin to take a rigorous approach to
   everything we discuss.  We want to show that the rule 'negative
-  times negative equals positive' holds for any set of elements that
-  share certain properties with numbers.  As it turns out, these
-  elements do not need to possess all the properties of complex
-  numbers, real numbers, or even rational numbers.  In fact, if they
-  satisfy a small and specific set of properties that integers have,
-  then the rule still holds.  These properties are known as
-  the <em>ring axioms</em>.
+  times negative equals positive' holds, in a general sense, for any
+  set of elements that share certain properties with numbers.  As it
+  turns out, these elements do not need to possess all the properties
+  of complex numbers, real numbers, or even rational numbers.  In
+  fact, if they satisfy a small and specific set of properties that
+  integers have, then the rule still holds.  These properties are
+  known as the <em>ring axioms</em>.
 </p>
 <p>
   A ring is an algebraic structure consisting of a set \( R \) with
@@ -100,7 +100,7 @@
   <li>
     <p>
       <strong>Additive identity:</strong> There exists an element \( 0
-      \in R \) such that for all \( a \in R, \) we have \( a + 0 = a =
+      \in R \) such that for all \( a \in R \), we have \( a + 0 = a =
       0 + a \).
     </p>
   </li>
@@ -121,14 +121,14 @@
   <li>
     <p>
       <strong>Left distributivity of multiplication over
-      addition:</strong> For all \( a, b, c \in R, \) we have \( a
+      addition:</strong> For all \( a, b, c \in R \), we have \( a
       \cdot (b + c) = (a \cdot b) + (a \cdot c) \).
     </p>
   </li>
   <li>
     <p>
       <strong>Right distributivity of multiplication over
-      addition:</strong> For all \( a, b, c \in R, \) we have \( (b +
+      addition:</strong> For all \( a, b, c \in R \), we have \( (b +
       c) \cdot a = (b \cdot a) + (c \cdot a) \).
     </p>
   </li>
@@ -159,14 +159,14 @@
 <ol>
   <li>
     <p>
-      <strong>Closure under addition:</strong> For all \( a, b \in R
-      \), we have \( a + b \in R \).
+      <strong>Closure under addition:</strong> For all
+      \( a, b \in R \), we have \( a + b \in R \).
     </p>
   </li>
   <li>
     <p>
       <strong>Closure under multiplication:</strong> For all \( a, b
-      \in R, \) we have \( a \cdot b \in R \).
+      \in R \), we have \( a \cdot b \in R \).
     </p>
   </li>
 </ol>
@@ -180,9 +180,9 @@
     \circ : M \times M \to M; \quad (a, b) \mapsto a \circ b.
   \]
 
-  This definition automatically implies the closure property.  The
-  addition and multiplication operations on a ring \( R \) may be
-  defined as
+  This definition automatically implies the closure property, since
+  the domain and codomain are the same.  The addition and
+  multiplication operations on a ring \( R \) may be defined as
 
   \begin{align*}
         + &amp;: R \times R \to R; \quad (a, b) \mapsto a + b, \\
@@ -451,8 +451,8 @@
 </p>
 <p>
   Similarly, <a href="#theorem-2">Theorem 2</a> confirms the
-  well-known fact that multiplying any integer by \( 0 \) yields \( 0
-  \).  For example, \( 2 \cdot 0 = 0 \).
+  well-known fact that multiplying any integer by \( 0 \) yields
+  \( 0 \).  For example, \( 2 \cdot 0 = 0 \).
 </p>
 <p>
   Then <a href="#theorem-3">Theorem 3</a> implies the rule that
@@ -468,7 +468,6 @@
   These familiar results are not limited to the integers.  The results
   hold in any ring, including polynomial rings, rings of integers
   modulo a fixed positive integer, and many other algebraic systems.
-  These results offer a glimpse of how the ring axioms can
-  formalise familiar arithmetic rules within a more general algebraic
-  framework.
+  These results demonstrate how the ring axioms formalise familiar
+  arithmetic rules within a more general algebraic framework.
 </p>
