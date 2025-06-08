@@ -33,7 +33,7 @@ a:empty {
   visibility: hidden;
   padding-left: 0.25em;
 }
-:hover > a, h2:hover > a {
+:hover > a:empty {
   visibility: visible;
 }
 blockquote, pre, kbd, .highlight {
