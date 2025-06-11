@@ -37,6 +37,8 @@ help:
 	@echo '  deep              Put website in a directory deeply nested within _site/.'
 	@echo
 	@echo 'Development targets:'
+	@echo '  clean             Clean temporary files.'
+	@echo '  clean-all         Clean temporary files more aggressively.'
 	@echo '  opt               Create directories at /opt for testing.'
 	@echo '  comment           Create comment file for filename in FILE macro.'
 	@echo '  loop              Run a loop to create website directory repeatedly.'
@@ -239,16 +241,16 @@ live: site
 
 site: katex
 	@echo Generating website ...
-	sbcl --load site.lisp --quit
+	time sbcl --load site.lisp --quit
 	@echo Done; echo
 
 dist: katex
 	@echo Generating distributable website ...
-	sbcl --noinform \
-	     --eval '(setf *break-on-signals* t)' \
-	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	     --load site.lisp \
-	     --quit
+	time sbcl --noinform \
+	          --eval '(setf *break-on-signals* t)' \
+	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	          --load site.lisp \
+	          --quit
 	@echo Done; echo
 
 serve:
@@ -283,6 +285,13 @@ mathjax:
 
 # Development Targets
 # -------------------
+
+clean:
+	rm -f dist.diff site.diff run.log
+	rm -rf _new/
+
+clean-all: clean
+	rm -rf _site/ _ref/
 
 opt:
 	sudo mkdir -p /opt/data/form/ /opt/log/form/
