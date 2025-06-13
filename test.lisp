@@ -686,9 +686,9 @@ Foo
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]" nil)))
     (assert (= (length posts) 3))
-    (assert (string= (aget "date" (first posts)) "2020-06-01"))
+    (assert (string= (aget "date" (first posts)) "2020-06-03"))
     (assert (string= (aget "date" (second posts)) "2020-06-02"))
-    (assert (string= (aget "date" (third posts)) "2020-06-03"))))
+    (assert (string= (aget "date" (third posts)) "2020-06-01"))))
 
 (test-case make-pages-filename-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
@@ -714,7 +714,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
-              (list (cons "callback" #'callback)))
+              (list (cons "callbacks" (list #'callback))))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo apple]")))
 
@@ -726,7 +726,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
-              (list (cons "a" "apple") (cons "callback" #'callback)))
+              (list (cons "a" "apple") (cons "callbacks" (list #'callback))))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo ant]")))
 
 (test-case make-pages-no-content-rendering
@@ -866,57 +866,65 @@ Z")
     (let* ((comment1 (first comments))
            (comment2 (second comments))
            (comment3 (third comments)))
-      (assert (string= (aget "date" comment1) "2020-06-03 00:00:03 +0000"))
-      (assert (string= (aget "author" comment1) "Carol"))
-      (assert (string= (aget "body" comment1) (format nil "Z")))
+      (assert (string= (aget "date" comment1) "2020-06-01 00:00:01 +0000"))
+      (assert (string= (aget "author" comment1) "Alice"))
+      (assert (string= (aget "body" comment1) (format nil "X~%")))
       (assert (string= (aget "date" comment2) "2020-06-02 00:00:02 +0000"))
       (assert (string= (aget "author" comment2) "Bob"))
       (assert (string= (aget "body" comment2) (format nil "Y~%")))
-      (assert (string= (aget "date" comment3) "2020-06-01 00:00:01 +0000"))
-      (assert (string= (aget "author" comment3) "Alice"))
-      (assert (string= (aget "body" comment3) (format nil "X~%"))))))
+      (assert (string= (aget "date" comment3) "2020-06-03 00:00:03 +0000"))
+      (assert (string= (aget "author" comment3) "Carol"))
+      (assert (string= (aget "body" comment3) (format nil "Z"))))))
 
 (test-case make-comment-list
-  (make-comment-list
-   (list (cons "slug" "foo")
-         (cons "title" "Foo"))
-   (list (list (cons "date" "2020-06-01")
-               (cons "author" "Alice")
-               (cons "body" "Foo"))
-         (list (cons "date" "2020-06-02")
-               (cons "author" "Bob")
-               (cons "body" "Bar"))
-         (list (cons "date" "2020-06-03")
-               (cons "author" "Carol")
-               (cons "body" "Baz")))
-   "test-tmp/{{ slug }}.html"
-   "[{{ title }} {{ count }} {{ comment-label }} {{ post-title }} {{ body }}]"
-   "[{{ date }} {{ author }} {{ body }} {{ comment-id }}]" nil)
-  (assert(string= (read-file "test-tmp/foo.html")
-                  (join-strings '("[Comments on Foo 3 comments Foo "
-                                  "[2020-06-03 Carol Baz 1]"
-                                  "[2020-06-02 Bob Bar 2]"
-                                  "[2020-06-01 Alice Foo 3]]")))))
+  (let ((comments (list (list (cons "date" "2020-06-01")
+                              (cons "author" "Alice")
+                              (cons "body" "Foo"))
+                        (list (cons "date" "2020-06-02")
+                              (cons "author" "Bob")
+                              (cons "body" "Bar"))
+                        (list (cons "date" "2020-06-03")
+                              (cons "author" "Carol")
+                              (cons "body" "Baz"))))
+        (page (list (cons "title" "Foo")
+                    (cons "neat-path" "foo/foo.html")
+                    (cons "author" "Alice"))))
+    (make-comment-list comments
+                       "test-tmp/{{ slug }}.html"
+                       "[{{ title }} {{ post-title }} {{ body }}]"
+                       (join-strings '("[{{ date }} {{ author }} {{ body }} "
+                                       "{{ comment-count }} {{ comment-label }}]"))
+                       (list (cons "slug" "foo")
+                             (cons "title" "Comments on Foo")
+                             (cons "post-title" "Foo")))
+    (assert(string= (read-file "test-tmp/foo.html")
+                    (join-strings '("[Comments on Foo Foo "
+                                    "[2020-06-03 Carol Baz 3 comments]"
+                                    "[2020-06-02 Bob Bar 3 comments]"
+                                    "[2020-06-01 Alice Foo 3 comments]]"))))))
 
 (test-case make-comment-list-imports
-  (make-comment-list (list (cons "slug" "foo") (cons "title" "Foo"))
-                     (list (list (cons "date" "2020-06-01")
+  (make-comment-list (list (list (cons "date" "2020-06-01")
                                  (cons "author" "Alice")
                                  (cons "body" "Foo")))
                      "test-tmp/comments.html"
                      "[{{ imports }}]"
                      "[{{ body }}]"
-                     (list (cons "root" "")))
+                     (list (cons "root" "")
+                           (cons "slug" "foo")
+                           (cons "title" "Foo")))
   (assert
    (string= (read-file "test-tmp/comments.html")
             "[  <link rel=\"stylesheet\" href=\"../css/comment.css\">
 ]")))
 
 (test-case make-comment-none
-  (make-comment-none (list (cons "slug" "foo") (cons "title" "Foo"))
-                     "test-tmp/{{ slug }}.html"
+  (make-comment-none "test-tmp/{{ slug }}.html"
                      "[{{ title }} {{ post-title }} {{ a }}]"
-                     (list (cons "a" "apple")))
+                     (list (cons "a" "apple")
+                           (cons "slug" "foo")
+                           (cons "title" "Comments on Foo")
+                           (cons "post-title" "Foo")))
   (assert (string= (read-file "test-tmp/foo.html")
                    "[Comments on Foo Foo apple]")))
 
