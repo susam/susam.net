@@ -15,7 +15,8 @@
     const target = document.getElementById(key).href
     let html = '<div style="font-size: x-large; margin-top: 2em">'
     html += '<p>Redirecting you automatically to the target page ...</p>'
-    html += '<p>If the automatic redirection fails, <a href="' + target + '">click here</a>.</p>'
+    html += '<p>If the automatic redirection fails, <a ' + 'href="' + target + '">click here</a>.</p>'
+    // The anchor tag is broken up above to prevent wget --spider from seeing it.
     document.body.innerHTML = html
     document.location.href = target
   }
