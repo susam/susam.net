@@ -579,9 +579,9 @@ value, next-index."
 (defun write-page (dst-path layout params)
   "Render given layout with given parameters and write page."
   (setf dst-path (render dst-path params))
-  ;; Standalone pages (e.g., ls.html, comment pages, etc.) need
-  ;; neat-url to be set for rendering the canonical link tag.  This
-  ;; function happens to be one common place where the neat-url
+  ;; Standalone pages (e.g., ls.html, comment pages, guestbook, etc.)
+  ;; need neat-url to be set for rendering the canonical link tag.
+  ;; This function happens to be one common place where the neat-url
   ;; parameter can be added to all such pages.
   (add-page-params dst-path params params)
   (write-log "Writing ~a ..." dst-path)
@@ -864,10 +864,10 @@ value, next-index."
         (dst-path "_site/guestbook.html"))
     (aput "title" "Guestbook" params)
     (aput "post-title" "Guestbook" params)
+    (add-page-params dst-path page params)
     (set-nested-template list-layout page-layout)
     (setf comments (enrich-comments comments page dst-path params))
     (make-comment-list comments dst-path list-layout item-layout params)
-    (add-page-params dst-path page params)
     (values (list page) comments)))
 
 
