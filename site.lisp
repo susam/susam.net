@@ -990,11 +990,6 @@ value, next-index."
                    '("index.html" "ls.html") "Index of {{ url-path }}"
                    page-layout params 100))
 
-(defun make-more-list (path title page-layout &optional params)
-  "Make index page immediately under the given directory only."
-  (visit-directory (truename "_site/") (truename path) '("more.html")
-                   title page-layout params 1))
-
 (defun collect-tree-paths (apex-pathname current-pathname page-layout params)
   "Collect paths from the given directory and its subdirectories recursively."
   (let ((paths))
@@ -1434,8 +1429,6 @@ value, next-index."
       (extend-list all-comments comments))
     ;; Music
     (extend-list all-pages (make-music "content/music/*.html" page-layout params))
-    ;; More links.
-    (make-more-list "_site/" "More" page-layout params)
     ;; Maze.
     (setf pages (make-blog "content/maze/*.html" "Maze" page-layout params))
     (extend-list all-comments (make-page-comments pages comments "Maze" page-layout params))
