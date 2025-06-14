@@ -864,8 +864,8 @@ value, next-index."
         (dst-path "_site/guestbook.html"))
     (aput "title" "Guestbook" params)
     (aput "post-title" "Guestbook" params)
-    (add-page-params dst-path page params)
     (set-nested-template list-layout page-layout)
+    (add-page-params dst-path page params)
     (setf comments (enrich-comments comments page dst-path params))
     (make-comment-list comments dst-path list-layout item-layout params)
     (values (list page) comments)))
@@ -1352,7 +1352,8 @@ value, next-index."
     (aput "import" "extra.css, math.inc" params)
     (aput "title" "All Comments" params)
     (setf comments (reverse (number-comments (only-listed-items comments))))
-    (make-comment-list comments "_site/comments.html" list-layout item-layout params)))
+    (make-comment-list comments "_site/comments/index.html"
+                       list-layout item-layout params)))
 
 (defun make-short (pages page-layout params)
   "Generate a short links listing page."
