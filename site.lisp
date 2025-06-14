@@ -777,7 +777,7 @@ value, next-index."
     comments))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
-  "Generate comment list page."
+  "Generate comment list page. Honour the order of comments provided."
   (let* ((post-import (aget "import" params))
          (comment-dst (render dst params))
          (comment-count (length comments))
@@ -787,15 +787,14 @@ value, next-index."
     (aput "comment-count" comment-count common-params)
     (aput "comment-label" comment-label common-params)
     (dolist (comment comments)
-      (setf rendered-comments
-            (cons (render item-layout (append comment common-params)) rendered-comments)))
+      (push (render item-layout (append comment common-params)) rendered-comments))
     ;; Inherit imports from post.
     (if post-import
         (setf post-import (fstr "comment.css, ~a" post-import))
         (setf post-import "comment.css"))
     (aput "import" post-import params)
     ;; Determine destination path and URL.
-    (aput "body" (join-strings rendered-comments) params)
+    (aput "body" (join-strings (reverse rendered-comments)) params)
     (write-page comment-dst list-layout params)))
 
 (defun make-comment-none (dst none-layout params)
@@ -1283,8 +1282,6 @@ value, next-index."
     (dolist (page pages)
       (dolist (tag (aget "tags" page))
         (aput-list tag page tags)))
-    (dolist (tag-entry tags)
-      (setf (cdr tag-entry) (sort-by-date-desc (cdr tag-entry))))
     (sort tags (lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
 
 (defun tags-html (tags params)
@@ -1359,7 +1356,7 @@ value, next-index."
     (set-nested-template list-layout page-layout)
     (aput "import" "extra.css, math.inc" params)
     (aput "title" "All Comments" params)
-    (setf comments (number-comments (only-listed-items comments)))
+    (setf comments (reverse (number-comments (only-listed-items comments))))
     (make-comment-list comments "_site/comments.html" list-layout item-layout params)))
 
 (defun make-short (pages page-layout params)
@@ -1449,7 +1446,6 @@ value, next-index."
     (extend-list all-comments (make-page-comments pages comments "Blog" page-layout params))
     (extend-list all-pages pages)
     ;; Aggregates validation.
-    (setf all-pages (sort-by-date-desc all-pages))
     (validate-required-params all-pages)
     (validate-unique-keys all-pages)
     ;; Aggregates rendering.
