@@ -1,7 +1,9 @@
 ;;;; Form Application
 ;;;; ================
 
-(ql:quickload "hunchentoot")
+(require "asdf")
+(asdf:load-system "hunchentoot")
+
 (defvar *main-mode* nil)
 (load "site.lisp")
 

@@ -6,7 +6,7 @@ help:
 	@echo 'Usage: make [target]'
 	@echo
 	@echo 'Targets to run on live server:'
-	@echo '  setup             Install Debian packages and Quicklisp for website.'
+	@echo '  setup             Install Debian packages and CL systems for website.'
 	@echo '  https             Reinstall live website and serve with Nginx via HTTPS.'
 	@echo '  http              Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  rm                Uninstall live website.'
@@ -70,9 +70,17 @@ help:
 # Targets for Live Server
 # -----------------------
 
-setup:
+setup: debs hunchentoot
+
+debs:
 	apt-get update
 	apt-get -y install nginx certbot sbcl
+
+hunchentoot:
+	mkdir -p /opt/cl/
+	set -x; while read -r url; do curl -sSL "$$url" | tar -C /opt/cl -xz; done < cl-deps.txt
+
+quicklisp:
 	rm -rf /opt/quicklisp.lisp /opt/quicklisp
 	curl https://beta.quicklisp.org/quicklisp.lisp -o /opt/quicklisp.lisp
 	sbcl --load /opt/quicklisp.lisp \
@@ -338,6 +346,8 @@ run-dist-deep: dist deep serve
 run-site-deep: site deep serve
 
 run-form: site
+	CL_SOURCE_REGISTRY="/opt/cl//" \
+	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
 	sbcl --load form.lisp
 
 # Checks
