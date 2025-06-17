@@ -1,13 +1,13 @@
 types {
     text/plain asm c cc el lisp md org py yaml yml;
 }
-limit_req_zone $binary_remote_addr zone=pagelimit:10m rate=4r/m;
-limit_req_zone $binary_remote_addr zone=formlimit:10m rate=4r/m;
+limit_req_zone $binary_remote_addr zone=pagelimit:10m rate=10r/m;
+limit_req_zone $binary_remote_addr zone=formlimit:10m rate=10r/m;
 limit_req_status 429;
 
 # http://susam.net/
 server {
-    limit_req zone=pagelimit burst=30 nodelay;
+    limit_req zone=pagelimit burst=60 nodelay;
     listen 80;
     listen [::]:80;
     server_name susam.net susam;

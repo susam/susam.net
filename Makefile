@@ -163,6 +163,7 @@ follow-post:
 
 follow-visit:
 	if ! [ -f /tmp/lines.txt ]; then echo 0 > /tmp/lines.txt; fi
+	tally=0; \
 	while true; do \
 	  make -s cache-visits FILE=/var/log/nginx/access.log; \
 	  prev_lines=$$(cat /tmp/lines.txt); \
@@ -173,12 +174,15 @@ follow-visit:
 	    echo "Log file truncated; following from the beginning"; \
 	  fi; \
 	  if [ "$$curr_lines" -ne "$$prev_lines" ]; then \
+	    tally=0; \
 	    echo; \
 	    tail -n +"$$(( $$prev_lines + 1 ))" /tmp/visits.txt; \
 	    echo; \
 	    echo "[$$(date +"%Y-%m-%d %H:%M:%S")] new visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	  else \
+	    tally=$$(( ($$tally + 1) % 5 )); \
 	    printf '.'; \
+	    if [ "$$tally" = 0 ]; then printf ' '; fi; \
 	  fi; \
 	  sleep 60; \
 	done
@@ -249,16 +253,16 @@ live: site
 
 site: katex
 	@echo Generating website ...
-	time sbcl --load site.lisp --quit
+	sbcl --load site.lisp --quit
 	@echo Done; echo
 
 dist: katex
 	@echo Generating distributable website ...
-	time sbcl --noinform \
-	          --eval '(setf *break-on-signals* t)' \
-	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	          --load site.lisp \
-	          --quit
+	sbcl --noinform \
+	     --eval '(setf *break-on-signals* t)' \
+	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	     --load site.lisp \
+	     --quit
 	@echo Done; echo
 
 serve:
@@ -347,6 +351,13 @@ run-form: site
 	CL_SOURCE_REGISTRY="/opt/cl//" \
 	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
 	sbcl --load form.lisp
+
+# List metadata.
+ls-unlist:
+	grep -r 'unlist:' content
+
+ls-tag:
+	grep -r 'tag:' content
 
 # Checks
 test:
@@ -616,7 +627,7 @@ cu:
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
-cus:
+cure:
 	git push origin main
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu restart"
