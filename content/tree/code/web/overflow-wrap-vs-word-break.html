@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>overflow-wrap vs break-word</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+      body {
+        max-width: 40em;
+        margin: 1em auto;
+        font-size: large;
+        font-family: georgia;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+      h1 + div {
+        border: none;
+      }
+      h2 {
+        font-size: 1em;
+        margin-top: 1.5em;
+      }
+      div {
+        border: thin solid gray;
+        max-width: 20em;
+      }
+      div p {
+        margin: 0.5em;
+      }
+      .ow-anywhere {
+        overflow-wrap: anywhere;
+      }
+      .ow-break-word {
+        overflow-wrap: break-word;
+      }
+      .wb-break-all {
+        word-break: break-all;
+      }
+      .wb-keep-all {
+        word-break: keep-all;
+      }
+    </style>
+  <body>
+    <h1>overflow-wrap vs break-word</h1>
+    <div>Published on 16 Jun 2025</div>
+    <h2>default</h2>
+    <div>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-cccccccccccccccccccc</p>
+      <p>我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我-你你你你你你你你你你你你你你你你你-人人人人人人人人人人人人</p>
+    </div>
+    <h2>overflow-wrap: anywhere</h2>
+    <div class="ow-anywhere">
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-cccccccccccccccccccc</p>
+      <p>我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我-你你你你你你你你你你你你你你你你你-人人人人人人人人人人人人</p>
+    </div>
+    <h2>overflow-wrap: break-word</h2>
+    <div class="ow-break-word">
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-cccccccccccccccccccc</p>
+      <p>我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我-你你你你你你你你你你你你你你你你你-人人人人人人人人人人人人</p>
+    </div>
+    <h2>word-break: break-all</h2>
+    <div class="wb-break-all">
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-cccccccccccccccccccc</p>
+      <p>我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我-你你你你你你你你你你你你你你你你你-人人人人人人人人人人人人</p>
+    </div>
+    <h2>word-break: keep-all</h2>
+    <div class="wb-keep-all">
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccc</p>
+      <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-cccccccccccccccccccc</p>
+      <p>我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我-你你你你你你你你你你你你你你你你你-人人人人人人人人人人人人</p>
+    </div>
+    <h2>Observations</h2>
+    <ul>
+      <li>
+        <p>
+          default: Breaks line at an acceptable breaking point, if one
+          exists.
+        </p>
+      </li>
+      <li>
+        <p>
+          <code>overflow-wrap: anywhere</code>: Breaks line at an
+          acceptable breaking point, if one exists.  Otherwise, breaks
+          the line at the end of the container.
+        </p>
+      </li>
+      <li>
+        <p>
+          <code>overflow-wrap: break-word</code>: Breaks line at an
+          acceptable breaking point, if one exists.  Otherwise, breaks
+          the line at the end of the container.
+        </p>
+      </li>
+      <li>
+        <p>
+          Although <code>overflow-wrap: anywhere</code>
+          and <code>overflow-wrap: break-word</code> behave the same
+          in the experiments on this page, according to
+          the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap">MDN
+          Web Docs</a>
+          and <a href="https://stackoverflow.com/a/61866696">this SO
+          answer</a>, <code>anywhere</code> has a stronger line
+          breaking behaviour.  While the former will always force a
+          line break before the edge of the container, the latter may
+          not do so in some cases.  However, for simple containers
+          like the one on this page, both have the same effect.
+      </li>
+      <li>
+        <p>
+          Firefox considers slash (<code>/</code>) to be an acceptable
+          breaking point but Safari 18.3 and Chrome 137 do not.
+        </p>
+      </li>
+      <li>
+        <p>
+          <code>word-break: break-all</code>: Breaks line at the end
+          of the container.
+        </p>
+      </li>
+      <li>
+        <p>
+          <code>word-break: keep-all</code>: Prevents word-breaking in
+          CJK text.  Same as default for non-CJK text.
+        </p>
+      </li>
+    </ul>
+    <h2>Deprecations</h2>
+    <p>
+      The following properties and vallues have been deprecated, so
+      they have not been used in the experiments on this page:
+    </p>
+    <ul>
+      <li>
+        <p>
+          The <code>word-wrap</code> property was originally a
+          non-standard Microsoft extension that has been superseded by
+          the standard <code>overflow-wrap</code> property.
+        </p>
+      </li>
+      <li>
+        <p>
+          The <code>word-break: break-word</code> value is deprecated.
+          It is defined to have the same behaviour
+          as <code>overflow-wrap: anywhere</code>.
+        </p>
+      </li>
+    </ul>
+    <h2>References</h2>
+    <ul>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap">MDN: overflow-wrap</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/word-break">MDN: word-break</a></li>
+    </ul>
+  </body>
+</html>
