@@ -2,8 +2,10 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="html" indent="yes"/>
   <xsl:template match="/rss/channel">
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <html lang="en">
       <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>
           <xsl:value-of select="description"/>
         </title>
