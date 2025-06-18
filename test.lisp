@@ -65,7 +65,8 @@
     (format t "~&FAIL: ~a~%" *fail*))
   (when *quit*
     (format t "~&~%quitting ...~%~%")
-    (uiop:quit (if (zerop *fail*) 0 1))))
+    (uiop:quit (if (zerop *fail*) 0 1)))
+  (zerop *fail*))
 
 
 ;;; Begin Test Cases
@@ -331,15 +332,6 @@
   (assert (string= (month-name 11) "Nov"))
   (assert (string= (month-name 12) "Dec")))
 
-(test-case decode-weekday-name
-  (assert (string= (decode-weekday-name 2019 01 07) "Mon"))
-  (assert (string= (decode-weekday-name 2019 03 05) "Tue"))
-  (assert (string= (decode-weekday-name 2020 01 01) "Wed"))
-  (assert (string= (decode-weekday-name 2020 02 27) "Thu"))
-  (assert (string= (decode-weekday-name 2020 02 28) "Fri"))
-  (assert (string= (decode-weekday-name 2020 02 29) "Sat"))
-  (assert (string= (decode-weekday-name 2020 03 01) "Sun")))
-
 (test-case format-rss-date
   (assert (string= (format-rss-date (parse-content-date "2020-06-01"))
                    "Mon, 01 Jun 2020 00:00:00 +0000"))
@@ -348,23 +340,27 @@
   (assert (string= (format-rss-date (parse-content-date "2020-06-01 09:00:10"))
                    "Mon, 01 Jun 2020 09:00:10 +0000"))
   (assert (string= (format-rss-date (parse-content-date "2020-06-01 14:30:10 +0530"))
-                   "Mon, 01 Jun 2020 09:00:10 +0000")))
+                   "Mon, 01 Jun 2020 09:00:10 +0000"))
+  (assert (string= (format-rss-date (parse-content-date "2020-06-01 04:30:10 +0530"))
+                   "Sun, 31 May 2020 23:00:10 +0000")))
 
-(test-case simple-date
-  (assert (string= (simple-date "2020-06-01")
+(test-case format-short-date
+  (assert (string= (format-short-date (parse-content-date "2020-06-01"))
                    "01 Jun 2020"))
-  (assert (string= (simple-date "2020-06-01 17:30")
-                   "01 Jun 2020 17:30"))
-  (assert (string= (simple-date "2020-06-01 17:30:10 +0000")
-                   "01 Jun 2020 17:30 GMT"))
-  (assert (string= (simple-date "2020-06-01 17:30:10 GMT")
-                   "01 Jun 2020 17:30 GMT"))
-  (assert (string= (simple-date "2020-06-01 17:30:10 +0530")
-                   "01 Jun 2020 17:30 +0530"))
-  (assert (string= (simple-date "2020-06-01 17:30:10 IST")
-                   "01 Jun 2020 17:30 IST"))
-  (assert (string= (simple-date "2020-06-01 17:30:10 IST" :sep "at ")
-                   "01 Jun 2020 at 17:30 IST")))
+  (assert (string= (format-short-date (parse-content-date "2020-06-01 09:00"))
+                   "01 Jun 2020"))
+  (assert (string= (format-short-date (parse-content-date "2020-06-01 14:30:10 +0530"))
+                   "01 Jun 2020"))
+  (assert (string= (format-short-date (parse-content-date "2020-06-01 04:30:10 +0530"))
+                   "31 May 2020")))
+
+(test-case format-long-date
+  (assert (string= (format-long-date (parse-content-date "2020-06-01"))
+                   "01 Jun 2020 00:00 GMT"))
+  (assert (string= (format-long-date (parse-content-date "2020-06-01 14:30:10 +0530"))
+                   "01 Jun 2020 09:00 GMT"))
+  (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530"))
+                   "31 May 2020 23:00 GMT")))
 
 (test-case date-slug
   (multiple-value-bind (date slug) (date-slug "foo")
