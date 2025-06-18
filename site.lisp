@@ -172,6 +172,13 @@
   "Append new-list to old-list and return the resulting list."
   `(setf ,old-list (append ,old-list ,new-list)))
 
+(defun parse-tz (tz-string)
+  "Parse timezone string to CL-friendly rational, e.g., +0530 as -9/2."
+  (let* ((sign (if (char= (char tz-string 0) #\-) 1 -1))
+         (hours (parse-integer tz-string :start 1 :end 3))
+         (minutes (parse-integer tz-string :start 3)))
+    (* sign (+ hours (/ minutes 60)))))
+
 
 ;;; Tool Definitions
 ;;; ----------------
@@ -213,65 +220,67 @@ value, next-index."
   "Given an index, return the corresponding day of week."
   (nth weekday-index '("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun")))
 
-(defun month-name (month-number)
-  "Given a number, return the corresponding month."
-  (nth month-number '("X" "Jan" "Feb" "Mar" "Apr" "May" "Jun"
-                      "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")))
+(defun parse-tz (tz-string)
+  "Parse timezone string like to CL-friendly rational, e.g., +0530 as -9/2."
+  (let* ((sign (if (char= (char tz-string 0) #\-) 1 -1))
+         (hours (parse-integer tz-string :start 1 :end 3))
+         (minutes (parse-integer tz-string :start 3)))
+    (* sign (+ hours (/ minutes 60)))))
 
-(defun decode-weekday-name (year month date)
-  "Given a date, return the day of week."
-  (let* ((encoded-time (encode-universal-time 0 0 0 date month year))
-         (decoded-week (nth-value 6 (decode-universal-time encoded-time)))
-         (weekday-name (weekday-name decoded-week)))
-    weekday-name))
+(defun format-tz (tz)
+  "Format tz (rational) into a +/-HHMM format timezone."
+  (let* ((minutes (* -60 tz))
+         (sign (if (minusp minutes) "-" "+"))
+         (abs-minutes (abs minutes))
+         (hh (truncate abs-minutes 60))
+         (mm (mod abs-minutes 60)))
+    (format nil "~a~2,'0d~2,'0d" sign hh mm)))
 
-(defun rss-date (date-string)
-  "Convert yyyy-mm-dd[ HH:MM[:SS[ TZ]]] to RFC-2822 date."
+(defun parse-content-date (date-string)
+  "Parse yyyy-mm-dd[ HH:MM:[:SS[ TZ]]] date to universal time (integer)."
   (let ((len (length date-string))
-        (year (parse-integer (subseq date-string 0 4)))
-        (month (parse-integer (subseq date-string 5 7)))
-        (date (parse-integer (subseq date-string 8 10)))
+        (year (parse-integer date-string :start 0 :end 4))
+        (month (parse-integer date-string :start 5 :end 7))
+        (date (parse-integer date-string :start 8 :end 10))
         (hour 0)
         (minute 0)
         (second 0)
-        (tz "+0000")
-        (month-name)
-        (weekday-name))
+        (tz 0))
+    ;; Consider example date: 2020-01-01 10:10:01 +0000
     (when (>= len 16)
-      (setf hour (parse-integer (subseq date-string 11 13)))
-      (setf minute (parse-integer (subseq date-string 14 16))))
+      (setf hour (parse-integer date-string :start 11 :end 13))
+      (setf minute (parse-integer date-string :start 14 :end 16)))
     (when (>= len 19)
       (setf second (parse-integer (subseq date-string 17 19))))
-    (when (>= len 21)
-      (setf tz (subseq date-string 20)))
-    (setf month-name (month-name month))
-    (setf weekday-name (decode-weekday-name year month date))
-    (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d ~a"
-            weekday-name date month-name year hour minute second tz)))
+    (when (>= len 25)
+      (setf tz (parse-tz (subseq date-string 20))))
+    (format t "~a ~a ~a ~a ~a ~a ~a~%" second minute hour date month year tz)
+    (encode-universal-time second minute hour date month year tz)))
 
-(defun simple-date (date-string &key (sep ""))
-  "Convert yyyy-mm-dd[ HH:MM[:SS[ TZ]]] to a human-readable date."
-  (let ((len (length date-string))
-        (year (parse-integer (subseq date-string 0 4)))
-        (month (parse-integer (subseq date-string 5 7)))
-        (date (parse-integer (subseq date-string 8 10)))
-        (hour 0)
-        (minute 0)
-        (tz "GMT")
-        (month-name)
-        (result))
-    (setf month-name (month-name month))
-    (setf result (format nil "~2,'0d ~a ~4,'0d" date month-name year))
-    (when (>= len 16)
-      (setf hour (parse-integer (subseq date-string 11 13)))
-      (setf minute (parse-integer (subseq date-string 14 16)))
-      (setf result (format nil "~a ~a~2,'0d:~2,'0d" result sep hour minute)))
-    (when (>= len 21)
-      (setf tz (subseq date-string 20))
-      (when (string= tz "+0000")
-        (setf tz "GMT"))
-      (setf result (format nil "~a ~a" result tz)))
-    result))
+(defun month-name (month-number)
+  "Given a number, return the corresponding month."
+  (nth (1- month-number) '("Jan" "Feb" "Mar" "Apr" "May" "Jun"
+                           "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")))
+
+(defun format-rss-date (universal-time)
+  "Convert universal-time (integer) to RFC-2822 date string."
+  (multiple-value-bind (second minute hour date month year day dst tz)
+      (decode-universal-time universal-time 0)
+    (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d ~a"
+            (weekday-name day) date (month-name month) year hour minute second (format-tz tz))))
+
+(defun format-short-date (universal-time)
+  "Convert universal-time (integer) to a simple human-readable date."
+  (multiple-value-bind (second minute hour date month year day dst tz)
+      (decode-universal-time universal-time 0)
+    (format nil "~2,'0d ~a ~4,'0d" date (month-name month) year)))
+
+(defun format-long-date (universal-time)
+  "Convert universal-time (integer) to a simple human-readable date."
+  (multiple-value-bind (second minute hour date month year day dst tz)
+      (decode-universal-time universal-time 0)
+    (format nil "~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d ~a"
+            date (month-name month) year hour minute "GMT")))
 
 (defun date-slug (filename)
   "Parse filename to extract date and slug."
