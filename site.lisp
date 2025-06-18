@@ -173,11 +173,21 @@
   `(setf ,old-list (append ,old-list ,new-list)))
 
 (defun parse-tz (tz-string)
-  "Parse timezone string to CL-friendly rational, e.g., +0530 as -9/2."
+  "Parse time zone string like to CL-friendly rational, e.g., +0530 as -9/2."
   (let* ((sign (if (char= (char tz-string 0) #\-) 1 -1))
          (hours (parse-integer tz-string :start 1 :end 3))
          (minutes (parse-integer tz-string :start 3)))
     (* sign (+ hours (/ minutes 60)))))
+
+(defun format-tz (tz)
+  "Format tz (rational) into a +HHMM format time zone string."
+  (let* ((minutes (* -60 tz))
+         (sign (if (minusp minutes) "-" "+"))
+         (abs-minutes (abs minutes))
+         (hh (truncate abs-minutes 60))
+         (mm (mod abs-minutes 60)))
+    (format nil "~a~2,'0d~2,'0d" sign hh mm)))
+
 
 
 ;;; Tool Definitions
@@ -220,22 +230,6 @@ value, next-index."
   "Given an index, return the corresponding day of week."
   (nth weekday-index '("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun")))
 
-(defun parse-tz (tz-string)
-  "Parse timezone string like to CL-friendly rational, e.g., +0530 as -9/2."
-  (let* ((sign (if (char= (char tz-string 0) #\-) 1 -1))
-         (hours (parse-integer tz-string :start 1 :end 3))
-         (minutes (parse-integer tz-string :start 3)))
-    (* sign (+ hours (/ minutes 60)))))
-
-(defun format-tz (tz)
-  "Format tz (rational) into a +/-HHMM format timezone."
-  (let* ((minutes (* -60 tz))
-         (sign (if (minusp minutes) "-" "+"))
-         (abs-minutes (abs minutes))
-         (hh (truncate abs-minutes 60))
-         (mm (mod abs-minutes 60)))
-    (format nil "~a~2,'0d~2,'0d" sign hh mm)))
-
 (defun parse-content-date (date-string)
   "Parse yyyy-mm-dd[ HH:MM:[:SS[ TZ]]] date to universal time (integer)."
   (let ((len (length date-string))
@@ -251,10 +245,9 @@ value, next-index."
       (setf hour (parse-integer date-string :start 11 :end 13))
       (setf minute (parse-integer date-string :start 14 :end 16)))
     (when (>= len 19)
-      (setf second (parse-integer (subseq date-string 17 19))))
+      (setf second (parse-integer date-string :start 17 :end 19)))
     (when (>= len 25)
       (setf tz (parse-tz (subseq date-string 20))))
-    (format t "~a ~a ~a ~a ~a ~a ~a~%" second minute hour date month year tz)
     (encode-universal-time second minute hour date month year tz)))
 
 (defun month-name (month-number)
@@ -266,6 +259,7 @@ value, next-index."
   "Convert universal-time (integer) to RFC-2822 date string."
   (multiple-value-bind (second minute hour date month year day dst tz)
       (decode-universal-time universal-time 0)
+    (declare (ignore dst))
     (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d ~a"
             (weekday-name day) date (month-name month) year hour minute second (format-tz tz))))
 
@@ -273,12 +267,14 @@ value, next-index."
   "Convert universal-time (integer) to a simple human-readable date."
   (multiple-value-bind (second minute hour date month year day dst tz)
       (decode-universal-time universal-time 0)
+    (declare (ignore second minute hour day dst tz))
     (format nil "~2,'0d ~a ~4,'0d" date (month-name month) year)))
 
 (defun format-long-date (universal-time)
   "Convert universal-time (integer) to a simple human-readable date."
   (multiple-value-bind (second minute hour date month year day dst tz)
       (decode-universal-time universal-time 0)
+    (declare (ignore second day dst tz))
     (format nil "~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d ~a"
             date (month-name month) year hour minute "GMT")))
 
@@ -608,7 +604,6 @@ value, next-index."
   (let ((text (read-file filename))
         (page)
         (date)
-        (updated)
         (draft))
     (multiple-value-bind (date slug) (date-slug filename)
       (aput "date" date page)
@@ -619,12 +614,15 @@ value, next-index."
     ;; Date.
     (setf date (aget "date" page))
     (when (aget "date" page)
-      (aput "rss-date" (rss-date date) page)
-      (aput "simple-date" (simple-date date) page))
+      (aput "rss-date" (format-rss-date (parse-content-date date)) page)
+      (aput "simple-date" (format-short-date (parse-content-date date)) page))
     ;; Updated date.
-    (setf updated (aget "updated" page))
-    (aput "update-mark"
-          (if updated (fstr " (updated on ~a)" (simple-date updated)) "") page)
+    (aput "update-mark" "" page)
+    (let ((updated (aget "updated" page)))
+      (when updated
+        (aput "update-mark" (fstr " (updated on ~a)"
+                                  (format-short-date (parse-content-date updated)))
+              page)))
     ;; Other metadata to be parsed.
     (aput "keys" (string-split (aget "key" page) ", ") page)
     (aput "tags" (string-split (aget "tag" page) ", ") page)
@@ -735,8 +733,8 @@ value, next-index."
     (aput "commenter" commenter comment)
     ;; Formatted dates.
     (setf date (aget "date" comment))
-    (aput "rss-date" (rss-date date) comment)
-    (aput "simple-date" (simple-date date) comment)
+    (aput "rss-date" (format-rss-date (parse-content-date date)) comment)
+    (aput "simple-date" (format-long-date (parse-content-date date)) comment)
     ;; Select content until next header or end-of-text as body.
     (setf next-index (search start-token text :start2 start-index))
     (aput "body" (subseq text start-index next-index) comment)
@@ -753,14 +751,12 @@ value, next-index."
     (loop
       (setf (values comment next-index) (read-comment text next-index))
       ;; Current comment date must be more recent than the previous comment.
-      (when (and (consp comments) (string< (aget "date" comment)
-                                           (aget "date" (car comments))))
-        (error "Incorrect order for comment ~a in ~a"
-               (aget "date" comment) filename))
-      ;; Ensure time zone is specified in comment date.
-      (unless (string-ends-with " +0000" (aget "date" comment))
-        (error (fstr "Time zone missing in comment date ~a in ~a"
-                     (aget "date" comment) filename)))
+      (let ((date (aget "date" comment)))
+        (when (and (consp comments) (string< date (aget "date" (car comments))))
+          (error "Incorrect order for comment ~a in ~a" date filename))
+        ;; Ensure time zone is specified in comment date.
+        (unless (and (= (length date) 25) (string-ends-with " +0000" date))
+          (error "Time zone missing in comment date ~a in ~a" date filename)))
       (aput "slug" slug comment)
       (aput "comment-file-serial" (incf serial) comment)
       (push comment comments)
@@ -1082,7 +1078,8 @@ value, next-index."
 
 (defun format-meet-date (date)
   "Format meeting entry date for display in meeting list page."
-  (string-replace " " "&nbsp;" (subseq (rss-date date) 0 22)))
+  (string-replace " " "&nbsp;"
+                  (subseq (format-rss-date (parse-content-date date)) 0 22)))
 
 (defun future-p (meet)
   "Whether the given meeting entry is scheduled for future."
