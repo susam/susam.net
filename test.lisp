@@ -35,13 +35,16 @@
        (handler-case (progn ,@body)
          (:no-error (c)
            (declare (ignore c))
+           (remove-directory #p"test-tmp/")
            (incf *pass*)
-           (format t "pass~%"))
+           (format t "pass~%")
+           t)
          (error (c)
+           (remove-directory #p"test-tmp/")
            (incf *fail*)
            (format t "FAIL~%")
            (format t "~&  ~a: error: ~a~%" test-name c)))
-       (remove-directory #p"test-tmp/"))))
+)))
 
 (defmacro test-case! (name &body body)
   "Execute a test case and error out on failure."
@@ -238,6 +241,18 @@
   (assert (string= (indent-lines 4 (fstr "x~%")) (fstr "    x~%")))
   (assert (string= (indent-lines 4 (fstr "x~%y~%")) (fstr "    x~%    y~%"))))
 
+(test-case parse-tz
+  (assert (= (parse-tz "+0000") 0))
+  (assert (= (parse-tz "+0100") -1))
+  (assert (= (parse-tz "+0530") -11/2))
+  (assert (= (parse-tz "-0500") 5)))
+
+(test-case format-tz
+  (assert (string= (format-tz 0) "+0000"))
+  (assert (string= (format-tz -1) "+0100"))
+  (assert (string= (format-tz -11/2) "+0530"))
+  (assert (string= (format-tz 5) "-0500")))
+
 
 ;;; Test Cases for Tool Definitions
 ;;; -------------------------------
@@ -325,17 +340,15 @@
   (assert (string= (decode-weekday-name 2020 02 29) "Sat"))
   (assert (string= (decode-weekday-name 2020 03 01) "Sun")))
 
-(test-case rss-date
-  (assert (string= (rss-date "2020-06-01")
+(test-case format-rss-date
+  (assert (string= (format-rss-date (parse-content-date "2020-06-01"))
                    "Mon, 01 Jun 2020 00:00:00 +0000"))
-  (assert (string= (rss-date "2020-06-01 17:30")
-                   "Mon, 01 Jun 2020 17:30:00 +0000"))
-  (assert (string= (rss-date "2020-06-01 17:30:10")
-                   "Mon, 01 Jun 2020 17:30:10 +0000"))
-  (assert (string= (rss-date "2020-06-01 17:30:10 +0530")
-                   "Mon, 01 Jun 2020 17:30:10 +0530"))
-  (assert (string= (rss-date "2020-06-01 17:30:10 IST")
-                   "Mon, 01 Jun 2020 17:30:10 IST")))
+  (assert (string= (format-rss-date (parse-content-date "2020-06-01 09:00"))
+                   "Mon, 01 Jun 2020 09:00:00 +0000"))
+  (assert (string= (format-rss-date (parse-content-date "2020-06-01 09:00:10"))
+                   "Mon, 01 Jun 2020 09:00:10 +0000"))
+  (assert (string= (format-rss-date (parse-content-date "2020-06-01 14:30:10 +0530"))
+                   "Mon, 01 Jun 2020 09:00:10 +0000")))
 
 (test-case simple-date
   (assert (string= (simple-date "2020-06-01")
@@ -899,9 +912,9 @@ Z")
                              (cons "post-title" "Foo")))
     (assert(string= (read-file "test-tmp/foo.html")
                     (join-strings '("[Comments on Foo Foo "
-                                    "[2020-06-03 Carol Baz 3 comments]"
+                                    "[2020-06-01 Alice Foo 3 comments]"
                                     "[2020-06-02 Bob Bar 3 comments]"
-                                    "[2020-06-01 Alice Foo 3 comments]]"))))))
+                                    "[2020-06-03 Carol Baz 3 comments]]"))))))
 
 (test-case make-comment-list-imports
   (make-comment-list (list (list (cons "date" "2020-06-01")
