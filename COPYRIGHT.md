@@ -1,12 +1,12 @@
 Copyright
 =========
 
-All rights reserved for all content, data, and media files available
-in this repository.
+All rights are reserved for all content, data, and media files
+available in this repository.
 
 The Common Lisp source code files [site.lisp](site.lisp) and
 [test.lisp](test.lisp) are available under the terms of the MIT
-License. See the license details in the section "The MIT License
+License.  See the license details in the section "The MIT License
 (MIT)" below.
 
 

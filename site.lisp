@@ -1405,8 +1405,6 @@ value, next-index."
   (let ((params (list (cons "apex" "_site/")
                       (cons "current-year" (nth-value 5 (get-decoded-time)))
                       (cons "head" "main.css")
-                      (cons "heads" "")
-                      (cons "imports" "")
                       (cons "index" "")
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
