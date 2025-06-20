@@ -638,17 +638,18 @@ Foo
     (assert (string= (relative-root-path "_site/foo/bar/" params) "../../"))
     (assert (string= (relative-root-path "_site/foo/bar/index.html" params) "../../"))))
 
-(test-case add-output-params-imports
+(test-case add-page-params-imports
   (let ((params (list (cons "apex" "_site/")
                       (cons "import" "foo.js")))
-        (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
-    (add-output-params "_site/" params)
+        (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%"))
+        (page))
+    (add-page-params "_site/" page params)
     (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-output-params "_site/foo.html" params)
+    (add-page-params "_site/foo.html" page params)
     (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-output-params "_site/foo/" params)
+    (add-page-params "_site/foo/" page params)
     (assert (string= (aget "imports" params) (format nil result "../")))
-    (add-output-params "_site/foo/bar.html" params)
+    (add-page-params "_site/foo/bar.html" page params)
     (assert (string= (aget "imports" params) (format nil result "../")))))
 
 (test-case add-page-params-neat-url
