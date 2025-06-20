@@ -249,7 +249,7 @@ live: site
 
 site: katex
 	@echo Generating website ...
-	time sbcl --load site.lisp --quit
+	time sbcl --noinform --load site.lisp --quit
 	@echo Done; echo
 
 dist: katex
@@ -289,6 +289,18 @@ mathjax:
 	else \
 	    echo MathJax is already cached.; \
 	fi
+
+roll:
+	@echo Generating blogroll ...
+	sbcl --noinform --load roll.lisp --quit
+
+droll:
+	@echo Generating blogroll ...
+	time sbcl --noinform \
+	          --eval '(setf *break-on-signals* t)' \
+	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	          --load roll.lisp \
+	          --quit
 
 
 # Development Targets

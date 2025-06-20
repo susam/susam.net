@@ -43,8 +43,7 @@
            (remove-directory #p"test-tmp/")
            (incf *fail*)
            (format t "FAIL~%")
-           (format t "~&  ~a: error: ~a~%" test-name c)))
-)))
+           (format t "~&  ~a: error: ~a~%" test-name c))))))
 
 (defmacro test-case! (name &body body)
   "Execute a test case and error out on failure."
@@ -64,7 +63,7 @@
   (when (plusp *fail*)
     (format t "~&FAIL: ~a~%" *fail*))
   (when *quit*
-    (format t "~&~%quitting ...~%~%")
+    (format t "~&~%DONE~%~%")
     (uiop:quit (if (zerop *fail*) 0 1)))
   (zerop *fail*))
 
@@ -73,9 +72,10 @@
 ;;; ----------------
 
 (defvar *log-mode* nil)
-(defvar *main-mode* nil)
+(defvar *site-mode* nil)
+(defvar *roll-mode* nil)
 (load "site.lisp")
-
+(load "roll.lisp")
 
 ;;; Test Cases for Reusable Definitions
 ;;; -----------------------------------
@@ -361,6 +361,20 @@
                    "01 Jun 2020 09:00 GMT"))
   (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530"))
                    "31 May 2020 23:00 GMT")))
+
+(test-case safe-parse-rss-date
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 00:00:00 +0000"))
+                   "2020-06-01 00:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 09:00:10 +0000"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 14:30:10 +0530"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
+                   "2020-05-31 23:00:10 +0000")))
 
 (test-case date-slug
   (multiple-value-bind (date slug) (date-slug "foo")
@@ -894,10 +908,7 @@ Z")
                               (cons "body" "Bar"))
                         (list (cons "date" "2020-06-03")
                               (cons "author" "Carol")
-                              (cons "body" "Baz"))))
-        (page (list (cons "title" "Foo")
-                    (cons "neat-path" "foo/foo.html")
-                    (cons "author" "Alice"))))
+                              (cons "body" "Baz")))))
     (make-comment-list comments
                        "test-tmp/{{ slug }}.html"
                        "[{{ title }} {{ post-title }} {{ body }}]"
@@ -937,6 +948,35 @@ Z")
   (assert (string= (read-file "test-tmp/foo.html")
                    "[Comments on Foo Foo apple]")))
 
+
+;;; Test Cases for Blogroll
+;;; -----------------------
+
+(test-case string-within
+  (let ((text "<p>foo</p><p>bar</p>"))
+    (multiple-value-bind (result index) (string-within text "<p>" "</p>")
+      (assert (string= result "foo"))
+      (assert (= index 10)))
+    (multiple-value-bind (result index) (string-within text "<p>" "</p>" 1)
+      (assert (string= result "bar"))
+      (assert (= index 20)))
+    (multiple-value-bind (result index) (string-within text "<em>" "</em>")
+      (assert (not result))
+      (assert (= index 0)))
+    (multiple-value-bind (result index) (string-within text "<em>" "</em>" 2)
+      (assert (not result))
+      (assert (= index 2))))
+  (let ((text "<p>foo"))
+    (multiple-value-bind (result index) (string-within text "<p>" "</p>")
+      (assert (not result))
+      (assert (= index 0)))))
+
+(test-case strings-within-tag
+  (let ((text "<p>foo</p><p>bar</p>"))
+    (assert (equal (strings-within-tag text "p") (list "foo" "bar")))
+    (assert (not (strings-within-tag text "em"))))
+  (let ((text "<p>foo</p><p>bar"))
+    (assert (equal (strings-within-tag text "p") (list "foo")))))
 
 ;; End test cases.
 

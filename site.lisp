@@ -5,10 +5,10 @@
 ;;;;
 ;;;; You can use, copy, modify, merge, publish, distribute,
 ;;;; sublicense, and/or sell copies of it, under the terms of the MIT
-;;;; License. See COPYRIGHT.md for complete details.
+;;;; License.  See COPYRIGHT.md for complete details.
 ;;;;
 ;;;; This software is provided "AS IS", WITHOUT WARRANTY OF ANY KIND,
-;;;; express or implied. See COPYRIGHT.md for complete details.
+;;;; express or implied.  See COPYRIGHT.md for complete details.
 
 ;;;; This site generator is inspired by and based on my lovely wife's
 ;;;; <https://github.com/sunainapai/makesite/>.
@@ -22,7 +22,7 @@
 (defvar *log-mode* t
   "Write logs iff true.")
 
-(defvar *main-mode* t
+(defvar *site-mode* t
   "Run main function iff true.")
 
 
@@ -782,7 +782,7 @@ value, next-index."
     comments))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
-  "Generate comment list page. Honour the order of comments provided."
+  "Generate comment list page.  Honour the order of comments provided."
   (let* ((post-import (aget "import" params))
          (comment-dst (render dst params))
          (comment-count (length comments))
@@ -1459,5 +1459,5 @@ value, next-index."
     (make-directory-lists "_site/" page-layout params))
   t)
 
-(when *main-mode*
+(when *site-mode*
   (main))
