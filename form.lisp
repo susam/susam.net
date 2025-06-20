@@ -4,7 +4,7 @@
 (require "asdf")
 (asdf:load-system "hunchentoot")
 
-(defvar *main-mode* nil)
+(defvar *site-mode* nil)
 (load "site.lisp")
 
 (setf *random-state* (make-random-state t))
@@ -104,7 +104,7 @@
                            (random 1000000))))
     (write-file filename text)))
 
-(defmacro add-page-params (params)
+(defmacro add-form-params (params)
   "Add common parameters necessary for page rendering."
   `(progn
      (aput "root" "../../" ,params)
@@ -123,7 +123,7 @@
         (index-layout (read-file "layout/form/index.html"))
         (params))
     (setf index-layout (render page-layout (list (cons "body" index-layout))))
-    (add-page-params params)
+    (add-form-params params)
     (aput "title" "Forms" params)
     (render index-layout params)))
 
@@ -308,7 +308,7 @@
          (options (read-options directory))
          (params))
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
-    (add-page-params params)
+    (add-form-params params)
     (aput "ukey" (getf options :ukey "uk") params)
     (aput "uval" (getf options :uval "uv") params)
     (aput "vkey" (getf options :vkey "vk") params)
@@ -415,7 +415,7 @@
          (options (read-options directory))
          (params))
     (setf form-layout (render page-layout (list (cons "body" form-layout))))
-    (add-page-params params)
+    (add-form-params params)
     (aput "intention" (subscriber-intention action) params)
     (aput "submit" (subscriber-button action) params)
     (aput "purpose" (subscriber-purpose action) params)
