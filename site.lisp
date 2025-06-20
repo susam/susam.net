@@ -5,10 +5,10 @@
 ;;;;
 ;;;; You can use, copy, modify, merge, publish, distribute,
 ;;;; sublicense, and/or sell copies of it, under the terms of the MIT
-;;;; License. See COPYRIGHT.md for complete details.
+;;;; License.  See COPYRIGHT.md for complete details.
 ;;;;
 ;;;; This software is provided "AS IS", WITHOUT WARRANTY OF ANY KIND,
-;;;; express or implied. See COPYRIGHT.md for complete details.
+;;;; express or implied.  See COPYRIGHT.md for complete details.
 
 ;;;; This site generator is inspired by and based on my lovely wife's
 ;;;; <https://github.com/sunainapai/makesite/>.
@@ -22,7 +22,7 @@
 (defvar *log-mode* t
   "Write logs iff true.")
 
-(defvar *main-mode* t
+(defvar *site-mode* t
   "Run main function iff true.")
 
 
@@ -351,15 +351,15 @@ value, next-index."
              (error "Unknown import type ~a in ~a" name import-header))))
     (if snippets (fstr "~{~a~}" (reverse snippets)) "")))
 
-(defun relative-root-path (path)
+(defun relative-root-path (path params)
   "Return relative path to web root from the given rendered file path."
-  (let ((depth (count #\/ (string-replace "_site/" "" path))))
+  (let ((depth (count #\/ (string-replace (aget "apex" params) "" path))))
     (if (zerop depth) "./" (repeat-string depth "../"))))
 
 (defun neat-path (path params)
   "Create canonical path component of the URL for the given rendered file path."
   (setf path (string-replace "index.html" (aget "index" params) path))
-  (string-replace "_site/" "" path))
+  (string-replace (aget "apex" params) "" path))
 
 (defun neat-url (path params)
   "Create canonical URL for the given rendered file path."
@@ -368,11 +368,11 @@ value, next-index."
 
 (defmacro add-zone-params (dst-path params)
   `(let ((blog-name (aget "blog-name" ,params))
-         (root (relative-root-path ,dst-path))
+         (root (relative-root-path ,dst-path ,params))
          (zone-link "")
          (zone-name)
          (zone-index))
-     (cond ((string-starts-with "_site/cc/" ,dst-path)
+     (cond ((string-starts-with (render "{{ apex }}cc/" ,params) ,dst-path)
             (setf zone-index (render "cc/{{ index }}" ,params))
             (setf zone-name "Club"))
            ((string/= blog-name "Blog")
@@ -384,21 +384,21 @@ value, next-index."
      (aput "zone-link" zone-link ,params)
      (when (string= blog-name "Maze")
        (let ((zone-title (render "{{ nick }}'s Maze" ,params)))
-         (if (string= ,dst-path (render "_site/{{ blog-slug }}.html" ,params))
+         (if (string= ,dst-path (render "{{ apex }}{{ blog-slug }}.html" ,params))
              (aput "title" zone-title ,params)
              (aput "subtitle" (fstr " - ~a" zone-title) ,params))))))
 
 (defmacro add-output-params (dst-path params)
   "Given an output file path, set a canonical URL for that file."
   `(progn
-     (aput "root" (relative-root-path ,dst-path) ,params)
+     (aput "root" (relative-root-path ,dst-path ,params) ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
 
 (defmacro add-page-params (dst page params)
   `(let* ((all-params (append ,page ,params))
           (dst-path (render ,dst all-params))
-          (root (relative-root-path dst-path)))
+          (root (relative-root-path dst-path ,params)))
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
@@ -782,7 +782,7 @@ value, next-index."
     comments))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
-  "Generate comment list page. Honour the order of comments provided."
+  "Generate comment list page.  Honour the order of comments provided."
   (let* ((post-import (aget "import" params))
          (comment-dst (render dst params))
          (comment-count (length comments))
@@ -839,7 +839,7 @@ value, next-index."
   (let ((none-layout (read-file "layout/comment/none.html"))
         (list-layout (read-file "layout/comment/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
-        (comment-dst "_site/comments/{{ slug }}.html")
+        (comment-dst "{{ apex }}comments/{{ slug }}.html")
         (enriched-comments))
     ;; Combine layouts to form final layouts.
     (set-nested-template none-layout page-layout)
@@ -849,8 +849,8 @@ value, next-index."
     ;; For each page, render its comment list page.
     (dolist (page pages)
       (let* ((page-comments (comments-by-slug all-comments (aget "slug" page)))
-             (dst-path (render comment-dst page))
-             (comment-params (append params page)))
+             (comment-params (append params page))
+             (dst-path (render comment-dst comment-params)))
         (aput "title" (fstr "Comments on ~a" (aget "title" page)) comment-params)
         (aput "post-title" (aget "title" page) comment-params)
         (setf page-comments (enrich-comments page-comments page dst-path params))
@@ -866,7 +866,7 @@ value, next-index."
         (list-layout (read-file "layout/guestbook/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
         (page (read-page "content/guestbook/guestbook.aux.html"))
-        (dst-path "_site/guestbook.html"))
+        (dst-path (render "{{ apex }}guestbook.html" params)))
     (aput "title" "Guestbook" params)
     (aput "post-title" "Guestbook" params)
     (set-nested-template list-layout page-layout)
@@ -991,7 +991,7 @@ value, next-index."
 
 (defun make-directory-lists (path page-layout &optional params)
   "Make index pages for each site directory and subdirectories recursively."
-  (visit-directory (truename "_site/") (truename path)
+  (visit-directory (truename (aget "apex" params)) (truename path)
                    '("index.html" "ls.html") "Index of {{ url-path }}"
                    page-layout params 100))
 
@@ -1066,8 +1066,8 @@ value, next-index."
   "Create a complete top-level blog with blog, tags, and list page."
   (aput "blog-name" name params)
   (aput "blog-slug" (string-downcase name) params)
-  (let* ((page-dst "_site/{{ slug }}.html")
-         (list-dst "_site/{{ blog-slug }}.html")
+  (let* ((page-dst "{{ apex }}{{ slug }}.html")
+         (list-dst "{{ apex }}{{ blog-slug }}.html")
          (pages))
     (setf pages (make-posts src page-dst list-dst page-layout params))
     pages))
@@ -1136,7 +1136,7 @@ value, next-index."
          (past-count (length past-meets))
          (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
          (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
-         (dst (if slug "_site/cc/{{ slug }}/log.html" "_site/cc/log.html")))
+         (dst (if slug "{{ apex }}cc/{{ slug }}/log.html" "{{ apex }}cc/log.html")))
     (aput "head" (fstr "~a, extra.css, meets.css, math.inc"
                        (aget "head" params)) params)
     (aput "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
@@ -1223,10 +1223,10 @@ value, next-index."
    (cons "dark-success-color" "#3c6")   ; contrast  9.0
    (cons "dark-error-color" "#f99")))   ; contrast  9.2
 
-(defun make-css ()
+(defun make-css (params)
   "Generate stylesheets for the main website."
-  (make-pages "layout/css/*.css" "_site/css/{{ slug }}.css" "{{ body }}"
-              (append (main-style) (list (cons "render" "yes")))))
+  (make-pages "layout/css/*.css" "{{ apex }}css/{{ slug }}.css" "{{ body }}"
+              (append (main-style) params)))
 
 (defun feed-css ()
   "Return stylesheet for feed as a string."
@@ -1235,10 +1235,10 @@ value, next-index."
                        (render (read-file "layout/css/extra.css") css))))
     (fstr "~%~a" (indent-lines 10 (join-strings styles)))))
 
-(defun make-xsl ()
+(defun make-xsl (params)
   "Generate stylesheet for feed."
-  (make-pages "layout/blog/*.xsl" "_site/{{ slug }}.xsl" "{{ body }}"
-              (list (cons "css" (feed-css)) (cons "render" "yes"))))
+  (make-pages "layout/blog/*.xsl" "{{ apex }}{{ slug }}.xsl" "{{ body }}"
+              (append (list (cons "css" (feed-css))) params)))
 
 
 ;;; Music
@@ -1264,11 +1264,11 @@ value, next-index."
     (aput "import" "extra.css, music.css" params)
     (aput-list "callbacks" #'make-widget-callback params)
     ;; Render all music pages.
-    (setf pages (make-pages src "_site/music/{{ slug }}.html"
+    (setf pages (make-pages src "{{ apex }}music/{{ slug }}.html"
                             post-layout params))
     ;; Generate music list page.
     (aput "title" "Music" params)
-    (make-page-list pages "_site/music/index.html"
+    (make-page-list pages "{{ apex }}music/index.html"
                     list-layout item-layout params)
     pages))
 
@@ -1311,10 +1311,10 @@ value, next-index."
          (item-layout (read-file "layout/tag/item.html"))
          (feed-xml (read-file "layout/tag/feed.xml"))
          (item-xml (read-file "layout/tag/item.xml"))
-         (tags-dst "_site/tag/index.html")
-         (list-dst "_site/tag/{{ tag-slug }}.html")
-         (mini-feed-dst "_site/tag/{{ tag-slug }}.xml")
-         (full-feed-dst "_site/tag/{{ tag-slug }}-full.xml")
+         (tags-dst "{{ apex }}tag/index.html")
+         (list-dst "{{ apex }}tag/{{ tag-slug }}.html")
+         (mini-feed-dst "{{ apex }}tag/{{ tag-slug }}.xml")
+         (full-feed-dst "{{ apex }}tag/{{ tag-slug }}-full.xml")
          (tags (collect-tags pages))
          (tag)
          (pages))
@@ -1348,7 +1348,7 @@ value, next-index."
         (item-layout (read-file "layout/full/item.html")))
     (set-nested-template list-layout page-layout)
     (aput "title" "All Pages" params)
-    (make-page-list pages "_site/pages.html" list-layout item-layout params)))
+    (make-page-list pages "{{ apex }}pages.html" list-layout item-layout params)))
 
 (defun make-full-comments (comments page-layout params)
   "Generate comment list for the full website."
@@ -1358,7 +1358,7 @@ value, next-index."
     (aput "import" "extra.css, math.inc" params)
     (aput "title" "All Comments" params)
     (setf comments (reverse (number-comments (only-listed-items comments))))
-    (make-comment-list comments "_site/comments/index.html"
+    (make-comment-list comments "{{ apex }}comments/index.html"
                        list-layout item-layout params)))
 
 (defun make-short (pages page-layout params)
@@ -1367,7 +1367,7 @@ value, next-index."
         (item-layout (read-file "layout/short/item.html")))
     (set-nested-template list-layout page-layout)
     (aput "title" "Short Links" params)
-    (make-page-list pages "_site/p/index.html" list-layout item-layout params)))
+    (make-page-list pages "{{ apex }}p/index.html" list-layout item-layout params)))
 
 (defun make-feed (pages params)
   "Generate feed for the complete website."
@@ -1376,8 +1376,8 @@ value, next-index."
     (aput "title" (aget "author" params) params)
     (aput "link" (aget "site-url" params) params)
     (aput "description" (render "{{ nick }}'s Feed" params) params)
-    (make-feed-list pages 20 "_site/feed.xml" feed-xml item-xml params)
-    (make-feed-list pages 10000 "_site/feed-full.xml" feed-xml item-xml params)))
+    (make-feed-list pages 20 "{{ apex }}feed.xml" feed-xml item-xml params)
+    (make-feed-list pages 10000 "{{ apex }}feed-full.xml" feed-xml item-xml params)))
 
 
 ;;; Home Page
@@ -1390,7 +1390,7 @@ value, next-index."
     (set-nested-template home-layout page-layout)
     (aput "title" (aget "author" params) params)
     (aput "subtitle" "" params)
-    (make-page-list pages "_site/index.html" home-layout item-layout params)))
+    (make-page-list pages "{{ apex }}index.html" home-layout item-layout params)))
 
 
 ;;; Complete Website
@@ -1402,19 +1402,20 @@ value, next-index."
 
 (defun main ()
   "Generate entire website."
-  (remove-directory "_site/")
-  (let ((params (list (cons "current-year" (nth-value 5 (get-decoded-time)))
-                      (cons "render" "yes")
+  (let ((params (list (cons "apex" "_site/")
+                      (cons "current-year" (nth-value 5 (get-decoded-time)))
+                      (cons "head" "main.css")
                       (cons "heads" "")
                       (cons "imports" "")
                       (cons "index" "")
-                      (cons "head" "main.css")))
+                      (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
         (comments (collect-comments (list "content/comments/*.html"
                                           "content/guestbook/guestbook.html")))
         (all-comments)
         (pages)
         (all-pages))
+    (remove-directory (aget "apex" params))
     ;; If params file exists, merge it with local params.
     (when (probe-file "params.lisp")
       (setf params (append (read-list "params.lisp") params)))
@@ -1422,12 +1423,12 @@ value, next-index."
     (when *params*
       (setf params (append *params* params)))
     ;; Dependencies.
-    (copy-directory "_cache/katex/" "_site/js/katex/")
+    (copy-directory "_cache/katex/" (render "{{ apex }}js/katex/" params))
     ;; Stylesheets.
-    (make-css)
-    (make-xsl)
+    (make-css params)
+    (make-xsl params)
     ;; Tree.
-    (setf all-pages (make-tree "content/tree/" "_site/" page-layout params))
+    (setf all-pages (make-tree "content/tree/" (aget "apex" params) page-layout params))
     (make-meets page-layout params)
     ;; Guestbook.
     (multiple-value-bind (pages comments)
@@ -1455,9 +1456,9 @@ value, next-index."
     (make-short all-pages page-layout params)
     (make-feed all-pages params)
     ;; Directory indices.
-    (make-tree-list "_site/" "Tree" page-layout params)
-    (make-directory-lists "_site/" page-layout params))
+    (make-tree-list (aget "apex" params) "Tree" page-layout params)
+    (make-directory-lists (aget "apex" params) page-layout params))
   t)
 
-(when *main-mode*
+(when *site-mode*
   (main))
