@@ -78,7 +78,7 @@ debs:
 
 hunchentoot:
 	mkdir -p /opt/cl/
-	set -x; while read -r url; do curl -sSL "$$url" | tar -C /opt/cl -xz; done < cl-deps.txt
+	set -x; while read -r url; do curl -sSL "$$url" | tar -C /opt/cl -xz; done < meta/cl-deps.txt
 
 quicklisp:
 	rm -rf /opt/quicklisp.lisp /opt/quicklisp
