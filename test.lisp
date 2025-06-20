@@ -43,8 +43,7 @@
            (remove-directory #p"test-tmp/")
            (incf *fail*)
            (format t "FAIL~%")
-           (format t "~&  ~a: error: ~a~%" test-name c)))
-)))
+           (format t "~&  ~a: error: ~a~%" test-name c))))))
 
 (defmacro test-case! (name &body body)
   "Execute a test case and error out on failure."
@@ -64,7 +63,7 @@
   (when (plusp *fail*)
     (format t "~&FAIL: ~a~%" *fail*))
   (when *quit*
-    (format t "~&~%quitting ...~%~%")
+    (format t "~&~%DONE~%~%")
     (uiop:quit (if (zerop *fail*) 0 1)))
   (zerop *fail*))
 
@@ -73,7 +72,7 @@
 ;;; ----------------
 
 (defvar *log-mode* nil)
-(defvar *main-mode* nil)
+(defvar *site-mode* nil)
 (load "site.lisp")
 
 
@@ -629,17 +628,19 @@ Foo
     (assert (string= layout "foo foo bar"))))
 
 (test-case relative-root-path
-  (assert (string= (relative-root-path "_site/") "./"))
-  (assert (string= (relative-root-path "_site/index.html") "./"))
-  (assert (string= (relative-root-path "_site/foo") "./"))
-  (assert (string= (relative-root-path "_site/foo/") "../"))
-  (assert (string= (relative-root-path "_site/foo/index.html") "../"))
-  (assert (string= (relative-root-path "_site/foo/bar") "../"))
-  (assert (string= (relative-root-path "_site/foo/bar/") "../../"))
-  (assert (string= (relative-root-path "_site/foo/bar/index.html") "../../")))
+  (let ((params (list (cons "apex" "_site/"))))
+    (assert (string= (relative-root-path "_site/" params) "./"))
+    (assert (string= (relative-root-path "_site/index.html" params) "./"))
+    (assert (string= (relative-root-path "_site/foo" params) "./"))
+    (assert (string= (relative-root-path "_site/foo/" params) "../"))
+    (assert (string= (relative-root-path "_site/foo/index.html" params) "../"))
+    (assert (string= (relative-root-path "_site/foo/bar" params) "../"))
+    (assert (string= (relative-root-path "_site/foo/bar/" params) "../../"))
+    (assert (string= (relative-root-path "_site/foo/bar/index.html" params) "../../"))))
 
 (test-case add-output-params-imports
-  (let ((params (list (cons "import" "foo.js")))
+  (let ((params (list (cons "apex" "_site/")
+                      (cons "import" "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%")))
     (add-output-params "_site/" params)
     (assert (string= (aget "imports" params) (format nil result "./")))
@@ -651,7 +652,8 @@ Foo
     (assert (string= (aget "imports" params) (format nil result "../")))))
 
 (test-case add-page-params-neat-url
-  (let ((params (list (cons "site-url" "https://example.com/")))
+  (let ((params (list (cons "apex" "_site/")
+                      (cons "site-url" "https://example.com/")))
         (page))
     (add-page-params "_site/" page params)
     (assert (string= (aget "neat-url" page) "https://example.com/"))
@@ -661,7 +663,8 @@ Foo
     (assert (string= (aget "neat-url" page) "https://example.com/foo/bar/"))))
 
 (test-case add-page-params-neat-url-index
-  (let ((params (list (cons "site-url" "https://example.com/")))
+  (let ((params (list (cons "apex" "_site/")
+                      (cons "site-url" "https://example.com/")))
         (page))
     (add-page-params "_site/index.html" page params)
     (assert (string= (aget "neat-url" page) "https://example.com/"))
@@ -894,10 +897,7 @@ Z")
                               (cons "body" "Bar"))
                         (list (cons "date" "2020-06-03")
                               (cons "author" "Carol")
-                              (cons "body" "Baz"))))
-        (page (list (cons "title" "Foo")
-                    (cons "neat-path" "foo/foo.html")
-                    (cons "author" "Alice"))))
+                              (cons "body" "Baz")))))
     (make-comment-list comments
                        "test-tmp/{{ slug }}.html"
                        "[{{ title }} {{ post-title }} {{ body }}]"

@@ -249,7 +249,7 @@ live: site
 
 site: katex
 	@echo Generating website ...
-	time sbcl --load site.lisp --quit
+	time sbcl --noinform --load site.lisp --quit
 	@echo Done; echo
 
 dist: katex
