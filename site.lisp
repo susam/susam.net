@@ -388,23 +388,19 @@ value, next-index."
              (aput "title" zone-title ,params)
              (aput "subtitle" (fstr " - ~a" zone-title) ,params))))))
 
-(defmacro add-output-params (dst-path params)
-  "Given an output file path, set a canonical URL for that file."
-  `(progn
-     (aput "root" (relative-root-path ,dst-path ,params) ,params)
-     (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
-     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)))
-
 (defmacro add-page-params (dst page params)
   `(let* ((all-params (append ,page ,params))
           (dst-path (render ,dst all-params))
           (root (relative-root-path dst-path ,params)))
-     (aput "tags-for-page" (format-tags-for-page ,page root) ,page)
-     (aput "tags-for-list" (format-tags-for-list ,page) ,page)
-     (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
+     (aput "root" root ,params)
+     (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
+     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
      (aput "keys-for-list" (format-keys-for-list ,page) ,page)
+     (aput "neat-path" (neat-path dst-path ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
-     (aput "neat-path" (neat-path dst-path ,params) ,page)))
+     (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
+     (aput "tags-for-list" (format-tags-for-list ,page) ,page)
+     (aput "tags-for-page" (format-tags-for-page ,page root) ,page)))
 
 (defmacro invoke-callbacks (params)
   "Run callbacks and add the parameters returned by it to params."
@@ -590,7 +586,6 @@ value, next-index."
   ;; parameter can be added to all such pages.
   (add-page-params dst-path params params)
   (write-log "Writing ~a ..." dst-path)
-  (add-output-params dst-path params)
   (add-zone-params dst-path params)
   ;; Perform format-markup only for .html pages.
   (write-file dst-path (format-markup (render layout params))))
