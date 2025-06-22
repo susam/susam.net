@@ -240,7 +240,7 @@ rdform:
 # Low-Level Targets
 # -----------------
 
-live: site
+live: site roll
 	@echo Setting up live directory ...
 	mv _live _gone || :
 	mv _site _live
@@ -290,6 +290,46 @@ mathjax:
 	    echo MathJax is already cached.; \
 	fi
 
+preroll:
+	@echo Fetching feeds for roll ...
+	rm -rf _cache/roll/
+	mkdir -p _cache/roll/
+	ua="curl/$$(curl -V | head -n1 | cut -d' ' -f2) (Susam's Blogroll; https://susam.net/roll.html)"; \
+	n=1; \
+	while read -r url; do \
+	  echo "Fetching $$url ..."; \
+	  curl -sSL -A "$$ua" -m 30 -o _cache/roll/$$n.xml "$$url"; n=$$(( $$n + 1 )); \
+	done < meta/roll.txt
+	@echo Done; echo
+
+dpreroll:
+	mv meta/roll.txt meta/roll.txt.bkp
+	echo 'https://susam.net/feed.xml' > meta/roll.txt
+	make preroll
+	mv meta/roll.txt.bkp meta/roll.txt
+
+roll:
+	@echo Generating roll ...
+	if ! [ -e _cache/roll/1.xml ]; then make preroll; fi
+	sbcl --noinform --load roll.lisp --quit > _cache/roll/roll.log
+	if [ -e _site/ ]; then cp -v _cache/roll/roll.* _site/; fi
+	if [ -e _live/ ]; then cp -v _cache/roll/roll.* _live/; fi
+	@echo Done; echo
+
+reroll: preroll roll
+
+droll:
+	@echo Generating development environment roll ...
+	if ! [ -e _cache/roll/1.xml ]; then make preroll; fi
+	if ! [ -e _site/ ]; then make dist; fi
+	time sbcl --noinform \
+	          --eval '(setf *break-on-signals* t)' \
+	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	          --load roll.lisp \
+	          --quit > _cache/roll/roll.log
+	cp -v _cache/roll/roll.* _site/
+	@echo Done; echo
+
 
 # Development Targets
 # -------------------
@@ -298,7 +338,7 @@ clean:
 	rm -f dist.diff site.diff run.log
 	rm -rf _new/
 
-clean-all: clean
+clear: clean
 	rm -rf _site/ _ref/
 
 opt:
@@ -343,7 +383,7 @@ run-dist-deep: dist deep serve
 
 run-site-deep: site deep serve
 
-run-form: site
+serve-form: site
 	CL_SOURCE_REGISTRY="/opt/cl//" \
 	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
 	sbcl --load form.lisp
