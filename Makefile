@@ -299,14 +299,14 @@ preroll:
 	while read -r url; do \
 	  echo "Fetching $$url ..."; \
 	  curl -sSL -A "$$ua" -m 30 -o _cache/roll/$$n.xml "$$url"; n=$$(( $$n + 1 )); \
-	done < meta/roll.txt
+	done < content/roll.txt
 	@echo Done; echo
 
 dpreroll:
-	mv meta/roll.txt meta/roll.txt.bkp
-	echo 'https://susam.net/feed.xml' > meta/roll.txt
+	mv content/roll.txt content/roll.txt.bkp
+	echo 'https://susam.net/feed.xml' > content/roll.txt
 	make preroll
-	mv meta/roll.txt.bkp meta/roll.txt
+	mv content/roll.txt.bkp content/roll.txt
 
 roll:
 	@echo Generating roll ...
