@@ -1,4 +1,4 @@
-/opt/log/form/*.log {
+/opt/log/cron/*.log {
     rotate 14
     daily
     missingok
