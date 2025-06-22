@@ -1,5 +1,5 @@
 types {
-    text/plain asm c cc el lisp md org py yaml yml;
+    text/plain asm c cc el lisp log md org py yaml yml;
 }
 limit_req_zone $binary_remote_addr zone=pagelimit:10m rate=4r/m;
 limit_req_zone $binary_remote_addr zone=formlimit:10m rate=4r/m;
