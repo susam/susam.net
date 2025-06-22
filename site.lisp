@@ -270,13 +270,13 @@ value, next-index."
     (declare (ignore second minute hour day dst tz))
     (format nil "~2,'0d ~a ~4,'0d" date (month-name month) year)))
 
-(defun format-long-date (universal-time)
+(defun format-long-date (universal-time &optional (sep " "))
   "Convert universal-time (integer) to a simple human-readable date."
   (multiple-value-bind (second minute hour date month year day dst tz)
       (decode-universal-time universal-time 0)
     (declare (ignore second day dst tz))
-    (format nil "~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d ~a"
-            date (month-name month) year hour minute "GMT")))
+    (format nil "~2,'0d ~a ~4,'0d~a~2,'0d:~2,'0d ~a"
+            date (month-name month) year sep hour minute "UTC")))
 
 (defun date-slug (filename)
   "Parse filename to extract date and slug."
@@ -1401,6 +1401,7 @@ value, next-index."
                       (cons "current-year" (nth-value 5 (get-decoded-time)))
                       (cons "head" "main.css")
                       (cons "index" "")
+                      (cons "head" "main.css")
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
         (comments (collect-comments (list "content/comments/*.html"

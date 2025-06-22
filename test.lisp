@@ -73,8 +73,10 @@
 
 (defvar *log-mode* nil)
 (defvar *site-mode* nil)
-(load "site.lisp")
+(defvar *roll-mode* nil)
 
+(load "site.lisp")
+(load "roll.lisp")
 
 ;;; Test Cases for Reusable Definitions
 ;;; -----------------------------------
@@ -355,11 +357,47 @@
 
 (test-case format-long-date
   (assert (string= (format-long-date (parse-content-date "2020-06-01"))
-                   "01 Jun 2020 00:00 GMT"))
+                   "01 Jun 2020 00:00 UTC"))
   (assert (string= (format-long-date (parse-content-date "2020-06-01 14:30:10 +0530"))
-                   "01 Jun 2020 09:00 GMT"))
+                   "01 Jun 2020 09:00 UTC"))
   (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530"))
-                   "31 May 2020 23:00 GMT")))
+                   "31 May 2020 23:00 UTC")))
+
+(test-case format-long-date-sep
+  (assert (string= (format-long-date (parse-content-date "2020-06-01") " at ")
+                   "01 Jun 2020 at 00:00 UTC"))
+  (assert (string= (format-long-date (parse-content-date "2020-06-01 14:30:10 +0530") " at ")
+                   "01 Jun 2020 at 09:00 UTC"))
+  (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530") " at ")
+                   "31 May 2020 at 23:00 UTC")))
+
+(test-case safe-parse-rss-date
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 00:00:00 +0000"))
+                   "2020-06-01 00:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 09:00:10 +0000"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 14:30:10 +0530"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
+                   "2020-05-31 23:00:10 +0000")))
+
+(test-case safe-parse-atom-date
+  (assert (string= (format-content-date
+                    (safe-parse-atom-date "2020-06-01T00:00:00Z"))
+                   "2020-06-01 00:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-atom-date "2020-06-01T09:00:10+00:00"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-atom-date "2020-06-01T14:30:10+05:30"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (safe-parse-atom-date "2020-06-01T04:30:10+05:30"))
+                   "2020-05-31 23:00:10 +0000")))
 
 (test-case date-slug
   (multiple-value-bind (date slug) (date-slug "foo")
@@ -837,14 +875,14 @@ yz
 "))
     (multiple-value-bind (p next-index) (read-comment text 0)
       (assert (string= (aget "date" p) "2020-06-01 07:08:09 +0000"))
-      (assert (string= (aget "simple-date" p) "01 Jun 2020 07:08 GMT"))
+      (assert (string= (aget "simple-date" p) "01 Jun 2020 07:08 UTC"))
       (assert (string= (aget "name" p) "Alice"))
       (assert (string= (aget "commenter" p) "Alice"))
       (assert (string= (aget "body" p) (format nil "x~%")))
       (assert (= next-index 64)))
     (multiple-value-bind (p next-index) (read-comment text 64)
       (assert (string= (aget "date" p) "2020-06-02 17:18:19 +0000"))
-      (assert (string= (aget "simple-date" p) "02 Jun 2020 17:18 GMT"))
+      (assert (string= (aget "simple-date" p) "02 Jun 2020 17:18 UTC"))
       (assert (string= (aget "name" p) "Bob"))
       (assert (string= (aget "commenter" p)
                        "<a href=\"https://example.com/\">Bob</a>"))
@@ -938,6 +976,124 @@ Z")
   (assert (string= (read-file "test-tmp/foo.html")
                    "[Comments on Foo Foo apple]")))
 
+
+;;; Test Cases for Blogroll
+;;; -----------------------
+
+(test-case string-within
+  (let ((text "<p>foo</p><p>bar</p>"))
+    (multiple-value-bind (result index) (string-within text "<p>" "</p>")
+      (assert (string= result "foo"))
+      (assert (= index 10)))
+    (multiple-value-bind (result index) (string-within text "<p>" "</p>" 1)
+      (assert (string= result "bar"))
+      (assert (= index 20)))
+    (multiple-value-bind (result index) (string-within text "<em>" "</em>")
+      (assert (not result))
+      (assert (= index 0)))
+    (multiple-value-bind (result index) (string-within text "<em>" "</em>" 2)
+      (assert (not result))
+      (assert (= index 2))))
+  (let ((text "<p>foo"))
+    (multiple-value-bind (result index) (string-within text "<p>" "</p>")
+      (assert (not result))
+      (assert (= index 0)))))
+
+(test-case string-within-tag
+  (let ((text "<p>foo</p><p>bar</p>"))
+    (multiple-value-bind (result index) (string-within-tag text "p")
+      (assert (string= result "foo"))
+      (assert (= index 10)))
+    (multiple-value-bind (result index) (string-within-tag text "p" 1)
+      (assert (string= result "bar"))
+      (assert (= index 20)))
+    (multiple-value-bind (result index) (string-within-tag text "em")
+      (assert (not result))
+      (assert (= index 0)))
+    (multiple-value-bind (result index) (string-within-tag text "em" 2)
+      (assert (not result))
+      (assert (= index 2))))
+  (let ((text "<p>foo"))
+    (multiple-value-bind (result index) (string-within-tag text "p")
+      (assert (not result))
+      (assert (= index 0)))))
+
+(test-case strings-within-tag
+  (let ((text "<p>foo</p><p>bar</p>"))
+    (assert (equal (strings-within-tag text "p") (list "foo" "bar")))
+    (assert (not (strings-within-tag text "em"))))
+  (let ((text "<p>foo</p><p>bar"))
+    (assert (equal (strings-within-tag text "p") (list "foo")))))
+
+(test-case string-truncate-words
+  ;;           1---5---10---15---20---25---30---35---40---
+  (let ((text "The quick brown fox jumps over the lazy dog"))
+    ;; zero min-chars
+    (assert (string= (string-truncate-words text 50 0) text))
+    (assert (string= (string-truncate-words text 43 0) text))
+    (assert (string= (string-truncate-words text 42 0)
+                     "The quick brown fox jumps over the lazy ..."))
+    (assert (string= (string-truncate-words text 34 0)
+                     "The quick brown fox jumps over the ..."))
+    (assert (string= (string-truncate-words text 33 0)
+                     "The quick brown fox jumps over ..."))
+    (assert (string= (string-truncate-words text 3 0) "The ..."))
+    (assert (string= (string-truncate-words text 2 0) " ..."))
+    (assert (string= (string-truncate-words text 0 0) " ..."))
+    ;; non-zero min-chars
+    (assert (string= (string-truncate-words text 50 1) text))
+    (assert (string= (string-truncate-words text 43 2) text))
+    (assert (string= (string-truncate-words text 3 1) "The ..."))
+    (assert (string= (string-truncate-words text 2 1) "Th..."))
+    (assert (string= (string-truncate-words text 0 1) "..."))
+    (assert (string= (string-truncate-words text 3 2) "The ...")))
+  ;;           1---5---10---15---20---25---30---35---40---
+  (let ((text "The_quick_brown fox_jumps_over the_lazy_dog"))
+    (assert (string= (string-truncate-words text 30 2)
+                     "The_quick_brown fox_jumps_over ..."))
+    (assert (string= (string-truncate-words text 29 2)
+                     "The_quick_brown fox_jumps_ove..."))
+    (assert (string= (string-truncate-words text 29 1)
+                     "The_quick_brown ..."))
+    (assert (string= (string-truncate-words text 15 1)
+                     "The_quick_brown ..."))
+    (assert (string= (string-truncate-words text 14 1)
+                     "The_quick_brow..."))
+    (assert (string= (string-truncate-words text 0 1)
+                     "..."))
+    (assert (string= (string-truncate-words text 0 0)
+                     " ...")))
+  ;;           1---5---10-
+  (let ((text "Hello World"))
+    ;; min-words = 2
+    (assert (string= (string-truncate-words text 11 2) text))
+    (assert (string= (string-truncate-words text 10 2) "Hello Worl..."))
+    (assert (string= (string-truncate-words text 7 2) "Hello W..."))
+    (assert (string= (string-truncate-words text 6 2) "Hello ..."))
+    (assert (string= (string-truncate-words text 5 2) "Hello ..."))
+    (assert (string= (string-truncate-words text 4 2) "Hell..."))
+    (assert (string= (string-truncate-words text 1 2) "H..."))
+    (assert (string= (string-truncate-words text 0 2) "..."))
+    ;; min-words = 1
+    (assert (string= (string-truncate-words text 11 1) text))
+    (assert (string= (string-truncate-words text 10 1) "Hello ..."))
+    (assert (string= (string-truncate-words text 7 1) "Hello ..."))
+    (assert (string= (string-truncate-words text 6 1) "Hello ..."))
+    (assert (string= (string-truncate-words text 5 1) "Hello ..."))
+    (assert (string= (string-truncate-words text 4 1) "Hell..."))
+    (assert (string= (string-truncate-words text 1 1) "H..."))
+    (assert (string= (string-truncate-words text 0 1) "..."))
+    ;; min-words = 0
+    (assert (string= (string-truncate-words text 11 0) text))
+    (assert (string= (string-truncate-words text 10 0) "Hello ..."))
+    (assert (string= (string-truncate-words text 7 0) "Hello ..."))
+    (assert (string= (string-truncate-words text 6 0) "Hello ..."))
+    (assert (string= (string-truncate-words text 5 0) "Hello ..."))
+    (assert (string= (string-truncate-words text 4 0) " ..."))
+    (assert (string= (string-truncate-words text 1 0) " ..."))
+    (assert (string= (string-truncate-words text 0 0) " ..."))
+
+    ))
 
 ;; End test cases.
 
