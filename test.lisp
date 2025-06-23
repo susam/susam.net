@@ -25,6 +25,10 @@
   (uiop:delete-directory-tree (pathname path) :validate t
                                               :if-does-not-exist :ignore))
 
+(defun set-dev-path ()
+  "Utility function to be run manually in development environment."
+  (setf *default-pathname-defaults* (truename "~/git/susam.net/")))
+
 (defmacro test-case (name &body body)
   "Execute a test case and print pass or fail status."
   `(progn
@@ -73,10 +77,9 @@
 
 (defvar *log-mode* nil)
 (defvar *site-mode* nil)
-(defvar *roll-mode* nil)
 
 (load "site.lisp")
-(load "roll.lisp")
+(load "defs.lisp")
 
 ;;; Test Cases for Reusable Definitions
 ;;; -----------------------------------
@@ -198,10 +201,8 @@
   (assert (string= (string-replace "foo" "x" "foo:foo:") "x:x:")))
 
 (test-case string-split
-  (assert (not (string-split "" "")))
   (assert (not (string-split "" ":")))
   (assert (not (string-split "" ": ")))
-  (assert (equal (string-split "foo" "") '("f" "o" "o")))
   (assert (equal (string-split "foo" ":") '("foo")))
   (assert (equal (string-split "foo:" ":") '("foo")))
   (assert (equal (string-split "foo:bar" ":") '("foo" "bar")))
@@ -212,7 +213,26 @@
   (assert (equal (string-split "foo:bar" ": ") '("foo:bar")))
   (assert (equal (string-split "foo: bar" ": ") '("foo" "bar")))
   (assert (equal (string-split "foo: bar: baz" ": ") '("foo" "bar" "baz")))
-  (assert (equal (string-split "foo: bar: baz: " ": ") '("foo" "bar" "baz"))))
+  (assert (equal (string-split "foo: bar: baz: " ": ") '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo: bar: : baz: " ": ") '("foo" "bar" "" "baz")))
+  (assert (equal (string-split "foo::bar:::baz:" ":") '("foo" ""  "bar" "" "" "baz"))))
+
+(test-case string-split-ignore-empty-splits
+  (assert (not (string-split "" ":" :ignore-empty t)))
+  (assert (not (string-split "" ": " :ignore-empty t)))
+  (assert (equal (string-split "foo" ":" :ignore-empty t) '("foo")))
+  (assert (equal (string-split "foo:" ":" :ignore-empty t) '("foo")))
+  (assert (equal (string-split "foo:bar" ":" :ignore-empty t) '("foo" "bar")))
+  (assert (equal (string-split "foo:bar" ":" :ignore-empty t) '("foo" "bar")))
+  (assert (equal (string-split "foo" ": " :ignore-empty t) '("foo")))
+  (assert (equal (string-split "foo:" ": " :ignore-empty t) '("foo:")))
+  (assert (equal (string-split "foo: " ": " :ignore-empty t) '("foo")))
+  (assert (equal (string-split "foo:bar" ": " :ignore-empty t) '("foo:bar")))
+  (assert (equal (string-split "foo: bar" ": " :ignore-empty t) '("foo" "bar")))
+  (assert (equal (string-split "foo: bar: baz" ": " :ignore-empty t) '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo: bar: baz: " ": " :ignore-empty t) '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo: bar: : baz: " ": " :ignore-empty t) '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo::bar:::baz:" ":" :ignore-empty t) '("foo" "bar" "baz"))))
 
 (test-case join-strings
   (assert (string= (join-strings '()) ""))
@@ -370,34 +390,6 @@
                    "01 Jun 2020 at 09:00 UTC"))
   (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530") " at ")
                    "31 May 2020 at 23:00 UTC")))
-
-(test-case safe-parse-rss-date
-  (assert (string= (format-content-date
-                    (safe-parse-rss-date "Mon, 01 Jun 2020 00:00:00 +0000"))
-                   "2020-06-01 00:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (safe-parse-rss-date "Mon, 01 Jun 2020 09:00:10 +0000"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (safe-parse-rss-date "Mon, 01 Jun 2020 14:30:10 +0530"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (safe-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
-                   "2020-05-31 23:00:10 +0000")))
-
-(test-case safe-parse-atom-date
-  (assert (string= (format-content-date
-                    (safe-parse-atom-date "2020-06-01T00:00:00Z"))
-                   "2020-06-01 00:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (safe-parse-atom-date "2020-06-01T09:00:10+00:00"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (safe-parse-atom-date "2020-06-01T14:30:10+05:30"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (safe-parse-atom-date "2020-06-01T04:30:10+05:30"))
-                   "2020-05-31 23:00:10 +0000")))
 
 (test-case date-slug
   (multiple-value-bind (date slug) (date-slug "foo")
@@ -999,32 +991,6 @@ Z")
       (assert (not result))
       (assert (= index 0)))))
 
-(test-case string-within-tag
-  (let ((text "<p>foo</p><p>bar</p>"))
-    (multiple-value-bind (result index) (string-within-tag text "p")
-      (assert (string= result "foo"))
-      (assert (= index 10)))
-    (multiple-value-bind (result index) (string-within-tag text "p" 1)
-      (assert (string= result "bar"))
-      (assert (= index 20)))
-    (multiple-value-bind (result index) (string-within-tag text "em")
-      (assert (not result))
-      (assert (= index 0)))
-    (multiple-value-bind (result index) (string-within-tag text "em" 2)
-      (assert (not result))
-      (assert (= index 2))))
-  (let ((text "<p>foo"))
-    (multiple-value-bind (result index) (string-within-tag text "p")
-      (assert (not result))
-      (assert (= index 0)))))
-
-(test-case strings-within-tag
-  (let ((text "<p>foo</p><p>bar</p>"))
-    (assert (equal (strings-within-tag text "p") (list "foo" "bar")))
-    (assert (not (strings-within-tag text "em"))))
-  (let ((text "<p>foo</p><p>bar"))
-    (assert (equal (strings-within-tag text "p") (list "foo")))))
-
 (test-case string-truncate-words
   ;;           1---5---10---15---20---25---30---35---40---
   (let ((text "The quick brown fox jumps over the lazy dog"))
@@ -1091,9 +1057,106 @@ Z")
     (assert (string= (string-truncate-words text 5 0) "Hello ..."))
     (assert (string= (string-truncate-words text 4 0) " ..."))
     (assert (string= (string-truncate-words text 1 0) " ..."))
-    (assert (string= (string-truncate-words text 0 0) " ..."))
+    (assert (string= (string-truncate-words text 0 0) " ..."))))
 
-    ))
+(test-case try-parse-ymd
+  (assert (equal (multiple-value-list (try-parse-ymd "2025-09-16")) (list 2025 09 16)))
+  (assert (equal (multiple-value-list (try-parse-ymd " 2025-09-16 ")) (list 2025 09 16)))
+  (assert (equal (multiple-value-list (try-parse-ymd " 2025 - 09 - 16 ")) (list 2025 09 16)))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025-09")) (list nil nil nil)))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025-09-")) (list nil nil nil)))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025")) (list nil nil nil)))
+  (assert (equal (multiple-value-list (try-parse-ymd "")) (list nil nil nil))))
+
+(test-case try-parse-hms
+  (assert (equal (multiple-value-list (try-parse-hms "09:30:10")) (list 9 30 10)))
+  (assert (equal (multiple-value-list (try-parse-hms "9:30:10")) (list 9 30 10)))
+  (assert (equal (multiple-value-list (try-parse-hms "9:1:2")) (list 9 1 2)))
+  (assert (equal (multiple-value-list (try-parse-hms " 9 : 1 : 2 ")) (list 9 1 2)))
+  (assert (equal (multiple-value-list (try-parse-hms "23:59:59")) (list 23 59 59)))
+  (assert (equal (multiple-value-list (try-parse-hms "23:59")) (list 23 59 0)))
+  (assert (equal (multiple-value-list (try-parse-hms "23")) (list 23 0 0)))
+  (assert (equal (multiple-value-list (try-parse-hms "")) (list 0 0 0))))
+
+(test-case try-parse-tz
+  (assert (= (try-parse-tz "UTC") 0))
+  (assert (= (try-parse-tz "GMT") 0))
+  (assert (= (try-parse-tz "XYZ") 0))
+  (assert (= (try-parse-tz "+0000") 0))
+  (assert (= (try-parse-tz "+0100") -1))
+  (assert (= (try-parse-tz "+0530") -11/2))
+  (assert (= (try-parse-tz "-0500") 5)))
+
+(test-case try-parse-rss-date
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 00:00:00 +0000"))
+                   "2020-06-01 00:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 09:00:10 +0000"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 14:30:10 +0530"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
+                   "2020-05-31 23:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020"))
+                   "2020-06-01 00:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 04"))
+                   "2020-06-01 04:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 04 +0530"))
+                   "2020-05-31 22:30:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 04:30 +0530"))
+                   "2020-05-31 23:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
+                   "2020-05-31 23:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-rss-date "Mon, 1 Jun 2020 4:1:2 +0530"))
+                   "2020-05-31 22:31:02 +0000")))
+
+(test-case try-parse-iso-date
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T09:00:10Z"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01 09:00:10Z"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T09:00:10+00:00"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T14:30:10+05:30"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T14:30:10 +05:30"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T04:30:10+05:30"))
+                   "2020-05-31 23:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T09:00:10"))
+                   "2020-06-01 09:00:10 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T09:30"))
+                   "2020-06-01 09:30:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T9:1:2"))
+                   "2020-06-01 09:01:02 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01T9"))
+                   "2020-06-01 09:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-06-01"))
+                   "2020-06-01 00:00:00 +0000"))
+  (assert (string= (format-content-date
+                    (try-parse-iso-date "2020-6-1"))
+                   "2020-06-01 00:00:00 +0000")))
+
 
 ;; End test cases.
 

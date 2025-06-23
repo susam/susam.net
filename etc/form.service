@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=www-data
 WorkingDirectory=/opt/susam.net
-Environment=CL_SOURCE_REGISTRY=/opt/cl// ASDF_OUTPUT_TRANSLATIONS=/opt/cl/:/opt/cache/cl/
+Environment=CL_SOURCE_REGISTRY=/opt/cl/form// ASDF_OUTPUT_TRANSLATIONS=/opt/cl/:/opt/cache/cl/
 ExecStart=/usr/bin/sbcl --load form.lisp
 Restart=always
 RestartSec=5

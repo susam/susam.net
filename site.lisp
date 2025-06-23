@@ -115,20 +115,24 @@
               (t
                (setf next-index (+ match-index (length old)))))))))
 
-(defun string-split (string separator)
+(defun string-split (string separator &key ignore-empty)
   "Split a string into a list of strings using the given separator."
   (let ((next-index 0)
         (match-index)
+        (split)
         (result))
     (loop
       (setf match-index (search separator string :start2 next-index))
-      (when (or (not match-index) (= match-index (length string)))
+      (when (or (not match-index))
         (return))
-      (setf match-index (max (1+ next-index) match-index))
-      (push (subseq string next-index match-index) result)
+      (setf split (subseq string next-index match-index))
+      (unless (and (= (length split) 0) ignore-empty)
+        (push split result))
       (setf next-index (+ match-index (length separator))))
     (when (< next-index (length string))
-      (push (subseq string next-index) result))
+      (setf split (subseq string next-index match-index))
+      (unless (and (= (length split) 0) ignore-empty)
+        (push split result)))
     (reverse result)))
 
 (defun join-strings (strings)
