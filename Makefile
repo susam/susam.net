@@ -76,9 +76,13 @@ debs:
 	apt-get update
 	apt-get -y install nginx certbot sbcl
 
-hunchentoot:
-	mkdir -p /opt/cl/
-	set -x; while read -r url; do curl -sSL "$$url" | tar -C /opt/cl -xz; done < meta/cl-deps.txt
+cldeps:
+	rm -rf /opt/cl/
+	mkdir -p /opt/cl/form/ /opt/cl/roll/
+	set -x; while read -r url; do curl -sSL "$$url" | \
+	tar -C /opt/cl/form/ -xz; done < meta/cldeps/form.txt
+	set -x; while read -r url; do curl -sSL "$$url" | \
+	tar -C /opt/cl/roll/ -xz; done < meta/cldeps/roll.txt
 
 quicklisp:
 	rm -rf /opt/quicklisp.lisp /opt/quicklisp
@@ -290,43 +294,47 @@ mathjax:
 	    echo MathJax is already cached.; \
 	fi
 
-preroll:
+getroll:
 	@echo Fetching feeds for roll ...
 	rm -rf _cache/roll/
 	mkdir -p _cache/roll/
 	ua="curl/$$(curl -V | head -n1 | cut -d' ' -f2) (Susam's Blogroll; https://susam.net/roll.html)"; \
-	n=1; \
 	while read -r url; do \
-	  echo "Fetching $$url ..."; \
-	  curl -sSL -A "$$ua" -m 30 -o _cache/roll/$$n.xml "$$url"; n=$$(( $$n + 1 )); \
+	  domain=$$(echo "$$url" | sed -E 's/.*:\/\/(www\.|feeds\.)?([^/]*)\/.*/\2/'); \
+	  echo "Fetching $$url ($$domain) ..."; \
+	  curl -sSL -A "$$ua" -m 30 -o _cache/roll/"$$domain".xml "$$url"; \
 	done < content/roll.txt
+	date > _cache/roll/ok
 	@echo Done; echo
 
-dpreroll:
+devgetroll:
 	mv content/roll.txt content/roll.txt.bkp
 	echo 'https://susam.net/feed.xml' > content/roll.txt
-	make preroll
+	make getroll
 	mv content/roll.txt.bkp content/roll.txt
 
 roll:
 	@echo Generating roll ...
-	if ! [ -e _cache/roll/1.xml ]; then make preroll; fi
-	sbcl --noinform --load roll.lisp --quit > _cache/roll/roll.log
+	if ! [ -e _cache/roll/ok ]; then make getroll; fi
+	CL_SOURCE_REGISTRY="/opt/cl/roll//" \
+	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:/opt/cache/cl/" \
+	sbcl --noinform --load roll.lisp --quit | tee _cache/roll/roll.log
 	if [ -e _site/ ]; then cp -v _cache/roll/roll.* _site/; fi
 	if [ -e _live/ ]; then cp -v _cache/roll/roll.* _live/; fi
 	@echo Done; echo
 
-reroll: preroll roll
+reroll: getroll roll
 
-droll:
+devroll:
 	@echo Generating development environment roll ...
-	if ! [ -e _cache/roll/1.xml ]; then make preroll; fi
+	if ! [ -e _cache/roll/ok ]; then make getroll; fi
 	if ! [ -e _site/ ]; then make dist; fi
-	time sbcl --noinform \
-	          --eval '(setf *break-on-signals* t)' \
-	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	          --load roll.lisp \
-	          --quit > _cache/roll/roll.log
+	CL_SOURCE_REGISTRY="/opt/cl/roll//" \
+	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
+	sbcl --noinform \
+	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	     --load roll.lisp \
+	     --quit | tee _cache/roll/roll.log
 	cp -v _cache/roll/roll.* _site/
 	@echo Done; echo
 
@@ -384,7 +392,7 @@ run-dist-deep: dist deep serve
 run-site-deep: site deep serve
 
 serve-form: site
-	CL_SOURCE_REGISTRY="/opt/cl//" \
+	CL_SOURCE_REGISTRY="/opt/cl/form//" \
 	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
 	sbcl --load form.lisp
 
