@@ -70,7 +70,7 @@ help:
 # Targets for Live Server
 # -----------------------
 
-setup: debs hunchentoot
+setup: debs cldeps
 
 debs:
 	apt-get update
