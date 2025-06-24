@@ -94,6 +94,7 @@ quicklisp:
 
 https: http
 	@echo Setting up HTTPS website ...
+	mkdir -p /opt/log/cron/
 	certbot certonly -n --agree-tos -m '$(MAIL)' --webroot \
 	                 -w '/var/www/$(FQDN)' -d '$(FQDN),www.$(FQDN),susam.in'
 	(crontab -l | sed '/::::/d'; cat etc/crontab) | crontab
