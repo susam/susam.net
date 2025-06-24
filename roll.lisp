@@ -97,7 +97,7 @@
         (when (and (stringp title) (string/= title "")
                    (stringp link) (string/= link "")
                    (good-link link)  univ-time)
-          (push (make-feed-item univ-time title link domain) entries))))
+          (push (make-feed-item univ-time title link domain) result))))
     result))
 
 (defun read-feed (src-path)
