@@ -36,8 +36,11 @@
   "Create an alist for the given feed item."
   (list (cons "date" (format-content-date universal-time))
         (cons "simple-date" (format-short-date universal-time))
-        (cons "title" (html-escape (string-truncate-words title 70 2) nil))
-        (cons "link" (html-escape link t))
+        (cons "title" (html-escape
+                       (string-trim-ws
+                        (string-truncate-words
+                         (string-crush-ws (remove-odd-chars title)) 70 2))))
+        (cons "link" (string-trim-ws (html-escape link :amp t)))
         (cons "domain" domain)))
 
 (defun node-tag (node tag-name)
