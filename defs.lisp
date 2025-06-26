@@ -10,41 +10,50 @@
 ;;;; This software is provided "AS IS", WITHOUT WARRANTY OF ANY KIND,
 ;;;; express or implied.  See COPYRIGHT.md for complete details.
 
+(defun whitespaces ()
+  "Return a list of known whitespace characters."
+  (list #\Newline #\Page #\Return #\Space #\Tab))
+
 (defun string-trim-ws (string)
   "Trim whitespace from both ends of the given string."
-  (string-trim (list #\Space #\Tab #\Newline) string))
+  (string-trim (whitespaces) string))
 
-(defun string-within (text start-token end-token &optional (next-index 0))
-  "Return text between start-token and end-token."
-  (let ((start-token-index)
-        (start-read-index)
-        (end-token-index)
-        (result))
-    (setf start-token-index (search start-token text :start2 next-index))
-    (when start-token-index
-      (setf start-read-index (+ start-token-index (length start-token)))
-      (setf end-token-index (search end-token text :start2 start-read-index))
-      (when end-token-index
-        (setf result (subseq text start-read-index end-token-index))
-        (setf next-index (+ end-token-index (length end-token)))))
-    (values result next-index)))
+(defun string-ws-to-space (string)
+  "Convert all whitespace characters in a string to space."
+  (dolist (c (whitespaces))
+    (setf string (substitute #\Space c string)))
+  string)
+
+(defun string-crush-ws (string)
+  "Crush multiple consecutive whitespaces into a single space."
+  (setf string (string-ws-to-space string))
+  (with-output-to-string (out)
+    (dotimes (n (length string))
+      (unless (and (> n 0)
+                   (char= (char string (1- n)) #\Space)
+                   (char= (char string n) #\Space))
+        (write-char (char string n) out)))))
 
 (defun string-truncate-words (text max-chars min-words)
   "Return a string truncated to a maximum length at word boundary."
   (when (> (length text) max-chars)
-    (let ((word-count 0)
+    (let ((norm text)
+          (word-count 0)
           (good-index 0)
           (next-index))
+      (setf norm (string-ws-to-space text))
       (loop
-        (setf next-index (position #\Space text :start (1+ good-index)))
+        (setf next-index (position #\Space norm :start (1+ good-index)))
         (unless next-index
           (return))
         (unless (<= next-index max-chars)
           (return))
-        (incf word-count)
+        (when (and (> next-index 0)
+                   (char/= (char norm (1- next-index)) #\Space))
+          (incf word-count))
         (setf good-index next-index))
       (if (or (>= word-count min-words)
-              (char= (char text max-chars) #\Space))
+              (char= (char norm max-chars) #\Space)) ; past the end of a word
           (setf text (fstr "~a ..." (subseq text 0 good-index)))
           (setf text (fstr "~a..." (subseq text 0 max-chars))))))
   text)
@@ -64,8 +73,8 @@
        (parse-integer string)))
 
 (defun try-parse-ymd (ymd)
-  "Parse yy-mm-dd date; return NILs if parsing fails."
-  (let* ((parts (string-split (string-replace " " "" ymd) "-"))
+  "Parse yy-mm-dd date into 3 integers; return NILs if parsing fails."
+  (let* ((parts (string-split (remove #\Space ymd) "-"))
          (year) (month) (date))
     (when (= (length parts) 3)
       (setf year (try-parse-integer (nth 0 parts)))
@@ -75,7 +84,7 @@
 
 (defun try-parse-hms (hms)
   "Parse hh:mm:ss time while tolerating errors; return 0s if parsing fails."
-  (let* ((parts (string-split (string-replace " " "" hms) ":"))
+  (let* ((parts (string-split (remove #\Space hms) ":"))
          (hour (if (>= (length parts) 1) (try-parse-integer (nth 0 parts)) 0))
          (minute (if (>= (length parts) 2) (try-parse-integer (nth 1 parts)) 0))
          (second (if (>= (length parts) 3) (try-parse-integer (nth 2 parts)) 0)))
@@ -83,8 +92,7 @@
 
 (defun try-parse-tz (tz-string)
   "Parse timezone while tolerating errors; return 0 if parsing fails."
-  (setf tz-string (string-replace " " "" tz-string))
-  (setf tz-string (string-replace ":" "" tz-string))
+  (setf tz-string (remove-items (list #\Space #\:) tz-string))
   (when (member tz-string (list "Z" "UTC" "GMT") :test #'string=)
     (setf tz-string "+0000"))
   (let ((tz 0))
@@ -140,17 +148,31 @@
     (when (and date month year hour minute second tz)
       (encode-universal-time second minute hour date month year tz))))
 
-(defun html-escape (text amp)
+(defun html-escape (text &key amp)
   "Escape special characters in HTML."
   (with-output-to-string (out)
-    (loop for c across text do
-      (case c
-        (#\& (write-string (if amp "&amp;" "&") out))
-        (#\< (write-string "&lt;" out))
-        (#\> (write-string "&gt;" out))
-        (#\" (write-string "&quot;" out))
-        (#\' (write-string "&apos;" out))
-        (t (write-char c out))))))
+    (loop for c across text
+          do (case c
+               (#\& (write-string (if amp "&amp;" "&") out))
+               (#\< (write-string "&lt;" out))
+               (#\> (write-string "&gt;" out))
+               (#\" (write-string "&quot;" out))
+               (#\' (write-string "&apos;" out))
+               (t (write-char c out))))))
+
+(defun remove-items (items sequence)
+  "Remove the given items from the given sequence."
+  (let ((result sequence))
+    (dolist (item items)
+      (setf result (remove item result)))
+    result))
+
+(defun remove-odd-chars (text)
+  "Remove certain characters that do not render well on all web browsers."
+  ;; shkspr.mobi uses half stars that don't render well without special fonts.
+  (remove-items (list #\BLACK_STAR
+                      #\WHITE_STAR
+                      #\STAR_WITH_LEFT_HALF_BLACK) text))
 
 (defun good-link (link)
   "Check if we can accept the given URL to be included in href attribute."
@@ -158,10 +180,7 @@
   (and
    (or (string-starts-with "http://" link)
        (string-starts-with "https://" link))
-   (every (lambda (c) (>= (char-code c) 32)) link)
-   (not (search "javascript:" link))
-   (not (search "data:" link))))
-
+   (every (lambda (c) (>= (char-code c) 32)) link)))
 
 (defun format-content-date (universal-time)
   "Convert universal-time (integer) to a simple human-readable date."

@@ -437,18 +437,10 @@ value, next-index."
 
 (defun latex-markup (text)
   "Reformat LaTeX code to make the punctuation stick to formulas."
-  (setf text (string-replace " \\)."
-                             ".  \\)"
-                             text))
-  (setf text (string-replace " \\)?"
-                             "?  \\)"
-                             text))
-  (setf text (string-replace " \\),"
-                             ", \\)"
-                             text))
-  (setf text (string-replace " \\);"
-                             ";  \\)"
-                             text)))
+  (setf text (string-replace " \\)." ".  \\)" text))
+  (setf text (string-replace " \\)?" "?  \\)" text))
+  (setf text (string-replace " \\)," ", \\)" text))
+  (setf text (string-replace " \\);" "; \\)" text)))
 
 (defun format-markup (text)
   "Perform final formatting to pages before rendering them."

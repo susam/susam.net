@@ -972,24 +972,19 @@ Z")
 ;;; Test Cases for Blogroll
 ;;; -----------------------
 
-(test-case string-within
-  (let ((text "<p>foo</p><p>bar</p>"))
-    (multiple-value-bind (result index) (string-within text "<p>" "</p>")
-      (assert (string= result "foo"))
-      (assert (= index 10)))
-    (multiple-value-bind (result index) (string-within text "<p>" "</p>" 1)
-      (assert (string= result "bar"))
-      (assert (= index 20)))
-    (multiple-value-bind (result index) (string-within text "<em>" "</em>")
-      (assert (not result))
-      (assert (= index 0)))
-    (multiple-value-bind (result index) (string-within text "<em>" "</em>" 2)
-      (assert (not result))
-      (assert (= index 2))))
-  (let ((text "<p>foo"))
-    (multiple-value-bind (result index) (string-within text "<p>" "</p>")
-      (assert (not result))
-      (assert (= index 0)))))
+(test-case string-trim-ws
+  (assert (string= (string-trim-ws "  foo bar  baz  ") "foo bar  baz"))
+  (assert (string= (string-trim-ws (format nil " ~%foo ~a" #\Tab)) "foo")))
+
+(test-case string-crush-ws
+  (assert (string= (string-crush-ws "") ""))
+  (assert (string= (string-crush-ws "  ") " "))
+  (assert (string= (string-crush-ws "   ") " "))
+  (assert (string= (string-crush-ws "foo bar") "foo bar"))
+  (assert (string= (string-crush-ws "foo    bar") "foo bar"))
+  (assert (string= (string-crush-ws " foo bar ") " foo bar "))
+  (assert (string= (string-crush-ws "   foo   bar   ") " foo bar "))
+  (assert (string= (string-crush-ws (format nil " ~%foo ~a bar ~%" #\Tab)) " foo bar ")))
 
 (test-case string-truncate-words
   ;;           1---5---10---15---20---25---30---35---40---
@@ -1012,7 +1007,36 @@ Z")
     (assert (string= (string-truncate-words text 3 1) "The ..."))
     (assert (string= (string-truncate-words text 2 1) "Th..."))
     (assert (string= (string-truncate-words text 0 1) "..."))
-    (assert (string= (string-truncate-words text 3 2) "The ...")))
+    (assert (string= (string-truncate-words text 3 2) "The ..."))
+    (assert (string= (string-truncate-words text 15 3) "The quick brown ...")))
+  ;;           1---5---10---15---20---25---30---35---40---
+  (let ((text "The quick  brown fox jumps over the lazy dog"))
+    (assert (string= (string-truncate-words text 15 2) "The quick  ..."))
+    (assert (string= (string-truncate-words text 15 3) "The quick  brow..."))
+    (assert (string= (string-truncate-words text 16 3) "The quick  brown ...")))
+  ;;           1---5---10---15---20---25---30---35---40---
+  (let ((text "The quick  brown fox jumps over the lazy dog"))
+    (assert (string= (string-truncate-words text 15 2) "The quick  ..."))
+    (assert (string= (string-truncate-words text 15 3) "The quick  brow..."))
+    (assert (string= (string-truncate-words text 16 3) "The quick  brown ...")))
+  ;;           1---5---10---15---20---25---30---35---40---
+  (let ((text " The quick  brown fox jumps over the lazy dog"))
+    (assert (string= (string-truncate-words text 15 2) " The quick  ..."))
+    (assert (string= (string-truncate-words text 15 3) " The quick  bro..."))
+    (assert (string= (string-truncate-words text 16 3) " The quick  brow..."))
+    (assert (string= (string-truncate-words text 17 3) " The quick  brown ...")))
+  ;;           1---5---10---15---20---25---30---35---40---
+  (let ((text " The quickTNbrown fox jumps over the lazy dog"))
+    (setf text (substitute #\Tab #\T text))
+    (setf text (substitute #\Newline #\N text))
+    (assert (string= (string-truncate-words text 15 2)
+                     (format nil " ~che quick~c ..." #\Tab #\Tab)))
+    (assert (string= (string-truncate-words text 15 3)
+                     (format nil " ~che quick~c~%bro..." #\Tab #\Tab)))
+    (assert (string= (string-truncate-words text 16 3)
+                     (format nil " ~che quick~c~%brow..." #\Tab #\Tab)))
+    (assert (string= (string-truncate-words text 17 3)
+                     (format nil " ~che quick~c~%brown ..." #\Tab #\Tab))))
   ;;           1---5---10---15---20---25---30---35---40---
   (let ((text "The_quick_brown fox_jumps_over the_lazy_dog"))
     (assert (string= (string-truncate-words text 30 2)
@@ -1058,6 +1082,27 @@ Z")
     (assert (string= (string-truncate-words text 4 0) " ..."))
     (assert (string= (string-truncate-words text 1 0) " ..."))
     (assert (string= (string-truncate-words text 0 0) " ..."))))
+
+(test-case month-number
+  (assert (= (month-number "Jan") 1))
+  (assert (= (month-number "Feb") 2))
+  (assert (= (month-number "Mar") 3))
+  (assert (= (month-number "Apr") 4))
+  (assert (= (month-number "May") 5))
+  (assert (= (month-number "Jun") 6))
+  (assert (= (month-number "Jul") 7))
+  (assert (= (month-number "Aug") 8))
+  (assert (= (month-number "Sep") 9))
+  (assert (= (month-number "Oct") 10))
+  (assert (= (month-number "Nov") 11))
+  (assert (= (month-number "Dec") 12)))
+
+(test-case try-parse-integer
+  (assert (= (try-parse-integer "0") 0))
+  (assert (= (try-parse-integer "007") 7))
+  (assert (= (try-parse-integer " 007 ") 7))
+  (assert (not (try-parse-integer " 007a ")))
+  (assert (not (try-parse-integer "foo"))))
 
 (test-case try-parse-ymd
   (assert (equal (multiple-value-list (try-parse-ymd "2025-09-16")) (list 2025 09 16)))
@@ -1157,6 +1202,41 @@ Z")
                     (try-parse-iso-date "2020-6-1"))
                    "2020-06-01 00:00:00 +0000")))
 
+(test-case html-escape
+  (assert (string= (html-escape "<foo>") "&lt;foo&gt;"))
+  (assert (string= (html-escape "\"foo'") "&quot;foo&apos;"))
+  (assert (string= (html-escape "foo & bar") "foo & bar"))
+  (assert (string= (html-escape "foo & bar" :amp t) "foo &amp; bar")))
+
+(test-case remove-items
+  (assert (equal (remove-items (list 20 40) (list 10 20 30 40)) (list 10 30)))
+  (assert (string= (remove-items nil "foo bar baz") "foo bar baz"))
+  (assert (string= (remove-items (list #\Space) "foo bar baz") "foobarbaz"))
+  (assert (string= (remove-items (list #\Space #\-) "foo  - bar -") "foobar")))
+
+(test-case remove-odd-chars
+  (let ((text (format nil "foo~a~a~a" #\BLACK_STAR #\WHITE_STAR
+                      #\STAR_WITH_LEFT_HALF_BLACK)))
+    (assert (string= (remove-odd-chars text) "foo"))))
+
+(test-case good-link
+  (assert (good-link "http://foo"))
+  (assert (good-link "https://foo"))
+  (assert (not (good-link (format nil "https://foo~%"))))
+  (assert (not (good-link (format nil "foo://bar")))))
+
+(test-case format-content-date
+  (assert (string= (format-content-date 0) "1900-01-01 00:00:00 +0000"))
+  (assert (string= (format-content-date 1) "1900-01-01 00:00:01 +0000"))
+  (assert (string= (format-content-date 86400) "1900-01-02 00:00:00 +0000"))
+  (assert (string= (format-content-date 1000000000) "1931-09-10 01:46:40 +0000"))
+  (assert (string= (format-content-date 2000000000) "1963-05-19 03:33:20 +0000"))
+  (assert (string= (format-content-date 2208988800) "1970-01-01 00:00:00 +0000"))
+  (assert (string= (format-content-date 3000000000) "1995-01-25 05:20:00 +0000"))
+  (assert (string= (format-content-date 4000000000) "2026-10-03 07:06:40 +0000"))
+  (assert (string= (format-content-date 5000000000) "2058-06-11 08:53:20 +0000"))
+  (assert (string= (format-content-date 6000000000) "2090-02-17 10:40:00 +0000"))
+  (assert (string= (format-content-date 7000000000) "2121-10-27 12:26:40 +0000")))
 
 ;; End test cases.
 
