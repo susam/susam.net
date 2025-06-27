@@ -156,6 +156,7 @@
     (when *params*
       (setf params (append *params* params)))
     (aput "title" (render "{{ nick }}'s Blogroll" params) params)
+    (aput "subtitle" "" params)
     (when (probe-file dst-path)
       (delete-file dst-path))
     (make-roll dst-path params))
