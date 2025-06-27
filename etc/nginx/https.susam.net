@@ -2,19 +2,19 @@ types {
     text/plain asm c cc el lisp log md org py yaml yml;
     text/xml xsl;
 }
-limit_req_zone $binary_remote_addr zone=pagelimit:10m rate=4r/m;
-limit_req_zone $binary_remote_addr zone=formlimit:10m rate=4r/m;
+limit_req_zone $binary_remote_addr zone=pagelimit:10m rate=10r/m;
+limit_req_zone $binary_remote_addr zone=formlimit:10m rate=10r/m;
 limit_req_status 429;
 
 # https://susam.net/
 server {
-    limit_req zone=pagelimit burst=30 nodelay;
     listen 443 ssl;
     listen [::]:443 ssl;
     ssl_certificate /etc/letsencrypt/live/susam.net/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/susam.net/privkey.pem;
     server_name susam.net susam;
     root /var/www/susam.net;
+    limit_req zone=pagelimit burst=100 nodelay;
     location /form/ {
         limit_req zone=formlimit burst=10 nodelay;
         proxy_pass http://127.0.0.1:4242;
