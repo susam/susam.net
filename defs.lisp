@@ -170,9 +170,10 @@
 (defun remove-odd-chars (text)
   "Remove certain characters that do not render well on all web browsers."
   ;; shkspr.mobi uses half stars that don't render well without special fonts.
-  (remove-items (list #\BLACK_STAR
-                      #\WHITE_STAR
-                      #\STAR_WITH_LEFT_HALF_BLACK) text))
+  (remove-items (list (code-char #x2605)  ; BLACK STAR
+                      (code-char #x2606)  ; WHITE STAR
+                      (code-char #x2bea)) ; STAR WITH LEFT HALF BLACK
+                text))
 
 (defun good-link (link)
   "Check if we can accept the given URL to be included in href attribute."

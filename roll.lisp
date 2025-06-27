@@ -1,5 +1,5 @@
-;;;; A Rudimentary Imperfect Blogroll Generator
-;;;; ==========================================
+;;;; Blogroll Generator
+;;;; ==================
 
 ;;;; Copyright (c) 2025 Susam Pal
 ;;;;
