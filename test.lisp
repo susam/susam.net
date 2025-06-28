@@ -50,7 +50,7 @@
            (format t "~&  ~a: error: ~a~%" test-name c))))))
 
 (defmacro test-case! (name &body body)
-  "Execute a test case and error out on failure."
+  "Execute a test case and error out on failure. Useful for debugging."
   `(progn
      (remove-directory #p"test-tmp/")
      (ensure-directories-exist #p"test-tmp/")
@@ -281,54 +281,28 @@
 
 (test-case read-header-line
   (let ((text (format nil "<!-- k1: v1 -->~%")))
-    (multiple-value-bind (k v next-index) (read-header-line text 0)
-      (assert (string= k "k1"))
-      (assert (string= v "v1"))
-      (assert (= next-index 16)))
-    (multiple-value-bind (k v next-index) (read-header-line text 16)
-      (assert (not k))
-      (assert (not v))
-      (assert (= next-index 16)))))
+    (assert (equal (multiple-value-list (read-header-line text 0)) '("k1" "v1" 16)))
+    (assert (equal (multiple-value-list (read-header-line text 16)) '(nil nil 16)))))
 
 (test-case read-header-line-empty-value
   (let ((text (format nil "<!-- k1:  -->~%")))
-    (multiple-value-bind (k v next-index) (read-header-line text 0)
-      (assert (string= k "k1"))
-      (assert (string= v ""))
-      (assert (= next-index 14)))
-    (multiple-value-bind (k v next-index) (read-header-line text 14)
-      (assert (not k))
-      (assert (not v))
-      (assert (= next-index 14)))))
+    (assert (equal (multiple-value-list (read-header-line text 0)) '("k1" "" 14)))
+    (assert (equal (multiple-value-list (read-header-line text 14)) '(nil nil 14)))))
 
 (test-case read-header-lines
   (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
-    (multiple-value-bind (k v next-index) (read-header-line text 0)
-      (assert (string= k "k1"))
-      (assert (string= v "v1"))
-      (assert (= next-index 16)))
-    (multiple-value-bind (k v next-index) (read-header-line text 16)
-      (assert (string= k "k2"))
-      (assert (string= v "v2"))
-      (assert (= next-index 32)))
-    (multiple-value-bind (k v next-index) (read-header-line text 32)
-      (assert (not k))
-      (assert (not v))
-      (assert (= next-index 32)))))
+    (assert (equal (multiple-value-list (read-header-line text 0)) '("k1" "v1" 16)))
+    (assert (equal (multiple-value-list (read-header-line text 16)) '("k2" "v2" 32)))
+    (assert (equal (multiple-value-list (read-header-line text 32)) '(nil nil 32)))))
 
 (test-case read-headers
   (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
-    (multiple-value-bind (headers next-index) (read-headers text 0)
-      (assert (equal headers (list (cons "k2" "v2") (cons "k1" "v1"))))
-      (assert (= next-index 32))))
+    (assert (equal (multiple-value-list (read-headers text 0))
+                   '((("k2" . "v2") ("k1" . "v1")) 32))))
   (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
-    (multiple-value-bind (headers next-index) (read-headers text 16)
-      (assert (equal headers (list (cons "k2" "v2"))))
-      (assert (= next-index 32))))
-  (let ((text "body"))
-    (multiple-value-bind (headers next-index) (read-headers text 0)
-      (assert (equal headers nil))
-      (assert (= next-index 0)))))
+    (assert (equal (multiple-value-list (read-headers text 16))
+                   '((("k2" . "v2")) 32))))
+  (assert (equal (multiple-value-list (read-headers "body" 0)) '(nil 0))))
 
 (test-case weekday-name
   (assert (string= (weekday-name 0) "Mon"))
@@ -354,59 +328,38 @@
   (assert (string= (month-name 12) "Dec")))
 
 (test-case format-rss-date
-  (assert (string= (format-rss-date (parse-content-date "2020-06-01"))
-                   "Mon, 01 Jun 2020 00:00:00 +0000"))
-  (assert (string= (format-rss-date (parse-content-date "2020-06-01 09:00"))
-                   "Mon, 01 Jun 2020 09:00:00 +0000"))
-  (assert (string= (format-rss-date (parse-content-date "2020-06-01 09:00:10"))
-                   "Mon, 01 Jun 2020 09:00:10 +0000"))
-  (assert (string= (format-rss-date (parse-content-date "2020-06-01 14:30:10 +0530"))
-                   "Mon, 01 Jun 2020 09:00:10 +0000"))
-  (assert (string= (format-rss-date (parse-content-date "2020-06-01 04:30:10 +0530"))
-                   "Sun, 31 May 2020 23:00:10 +0000")))
+  (flet ((f (x) (format-rss-date (parse-content-date x))))
+    (assert (string= (f "2020-06-01") "Mon, 01 Jun 2020 00:00:00 +0000"))
+    (assert (string= (f "2020-06-01 09:00") "Mon, 01 Jun 2020 09:00:00 +0000"))
+    (assert (string= (f "2020-06-01 09:00:10") "Mon, 01 Jun 2020 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01 14:30:10 +0530") "Mon, 01 Jun 2020 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01 04:30:10 +0530") "Sun, 31 May 2020 23:00:10 +0000"))))
 
 (test-case format-short-date
-  (assert (string= (format-short-date (parse-content-date "2020-06-01"))
-                   "01 Jun 2020"))
-  (assert (string= (format-short-date (parse-content-date "2020-06-01 09:00"))
-                   "01 Jun 2020"))
-  (assert (string= (format-short-date (parse-content-date "2020-06-01 14:30:10 +0530"))
-                   "01 Jun 2020"))
-  (assert (string= (format-short-date (parse-content-date "2020-06-01 04:30:10 +0530"))
-                   "31 May 2020")))
+  (flet ((f (x) (format-short-date (parse-content-date x))))
+    (assert (string= (f "2020-06-01") "01 Jun 2020"))
+    (assert (string= (f "2020-06-01 09:00") "01 Jun 2020"))
+    (assert (string= (f "2020-06-01 14:30:10 +0530") "01 Jun 2020"))
+    (assert (string= (f "2020-06-01 04:30:10 +0530") "31 May 2020"))))
 
 (test-case format-long-date
-  (assert (string= (format-long-date (parse-content-date "2020-06-01"))
-                   "01 Jun 2020 00:00 UTC"))
-  (assert (string= (format-long-date (parse-content-date "2020-06-01 14:30:10 +0530"))
-                   "01 Jun 2020 09:00 UTC"))
-  (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530"))
-                   "31 May 2020 23:00 UTC")))
+  (flet ((f (x) (format-long-date (parse-content-date x))))
+    (assert (string= (f "2020-06-01") "01 Jun 2020 00:00 UTC"))
+    (assert (string= (f "2020-06-01 14:30:10 +0530") "01 Jun 2020 09:00 UTC"))
+    (assert (string= (f "2020-06-01 04:30:10 +0530") "31 May 2020 23:00 UTC"))))
 
 (test-case format-long-date-sep
-  (assert (string= (format-long-date (parse-content-date "2020-06-01") " at ")
-                   "01 Jun 2020 at 00:00 UTC"))
-  (assert (string= (format-long-date (parse-content-date "2020-06-01 14:30:10 +0530") " at ")
-                   "01 Jun 2020 at 09:00 UTC"))
-  (assert (string= (format-long-date (parse-content-date "2020-06-01 04:30:10 +0530") " at ")
-                   "31 May 2020 at 23:00 UTC")))
+  (flet ((f (x) (format-long-date (parse-content-date x) " at ")))
+    (assert (string= (f "2020-06-01") "01 Jun 2020 at 00:00 UTC"))
+    (assert (string= (f "2020-06-01 14:30:10 +0530") "01 Jun 2020 at 09:00 UTC"))
+    (assert (string= (f "2020-06-01 04:30:10 +0530") "31 May 2020 at 23:00 UTC"))))
 
 (test-case date-slug
-  (multiple-value-bind (date slug) (date-slug "foo")
-    (assert (not date))
-    (assert (string= slug "foo")))
-  (multiple-value-bind (date slug) (date-slug "foo-bar.html")
-    (assert (not date))
-    (assert (string= slug "foo-bar")))
-  (multiple-value-bind (date slug) (date-slug "/foo-bar.html")
-    (assert (not date))
-    (assert (string= slug "foo-bar")))
-  (multiple-value-bind (date slug) (date-slug "2020-06-01-foo.html")
-    (assert (string= date "2020-06-01"))
-    (assert (string= slug "foo")))
-  (multiple-value-bind (date slug) (date-slug "/2020-06-01-foo.html")
-    (assert (string= date "2020-06-01"))
-    (assert (string= slug "foo"))))
+  (assert (equal (multiple-value-list (date-slug "foo")) '(nil "foo")))
+  (assert (equal (multiple-value-list (date-slug "foo-bar.html")) '(nil "foo-bar")))
+  (assert (equal (multiple-value-list (date-slug "/foo-bar.html")) '(nil "foo-bar")))
+  (assert (equal (multiple-value-list (date-slug "2020-06-01-foo.html")) '("2020-06-01" "foo")))
+  (assert (equal (multiple-value-list (date-slug "/2020-06-01-foo.html")) '("2020-06-01" "foo"))))
 
 (test-case aput
   (let ((alist))
@@ -865,36 +818,38 @@ x
 <!-- url: https://example.com/ -->
 yz
 "))
-    (multiple-value-bind (p next-index) (read-comment text 0)
-      (assert (string= (aget "date" p) "2020-06-01 07:08:09 +0000"))
-      (assert (string= (aget "simple-date" p) "01 Jun 2020 07:08 UTC"))
-      (assert (string= (aget "name" p) "Alice"))
-      (assert (string= (aget "commenter" p) "Alice"))
-      (assert (string= (aget "body" p) (format nil "x~%")))
-      (assert (= next-index 64)))
-    (multiple-value-bind (p next-index) (read-comment text 64)
-      (assert (string= (aget "date" p) "2020-06-02 17:18:19 +0000"))
-      (assert (string= (aget "simple-date" p) "02 Jun 2020 17:18 UTC"))
-      (assert (string= (aget "name" p) "Bob"))
-      (assert (string= (aget "commenter" p)
-                       "<a href=\"https://example.com/\">Bob</a>"))
-      (assert (string= (aget "body" p) (format nil "yz~%")))
-      (assert (eq next-index nil)))))
+    (assert (equal (multiple-value-list (read-comment text 0))
+                   `((("body" . ,(format nil "x~%"))
+                      ("simple-date" . "01 Jun 2020 07:08 UTC")
+                      ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                      ("commenter" . "Alice")
+                      ("name" . "Alice")
+                      ("date" . "2020-06-01 07:08:09 +0000")) 64)))
+    (assert (equal (multiple-value-list (read-comment text 64))
+                   `((("body" . ,(format nil "yz~%"))
+                      ("simple-date" . "02 Jun 2020 17:18 UTC")
+                      ("rss-date" . "Tue, 02 Jun 2020 17:18:19 +0000")
+                      ("commenter" . "<a href=\"https://example.com/\">Bob</a>")
+                      ("url" . "https://example.com/")
+                      ("name" . "Bob")
+                      ("date" . "2020-06-02 17:18:19 +0000")) nil)))))
 
 (test-case read-comments-single
-  (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 07:08:09 +0000 -->
+  (write-file "test-tmp/foo.txt" "<!-- date: 2020-06-01 07:08:09 +0000 -->
 <!-- name: Alice -->
-Foo")
-  (multiple-value-bind (comments slug) (read-comments "test-tmp/comments.txt")
-    (assert (string= slug "comments"))
-    (assert (= (length comments) 1))
-    (let ((comment1 (first comments)))
-      (assert (string= (aget "date" comment1) "2020-06-01 07:08:09 +0000"))
-      (assert (string= (aget "name" comment1) "Alice"))
-      (assert (string= (aget "body" comment1) "Foo")))))
+Bar")
+  (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
+                 '(((("comment-file-serial" . 1)
+                     ("slug" . "foo")
+                     ("body" . "Bar")
+                     ("simple-date" . "01 Jun 2020 07:08 UTC")
+                     ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                     ("commenter" . "Alice")
+                     ("name" . "Alice")
+                     ("date" . "2020-06-01 07:08:09 +0000"))) "foo"))))
 
 (test-case read-comments-multiple
-  (write-file "test-tmp/comments.txt" "<!-- date: 2020-06-01 00:00:01 +0000 -->
+  (write-file "test-tmp/foo.txt" "<!-- date: 2020-06-01 00:00:01 +0000 -->
 <!-- author: Alice -->
 X
 <!-- date: 2020-06-02 00:00:02 +0000 -->
@@ -903,21 +858,31 @@ Y
 <!-- date: 2020-06-03 00:00:03 +0000 -->
 <!-- author: Carol -->
 Z")
-  (multiple-value-bind (comments slug) (read-comments "test-tmp/comments.txt")
-    (assert (string= slug "comments"))
-    (assert (= (length comments) 3))
-    (let* ((comment1 (first comments))
-           (comment2 (second comments))
-           (comment3 (third comments)))
-      (assert (string= (aget "date" comment1) "2020-06-01 00:00:01 +0000"))
-      (assert (string= (aget "author" comment1) "Alice"))
-      (assert (string= (aget "body" comment1) (format nil "X~%")))
-      (assert (string= (aget "date" comment2) "2020-06-02 00:00:02 +0000"))
-      (assert (string= (aget "author" comment2) "Bob"))
-      (assert (string= (aget "body" comment2) (format nil "Y~%")))
-      (assert (string= (aget "date" comment3) "2020-06-03 00:00:03 +0000"))
-      (assert (string= (aget "author" comment3) "Carol"))
-      (assert (string= (aget "body" comment3) (format nil "Z"))))))
+  (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
+                 `(((("comment-file-serial" . 1)
+                     ("slug" . "foo")
+                     ("body" . ,(format nil "X~%"))
+                     ("simple-date" . "01 Jun 2020 00:00 UTC")
+                     ("rss-date" . "Mon, 01 Jun 2020 00:00:01 +0000")
+                     ("commenter")
+                     ("author" . "Alice")
+                     ("date" . "2020-06-01 00:00:01 +0000"))
+                    (("comment-file-serial" . 2)
+                     ("slug" . "foo")
+                     ("body" . ,(format nil "Y~%"))
+                     ("simple-date" . "02 Jun 2020 00:00 UTC")
+                     ("rss-date" . "Tue, 02 Jun 2020 00:00:02 +0000")
+                     ("commenter")
+                     ("author" . "Bob")
+                     ("date" . "2020-06-02 00:00:02 +0000"))
+                    (("comment-file-serial" . 3)
+                     ("slug" . "foo")
+                     ("body" . "Z")
+                     ("simple-date" . "03 Jun 2020 00:00 UTC")
+                     ("rss-date" . "Wed, 03 Jun 2020 00:00:03 +0000")
+                     ("commenter")
+                     ("author" . "Carol")
+                     ("date" . "2020-06-03 00:00:03 +0000"))) "foo"))))
 
 (test-case make-comment-list
   (let ((comments (list (list (cons "date" "2020-06-01")
@@ -1133,74 +1098,32 @@ Z")
   (assert (= (try-parse-tz "-0500") 5)))
 
 (test-case try-parse-rss-date
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 00:00:00 +0000"))
-                   "2020-06-01 00:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 09:00:10 +0000"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 14:30:10 +0530"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
-                   "2020-05-31 23:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020"))
-                   "2020-06-01 00:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 04"))
-                   "2020-06-01 04:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 04 +0530"))
-                   "2020-05-31 22:30:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 04:30 +0530"))
-                   "2020-05-31 23:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 01 Jun 2020 04:30:10 +0530"))
-                   "2020-05-31 23:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-rss-date "Mon, 1 Jun 2020 4:1:2 +0530"))
-                   "2020-05-31 22:31:02 +0000")))
+  (flet ((f (x) (format-content-date (try-parse-rss-date x))))
+    (assert (string= (f "Mon, 01 Jun 2020 00:00:00 +0000") "2020-06-01 00:00:00 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 09:00:10 +0000") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 14:30:10 +0530") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 04:30:10 +0530") "2020-05-31 23:00:10 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020") "2020-06-01 00:00:00 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 04") "2020-06-01 04:00:00 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 04 +0530") "2020-05-31 22:30:00 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 04:30 +0530") "2020-05-31 23:00:00 +0000"))
+    (assert (string= (f "Mon, 01 Jun 2020 04:30:10 +0530") "2020-05-31 23:00:10 +0000"))
+    (assert (string= (f "Mon, 1 Jun 2020 4:1:2 +0530") "2020-05-31 22:31:02 +0000"))))
 
 (test-case try-parse-iso-date
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T09:00:10Z"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01 09:00:10Z"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T09:00:10+00:00"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T14:30:10+05:30"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T14:30:10 +05:30"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T04:30:10+05:30"))
-                   "2020-05-31 23:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T09:00:10"))
-                   "2020-06-01 09:00:10 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T09:30"))
-                   "2020-06-01 09:30:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T9:1:2"))
-                   "2020-06-01 09:01:02 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01T9"))
-                   "2020-06-01 09:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-06-01"))
-                   "2020-06-01 00:00:00 +0000"))
-  (assert (string= (format-content-date
-                    (try-parse-iso-date "2020-6-1"))
-                   "2020-06-01 00:00:00 +0000")))
+  (flet ((f (x) (format-content-date (try-parse-iso-date x))))
+    (assert (string= (f "2020-06-01T09:00:10Z") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01 09:00:10Z") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01T09:00:10+00:00") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01T14:30:10+05:30") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01T14:30:10 +05:30") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01T04:30:10+05:30") "2020-05-31 23:00:10 +0000"))
+    (assert (string= (f "2020-06-01T09:00:10") "2020-06-01 09:00:10 +0000"))
+    (assert (string= (f "2020-06-01T09:30") "2020-06-01 09:30:00 +0000"))
+    (assert (string= (f "2020-06-01T9:1:2") "2020-06-01 09:01:02 +0000"))
+    (assert (string= (f "2020-06-01T9") "2020-06-01 09:00:00 +0000"))
+    (assert (string= (f "2020-06-01") "2020-06-01 00:00:00 +0000"))
+    (assert (string= (f "2020-6-1") "2020-06-01 00:00:00 +0000"))))
 
 (test-case html-escape
   (assert (string= (html-escape "<foo>") "&lt;foo&gt;"))
