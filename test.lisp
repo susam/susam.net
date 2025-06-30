@@ -390,9 +390,9 @@
     (aput-list "c" "cat" alist)
     (aput-list "a" "ant" alist)
     (aput-list "b" "bag" alist)
-    (assert (equal (aget "a" alist) (list "ant" "axe" "apple")))
-    (assert (equal (aget "b" alist) (list "bag" "ball")))
-    (assert (equal (aget "c" alist) (list "cat")))))
+    (assert (equal (aget "a" alist) '("ant" "axe" "apple")))
+    (assert (equal (aget "b" alist) '("bag" "ball")))
+    (assert (equal (aget "c" alist) '("cat")))))
 
 (test-case last-n
   (let ((seq '(10 20 30 40 50)))
@@ -532,7 +532,7 @@ Foo
 
 (test-case render
   (let* ((template "Foo {{ var-x }} Baz {{ var-y }} Quux")
-         (params (list (cons "var-x" "Bar") (cons "var-y" "Qux")))
+         (params '(("var-x" . "Bar") ("var-y" . "Qux")))
          (result (render template params)))
     (assert (string= result "Foo Bar Baz Qux Quux"))))
 
@@ -541,12 +541,12 @@ Foo
 
 (test-case render-one-param
   (let* ((template "{{ var-x }}")
-         (params (list (cons "var-x" "Bar"))))
+         (params '(("var-x" . "Bar"))))
     (assert (string= (render template params) "Bar"))))
 
 (test-case render-trailing-param
   (let* ((template "Foo {{ var-x }}")
-         (params (list (cons "var-x" "Bar"))))
+         (params '(("var-x" . "Bar"))))
     (assert (string= (render template params) "Foo Bar"))))
 
 (test-case render-missing-param-intact
@@ -555,12 +555,12 @@ Foo
 
 (test-case render-good-param-and-missing-param
   (let* ((template "Foo {{ var-x }} {{ var-y }}")
-         (params (list (cons "var-x" "Bar"))))
+         (params '(("var-x" . "Bar"))))
     (assert (string= (render template params) "Foo Bar {{ var-y }}"))))
 
 (test-case render-extra-params-ignored
   (let* ((template "Foo {{ var-x }}")
-         (params (list (cons "var-x" "Bar") (cons "var-y" "Baz"))))
+         (params '(("var-x" . "Bar") ("var-y" . "Baz"))))
     (assert (string= (render template params) "Foo Bar"))))
 
 (test-case render-head-html-css
@@ -611,7 +611,7 @@ Foo
     (assert (string= layout "foo foo bar"))))
 
 (test-case relative-root-path
-  (let ((params (list (cons "apex" "_site/"))))
+  (let ((params '(("apex" . "_site/"))))
     (assert (string= (relative-root-path "_site/" params) "./"))
     (assert (string= (relative-root-path "_site/index.html" params) "./"))
     (assert (string= (relative-root-path "_site/foo" params) "./"))
@@ -622,8 +622,8 @@ Foo
     (assert (string= (relative-root-path "_site/foo/bar/index.html" params) "../../"))))
 
 (test-case add-page-params-imports
-  (let ((params (list (cons "apex" "_site/")
-                      (cons "import" "foo.js")))
+  (let ((params '(("apex" . "_site/")
+                  ("import" . "foo.js")))
         (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%"))
         (page))
     (add-page-params "_site/" page params)
@@ -636,8 +636,8 @@ Foo
     (assert (string= (aget "imports" params) (format nil result "../")))))
 
 (test-case add-page-params-neat-url
-  (let ((params (list (cons "apex" "_site/")
-                      (cons "site-url" "https://example.com/")))
+  (let ((params '(("apex" . "_site/")
+                  ("site-url" . "https://example.com/")))
         (page))
     (add-page-params "_site/" page params)
     (assert (string= (aget "neat-url" page) "https://example.com/"))
@@ -647,8 +647,8 @@ Foo
     (assert (string= (aget "neat-url" page) "https://example.com/foo/bar/"))))
 
 (test-case add-page-params-neat-url-index
-  (let ((params (list (cons "apex" "_site/")
-                      (cons "site-url" "https://example.com/")))
+  (let ((params '(("apex" . "_site/")
+                  ("site-url" . "https://example.com/")))
         (page))
     (add-page-params "_site/index.html" page params)
     (assert (string= (aget "neat-url" page) "https://example.com/"))
@@ -698,31 +698,31 @@ Foo
   (make-pages "test-tmp/content/*.txt"
               "test-tmp/output/{{ slug }}.txt"
               "[{{ date }} {{ slug }} {{ body }}]"
-              (list (cons "date" "2020-06-01") (cons "slug" "quux")))
+              '(("date" . "2020-06-01") ("slug" . "quux")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[2020-06-01 foo foo]")))
 
 (test-case make-pages-callback
   (defun callback (params)
     (declare (ignore params))
-    (list (cons "a" "apple")))
+    '(("a" . "apple")))
   (write-file "test-tmp/content/foo.txt" "foo")
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
-              (list (cons "callbacks" (list #'callback))))
+              `(("callbacks" . (,#'callback))))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo apple]")))
 
 (test-case make-pages-callback-params-overrides-call-params
   (defun callback (params)
     (declare (ignore params))
-    (list (cons "a" "ant")))
+    '(("a" . "ant")))
   (write-file "test-tmp/content/foo.txt" "foo")
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
-              (list (cons "a" "apple") (cons "callbacks" (list #'callback))))
+              `(("a" . "apple") ("callbacks" . (,#'callback))))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo ant]")))
 
 (test-case make-pages-no-content-rendering
@@ -730,7 +730,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }}]"
-              (list (cons "a" "apple")))
+              '(("a" . "apple")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo {{ a }} bar]")))
 
@@ -739,7 +739,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }}]"
-              (list (cons "a" "apple") (cons "render" "yes")))
+              '(("a" . "apple") ("render" . "yes")))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo apple bar]")))
 
 (test-case make-pages-import-css
@@ -747,7 +747,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
-              (list (cons "import" "foo.css") (cons "root" "")))
+              '(("import" . "foo.css") ("root" . "")))
   (let ((s "[  <link rel=\"stylesheet\" href=\"../../css/foo.css\">
 foo]"))
     (assert (string= (read-file "test-tmp/output/foo.txt") s))))
@@ -757,7 +757,7 @@ foo]"))
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
-              (list (cons "import" "foo.js")))
+              '(("import" . "foo.js")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[  <script src=\"../../js/foo.js\"></script>
 foo]")))
@@ -785,7 +785,7 @@ foo]")))
     (make-page-list posts "test-tmp/list.html"
                     "[{{ a }} {{ body }}]"      ; Param used here
                     "[{{ a }} {{ body }}]"      ; and here.
-                    (list (cons "a" "apple")))) ; Call param.
+                    '(("a" . "apple")))) ; Call param.
   (assert (string= (read-file "test-tmp/list.html")
                    "[apple [apple baz][apple bar][apple foo]]")))
 
@@ -805,7 +805,7 @@ foo]")))
     (make-page-list posts "test-tmp/list.html"
                     "[{{ a }} {{ body }}]"  ; Param used here
                     "[{{ a }} {{ body }}]"  ; and here.
-                    (list (cons "a" "apple"))))
+                    '(("a" . "apple"))))
   (assert (string= (read-file "test-tmp/list.html")
                    "[apple [ash baz][ant bar][air foo]]")))
 
@@ -885,23 +885,23 @@ Z")
                      ("date" . "2020-06-03 00:00:03 +0000"))) "foo"))))
 
 (test-case make-comment-list
-  (let ((comments (list (list (cons "date" "2020-06-01")
-                              (cons "author" "Alice")
-                              (cons "body" "Foo"))
-                        (list (cons "date" "2020-06-02")
-                              (cons "author" "Bob")
-                              (cons "body" "Bar"))
-                        (list (cons "date" "2020-06-03")
-                              (cons "author" "Carol")
-                              (cons "body" "Baz")))))
+  (let ((comments '((("date" . "2020-06-01")
+                     ("author" . "Alice")
+                     ("body" . "Foo"))
+                    (("date" . "2020-06-02")
+                     ("author" . "Bob")
+                     ("body" . "Bar"))
+                    (("date" . "2020-06-03")
+                     ("author" . "Carol")
+                     ("body" . "Baz")))))
     (make-comment-list comments
                        "test-tmp/{{ slug }}.html"
                        "[{{ title }} {{ post-title }} {{ body }}]"
                        (join-strings '("[{{ date }} {{ author }} {{ body }} "
                                        "{{ comment-count }} {{ comment-label }}]"))
-                       (list (cons "slug" "foo")
-                             (cons "title" "Comments on Foo")
-                             (cons "post-title" "Foo")))
+                       '(("slug" . "foo")
+                         ("title" . "Comments on Foo")
+                         ("post-title" . "Foo")))
     (assert(string= (read-file "test-tmp/foo.html")
                     (join-strings '("[Comments on Foo Foo "
                                     "[2020-06-01 Alice Foo 3 comments]"
@@ -909,15 +909,13 @@ Z")
                                     "[2020-06-03 Carol Baz 3 comments]]"))))))
 
 (test-case make-comment-list-imports
-  (make-comment-list (list (list (cons "date" "2020-06-01")
-                                 (cons "author" "Alice")
-                                 (cons "body" "Foo")))
+  (make-comment-list '((("date" . "2020-06-01")
+                        ("author" . "Alice")
+                        ("body" . "Foo")))
                      "test-tmp/comments.html"
                      "[{{ imports }}]"
                      "[{{ body }}]"
-                     (list (cons "root" "")
-                           (cons "slug" "foo")
-                           (cons "title" "Foo")))
+                     '(("root" . "") ("slug" . "foo") ("title" . "Foo")))
   (assert
    (string= (read-file "test-tmp/comments.html")
             "[  <link rel=\"stylesheet\" href=\"../css/comment.css\">
@@ -926,10 +924,10 @@ Z")
 (test-case make-comment-none
   (make-comment-none "test-tmp/{{ slug }}.html"
                      "[{{ title }} {{ post-title }} {{ a }}]"
-                     (list (cons "a" "apple")
-                           (cons "slug" "foo")
-                           (cons "title" "Comments on Foo")
-                           (cons "post-title" "Foo")))
+                     '(("a" . "apple")
+                       ("slug" . "foo")
+                       ("title" . "Comments on Foo")
+                       ("post-title" . "Foo")))
   (assert (string= (read-file "test-tmp/foo.html")
                    "[Comments on Foo Foo apple]")))
 
@@ -1070,23 +1068,23 @@ Z")
   (assert (not (try-parse-integer "foo"))))
 
 (test-case try-parse-ymd
-  (assert (equal (multiple-value-list (try-parse-ymd "2025-09-16")) (list 2025 09 16)))
-  (assert (equal (multiple-value-list (try-parse-ymd " 2025-09-16 ")) (list 2025 09 16)))
-  (assert (equal (multiple-value-list (try-parse-ymd " 2025 - 09 - 16 ")) (list 2025 09 16)))
-  (assert (equal (multiple-value-list (try-parse-ymd "2025-09")) (list nil nil nil)))
-  (assert (equal (multiple-value-list (try-parse-ymd "2025-09-")) (list nil nil nil)))
-  (assert (equal (multiple-value-list (try-parse-ymd "2025")) (list nil nil nil)))
-  (assert (equal (multiple-value-list (try-parse-ymd "")) (list nil nil nil))))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025-09-16")) '(2025 09 16)))
+  (assert (equal (multiple-value-list (try-parse-ymd " 2025-09-16 ")) '(2025 09 16)))
+  (assert (equal (multiple-value-list (try-parse-ymd " 2025 - 09 - 16 ")) '(2025 09 16)))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025-09")) '(nil nil nil)))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025-09-")) '(nil nil nil)))
+  (assert (equal (multiple-value-list (try-parse-ymd "2025")) '(nil nil nil)))
+  (assert (equal (multiple-value-list (try-parse-ymd "")) '(nil nil nil))))
 
 (test-case try-parse-hms
-  (assert (equal (multiple-value-list (try-parse-hms "09:30:10")) (list 9 30 10)))
-  (assert (equal (multiple-value-list (try-parse-hms "9:30:10")) (list 9 30 10)))
-  (assert (equal (multiple-value-list (try-parse-hms "9:1:2")) (list 9 1 2)))
-  (assert (equal (multiple-value-list (try-parse-hms " 9 : 1 : 2 ")) (list 9 1 2)))
-  (assert (equal (multiple-value-list (try-parse-hms "23:59:59")) (list 23 59 59)))
-  (assert (equal (multiple-value-list (try-parse-hms "23:59")) (list 23 59 0)))
-  (assert (equal (multiple-value-list (try-parse-hms "23")) (list 23 0 0)))
-  (assert (equal (multiple-value-list (try-parse-hms "")) (list 0 0 0))))
+  (assert (equal (multiple-value-list (try-parse-hms "09:30:10")) '(9 30 10)))
+  (assert (equal (multiple-value-list (try-parse-hms "9:30:10")) '(9 30 10)))
+  (assert (equal (multiple-value-list (try-parse-hms "9:1:2")) '(9 1 2)))
+  (assert (equal (multiple-value-list (try-parse-hms " 9 : 1 : 2 ")) '(9 1 2)))
+  (assert (equal (multiple-value-list (try-parse-hms "23:59:59")) '(23 59 59)))
+  (assert (equal (multiple-value-list (try-parse-hms "23:59")) '(23 59 0)))
+  (assert (equal (multiple-value-list (try-parse-hms "23")) '(23 0 0)))
+  (assert (equal (multiple-value-list (try-parse-hms "")) '(0 0 0))))
 
 (test-case try-parse-tz
   (assert (= (try-parse-tz "UTC") 0))
@@ -1132,10 +1130,10 @@ Z")
   (assert (string= (html-escape "foo & bar" :amp t) "foo &amp; bar")))
 
 (test-case remove-items
-  (assert (equal (remove-items (list 20 40) (list 10 20 30 40)) (list 10 30)))
+  (assert (equal (remove-items '(20 40) '(10 20 30 40)) '(10 30)))
   (assert (string= (remove-items nil "foo bar baz") "foo bar baz"))
-  (assert (string= (remove-items (list #\Space) "foo bar baz") "foobarbaz"))
-  (assert (string= (remove-items (list #\Space #\-) "foo  - bar -") "foobar")))
+  (assert (string= (remove-items '(#\Space) "foo bar baz") "foobarbaz"))
+  (assert (string= (remove-items '(#\Space #\-) "foo  - bar -") "foobar")))
 
 (test-case remove-odd-chars
   (let ((text (format nil "foo~a~a~a" #\BLACK_STAR #\WHITE_STAR
