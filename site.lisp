@@ -527,7 +527,7 @@ value, next-index."
 
 (defun tag-slug (tag)
   "Convert tag title to tag slug."
-  (string-replace " " "-" (string-downcase tag)))
+  (substitute #\- #\Space (string-downcase tag)))
 
 (defun format-tags-for-html (page indent root)
   "Create HTML to display tags."
