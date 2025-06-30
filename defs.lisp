@@ -58,6 +58,13 @@
           (setf text (fstr "~a..." (subseq text 0 max-chars))))))
   text)
 
+(defun remove-items (items sequence)
+  "Remove the given items from the given sequence."
+  (let ((result sequence))
+    (dolist (item items)
+      (setf result (remove item result)))
+    result))
+
 (defun month-number (month-name)
   "Given a month name, return the month number."
   (let* ((months '("Jan" "Feb" "Mar" "Apr" "May" "Jun"
@@ -159,13 +166,6 @@
                (#\" (write-string "&quot;" out))
                (#\' (write-string "&apos;" out))
                (t (write-char c out))))))
-
-(defun remove-items (items sequence)
-  "Remove the given items from the given sequence."
-  (let ((result sequence))
-    (dolist (item items)
-      (setf result (remove item result)))
-    result))
 
 (defun remove-odd-chars (text)
   "Remove certain characters that do not render well on all web browsers."
