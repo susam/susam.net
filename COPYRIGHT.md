@@ -13,7 +13,7 @@ License.  See the license details in the section "The MIT License
 All Rights Reserved
 -------------------
 
-Copyright (c) 2001-2022 Susam Pal\
+Copyright (c) 2001-2025 Susam Pal\
 All rights reserved.
 
 Permission is not granted to use, copy, modify, publish, merge,
@@ -28,7 +28,7 @@ implied.
 The MIT License (MIT)
 ---------------------
 
-Copyright (c) 2021-2022 Susam Pal
+Copyright (c) 2021-2025 Susam Pal
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

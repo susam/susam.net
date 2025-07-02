@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Susam Pal - Discontinued Feed</title>
+<link>https://susam.net/</link>
+<atom:link rel="self" type="application/rss+xml" href="https://susam.net/obsolete.xml"/>
+<description>This feed is no longer updated.  Please subscribe to https://susam.net/feed.xml for the new feed.</description>
+<item>
+<title>This feed is no longer updated.  Please subscribe to https://susam.net/feed.xml for the new feed.</title>
+<link>https://susam.net/feed.xml</link>
+<guid isPermaLink="false">obslt</guid>
+<pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
+<description>
+<![CDATA[
+<p>
+This feed is no longer maintained.  Please subscribe to the new feed
+at <a href="https://susam.net/feed.xml">https://susam.net/feed.xml</a>
+to receive updates about new blog posts.
+</p>
+]]>
+</description>
+</item>
+</channel>
+</rss>

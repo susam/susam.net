@@ -1,7 +1,7 @@
 ;;;; Tests
 ;;;; =====
 
-;;;; Copyright (c) 2021-2022 Susam Pal
+;;;; Copyright (c) 2021-2025 Susam Pal
 ;;;;
 ;;;; You can use, copy, modify, merge, publish, distribute,
 ;;;; sublicense, and/or sell copies of it, under the terms of the MIT
