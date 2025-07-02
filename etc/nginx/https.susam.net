@@ -32,7 +32,7 @@ server {
         default_type text/plain;
     }
     # Redirects.
-    rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /feed.xml redirect;
+    rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /obsolete.xml redirect;
     rewrite ^/(?:blog|maze)/([^./]*)(?:\.html|/)?$ /$1.html redirect;
     # Short URLs.
     rewrite ^/cfrs$ /cfrs.html redirect;
