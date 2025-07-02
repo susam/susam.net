@@ -1,8 +1,9 @@
 https://aartaka.me/rss.xml
 https://feeds.thejeshgn.com/thejeshgn/
 https://matklad.github.io/feed.xml
-https://www.norvig.com/rss-feed.xml
+https://maxwellito.com/feed
 https://sachachua.com/blog/feed/
 https://shkspr.mobi/blog/feed/atom/
 https://sunainapai.com/blog/rss.xml
 https://www.masteringemacs.org/feed
+https://www.norvig.com/rss-feed.xml

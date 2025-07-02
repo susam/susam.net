@@ -1,73 +1,57 @@
-<!-- date: 2025-05-31 -->
-<!-- title: Noise in Your Feed Reader -->
-<!-- tag: Miscellaneous -->
+<!-- date: 2025-06-01 -->
+<!-- title: Noise From My Feeds -->
+<!-- tag: Web, Technology -->
 <!-- key: xjdrj -->
 <p>
-  Hello, Dear Feed Subscribers,
-</p>
-<p>
-  Let me begin by saying thank you for subscribing to the feed of my
-  website.  It is a quiet joy of mine to maintain this little corner
-  of the Web and occasionally spot, in the server logs, that a few of
-  you wander in via your old and trusted feed readers.
-</p>
-<p>
-  Recently, you may have noticed something odd with the feeds from
-  this website.  Your feed reader might have shown a bunch of old
-  posts as if they were freshly published.  If that happened with your
-  feed reader, I apologise for the noise.  I hope this post will give
-  you some clarity on why this happened.  The reason for this noise is
-  a change to the way the RSS feeds are generated for this website.
-  Each post in the feeds includes a GUID, which is used by many feed
-  readers to decide whether a post is new or if it has been seen
-  already.  Until now, the GUID was simply the post's URL, like this:
+  Hello!  If you are subscribed to this website's feeds, you may have
+  noticed something odd recently.  Your feed reader might have shown a
+  bunch of old posts as if they were published today.  If that
+  happened with your feed reader, I apologise for the noise.  I hope
+  this post will give you some clarity on why this happened.  The
+  reason for this noise is a change to the way the RSS feeds are
+  generated for this website.  Each post in the feeds includes a GUID,
+  which is used by many feed readers to decide whether a post is new
+  or if it has been seen already.  Until now, the GUID was simply the
+  post's URL, like this:
 </p>
 <pre>
 <code>&lt;url&gt;https://susam.net/product-of-additive-inverses.html&lt;/url&gt;
 &lt;guid&gt;https://susam.net/product-of-additive-inverses.html&lt;/guid&gt;</code>
 </pre>
 <p>
-  However, today this has changed to a randomly generated, permanent
-  short URL, like so:
+  However, today this has changed to a short random string, like so:
 </p>
 <pre>
 <code>&lt;url&gt;https://susam.net/product-of-additive-inverses.html&lt;/url&gt;
-&lt;guid&gt;https://susam.net/p/?cjini&lt;/guid&gt;</code>
+&lt;guid isPermaLink="false"&gt;rxpnz&lt;/guid&gt;</code>
 </pre>
 <p>
   If your feed reader looks at this GUID value to decide whether a new
-  post has been published, it would show you a whole bunch of old
-  posts once again in your reader, as if they were new.  These GUIDs
-  won't change again in the future, so this is a one-time problem
-  only.  The full URL of the post is still present in the feeds, as
-  you can see in the example above, so your feed reader still knows
-  where to take you if you wish to visit this website to read a post.
-  The short URL serves only as a unique identifier.  However, if
-  someone happens to visit the short URL, it will simply redirect to
-  the full URL.
+  post has been published, it will show you a whole bunch of old posts
+  once again in your reader, as if they were new.  These GUIDs won't
+  change again in the future, so this is a one-time problem.  The full
+  URL of the post is still present in the feeds, as you can see in the
+  example above, so your feed reader still knows where to take you if
+  you wish to visit this website to read a post.  The short random
+  string serves as a unique identifier for each post.
 </p>
 <p>
   This website is a passion project I work on in my spare time, and
   sometimes, after publishing a post, I realise the title could be
-  sharper or the URL could be cleaner.  When I have made such changes
-  in the past, the GUID (being the URL) changed too, and your feed
-  reader assumed it was seeing a new post.  Switching to stable,
-  random GUIDs prevents this problem from occurring again.  The GUIDs
-  now stay the same no matter what changes I make behind the scenes,
-  which means no more unnecessary noise in your feed reader.
+  sharper or the URL could be cleaner.  I make the necessary changes
+  and set up HTTP redirects on my web server, so that visitors using
+  the old URL are still taken to the updated location of the post.
+  Previously, however, the GUID (being the URL) changed too, which
+  caused many feed readers to treat the updated post as a new one even
+  when it wasn't.  Switching to stable, random GUIDs prevents this
+  problem from occurring again.  The GUIDs now stay the same no matter
+  what changes I make behind the scenes, which means no more
+  unnecessary noise in your feed reader.
 </p>
 <p>
   I am sorry if this caused any confusion or clutter.  If your feed
   reader is currently flooded with old posts appearing as new, the
-  best solution is to mark those items as read.  That should restore
-  order and ensure you only see genuinely new posts going forward.
-</p>
-<p>
-  Thanks for your patience, and for continuing to follow along.  I
-  promise to keep future surprises limited to content, not
-  configuration.
-</p>
-<p>
-  Cheers,<br>
-  Your friendly neighbourhood feed fiddler.
+  best solution is to mark those items as read.  Thank you for your
+  patience with this issue.  I hope to keep future surprises limited
+  to content, not configuration.
 </p>

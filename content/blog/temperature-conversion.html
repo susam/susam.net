@@ -128,8 +128,7 @@
   one-tenth of a number, say, 25, we consider the result to be 2.
   Similarly, if a step requires us to halve the number 25, we consider
   the result to be 12.  This is also known as <em>truncated
-  division</em> or <em>integer division</em> or <em>floor
-  division</em>.
+  division</em> or <em>integer division</em>.
 </p>
 <p>
   To go from &deg;C to &deg;F, here is my quick three-step
@@ -228,7 +227,9 @@
 <h3 id="analysis">Analysis</h3>
 <p>
   In this section, we will see why the refined approximation methods
-  work so well.
+  work so well.  Throughout this section we will use the notation \(
+  [x] \) to mean the integer part of \( x \).  For example, \( [10.2]
+  = [-10.2] = 10 \).
 </p>
 <h4 id="celsius-to-fahrenheit-conversion">Celsius to Fahrenheit Conversion</h4>
 <p>
@@ -237,7 +238,7 @@
 
   \[
     \overset{\approx}{f} =
-    2 \left(c - \left\lfloor \frac{c}{10} \right\rfloor \right) + 31
+    2 \left(c - \left[ \frac{c}{10} \right] \right) + 31
   \]
 
   where \( c \) is the temperature value in Celsius and \(
@@ -249,16 +250,16 @@
 </p>
 <ol>
   <li>
-    Subtracting one-tenth (floor division by 10) of \( c \) from
-    itself gives us \( c - \left\lfloor \frac{c}{10} \right\rfloor \).
+    Subtracting one-tenth (truncated division by 10) of \( c \) from
+    itself gives us \( c - \left[ \frac{c}{10} \right] \).
   </li>
   <li>
-    Doubling the previous result gives us \( 2 \left(c - \left\lfloor
-    \frac{c}{10} \right\rfloor \right) \).
+    Doubling the previous result gives us \( 2 \left(c - \left[
+    \frac{c}{10} \right] \right) \).
   </li>
   <li>
     Adding \( 31 \) to the previous result gives us \( 2 \left(c -
-    \left\lfloor \frac{c}{10} \right\rfloor \right) + 31 \).
+    \left[ \frac{c}{10} \right] \right) + 31 \).
   </li>
 </ol>
 <p>
@@ -278,16 +279,16 @@
   \]
 
   We don't want to deal with fractions, so we decide to approximate \(
-  \frac{c}{10} \) in the above formula with \( \left\lfloor
-  \frac{c}{10} \right\rfloor \) and get
+  \frac{c}{10} \) in the above formula with \( \left[
+  \frac{c}{10} \right] \) and get
 
   \[
     \overset{\sim}{f} =
-    2 \left(c - \left\lfloor \frac{c}{10} \right\rfloor \right) + 32.
+    2 \left(c - \left[ \frac{c}{10} \right] \right) + 32.
   \]
 
   where \( \overset{\sim}{f} \) is an approximation of the value in
-  Fahrenheit.  The floor division has the effect of potentially
+  Fahrenheit.  The truncated division has the effect of potentially
   overestimating the final result by a value that is less than
   \( 2 \).  This is the approximation error.
 </p>
@@ -301,7 +302,7 @@
 
   \[
     \overset{\approx}{f} =
-    2 \left(c - \left\lfloor \frac{c}{10} \right\rfloor \right) + 31.
+    2 \left(c - \left[ \frac{c}{10} \right] \right) + 31.
   \]
 
   This is the formula that the three-step method to convert
@@ -314,8 +315,8 @@
 
   \[
     \overset{\approx}{c} =
-    \left\lfloor \frac{f - 31}{2} \right\rfloor +
-    \left\lfloor \frac{f - 31}{20} \right\rfloor
+    \left[ \frac{f - 31}{2} \right] +
+    \left[ \frac{f - 31}{20} \right]
   \]
 
   where \( f \) is the temperature value in Fahrenheit and \(
@@ -330,15 +331,14 @@
     Subtracting \( 31 \) from \( f \) gives us \( f - 31 \).
   </li>
   <li>
-    Halving (floor division by \( 2 \)) the previous result gives us
-    \( \left\lfloor \frac{f - 31}{2} \right\rfloor \).
+    Halving (truncated division by \( 2 \)) the previous result gives
+    us \( \left[ \frac{f - 31}{2} \right] \).
   </li>
   <li>
-    Adding one-tenth (floor division by \( 10 \)) of the previous
-    result to itself gives us \( \left\lfloor \frac{f - 31}{2}
-    \right\rfloor + \left\lfloor \frac{1}{10} \left\lfloor \frac{f -
-    31}{2} \right\rfloor \right\rfloor = \left\lfloor \frac{f - 31}{2}
-    \right\rfloor + \left\lfloor \frac{f - 31}{20} \right\rfloor \).
+    Adding one-tenth (truncated division by \( 10 \)) of the previous
+    result to itself gives us \( \left[ \frac{f - 31}{2} \right] +
+    \left[ \frac{1}{10} \left[ \frac{f - 31}{2} \right] \right] =
+    \left[ \frac{f - 31}{2} \right] + \left[ \frac{f - 31}{20} \right] \).
   </li>
 </ol>
 <p>
@@ -356,12 +356,11 @@
 
   \begin{align*}
     c &amp; =       \frac{5(f - 32)}{9} \\
-      &amp; =       0.5556 (f - 32) \\
       &amp; \approx 0.55 (f - 31) \\
       &amp; =       \frac{11 (f - 31)}{20} \\
       &amp; =       \frac{f - 31}{2} + \frac{f - 31}{20} \\
-      &amp; \approx \left\lfloor \frac{f - 31}{2} \right\rfloor +
-                \left\lfloor \frac{f - 31}{20} \right\rfloor
+      &amp; \approx \left[ \frac{f - 31}{2} \right] +
+                \left[ \frac{f - 31}{20} \right]
       = \overset{\approx}{c}
   \end{align*}
 </p>
