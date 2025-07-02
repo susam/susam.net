@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Test RSS Feed</title>
+    <link>https://example/</link>
+    <description>Test Description</description>
+    <!-- Non-distinct GUID link -->
+    <item>
+      <title>The First Title</title>
+      <link>https://example/first</link>
+      <guid>https://example/first</guid>
+      <pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The first post has non-distinct GUID link.</p>]]>
+      </description>
+    </item>
+    <!-- Distinct GUID link -->
+    <item>
+      <title>The Second Title</title>
+      <link>https://example/second</link>
+      <guid>https://example/second/guid</guid>
+      <pubDate>Mon, 02 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The second post has a distinct GUID link.]]>
+      </description>
+    </item>
+    <!-- Distinct GUID string -->
+    <item>
+      <title>The Third Title</title>
+      <link>https://example/third</link>
+      <guid>third-guid-updated</guid>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The third post has a distinct GUID string.]]>
+      </description>
+    </item>
+    <!-- Non-distinct GUID link + isPermaLink true -->
+    <item>
+      <title>The Fourth Title</title>
+      <link>https://example/fourth</link>
+      <guid isPermaLink="true">https://example/fourth</guid>
+      <pubDate>Wed, 04 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The fourth post has non-distinct perma GUID link.</p>]]>
+      </description>
+    </item>
+    <!-- Distinct GUID link + isPermaLink true -->
+    <item>
+      <title>The Fifth Title</title>
+      <link>https://example/fifth</link>
+      <guid isPermaLink="true">https://example/fifth/guid</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The fifth post has distinct perma GUID link.]]>
+      </description>
+    </item>
+    <!-- Distinct GUID string + isPermaLink true -->
+    <item>
+      <title>The Sixth Title</title>
+      <link>https://example/sixth</link>
+      <guid isPermaLink="true">sixth-guid</guid>
+      <pubDate>Fri, 06 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The sixth post has distinct perma GUID string.]]>
+      </description>
+    </item>
+    <!-- Non-Distinct GUID link + isPermaLink false -->
+    <item>
+      <title>The Seventh Title</title>
+      <link>https://example/seventh</link>
+      <guid isPermaLink="false">https://example/seventh</guid>
+      <pubDate>Sat, 07 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The seventh post has non-distinct non-perma GUID link.</p>]]>
+      </description>
+    </item>
+    <!-- Distinct GUID link + isPermaLink false -->
+    <item>
+      <title>The Eighth Title</title>
+      <link>https://example/eighth</link>
+      <guid isPermaLink="false">https://example/eighth/guid</guid>
+      <pubDate>Sun, 08 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The eighth post has distinct non-perma GUID link.]]>
+      </description>
+    </item>
+    <!-- Distinct GUID string + isPermaLink false -->
+    <item>
+      <title>The Ninth Title</title>
+      <link>https://example/ninth</link>
+      <guid isPermaLink="false">ninth-guid</guid>
+      <pubDate>Mon, 09 Jun 2025 00:00:00 +0000</pubDate>
+      <description>
+        <![CDATA[<p>The ninth post has distinct non-perma GUID string.]]>
+      </description>
+    </item>
+  </channel>
+</rss>

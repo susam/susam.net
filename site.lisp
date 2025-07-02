@@ -1443,7 +1443,7 @@ value, next-index."
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
     (make-full-comments all-comments page-layout params)
-    (make-short all-pages page-layout params)
+    (make-short all-pages page-layout (cons (cons "import" "noindex.inc") params))
     (make-feed all-pages params)
     ;; Directory indices.
     (make-tree-list (aget "apex" params) "Tree" page-layout params)
