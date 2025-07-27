@@ -16,6 +16,7 @@
           {left: '\\begin{align*}', right: '\\end{align*}', display: true},
           {left: '\\begin{alignat}', right: '\\end{alignat}', display: true},
           {left: '\\begin{alignat*}', right: '\\end{alignat*}', display: true},
+          {left: '\\begin{array}', right: '\\end{array}', display: true},
         ],
         macros: {
           '\\eqnref': '\\href{###1}{(\\text{#2})}',
