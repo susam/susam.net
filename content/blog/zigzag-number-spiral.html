@@ -59,21 +59,21 @@
 </p>
 <p>
   Let us first clarify what we mean by a <em>closed-form
-  expression</em>.  There is no universal definition for a closed-form
-  expression, but typically a closed-form expression is a mathematical
-  expression involving variables and constants, constructed using a
-  finite number of operations such as addition, subtraction,
+  expression</em>.  There is no universal definition of a closed-form
+  expression, but the term typically refers to a mathematical
+  expression involving variables and constants, built using a finite
+  combination of basic operations: addition, subtraction,
   multiplication, division, integer exponents, roots with integer
-  index, and standard functions such as exponentials, logarithms and
+  index, and functions such as exponentials, logarithms and
   trigonometric functions.
 </p>
 <p>
   In this article, however, we need only addition, subtraction,
   division, squares and square roots.  This may be a bit of a spoiler,
-  but I must mention that the functions \( \max \) and \( \min \) also
-  appear in the closed-form expressions we are about to see.  If you
-  are concerned about whether functions like \( \max \) and \( \min \)
-  are permitted in such expressions, note that
+  but I must mention that the \( \max \) function appears in the
+  closed-form expressions we are about to see.  If you are concerned
+  about whether functions like \( \max \) and \( \min \) are permitted
+  in such expressions, note that
 
   \begin{align*}
     \max(m, n) &amp; = \frac{m + n + \sqrt{(m - n)^2}}{2}, \\
@@ -81,24 +81,25 @@
   \end{align*}
 
   So \( \max \) and \( \min \) are simply shorthand for expressions
-  involving addition, subtraction, division, squares and square
-  roots.
+  involving addition, subtraction, division, squares and square roots.
+  In the discussion that follows, we will use only the \( \max \)
+  function.
 </p>
 <h2 id="patterns-on-the-edges">Patterns on the Edges</h2>
 <p>
   Let us begin by analysing the edge numbers.  Number the rows as \(
-  1, 2, 3 \dots \) and the columns as \( 1, 2, 3, \dots \).  Observe
-  where the spiral touches the left edge and changes direction.  This
-  happens only on even-numbered rows.  Similarly, each time the spiral
-  touches the top edge and changes direction, it happens on
-  odd-numbered columns.  Let us take a closer look at this behaviour
+  1, 2, 3 \dots \) and the columns likewise.  Observe where the spiral
+  touches the left edge and changes direction.  This happens only on
+  even-numbered rows.  Similarly, each time the spiral touches the top
+  edge and changes direction, it does so on odd-numbered columns.  In
+  the following subsections, we take a closer look at this behaviour
   of the spiral.
 </p>
 <p>
-  Before we proceed, I should mention that this section takes a rather
-  long path to arrive at the closed-form solution.  Personally, I
-  enjoy such extended tours.  If you prefer a more direct approach,
-  feel free to skip ahead to
+  I should mention that this section takes a rather long path to
+  arrive at the closed-form solution.  Personally, I enjoy such long
+  tours.  If you prefer a more direct approach, feel free to skip
+  ahead to
   <a href="#patterns-on-the-diagonal">Patterns on the Diagonal</a> for
   a shorter discussion that reaches the same result.
 </p>
@@ -163,7 +164,7 @@
     \vd & \vd &  \vd & \vd & \vd & \dd
   \end{array}
   <figcaption>
-    The spiral touches the top edge on the 3rd column where the
+    The spiral touches the top edge on the \( 3 \)rd column where the
     number is \( 3^2 \)
   </figcaption>
 </figure>
@@ -310,14 +311,15 @@
       \end{cases}
   \]
 
-  This is the same formula, rewritten to reveal an interesting
-  pattern.  In each of the right-hand side expressions, one variable
-  plays the dominant role, i.e., it occurs several times, while the
-  other variable occurs only once.  For example, in the first two
-  expressions \( n \) plays the dominant role whereas \( m \) occurs
-  only once.  If we look closely, we realise that it is the variable
-  that is greater than or equal to the other that plays the dominant
-  role.  Therefore the first and third expressions may be written as
+  This is the same formula, rewritten to reveal common patterns
+  between the four expressions on the right-hand side. In each
+  expression, one variable plays the dominant role, occurring several
+  times, while the other appears only once.  For example, in the first
+  two expressions, \( n \) plays the dominant role whereas \( m \)
+  occurs only once.  If we look closely, we realise that it is the
+  variable that is greater than or equal to the other that plays the
+  dominant role.  Therefore the first and third expressions may be
+  written as
 
   \[
     \left( (\max(m, n))^2 - \max(m, n) + 1 \right) + (m - n).
@@ -357,14 +359,15 @@
   A number on the diagonal has the same row number and column number.
   In other words, a diagonal number has the value \( f(n, n) \) for
   some positive integer \( n \).  Consider the case when \( n \) is
-  even.  In this case, the diagonal number is on an arm of the spiral
-  that is moving to the left.  The \( n \times n \) subgrid formed by
-  the first \( n \) rows and the first \( n \) columns contains
-  exactly \( n^2 \) consecutive numbers.  Since the diagonal number is
-  on the last row of this subgrid and the numbers in this row increase
-  as we move from right to left, the largest number in the subgrid
-  must be on the left edge of this row.  Therefore the number at the
-  left edge is \( f(n, 1) = n^2 \).  This is illustrated below.
+  even.  In this case, the diagonal number is on a segment of the
+  spiral that is moving to the left.  The \( n \times n \) subgrid
+  formed by the first \( n \) rows and the first \( n \) columns
+  contains exactly \( n^2 \) consecutive numbers.  Since the diagonal
+  number is on the last row of this subgrid and the numbers in this
+  row increase as we move from right to left, the largest number in
+  the subgrid must be on the left edge of this row.  Therefore the
+  number at the left edge is \( f(n, 1) = n^2 \), where \( n \) is
+  even.  This is illustrated below.
 </p>
 <figure>
   \begin{array}{rrrr:rl}
@@ -386,7 +389,6 @@
   consecutive numbers.  In a sequence of \( n \) consecutive numbers,
   the difference between the maximum number and the minimum number is
   \( n - 1 \).  Therefore, \( n^2 - f(n, n) = n - 1 \).  This gives us
-  \( f(n, n) = n^2 - n + 1 \), i.e.,
 
   \[
     f(n, n) = n^2 - n + 1 \quad \text{if } n \equiv 0 \pmod{2}.
@@ -413,8 +415,8 @@
 <p>
   By a similar reasoning, for odd \( n \), the \( n \)th column has
   numbers that increase as we move up from the diagonal number towards
-  the top edge.  Therefore \( f(1, n) = n^2 \) and the diagonal number
-  is \( n^2 - n + 1 \) again, i.e.,
+  the top edge.  Therefore \( f(1, n) = n^2 \), and since \( n^2 -
+  f(n, n) = n - 1 \), we again obtain
 
   \[
     f(n, n) = n^2 - n + 1 \quad \text{if } n \equiv 1 \pmod{2}.
@@ -512,6 +514,9 @@
   \[
     f(m, n) = (\max(m, n))^2 - \max(m, n) + 1 + (-1)^{\max(m, n)} (m - n).
   \]
+
+  We arrive again at the same closed-form expression, this time by
+  focusing on the diagonal of the grid.
 </p>
 <h2 id="references">References</h2>
 <ul>
