@@ -8,9 +8,9 @@
   positive number.  Most of us learnt this rule during our primary or
   secondary school years.  'Negative times negative equals positive'
   was a phrase drummed into us during mathematics lessons.  In this
-  article, we will prove this rule &mdash; not just for numbers, but
-  for any algebraic structure that, in a general sense, behaves
-  somewhat like numbers.
+  article, we will prove this rule, not just for numbers but for any
+  algebraic structure that, in a general sense, behaves somewhat like
+  numbers.
 </p>
 {{ toc }}
 <h2 id="illustration">Illustration</h2>
@@ -141,14 +141,14 @@
   numbers satisfy the ring axioms too.
 </p>
 <p>
-  Rings need not consist of numbers; they may contain elements of any
-  type.  As long as a set of elements, together with suitable addition
-  and multiplication operations, satisfies the seven axioms above, it
-  forms a ring.  For example, the set of all polynomials in the
-  indeterminate \( t \) with coefficients in some ring \( R \) forms a
-  ring under the usual addition and multiplication of polynomials.
-  Such a ring is called a <em>polynomial ring</em> and it is denoted
-  \( R[t] \).
+  Rings need not consist of numbers; they may contain elements
+  of <em>any</em> type.  As long as a set of elements, together with
+  suitable addition and multiplication operations, satisfies the seven
+  axioms above, it forms a ring.  For example, the set of all
+  polynomials in the indeterminate \( t \) with coefficients in some
+  ring \( R \) forms a ring under the usual addition and
+  multiplication of polynomials.  Such a ring is called
+  a <em>polynomial ring</em> and it is denoted \( R[t] \).
 </p>
 <h2 id="closure-properties">Closure Properties</h2>
 <p>
@@ -234,7 +234,7 @@
   the context of rings.
 </p>
 <p>
-  It is also worth noting that the additive inverse is unique in a
+  It is also worth noting that the additive identity is unique in a
   ring (as well as in any group), but since this fact is not needed
   for later results, its proof has been omitted.  Even if,
   hypothetically, there were two distinct additive identities, \( 0 \)
@@ -326,10 +326,11 @@
     Let \( R \) be a ring with \( + \) and \( \cdot \) operations.
     Then for all \( a, b \in R \), we have
 
-    \[
-      a \cdot (-b) = (-a) \cdot b = -(a \cdot b).
-    \]
-  </em>
+    \begin{align*}
+      a \cdot (-b) &amp;= -(a \cdot b), \\
+      (-a) \cdot b &amp;= -(a \cdot b).
+    \end{align*}
+    </em>
 </p>
 <p>
   <em>Proof.</em> Using the left distributivity and additive inverse
@@ -409,6 +410,49 @@
   \]
 
   This completes the proof.
+</p>
+<h2 id="alternate-proof">Alternate Proof</h2>
+<p>
+  The above sequence of theorems is not the only way to arrive
+  at <a href="#theorem-4">Theorem 4</a>.  There are other ways to
+  reach this result as well.  Let us briefly discuss another such
+  proof.  From <a href="#theorem-3">Theorem 3</a> we know that \( a
+  \cdot b \) is the additive inverse of \( a \cdot (-b) \).  In a very
+  similar way, we can show that \( (-a) \cdot (-b) \) is also the
+  additive inverse of \( a \cdot (-b) \).  The proof goes as follows:
+
+  \[
+    (-a) \cdot (-b) + a \cdot (-b)
+    = (-a + a) \cdot (-b)
+    = 0 \cdot (-b)
+    = 0.
+  \]
+
+  Note that we used <a href="#theorem-2">Theorem 2</a> again for the
+  last equality.  So now we know that both \( (-a) \cdot (-b) \) and
+  \( a \cdot b \) are additive inverses of \( a \cdot (-b) \).  Does
+  this mean that \( (-a) \cdot (-b) = a \cdot b \)?  Yes, since the
+  additive inverse of an element is unique in a ring.  Let us prove
+  this now.
+
+  Let \( b \) and \( c \) be additive inverses of \( a \).  Then \( a
+  + b = b + a = 0 \) and \( a + c = c + a = 0 \).  Using this, we get
+
+  \[
+    b = b + 0 = b + (a + c) = (b + a) + c = 0 + c = c.
+  \]
+
+  Since \( (-a) \cdot (-b) \) and \( a \cdot b \) are additive
+  inverses of the same element \(a \cdot (-b) \), and since the
+  additive inverse of an element is unique in a ring, it follows that
+
+  \[
+    (-a) \cdot (-b) = a \cdot b.
+  \]
+
+  Note that we do not need <a href="#theorem-1">Theorem 1</a> in this
+  alternate proof but we introduced a new theorem about the uniqueness
+  of the additive inverse to complete this proof.
 </p>
 <h2 id="conclusion">Conclusion</h2>
 <p>
