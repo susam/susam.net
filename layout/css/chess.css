@@ -1,0 +1,73 @@
+table.chess {
+  border-collapse: collapse;
+  color: #300;
+  line-height: 1;
+  margin: 1rem auto;
+  text-align: center;
+}
+table.chess.inline {
+  margin: 0.5rem;
+  display: inline-block;
+}
+table.chess tr:nth-child(odd) td:nth-child(odd),
+table.chess tr:nth-child(even) td:nth-child(even),
+table.chess.odd tr:nth-child(odd) td:nth-child(even),
+table.chess.odd tr:nth-child(even) td:nth-child(odd) {
+  background: #fc9;
+}
+table.chess tr:nth-child(odd) td:nth-child(even),
+table.chess tr:nth-child(even) td:nth-child(odd),
+table.chess.odd tr:nth-child(odd) td:nth-child(odd),
+table.chess.odd tr:nth-child(even) td:nth-child(even) {
+  background: #c84;
+}
+table.chess td.em {
+  border: thin dashed #300;
+}
+table.chess td {
+  box-sizing: border-box;
+  width: 3rem;
+  height: 3rem;
+  padding: 0; /* Override any padding set in other CSS */
+}
+table.chess td.white,
+table.chess td.black {
+  font-size: 2rem;
+  padding: 0 0 0.25rem 0;
+}
+.white.king::before {
+  content: "\2654"
+}
+.white.queen::before {
+  content: "\2655"
+}
+.white.rook::before {
+  content: "\2656"
+}
+.white.bishop::before {
+  content: "\2657"
+}
+.white.knight::before {
+  content: "\2658"
+}
+.white.pawn::before {
+  content: "\2659"
+}
+.black.king::before {
+  content: "\265a"
+}
+.black.queen::before {
+  content: "\265b"
+}
+.black.rook::before {
+  content: "\265c"
+}
+.black.bishop::before {
+  content: "\265d"
+}
+.black.knight::before {
+  content: "\265e"
+}
+.black.pawn::before {
+  content: "\265f"
+}
