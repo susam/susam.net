@@ -463,7 +463,7 @@ check-tex-content:
 	@echo Done; echo
 
 check-tex-site: dist
-	grep --include="*.html" -IErn "\\\)[^- :t'\"<)}]" _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
+	grep --include="*.html" -IErn "\\\)[^- :tr'\"<)}]" _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-newlines:
