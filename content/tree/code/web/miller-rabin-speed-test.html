@@ -170,7 +170,7 @@
         if (callables.length > 0) {
           callables[0]()
           setTimeout(function () {
-            chain(callables.slice(1))
+            chain(callables.slice(1), 10)
           })
         }
       }
@@ -199,6 +199,7 @@
       function main () {
         chain(
           [
+            function () { document.getElementById('wip').innerHTML = '...' },
             function () { test(10000) },
             function () { log('Fields: {function} {start} {n} {primes} {runTime}') },
             function () { log('') },
@@ -210,6 +211,7 @@
             function () { compare(10000000000, 25000) },
             function () { compare(100000000000, 10000) },
             function () { compare(Number.MAX_SAFE_INTEGER - 149, 150) },
+            function () { document.getElementById('wip').innerHTML = '' },
             function () { log('DONE') },
             showInfo
           ]
@@ -222,6 +224,7 @@
   <body>
     <h1>Miller-Rabin Speed Test</h1>
     <div id="log"></div>
+    <div id="wip"></div>
     <div id="info">
       <h2>Field Descriptions</h2>
       <table>
