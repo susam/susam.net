@@ -9,7 +9,6 @@
       body {
         color: #333;
         font-family: monospace,monospace;
-        font-size: large;
         line-height: 1.5em;
         margin: 0 auto;
         max-width: 40em;
@@ -37,6 +36,8 @@
       }
     </style>
     <script>
+      // ----- Simple Division-Based Primality Test -----
+
       function isPrimeTrue (n) {
         if (n < 2) {
           return false
@@ -49,18 +50,37 @@
         return true
       }
 
+      // ----- Miller-Rabin Primality Test -----
+
       function isPrimeByMR (n) {
         n = BigInt(n)
         if (n <= 1n) {
           return false
         }
-        let s = 0n // Express n - 1 = 2^s * d where d is odd.
-        let d = n - 1n
+        const [s, d] = factorOutTwos(n - 1n)
+        const bases = chooseBasesBySize(n)
+        if (bases === null) {
+          return null
+        }
+        for (const a of bases) {
+          if (!isStrongPRP(n, s, d, BigInt(a))) {
+            return false
+          }
+        }
+        return true
+      }
+
+      function factorOutTwos (d) {
+        let s = 0n // Count power of 2.
         while ((d & 1n) === 0n) {
           d >>= 1n
           ++s
         }
-        const choiceOfBases = [ // Reference: https://oeis.org/A014233
+        return [s, d] // (2^s)(d) = input.
+      }
+
+      function chooseBasesBySize (n) {
+        const choices = [ // Reference: https://oeis.org/A014233
           [3n, []],
           [2047n, [2]],
           [1373653n, [2, 3]],
@@ -72,33 +92,26 @@
           [3825123056546413051n, [2, 3, 5, 7, 11, 13, 17, 19, 23]],
           [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]]
         ]
-        let bases = null
-        for (const choice of choiceOfBases) {
-          if (n < choice[0]) {
-            bases = choice[1]
-            break
+        for (const [composite, bases] of choices) {
+          if (n < composite) {
+            return bases
           }
         }
-        if (bases === null) {
-          return null
+        return null
+      }
+
+      function isStrongPRP (n, s, d, a) {
+        let x = modPow(a, d, n)
+        if (x === 1n || x === n - 1n) {
+          return true
         }
-        for (const a of bases) {
-          let x = modPow(BigInt(a), d, n)
-          if (x !== 1n && x !== n - 1n) {
-            let passed = false
-            for (let r = 1; r <= s - 1n; r++) {
-              x = (x * x) % n
-              if (x === n - 1n) {
-                passed = true
-                break
-              }
-            }
-            if (!passed) {
-              return false // n failed the test with base a.
-            }
-          } // n passed the test with base a; try next base.
+        for (let r = 1; r <= s - 1n; ++r) {
+          x = (x * x) % n
+          if (x === n - 1n) {
+            return true
+          }
         }
-        return true // n passed the test for all chosen bases.
+        return false
       }
 
       function modPow (base, exp, mod) {
@@ -117,10 +130,7 @@
         return result
       }
 
-      function log () {
-        const args = Array.prototype.slice.call(arguments)
-        document.getElementById('log').innerHTML += args.join(' ') + '<br>'
-      }
+      // ----- Tests and Measurements -----
 
       function test (m) {
         for (let n = 0; n < 1000000; ++n) {
@@ -151,11 +161,11 @@
         log()
       }
 
-      function run (callables) {
+      function chain (callables) {
         if (callables.length > 0) {
           callables[0]()
           setTimeout(function () {
-            run(callables.slice(1))
+            chain(callables.slice(1))
           })
         }
       }
@@ -166,8 +176,13 @@
         document.getElementById('text').innerText = script.innerHTML.replace(/^\n+/, '')
       }
 
+      function log () {
+        const args = Array.prototype.slice.call(arguments)
+        document.getElementById('log').innerHTML += args.join(' ') + '<br>'
+      }
+
       function main () {
-        run(
+        chain(
           [
             function () { test(10000) },
             function () { log('Fields: {function} {start} {n} {primes} {runTime}') },
