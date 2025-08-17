@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <title>Miller-Rabin Speed Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A demo of Miller-Rabin primality test in JavaScript.">
+    <style>
+      body {
+        color: #333;
+        font-family: monospace,monospace;
+        font-size: large;
+        line-height: 1.5em;
+        margin: 0 auto;
+        max-width: 40em;
+        padding: 0 1em;
+      }
+      h1, h2 {
+        margin: 1.25em 0 0.25em 0;
+        line-height: 1.2;
+      }
+      td {
+        vertical-align: top;
+        padding: 0.5em 0;
+      }
+      td:first-child {
+        padding-right: 1.5em;
+      }
+      #info {
+        display: none
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #111;
+          color: #ccc;
+        }
+      }
+    </style>
+    <script>
+      function isPrimeTrue (n) {
+        if (n < 2) {
+          return false
+        }
+        for (let i = 2; i <= Math.sqrt(n); ++i) {
+          if (n % i === 0) {
+            return false
+          }
+        }
+        return true
+      }
+
+      function isPrimeByMR (n) {
+        n = BigInt(n)
+        if (n <= 1n) {
+          return false
+        }
+        let s = 0n // Express n - 1 = 2^s * d where d is odd.
+        let d = n - 1n
+        while ((d & 1n) === 0n) {
+          d >>= 1n
+          ++s
+        }
+        const choiceOfBases = [ // Reference: https://oeis.org/A014233
+          [3n, []],
+          [2047n, [2]],
+          [1373653n, [2, 3]],
+          [25326001n, [2, 3, 5]],
+          [3215031751n, [2, 3, 5, 7]],
+          [2152302898747n, [2, 3, 5, 7, 11]],
+          [3474749660383n, [2, 3, 5, 7, 11, 13]],
+          [341550071728321n, [2, 3, 5, 7, 11, 13, 17]],
+          [3825123056546413051n, [2, 3, 5, 7, 11, 13, 17, 19, 23]],
+          [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]]
+        ]
+        let bases = null
+        for (const choice of choiceOfBases) {
+          if (n < choice[0]) {
+            bases = choice[1]
+            break
+          }
+        }
+        if (bases === null) {
+          return null
+        }
+        for (const a of bases) {
+          let x = modPow(BigInt(a), d, n)
+          if (x !== 1n && x !== n - 1n) {
+            let passed = false
+            for (let r = 1; r <= s - 1n; r++) {
+              x = (x * x) % n
+              if (x === n - 1n) {
+                passed = true
+                break
+              }
+            }
+            if (!passed) {
+              return false // n failed the test with base a.
+            }
+          } // n passed the test with base a; try next base.
+        }
+        return true // n passed the test for all chosen bases.
+      }
+
+      function modPow (base, exp, mod) {
+        if (mod === 1n) {
+          return 0n
+        }
+        base %= mod
+        let result = 1n
+        while (exp > 0n) {
+          if (exp & 1n) {
+            result = (result * base) % mod
+          }
+          base = (base * base) % mod
+          exp >>= 1n
+        }
+        return result
+      }
+
+      function log () {
+        const args = Array.prototype.slice.call(arguments)
+        document.getElementById('log').innerHTML += args.join(' ') + '<br>'
+      }
+
+      function test (m) {
+        for (let n = 0; n < 1000000; ++n) {
+          if (isPrimeTrue(n) !== isPrimeByMR(n)) {
+            log('FAIL:', n, isPrimeTrue(n), isPrimeByMR(n))
+            return
+          }
+        }
+        log('OKAY')
+        log()
+      }
+
+      function measure (f, start, nums) {
+        const startTime = Date.now()
+        let primes = 0
+        for (let n = start; n < start + nums; ++n) {
+          if (f(n)) {
+            ++primes
+          }
+        }
+        const runTime = Date.now() - startTime
+        log(f.name, start, nums, primes, runTime)
+      }
+
+      function compare (start, nums) {
+        measure(isPrimeTrue, start, nums)
+        measure(isPrimeByMR, start, nums)
+        log()
+      }
+
+      function run (callables) {
+        if (callables.length > 0) {
+          callables[0]()
+          setTimeout(function () {
+            run(callables.slice(1))
+          })
+        }
+      }
+
+      function showInfo () {
+        const script = document.getElementsByTagName('script')[0]
+        document.getElementById('info').style.display = 'block'
+        document.getElementById('text').innerText = script.innerHTML.replace(/^\n+/, '')
+      }
+
+      function main () {
+        run(
+          [
+            function () { test(10000) },
+            function () { log('Fields: {function} {start} {n} {primes} {runTime}') },
+            function () { log('') },
+            function () { compare(0, 1000000) },
+            function () { compare(1000000, 1000000) },
+            function () { compare(10000000, 1000000) },
+            function () { compare(100000000, 1000000) },
+            function () { compare(1000000000, 1000000) },
+            function () { compare(10000000000, 25000) },
+            function () { compare(100000000000, 10000) },
+            function () { compare(Number.MAX_SAFE_INTEGER - 149, 150) },
+            function () { log('DONE') },
+            showInfo
+          ]
+        )
+      }
+
+      window.addEventListener('load', main)
+    </script>
+  </head>
+  <body>
+    <h1>Miller-Rabin Speed Test</h1>
+    <div id="log"></div>
+    <div id="info">
+      <h2>Field Descriptions</h2>
+      <table>
+        <tr>
+          <td>
+            <strong>function</strong>
+          </td>
+          <td>
+            Name of the primality test run, applied to each integer in the range.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>start</strong>
+          </td>
+          <td>
+            First integer in the range to test.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>n</strong>
+          </td>
+          <td>
+            Count of consecutive integers tested beginning
+            at <strong>start</strong>.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>primes</strong>
+          </td>
+          <td>
+            Number of primes found in the interval
+            [<strong>start</strong>, <strong>start + n</strong>).
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>runTime</strong>
+          </td>
+          <td>
+            Wall-clock time in milliseconds consumed while checking
+            all <strong>n</strong> numbers.
+          </td>
+        </tr>
+      </table>
+      <h2>Script Source</h2>
+      <pre id="text"></pre>
+    </div>
+  </body>
+</html>
