@@ -1,3 +1,8 @@
+<!--
+  Miller-Rabin Speed Test
+  Copyright (c) 2025 Susam Pal
+  This file is available under the terms of the MIT License.
+-->
 <!DOCTYPE html>
 <html lang="en-GB">
   <head>
@@ -15,7 +20,7 @@
         padding: 0 1em;
       }
       h1, h2 {
-        margin: 1.25em 0 0.25em 0;
+        margin: 1.5em 0 0.75em 0;
         line-height: 1.2;
       }
       td {
@@ -36,7 +41,7 @@
       }
     </style>
     <script>
-      // ----- Simple Division-Based Primality Test -----
+      // Simple Division-Based Primality Test ================================
 
       function isPrimeTrue (n) {
         if (n < 2) {
@@ -50,7 +55,7 @@
         return true
       }
 
-      // ----- Miller-Rabin Primality Test -----
+      // Miller-Rabin Primality Test =========================================
 
       function isPrimeByMR (n) {
         n = BigInt(n)
@@ -130,7 +135,7 @@
         return result
       }
 
-      // ----- Tests and Measurements -----
+      // Tests and Measurements ==============================================
 
       function test (m) {
         for (let n = 0; n < 1000000; ++n) {
@@ -170,15 +175,25 @@
         }
       }
 
-      function showInfo () {
-        const script = document.getElementsByTagName('script')[0]
-        document.getElementById('info').style.display = 'block'
-        document.getElementById('text').innerText = script.innerHTML.replace(/^\n+/, '')
-      }
-
       function log () {
         const args = Array.prototype.slice.call(arguments)
         document.getElementById('log').innerHTML += args.join(' ') + '<br>'
+      }
+
+      // HTML Display ========================================================
+
+      function formatCode (code) {
+        code = code.split('\n').map(l => l.slice(6)).join('\n')
+        code = code.slice(code.indexOf('//'), code.indexOf('\n// Tests'))
+        console.log('[' + code + ']')
+        return code
+      }
+
+      function showInfo () {
+        const script = document.getElementsByTagName('script')[0]
+        const code = formatCode(script.innerHTML)
+        document.getElementById('info').style.display = 'block'
+        document.getElementById('text').innerText = code
       }
 
       function main () {
