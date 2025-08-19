@@ -32,7 +32,8 @@
         padding: 0.5em;
       }
       button {
-        padding-top: 0.4em;
+        padding: 0.4em 1em 0.5em 1em;
+        touch-action: manipulation;
       }
       div.input {
         display: inline-block;
@@ -40,9 +41,6 @@
       }
       div.buttons {
         display: inline-block;
-      }
-      button {
-        width: 2em;
       }
       noscript {
         border: medium double #900;
@@ -57,11 +55,30 @@
       #grid {
         white-space: pre;
       }
+      hr {
+        margin-top: 1.5em;
+        margin-bottom: 1em;
+        border: 0;
+        border-bottom: 0.15em dotted #888;
+      }
+      footer {
+        text-align: center;
+      }
+      nav a {
+        line-height: 2.5;
+      }
+      nav a:not(:last-child) {
+        margin-right: 1.5em;
+      }
       @media (prefers-color-scheme: dark) {
         body {
           background: #111;
           color: #ccc;
         }
+        a:link {color: #9bf}
+        a:visited {color: #a9f}
+        a:focus, a:hover {color: #9cf}
+        a:active {color: #f99}
         input, button {
           background: #000;
           border: thin solid #666;
@@ -77,11 +94,13 @@
       }
     </style>
     <script>
-      let start, rows, cols, prev, next, dots, info, grid
+      let start, rows, cols, prev, next, dots, info, grid, foot
       let nStart, nRows, nCols, nEnd, nNext
-      let compositeSymbol = '&nbsp;'
+      let dotsEnabled = false
+      let tipsEnabled = false
       let timer = null
-      const LOGGING = true
+      let pendingMsg = '&nbsp;'
+      const LOGGING = false
       const CHUNK_SIZE = 100000n
 
       function init () {
@@ -91,8 +110,10 @@
         prev = document.getElementById('prev')
         next = document.getElementById('next')
         dots = document.getElementById('dots')
+        tips = document.getElementById('tips')
         info = document.getElementById('info')
         grid = document.getElementById('grid')
+        foot = document.getElementById('foot')
         for (const element of [start, rows, cols]) {
           for (const event of ['blur', 'change', 'cut', 'keyup', 'paste']) {
             element.addEventListener(event, readInput)
@@ -101,6 +122,7 @@
         prev.addEventListener('click', prevBlock)
         next.addEventListener('click', nextBlock)
         dots.addEventListener('click', toggleDots)
+        tips.addEventListener('click', toggleTips)
         window.addEventListener('hashchange', readHash)
         readHash()
       }
@@ -127,10 +149,10 @@
           return
         }
         const newHash = '#' + start.value + '-' + rows.value + '-' + cols.value
-        if (newHash === '#1-100-100') {
-          window.history.replaceState(null, '', '#')
-        } else {
+        if (newHash !== '#1-100-100') {
           window.history.replaceState(null, '', newHash)
+        } else if (window.location.hash !== '') {
+          window.history.replaceState(null, '', '#')
         }
         log(`Updated location hash to ${window.location.hash}`)
         startPlot()
@@ -147,7 +169,13 @@
       }
 
       function toggleDots () {
-        compositeSymbol = compositeSymbol === '&nbsp;' ? '.' : '&nbsp;'
+        dotsEnabled = !dotsEnabled
+        readInput()
+      }
+
+      function toggleTips () {
+        tipsEnabled = !tipsEnabled
+        pendingMsg = (tipsEnabled ? 'Enabled' : 'Disabled') + ' tooltips'
         readInput()
       }
 
@@ -243,8 +271,10 @@
         nCols = BigInt(cols.value)
         nEnd = nStart + nRows * nCols - 1n
         nNext = nStart
-        info.innerHTML = '&nbsp;'
+        info.innerHTML = pendingMsg
+        pendingMsg = '&nbsp;'
         grid.innerHTML = ''
+        foot.style.display = 'none'
         if (nEnd > MAX_N) {
           info.innerHTML = `ERROR: Cannot plot numbers greater than ${MAX_N}`
           return
@@ -259,9 +289,12 @@
         if (nEnd < nChunkEnd) {
           nChunkEnd = nEnd
         }
-        log(`Plotting chunk ${nNext} to ${nChunkEnd} ...`)
+        const composite = dotsEnabled ? '.' : '&nbsp;'
+
+        log(`Plotting chunk ${nNext} to ${nChunkEnd}; dots: ${dotsEnabled}; tips: ${tipsEnabled} ...`)
         for (let n = nNext; n <= nChunkEnd; n++) {
-          text += isPrimeByMR(n) ? '&#x25cf;' : compositeSymbol
+          const prime = tipsEnabled ? `<span title="${n}">&#x25cf;</a>` : '&#x25cf;'
+          text += isPrimeByMR(n) ?  prime : composite
           if (((n - nStart + 1n) % nCols) === 0n) {
             text += '\n'
           }
@@ -272,6 +305,7 @@
           timer = setTimeout(plotGrid, 20)
         } else {
           timer = null
+          foot.style.display = 'block'
         }
       }
 
@@ -300,12 +334,23 @@
     <div class="buttons">
       <button id="prev" title="Previous Block">&laquo;</button>
       <button id="next" title="Next Block">&raquo;</button>
-      <button id="dots" title="Toggle Dots">.</button>
+      <button id="dots" title="Toggle Dots">&middot;</button>
+      <button id="tips" title="Toggle Tooltips">t</button>
     </div>
     <noscript>
       JavaScript must be enabled for this page to function.
     </noscript>
     <div id="info">&nbsp;</div>
     <div id="grid"></div>
+    <footer id="foot">
+      <hr>
+      <nav>
+        <a href="./">Home</a>
+        <a href="./links.html">Links</a>
+        <a href="./about.html">About</a>
+        <a href="https://github.com/susam/fxyt">GitHub</a>
+        <a href="https://mastodon.social/@susam">Mastodon</a>
+      </nav>
+    </footer>
   </body>
 </html>
