@@ -1,0 +1,288 @@
+<!--
+  Prime Grid
+  Copyright (c) 2025 Susam Pal
+  This file is available under the terms of the MIT License.
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <title>Prime Grid</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore the distribution of prime numbers in a grid.">
+    <style>
+      body {
+        font-family: monospace,monospace;
+        font-size: large;
+        margin: 0;
+        padding: 1em;
+      }
+      label {
+        box-sizing: border-box;
+        display: inline-block;
+        width: 4em;
+      }
+      input, button {
+        box-sizing: border-box;
+        display: inline-block;
+        font-family: monospace,monospace;
+        font-size: large;
+        height: 2em;
+        margin-bottom: 1em;
+        padding: 0.5em;
+      }
+      button {
+        padding-top: 0.4em;
+      }
+      div.input {
+        display: inline-block;
+      }
+      div.input {
+        margin-right: 2em;
+      }
+      noscript {
+        border: medium double #900;
+        color: #900;
+        display: block;
+        padding: 1em;
+        text-align: center;
+      }
+      #info {
+        margin-bottom: 1em;
+      }
+      #grid {
+        white-space: pre;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #111;
+          color: #ccc;
+        }
+        input, button {
+          background: #000;
+          border: thin solid #666;
+          color: #ccc;
+        }
+        button:active {
+          background: #333;
+        }
+        noscript {
+          border-color: #f99;
+          color: #f99;
+        }
+      }
+    </style>
+    <script>
+      let start, rows, cols, next, info, grid
+      let nStart, nRows, nCols, nEnd, nNext
+      let timer = null
+      const LOGGING = false
+      const CHUNK_SIZE = 100000n
+
+      function init () {
+        start = document.getElementById('start')
+        rows = document.getElementById('rows')
+        cols = document.getElementById('cols')
+        next = document.getElementById('next')
+        info = document.getElementById('info')
+        grid = document.getElementById('grid')
+        for (const element of [start, rows, cols]) {
+          for (const event of ['blur', 'change', 'cut', 'keyup', 'paste']) {
+            element.addEventListener(event, readInput)
+          }
+        }
+        next.addEventListener('click', nextBlock)
+        window.addEventListener('hashchange', readHash)
+        readHash()
+      }
+
+      function readHash () {
+        const hash = window.location.hash
+        if (/^#[0-9]+-[0-9]+-[0-9]+$/.test(hash)) {
+          const splits = hash.substring(1).split('-')
+          start.value = splits[0]
+          rows.value = splits[1]
+          cols.value = splits[2]
+          log('Done setting inputs to', splits)
+        } else {
+          log('Ignoring invalid location hash', hash)
+        }
+        readInput()
+      }
+
+      function readInput () {
+        log('Reading inputs ...')
+        const re = /^[0-9]+/
+        if (!re.test(start.value) || !re.test(rows.value) || !re.test(cols.value)) {
+          info.innerHTML = 'ERROR: Inputs must be positive integers'
+          return
+        }
+        const newHash = '#' + start.value + '-' + rows.value + '-' + cols.value
+        if (newHash === '#1-100-100') {
+          window.history.replaceState(null, '', '#')
+        } else {
+          window.history.replaceState(null, '', newHash)
+        }
+        log(`Updated location hash to ${window.location.hash}`)
+        startPlot()
+      }
+
+      function nextBlock () {
+        start.value = Number(start.value) + Number(rows.value) * Number(cols.value)
+        readInput()
+      }
+
+      function isPrimeByMR (n) {
+        n = BigInt(n)
+        if (n <= 1n) {
+          return false
+        }
+        const [s, d] = factorOutTwos(n - 1n)
+        const bases = chooseBases(n)
+        if (bases === null) {
+          return null
+        }
+        for (const a of bases) {
+          if (!isStrongPRP(n, s, d, BigInt(a))) {
+            return false
+          }
+        }
+        return true
+      }
+
+      function factorOutTwos (d) {
+        let s = 0n // Count power of 2.
+        while ((d & 1n) === 0n) {
+          d >>= 1n
+          s++
+        }
+        return [s, d] // (2^s)(d) = input.
+      }
+
+      const MAX_N = 318665857834031151167461n - 1n
+
+      function chooseBases (n) {
+        const choices = [ // Reference: https://oeis.org/A014233
+          [3n, []],
+          [2047n, [2]],
+          [1373653n, [2, 3]],
+          [25326001n, [2, 3, 5]],
+          [3215031751n, [2, 3, 5, 7]],
+          [2152302898747n, [2, 3, 5, 7, 11]],
+          [3474749660383n, [2, 3, 5, 7, 11, 13]],
+          [341550071728321n, [2, 3, 5, 7, 11, 13, 17]],
+          [3825123056546413051n, [2, 3, 5, 7, 11, 13, 17, 19, 23]],
+          [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]]
+        ]
+        for (const [composite, bases] of choices) {
+          if (n < composite) {
+            return bases
+          }
+        }
+        return null
+      }
+
+      function isStrongPRP (n, s, d, a) {
+        let x = modPow(a, d, n)
+        if (x === 1n || x === n - 1n) {
+          return true
+        }
+        for (let r = 1; r <= s - 1n; r++) {
+          x = (x * x) % n
+          if (x === n - 1n) {
+            return true
+          }
+        }
+        return false
+      }
+
+      function modPow (base, exp, mod) {
+        if (mod === 1n) {
+          return 0n
+        }
+        base %= mod
+        let result = 1n
+        while (exp > 0n) {
+          if (exp & 1n) {
+            result = (result * base) % mod
+          }
+          base = (base * base) % mod
+          exp >>= 1n
+        }
+        return result
+      }
+
+      function startPlot () {
+        if (timer !== null) {
+          clearTimeout(timer)
+          timer = null
+        }
+        nStart = BigInt(start.value)
+        nRows = BigInt(rows.value)
+        nCols = BigInt(cols.value)
+        nEnd = nStart + nRows * nCols - 1n
+        nNext = nStart
+        log(`Plotting ${nStart} to ${nEnd} in ${nRows} x ${nCols} grid ...`)
+        if (nEnd > MAX_N) {
+          info.innerHTML = `ERROR: Cannot plot numbers greater than ${MAX_N}`
+          return
+        }
+        info.innerHTML = '&nbsp;'
+        grid.innerHTML = ''
+        timer = setTimeout(plotGrid)
+      }
+
+      function plotGrid () {
+        let text = ''
+        let nChunkEnd = nNext + CHUNK_SIZE - 1n
+        if (nEnd < nChunkEnd) {
+          nChunkEnd = nEnd
+        }
+        log(`Plotting chunk ${nNext} to ${nChunkEnd} ...`)
+        for (let n = nNext; n <= nChunkEnd; n++) {
+          text += isPrimeByMR(n) ? '&#x25cf;' : '&nbsp;'
+          if (((n - nStart + 1n) % nCols) === 0n) {
+            text += '\n'
+          }
+        }
+        grid.innerHTML += text
+        nNext = nChunkEnd + 1n
+        if (nChunkEnd < nEnd) {
+          timer = setTimeout(plotGrid, 20)
+        } else {
+          timer = null
+        }
+      }
+
+      function log () {
+        if (LOGGING) {
+          const args = Array.prototype.slice.call(arguments)
+          console.log('[log] ' + args.join(' '))
+        }
+      }
+      window.addEventListener('load', init)
+    </script>
+  </head>
+  <body>
+    <div class="input">
+      <label for="start">Start</label>
+      <input type="number" id="start" min="1" value="1">
+    </div>
+    <div class="input">
+      <label for="rows">Rows</label>
+      <input type="number" id="rows" min="1" value="100">
+    </div>
+    <div class="input">
+      <label for="cols">Cols</label>
+      <input type="number" id="cols" min="1" value="100">
+    </div>
+    <div class="input">
+      <button id="next">Next Block</button>
+    </div>
+    <noscript>
+      JavaScript must be enabled for this page to function.
+    </noscript>
+    <div id="info">&nbsp;</div>
+    <div id="grid"></div>
+  </body>
+</html>
