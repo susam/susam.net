@@ -41,6 +41,9 @@
       div.buttons {
         display: inline-block;
       }
+      button {
+        width: 2em;
+      }
       noscript {
         border: medium double #900;
         color: #900;
@@ -74,10 +77,11 @@
       }
     </style>
     <script>
-      let start, rows, cols, prev, next, info, grid
+      let start, rows, cols, prev, next, dots, info, grid
       let nStart, nRows, nCols, nEnd, nNext
+      let compositeSymbol = '&nbsp;'
       let timer = null
-      const LOGGING = false
+      const LOGGING = true
       const CHUNK_SIZE = 100000n
 
       function init () {
@@ -86,6 +90,7 @@
         cols = document.getElementById('cols')
         prev = document.getElementById('prev')
         next = document.getElementById('next')
+        dots = document.getElementById('dots')
         info = document.getElementById('info')
         grid = document.getElementById('grid')
         for (const element of [start, rows, cols]) {
@@ -95,6 +100,7 @@
         }
         prev.addEventListener('click', prevBlock)
         next.addEventListener('click', nextBlock)
+        dots.addEventListener('click', toggleDots)
         window.addEventListener('hashchange', readHash)
         readHash()
       }
@@ -137,6 +143,11 @@
 
       function nextBlock () {
         start.value = Number(start.value) + Number(rows.value) * Number(cols.value)
+        readInput()
+      }
+
+      function toggleDots () {
+        compositeSymbol = compositeSymbol === '&nbsp;' ? '.' : '&nbsp;'
         readInput()
       }
 
@@ -250,7 +261,7 @@
         }
         log(`Plotting chunk ${nNext} to ${nChunkEnd} ...`)
         for (let n = nNext; n <= nChunkEnd; n++) {
-          text += isPrimeByMR(n) ? '&#x25cf;' : '&nbsp;'
+          text += isPrimeByMR(n) ? '&#x25cf;' : compositeSymbol
           if (((n - nStart + 1n) % nCols) === 0n) {
             text += '\n'
           }
@@ -289,6 +300,7 @@
     <div class="buttons">
       <button id="prev" title="Previous Block">&laquo;</button>
       <button id="next" title="Next Block">&raquo;</button>
+      <button id="dots" title="Toggle Dots">.</button>
     </div>
     <noscript>
       JavaScript must be enabled for this page to function.
