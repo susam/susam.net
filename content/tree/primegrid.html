@@ -36,9 +36,10 @@
       }
       div.input {
         display: inline-block;
-      }
-      div.input {
         margin-right: 2em;
+      }
+      div.buttons {
+        display: inline-block;
       }
       noscript {
         border: medium double #900;
@@ -73,7 +74,7 @@
       }
     </style>
     <script>
-      let start, rows, cols, next, info, grid
+      let start, rows, cols, prev, next, info, grid
       let nStart, nRows, nCols, nEnd, nNext
       let timer = null
       const LOGGING = false
@@ -83,6 +84,7 @@
         start = document.getElementById('start')
         rows = document.getElementById('rows')
         cols = document.getElementById('cols')
+        prev = document.getElementById('prev')
         next = document.getElementById('next')
         info = document.getElementById('info')
         grid = document.getElementById('grid')
@@ -91,6 +93,7 @@
             element.addEventListener(event, readInput)
           }
         }
+        prev.addEventListener('click', prevBlock)
         next.addEventListener('click', nextBlock)
         window.addEventListener('hashchange', readHash)
         readHash()
@@ -125,6 +128,11 @@
         }
         log(`Updated location hash to ${window.location.hash}`)
         startPlot()
+      }
+
+      function prevBlock () {
+        start.value = Number(start.value) - Number(rows.value) * Number(cols.value)
+        readInput()
       }
 
       function nextBlock () {
@@ -278,8 +286,9 @@
       <label for="cols">Cols</label>
       <input type="number" id="cols" min="1" value="100">
     </div>
-    <div class="input">
-      <button id="next">Next Block</button>
+    <div class="buttons">
+      <button id="prev" title="Previous Block">&laquo;</button>
+      <button id="next" title="Next Block">&raquo;</button>
     </div>
     <noscript>
       JavaScript must be enabled for this page to function.
