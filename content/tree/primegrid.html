@@ -159,21 +159,23 @@
         return [s, d] // (2^s)(d) = input.
       }
 
-      const MAX_N = 318665857834031151167461n - 1n
+      const choices = [ // Reference: https://oeis.org/A014233
+        [3n, []],
+        [2047n, [2]],
+        [1373653n, [2, 3]],
+        [25326001n, [2, 3, 5]],
+        [3215031751n, [2, 3, 5, 7]],
+        [2152302898747n, [2, 3, 5, 7, 11]],
+        [3474749660383n, [2, 3, 5, 7, 11, 13]],
+        [341550071728321n, [2, 3, 5, 7, 11, 13, 17]],
+        [3825123056546413051n, [2, 3, 5, 7, 11, 13, 17, 19, 23]],
+        [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]],
+        [3317044064679887385961981n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]]
+      ]
+
+      const MAX_N = choices[choices.length - 1][0] - 1n
 
       function chooseBases (n) {
-        const choices = [ // Reference: https://oeis.org/A014233
-          [3n, []],
-          [2047n, [2]],
-          [1373653n, [2, 3]],
-          [25326001n, [2, 3, 5]],
-          [3215031751n, [2, 3, 5, 7]],
-          [2152302898747n, [2, 3, 5, 7, 11]],
-          [3474749660383n, [2, 3, 5, 7, 11, 13]],
-          [341550071728321n, [2, 3, 5, 7, 11, 13, 17]],
-          [3825123056546413051n, [2, 3, 5, 7, 11, 13, 17, 19, 23]],
-          [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]]
-        ]
         for (const [composite, bases] of choices) {
           if (n < composite) {
             return bases
@@ -222,13 +224,13 @@
         nCols = BigInt(cols.value)
         nEnd = nStart + nRows * nCols - 1n
         nNext = nStart
-        log(`Plotting ${nStart} to ${nEnd} in ${nRows} x ${nCols} grid ...`)
+        info.innerHTML = '&nbsp;'
+        grid.innerHTML = ''
         if (nEnd > MAX_N) {
           info.innerHTML = `ERROR: Cannot plot numbers greater than ${MAX_N}`
           return
         }
-        info.innerHTML = '&nbsp;'
-        grid.innerHTML = ''
+        log(`Plotting ${nStart} to ${nEnd} in ${nRows} x ${nCols} grid ...`)
         timer = setTimeout(plotGrid)
       }
 
