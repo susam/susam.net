@@ -17,6 +17,9 @@
         margin: 0;
         padding: 1em;
       }
+      main {
+        min-height: calc(100vh - 7.5em);
+      }
       label {
         box-sizing: border-box;
         display: inline-block;
@@ -319,36 +322,38 @@
     </script>
   </head>
   <body>
-    <div class="input">
-      <label for="start">Start</label>
-      <input type="number" id="start" min="1" value="1">
-    </div>
-    <div class="input">
-      <label for="rows">Rows</label>
-      <input type="number" id="rows" min="1" value="100">
-    </div>
-    <div class="input">
-      <label for="cols">Cols</label>
-      <input type="number" id="cols" min="1" value="100">
-    </div>
-    <div class="buttons">
-      <button id="prev" title="Previous Block">&laquo;</button>
-      <button id="next" title="Next Block">&raquo;</button>
-      <button id="dots" title="Toggle Dots">&middot;</button>
-      <button id="tips" title="Toggle Tooltips">t</button>
-    </div>
-    <noscript>
-      JavaScript must be enabled for this page to function.
-    </noscript>
-    <div id="info">&nbsp;</div>
-    <div id="grid"></div>
+    <main>
+      <div class="input">
+        <label for="start">Start</label>
+        <input type="number" id="start" min="1" value="1">
+      </div>
+      <div class="input">
+        <label for="rows">Rows</label>
+        <input type="number" id="rows" min="1" value="100">
+      </div>
+      <div class="input">
+        <label for="cols">Cols</label>
+        <input type="number" id="cols" min="1" value="100">
+      </div>
+      <div class="buttons">
+        <button id="prev" title="Previous Block">&laquo;</button>
+        <button id="next" title="Next Block">&raquo;</button>
+        <button id="dots" title="Toggle Dots">&middot;</button>
+        <button id="tips" title="Toggle Tooltips">t</button>
+      </div>
+      <noscript>
+        JavaScript must be enabled for this page to function.
+      </noscript>
+      <div id="info">&nbsp;</div>
+      <div id="grid"></div>
+    </main>
     <footer id="foot">
       <hr>
       <nav>
         <a href="./">Home</a>
         <a href="./links.html">Links</a>
         <a href="./about.html">About</a>
-        <a href="https://github.com/susam/fxyt">GitHub</a>
+        <a href="https://github.com/susam">GitHub</a>
         <a href="https://mastodon.social/@susam">Mastodon</a>
       </nav>
     </footer>
