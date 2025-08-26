@@ -11,7 +11,7 @@ main > div {
   margin: 1em 0;
   overflow: auto;
 }
-.comment :last-child {
+.comment > :last-child {
   margin-bottom: 0;
 }
 .comment.author {
