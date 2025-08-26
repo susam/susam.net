@@ -63,7 +63,7 @@
     (dom:get-attribute node attr-name)))
 
 (defun read-rss-feed (document domain)
-  "Reed RSS feed entries."
+  "Read RSS feed entries."
   (let ((entries (dom:get-elements-by-tag-name document "item"))
         (result))
     (write-log "Found ~a RSS entries" (dom:length entries))
