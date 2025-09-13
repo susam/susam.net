@@ -1,4 +1,5 @@
 https://aartaka.me/rss.xml
+https://alexalejandre.com/index.xml
 https://feeds.thejeshgn.com/thejeshgn/
 https://matklad.github.io/feed.xml
 https://maxwellito.com/feed
