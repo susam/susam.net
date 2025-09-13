@@ -9,7 +9,6 @@ main > div {
   border: thin solid {{ light-line-color }};
   padding: 0.625em;
   margin: 1em 0;
-  overflow: auto;
 }
 .comment > :last-child {
   margin-bottom: 0;
