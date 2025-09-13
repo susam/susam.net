@@ -2,6 +2,7 @@
   <style>
     .katex {font-size: 1.1em }
     .katex a:link {text-decoration: none}
+    .katex-display {overflow: auto hidden}
   </style>
   <script defer src="{{ root }}js/katex/katex.min.js"></script>
   <script defer src="{{ root }}js/katex/contrib/auto-render.min.js"></script>
