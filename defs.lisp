@@ -123,7 +123,7 @@
       (setf (values hour minute second) (try-parse-hms (nth 4 parts))))
     (when (>= (length parts) 6)
       (setf tz (try-parse-tz (nth 5 parts))))
-    (when (and date month year hour minute second tz)
+    (when (and date month year hour minute second tz (>= year 1900))
       (encode-universal-time second minute hour date month year tz))))
 
 (defun try-parse-iso-date (date-string)
@@ -152,7 +152,7 @@
       (when (>= (length parts) 2)
         (setf (values hour minute second) (try-parse-hms (nth 1 parts))))
       (setf tz (try-parse-tz tz-string)))
-    (when (and date month year hour minute second tz)
+    (when (and date month year hour minute second tz (>= year 1900))
       (encode-universal-time second minute hour date month year tz))))
 
 (defun html-escape (text &key amp)
