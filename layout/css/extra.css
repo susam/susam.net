@@ -110,6 +110,10 @@ noscript div {
   word-break: break-all;
   white-space: pre-wrap;
 }
+.question {
+  margin-top: 1.5em;
+  font-weight: bold;
+}
 @media (prefers-color-scheme: dark) {
   .soft img {
     opacity: 0.7; /* (0xbb - 0x11) / (0xff - 0x11) */
