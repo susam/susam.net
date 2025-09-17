@@ -168,12 +168,22 @@
       }
 
       function minusCols () {
-        cols.value = Number(cols.value) - 1
+        const value = Number(cols.value) - 1
+        if (value <= 0) {
+          info.innerHTML = 'ERROR: Minimum number of columns reached'
+          return
+        }
+        cols.value = value
         readInput()
       }
 
       function prevBlock () {
-        start.value = Number(start.value) - Number(rows.value) * Number(cols.value)
+        const value = Number(start.value) - Number(rows.value) * Number(cols.value)
+        if (value <= 0) {
+          info.innerHTML = 'ERROR: Already at the first block'
+          return
+        }
+        start.value = value
         readInput()
       }
 
