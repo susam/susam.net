@@ -426,12 +426,16 @@ cvsplit:
 	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/talks.html
 
 check-bre:
+	# iz
 	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude quickqwerty.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
-	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|wizard|:topic'; [ $$? = 1 ]
+	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|\<traumatized by Java-esque\>|wizard|:topic'; [ $$? = 1 ]
+	# yze
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
+	# color, center
 	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
 	  grep -vE '\.center\>|-color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]
+	# My comments.
 	sed -n '/Susam Pal/,/date:/p' content/comments/*.html | \
 	  grep -E 'iz[a-z]|yze|center|color' | grep -vE '\<color:|\<size\>'; [ $$? = 1 ]
 	@echo Done; echo
@@ -449,7 +453,7 @@ check-copyright:
 	@echo Done; echo
 
 check-entities:
-	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude=quickqwerty.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
+	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude=primegrid.html --exclude=quickqwerty.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-tex-content:
@@ -463,11 +467,12 @@ check-tex-content:
 	@echo Done; echo
 
 check-tex-site: dist
-	grep --include="*.html" -IErn "\\\)[^- :t'\"<)}]" _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
+	grep --include="*.html" -IErn "\\\)[^- :tr'\"<)}]" _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-newlines:
-	grep -IErn '(<br>[^&]|\\\[.)' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
+	# <br> and \[ must be followed by a newline.
+	grep -IErn --exclude=miller-rabin-speed-test.html '(<br>.|\\\[.)' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-nginx:
@@ -493,7 +498,7 @@ check-sentence-space:
 	@#                      ^-----^
 	grep -IERn '\. \\' content | grep -vE '<code>|\\left\.'; [ $$? = 1 ]
 	grep -IERn '\.  [a-z]' content | grep -vE '\.  freenode'; [ $$? = 1 ]
-	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.'; [ $$? = 1 ]
+	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.|vs\. domains'; [ $$? = 1 ]
 	@echo Done; echo
 
 tidy: dist

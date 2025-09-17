@@ -8,15 +8,15 @@
   <a href="https://lobste.rs/~veqq">@veqq</a> from the
   <a href="https://lobste.rs/">Lobsters</a> community about computing,
   mathematics, and a range of related topics.  Our conversation was
-  later published on Lobsters as
+  later published on the community website as
   <a href="https://lobste.rs/s/kltoas">Lobsters Interview with
   Susam</a>.  This post is a copy of that post, so that I have a copy
   of the post archived on my website too.  I should mention that the
   sections presented in this post are not in the same order in which
   we originally discussed them.  The sections were edited and
-  rearranged to improve the flow and avoid repetition of similar
-  topics too close to each other.  The interview follows this
-  paragraph.  I hope you enjoy it.
+  rearranged by <a href="https://lobste.rs/~veqq">@veqq</a> to improve
+  the flow and avoid repetition of similar topics too close to each
+  other.  The interview follows this paragraph.  I hope you enjoy it.
 </p>
 <!-- Lisp and other things -->
 <p class="question">
@@ -102,9 +102,10 @@
   theory.  One day I decided to learn the RSA cryptosystem.  As I was
   working through the
   <a href="https://people.csail.mit.edu/rivest/Rsapaper.pdf">RSA
-  paper</a>, I stumbled upon the Euler totient function \( \varphi(n)
-  \) which gives the number of positive integers not exceeding n that
-  are relatively prime to n.  The paper first states that
+  paper</a>, I stumbled upon the Euler totient function
+  \( \varphi(n) \) which gives the number of positive integers not
+  exceeding n that are relatively prime to n.  The paper first states
+  that
 
   \[
     \varphi(p) = p - 1
@@ -122,9 +123,9 @@
   for primes \( p \) and \( q \).  That was not immediately obvious to
   me back then.  After a few minutes of thinking, I managed to prove
   it from scratch.  By the inclusion-exclusion principle, we count how
-  many integers from \( 1 \) up to \( pq \) are not divisible by \( p
-  \) or \( q \).  There are \( pq \) integers in total.  Among them,
-  there are \( q \) integers divisible by \( p \), and \( p \)
+  many integers from \( 1 \) up to \( pq \) are not divisible by
+  \( p \) or \( q \).  There are \( pq \) integers in total.  Among
+  them, there are \( q \) integers divisible by \( p \), and \( p \)
   integers divisible by \( q \).  So we need to subtract \( p + q \)
   from \( pq \).  But since one integer (\( pq \) itself) is counted
   in both groups, we add \( 1 \) back.  Therefore
@@ -879,10 +880,11 @@ f() or t() or f()
   ended with quite clever contour integrals that proved the theorem.
   The complex analysis I had learnt from Kreyszig turned out to be
   crucial for understanding those integrals.  Along the way I gained a
-  deeper understanding of the Riemann zeta function ζ(s).  The book
-  discusses zero-free regions where ζ(s) does not vanish, which I
-  found especially fascinating.  Results like ζ(-1) = -1/12, which
-  once seemed mysterious, became obvious after studying this book.
+  deeper understanding of the Riemann zeta function \( \zeta(s) \).
+  The book discusses zero-free regions where \( \zeta(s) \) does not
+  vanish, which I found especially fascinating.  Results like \(
+  \zeta(-1) = -1/12 \), which once seemed mysterious, became obvious
+  after studying this book.
 </p>
 <p>
   The third is <em>Galois Theory</em> by Ian Stewart.  It introduced
