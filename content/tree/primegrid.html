@@ -94,7 +94,7 @@
       }
     </style>
     <script>
-      let start, rows, cols, prev, next, dots, info, grid, foot
+      let start, rows, cols, plus, minus, prev, next, dots, info, grid, foot
       let nStart, nRows, nCols, nEnd, nNext
       let dotsEnabled = false
       let tipsEnabled = false
@@ -107,6 +107,8 @@
         start = document.getElementById('start')
         rows = document.getElementById('rows')
         cols = document.getElementById('cols')
+        plus = document.getElementById('plus')
+        minus = document.getElementById('minus')
         prev = document.getElementById('prev')
         next = document.getElementById('next')
         dots = document.getElementById('dots')
@@ -119,6 +121,8 @@
             element.addEventListener(event, readInput)
           }
         }
+        plus.addEventListener('click', plusCols)
+        minus.addEventListener('click', minusCols)
         prev.addEventListener('click', prevBlock)
         next.addEventListener('click', nextBlock)
         dots.addEventListener('click', toggleDots)
@@ -156,6 +160,16 @@
         }
         log(`Updated location hash to ${window.location.hash}`)
         startPlot()
+      }
+
+      function plusCols () {
+        cols.value = Number(cols.value) + 1
+        readInput()
+      }
+
+      function minusCols () {
+        cols.value = Number(cols.value) - 1
+        readInput()
       }
 
       function prevBlock () {
@@ -332,6 +346,8 @@
       <input type="number" id="cols" min="1" value="100">
     </div>
     <div class="buttons">
+      <button id="minus" title="Decrement Cols">&minus;</button>
+      <button id="plus" title="Increment Cols">&plus;</button>
       <button id="prev" title="Previous Block">&laquo;</button>
       <button id="next" title="Next Block">&raquo;</button>
       <button id="dots" title="Toggle Dots">&middot;</button>
