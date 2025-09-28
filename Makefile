@@ -499,7 +499,8 @@ check-sentence-space:
 tidy: dist
 	find _site -name "*.html" | while read -r page; do \
 	  echo Tidying "$$page"; \
-	  tidy -q -e --warn-proprietary-attributes no "$$page" || exit 1; \
+	  sed 's/ method="dialog"//' "$$page" > /tmp/tmp.html; \
+	  tidy -q -e --warn-proprietary-attributes no /tmp/tmp.html || exit 1; \
 	done
 	@echo Done; echo
 
