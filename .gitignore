@@ -11,4 +11,5 @@ _site/
 _live/
 _gone/
 _cache/
+node_modules/
 venv
