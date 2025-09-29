@@ -1,0 +1,59 @@
+<!-- date: 2025-09-28 -->
+<!-- title: QuickQWERTY 1.1.0 -->
+<!-- tag: Web, Programming -->
+<!-- key: qqooz -->
+<p>
+  There has been a new release of QuickQWERTY after over 10 years!
+  QuickQWERTY is a web-based touch typing tutor for QWERTY keyboards
+  that runs directly in the web browser.  You can try it out
+  here: <a href="../../../quickqwerty.html">quickqwerty.html</a>.
+</p>
+<p>
+  The new release, version 1.1.0 of QuickQWERTY, introduces a new
+  input command named <code>reset</code>, which is a synoymn for the
+  existing commands <code>restart</code> and <code>rst</code> used to
+  restart the current lesson.  Another input command
+  named <code>test</code> runs an internal suite of tests to validate
+  that no lesson involves keys that have not been introduced in the
+  current or prior lessons.  Further, in this release, the application
+  has been fully rewritten as a single standalone HTML file with no
+  external dependencies, and the source code has been greatly
+  simplified.
+</p>
+<p>
+  There are a number of other changes too.  Words per minute (WPM)
+  calculation has been refined so the first character, which starts
+  the timer, is not counted.  The guides have been enhanced.  Keys to
+  be pressed are now highlighted more clearly, and reminders to return
+  fingers to their home positions have been added to each guide.  The
+  confirmation dialogue for switching between 6-7 split and 5-6 split
+  styles now uses the HTML <code>&lt;dialog&gt;</code> element,
+  replacing the dated <code>window.confirm()</code> prompt.  In
+  addition, when the application is opened without a fragment
+  identifier in the URL, the most recently practised lesson loads
+  automatically.
+</p>
+<p>
+  The user interface has been simplified.  The previous and next links
+  (<code>&laquo;</code> and <code>&raquo;</code>) for navigating
+  lessons have been removed, as they added little value and made the
+  layout of the various user interface components more complex.  The
+  "Next lesson" advice link remains for moving to the next lesson when
+  the current one is completed successfully.  Tooltips showing
+  additional typing metrics have also been removed due to limited
+  usefulness.
+</p>
+<p>
+  The lessons have been updated to remove spellings specific to
+  American English.  Care has been taken to use only words that are
+  spelled the same in American and British English with one exception.
+  The word "tyre" with its British English spelling has remained in
+  the lesson by oversight.  That will be fixed in the next release.
+</p>
+<p>
+  Finally, QuickQWERTY's license has changed from the BSD-2-Clause
+  licence to the MIT licence.  The source code is available at
+  <a href="https://github.com/susam/quickqwerty">github.com/susam/quickqwerty</a>.
+  To run this release and learn touch typing on a QWERTY keyboard, go
+  to <a href="../../../quickqwerty.html">quickqwerty.html</a>.
+</p>
