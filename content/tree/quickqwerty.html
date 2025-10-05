@@ -1,5 +1,5 @@
 <!--
-    QuickQWERTY 1.1.0
+    QuickQWERTY 1.2.0
     Copyright (c) 2008-2025 Susam Pal
     Source: https://github.com/susam/quickqwerty
     License: MIT
@@ -289,7 +289,7 @@
         altMessage = document.getElementById('altMessage')
 
         const prevUnit = window.localStorage.getItem('unit')
-        if (window.location.hash === '' && prevUnit !== null) {
+        if (window.location.hash === '' && prevUnit !== null && prevUnit !== '#1') {
           log('no location hash; redirecting to unit', prevUnit)
           window.location.hash = prevUnit
         }
@@ -413,6 +413,7 @@
         const msg = alt ? UNITS.mainConfirmMsg : UNITS.altConfirmMsg
         const newAlt = alt ? 'no' : 'yes'
         altMessage.innerHTML = msg
+        altDialog.returnValue = 'no'
         altDialog.showModal()
         altDialog.addEventListener('close', function () {
           log('alt dialog return value:', altDialog.returnValue)
@@ -954,8 +955,8 @@
             guide: '<p>Use the left forefinger to type <kbd>T</kbd> and the right forefinger to type <kbd>Y</kbd>. After typing <kbd>T</kbd> or <kbd>Y</kbd>, return the forefingers to their original positions on <kbd>F</kbd> and <kbd>J</kbd>.</p>',
             sections: {
               Grip: 'ftft jyjy ftft jyjy ftft jyjy; tftf yjyj tftf yjyj tftf yjyj; fyfy tjtj fyfy tjtj fyfy tjtj; yfyf jtjt yfyf jtjt yfyf jtjt; ertyui iuytre ertyui iuytre ertyui iuytre; asdft ;lkjy asdfy ;lkjt aedtf ;ikyj adert ;kiuy afty ;jyt tety yjkt lyjt gyht athy sytg lhyg shdt svtm ctym vtyy, ,gytyv crttys sctyt l;tiy, kyhat sytay sytty lttys yytym mtyty syght ymtsy yctvy lytvy ;mtcvy sytaty',
-              Words: 'harry, tight, light, very, merry, dry, height, try; sight, might, fry, cry, family, sally, mathematics; chemistry, fight, tyre, yell, the, there, this, them; jury, hay, heavy, lyre, tram, yacht, tuesday; thursday, friday, saturday, target, hit, fit, tackle; sky, year, thirsty, yet, may, july, august',
-              Control: 't th thi thir thirs thirst thirsty, c ch che chem chemi chemis chemist chemistr chemistry, t tu tue tues tuesd tuesda tuesday, t th thi this, t th the ther there, t th the them, t ty tyr tyre, m ma mat math mathe mathem mathema mathemat mathemati mathematic mathematics',
+              Words: 'harry, tight, light, very, merry, dry, height, try; sight, might, fry, cry, family, sally, mathematics; chemistry, fight, yell, the, there, this, them; jury, hay, heavy, lyre, tram, yacht, tuesday; thursday, friday, saturday, target, hit, fit, tackle; sky, year, thirsty, yet, may, july, august',
+              Control: 't th thi thir thirs thirst thirsty, c ch che chem chemi chemis chemist chemistr chemistry, t tu tue tues tuesd tuesda tuesday, t th thi this, t th the ther there, t th the them, m ma mat math mathe mathem mathema mathemat mathemati mathematic mathematics',
               Sentences: 'harry studied mathematics yesterday, this is the tyre, sally likes chemistry, he hit them, let us fit it, hit the target accurately, let us catch the tram, matt has a yacht, she yelled at him, the teachers met everyday, this is my yacht',
               Test: 'harry, tight, light, merry, try, chemistry, tyre, yacht; tuesday, thursday, saturday, thirsty, year, hay, yet; the, this, there, them, thus; this is the tyre, harry studied mathematics yesterday, he hit them, this is my yacht, the teachers met everyday'
             }
@@ -978,8 +979,8 @@
             guide: '<p>Use the left ring finger to type <kbd>W</kbd> and the right ring finger to type <kbd>O</kbd>. After typing <kbd>W</kbd> or <kbd>O</kbd>, return the ring fingers to their original positions on <kbd>S</kbd> and <kbd>L</kbd>.</p>',
             sections: {
               Grip: 'swsw lolo swsw lolo swsw lolo; wsws olol wsws olol wsws olol; fwfw jojo fwfw jojo fwfw jojo; wfwf ojoj wfwf ojoj wfwf ojoj; swlo olws swlo olws swlo olws; wlos solw wlos solw wlos solw; oswl lwso oswl lwso oswl olws; awss fwrs oulj ouwa wsou wsol;',
-              Words: 'what who why when which whom, wheel wind, good moot, sworn sow saw soot loot, war won welcome office will, world worse vow word, biology economics sociology, would whole sword wolf worm, now how orwelian work, owe onus new dew stew too to, weblog wobble womble, you we, monday wednesday, october november, wonder',
-              Control: 'w we wel welc welco welcom welcome, w wo wor work, o or orw orwe orwel orweli orwelia orwelian, h ho how, w wh who whol whole, w we web webl weblo weblog, s so soc soci socio sociol sociolo sociolog sociology, s sw swo swor sword, w wh who whom',
+              Words: 'what who why when which whom, wheel wind, good moot, sworn sow saw soot loot, war won welcome office will, world worse vow word, biology economics sociology, would whole sword wolf worm, now how orwellian work, owe onus new dew stew too to, weblog wobble womble, you we, monday wednesday, october november, wonder',
+              Control: 'w we wel welc welco welcom welcome, w wo wor work, o or orw orwe orwel orwell orwelli orwellia orwellian, h ho how, w wh who whol whole, w we web webl weblo weblog, s so soc soci socio sociol sociolo sociolog sociology, s sw swo swor sword, w wh who whom',
               Sentences: 'do not introduce orwellian notions into this work, work for the good of the world, will you come to office tomorrow, how many swords do you have, do you know the new seven wonders of the world',
               Test: 'who how word world wonder would whole sword wolf worm, orwellian work owe weblog wobble womble wonder tomorrow, shower mower lower, will you come to office tomorrow, use the lawn mower, work for the good of the world, how many swords do you have'
             }
@@ -1074,7 +1075,7 @@
               Grip: 'd4d4 k9k9 d4d4 k9k9 d4d4 k9k9; 4d4d 9k9k 4d4d 9k9k 4d4d 9k9k; k4k4 d9d9 k4k4 d9d9 k4k4 d9d9; 4k4k 9d9d 4k4k 9d9d 4k4k 9d9d; d4r9 k9u4 d4r9 k9u4 d4r9 k9u4; d4r8 k9u4 d4r8 k9u4 d8r9 k9u4; a8dd4 8akk9 as5dr4 5akku9 5s8d4r 8a5k9u a4r9 94u8 9549 94s4 489u4 4r95 49rd5 s4549k a4s98 r4as9 s4a98 s594r d49k5 k98a4 r5a94 a9849 849a 949598',
               Words: '4 pens, 9 pencils, 49 buses, 5945 items, 99 words, 44 hens, 45 tests, 94 samples, 9454 roads, 94 sticks, 545 villages, 954 seats, 598 labels, 549 calls',
               Control: '4 44 449 4499 44998 449985 9 94 948 9488 94885 948859 9 98 984 9844 98445 984459 4 48 489 4899 48994 489945',
-              Sentences: 'The sum of 44 and 55 is 99. 44 is one less than 45. 89 is one more than 99. 45 is a multiple of 9.',
+              Sentences: 'The sum of 44 and 55 is 99. 44 is one less than 45. 89 is one more than 88. 45 is a multiple of 9.',
               Test: '4 49 94 9445 9844 9845 4589 9845 4458 4459 449 984 995; 4 pens, 45 tests, 5945 items, 99 words, 94 samples; The sum of 44 and 55 is 99. 44 is one less than 45.'
             }
           },
@@ -1241,7 +1242,7 @@
         <a href="https://github.com/susam/quickqwerty#readme">About</a>
       </nav>
       <p>
-        QuickQWERTY 1.1.0<br>
+        QuickQWERTY 1.2.0<br>
         &copy; 2008-2025 <a href="https://susam.net/">Susam Pal</a>
       </p>
       <p>
