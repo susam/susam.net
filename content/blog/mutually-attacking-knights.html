@@ -17,8 +17,8 @@
   the destination square, the knight captures it.  If two knights are
   placed such that each can capture the other in a single move, then
   we say the knights attack each other.  We want to determine the
-  number of different ways to place two identical knights on an \( n
-  \times n \) chessboard so that they attack each other.
+  number of ways to place two identical knights on an \( n \times n \)
+  chessboard so that they attack each other.
 </p>
 <figure>
   <table class="chess odd">
@@ -43,9 +43,9 @@
   </figcaption>
 </figure>
 <p>
-  This is just one of several ways two knights can attack each other
-  on a \( 3 \times 3 \) board.  There are, in fact, a total of eight
-  such placements, shown below.
+  The above illustration shows just one of several ways two knights
+  can attack each other on a \( 3 \times 3 \) board.  There are, in
+  fact, a total of eight such placements, shown below.
 </p>
 <figure style="text-align: center">
   <!-- 1 -->
@@ -221,7 +221,7 @@
   simple and elegant solution.  While I personally enjoy these
   long-winded explorations, if you prefer a more direct solution,
   please skip ahead
-  to <a href="counting-placements-from-minimal-attack-sections">Counting
+  to <a href="#counting-placements-from-minimal-attack-sections">Counting
   Placements From Minimal Attack Sections</a>.
 </p>
 <p>
@@ -254,11 +254,11 @@
   For brevity, we will avoid restating the process of enlarging an \(
   (n - 1) \times (n - 1) \) board to an \( n \times n \) board by
   adding one row and one column whenever we refer to new placements.
-  Instead, we use the term <em>new placements</em> on an \( n \times n
-  \) board to refer to \( \Delta f(n) \).  It is to be understood that
-  these new placements are the mutually attacking knight placements
-  introduced by enlarging the board from size \( (n - 1) \times (n -
-  1) \) to \( n \times n \).
+  Instead, we use the term <em>new placements</em> on an
+  \( n \times n \) board to refer to \( \Delta f(n) \).  It is to be
+  understood that these new placements are the mutually attacking
+  knight placements introduced by enlarging the board from size \( (n
+  - 1) \times (n - 1) \) to \( n \times n \).
 </p>
 <p>
   Without loss of generality, suppose the new row and column are added
@@ -266,7 +266,7 @@
 
   \begin{align*}
     \Delta f(2) &amp; = f(2) - f(1) = 0 - 0 = 0, \\
-    \Delta f(3) &amp; = f(3) - f(2) = 8 - 0 = 8. \\
+    \Delta f(3) &amp; = f(3) - f(2) = 8 - 0 = 8.  \\
   \end{align*}
 
   We will now find \( \Delta f(n) \) for \( n \ge 4 \).  To do this,
@@ -468,11 +468,11 @@
   increase the size of a board from \( (n - 1) \times (n - 1) \) to \(
   n \times n \), where \( n \ge 4 \), we add \( n^2 - (n - 1)^2 = 2n -
   1 \) new squares.  Among these, \( 3 \) are of type A, \( 2 \) are
-  of type B, and \( 2 \) are of type D.  That gives us a total of \( 7
-  \) squares of type A, B, or D.  The remaining \( 2n - 1 - 7 = 2n - 8
-  \) squares are therefore of type C.  Note that when the board size
-  increases from \( 3 \times 3 \) to \( 4 \times 4 \), there are \( 2
-  \times 4 - 8 = 0 \) squares of type C.
+  of type B, and \( 2 \) are of type D.  That gives us a total of
+  \( 7 \) squares of type A, B, or D.  The remaining \( 2n - 1 - 7 =
+  2n - 8 \) squares are therefore of type C.  Note that when the board
+  size increases from \( 3 \times 3 \) to \( 4 \times 4 \), there are
+  \( 2 \times 4 - 8 = 0 \) squares of type C.
 </p>
 <figure>
   <table class="chess">
@@ -721,11 +721,11 @@
   For example, when we increase the board size from \( 3 \times 3 \)
   to \( 4 \times 4 \), both the placements described in the previous
   paragraph appear while analysing the placements with a knight on a
-  type B square.  More generally, for any board of size \( n \times n
-  \) with \( n \ge 5 \), these placements occur while analysing the
-  placements with a knight on a type C square.  Therefore the total
-  number of new mutually attacking knight placements is \( 2 \times 3
-  - 2 = 4 \).
+  type B square.  More generally, for any board of size
+  \( n \times n \) with \( n \ge 5 \), these placements occur while
+  analysing the placements with a knight on a type C square.
+  Therefore the total number of new mutually attacking knight
+  placements is \( 2 \times 3 - 2 = 4 \).
 </p>
 <figure>
   <table class="chess odd inline">
@@ -986,9 +986,9 @@
   </figcaption>
 </figure>
 <p>
-  On a \( 3 \times 3 \) board, all squares have attacking degree \( 2
-  \) except the centre square, whose attacking degree is \( 0 \).  In
-  other words, placing a knight on any square other than the middle
+  On a \( 3 \times 3 \) board, all squares have attacking degree
+  \( 2 \) except the centre square, whose attacking degree is \( 0 \).
+  In other words, placing a knight on any square other than the middle
   one gives exactly two possible positions for the other knight so
   that they attack each other.
 </p>
@@ -1050,9 +1050,9 @@
   \]
 
   If \( (S_i, S_j) \) is a mutually attacking knight placement of the
-  distinct knights \( N_1 \) and \( N_2 \) for some \( i \) and \( j
-  \) with \( 1 \le i, j \le n^2 \) and \( i \ne j \), then \( (S_j,
-  S_i) \) is also a mutually attacking knight placement, since
+  distinct knights \( N_1 \) and \( N_2 \) for some \( i \) and
+  \( j \) with \( 1 \le i, j \le n^2 \) and \( i \ne j \), then \(
+  (S_j, S_i) \) is also a mutually attacking knight placement, since
   swapping the positions of the two mutually attacking knights still
   yields a valid mutually attacking placement.  Therefore
 
@@ -1195,7 +1195,7 @@
   From this illustration, we get
 
   \begin{align*}
-    g(6) &amp; = 4 \times 2 + 8 \times 3 + 12 \times 4 + 8 \times 6 + 4 \times 8 = 160. \\
+    g(6) &amp; = 4 \times 2 + 8 \times 3 + 12 \times 4 + 8 \times 6 + 4 \times 8 = 160.  \\
     f(6) &amp; = g(6)/2 = 80.
   \end{align*}
 
@@ -1268,11 +1268,11 @@
   \end{align*}
 
   Even though we assumed \( n \ge 4 \) while obtaining the above
-  formula, remarkably, it gives us the correct values for \( n = 1, 2
-  \) and \( 3 \).  The number of mutually attacking knight placements
-  for distinct knights on an \( n \times n \) board is \( 0 \) if \( n
-  = 1 \) or \( 2 \), and \( 16 \) if \( n = 3 \), and indeed the above
-  formula gives us
+  formula, remarkably, it gives us the correct values for
+  \( n = 1, 2 \) and \( 3 \).  The number of mutually attacking knight
+  placements for distinct knights on an \( n \times n \) board is
+  \( 0 \) if \( n = 1 \) or \( 2 \), and \( 16 \) if \( n = 3 \), and
+  indeed the above formula gives us
 
   \[
     g(1) = g(2) = 0, \quad g(3) = 16.
@@ -1299,9 +1299,9 @@
 </p>
 <h3 id="minimal-attack-sections">Minimal Attack Sections</h3>
 <p>
-  Consider a \( 2 \times 3 \) section of a board of size \( 3 \times 3
-  \) or larger.  Such a section has exactly two mutually attacking
-  knight placements.
+  Consider a \( 2 \times 3 \) section of a board of size
+  \( 3 \times 3 \) or larger.  Such a section has exactly two mutually
+  attacking knight placements.
 </p>
 <figure>
   <table class="chess inline">
@@ -1420,9 +1420,9 @@
   discussion in the previous two paragraphs, we know that \( h(n) =
   2(n - 1)(n - 2) \) for \( n \ge 3 \).  Further, this formula for \(
   h(n) \) works for \( n = 1 \) and \( n = 2 \) as well since \( h(1)
-  = h(2) = 0 \) and indeed a \( 1 \times 1 \) board or a \( 2 \times 2
-  \) board is too small to contain any minimal attack sections.
-  Therefore, for all \( n \ge 1 \), we get
+  = h(2) = 0 \) and indeed a \( 1 \times 1 \) board or a
+  \( 2 \times 2 \) board is too small to contain any minimal attack
+  sections.  Therefore, for all \( n \ge 1 \), we get
 
   \[
     h(n) = 2(n - 1)(n - 2).
@@ -1438,3 +1438,22 @@
 
   for all \( n \ge 1 \).
 </p>
+<h2 id="reference">References</h2>
+<ul>
+  <li>
+    <a href="https://cses.fi/problemset/task/1072">Two Knights</a>
+    from the CSES Problem Set
+  </li>
+  <li>
+    <a href="https://mathworld.wolfram.com/KnightGraph.html">Knight Graph</a>
+    by Eric W. by Weisstein
+  </li>
+  <li>
+    <a href="https://oeis.org/A033996">OEIS Entry A033996</a>
+    by N. J. A. Sloane
+  </li>
+  <li>
+    <a href="https://oeis.org/A172132">OEIS Entry A172132</a>
+    by Vaclav Kotesovec
+  </li>
+</ul>

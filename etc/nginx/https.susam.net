@@ -42,6 +42,7 @@ server {
     rewrite ^/myrgb$ /myrgb.html redirect;
     # Short-term redirects.
     rewrite ^/comments.html$ /comments/ redirect;
+    rewrite ^/guestbook-reinstated.html$ /reinstated-guestbook.html redirect;
 }
 
 # https://(www.susam.net|susam.in)/ => https://susam.net/

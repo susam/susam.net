@@ -14,7 +14,7 @@
     \gdef\vd{\vdots}
     \gdef\dd{\ddots}
     \gdef\arraystretch{1.2}
-    \gdef\hl{{\small\blacktriangleright}}
+    \gdef\hl{\small\blacktriangleright}
   \]
 </div>
 <p>
@@ -23,16 +23,16 @@
   direction each time it reaches the edge of the grid:
 
   \begin{array}{rcrcrcrcrl}
-      1 & \rt &   2 & \sp &   9 & \rt &  10 & \sp &  25 & \cd \\
-    \sp & \sp & \dn & \sp & \up & \sp & \dn & \sp & \up & \sp \\
-      4 & \lf &   3 & \sp &   8 & \sp &  11 & \sp &  24 & \cd \\
-    \dn & \sp & \sp & \sp & \up & \sp & \dn & \sp & \up & \sp \\
-      5 & \rt &   6 & \rt &   7 & \sp &  12 & \sp &  23 & \cd \\
-    \sp & \sp & \sp & \sp & \sp & \sp & \dn & \sp & \up & \sp \\
-     16 & \lf &  15 & \lf &  14 & \lf &  13 & \sp &  22 & \cd \\
-    \dn & \sp & \sp & \sp & \sp & \sp & \sp & \sp & \up & \sp \\
-     17 & \rt &  18 & \rt &  19 & \rt &  20 & \rt &  21 & \cd \\
-    \vd & \sp & \vd & \sp & \vd & \sp & \vd & \sp & \vd & \dd
+      1 &amp; \rt &amp;   2 &amp; \sp &amp;   9 &amp; \rt &amp;  10 &amp; \sp &amp;  25 &amp; \cd \\
+    \sp &amp; \sp &amp; \dn &amp; \sp &amp; \up &amp; \sp &amp; \dn &amp; \sp &amp; \up &amp; \sp \\
+      4 &amp; \lf &amp;   3 &amp; \sp &amp;   8 &amp; \sp &amp;  11 &amp; \sp &amp;  24 &amp; \cd \\
+    \dn &amp; \sp &amp; \sp &amp; \sp &amp; \up &amp; \sp &amp; \dn &amp; \sp &amp; \up &amp; \sp \\
+      5 &amp; \rt &amp;   6 &amp; \rt &amp;   7 &amp; \sp &amp;  12 &amp; \sp &amp;  23 &amp; \cd \\
+    \sp &amp; \sp &amp; \sp &amp; \sp &amp; \sp &amp; \sp &amp; \dn &amp; \sp &amp; \up &amp; \sp \\
+     16 &amp; \lf &amp;  15 &amp; \lf &amp;  14 &amp; \lf &amp;  13 &amp; \sp &amp;  22 &amp; \cd \\
+    \dn &amp; \sp &amp; \sp &amp; \sp &amp; \sp &amp; \sp &amp; \sp &amp; \sp &amp; \up &amp; \sp \\
+     17 &amp; \rt &amp;  18 &amp; \rt &amp;  19 &amp; \rt &amp;  20 &amp; \rt &amp;  21 &amp; \cd \\
+    \vd &amp; \sp &amp; \vd &amp; \sp &amp; \vd &amp; \sp &amp; \vd &amp; \sp &amp; \vd &amp; \dd
   \end{array}
 
   Can we find a closed-form expression that tells us the number at the
@@ -45,17 +45,17 @@
   number spiral grid in a cleaner form, omitting the arrows:
 
   \begin{array}{rrrrrl}
-      1 &   2 &   9  &  10 &  25 & \cd \\
-      4 &   3 &   8  &  11 &  24 & \cd \\
-      5 &   6 &   7  &  12 &  23 & \cd \\
-     16 &  15 &  14  &  13 &  22 & \cd \\
-     17 &  18 &  19  &  20 &  21 & \cd \\
-    \vd & \vd & \vd  & \vd & \vd & \dd
+      1 &amp;   2 &amp;   9  &amp;  10 &amp;  25 &amp; \cd \\
+      4 &amp;   3 &amp;   8  &amp;  11 &amp;  24 &amp; \cd \\
+      5 &amp;   6 &amp;   7  &amp;  12 &amp;  23 &amp; \cd \\
+     16 &amp;  15 &amp;  14  &amp;  13 &amp;  22 &amp; \cd \\
+     17 &amp;  18 &amp;  19  &amp;  20 &amp;  21 &amp; \cd \\
+    \vd &amp; \vd &amp; \vd  &amp; \vd &amp; \vd &amp; \dd
   \end{array}
 
-  Let \( f(m, n) \) denote the number at the \( m \)th row and \( n
-  \)th column.  For example, \( f(1, 1) = 1 \) and \( f(2, 5) = 24 \).
-  We want to find a closed-form expression for \( f(m, n) \).
+  Let \( f(m, n) \) denote the number at the \( m \)th row and
+  \( n \)th column.  For example, \( f(1, 1) = 1 \) and \( f(2, 5) =
+  24 \).  We want to find a closed-form expression for \( f(m, n) \).
 </p>
 <p>
   Let us first clarify what we mean by a <em>closed-form
@@ -109,19 +109,19 @@
   at some \( m \)th row where \( m \) is even.  The \( m \times m \)
   subgrid formed by the first \( m \) rows and the first \( m \)
   columns contains \( m^2 \) consecutive numbers.  Since the numbers
-  strictly increase as the spiral grows, the largest of these \( m^2
-  \) numbers must appear at the position where the spiral touches the
-  left edge.  This is illustrated in the figure below.
+  strictly increase as the spiral grows, the largest of these
+  \( m^2 \) numbers must appear at the position where the spiral
+  touches the left edge.  This is illustrated in the figure below.
 </p>
 <figure>
   \begin{array}{rrrr:rl}
-     1     &   2 &   9  &  10 &  25 & \cd \\
-     4     &   3 &   8  &  11 &  24 & \cd \\
-     5     &   6 &   7  &  12 &  23 & \cd \\
-    \hl 16 &  15 &  14  &  13 &  22 & \cd \\
+     1     &amp;   2 &amp;   9  &amp;  10 &amp;  25 &amp; \cd \\
+     4     &amp;   3 &amp;   8  &amp;  11 &amp;  24 &amp; \cd \\
+     5     &amp;   6 &amp;   7  &amp;  12 &amp;  23 &amp; \cd \\
+    \hl 16 &amp;  15 &amp;  14  &amp;  13 &amp;  22 &amp; \cd \\
     \hdashline
-    17     &  18 &  19  &  20 &  21 & \cd \\
-    \vd    & \vd & \vd  & \vd & \vd & \dd
+    17     &amp;  18 &amp;  19  &amp;  20 &amp;  21 &amp; \cd \\
+    \vd    &amp; \vd &amp; \vd  &amp; \vd &amp; \vd &amp; \dd
   \end{array}
   <figcaption>
     The spiral touches the left edge on the \( 4 \)th row where the
@@ -131,13 +131,13 @@
 <p>
   Whenever the spiral touches the left edge at the \( m \)th row
   (where \( m \) is even), the number in the first column of that row
-  is \( m^2 \).  Hence, we conclude that \( f(m, 1) = m^2 \) when \( m
-  \) is even.  Immediately after touching the left edge, the spiral
-  turns downwards into the first column of the next row.  Thus, in the
-  next row, i.e., in the \( (m + 1) \)th row, we have \( f(m + 1, 1) =
-  m^2 + 1 \), where \( m + 1 \) is odd.  This can be restated as \(
-  f(m, 1) = (m - 1)^2 + 1 \) when \( m \) is odd.  Since \( f(1, 1) =
-  1 \), we can summarise the two formulas we have found here as:
+  is \( m^2 \).  Hence, we conclude that \( f(m, 1) = m^2 \) when
+  \( m \) is even.  Immediately after touching the left edge, the
+  spiral turns downwards into the first column of the next row.  Thus,
+  in the next row, i.e., in the \( (m + 1) \)th row, we have \( f(m +
+  1, 1) = m^2 + 1 \), where \( m + 1 \) is odd.  This can be restated
+  as \( f(m, 1) = (m - 1)^2 + 1 \) when \( m \) is odd.  Since \( f(1,
+  1) = 1 \), we can summarise the two formulas we have found here as:
 
   \[
     f(m, 1) =
@@ -149,19 +149,19 @@
 </p>
 <p>
   We can perform a similar analysis for the numbers at the top edge
-  and note that whenever the spiral touches the top edge at the \( n
-  \)th column (where \( n \) is odd), the number in the first row of
-  that column is \( n^2 \).  This is illustrated below.
+  and note that whenever the spiral touches the top edge at the
+  \( n \)th column (where \( n \) is odd), the number in the first row
+  of that column is \( n^2 \).  This is illustrated below.
 </p>
 <figure>
   \begin{array}{rrr:rrl}
-     1 &   2 & \hl 9 &  10 &  25 & \cd \\
-     4 &   3 &     8 &  11 &  24 & \cd \\
-     5 &   6 &     7 &  12 &  23 & \cd \\
+     1 &amp;   2 &amp; \hl 9 &amp;  10 &amp;  25 &amp; \cd \\
+     4 &amp;   3 &amp;     8 &amp;  11 &amp;  24 &amp; \cd \\
+     5 &amp;   6 &amp;     7 &amp;  12 &amp;  23 &amp; \cd \\
     \hdashline
-    16 &  15 &    14 &  13 &  22 & \cd \\
-    17 &  18 &    19 &  20 &  21 & \cd \\
-    \vd & \vd &  \vd & \vd & \vd & \dd
+    16 &amp;  15 &amp;    14 &amp;  13 &amp;  22 &amp; \cd \\
+    17 &amp;  18 &amp;    19 &amp;  20 &amp;  21 &amp; \cd \\
+    \vd &amp; \vd &amp;  \vd &amp; \vd &amp; \vd &amp; \dd
   \end{array}
   <figcaption>
     The spiral touches the top edge on the \( 3 \)rd column where the
@@ -312,7 +312,7 @@
   \]
 
   This is the same formula, rewritten to reveal common patterns
-  between the four expressions on the right-hand side. In each
+  between the four expressions on the right-hand side.  In each
   expression, one variable plays the dominant role, occurring several
   times, while the other appears only once.  For example, in the first
   two expressions, \( n \) plays the dominant role whereas \( m \)
@@ -371,13 +371,13 @@
 </p>
 <figure>
   \begin{array}{rrrr:rl}
-     1     &   2 &   9  &     10 &  25 & \cd \\
-     4     &   3 &   8  &     11 &  24 & \cd \\
-     5     &   6 &   7  &     12 &  23 & \cd \\
-    \hl 16 &  15 &  14  & \hl 13 &  22 & \cd \\
+     1     &amp;   2 &amp;   9  &amp;     10 &amp;  25 &amp; \cd \\
+     4     &amp;   3 &amp;   8  &amp;     11 &amp;  24 &amp; \cd \\
+     5     &amp;   6 &amp;   7  &amp;     12 &amp;  23 &amp; \cd \\
+    \hl 16 &amp;  15 &amp;  14  &amp; \hl 13 &amp;  22 &amp; \cd \\
     \hdashline
-    17     &  18 &  19  &     20 &  21 & \cd \\
-    \vd    & \vd & \vd  &    \vd & \vd & \dd
+    17     &amp;  18 &amp;  19  &amp;     20 &amp;  21 &amp; \cd \\
+    \vd    &amp; \vd &amp; \vd  &amp;    \vd &amp; \vd &amp; \dd
   \end{array}
   <figcaption>
     The spiral touches the left edge on the \( 4 \)th row where the
@@ -399,13 +399,13 @@
 </p>
 <figure>
   \begin{array}{rrr:rrl}
-     1 &   2 & \hl 9 &  10 &  25 & \cd \\
-     4 &   3 &     8 &  11 &  24 & \cd \\
-     5 &   6 & \hl 7 &  12 &  23 & \cd \\
+     1 &amp;   2 &amp; \hl 9 &amp;  10 &amp;  25 &amp; \cd \\
+     4 &amp;   3 &amp;     8 &amp;  11 &amp;  24 &amp; \cd \\
+     5 &amp;   6 &amp; \hl 7 &amp;  12 &amp;  23 &amp; \cd \\
     \hdashline
-    16 &  15 &    14 &  13 &  22 & \cd \\
-    17 &  18 &    19 &  20 &  21 & \cd \\
-    \vd & \vd &  \vd & \vd & \vd & \dd
+    16 &amp;  15 &amp;    14 &amp;  13 &amp;  22 &amp; \cd \\
+    17 &amp;  18 &amp;    19 &amp;  20 &amp;  21 &amp; \cd \\
+    \vd &amp; \vd &amp;  \vd &amp; \vd &amp; \vd &amp; \dd
   \end{array}
   <figcaption>
     The spiral touches the top edge on the \( 3 \)rd column where the
@@ -422,8 +422,8 @@
     f(n, n) = n^2 - n + 1 \quad \text{if } n \equiv 1 \pmod{2}.
   \]
 
-  Since \( f(n, n) \) takes the same form for both odd and even \( n
-  \), we can write
+  Since \( f(n, n) \) takes the same form for both odd and even
+  \( n \), we can write
 
   \[
     f(n, n) = n^2 - n + 1
