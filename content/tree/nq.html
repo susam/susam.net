@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Susam's Nerd Quiz</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        color: #333;
+        font-family: georgia, serif;
+        font-size: large;
+        line-height: 1.5;
+        margin: 0 auto;
+        max-width: 40em;
+        overflow-wrap: break-word;
+        padding: 0 1em;
+      }
+      h1, h2 {
+        margin: 1em 0 0.5em 0;
+        text-align: center;
+      }
+      a:link { color: #00e }
+      a:visited { color: #518 }
+      a:focus, a:hover { color: #03f }
+      a:active { color: #a00 }
+      blockquote, pre, kbd {
+        background: #eee;
+      }
+      input {
+        margin-right: 1em;
+      }
+      label {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.5em;
+      }
+      button {
+        font-family: georgia, serif;
+        font-size: 1em;
+        margin-top: 1em;
+        min-width: 50%;
+        min-height: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+      blockquote {
+        border-left: thick solid #ccc;
+        margin: 1em 0;
+      }
+      pre {
+        overflow: auto;
+      }
+      blockquote, pre {
+        padding: 0.5em;
+      }
+      blockquote *:first-child {
+        margin-top: 0;
+      }
+      blockquote *:last-child {
+        margin-bottom: 0;
+      }
+      pre, code {
+        font-family: monospace,monospace;
+        font-size: 0.9em;
+      }
+      pre code {
+        font-size: 1.0em;
+      }
+      code {
+        color: #050;
+      }
+      footer {
+        text-align: center;
+      }
+      footer hr {
+        margin: 2.5em auto 1.5em auto;
+        border: 0;
+        border-bottom: 0.15em dotted #999;
+      }
+      nav a {
+        margin-right: 1.5em;
+        line-height: 2.5;
+      }
+      nav a:last-child  {
+        margin-right: 0;
+      }
+      noscript, .error {
+        border: medium double #c00;
+        color: #c00;
+        display: block;
+        padding: 1em;
+        text-align: center;
+      }
+      .card, .explanation {
+        border: thin solid #666;
+        padding: 1em;
+      }
+      .card {
+        margin: 2em 0;
+      }
+      .explanation {
+        margin-top: 1em;
+      }
+      .award {
+        border: thick double #666;
+        padding: 1em 1em 2em 1em;
+        text-align: center;
+      }
+      .award p {
+        font-size: 1.25em;
+        margin: 0.5em 0;
+      }
+      .award p:first-child {
+        font-size: 3em;
+        margin: 0;
+      }
+      .card > :first-child, .explanation > :first-child, .award > :first-child {
+        margin-top: 0;
+      }
+      .card > :last-child, .explanation > :last-child, .award > :last-child {
+        margin-bottom: 0;
+      }
+      .skipped.card {
+        background: #eee;
+      }
+      .new label {
+        cursor: pointer;
+      }
+      .new label:hover {
+        background: #ddd;
+      }
+      label.correct {
+        background: #9d9;
+      }
+      .correct.card, .correct .explanation {
+        background: #efe;
+        border-color: #090;
+      }
+      label.incorrect {
+        background: #fbb;
+      }
+      .incorrect.card, .incorrect .explanation {
+        background: #fee;
+        border-color: #900;
+      }
+      .meta {
+        text-align: right;
+        font-size: small;
+      }
+      .score {
+        margin: 2em auto;
+        display: inline-block;
+        border: thin solid red;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #111;
+          color: #ccc;
+        }
+        a:link { color: #9bf }
+        a:visited { color: #a9f }
+        a:focus, a:hover { color: #9cf }
+        a:active { color: #f99 }
+        button {
+          background: #000;
+          color: #bbb;
+          border-color: #666;
+        }
+        blockquote, pre, kbd {
+          background: #000;
+          box-shadow: 0 0 0.5em #333;
+        }
+        blockquote {
+          border-left-color: #333;
+        }
+        code, pre kbd {
+          color: #9c6;
+        }
+        .new label:hover {
+          background: #333;
+        }
+        .card, .explanation {
+          border-color: #666;
+        }
+        .skipped.card {
+          background: #222;
+        }
+        label.correct {
+          background: #040;
+        }
+        .award {
+          border-color: #999;
+        }
+        .correct.card, .correct .explanation {
+          background: #121;
+          border-color: #262;
+        }
+        label.incorrect {
+          background: #600;
+        }
+        .incorrect.card, .incorrect .explanation {
+          background: #211;
+          border-color: #622;
+        }
+        noscript, .error {
+          border-color: #f99;
+          color: #f99;
+        }
+        footer hr {
+          border-bottom-color: #666;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="js/katex/katex.min.css">
+    <style>
+      .katex {font-size: 1.1em }
+      .katex a:link {text-decoration: none}
+      .katex-display {overflow: auto hidden}
+    </style>
+    <script defer src="js/katex/katex.min.js"></script>
+    <script defer src="js/katex/contrib/auto-render.min.js"></script>
+    <script>
+      const PAGES = {}
+      let models
+
+      function init () {
+        PAGES.about = document.getElementById('about').innerHTML
+        setupQuiz()
+        window.addEventListener('hashchange', setupQuiz)
+      }
+
+      function setupQuiz () {
+        const maxSet = Math.floor(CARDS.length / 5)
+        const hash = window.location.hash.slice(1)
+
+        if (/^q[\d,]+$/.test(hash)) {
+          models = createModels(hash.slice(1).split(',').map(Number).filter(Boolean))
+          setupForm(models)
+        } else if (/^\d+$/.test(hash)) {
+          const n = parseInt(hash)
+          if (n === 0) {
+            window.location.hash = '#' + maxSet
+            return
+          }
+          if (n > maxSet) {
+            setupError('Quiz set #' + n + ' does not exist.')
+            return
+          }
+          models = createModels(range(5 * (n - 1) + 1, 5 * n + 1))
+          setupForm(models)
+        } else if (hash === 'about') {
+          document.querySelector('main').innerHTML = PAGES.about
+        } else {
+          window.location.hash = '#' + maxSet
+        }
+      }
+
+      function createModels (qids) {
+        const models = []
+        for (const qid of qids) {
+          models.push(createModel(qid))
+        }
+        return models
+      }
+
+      function createModel (qid) {
+        const card = CARDS[qid - 1]
+        const [options, answer] = shuffleOptions(card.options)
+        const model = Object.assign({}, card)
+        model.qid = qid.toString()
+        model.options = []
+        for (let i = 0; i < options.length; i++) {
+          const option = {}
+          option.oid = qid + '.' + (i + 1)
+          option.text = options[i]
+          option.correct = i === answer
+          model.options.push(option)
+        }
+        model.penalty = -1 / (options.length - 1)
+        return model
+      }
+
+      function setupForm (models) {
+        const main = document.querySelector('main')
+        const form = document.createElement('form')
+        form.id = 'form'
+        for (let i = 0; i < models.length; i++) {
+          form.append(setupCard(models[i]))
+        }
+        const button = document.createElement('button')
+        button.id = 'submit'
+        button.textContent = 'Submit Answers'
+        button.addEventListener('click', markCards)
+        form.append(button)
+        main.replaceChildren(form)
+      }
+
+      function setupError (msg) {
+        const main = document.querySelector('main')
+        const div = document.createElement('div')
+        div.className = 'error'
+        div.textContent = msg
+        main.replaceChildren(div)
+      }
+
+      function setupCard (model) {
+        const card = document.createElement('div')
+        card.id = 'c' + model.qid
+        card.className = 'card new'
+
+        const h2 = document.createElement('h2')
+        h2.textContent = model.title
+        card.append(h2)
+
+        const p = document.createElement('p')
+        p.innerHTML = model.question
+        card.append(p)
+
+        for (let n = 0; n < model.options.length; n++) {
+          const option = model.options[n]
+          const label = document.createElement('label')
+          const radio = document.createElement('input')
+          const spanForRadio = document.createElement('span')
+          const spanForOption = document.createElement('span')
+          label.id = 'l' + option.oid
+          radio.type = 'radio'
+          radio.name = 'q' + model.qid
+          radio.id = 'r' + option.oid
+          spanForRadio.append(radio)
+          spanForOption.innerHTML = option.text
+          label.append(spanForRadio, spanForOption)
+          card.append(label)
+        }
+
+        const meta = document.createElement('div')
+        const text = 'QID #' + model.qid + ' | ' + formatDate(model.date) + ' | '
+        const score = document.createElement('span')
+        meta.className = 'meta'
+        score.id = 's' + model.qid
+        score.textContent = 'Penalty: ' + model.penalty.toFixed(2)
+        meta.append(text, score)
+        card.append(meta)
+        return card
+      }
+
+      function markCards (e) {
+        e.preventDefault()
+        const submit = document.getElementById('submit')
+        let scored = 0
+        for (const model of models) {
+          scored += markCard(model)
+          explainAnswer(model, scored)
+        }
+        showAward(scored)
+        renderKaTeX()
+        submit.disabled = true
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+
+      function markCard (model) {
+        const TICK_MARK = '\u00a0\u00a0\u2713'
+        const CROSS_MARK = '\u00a0\u00a0\u2717'
+        const card = document.getElementById('c' + model.qid)
+        const score = document.getElementById('s' + model.qid)
+        card.className = 'skipped card'
+        let scored = 0
+        for (const option of model.options) {
+          const label = document.getElementById('l' + option.oid)
+          const radio = document.getElementById('r' + option.oid)
+          radio.disabled = true
+          label.className = ''
+          if (radio.checked) {
+            if (option.correct) {
+              card.className = 'correct card'
+              label.className = 'correct'
+              scored = 1
+              label.append(TICK_MARK)
+            } else {
+              card.className = 'incorrect card'
+              label.className = 'incorrect'
+              scored = model.penalty
+              label.append(CROSS_MARK)
+            }
+          } else if (option.correct) {
+            label.className = 'correct'
+            label.append(TICK_MARK)
+          }
+        }
+        score.textContent = 'Scored: ' + formatScore(scored)
+        return scored
+      }
+
+      function explainAnswer (model, scored) {
+        const card = document.getElementById('c' + model.qid)
+        const div = document.createElement('div')
+        div.className = 'explanation'
+        div.innerHTML = formatParagraphs(model.explanation)
+        card.append(div)
+      }
+
+      function showAward (scored) {
+        const DOUGHNUT = '\u{1f369}'
+        const BEVERAGE = '\u2615'
+        const STAR = '\u2605'
+        const maxScore = models.length
+        const grade = Math.max(0, Math.floor(5 * scored / maxScore))
+        const messages = [
+          grade === 0
+            ? DOUGHNUT
+            : (grade === 1 ? BEVERAGE : STAR.repeat(grade))
+        ]
+        messages.push('You scored ' + formatTotalScore(scored) +
+                      ' out of ' + maxScore + '.')
+        messages.push('Your nerd level today: <strong>' + [
+          'Rookie',
+          'Nerdling',
+          'Apprentice Nerd',
+          'Pro Nerd',
+          'Elite Nerd',
+          'Ultimate Nerd'
+        ][grade] + '</strong>.')
+        messages.push([
+          'Every great nerd starts somewhere.',
+          'A spark of nerdiness has been lit.',
+          'The path to greatness has begun.',
+          'A splending performance worthy of a seasoned nerd.',
+          'A dazzling performance from a nerd in finest form.',
+          'A flawless display of unmatched brilliance!'
+        ][grade])
+        const form = document.getElementById('form')
+        const div = document.createElement('div')
+        div.className = 'award level' + grade
+        for (const message of messages) {
+          const p = document.createElement('p')
+          p.innerHTML = message
+          div.append(p)
+        }
+        form.prepend(div)
+      }
+
+      function range (m, n) {
+        const result = []
+        for (let i = m; i < n; i++) {
+          result.push(i)
+        }
+        return result
+      }
+
+      function shuffleOptions (options) {
+        let aota = null
+        let nota = null
+        const others = []
+        for (let i = 0; i < options.length; i++) {
+          const option = options[i]
+          if (option.toLowerCase().startsWith('all of the above')) {
+            aota = option
+          } else if (option.toLowerCase().startsWith('none of the above')) {
+            nota = option
+          } else {
+            others.push(option)
+          }
+        }
+        const shuffled = shuffle(others)
+        if (aota !== null) {
+          shuffled.push(aota)
+        }
+        if (nota !== null) {
+          shuffled.push(nota)
+        }
+        for (let i = 0; i < shuffled.length; i++) {
+          if (shuffled[i] === options[0]) {
+            return [shuffled, i]
+          }
+        }
+      }
+
+      function shuffle (items) {
+        items = items.slice()
+        for (let n = items.length - 1; n >= 1; n--) {
+          const m = Math.floor(Math.random() * (n + 1));
+          [items[m], items[n]] = [items[n], items[m]]
+        }
+        return items
+      }
+
+      function formatDate (dateStr) {
+        const date = new Date(dateStr)
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = [
+          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ][date.getMonth()]
+        const year = date.getFullYear()
+        return day + ' ' + month + ' ' + year
+      }
+
+      function formatParagraphs (s) {
+        s = s.replaceAll('\n\n', '</p><p>')
+        return '<p>' + s + '</p>'
+      }
+
+      function formatScore (n) {
+        if (n === 0) {
+          return '0'
+        } else if (n > 0) {
+          return '+' + n
+        } else {
+          return n.toFixed(2)
+        }
+      }
+
+      function formatTotalScore (n) {
+        return (Math.round(n * 100) / 100).toString()
+      }
+
+      function renderKaTeX () {
+        window.renderMathInElement(document.body, {
+          delimiters: [
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true },
+            { left: '\\begin{equation}', right: '\\end{equation}', display: true },
+            { left: '\\begin{align}', right: '\\end{align}', display: true },
+            { left: '\\begin{align*}', right: '\\end{align*}', display: true },
+            { left: '\\begin{alignat}', right: '\\end{alignat}', display: true },
+            { left: '\\begin{alignat*}', right: '\\end{alignat*}', display: true },
+            { left: '\\begin{array}', right: '\\end{array}', display: true }
+          ],
+          macros: {
+            '\\eqnref': '\\href{###1}{(\\text{#2})}',
+            '\\label': '\\htmlId{#1}{}'
+          },
+          throwOnError: false,
+          trust: function (context) {
+            return ['\\htmlId', '\\href'].includes(context.command)
+          }
+        })
+      }
+
+      window.addEventListener('load', init)
+
+      const CARDS = [
+        {
+          date: '2025-10-10',
+          title: 'Integral Domain and Field',
+          tags: [
+            'Mathematics',
+            'Abstract Algebra'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'An integral domain is a non-trivial commutative ring in which the\nproduct of any two non-zero elements is non-zero.  Which of the\nfollowing statements is true?',
+          options: [
+            'Every finite integral domain is a field.',
+            'Every integral domain is a field.',
+            'Every infinite integral domain is a field.',
+            'All of the above.',
+            'None of the above.'
+          ],
+          explanation: 'Every infinite integral domain is not a field.  For example, the set\nof all integers is an integral domain but it is not a field.  As a\nresult, every integral domain is not a field either.\n\nIn fact, every finite integral domain is a field.  This can be shown\nas follows.\n\nLet \\( R \\) be a finite integral domain.  Let \\( a \\in R \\) such that\n\\( a \\ne 0 \\).  Consider the set\n\\[\n  A = \\{ a, a^2, a^3, \\dots \\}.\n\\]\nSince a ring is closed under multiplication, every element of \\( A \\)\nis also an element of \\( R \\).  Therefore \\( A \\subseteq R \\).  Since\n\\( R \\) is finite, \\( A \\) is finite too.  Therefore there must be\npositive integers \\( m \\) and \\( n \\) such that \\( m \\gt n \\) and\n\\[\n  a^m = a^n\n\\]\nFrom the above equation, we get\n\\[\n  a \\cdot a^{m - n - 1} \\cdot a^n = 1 \\cdot a^n.\n\\]\nBy the cancellation property of integral domain,\n\\[\n  a \\cdot a^{m - n - 1} = 1.\n\\]\nSince a ring is closed under multiplication and since \\( m - n - 1 \\ge\n0 \\), we get \\( a^{m - n - 1} \\in R \\).\n\nThus every non-zero \\( a \\in R \\) has a multiplicative inverse in\n\\( R \\).'
+        },
+        {
+          date: '2025-10-11',
+          title: 'False Friends',
+          tags: [
+            'Linguistics'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'Which pair of words below are false friends?',
+          options: [
+            'English <em>gift</em> and German <em>Gift</em>.',
+            'English <em>hand</em> and German <em>Hand</em>.',
+            'English <em>hotel</em> and French <em>hôtel</em>.',
+            'English <em>minute</em> and French <em>minute</em>.',
+            'All of the above.'
+          ],
+          explanation: 'False friends are pairs of words in two languages that look or sound\nsimilar but have different meanings.  English <em>gift</em> and German\n<em>Gift</em> are false friends, since the English word means a\npresent while the German word means <em>poison</em>.  Other pairs of\nwords in this quiz are not false friends because they share the same\nmeaning.'
+        },
+        {
+          date: '2025-10-12',
+          title: 'Lat Pull-Down',
+          tags: [
+            'Miscellaneous'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What does lat refer to in the strength training exercise called <em>lat pull-down</em>?',
+          options: [
+            'Latissimus dorsi',
+            'Lateral deltoid',
+            'Lateral stabilisation',
+            'Latent strength',
+            'Trapezius'
+          ],
+          explanation: 'The term \'lat\' is short for <em>latissimus dorsi</em>, a pair of\nlarge, flat muscles on either side of the back.  The <em>lat\npull-down</em> is a seated exercise that targets the latissimus dorsi\nby pulling a bar from above down to the upper chest, then slowly\nextending the arms back to the starting position.  The latissimus\ndorsi is also known as \'lats\' among bodybuilders and gym-goers.\n\nThe <em>lateral deltoid</em> is one of the three heads of the deltoid\nmuscle.  It is located on the outer side of the shoulder and is\nresponsible for lifting the arm away from the body.  Exercises such as\nlateral raises target this muscle.\n\nThe <em>trapezius</em> is a large, triangular muscle that extends from\nthe base of the skull down to the middle of the back.  It plays a key\nrole in moving, rotating and stabilising the shoulder blades.  Common\nexercises targeting the trapezius include shrugs and upright rows.\n\n<em>Lateral stabilisation</em> is a generic term with different\nmeanings depending on the field.  In human anatomy, it can refer to\nthe body\'s ability to maintain balance and control of side-to-side\nmovements. In construction and engineering, it can refer to the\ncapacity of a structure to resist horizontal forces such as wind or\nseismic activity. This term is not directly related to the lat\npull-down exercise.\n\n<em>Latent strength</em> is a pure distractor in the quiz options.  It\nis not a recognised strength training concept, although it may be used\ninformally to describe untapped potential strength.'
+        },
+        {
+          date: '2025-10-14',
+          title: 'Chess-Playing Computer',
+          tags: [
+            'Technology',
+            'History'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'In which year did a chess-playing computer first win a game against a\nreigning world champion under normal tournament conditions with\nclassical time controls?',
+          options: [
+            '1996',
+            '1948',
+            '1956',
+            '1997',
+            '2016'
+          ],
+          explanation: 'The first game of the 1996 Kasparov-Deep Blue match, which took place\non 10 Feb 1996, marked the first time a computer defeated a reigning\nworld champion in a single game under normal tournament conditions\nwith classical time controls.  Kasparov eventually won the match 4–2,\nbut the first game of the 1996 match was a historic milestone in\ncomputer chess.\n\nLater, in the 1997 rematch held from 03 May to 11 May 1997, an\nimproved version of Deep Blue won 3&frac12;–2&frac12, becoming the\nfirst computer to defeat a reigning world champion in a full match.\n\nThe other years mentioned in the quiz options are also notable in the\ndevelopment of computer programs playing board games against humans.\n\nIn 1948, Alan Turing and David Champernowne developed a chess program\nknown as <em>Turochamp</em>.  The name comes from the surnames of the\ntwo inventors.  The program was not implemented on an actual computer\nduring Turing\'s lifetime.  However, it was used to play against humans\nby simulating the algorithm on paper.\n\nIn 1956, <em>Los Alamos chess</em> became the first program to play a\nchess-like game.  Los Alamos chess is a variant of chess played without\nbishops on a 6×6 board.  The program was written at Los Alamos\nScientific Laboratory by Paul Stein and Mark Wells for the\nMathematical Analyser Numerical Integrator and Automatic Computer\nModel I (MANIAC I).\n\nOn 09 Mar 2016, a computer program named AlphaGo, developed by\nDeepMind (a British AI company acquired by Google in 2014), won a game\nagainst Lee Sedol and became the first program to defeat a human\nprofessional Go player on a full-sized 19x19 board without\nhandicaps.  In the five-game match between AlphaGo and Sedol, held\nuntil 15 Mar 2016, AlphaGo won 4–1.'
+        },
+        {
+          date: '2025-10-16',
+          title: 'Phosphor',
+          tags: [
+            'Physics',
+            'Chemistry'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'Which of the following statements is true about <em>phosphor</em>?',
+          options: [
+            'Electrons in it are excited to higher energy states when exposed to\nradiation.',
+            'It is a chemical element with atomic number 15.',
+            'It is used as a filament in incandescent lamps.',
+            'None of the above.',
+            'All of the above.'
+          ],
+          explanation: 'A <em>phosphor</em> is a substance that exhibits the phenomenon of\nphosphorescence or fluorescence.  When exposed to certain forms of\nradiation (such as ultraviolet light or electron beams), electrons in\nits crystal lattice or molecules are excited to higher energy states.\nAs they return to their ground state, they emit visible light.  If the\nsubstance stops glowing almost immediately once the radiation is\nturned off, it is said to be <em>fluorescent</em>.  If it continues to\nglow for some time after the radiation is removed, it is said to\nbe <em>phosphorescent</em>.\n\nFluorescent materials are used in fluorescent lamps, where phosphor\ncoatings convert ultraviolet light into visible light, and in\ncathode-ray tube (CRT) displays, where electron beams excite the\nphosphor coating on the inner surface of the screen to produce images.\nPhosphorescent materials are commonly used in glow-in-the-dark watch\ndials, safety signs and toys.\n\nThe chemical element with atomic number 15 is <em>phosphorus</em> (not\nphosphor).  White phosphorus glows faintly when exposed to oxygen, but\nthis glow is caused by oxidation, not phosphorescence.  This\nphenomenon is known as <em>chemiluminescence</em>, the emission of\nlight as a result of a chemical reaction.  The chemiluminescence of\nwhite phosphorus originally inspired the term phosphorescence,\nalthough the two are unrelated phenomena.\n\nFinally, neither phosphor nor phosphorus is used as a filament in\nincandescent lamps.  Filaments in such lamps are typically made of\ntungsten.  As mentioned earlier, phosphors, may be used as coatings in\nfluorescent lamps, but they do not serve as filaments.'
+        }
+      ]
+    </script>
+  </head>
+  <body>
+    <header><h1>Nerd Quiz</h1></header>
+    <main>
+      <noscript>JavaScript is required to use this application.</noscript>
+      <div id="about">
+        <p>
+          Hi!  I am Susam Pal, the developer and maintainer
+          of <a href="#">Nerd Quiz</a>.
+        </p>
+        <p>
+          Every question in this quiz comes from my own everyday
+          moments of reading, writing, thinking, learning and
+          exploring.  Whenever I encounter something curious or
+          fascinating, I often turn it into a quiz question to share
+          it with you.  Each question includes a footer that shows
+          when I wrote the question as well as the penalty score if
+          you answer it incorrectly.
+        </p>
+        <p>
+          New quizzes are published whenever I have five fresh
+          questions ready.  There's no fixed schedule.
+        </p>
+        <p>
+          The hash value in the URL determines the quiz presented to
+          you.  If it is an integer like <a href="#1">#1</a>,
+          <a href="#2">#2</a>, etc., then the corresponding quiz with a set
+          of five questions is loaded.  However, if the hash value
+          starts with the prefix "q", like <a href="#q1">#q1</a>,
+          <a href="#q2">#q2</a>, etc., then a specific question is
+          loaded.  You can also mix and match questions to form a
+          custom quiz.  To do so, use the prefix "q" followed by
+          comma-separated integers as the hash value, e.g.,
+          <a href="#q1,3,5">#q1,3,5</a>.
+        </p>
+        <p>
+          Whether you end up as a <strong>Rookie</strong> or rise
+          to <strong>Ultimate Nerd</strong>, I hope you'll enjoy
+          uncovering these little nuggets of knowledge as much as I
+          enjoyed discovering them.
+        </p>
+      </div>
+    </main>
+    <footer>
+      <hr>
+      <nav>
+        <a href="#">Quiz</a>
+        <a href="#about">About</a>
+        <a href="https://github.com/susam/nq">GitHub</a>
+        <a href="https://mastodon.social/@susam">Mastodon</a>
+        <p>&copy; 2025 Susam Pal</p>
+      </nav>
+    </footer>
+  </body>
+</html>
