@@ -19,6 +19,9 @@
         margin: 1em 0 0.5em 0;
         text-align: center;
       }
+      .screen h1, .screen h2 {
+        text-align: left;
+      }
       a:link { color: #00e }
       a:visited { color: #518 }
       a:focus, a:hover { color: #03f }
@@ -153,6 +156,9 @@
         display: inline-block;
         border: thin solid red;
       }
+      footer, .hidden {
+        display: none;
+      }
       @media (prefers-color-scheme: dark) {
         body {
           background: #111;
@@ -221,22 +227,26 @@
     <script defer src="js/katex/katex.min.js"></script>
     <script defer src="js/katex/contrib/auto-render.min.js"></script>
     <script>
-      const PAGES = {}
+      const SCREENS = {}
       let models
 
       function init () {
-        PAGES.about = document.getElementById('about').innerHTML
-        setupQuiz()
-        window.addEventListener('hashchange', setupQuiz)
+        for (const screen of ['about']) {
+          SCREENS[screen] = document.getElementById(screen).innerHTML
+          SCREENS[screen].className = 'screen'
+        }
+        setupPage()
+        document.querySelector('footer').style.display = 'block'
+        window.addEventListener('hashchange', setupPage)
       }
 
-      function setupQuiz () {
+      function setupPage () {
         const maxSet = Math.floor(CARDS.length / 5)
         const hash = window.location.hash.slice(1)
 
         if (/^q[\d,]+$/.test(hash)) {
           models = createModels(hash.slice(1).split(',').map(Number).filter(Boolean))
-          setupForm(models)
+          setupQuiz(models)
         } else if (/^\d+$/.test(hash)) {
           const n = parseInt(hash)
           if (n === 0) {
@@ -248,9 +258,9 @@
             return
           }
           models = createModels(range(5 * (n - 1) + 1, 5 * n + 1))
-          setupForm(models)
-        } else if (hash === 'about') {
-          document.querySelector('main').innerHTML = PAGES.about
+          setupQuiz(models)
+        } else if (hash in SCREENS) {
+          setupScreen(hash)
         } else {
           window.location.hash = '#' + maxSet
         }
@@ -281,9 +291,11 @@
         return model
       }
 
-      function setupForm (models) {
+      function setupQuiz (models, quizNo) {
         const main = document.querySelector('main')
+        const h1 = document.createElement('h1')
         const form = document.createElement('form')
+        h1.textContent = 'Nerd Quiz'
         form.id = 'form'
         for (let i = 0; i < models.length; i++) {
           form.append(setupCard(models[i]))
@@ -293,7 +305,8 @@
         button.textContent = 'Submit Answers'
         button.addEventListener('click', markCards)
         form.append(button)
-        main.replaceChildren(form)
+        main.replaceChildren(h1, form)
+        window.scroll({ top: 0 })
       }
 
       function setupError (msg) {
@@ -355,7 +368,7 @@
         showAward(scored)
         renderKaTeX()
         submit.disabled = true
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        window.scroll({ top: 0, behavior: 'smooth' })
       }
 
       function markCard (model) {
@@ -437,6 +450,14 @@
           div.append(p)
         }
         form.prepend(div)
+      }
+
+      function setupScreen (name) {
+        const div = document.createElement('div')
+        div.className = 'screen'
+        div.innerHTML = SCREENS[name]
+        document.querySelector('main').replaceChildren(div)
+        window.scroll({ top: 0 })
       }
 
       function range (m, n) {
@@ -631,9 +652,9 @@
           question: 'Which of the following statements is true about <em>phosphor</em>?',
           options: [
             'Electrons in it are excited to higher energy states when exposed to\nradiation.',
+            'When exposed to air, it glows faintly due to oxidation.',
             'It is a chemical element with atomic number 15.',
             'It is used as a filament in incandescent lamps.',
-            'None of the above.',
             'All of the above.'
           ],
           explanation: 'A <em>phosphor</em> is a substance that exhibits the phenomenon of\nphosphorescence or fluorescence.  When exposed to certain forms of\nradiation (such as ultraviolet light or electron beams), electrons in\nits crystal lattice or molecules are excited to higher energy states.\nAs they return to their ground state, they emit visible light.  If the\nsubstance stops glowing almost immediately once the radiation is\nturned off, it is said to be <em>fluorescent</em>.  If it continues to\nglow for some time after the radiation is removed, it is said to\nbe <em>phosphorescent</em>.\n\nFluorescent materials are used in fluorescent lamps, where phosphor\ncoatings convert ultraviolet light into visible light, and in\ncathode-ray tube (CRT) displays, where electron beams excite the\nphosphor coating on the inner surface of the screen to produce images.\nPhosphorescent materials are commonly used in glow-in-the-dark watch\ndials, safety signs and toys.\n\nThe chemical element with atomic number 15 is <em>phosphorus</em> (not\nphosphor).  White phosphorus glows faintly when exposed to oxygen, but\nthis glow is caused by oxidation, not phosphorescence.  This\nphenomenon is known as <em>chemiluminescence</em>, the emission of\nlight as a result of a chemical reaction.  The chemiluminescence of\nwhite phosphorus originally inspired the term phosphorescence,\nalthough the two are unrelated phenomena.\n\nFinally, neither phosphor nor phosphorus is used as a filament in\nincandescent lamps.  Filaments in such lamps are typically made of\ntungsten.  As mentioned earlier, phosphors, may be used as coatings in\nfluorescent lamps, but they do not serve as filaments.'
@@ -642,10 +663,12 @@
     </script>
   </head>
   <body>
-    <header><h1>Nerd Quiz</h1></header>
     <main>
+      <h1>Nerd Quiz</h1>
       <noscript>JavaScript is required to use this application.</noscript>
-      <div id="about">
+      <div id="about" class="hidden">
+        <h1>About Nerd Quiz</h1>
+        <h2>Introduction</h2>
         <p>
           Hi!  I am Susam Pal, the developer and maintainer
           of <a href="#">Nerd Quiz</a>.
@@ -653,16 +676,17 @@
         <p>
           Every question in this quiz comes from my own everyday
           moments of reading, writing, thinking, learning and
-          exploring.  Whenever I encounter something curious or
-          fascinating, I often turn it into a quiz question to share
-          it with you.  Each question includes a footer that shows
-          when I wrote the question as well as the penalty score if
-          you answer it incorrectly.
+          exploring.  Sometimes, when I come across something curious
+          or fascinating, I turn it into a quiz question and share it
+          here.  Each question includes a footer that shows when I
+          wrote the question as well as the penalty score if you
+          answer it incorrectly.
         </p>
         <p>
           New quizzes are published whenever I have five fresh
           questions ready.  There's no fixed schedule.
         </p>
+        <h2>URL Tricks</h2>
         <p>
           The hash value in the URL determines the quiz presented to
           you.  If it is an integer like <a href="#1">#1</a>,
@@ -676,10 +700,44 @@
           <a href="#q1,3,5">#q1,3,5</a>.
         </p>
         <p>
-          Whether you end up as a <strong>Rookie</strong> or rise
-          to <strong>Ultimate Nerd</strong>, I hope you'll enjoy
-          uncovering these little nuggets of knowledge as much as I
-          enjoyed discovering them.
+          This is a very new project, so currently there is only one
+          quiz.  As more quizzes are added, a few navigation links
+          will be added too to make it easy to to explore the
+          collection, jump to a random quiz or generate a custom set
+          of questions on the fly.
+        </p>
+        <h2>Issues</h2>
+        <p>
+          If you find any errors in the answers or the explanations,
+          or bugs in the software, please report it either on
+          <a href="https://github.com/susam/nq/issues">GitHub issues</a> or on
+          <a href="https://codeberg.org/susam/nq/issues">Codeberg issues</a>.
+        </p>
+        <h2>Community</h2>
+        <p>
+          If you'd like to discuss the quiz questions with other
+          quizzers, the following channels are available for you:
+        </p>
+        <ul>
+          <li>
+            Matrix: <a href="https://app.element.io/#/room/#susam:matrix.org">#susam:matrix.org</a>
+          </li>
+          <li>
+            IRC: <a href="https://web.libera.chat/#susam">#susam:libera.chat</a>
+          </li>
+        </ul>
+        <p>
+          You can also post a comment to my website using this
+          <a href="https://susam.net/form/comment/?p=nq">comment form</a>.
+        </p>
+        <h2>Enjoy</h2>
+        <p>
+          Go to <a href="#">Nerd Quiz</a> now and try the latest
+          quiz. This project is meant to be simple, light-hearted and
+          fun. Whether you're here to test what you already know or to
+          discover something new, I hope it adds a bit of curiosity to
+          your day.  I also hope you'll enjoy uncovering these little
+          nuggets of knowledge as much as I enjoyed finding them.
         </p>
       </div>
     </main>
