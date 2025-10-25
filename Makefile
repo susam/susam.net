@@ -59,12 +59,13 @@ help:
 	@echo '  pub               Publish updated website on live server and mirror.'
 	@echo '  main              Publish main branch on primary server only.'
 	@echo '  cu                Publish content updates on primary server only.'
-	@echo '  cus               Publish content updates on primary server and restart web server.'
+	@echo '  cure              Publish content updates on primary server and restart web server.'
 	@echo '  gh                Publish website on GitHub mirror only.'
+	@echo '  cb                Publish website on GitHub mirror only.'
 	@echo '  pull-backup       Pull a backup of cache from live server.'
 	@echo
 	@echo 'Default target:'
-	@echo '  help       Show this help message.'
+	@echo '  help              Show this help message.'
 
 
 # Targets for Live Server
@@ -185,9 +186,9 @@ follow-visit:
 	    echo; \
 	    echo "[$$(date +"%Y-%m-%d %H:%M:%S")] new visits: $$curr_lines - $$prev_lines = $$(( $$curr_lines - $$prev_lines ))"; \
 	  else \
-	    tally=$$(( ($$tally + 1) % 5 )); \
+	    tally=$$(( $$tally + 1 )); \
 	    printf '.'; \
-	    if [ "$$tally" = 0 ]; then printf ' '; fi; \
+	    if [ $$(( $$tally % 5 )) = 0 ]; then printf " $$tally "; fi; \
 	  fi; \
 	  sleep 60; \
 	done
@@ -426,12 +427,16 @@ cvsplit:
 	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/talks.html
 
 check-bre:
+	# iz
 	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude quickqwerty.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
-	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|wizard|:topic'; [ $$? = 1 ]
+	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|\<traumatized by Java-esque\>|\<quiz|\<wizards\>|:topic'; [ $$? = 1 ]
+	# yze
 	grep -IErn --exclude-dir content/comments 'yze' content layout | \
 	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
-	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
-	  grep -vE '\.center\>|-color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]
+	# color, center
+	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude nq.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
+	  grep -vE '\.center\>|= .center.|-color\>|\.color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]
+	# My comments.
 	sed -n '/Susam Pal/,/date:/p' content/comments/*.html | \
 	  grep -E 'iz[a-z]|yze|center|color' | grep -vE '\<color:|\<size\>'; [ $$? = 1 ]
 	@echo Done; echo
@@ -449,7 +454,7 @@ check-copyright:
 	@echo Done; echo
 
 check-entities:
-	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude=quickqwerty.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
+	grep -IErn --include='*.html' --exclude=cfrs.html --exclude=fxyt.html --exclude=invaders.html --exclude=myrgb.html --exclude=nq.html --exclude=primegrid.html --exclude=quickqwerty.html --exclude-dir=content/tree/code/web ' [<>&] ' content | grep -vE ':hover > a'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-tex-content:
@@ -463,11 +468,12 @@ check-tex-content:
 	@echo Done; echo
 
 check-tex-site: dist
-	grep --include="*.html" -IErn "\\\)[^- :t'\"<)}]" _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
+	grep --include="*.html" --exclude=nq.html -IErn "\\\)[^- :tr'\"<)}]" _site | grep -vE '<code>.*\\\).*</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-newlines:
-	grep -IErn '(<br>[^&]|\\\[.)' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
+	# <br> and \[ must be followed by a newline.
+	grep -IErn --exclude=miller-rabin-speed-test.html --exclude=nq.html '(<br>.|\\\[.)' content | grep -vE '\\\[</code>'; [ $$? = 1 ]
 	@echo Done; echo
 
 check-nginx:
@@ -489,11 +495,11 @@ check-rendering:
 	@echo Done; echo
 
 check-sentence-space:
-	grep --exclude invaders.html --exclude cfrs.html --exclude quickqwerty.html -IErn "[^0-9A-Z.][.?!][])\"']? [A-Z]" content | grep -vE "No soup for you|Mr\. T\.|function!|RET|SPC"; [ $$? = 1 ]
+	grep --exclude invaders.html --exclude cfrs.html --exclude quickqwerty.html --exclude nq.html -IErn "[^0-9A-Z.][.?!][])\"']? [A-Z]" content | grep -vE "No soup for you|Mr\. T\.|function!|RET|SPC"; [ $$? = 1 ]
 	@#                      ^-----^
 	grep -IERn '\. \\' content | grep -vE '<code>|\\left\.'; [ $$? = 1 ]
 	grep -IERn '\.  [a-z]' content | grep -vE '\.  freenode'; [ $$? = 1 ]
-	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.'; [ $$? = 1 ]
+	grep -IErn 'Mr\.|Ms\.|Mrs\.|Dr\.|vs\.' content | grep -vE 'Mr\. T\.|vs\. domains'; [ $$? = 1 ]
 	@echo Done; echo
 
 tidy: dist
@@ -670,14 +676,14 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
-pub: cu gh
+pub: cu gh cb
 
 cu:
 	git push origin main
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
-cus:
+cure:
 	git push origin main
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu restart"
@@ -687,39 +693,42 @@ pull-backup:
 	ssh susam.net "tar -czf - -C /opt/data/ form/" > ~/bkp/form-$$(date "+%Y-%m-%d_%H-%M-%S").tgz
 	ls -lh ~/bkp/
 
-TMP_REV = /tmp/rev.txt
-CAT_REV = cat $(TMP_REV)
 GIT_SRC = https://github.com/susam/susam.net
-GIT_DST = git@github.com:susam/susam.github.io.git
-WEB_URL = https://susam.github.io/
-TMP_GIT = /tmp/tmpgit
-README  = $(TMP_GIT)/README.md
 
-gh: site
-	@echo
-	@echo 'Creating GitHub mirror ...'
-	rm -rf $(TMP_GIT)
-	mv _site $(TMP_GIT)
-	git rev-parse --short HEAD > $(TMP_REV)
-	echo "# Mirror of Susam\'s Website" >> $(README)
-	echo >> $(README)
-	echo "Automatically generated from [susam/susam.net][GIT_SRC]" >> $(README)
-	echo "([$$($(CAT_REV))][GIT_REV])". >> $(README)
-	echo >> $(README)
-	echo "Visit $(WEB_URL) to view the the mirror." >> $(README)
-	echo >> $(README)
-	echo "[GIT_SRC]: $(GIT_SRC)" >> $(README)
-	echo "[WEB_URL]: $(WEB_URL)" >> $(README)
-	echo "[GIT_REV]: $(GIT_SRC)/commit/$$($(CAT_REV))" >> $(README)
-	@echo
-	@echo 'Pushing GitHub mirror ...'
-	cd $(TMP_GIT) && git init
-	cd $(TMP_GIT) && git config user.name "Susam Pal"
-	cd $(TMP_GIT) && git config user.email susam@susam.net
-	cd $(TMP_GIT) && git add .
-	cd $(TMP_GIT) && git commit -m "Generated from $(GIT_SRC) - $$($(CAT_REV))"
-	cd $(TMP_GIT) && git remote add origin "$(GIT_DST)"
-	cd $(TMP_GIT) && git log
-	cd $(TMP_GIT) && git push -f origin main
-	@echo
-	@echo Done
+mirror: site
+	@echo Creating mirror ...
+	rm -rf /tmp/mirror/
+	mv _site /tmp/mirror/
+	git rev-parse --short HEAD > /tmp/rev.txt
+	printf '%b' "# Mirror of Susam's Website\n\n\
+Automatically generated from \
+commit [$$(cat /tmp/rev.txt)]($(GIT_SRC)/commit/$$(cat /tmp/rev.txt)) \
+of <$(GIT_SRC)>.\n\n\
+Visit <$(WEB_URL)> to visit the mirror.\n\n\
+Visit <https://susam.net/> to visit the original website.\n" > /tmp/mirror/README.md
+	cd /tmp/mirror/ && git init
+	cd /tmp/mirror/ && git config user.name "Susam Pal"
+	cd /tmp/mirror/ && git config user.email susam@susam.net
+	cd /tmp/mirror/ && git add .
+	cd /tmp/mirror/ && git commit -m "Generated from $(GIT_SRC)"
+	cd /tmp/mirror/ && git log
+	cat /tmp/mirror/README.md
+	@echo Done; echo
+
+push-mirror:
+	make mirror GIT_DST=$(GIT_DST) WEB_URL=$(WEB_URL)
+	@echo Publishing mirror to $(WEB_URL) ...
+	cd /tmp/mirror/ && git remote remove origin || :
+	cd /tmp/mirror/ && git remote add origin "$(GIT_DST)"
+	cd /tmp/mirror/ && git push -f origin main
+	@echo Done; echo
+
+gh:
+	make push-mirror \
+	  GIT_DST=git@github.com:susam/susam.github.io.git \
+	  WEB_URL=https://susam.github.io/
+
+cb:
+	make push-mirror \
+	  GIT_DST=ssh://git@codeberg.org/susam/pages.git \
+	  WEB_URL=https://susam.codeberg.page/
