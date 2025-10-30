@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       body {
-        color: #333;
         font-family: georgia, serif;
         font-size: large;
         line-height: 1.5;
@@ -15,7 +14,17 @@
         overflow-wrap: break-word;
         padding: 0 1em;
       }
-      h1, h2 {
+      body, dialog {
+        color: #333;
+      }
+      dialog {
+        max-width: 40em;
+        text-align: center;
+      }
+      dialog div:nth-of-type(2) {
+        text-align: left;
+      }
+      h1, h2, h3 {
         margin: 1em 0 0.5em 0;
         text-align: center;
       }
@@ -30,19 +39,17 @@
         margin-right: 1em;
       }
       label {
-        display: flex;
         align-items: flex-start;
+        display: flex;
         margin-bottom: 0.5em;
       }
       button {
+        display: block;
         font-family: georgia, serif;
         font-size: 1em;
-        margin-top: 1em;
-        min-width: 50%;
+        margin: 1em auto 0 auto;
         min-height: 2em;
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
+        min-width: 50%;
       }
       blockquote {
         border-left: thick solid #ccc;
@@ -50,15 +57,6 @@
       }
       pre {
         overflow: auto;
-      }
-      blockquote, pre {
-        padding: 0.5em;
-      }
-      blockquote *:first-child {
-        margin-top: 0;
-      }
-      blockquote *:last-child {
-        margin-bottom: 0;
       }
       pre, code {
         font-family: monospace,monospace;
@@ -70,22 +68,40 @@
       code {
         color: #050;
       }
+      blockquote, pre {
+        padding: 0.5em;
+      }
+      dialog button {
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: large;
+        margin-right: 0.5em;
+        padding: 0.25em 1em;
+        min-width: 10em;
+      }
+      dialog button:last-child {
+        margin-right: 0;
+      }
+      dialog::backdrop {
+        background: #000;
+        opacity: 0.7;
+      }
       footer {
         text-align: center;
       }
       footer hr {
-        margin: 2.5em auto 1.5em auto;
         border: 0;
         border-bottom: 0.15em dotted #999;
+        margin: 2.5em auto 1.5em auto;
       }
       nav a {
-        margin-right: 1.5em;
         line-height: 2.5;
+        margin-right: 1.5em;
       }
       nav a:last-child  {
         margin-right: 0;
       }
-      noscript, .error {
+      .error {
         border: medium double #c00;
         color: #c00;
         display: block;
@@ -112,13 +128,24 @@
         margin: 0.5em 0;
       }
       .award p:first-child {
-        font-size: 3em;
+        font-size: 2.5em;
         margin: 0;
       }
-      .card > :first-child, .explanation > :first-child, .award > :first-child {
+      .award p strong {
+        white-space: pre;
+      }
+      blockquote > :first-child,
+      dialog > :first-child,
+      .card > :first-child,
+      .explanation > :first-child,
+      .award > :first-child {
         margin-top: 0;
       }
-      .card > :last-child, .explanation > :last-child, .award > :last-child {
+      blockquote > :last-child,
+      dialog > :last-child,
+      .card > :last-child,
+      .explanation > :last-child,
+      .award > :last-child {
         margin-bottom: 0;
       }
       .skipped.card {
@@ -145,16 +172,36 @@
         border-color: #900;
       }
       .meta {
-        text-align: right;
+        display: flex;
+        align-items: center;
+      }
+      .skipped .meta, .correct .meta, .incorrect .meta {
+        margin-top: 1em;
+      }
+      .result {
+        flex: 1;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .info {
+        cursor: pointer;
+        flex: 1;
         font-size: small;
+        text-align: right;
       }
       .score {
         margin: 2em auto;
         display: inline-block;
         border: thin solid red;
       }
+      .screen h1, .screen h2 {
+        text-align: left;
+      }
+      footer, .hidden {
+        display: none;
+      }
       @media (prefers-color-scheme: dark) {
-        body {
+        body, dialog {
           background: #111;
           color: #ccc;
         }
@@ -164,8 +211,12 @@
         a:active { color: #f99 }
         button {
           background: #000;
-          color: #bbb;
           border-color: #666;
+          color: #bbb;
+        }
+        button:disabled {
+          background: #222;
+          color: #999;
         }
         blockquote, pre, kbd {
           background: #000;
@@ -203,7 +254,7 @@
           background: #211;
           border-color: #622;
         }
-        noscript, .error {
+        .error {
           border-color: #f99;
           color: #f99;
         }
@@ -221,46 +272,72 @@
     <script defer src="js/katex/katex.min.js"></script>
     <script defer src="js/katex/contrib/auto-render.min.js"></script>
     <script>
-      const PAGES = {}
+      const LOGGING = true
+      const SCREENS = {}
+      const CARDS_PER_SET = 5
       let models
+      let answering
+      let docTitle
 
       function init () {
-        PAGES.about = document.getElementById('about').innerHTML
-        setupQuiz()
-        window.addEventListener('hashchange', setupQuiz)
+        log('initialising')
+        for (const screen of ['about']) {
+          SCREENS[screen] = document.getElementById(screen).innerHTML
+          SCREENS[screen].className = 'screen'
+        }
+        docTitle = document.title
+        setupPage()
+        document.querySelector('footer').style.display = 'block'
+        window.addEventListener('hashchange', setupPage)
+        log('initialised')
       }
 
-      function setupQuiz () {
-        const maxSet = Math.floor(CARDS.length / 5)
-        const hash = window.location.hash.slice(1)
+      function setupPage () {
+        log('setting up page')
+        const maxSet = Math.floor(CARDS.length / CARDS_PER_SET)
+        let hash = window.location.hash.slice(1)
+        let revealing = false
+
+        if (hash.slice(-1) === 'r') {
+          hash = hash.slice(0, -1)
+          revealing = true
+        }
 
         if (/^q[\d,]+$/.test(hash)) {
-          models = createModels(hash.slice(1).split(',').map(Number).filter(Boolean))
-          setupForm(models)
+          const qids = unique(hash.slice(1).split(',').map(Number).filter(Boolean))
+          for (const qid of qids) {
+            if (qid < 1 || qid > CARDS.length) {
+              setupError('Question #' + qid + ' does not exist.')
+              return
+            }
+          }
+          models = createModels(qids)
+          setupQuiz(models, revealing, null)
         } else if (/^\d+$/.test(hash)) {
           const n = parseInt(hash)
-          if (n === 0) {
-            window.location.hash = '#' + maxSet
-            return
-          }
-          if (n > maxSet) {
+          if (n < 1 || n > maxSet) {
             setupError('Quiz set #' + n + ' does not exist.')
             return
           }
-          models = createModels(range(5 * (n - 1) + 1, 5 * n + 1))
-          setupForm(models)
-        } else if (hash === 'about') {
-          document.querySelector('main').innerHTML = PAGES.about
+          models = createModels(
+            range(CARDS_PER_SET * (n - 1) + 1, CARDS_PER_SET * n + 1)
+          )
+          setupQuiz(models, revealing, n)
+        } else if (hash in SCREENS) {
+          setupScreen(hash)
         } else {
           window.location.hash = '#' + maxSet
         }
+        log('set up page')
       }
 
       function createModels (qids) {
+        log('creating models')
         const models = []
         for (const qid of qids) {
           models.push(createModel(qid))
         }
+        log('created models')
         return models
       }
 
@@ -277,31 +354,85 @@
           option.correct = i === answer
           model.options.push(option)
         }
+        model.points = 1
         model.penalty = -1 / (options.length - 1)
         return model
       }
 
-      function setupForm (models) {
-        const main = document.querySelector('main')
+      function setupQuiz (models, revealing, quizNum) {
+        log('setting up quiz')
+        answering = false
+
+        // Set up title.
+        let titleSuffix = ''
+        if (quizNum !== null) {
+          // Quiz set.
+          titleSuffix = ' #' + quizNum
+        } else if (models.length === 1) {
+          // Single question.
+          titleSuffix = ' - Question #' + models[0].qid
+        } else {
+          // Assorted questions.
+          titleSuffix = ' - Assorted'
+        }
+        const h1 = document.createElement('h1')
+        h1.textContent = 'Nerd Quiz' + titleSuffix
+        document.title = docTitle + titleSuffix
+
+        // Set up submit button and prompt.
+        const submit = document.createElement('button')
+        const prompt = document.createElement('p')
+        submit.id = 'submit'
+        prompt.id = 'prompt'
+        if (revealing) {
+          submit.textContent = 'Try Quiz'
+          submit.addEventListener('click', redirectToTake)
+          prompt.style.display = 'none'
+        } else {
+          submit.textContent = 'Reveal ' + plural(models, 'Answer', 'Answers')
+          submit.addEventListener('click', redirectToReveal)
+          prompt.textContent = 'Select an answer to begin the quiz.'
+          prompt.style.fontStyle = 'italic'
+          prompt.style.textAlign = 'center'
+        }
+
+        // Set up the quiz cards and the form.
         const form = document.createElement('form')
         form.id = 'form'
         for (let i = 0; i < models.length; i++) {
           form.append(setupCard(models[i]))
         }
-        const button = document.createElement('button')
-        button.id = 'submit'
-        button.textContent = 'Submit Answers'
-        button.addEventListener('click', markCards)
-        form.append(button)
-        main.replaceChildren(form)
+        form.append(submit, prompt)
+
+        // Add a blank dialog to the document to be triggered later.
+        const dialog = document.createElement('dialog')
+        dialog.id = 'dialog'
+
+        // Set up the main section and scroll to top.
+        const main = document.querySelector('main')
+        main.replaceChildren(h1, form, dialog)
+        log('scrolling to top immediately')
+        window.scroll({ top: 0 })
+
+        // Reveal cards if requested.
+        if (revealing) {
+          answerCards()
+          markCards(false)
+        }
+        log('set up quiz')
       }
 
       function setupError (msg) {
+        log('setting up error')
         const main = document.querySelector('main')
+        const h1 = document.createElement('h1')
         const div = document.createElement('div')
+        document.title = docTitle
+        h1.textContent = 'Nerd Quiz'
         div.className = 'error'
         div.textContent = msg
-        main.replaceChildren(div)
+        main.replaceChildren(h1, div)
+        log('setup error')
       }
 
       function setupCard (model) {
@@ -327,44 +458,157 @@
           radio.type = 'radio'
           radio.name = 'q' + model.qid
           radio.id = 'r' + option.oid
+          radio.addEventListener('change', handleRadio)
           spanForRadio.append(radio)
           spanForOption.innerHTML = option.text
           label.append(spanForRadio, spanForOption)
           card.append(label)
         }
 
-        const meta = document.createElement('div')
-        const text = 'QID #' + model.qid + ' | ' + formatDate(model.date) + ' | '
-        const score = document.createElement('span')
-        meta.className = 'meta'
-        score.id = 's' + model.qid
-        score.textContent = 'Penalty: ' + model.penalty.toFixed(2)
-        meta.append(text, score)
-        card.append(meta)
+        card.append(setupMeta(model))
         return card
       }
 
-      function markCards (e) {
-        e.preventDefault()
-        const submit = document.getElementById('submit')
-        let scored = 0
-        for (const model of models) {
-          scored += markCard(model)
-          explainAnswer(model, scored)
-        }
-        showAward(scored)
-        renderKaTeX()
-        submit.disabled = true
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+      function setupMeta (model) {
+        const score = document.createElement('span')
+        score.id = 's' + model.qid
+        score.textContent = 'Penalty: ' + model.penalty.toFixed(2)
+
+        const text = 'Q#' + model.qid + ' | ' + formatDate(model.date) + ' | '
+        const info = document.createElement('div')
+        info.className = 'info'
+        info.append(text, score)
+        info.addEventListener('click', function () {
+          showInfoDialog(model)
+        })
+
+        const meta = document.createElement('div')
+        meta.className = 'meta'
+        meta.id = 'm' + model.qid
+        meta.append(info)
+        return meta
       }
 
-      function markCard (model) {
+      function showInfoDialog (model) {
+        // Set up header.
+        const h3 = document.createElement('h3')
+        const by = document.createElement('div')
+        h3.textContent = 'Question #' + model.qid
+        by.innerHTML = 'By ' + formatAuthors(model.authors) + ' on ' + formatDate(model.date)
+
+        // Set up text content.
+        const div = document.createElement('div')
+        const visitLabel = 'Visit Question'
+        let html = '<p>This question has the following '
+        html += plural(model.tags, 'tag', 'tags') + ': '
+        html += formatTags(model.tags) + '.  '
+        html += 'You score ' + model.points + ' for a correct answer and lose '
+        html += (-model.penalty).toFixed(2) + ' for an incorrect one.</p>'
+
+        // Set up buttons.
+        const form = document.createElement('form')
+        form.method = 'dialog'
+        if (models.length > 1) {
+          const visit = document.createElement('button')
+          visit.value = 'visit'
+          visit.textContent = visitLabel
+          form.append(visit)
+          html += '<p>You can load this question on its own page by clicking the '
+          html += '\'' + visitLabel + '\' button below.</p>'
+        }
+        div.innerHTML = html
+        const close = document.createElement('button')
+        close.value = 'close'
+        close.textContent = 'Close'
+        form.append(close)
+
+        // Set up and show dialog.
+        const dialog = document.getElementById('dialog')
+        dialog.returnValue = null
+        dialog.addEventListener('close', function () {
+          log('info dialog return value:', dialog.returnValue)
+          if (dialog.returnValue === 'visit') {
+            window.location.hash = '#q' + model.qid
+          }
+        })
+        dialog.replaceChildren(h3, by, div, form)
+        dialog.showModal()
+        close.focus()
+      }
+
+      function handleRadio () {
+        if (!answering) {
+          log('switching to answering mode')
+          const submit = document.getElementById('submit')
+          const prompt = document.getElementById('prompt')
+          submit.textContent = 'Submit ' + plural(models, 'Answer', 'Answers')
+          submit.removeEventListener('click', redirectToReveal)
+          submit.addEventListener('click', markAnswers)
+          prompt.style.display = 'none'
+          answering = true
+        }
+      }
+
+      function redirectToReveal (e) {
+        log('redirecting to reveal hash')
+        e.preventDefault()
+        window.location.hash += 'r'
+      }
+
+      function redirectToTake (e) {
+        log('redirecting to take quiz hash')
+        e.preventDefault()
+        window.location.hash = window.location.hash.replace('r', '')
+      }
+
+      function answerCards () {
+        log('revealing card answers')
+        for (const model of models) {
+          answerCard(model)
+        }
+        log('revealed card answers')
+      }
+
+      function answerCard (model) {
+        for (const option of model.options) {
+          const radio = document.getElementById('r' + option.oid)
+          if (option.correct) {
+            radio.checked = true
+          }
+        }
+      }
+
+      function markAnswers (e) {
+        e.preventDefault()
+        markCards(true)
+      }
+
+      function markCards (scoring) {
+        log('marking cards')
+        let points = 0
+        for (const model of models) {
+          points += markCard(model, scoring)
+          explainAnswer(model, points)
+        }
+        if (scoring) {
+          document.getElementById('submit').disabled = true
+          showAward(points)
+        }
+        renderKaTeX()
+        log('scrolling to top smoothly')
+        window.scroll({ top: 0, behavior: 'smooth' })
+        log('marked cards')
+      }
+
+      function markCard (model, scoring) {
         const TICK_MARK = '\u00a0\u00a0\u2713'
         const CROSS_MARK = '\u00a0\u00a0\u2717'
         const card = document.getElementById('c' + model.qid)
+        const meta = document.getElementById('m' + model.qid)
         const score = document.getElementById('s' + model.qid)
+        let result = 'Skipped'
         card.className = 'skipped card'
-        let scored = 0
+        let points = 0
         for (const option of model.options) {
           const label = document.getElementById('l' + option.oid)
           const radio = document.getElementById('r' + option.oid)
@@ -372,14 +616,16 @@
           label.className = ''
           if (radio.checked) {
             if (option.correct) {
+              result = 'Correct'
               card.className = 'correct card'
               label.className = 'correct'
-              scored = 1
+              points = model.points
               label.append(TICK_MARK)
             } else {
+              result = 'Incorrect'
               card.className = 'incorrect card'
               label.className = 'incorrect'
-              scored = model.penalty
+              points = model.penalty
               label.append(CROSS_MARK)
             }
           } else if (option.correct) {
@@ -387,11 +633,17 @@
             label.append(TICK_MARK)
           }
         }
-        score.textContent = 'Scored: ' + formatScore(scored)
-        return scored
+        if (scoring) {
+          const div = document.createElement('div')
+          div.className = 'result'
+          div.textContent = result
+          meta.prepend(div)
+          score.textContent = 'Scored: ' + formatScore(points)
+        }
+        return points
       }
 
-      function explainAnswer (model, scored) {
+      function explainAnswer (model, points) {
         const card = document.getElementById('c' + model.qid)
         const div = document.createElement('div')
         div.className = 'explanation'
@@ -399,27 +651,27 @@
         card.append(div)
       }
 
-      function showAward (scored) {
+      function showAward (points) {
         const DOUGHNUT = '\u{1f369}'
         const BEVERAGE = '\u2615'
         const STAR = '\u2605'
         const maxScore = models.length
-        const grade = Math.max(0, Math.floor(5 * scored / maxScore))
+        const grade = Math.max(0, Math.floor(5 * points / maxScore))
         const messages = [
           grade === 0
             ? DOUGHNUT
             : (grade === 1 ? BEVERAGE : STAR.repeat(grade))
         ]
-        messages.push('You scored ' + formatTotalScore(scored) +
+        messages.push('You scored ' + formatTotalScore(points) +
                       ' out of ' + maxScore + '.')
-        messages.push('Your nerd level today: <strong>' + [
-          'Rookie',
-          'Nerdling',
-          'Apprentice Nerd',
-          'Pro Nerd',
-          'Elite Nerd',
-          'Ultimate Nerd'
-        ][grade] + '</strong>.')
+        messages.push('You have been deemed ' + [
+          'a <strong>Neophyte</strong>',
+          'a <strong>Nerdling</strong>',
+          'an <strong>Apprentice Nerd</strong>',
+          'a <strong>Pro Nerd</strong>',
+          'an <strong>Elite Nerd</strong>',
+          'the <strong>Ultimate Nerd</strong>'
+        ][grade] + '.')
         messages.push([
           'Every great nerd starts somewhere.',
           'A spark of nerdiness has been lit.',
@@ -437,6 +689,17 @@
           div.append(p)
         }
         form.prepend(div)
+      }
+
+      function setupScreen (name) {
+        log('setting up screen', name)
+        const div = document.createElement('div')
+        div.className = 'screen'
+        div.innerHTML = SCREENS[name]
+        document.querySelector('main').replaceChildren(div)
+        log('scrolling to top immediately')
+        window.scroll({ top: 0 })
+        log('set up screen', name)
       }
 
       function range (m, n) {
@@ -484,6 +747,14 @@
         return items
       }
 
+      function formatAuthors (authors) {
+        return joinAnd(unique(authors).map(x => '<strong>' + x + '</strong>'))
+      }
+
+      function formatTags (tags) {
+        return joinAnd(unique(tags).map(x => '<em>' + x + '</em>'))
+      }
+
       function formatDate (dateStr) {
         const date = new Date(dateStr)
         const day = String(date.getDate()).padStart(2, '0')
@@ -514,6 +785,21 @@
         return (Math.round(n * 100) / 100).toString()
       }
 
+      function joinAnd (items) {
+        if (items.length <= 1) {
+          return items.join()
+        }
+        return items.slice(0, -1).join(', ') + ' and ' + items.slice(-1)
+      }
+
+      function unique (items) {
+        return Array.from(new Set(items))
+      }
+
+      function plural (items, singular, plural) {
+        return items.length === 1 ? singular : plural
+      }
+
       function renderKaTeX () {
         window.renderMathInElement(document.body, {
           delimiters: [
@@ -535,6 +821,13 @@
             return ['\\htmlId', '\\href'].includes(context.command)
           }
         })
+      }
+
+      function log () {
+        if (LOGGING) {
+          const args = Array.prototype.slice.call(arguments)
+          console.log('[log] ' + args.join(' '))
+        }
       }
 
       window.addEventListener('load', init)
@@ -564,7 +857,8 @@
           date: '2025-10-11',
           title: 'False Friends',
           tags: [
-            'Linguistics'
+            'Linguistics',
+            'Terminology'
           ],
           authors: [
             'Susam Pal'
@@ -583,12 +877,13 @@
           date: '2025-10-12',
           title: 'Lat Pull-Down',
           tags: [
-            'Miscellaneous'
+            'Health',
+            'Terminology'
           ],
           authors: [
             'Susam Pal'
           ],
-          question: 'What does lat refer to in the strength training exercise called <em>lat pull-down</em>?',
+          question: 'What does lat refer to in the strength training exercise called\n<em>lat pull-down</em>?',
           options: [
             'Latissimus dorsi',
             'Lateral deltoid',
@@ -602,6 +897,7 @@
           date: '2025-10-14',
           title: 'Chess-Playing Computer',
           tags: [
+            'Chess',
             'Technology',
             'History'
           ],
@@ -631,21 +927,45 @@
           question: 'Which of the following statements is true about <em>phosphor</em>?',
           options: [
             'Electrons in it are excited to higher energy states when exposed to\nradiation.',
+            'When exposed to air, it glows faintly due to oxidation.',
             'It is a chemical element with atomic number 15.',
             'It is used as a filament in incandescent lamps.',
-            'None of the above.',
             'All of the above.'
           ],
-          explanation: 'A <em>phosphor</em> is a substance that exhibits the phenomenon of\nphosphorescence or fluorescence.  When exposed to certain forms of\nradiation (such as ultraviolet light or electron beams), electrons in\nits crystal lattice or molecules are excited to higher energy states.\nAs they return to their ground state, they emit visible light.  If the\nsubstance stops glowing almost immediately once the radiation is\nturned off, it is said to be <em>fluorescent</em>.  If it continues to\nglow for some time after the radiation is removed, it is said to\nbe <em>phosphorescent</em>.\n\nFluorescent materials are used in fluorescent lamps, where phosphor\ncoatings convert ultraviolet light into visible light, and in\ncathode-ray tube (CRT) displays, where electron beams excite the\nphosphor coating on the inner surface of the screen to produce images.\nPhosphorescent materials are commonly used in glow-in-the-dark watch\ndials, safety signs and toys.\n\nThe chemical element with atomic number 15 is <em>phosphorus</em> (not\nphosphor).  White phosphorus glows faintly when exposed to oxygen, but\nthis glow is caused by oxidation, not phosphorescence.  This\nphenomenon is known as <em>chemiluminescence</em>, the emission of\nlight as a result of a chemical reaction.  The chemiluminescence of\nwhite phosphorus originally inspired the term phosphorescence,\nalthough the two are unrelated phenomena.\n\nFinally, neither phosphor nor phosphorus is used as a filament in\nincandescent lamps.  Filaments in such lamps are typically made of\ntungsten.  As mentioned earlier, phosphors, may be used as coatings in\nfluorescent lamps, but they do not serve as filaments.'
+          explanation: 'A <em>phosphor</em> is a substance that exhibits the phenomenon of\nphosphorescence or fluorescence.  When exposed to certain forms of\nradiation (such as ultraviolet light or electron beams), electrons in\nits crystal lattice or molecules are excited to higher energy states.\nAs they return to their ground state, they emit visible light.  If the\nsubstance stops glowing almost immediately once the radiation is\nturned off, it is said to be <em>fluorescent</em>.  If it continues to\nglow for some time after the radiation is removed, it is said to\nbe <em>phosphorescent</em>.\n\nFluorescent materials are used in fluorescent lamps, where phosphor\ncoatings convert ultraviolet light into visible light, and in\ncathode-ray tube (CRT) displays, where electron beams excite the\nphosphor coating on the inner surface of the screen to produce images.\nPhosphorescent materials are commonly used in glow-in-the-dark watch\ndials, safety signs and toys.\n\nThe chemical element with atomic number 15 is <em>phosphorus</em> (not\nphosphor).  White phosphorus glows faintly when exposed to oxygen, but\nthis glow is caused by oxidation, not phosphorescence.  This\nphenomenon is known as <em>chemiluminescence</em>, the emission of\nlight as a result of a chemical reaction.  The chemiluminescence of\nwhite phosphorus originally inspired the term phosphorescence,\nalthough the two are unrelated phenomena.\n\nFinally, neither phosphor nor phosphorus is used as a filament in\nincandescent lamps.  Filaments in such lamps are typically made of\ntungsten.  As mentioned earlier, phosphors may be used as coatings in\nfluorescent lamps, but they do not serve as filaments.'
+        },
+        {
+          date: '2025-10-25',
+          title: 'Royal Fork',
+          tags: [
+            'Chess',
+            'Terminology'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'Which of the following statements is true about a <em>royal fork</em>\nin chess?',
+          options: [
+            'It is a double attack on the opponent\'s king and queen by a single piece.',
+            'It is a double attack on two pieces of the opponent by the queen.',
+            'It is an opening tactic where the queen and bishop coordinate to\ndeliver checkmate on f7 by White or on f2 by Black.',
+            'It is an endgame pattern where two queens coordinate to checkmate the\nopponent\'s king.',
+            'It is a tactic in which a piece is attacked but cannot move because\ndoing so would expose its king to check.'
+          ],
+          explanation: 'When two attacks are made with one move, it is called a <em>double\nattack</em>.  If both attacks are made by the same piece, it is called\na <em>fork</em>.  In other words, a fork occurs when one piece attacks\ntwo or more of the opponent\'s pieces at the same time.\n\nA <em>royal fork</em> is a special type of fork in which a single\npiece attacks the opponent\'s king and queen at the same time.  Since\nthe opponent must respond to the check against the king, the queen is\nusually captured on the following move, making this the highest\nmaterial-gaining fork possible.\n\nA fork involving the queen attacking two of the opponent\'s pieces is\nsimply called a <em>queen fork</em>, not a royal fork.\n\nThe opening tactic where the queen and bishop coordinate to deliver\ncheckmate on f7 by White or on f2 by Black is called the Scholar\'s\nMate.  Despite being a quick and threatening attack, it is easy to\ndefend against by developing minor pieces and defending the vulnerable\nf7 or f2 square early.  For this reason, it is rarely seen in serious\nplay.\n\nCheckmating with two queens is an elementary endgame pattern that\nrelies on restricting the opposing king\'s mobility and coordinating\nboth queens to force checkmate.  This pattern is unrelated to fork.\n\nIf a defending piece cannot move because doing so would expose a more\nvaluable piece behind it to attack, the situation is called a\n<em>pin</em>.  If the more valuable piece is the king, the pin is\ncalled an <em>absolute pin</em>.'
         }
       ]
     </script>
   </head>
   <body>
-    <header><h1>Nerd Quiz</h1></header>
     <main>
-      <noscript>JavaScript is required to use this application.</noscript>
-      <div id="about">
+      <noscript>
+        <h1>Nerd Quiz</h1>
+        <div class="error">JavaScript is required to use this application.</div>
+      </noscript>
+      <div id="about" class="hidden">
+        <h1>About Nerd Quiz</h1>
+        <h2>Introduction</h2>
         <p>
           Hi!  I am Susam Pal, the developer and maintainer
           of <a href="#">Nerd Quiz</a>.
@@ -653,16 +973,17 @@
         <p>
           Every question in this quiz comes from my own everyday
           moments of reading, writing, thinking, learning and
-          exploring.  Whenever I encounter something curious or
-          fascinating, I often turn it into a quiz question to share
-          it with you.  Each question includes a footer that shows
-          when I wrote the question as well as the penalty score if
-          you answer it incorrectly.
+          exploring.  Sometimes, when I come across something curious
+          or fascinating, I turn it into a quiz question and share it
+          here.  Each question includes a footer that shows when I
+          wrote the question as well as the penalty score if you
+          answer it incorrectly.
         </p>
         <p>
           New quizzes are published whenever I have five fresh
           questions ready.  There's no fixed schedule.
         </p>
+        <h2>URL Tricks</h2>
         <p>
           The hash value in the URL determines the quiz presented to
           you.  If it is an integer like <a href="#1">#1</a>,
@@ -676,10 +997,44 @@
           <a href="#q1,3,5">#q1,3,5</a>.
         </p>
         <p>
-          Whether you end up as a <strong>Rookie</strong> or rise
-          to <strong>Ultimate Nerd</strong>, I hope you'll enjoy
-          uncovering these little nuggets of knowledge as much as I
-          enjoyed discovering them.
+          This is a very new project, so currently there is only one
+          quiz.  As more quizzes are added, a few navigation links
+          will be added too to make it easy to to explore the
+          collection, jump to a random quiz or generate a custom set
+          of questions on the fly.
+        </p>
+        <h2>Issues</h2>
+        <p>
+          If you find any errors in the answers or the explanations,
+          or bugs in the software, please report it either on
+          <a href="https://github.com/susam/nq/issues">GitHub issues</a> or on
+          <a href="https://codeberg.org/susam/nq/issues">Codeberg issues</a>.
+        </p>
+        <h2>Community</h2>
+        <p>
+          If you'd like to discuss the quiz questions with other
+          quizzers, the following channels are available for you:
+        </p>
+        <ul>
+          <li>
+            Matrix: <a href="https://app.element.io/#/room/#susam:matrix.org">#susam:matrix.org</a>
+          </li>
+          <li>
+            IRC: <a href="https://web.libera.chat/#susam">#susam:libera.chat</a>
+          </li>
+        </ul>
+        <p>
+          You can also post a comment to my website using this
+          <a href="https://susam.net/form/comment/?p=nq">comment form</a>.
+        </p>
+        <h2>Enjoy</h2>
+        <p>
+          Go to <a href="#">Nerd Quiz</a> now and try the latest
+          quiz. This project is meant to be simple, light-hearted and
+          fun. Whether you're here to test what you already know or to
+          discover something new, I hope it adds a bit of curiosity to
+          your day.  I also hope you'll enjoy uncovering these little
+          nuggets of knowledge as much as I enjoyed finding them.
         </p>
       </div>
     </main>
