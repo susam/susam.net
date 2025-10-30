@@ -20,12 +20,12 @@
         padding: 0 1em;
       }
       h1, h2 {
-        margin: 1.5em 0 0.75em 0;
         line-height: 1.2;
+        margin: 1.5em 0 0.75em 0;
       }
       td {
-        vertical-align: top;
         padding: 0.5em 0;
+        vertical-align: top;
       }
       td:first-child {
         padding-right: 1.5em;
@@ -47,7 +47,7 @@
         if (n < 2) {
           return false
         }
-        for (let i = 2; i <= Math.sqrt(n); ++i) {
+        for (let i = 2; i <= Math.sqrt(n); i++) {
           if (n % i === 0) {
             return false
           }
@@ -63,7 +63,7 @@
           return false
         }
         const [s, d] = factorOutTwos(n - 1n)
-        const bases = chooseBasesBySize(n)
+        const bases = chooseBases(n)
         if (bases === null) {
           return null
         }
@@ -79,12 +79,12 @@
         let s = 0n // Count power of 2.
         while ((d & 1n) === 0n) {
           d >>= 1n
-          ++s
+          s++
         }
         return [s, d] // (2^s)(d) = input.
       }
 
-      function chooseBasesBySize (n) {
+      function chooseBases (n) {
         const choices = [ // Reference: https://oeis.org/A014233
           [3n, []],
           [2047n, [2]],
@@ -95,7 +95,8 @@
           [3474749660383n, [2, 3, 5, 7, 11, 13]],
           [341550071728321n, [2, 3, 5, 7, 11, 13, 17]],
           [3825123056546413051n, [2, 3, 5, 7, 11, 13, 17, 19, 23]],
-          [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]]
+          [318665857834031151167461n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]],
+          [3317044064679887385961981n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]]
         ]
         for (const [composite, bases] of choices) {
           if (n < composite) {
@@ -110,7 +111,7 @@
         if (x === 1n || x === n - 1n) {
           return true
         }
-        for (let r = 1; r <= s - 1n; ++r) {
+        for (let r = 1; r <= s - 1n; r++) {
           x = (x * x) % n
           if (x === n - 1n) {
             return true
@@ -138,22 +139,21 @@
       // Tests and Measurements ==============================================
 
       function test (m) {
-        for (let n = 0; n < 1000000; ++n) {
+        for (let n = 0; n < 1000000; n++) {
           if (isPrimeTrue(n) !== isPrimeByMR(n)) {
             log('FAIL:', n, isPrimeTrue(n), isPrimeByMR(n))
             return
           }
         }
         log('OKAY')
-        log()
       }
 
       function measure (f, start, nums) {
         const startTime = Date.now()
         let primes = 0
-        for (let n = start; n < start + nums; ++n) {
+        for (let n = start; n < start + nums; n++) {
           if (f(n)) {
-            ++primes
+            primes++
           }
         }
         const runTime = Date.now() - startTime
@@ -161,23 +161,23 @@
       }
 
       function compare (start, nums) {
+        log()
         measure(isPrimeTrue, start, nums)
         measure(isPrimeByMR, start, nums)
-        log()
       }
 
       function chain (callables) {
         if (callables.length > 0) {
           callables[0]()
           setTimeout(function () {
-            chain(callables.slice(1), 10)
+            chain(callables.slice(1), 20)
           })
         }
       }
 
       function log () {
         const args = Array.prototype.slice.call(arguments)
-        document.getElementById('log').innerHTML += args.join(' ') + '<br>'
+        document.getElementById('log').innerHTML += args.join(' ') + '\n'
       }
 
       // HTML Display ========================================================
@@ -201,8 +201,8 @@
           [
             function () { document.getElementById('wip').innerHTML = '...' },
             function () { test(10000) },
+            function () { log() },
             function () { log('Fields: {function} {start} {n} {primes} {runTime}') },
-            function () { log('') },
             function () { compare(0, 1000000) },
             function () { compare(1000000, 1000000) },
             function () { compare(10000000, 1000000) },
@@ -212,6 +212,7 @@
             function () { compare(100000000000, 10000) },
             function () { compare(Number.MAX_SAFE_INTEGER - 149, 150) },
             function () { document.getElementById('wip').innerHTML = '' },
+            function () { log() },
             function () { log('DONE') },
             showInfo
           ]
@@ -223,7 +224,7 @@
   </head>
   <body>
     <h1>Miller-Rabin Speed Test</h1>
-    <div id="log"></div>
+    <pre id="log"></pre>
     <div id="wip"></div>
     <div id="info">
       <h2>Field Descriptions</h2>

@@ -4,22 +4,51 @@
 <!-- key: lbstr -->
 <!-- import: extra.css, math.inc -->
 <p>
-  I recently had an engaging conversation with
-  <a href="https://lobste.rs/~veqq">@veqq</a> from the
+  I recently had an engaging conversation with Alex
+  (<a href="https://lobste.rs/~veqq">@veqq</a>) from the
   <a href="https://lobste.rs/">Lobsters</a> community about computing,
-  mathematics, and a range of related topics.  Our conversation was
-  later published on Lobsters as
+  mathematics and a range of related topics.  Our conversation was
+  later published on the community website as
   <a href="https://lobste.rs/s/kltoas">Lobsters Interview with
-  Susam</a>.  This post is a copy of that post, so that I have a copy
-  of the post archived on my website too.  I should mention that the
-  sections presented in this post are not in the same order in which
-  we originally discussed them.  The sections were edited and
-  rearranged to improve the flow and avoid repetition of similar
-  topics too close to each other.  The interview follows this
-  paragraph.  I hope you enjoy it.
+  Susam</a>.
 </p>
+<p>
+  I should mention the sections presented in that post are not in the
+  same order in which we originally discussed them.  The sections were
+  edited and rearranged by Alex to improve the flow and avoid
+  repetition of similar topics too close to each other.
+</p>
+<p>
+  This page preserves a copy of our discussion as edited by Alex, so I
+  can keep an archived version on my website.  In my copy, I have
+  added a table of contents to make it easier to navigate to specific
+  sections.  The interview itself follows the table of contents.  I
+  hope you enjoy reading it.
+</p>
+<h2 id="contents">Contents</h2>
+<ol>
+  <li><a href="#lisp-and-other-things">Lisp and Other Things</a></li>
+  <li><a href="#lisp-emacs-and-mathematics">Lisp, Emacs, and Mathematics</a></li>
+  <li><a href="#interests-and-exploration">Interests and Exploration</a></li>
+  <li><a href="#computing-for-fun">Computing for Fun</a></li>
+  <li><a href="#computing-activities">Computing Activities</a></li>
+  <li><a href="#programming-vs-domains">Programming vs Domains</a></li>
+  <li><a href="#old-functionality-and-new-problems">Old Functionality and New Problems</a></li>
+  <li><a href="#designing-for-composability">Designing for Composability</a></li>
+  <li><a href="#small-vs-large-functions">Small vs Large Functions</a></li>
+  <li><a href="#domains-and-projects">Domains and Projects</a></li>
+  <li><a href="#double-spacing-and-touch-typing">Double Spacing and Touch Typing</a></li>
+  <li><a href="#approach-to-learning">Approach to Learning</a></li>
+  <li><a href="#managing-time-and-distractions">Managing Time and Distractions</a></li>
+  <li><a href="#blogging">Blogging</a></li>
+  <li><a href="#forums">Forums</a></li>
+  <li><a href="#mathb-moderation-problems">MathB Moderation Problems</a></li>
+  <li><a href="#favourite-mathematics-textbooks">Favourite Mathematics Textbooks</a></li>
+  <li><a href="#mathematics-and-computing">Mathematics and Computing</a></li>
+</ol>
+<h2 id="conversation">Our Conversation</h2>
 <!-- Lisp and other things -->
-<p class="question">
+<p class="question" id="lisp-and-other-things">
   Hi <a href="https://lobste.rs/~susam">@susam</a>, I primarily know
   you as a Lisper, what other things do you use?
 </p>
@@ -46,7 +75,8 @@
   <a href="https://issues.apache.org/jira/browse/NUTCH-559">first
   substantial open source contribution</a> was to the Apache Nutch
   project which was in Java, and one of my early original open source
-  projects was Uncap, a C program to remap keys on Windows.
+  projects was <a href="https://github.com/susam/uncap">Uncap</a>, a C
+  program to remap keys on Windows.
 </p>
 <p>
   These days I use a lot of Python, along with some Go and Rust, but
@@ -55,7 +85,7 @@
   all the code in a single file in a readable, unminified form.
 </p>
 <!-- Lisp, Emacs, and mathematics -->
-<p class="question">
+<p class="question" id="lisp-emacs-and-mathematics">
   How did you first discover computing, then end up with Lisp, Emacs
   and mathematics?
 </p>
@@ -102,9 +132,10 @@
   theory.  One day I decided to learn the RSA cryptosystem.  As I was
   working through the
   <a href="https://people.csail.mit.edu/rivest/Rsapaper.pdf">RSA
-  paper</a>, I stumbled upon the Euler totient function \( \varphi(n)
-  \) which gives the number of positive integers not exceeding n that
-  are relatively prime to n.  The paper first states that
+  paper</a>, I stumbled upon the Euler totient function
+  \( \varphi(n) \) which gives the number of positive integers not
+  exceeding n that are relatively prime to n.  The paper first states
+  that
 
   \[
     \varphi(p) = p - 1
@@ -122,9 +153,9 @@
   for primes \( p \) and \( q \).  That was not immediately obvious to
   me back then.  After a few minutes of thinking, I managed to prove
   it from scratch.  By the inclusion-exclusion principle, we count how
-  many integers from \( 1 \) up to \( pq \) are not divisible by \( p
-  \) or \( q \).  There are \( pq \) integers in total.  Among them,
-  there are \( q \) integers divisible by \( p \), and \( p \)
+  many integers from \( 1 \) up to \( pq \) are not divisible by
+  \( p \) or \( q \).  There are \( pq \) integers in total.  Among
+  them, there are \( q \) integers divisible by \( p \), and \( p \)
   integers divisible by \( q \).  So we need to subtract \( p + q \)
   from \( pq \).  But since one integer (\( pq \) itself) is counted
   in both groups, we add \( 1 \) back.  Therefore
@@ -140,7 +171,7 @@
   And just like that, I had begun to learn number theory!
 </p>
 <!-- Computing for fun -->
-<p class="question">
+<p class="question" id="computing-for-fun">
   You've said you prefer computing for fun.  What is fun to you?  Do
   you have an idea of what makes something fun or not?
 </p>
@@ -184,7 +215,7 @@
   share with others on the World Wide Web and others find it fun too.
 </p>
 <!-- Pursuits -->
-<p class="question">
+<p class="question" id="interests-and-exploration">
   How do you choose what to investigate?  Which most interest you,
   with what commonalities?
 </p>
@@ -220,11 +251,11 @@
   Another example is <a href="https://susam.github.io/muboard/">Muboard</a>,
   which is a bit like an interactive mathematics chalkboard.  I built
   this when I was hosting an
-  <a href="https://susam.net/journey-to-prime-number-theorem.html">analytic
-  number theory book club</a> and I needed a way to type LaTeX
-  snippets live on screen and see them immediately rendered.  That
-  made me wonder: what if I took TeXMe, made it interactive, and gave
-  it a chalkboard look-and-feel?  That led to Muboard.
+  <a href="journey-to-prime-number-theorem.html">analytic number
+  theory book club</a> and I needed a way to type LaTeX snippets live
+  on screen and see them immediately rendered.  That made me wonder:
+  what if I took TeXMe, made it interactive, and gave it a chalkboard
+  look-and-feel?  That led to Muboard.
 </p>
 <p>
   So we can see that sharing mathematical notes and snippets has been
@@ -241,20 +272,19 @@
   (<a href="https://github.com/susam/emacs4cl">Emacs4CL</a>,
   <a href="https://github.com/susam/emfy">Emfy</a>),
   developing small single-file HTML games
-  (<a href="https://susam.net/invaders.html">Andromeda Invaders</a>,
-  <a href="https://susam.net/myrgb.html">Guess My RGB</a>),
+  (<a href="invaders.html">Andromeda Invaders</a>,
+  <a href="myrgb.html">Guess My RGB</a>),
   purely recreational programming
-  (<a href="https://susam.net/fxyt.html">FXYT</a>,
+  (<a href="fxyt.html">FXYT</a>,
   <a href="https://github.com/susam/may4">may4.fs</a>,
-  <a href="https://susam.net/self-printing-machine-code.html">self-printing machine
-    code</a>,
-  <a href="https://susam.net/primegrid.html">prime number grid explorer</a>),
+  <a href="self-printing-machine-code.html">self-printing machine code</a>,
+  <a href="primegrid.html">prime number grid explorer</a>),
   and so on.  The list goes on.  When it comes to hobby computing, I
   don't think I can pick just one domain and say it interests me the
   most.  I have a lot of interests.
 </p>
 <!-- What is computing?  -->
-<p class="question">
+<p class="question" id="computing-activities">
   What is computing, to you?
 </p>
 <p>
@@ -308,7 +338,7 @@
   fun.
 </p>
 <!-- Programming vs domains -->
-<p class="question">
+<p class="question" id="programming-vs-domains">
   How do you view programming vs. domains?
 </p>
 <p>
@@ -349,7 +379,7 @@
   scratch!
 </p>
 <!-- Applicability of old functionality for new problems -->
-<p class="question">
+<p class="question" id="old-functionality-and-new-problems">
   Has the rate of your making new Emacs functions has diminished over
   time (as if everything's covered) or do the widening domains lead to
   more?  I'm curious how applicable old functionality is for new
@@ -383,7 +413,7 @@
   much better to implement new functions that are small, orthogonal,
   and flexible, each doing one thing and doing it well.
 </p>
-<p class="question">
+<p class="question" id="designing-for-composability">
   What design methods or tips do you have, to increase composability?
 </p>
 <p>
@@ -466,7 +496,7 @@
   understand and reason about even years after it was written.
 </p>
 <!-- Small vs large functions -->
-<p class="question">
+<p class="question" id="small-vs-large-functions">
   Not enhancing existing functions but adding new small ones seems
   quite lovely, but how do you come back to such a codebase later with
   many tiny functions?  At points, I've advocated for very large
@@ -508,7 +538,7 @@
   smaller.
 </p>
 <!-- Domains -->
-<p class="question">
+<p class="question" id="domains-and-projects">
   Like you, I program as a tool to explore domains.  Which do you know
   the most about?
 </p>
@@ -534,17 +564,15 @@
   I am not a web developer, I learnt to build small, interactive
   single-page tools in plain HTML, CSS, and JavaScript simply because
   I needed them for my hobby projects over and over again.  An early
-  example is
-  <a href="https://susam.net/quickqwerty.html">QuickQWERTY</a>, which
-  I built to teach myself and my friends touch-typing on QWERTY
-  keyboards.  Another example is
-  <a href="https://susam.net/cfrs.html">CFRS[]</a>, which I created
+  example is <a href="quickqwerty.html">QuickQWERTY</a>, which I built
+  to teach myself and my friends touch-typing on QWERTY keyboards.
+  Another example is <a href="cfrs.html">CFRS[]</a>, which I created
   because I wanted to make a total (non-Turing complete) drawing
   language that has turtle graphics like Logo but is absolutely
   minimal like P&prime;&prime;.
 </p>
 <!-- Double spacing -->
-<p class="question">
+<p class="question" id="double-spacing-and-touch-typing">
   You use double spaces after periods which I'd only experienced from
   people who learned touch typing on typewriters, unexpected!
 </p>
@@ -559,10 +587,9 @@
   decades ago, that the lessons really stayed with me.  Surprisingly,
   that application taught me to type with a single space between
   sentences.  By the way, I disliked installing Java plugins into the
-  web browser, so I wrote
-  <a href="https://susam.net/quickqwerty.html">QuickQWERTY</a> as a
-  similar touch typing tutor in plain HTML and JavaScript for myself
-  and my friends.
+  web browser, so I wrote <a href="quickqwerty.html">QuickQWERTY</a>
+  as a similar touch typing tutor in plain HTML and JavaScript for
+  myself and my friends.
 </p>
 <p>
   I learnt to use double spaces between sentences first with Vim and
@@ -603,7 +630,7 @@
   or the comments in the <a href="https://gcc.gnu.org/git/?p=gcc.git;f=gcc/cfg.cc;hb=releases/gcc-15.2.0">GCC source code</a>.
 </p>
 <!-- Learning -->
-<p class="question">
+<p class="question" id="approach-to-learning">
   How do you approach learning a new domain?
 </p>
 <p>
@@ -673,7 +700,7 @@ f() or t() or f()
   holds and why no counterexamples exist.
 </p>
 <!-- Distraction -->
-<p class="question">
+<p class="question" id="managing-time-and-distractions">
   Do you have trouble not getting distracted with so much on your
   plate?  I'm curious how you balance the time commitments of
   everything!
@@ -709,7 +736,7 @@ f() or t() or f()
   of hours a week, most of it on weekends.
 </p>
 <!-- Blogging -->
-<p class="question">
+<p class="question" id="blogging">
   How does blogging mix in?  What's the development like of a single
   piece of curiosity through wrestling with the domain, learning and
   sharing it etc.?
@@ -732,19 +759,19 @@ f() or t() or f()
 </p>
 <p>
   One of my most frequently visited posts
-  is <a href="https://susam.net/lisp-in-vim.html">Lisp in Vim</a>.  It
-  started when I was hosting a Common Lisp programming club for
-  beginners.  Although I have always used Emacs and SLIME for Common
-  Lisp programming myself, many in the club used Vim, so I decided to
-  write a short guide on setting up something SLIME-like there.  As a
-  former long-time Vim user myself, I wanted to make the Lisp journey
-  easier for Vim users too.  I thought it would be a 30-minute
-  exercise where I write up a README that explains how to
-  install <a href="https://github.com/kovisoft/slimv">Slimv</a> and
-  how to set it up in Vim.  But then I discovered a newer plugin
-  called <a href="https://github.com/vlime/vlime">Vlime</a> that also
-  offered SLIME-like features in Vim!  That detail sent me down a very
-  deep rabbit hole.  Now I needed to know how the two packages were
+  is <a href="lisp-in-vim.html">Lisp in Vim</a>.  It started when I
+  was hosting a Common Lisp programming club for beginners.  Although
+  I have always used Emacs and SLIME for Common Lisp programming
+  myself, many in the club used Vim, so I decided to write a short
+  guide on setting up something SLIME-like there.  As a former
+  long-time Vim user myself, I wanted to make the Lisp journey easier
+  for Vim users too.  I thought it would be a 30-minute exercise where
+  I write up a README that explains how to install
+  <a href="https://github.com/kovisoft/slimv">Slimv</a> and how to set
+  it up in Vim.  But then I discovered a newer plugin called
+  <a href="https://github.com/vlime/vlime">Vlime</a> that also offered
+  SLIME-like features in Vim!  That detail sent me down a very deep
+  rabbit hole.  Now I needed to know how the two packages were
   different, what their strengths and weaknesses were, how routine
   operations were performed in both, and so on.  What was meant to be
   a short note turned into a nearly 10,000-word article.  As I was
@@ -758,7 +785,7 @@ f() or t() or f()
 </p>
 <p>
   At the opposite extreme is a post like
-  <a href="https://susam.net/elliptical-python-programming.html">Elliptical
+  <a href="elliptical-python-programming.html">Elliptical
   Python Programming</a>.  I stumbled upon Python's
   <a href="https://docs.python.org/3/library/constants.html#Ellipsis">Ellipsis</a>
   while reviewing someone's code.  It immediately caught my attention.
@@ -774,7 +801,7 @@ f() or t() or f()
   quite amusing nevertheless!
 </p>
 <!-- Forums -->
-<p class="question">
+<p class="question" id="forums">
   What draws you to post and read online forums?  How do you balance
   or allot time for reading technical articles, blogs etc.?
 </p>
@@ -794,7 +821,7 @@ f() or t() or f()
   comments.
 </p>
 <!-- MathB.in -->
-<p class="question">
+<p class="question" id="mathb-moderation-problems">
   When you decided to stop with MathB due to moderation burdens, I
   offered to take over/help and you mentioned others had too.  Did
   anyone end up forking it, to your knowledge?
@@ -822,8 +849,8 @@ f() or t() or f()
   triggered compliance concerns and my server was taken offline while
   I was away?  I no longer wanted that kind of burden in my life.  So
   I finally decided to shut it down.  I've written more about this
-  in <a href="https://susam.net/mathbin-is-shutting-down.html">MathB.in
-  Is Shutting Down</a>.
+  in <a href="mathbin-is-shutting-down.html">MathB.in Is Shutting
+  Down</a>.
 </p>
 <p>
   To my knowledge, no one has forked it, but others have developed
@@ -835,7 +862,7 @@ f() or t() or f()
   about a week to get everything successfully archived.
 </p>
 <!-- Textbooks -->
-<p class="question">
+<p class="question" id="favourite-mathematics-textbooks">
   What're your favorite math textbooks?
 </p>
 <p>
@@ -879,10 +906,11 @@ f() or t() or f()
   ended with quite clever contour integrals that proved the theorem.
   The complex analysis I had learnt from Kreyszig turned out to be
   crucial for understanding those integrals.  Along the way I gained a
-  deeper understanding of the Riemann zeta function ζ(s).  The book
-  discusses zero-free regions where ζ(s) does not vanish, which I
-  found especially fascinating.  Results like ζ(-1) = -1/12, which
-  once seemed mysterious, became obvious after studying this book.
+  deeper understanding of the Riemann zeta function \( \zeta(s) \).
+  The book discusses zero-free regions where \( \zeta(s) \) does not
+  vanish, which I found especially fascinating.  Results like \(
+  \zeta(-1) = -1/12 \), which once seemed mysterious, became obvious
+  after studying this book.
 </p>
 <p>
   The third is <em>Galois Theory</em> by Ian Stewart.  It introduced
@@ -905,7 +933,7 @@ f() or t() or f()
   know that I didn't know.
 </p>
 <!-- Mathematics and computing -->
-<p class="question">
+<p class="question" id="mathematics-and-computing">
   How does the newer math jell with or inform past or present
   computing, compared to much older stuff?
 </p>
