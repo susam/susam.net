@@ -413,7 +413,7 @@ ls-tag:
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: cvsplit check-bre check-comment-files check-copyright check-entities check-tex-content check-newlines check-nginx check-quotes check-rendering check-sentence-space check-tex-site tidy
+checks: cvsplit check-bre check-comment-files check-copyright check-entities check-tex-content check-newlines check-nginx check-quotes check-rendering check-sentence-space check-serial-and check-serial-or check-tex-site tidy
 
 cvsplit:
 	: > content/tree/foss.html
@@ -426,13 +426,160 @@ cvsplit:
 	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/talks.html
 	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/talks.html
 
+check-serial-and:
+	rm -f /tmp/fail
+	find content \( -name '*.txt' -o -name '*.html' \) | \
+	grep -vE '/euler-formula.html|/chatgpt-explains-jokes.html|/guestbook.html|/lemma-for-ftgt.html|/mit.html|/comments/' | \
+	while read -r f; do \
+	  sed 's/<[^>]*>//g' "$$f" | tr -s '[:space:]' ' ' | \
+	  sed 's/, and .,.\.)/ x/g' | \
+	  sed 's/, and Hello World/ x/g' | \
+	  sed 's/, and \/n\// x/g' | \
+	  sed 's/, and a great number of contorted trees/ x/g' | \
+	  sed 's/, and after a while/ x/g' | \
+	  sed 's/, and arithmetic expansion/ x/g' | \
+	  sed 's/, and at the scale/ x/g' | \
+	  sed 's/, and consider what/ x/g' | \
+	  sed 's/, and diverting myself/ x/g' | \
+	  sed 's/, and even deeper/ x/g' | \
+	  sed 's/, and finally/ x/g' | \
+	  sed 's/, and he immediately declared/ x/g' | \
+	  sed 's/, and in the days/ x/g' | \
+	  sed 's/, and keeping fun/ x/g' | \
+	  sed 's/, and language that/ x/g' | \
+	  sed 's/, and log.brigg./ x/g' | \
+	  sed 's/, and odd, outlandish/ x/g' | \
+	  sed 's/, and suggested that never/ x/g' | \
+	  sed 's/, and symbolic forms/ x/g' | \
+	  sed 's/, and they are not/ x/g' | \
+	  sed 's/, and we should be open to all interpretations/ x/g' | \
+	  sed 's/, and we will have/ x/g' | \
+	  grep ', and' >> /tmp/fail && echo "Serial comma before 'and': $$f"; \
+	done; true
+	! [ -s /tmp/fail ]
+
+check-serial-or:
+	rm -f /tmp/fail
+	find content \( -name '*.txt' -o -name '*.html' \) | \
+	grep -vE '/chatgpt-explains-jokes.html|/comments/' | \
+	while read -r f; do \
+	  sed 's/<[^>]*>//g' "$$f" | tr -s '[:space:]' ' ' | \
+	  sed 's/, or a comment/ x/g' | \
+	  sed 's/, or calling a function/ x/g' | \
+	  sed 's/, or equivalently/ x/g' | \
+	  sed 's/, or even/ x/g' | \
+	  sed 's/, or most simply/ x/g' | \
+	  sed 's/, or other behavior/ x/g' | \
+	  sed 's/, or pinhole camera/ x/g' | \
+	  sed 's/, or simply move/ x/g' | \
+	  sed 's/, or spelling is bound/ x/g' | \
+	  sed 's/, or the Poinca/ x/g' | \
+	  sed 's/, or typographical error/ x/g' | \
+	  sed 's/, or until your heap/ x/g' | \
+	  grep ', or\>' >> /tmp/fail && echo "Serial comma before 'or': $$f"; \
+	done; true
+	! [ -s /tmp/fail ]
+
 check-bre:
 	# iz
-	grep -IErn --exclude invaders.html --exclude cfrs.html --exclude fxyt.html --exclude quickqwerty.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments --exclude-dir content/tree/code/web 'iz[a-z]' content layout | \
-	  grep -vE '\<AUTHorize\>|\<chatgpt\>|\<C\+\+ Optimizing Compiler\>|\<Customize Jenkins\>|\<Dehumanized\>|\<initializer \(6\.7\.8\)|\<journaling and visualization\>|mastering-emacs/ch03.post.html:.*\<[Cc]ustomiz[ae]|\<netizens\>|\<package-initialize\>|\<public synchronized\>|\<Registrant Organization\>|\<ResizableDoubleArray\>|\<[Rr]esized?\>|\<resizing\>|rizon|\<[Ss]ize(d|s|of)?\>|\<sizing\>|\<traumatized by Java-esque\>|\<quiz|\<wizards\>|:topic'; [ $$? = 1 ]
+	rm -f /tmp/fail
+	find content \( -name '*.txt' -o -name '*.html' \) | \
+	grep -vE '/comments/' | \
+	while read -r f; do \
+	  cat "$$f" | \
+	  sed 's/0ZTIz/ x /g' | \
+	  sed 's/<code>[^<]*<\/code>/ x /g' | \
+	  sed 's/<em>The Customize Interface<\/em>/ x /g' | \
+	  sed 's/AUTHorize/ x /g' | \
+	  sed 's/Customize Jenkins/ x /g' | \
+	  sed 's/Dehumanized/ x /g' | \
+	  sed 's/ELIZA/ x /g' | \
+	  sed 's/Erase Customizations/ x /g' | \
+	  sed 's/I apologize for any confusion/ x /g' | \
+	  sed 's/I apologize for misunderstanding the joke/ x /g' | \
+	  sed 's/I apologize for the error/ x /g' | \
+	  sed 's/M-x customize[-a-z]* RET/ x /g' | \
+	  sed 's/Optimizing Compiler/ x /g' | \
+	  sed 's/Registrant Organization/ x /g' | \
+	  sed 's/ResizableDoubleArray/ x /g' | \
+	  sed 's/Revert This Session.s Customizations/ x /g' | \
+	  sed 's/Size/ x /g' | \
+	  sed 's/Sizing/ x /g' | \
+	  sed 's/Undo Edits in Customization Buffer/ x /g' | \
+	  sed 's/[Hh]orizontal/ x /g' | \
+	  sed 's/[Rr]esize/ x /g' | \
+	  sed 's/[^[:alpha:]][Ss]ize$$/ x /g' | \
+	  sed 's/[^[:alpha:]][Ss]ize[^[:alpha:]]/ x /g' | \
+	  sed 's/[^[:alpha:]][Ss]ize[ds]$$/ x /g' | \
+	  sed 's/[^[:alpha:]][Ss]ize[ds][^[:alpha:]]/ x /g' | \
+	  sed 's/[^[:alpha:]]sizeof[^[:alpha:]]/ x /g' | \
+	  sed 's/[_-]SIZE/ x /g' | \
+	  sed 's/box-sizing/ x /g' | \
+	  sed 's/horizons/ x /g' | \
+	  sed 's/initializer (6.7.8)/ x /g' | \
+	  sed 's/izz/ x /g' | \
+	  sed 's/netizens/ x /g' | \
+	  sed 's/package-initialize/ x /g' | \
+	  sed 's/public synchronized/ x /g' | \
+	  sed 's/quiz[a-z]*/ x /g' | \
+	  sed 's/resizing/ x /g' | \
+	  sed 's/seize/ x /g' | \
+	  sed 's/traumatized by Java-esque/ x /g' | \
+	  sed 's/verizon/ x /g' | \
+	  sed 's/wizard/ x /g' | \
+	  grep -in 'iz[a-z]' | tee -a /tmp/fail; \
+	done; true
+	! [ -s /tmp/fail ]
 	# yze
-	grep -IErn --exclude-dir content/comments 'yze' content layout | \
-	  grep -vE '\<StandardAnalyzer\>'; [ $$? = 1 ]
+	rm -f /tmp/fail
+	find content \( -name '*.txt' -o -name '*.html' \) | \
+	grep -vE '/comments/' | \
+	while read -r f; do \
+	  cat "$$f" | \
+	  sed 's/Field.Index.ANALYZED/ x /g' | \
+	  sed 's/StandardAnalyzer/ x /g' | \
+	  grep -in 'yze' | tee -a /tmp/fail; \
+	done; true
+	! [ -s /tmp/fail ]
+	# color
+	rm -f /tmp/fail
+	find content \( -name '*.txt' -o -name '*.html' \) | \
+	grep -vE '/comments/' | \
+	while read -r f; do \
+	  cat "$$f" | \
+	  sed 's/<code>[^<]*<\/code>/ x /g' | \
+	  sed 's/<em>Supported colors<\/em>/ x /g' | \
+	  sed 's/COLORTERM=truecolor/ x /g' | \
+	  sed 's/M-x info-apropos RET Colors/ x /g' | \
+	  sed 's/M-x list-color-display/ x /g' | \
+	  sed 's/StandardAnalyzer/ x /g' | \
+	  sed 's/color: #/ x /g' | \
+	  sed 's/color: linear-gradient/ x /g' | \
+	  sed 's/href="[^"]*"/ x /g' | \
+	  sed 's/id="[^"]*"/ x /g' | \
+	  sed 's/prefers-color-scheme/ x /g' | \
+	  sed 's/src="[^"]*"/ x /g' | \
+	  sed 's/style="[^"]*"/ x /g' | \
+	  sed 's/style\.accentColor/ x /g' | \
+	  sed 's/style\.color/ x /g' | \
+	  grep -in 'color' | tee -a /tmp/fail; \
+	done; true
+	# center
+	rm -f /tmp/fail
+	find content \( -name '*.txt' -o -name '*.html' \) | \
+	grep -vE '/comments/' | \
+	while read -r f; do \
+	  cat "$$f" | \
+	  sed 's/style\.[A-Za-z]* = .center./ x /g' | \
+	  sed 's/align-items: center/ x /g' | \
+	  sed 's/text-align: center/ x /g' | \
+	  sed 's/style="[^"]*"/ x /g' | \
+	  sed 's/class="[^"]*"/ x /g' | \
+	  grep -in 'center' | tee -a /tmp/fail; \
+	done; true
+	! [ -s /tmp/fail ]
+
+check-bre-old:
 	# color, center
 	grep -IErn --exclude cfrs.html --exclude fxyt.html --exclude invaders.html --exclude myrgb.html --exclude nq.html --exclude "*tex-live-packages-in-debian.html" --exclude-dir content/comments 'color|center' content layout | \
 	  grep -vE '\.center\>|= .center.|-color\>|\.color\>|\<color:|\<colorforth\>|\<grid center\>|mastering-emacs/ch03.post.html:.*(COLOR|color)|--nocolor\>|\<text-align: center\>|\<textcenter\>'; [ $$? = 1 ]

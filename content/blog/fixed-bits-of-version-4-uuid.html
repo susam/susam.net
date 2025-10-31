@@ -13,8 +13,8 @@
 <blockquote>
   This specification defines a Uniform Resource Name namespace for
   UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally
-  Unique IDentifier).  A UUID is 128 bits long, and requires no
-  central registration process.
+  Unique IDentifier).  A UUID is 128 bits long and requires no central
+  registration process.
 </blockquote>
 <p>
   These 128-bit identifiers are typically represented as 32
@@ -49,7 +49,7 @@
 <p>
   The above infinite loops show that the hexademical digit at index 14
   must always be 4.  Similarly, the hexadecimal digit at index 19 must
-  always be one of 8, 9, a, and b.  We can see the two examples of
+  always be one of 8, 9, a and b.  We can see the two examples of
   version 4 UUIDs mentioned earlier and confirm that this is indeed
   the case.  Here are a few more examples that illustrate this
   pattern:
@@ -63,7 +63,7 @@ c21b57cc-2a4e-<span class="hl">4</span>425-<span class="hl">a</span>2f4-12925656
 <p>
   The digit after the second hyphen is at index 14 and indeed this
   digit is always 4.  Similarly, the hexadecimal digit after the third
-  hyphen is at index 19 and indeed it is always one of 8, 9, a, and b.
+  hyphen is at index 19 and indeed it is always one of 8, 9, a and b.
 </p>
 <p>
   If we number the octets in the identifiers as 0, 1, 2, etc. where 0
@@ -77,8 +77,8 @@ c21b57cc-2a4e-<span class="hl">4</span>425-<span class="hl">a</span>2f4-12925656
   As a result, octet 8 must be of the form 10xx xxxx in binary where
   each x represents an independent random bit.  Thus, in binary, the
   four most significant bits of octet 8 must be one of 1000, 1001,
-  1010, and 1011.  This explains why we always see the hexadecimal
-  digit 8, 9, a, or b at this position.
+  1010 and 1011.  This explains why we always see the hexadecimal
+  digit 8, 9, a or b at this position.
 </p>
 <p>
   Similarly, a study of

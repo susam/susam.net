@@ -44,7 +44,7 @@
 <pre><code>(emacs) Branches</code></pre>
 <p>
   Now we can go to the <code>*scratch*</code> buffer (or any buffer),
-  copy the node name, and complete the <code>info</code> expression
+  copy the node name and complete the <code>info</code> expression
   manually.  For example, we could type the following key sequence on
   a fresh new line to create the Elisp expression and copy it to the
   kill ring:
@@ -58,7 +58,7 @@
   (<code>C-y</code>), then selects the pasted text (<code>C-a C-SPC
   C-e</code>), then surrounds it within parentheses
   (<code>M-(</code>), then inserts the text <code>info</code> just
-  after the opening parentheses, and finally copies the resulting
+  after the opening parentheses and finally copies the resulting
   expression to the kill ring (<code>C-a C-k C-/</code>).  The
   expression copied to the kill ring looks like this:
 </p>
@@ -110,6 +110,6 @@ With a zero prefix arg, put the name inside a function call to ‘info’.
   simply type <code>C-y C-x C-e</code> to paste the expression into a
   buffer and evaluate it immediately.  Alternatively, they might want
   to type <code>M-: C-y RET</code> to bring the
-  <code>eval-expression</code> minibuffer, paste the expression, and
+  <code>eval-expression</code> minibuffer, paste the expression and
   evaluate it.
 </p>

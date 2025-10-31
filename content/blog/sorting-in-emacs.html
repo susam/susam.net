@@ -32,9 +32,9 @@ Bob    30   Paris   ORY->HND</code>
       Let us pretend that each line is a record that represents some
       details about different persons.  From left to right, we have
       each person's name, some sort of numerical ID, their current
-      location, and their upcoming travel plan.  For example, the
-      first line says that Carol from London is planning to travel
-      from London Heathrow (LHR) to San Francisco (SFO).
+      location and their upcoming travel plan.  For example, the first
+      line says that Carol from London is planning to travel from
+      London Heathrow (LHR) to San Francisco (SFO).
     </p>
   </li>
   <li> <!-- 2. sort-lines -->
@@ -332,12 +332,12 @@ Bob    100  London  LCY->CDG</code>
       RET</code> to sort the lines but remove duplicate lines during
       the sort operation.  The <code>M-|</code> key sequence invokes
       the command <code>shell-command-on-region</code> which prompts
-      for a shell command, executes it, and usually displays the
-      output in the echo area.  If the output cannot fit in the echo
-      area, then it displays the output in a separate buffer.
-      However, if a prefix argument is supplied, say
-      with <code>C-u</code>, then it replaces the region with the
-      output.  As a result, the buffer now looks like this:
+      for a shell command, executes it and usually displays the output
+      in the echo area.  If the output cannot fit in the echo area,
+      then it displays the output in a separate buffer.  However, if a
+      prefix argument is supplied, say with <code>C-u</code>, then it
+      replaces the region with the output.  As a result, the buffer
+      now looks like this:
     </p>
     <pre>
 <code>Alice  10   Paris   CDG->LHR

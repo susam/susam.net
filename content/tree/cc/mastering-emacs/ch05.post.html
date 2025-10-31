@@ -125,7 +125,7 @@
   consecutive kills and then pasting with <code>C-y</code>.  For
   example, <code>M-d M-d M-d C-p C-p C-y</code> kills 3 words, creates
   a single stretch of text consisting of those 3 words in the kill
-  ring, and pastes that text two lines above.
+  ring and pastes that text two lines above.
 </p>
 <p>
   However, the moment a non-kill command is used, it seals the stretch
@@ -454,12 +454,12 @@
 <p>
   To demonstrate how changing <code>comment-style</code> changes the
   commenting behaviour try <code>M-x (setq comment-style 'indent)
-  RET</code>, then select a region, and type <code>M-;</code>.  The
+  RET</code>, then select a region and type <code>M-;</code>.  The
   selected region will be commented out with a comment box.
 </p>
 <p>
   However running <code>M-x (setq comment-style 'aligned) RET</code>,
-  selecting a region in a C buffer, and typing <code>M-;</code> does
+  selecting a region in a C buffer and typing <code>M-;</code> does
   not seem to do anything interesting.
 </p>
 <h2 id="search-and-replace">Search and Replace</h2>
@@ -637,7 +637,7 @@ web-server-port-HTTP-80
   <li>
     <code>C-M-s port-[[:upper:][:digit:]-]+</code>: Search for the
     string <code>port-</code> followed by consecutive sequence of one
-    or more upper-case letters, digits, or hyphen.
+    or more upper-case letters, digits or hyphen.
   </li>
   <li>
     <code>C-M-s \&lt;web</code>: Search for the
@@ -675,7 +675,7 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s \sw</code>: Search for word constituent character.
-    Typically uppercase letters, lowercase letters, and digits are
+    Typically uppercase letters, lowercase letters and digits are
     considered word constituents.
   </li>
   <li>
@@ -747,7 +747,7 @@ web-server-port-HTTP-80
   <li>
     <code>C-M-% \(foo-\)\sw+\(-baz\) RET \1\?\2 RET</code>: Search for
     the string <code>foo-</code> followed by a word and the
-    string <code>baz</code>, and replace the middle word with text
+    string <code>baz</code> and replace the middle word with text
     input provided by the user.  Before each replace operation, Emacs
     will prompt the user to edit the replacement pattern by putting
     the point where <code>\?</code> was in the original replacement
@@ -758,7 +758,7 @@ web-server-port-HTTP-80
     string <code>foo</code> and replace each match with an
     autoincrementing number.  The first match is replaced
     with <code>0</code>, the second one with <code>1</code>, the third
-    one with <code>2</code>, and so on.  Precisely speaking, the
+    one with <code>2</code> and so on.  Precisely speaking, the
     backreference <code>\#</code> refers to the count of the
     replacements already made in the current search and replace
     operation.
@@ -843,7 +843,7 @@ web-server-port-HTTP-80
 </p>
 <ul>
   <li>
-    <code>M-=</code>: Count lines, words, and characters in region.
+    <code>M-=</code>: Count lines, words and characters in region.
   </li>
   <li>
     <code>M-x count-words-region RET</code>: Same as above.
@@ -926,7 +926,7 @@ baz</code>
     <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
     match the regular expression <code>b..</code> and delete the rest.
     If no region is active, then keep matching lines between the point
-    and end of buffer, and delete the rest.  The deleted lines are not
+    and end of buffer and delete the rest.  The deleted lines are not
     copied to kill ring.
   </li>
   <li>
@@ -997,7 +997,7 @@ baz</code>
 <ul>
   <li>
     <code>M-x whitespace-mode RET</code>: Toggle visualisation of
-    spaces, tabs, newlines, and lines longer
+    spaces, tabs, newlines and lines longer
     than <code>whitespace-line-column</code> number of columns (80 by
     default) with special glyphs and colour.
   </li>
@@ -1246,14 +1246,14 @@ baz</code>
   <li>
     Type <code>C-a F3 . SPC M-c C-n</code> to insert macro counter
     which <code>0</code> by default, followed by dot and space at the
-    beginning of the line, capitalise the first word, and move to the
+    beginning of the line, capitalise the first word and move to the
     next line.
   </li>
   <li>
     Type <code>C-x e</code> to stop macro recording and call the
-    recorded macro.  Now <code>1</code>, dot, and space is inserted at
-    the beginning of the line, the first word of the current line is
-    capitalised, and the cursor moves to the next line.
+    recorded macro.  Now <code>1</code>, dot and space is inserted at
+    the beginning of the line.  The first word of the current line is
+    capitalised and the cursor moves to the next line.
   </li>
   <li>
     Type <code>e</code> to repeat the macro call.  Keep
@@ -1278,7 +1278,7 @@ baz</code>
   <li>
     <code>C-5 F3</code>: Start recording but set counter to 5, i.e.,
     while a macro is being recorded, typing <code>F3</code> inserts 5
-    the first time, 6 the second time, and so on.  The numeric prefix
+    the first time, 6 the second time and so on.  The numeric prefix
     argument sets the counter value.
   </li>
   <li>
@@ -1365,15 +1365,15 @@ baz</code>
 <p>
   In the above examples, when the macro playback prompts queries for
   user input, we can also type <code>C-l</code> to recentre the
-  screen, <code>C-r</code> to enter recursive edit,
-  or <code>C-M-c</code> to exit recursive edit.
+  screen, <code>C-r</code> to enter recursive edit or
+  <code>C-M-c</code> to exit recursive edit.
 </p>
 <p>
   Note that the key sequence <code>C-l</code> behaves a little
   differently from the regular <code>C-l</code>.  Unlike the
   regular <code>C-l</code>, successive invocations of this key
   sequence during macro query does not cause the window to reposition
-  at various places (centre, top, and bottom by default) in a cyclical
+  at various places (centre, top and bottom by default) in a cyclical
   order.  Successive invocations of <code>C-l</code> during macro
   query, leaves the screen centred.
 </p>
@@ -1560,13 +1560,13 @@ baz</code>
   </li>
   <li>
     Type <code>C-M-/</code> again.  The matching
-    words <code>apple</code>, <code>appliance</code>,
+    words <code>apple</code>, <code>appliance</code>
     and <code>application</code> are presented as possible completions
     in a temporary buffer named <code>*Completions*</code>.
   </li>
   <li>
     Now type <code>ic</code>, so that the word before the cursor
-    becomes <code>applic</code>, and type <code>C-M-/</code> again.
+    becomes <code>applic</code> and type <code>C-M-/</code> again.
     Now the word before the cursor expands to <code>application</code>
     because that is the only possible completion now.
   </li>
@@ -1837,7 +1837,7 @@ baz</code>
   </li>
   <li>
     <code>M-x align-current RET</code>: Aligns current section.  A
-    section is a group of consecutive lines both below, above, and
+    section is a group of consecutive lines both below, above and
     including the current line for which the first alignment rule
     (according to the major mode) applies.
   </li>
@@ -1851,9 +1851,9 @@ baz</code>
                  ("country" . "UK")))</code>
 </pre>
 <p>
-  If we type <code>C-x h</code> followed by <code>M-x align
-  RET</code>, or if we put the cursor on any line of the above code
-  and type <code>M-x align-current RET</code>, we get the following
+  If we type <code>C-x h</code> followed by <code>M-x align RET</code>
+  or if we put the cursor on any line of the above code and
+  type <code>M-x align-current RET</code>, we get the following
   result:
 </p>
 <pre>
@@ -2092,7 +2092,7 @@ Carol     :Tokyo      :Japan</code>
   The spell checking commands of Emacs require a spell checking
   program to be installed on the system.  Emacs supports the spell
   checking programs <code>aspell</code>, <code>ispell</code>,
-  <code>hunspell</code>, and <code>enchant-2</code>.  If multiple
+  <code>hunspell</code> and <code>enchant-2</code>.  If multiple
   programs are present, it looks for them one by one in the order
   specified in the previous sentence and picks the first one that is
   found.  The following spell checking commands are introduced in the
