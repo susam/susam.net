@@ -51,8 +51,8 @@ $ <kbd>printf 12345678 | base64 --decode | od -tx1</kbd>
 <p>
   Further, since <code>+</code> and <code>/</code> are also used as
   symbols in Base64 encoding (for binary <code>111110</code>
-  and <code>111111</code>, respectively), we also have a few more
-  intersting examples:
+  and <code>111111</code> respectively), we also have a few more
+  interesting examples:
 </p>
 <pre>
 <samp>$ <kbd>printf 1+2+3+4+5/11 | base64 --decode | od -tx1</kbd>
@@ -73,7 +73,7 @@ $ <kbd>printf "\xd7\xed\xbe\xdf\xee\x3e\xe7\xfd\x75" | base64</kbd>
   Arabic numerals, the plus sign (<code>+</code>) and the forward
   slash (<code>/</code>).  For example, the bits <code>000000</code>
   is encoded as <code>A</code>, the bits <code>000001</code> is
-  encoded as <code>B</code>, and so on.  The equals sign
+  encoded as <code>B</code> and so on.  The equals sign
   (<code>=</code>) is used for padding but that is not something we
   will discuss in detail in this post.
 </p>

@@ -11,7 +11,7 @@
     Without using <code>typedef</code>, declare <code>x</code> as a
     pointer to a function that takes one argument which is an array of
     10 pointers to functions which in turn take <code>int *</code> as
-    their only argument, and returns a pointer to a function which
+    their only argument and returns a pointer to a function which
     has <code>int *</code> argument and <code>void</code> return type.
   </p>
 </div>
@@ -41,8 +41,8 @@ func_t (*x)(func_t [10]);</code>
 <div style="text-align: center">
   <p>
     <code>void x(int *)</code><br>
-    A function that has <code>int *</code> argument
-    and <code>void</code> return type.
+    A function that has <code>int *</code> argument and
+    <code>void</code> return type.
   </p>
   <p>
     <code>void (*x)(int *)</code><br>
@@ -57,7 +57,7 @@ func_t (*x)(func_t [10]);</code>
   <p>
     <code>void (*x(void (*)(int *)))(int *)</code><br>
     A function that has a pointer to a function that has <code>int
-    *</code> argument and <code>void</code> return type as argument,
+    *</code> argument and <code>void</code> return type as argument
     and returns a pointer to a function which has <code>int *</code>
     argument and <code>void</code> return type.
   </p>
@@ -65,16 +65,16 @@ func_t (*x)(func_t [10]);</code>
     <code>void (*x(void (*[10])(int *)))(int *)</code><br>
     A function that has an array of 10 pointers to functions that has
     <code>int *</code> argument and <code>void</code> return type as
-    argument, and returns a pointer to a function which has <code>int
+    argument and returns a pointer to a function which has <code>int
     *</code> argument and <code>void</code> return type.
   </p>
   <p>
     <code>void (*(*x)(void (*[10])(int *)))(int *)</code><br>
     A pointer to a function that has an array of 10 pointers to
-    functions that has <code>int *</code> argument
-    and <code>void</code> return type as argument, and returns a
-    pointer to a function which has <code>int *</code> argument
-    and <code>void</code> return type.
+    functions that has <code>int *</code> argument and
+    <code>void</code> return type as argument and returns a pointer to
+    a function which has <code>int *</code> argument and
+    <code>void</code> return type.
   </p>
 </div>
 <h2 id="example-code">Example Code</h2>
@@ -121,7 +121,7 @@ int main()
   Here is the output of this program:
 </p>
 <pre>
-<samp>$ gcc -Wall -Wextra -pedantic -std=c99 foo.c && ./a.out
+<samp>$ gcc -Wall -Wextra -pedantic -std=c99 foo.c &amp;&amp; ./a.out
 g(): a = 0
 g(): a = 1
 g(): a = 2

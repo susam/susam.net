@@ -122,7 +122,7 @@ printf("%d %d\n", n, power(2, n));</code>
   <p>
     The question is whether the subscript is the old value
     of <code>i</code> or the new.  Compilers can interpret this in
-    different ways, and generate different answers depending on their
+    different ways and generate different answers depending on their
     interpretation.
   </p>
 </blockquote>
@@ -130,7 +130,7 @@ printf("%d %d\n", n, power(2, n));</code>
 <p>
   To read more about this, download the
   <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf">C99
-  standard</a>, go to section 5.1.2.3 (Program execution), and see the
+  standard</a>, go to section 5.1.2.3 (Program execution) and see the
   second point which mentions:
 </p>
 <blockquote>
@@ -167,7 +167,7 @@ printf("%d %d\n", n, power(2, n));</code>
 <pre><code>printf("%d %d %d\n", i, i--, ++i);</code></pre>
 <p>
   there is a sequence point after the evaluation of the three
-  arguments (<code>i</code>, <code>i--</code>, and <code>++i</code>)
+  arguments (<code>i</code>, <code>i--</code> and <code>++i</code>)
   and before the <code>printf()</code> function is called.  But none
   of the items specified in Annex C implies that there is a sequence
   point between the evaluation of the arguments.  Yet the value

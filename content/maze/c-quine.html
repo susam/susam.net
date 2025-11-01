@@ -29,7 +29,7 @@
 </p>
 <pre>
 <samp>$ <kbd>printf '%s' 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}' &gt; quine.c</kbd>
-$ <kbd>cc quine.c && ./a.out &gt; out.txt && diff quine.c out.txt</kbd>
+$ <kbd>cc quine.c &amp;&amp; ./a.out &gt; out.txt &amp;&amp; diff quine.c out.txt</kbd>
 $ <kbd>cat quine.c; echo</kbd>
 main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}
 $ <kbd>./a.out</kbd>
@@ -61,14 +61,13 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
 <p>
   We can see that the <code>printf</code> call uses the
   string <code>s</code> as the format string.  The format string
-  contains three conversion
-  specifications: <code>%c</code>, <code>%s</code>,
-  and <code>%c</code>.  The arguments for these conversions
-  are: <code>34</code>, the string <code>s</code> itself,
-  and <code>34</code> once again.  Note that <code>34</code> is the
-  ASCII code for the quotation mark character (<code>"</code>).  With
-  that in mind, let us now construct the output of
-  the <code>printf</code> call in a step-by-step manner.
+  contains three conversion specifications:
+  <code>%c</code>, <code>%s</code> and <code>%c</code>.  The arguments
+  for these conversions are: <code>34</code>, the string
+  <code>s</code> itself and <code>34</code> once again.  Note
+  that <code>34</code> is the ASCII code for the quotation mark
+  character (<code>"</code>).  With that in mind, let us now construct
+  the output of the <code>printf</code> call in a step-by-step manner.
 </p>
 <p>
   The initial portion of the output consists of the format string from
@@ -78,7 +77,7 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
 <pre><samp>main(){char*s=</samp></pre>
 <p>
   Then the first conversion specification <code>%c</code> is
-  processed, the corresponnding argument <code>34</code> is taken, and
+  processed, the corresponnding argument <code>34</code> is taken and
   a quotation mark is printed like this:
 </p>
 <pre><samp>"</samp></pre>
@@ -137,7 +136,7 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
 </p>
 <pre>
 <samp>$ <kbd>echo 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}' &gt; quine.c</kbd>
-$ <kbd>cc quine.c && ./a.out &gt; out.txt && diff quine.c out.txt</kbd>
+$ <kbd>cc quine.c &amp;&amp; ./a.out &gt; out.txt &amp;&amp; diff quine.c out.txt</kbd>
 $ <kbd>cat quine.c</kbd>
 main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}
 $ <kbd>./a.out</kbd>
@@ -160,7 +159,7 @@ int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,1
 <pre>
 <samp>$ <kbd>echo '#include &lt;stdio.h&gt;
 int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}' &gt; quine.c</kbd>
-$ <kbd>cc -std=c89 -Wall -Wextra -pedantic quine.c && ./a.out &gt; out.txt && diff quine.c out.txt</kbd>
+$ <kbd>cc -std=c89 -Wall -Wextra -pedantic quine.c &amp;&amp; ./a.out &gt; out.txt &amp;&amp; diff quine.c out.txt</kbd>
 $ <kbd>cat quine.c</kbd>
 #include &lt;stdio.h&gt;
 int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}

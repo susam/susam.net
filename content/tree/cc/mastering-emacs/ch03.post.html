@@ -19,15 +19,15 @@
 <ul>
   <li>
     <code>emacs -nw</code>: Tell Emacs not to create a graphical
-    frame, i.e., run Emacs within a terminal instead.
+    frame, i.e. run Emacs within a terminal instead.
   </li>
   <li>
-    <code>emacs -q</code>: Do not load an init file, i.e., do not
+    <code>emacs -q</code>: Do not load an init file, i.e. do not
     load <code>~/.emacs</code>, <code>~/.emacs.d/init.el</code>, etc.
   </li>
   <li>
     <code>emacs -Q</code>: Do not load init file, site-wide startup
-    file, or X resources.
+    file or X resources.
   </li>
 </ul>
 <h2 id="emacs-client-server">Emacs Client-Server</h2>
@@ -80,8 +80,8 @@
 <h2 id="the-emacs-interface">The Emacs Interface</h2>
 <p>
   The book mentions that many Emacs users disable the menu bar, tool
-  bar, and the splash screen.  The following Elisp code shows how
-  these UI elements can be disabled:
+  bar and the splash screen.  The following Elisp code shows how these
+  UI elements can be disabled:
 </p>
 <pre>
 <code>(menu-bar-mode 0)
@@ -139,7 +139,7 @@
 </p>
 <p>
   Then open a new buffer, say with <code>C-x b foo RET</code> and
-  type <kbd>ctrl</kbd>+<kbd>j</kbd>, <kbd>alt</kbd>+<kbd>j</kbd>,
+  type <kbd>ctrl</kbd>+<kbd>j</kbd>, <kbd>alt</kbd>+<kbd>j</kbd>
   and <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>j</kbd> to test the first
   three key bindings.
 </p>
@@ -154,15 +154,15 @@
   not mapped to any actual key in modern systems.  However, it is
   possible to invoke the <code>H-j</code> and <code>A-j</code> key
   bindings with the key sequences <code>C-x @ h j</code> and <code>C-x
-  @ a j</code>, respectively,
-  i.e., <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>h</kbd> <kbd>j</kbd>
-  and <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>a</kbd> <kbd>j</kbd>,
+  @ a j</code> respectively, i.e.
+  <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>h</kbd> <kbd>j</kbd>
+  and <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>a</kbd> <kbd>j</kbd>
   respectively.
 </p>
 <p>
   In fact, similarly, <code>s-j</code> too can be invoked
-  with <code>C-x @ s j</code>,
-  i.e., <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>s</kbd> <kbd>j</kbd>
+  with <code>C-x @ s j</code>, i.e.
+  <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>@</kbd> <kbd>s</kbd> <kbd>j</kbd>
   but that is rarely necessary because <code>s-</code> is often bound
   to a GUI key like the <kbd>command</kbd> key on Apple keyboards and
   the <kbd>win</kbd> key on Windows keyboards.
@@ -192,18 +192,18 @@
 <ul>
   <li>
     <em>Key sequence</em> (or just <em>key</em>): A sequence of
-    keyboard or mouse actions, e.g., <code>C-d</code>,
+    keyboard or mouse actions, e.g. <code>C-d</code>,
     <code>C-M-d</code>, <code>C-x C-f</code>, <code>C-x 8
     P</code>, <code>C-x</code>, <code>C-x 8</code>, etc.
   </li>
   <li>
-    <em>Complete key</em>: A key sequence that invokes a command,
-    e.g., <code>C-d</code>, <code>C-M-d</code>, <code>C-x
+    <em>Complete key</em>: A key sequence that invokes a command, e.g.
+    <code>C-d</code>, <code>C-M-d</code>, <code>C-x
     C-f</code>, <code>C-x 8 P</code>, etc.
   </li>
   <li>
     <em>Prefix key</em>: A key sequence that is not a complete key,
-    e.g., <code>C-x</code>, <code>C-x 8</code>, etc.
+    e.g. <code>C-x</code>, <code>C-x 8</code>, etc.
   </li>
 </ul>
 <h2 id="key-examples">Key Examples</h2>
@@ -225,11 +225,11 @@
     for editing a file.
   </li>
   <li>
-    <code>C-x 8 P</code>: Insersts pilcrow, i.e., the symbol &para;,
+    <code>C-x 8 P</code>: Insersts pilcrow, i.e. the symbol &para;,
     also known as the paragraph symbol.  Here both <code>C-x</code>
     and <code>8</code> are prefix keys.  There are many more key
     bindings available under the <code>C-x 8</code> prefix.  For
-    example, <code>C-x 8 C</code> inserts the copyright symbol, i.e.,
+    example, <code>C-x 8 C</code> inserts the copyright symbol, i.e.
     the symbol &copy;.  A set of keys like this that belong to a
     particular prefix key is called a <em>key map</em>.
   </li>
@@ -239,13 +239,13 @@
     key <kbd>%</kbd> is normally typed
     as <kbd>shift</kbd>+<kbd>5</kbd>, this key sequence involves
     holding down 4 keys together,
-    i.e., <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>shift</kbd>+<kbd>5</kbd>.
+    i.e. <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>shift</kbd>+<kbd>5</kbd>.
     Annoyingly, this happens to be an example of a key sequence that
     does not work in terminal Emacs due to terminal limitations.
   </li>
   <li>
     <code>TAB</code>: Calls <code>indent-for-tab-command</code> that
-    either indents the current line or region, or inserts a tab,
+    either indents the current line or region or inserts a tab,
     depending on the context.
   </li>
   <li>
@@ -255,7 +255,7 @@
     complete key sequence.  For example, <code>&lt;f1&gt;</code> is a
     prefix key that is available as an alternative to
     the <code>C-h</code> prefix key.  The key sequence <code>C-h
-    m</code> shows help for the current major and minor modes, and so
+    m</code> shows help for the current major and minor modes and so
     does <code>&lt;f1&gt; m</code>.  However, <code>&lt;f10&gt;</code>
     is a complete key sequence that calls the
     command <code>menu-bar-open</code> that shows the menu bar.
@@ -334,19 +334,19 @@
 <h2 id="M-x-execute-extended-command">M-x: Execute Extended Command</h2>
 <p>
   The key sequence <code>M-x</code> is pronounced <em>mex</em>, <em>M
-  x</em>, or <em>meta x</em>.  It invokes the
+  x</em> or <em>meta x</em>.  It invokes the
   command <code>execute-extended-command</code> that brings up a
   minibuffer to read a command name and execute it.
 </p>
 <p>
   When <code>M-x</code> key sequences are presented in written form,
   often they may be written in a precise manner that includes
-  the <code>M-x</code> key sequence, then the command name, and
-  finally the <code>RET</code> key in the end, e.g., <code>M-x
-  lunar-phases RET</code>.  But sometimes they may also be written
-  without the <code>RET</code> key, e.g., <code>M-x
-  lunar-phases</code>.  The <code>RET</code> key is automatically
-  implied in the latter form.
+  the <code>M-x</code> key sequence, then the command name and finally
+  the <code>RET</code> key in the end, e.g. <code>M-x lunar-phases
+  RET</code>.  But sometimes they may also be written without
+  the <code>RET</code> key, e.g. <code>M-x lunar-phases</code>.
+  The <code>RET</code> key is automatically implied in the latter
+  form.
 </p>
 <h2 id="interactive-commands">Interactive Commands</h2>
 <p>
@@ -371,7 +371,7 @@
 </p>
 <p>
   To see the difference between the two functions, copy both functions
-  to some buffer, say, the scratch buffer, and then put the cursor
+  to some buffer, say, the scratch buffer and then put the cursor
   after the closing parentheses of each function and type <code>C-x
   C-e</code> to evaluate the <code>defun</code> expressions thus
   defining the functions.  After doing so, <code>M-x hello RET</code>
@@ -454,7 +454,7 @@
   M-f</code> is going to be more convenient than <code>C-5 M-f</code>
   or <code>C-M-5 M-f</code>.  To type <code>M-5 M-f</code>, we can
   simply press and hold down <kbd>alt</kbd>, then type <kbd>5</kbd>
-  followed by <kbd>f</kbd>, and finally release <kbd>alt</kbd>.
+  followed by <kbd>f</kbd> and finally release <kbd>alt</kbd>.
   Similarly, if we are going to move forward by 5 expressions,
   then <code>C-M-5 C-M-f</code> is going to be more convenient than
   using any other modifier for the digit argument.
@@ -530,7 +530,7 @@
   nested prefix keys are clearly marked in the output as "Prefix
   Command".
 </p>
-<h2 id="true-color">True Color</h2>
+<h2 id="true-colour">True Colour</h2>
 <p>
   There is a note with the title <em>Supported colors</em> in the
   section <em>The Customize Interface</em> that introduces the
@@ -539,7 +539,7 @@
 <ul>
   <li>
     <code>M-x list-color-display RET</code>: Display names of defined
-    colors and show what they look like.
+    colours and show what they look like.
   </li>
   <li>
     <code>M-x info-apropos RET Colors on a TTY RET</code>: Find an
@@ -547,9 +547,9 @@
   </li>
 </ul>
 <p>
-  Since Emacs 28, we can easily enable 24-bit color in terminal Emacs
-  by setting the environment
-  variable <code>COLORTERM=truecolor</code>.  To quickly test it out,
+  Since Emacs 28, we can easily enable 24-bit colour in terminal Emacs
+  by setting the environment variable
+  <code>COLORTERM=truecolor</code>.  To quickly test it out,
   first enter the following command in the terminal:
 </p>
 <pre><code>COLORTERM=truecolor emacs -nw</code></pre>
@@ -557,10 +557,10 @@
   Then type the following in Emacs:
 </p>
 <pre><code>M-x list-color-display RET</code></pre>
-<h2 id="the-customize-interface">The Customize Interface</h2>
+<h2 id="the-customise-interface">The Customise Interface</h2>
 <p>
-  The customize interface allows us to customize two things: faces and
-  options.  Here are some steps to get started with the customize
+  The customise interface allows us to customise two things: faces and
+  options.  Here are some steps to get started with the customise
   interface:
 </p>
 <ol>
@@ -600,7 +600,7 @@
   <li>
     <p>
       Then type <code>font-lock-string-face</code> and
-      press <kbd>enter</kbd>.  The customization interface for the
+      press <kbd>enter</kbd>.  The customisation interface for the
       chosen face now appears in the buffer.  The message next to the
       "State" button shows "STANDARD." which indicates that the face
       is set to its default value.
@@ -628,13 +628,13 @@
   </li>
   <li>
     <p>
-      Now click the "Revert..." button and then click "Revert This
-      Session's Customizations" to revert the customization.
+      Now click the "Revert..." button and then click
+      "Revert This Session's Customizations" to revert the customisation.
     </p>
   </li>
   <li>
     <p>
-      Now change the string color to blue again and click "Apply and
+      Now change the string colour to blue again and click "Apply and
       Save".  The message next to the "State" button now changes to
       "SAVED and set."  Then check Emacs initialisation file (such
       as <code>~/.emacs</code>, <code>~/.emacs.d/init.el</code>, etc.)
@@ -644,13 +644,13 @@
   </li>
   <li>
     <p>
-      To erase the customization from the initialisation file, click
+      To erase the customisation from the initialisation file, click
       "Revert ..." and then click "Erase Customizations".  At this
-      point, the customization is no longer present in the
-      initialisation file.  However, the customize interface shows a
+      point, the customisation is no longer present in the
+      initialisation file.  However, the customise interface shows a
       confusing message next to the "State" button, "EDITED, shown
       value does not take effect until you set or save it."  Further,
-      the face is set to "-- Empty face --" in the customization
+      the face is set to "-- Empty face --" in the customisation
       interface.  To add to the confusion, the "Apply and Save" button
       is enabled!  Beware though!  If "Apply and Save" is clicked now,
       it will set <code>nil</code> as the value for the face which
@@ -660,67 +660,68 @@
   </li>
   <li>
     <p>
-      To get rid of the confusing state of the customization buffer
-      discussed in the previous point and restore the customization
+      To get rid of the confusing state of the customisation buffer
+      discussed in the previous point and restore the customisation
       buffer to a sane state, click "Revert ..." and then click either
-      "Undo Edits in Customization Buffer" or click "Revert This
-      Session's Customizations".  Doing so would end up showing the
-      default colour of the face in the customize interface.  The
-      message next to the "State" button shows "STANDARD." again.
+      "Undo Edits in Customization Buffer" or click
+      "Revert This Session's Customizations".  Doing so would end up
+      showing the default colour of the face in the customise
+      interface.  The message next to the "State" button shows
+      "STANDARD." again.
     </p>
   </li>
 </ol>
-<h2 id="customize-commands">Customize Commands</h2>
+<h2 id="customise-commands">Customise Commands</h2>
 <p>
   Here are some examples of complete key sequences that invoke various
-  customize commands:
+  customise commands:
 </p>
 <ul>
   <li>
-    <code>M-x customize RET</code>: Display customize interface.  We
-    can reach a specific item to be customized by navigating the
+    <code>M-x customize RET</code>: Display customise interface.  We
+    can reach a specific item to be customised by navigating the
     groups presented and the subgroups within them.  For example, to
-    customize <code>font-lock-string-face</code>, we can naviage to
+    customise <code>font-lock-string-face</code>, we can naviage to
     Faces &gt; Font Lock &gt; Font Lock Faces &gt; Font Lock String
     Face.
   </li>
   <li>
     <code>M-x customize-browse RET</code>: Create a tree browser for
-    the customize hierarchy.
+    the customise hierarchy.
   </li>
   <li>
     <code>M-x customize-option RET global-display-line-numbers
-    RET</code>: Customize a specific option.
+    RET</code>: Customise a specific option.
   </li>
   <li>
     <code>M-x customize-face RET font-lock-string-face RET</code>:
-    Customize a specific face.
+    Customise a specific face.
   </li>
   <li>
-    <code>M-x customize-group RET faces RET</code>: Customize a
+    <code>M-x customize-group RET faces RET</code>: Customise a
     specific group.
   </li>
   <li>
     <code>M-x customize-group RET font-lock-faces RET</code>: Another
-    example similar to the previous one.  This one customizes
+    example similar to the previous one.  This one customises
     the <em>Font Lock Faces</em> subgroup within the <em>Faces</em>
     group.
   </li>
   <li>
-    <code>M-x customize-mode RET</code>: Customize the major mode of
+    <code>M-x customize-mode RET</code>: Customise the major mode of
     the current buffer.
   </li>
   <li>
-    <code>M-x customize-mode RET python-mode RET</code>: Customize a
+    <code>M-x customize-mode RET python-mode RET</code>: Customise a
     specific mode.  After the first <code>RET</code>, a prompt to
     enter the mode appears only if the current major mode has no known
-    customize group.
+    customise group.
   </li>
   <li>
     <code>C-u M-x customize-mode RET python-mode RET</code>: Yet
-    another way to customize a specific mode.  Using the prefix
+    another way to customise a specific mode.  Using the prefix
     argument ensures that we are always prompted for the mode name.
-    This can be useful when we want to customize a minor mode, or a
+    This can be useful when we want to customise a minor mode or a
     major mode that is different from the current major mode.
   </li>
   <li>
@@ -728,30 +729,30 @@
     of custom themes.
   </li>
   <li>
-    <code>M-x customize-customized RET</code>: Customize all
-    customizations set in the session but not saved.  This is very
-    useful to see all unsaved customizations together at one place.
+    <code>M-x customize-customized RET</code>: Customise all
+    customisations set in the session but not saved.  This is very
+    useful to see all unsaved customisations together at one place.
   </li>
   <li>
-    <code>M-x customize-saved RET</code>: Customize all saved
-    customizations.  This is very useful to see all saved
-    customizations together at one place.
+    <code>M-x customize-saved RET</code>: Customise all saved
+    customisations.  This is very useful to see all saved
+    customisations together at one place.
   </li>
   <li>
-    <code>M-x customize-changed RET</code>: Customize all settings
+    <code>M-x customize-changed RET</code>: Customise all settings
     whose meanings have changed since the previous major Emacs
     release.
   </li>
   <li>
-    <code>M-x customize-changed RET 26.1 RET</code>: Customize all
+    <code>M-x customize-changed RET 26.1 RET</code>: Customise all
     settings whose meanings have changed since a particular previous
     major Emacs release.
   </li>
 </ul>
 <p>
-  One thing worth keeping in mind is that when we apply, save, or
-  revert customizations, only the customizations shown in the current
-  buffer are applied, saved, or reverted.  Here is an experiment that
+  One thing worth keeping in mind is that when we apply, save or
+  revert customisations, only the customisations shown in the current
+  buffer are applied, saved or reverted.  Here is an experiment that
   demonstrates what this means:
 </p>
 <ol>
@@ -781,11 +782,12 @@
   </li>
   <li>
     <p>
-      Now click "Revert ..." and then click "Revert This Sessions's
-      Customizations".  Only the colour of the function name reverts
-      to the default colour.  The colour of the macro name remains red
-      in the Elisp buffer.  This confirms that the revert operation
-      takes only the customizations in the buffer into account.
+      Now click "Revert ..." and then click
+      "Revert This Session's Customizations".  Only the colour of the
+      function name reverts to the default colour.  The colour of the
+      macro name remains red in the Elisp buffer.  This confirms that
+      the revert operation takes only the customisations in the buffer
+      into account.
     </p>
   </li>
   <li>
@@ -798,35 +800,35 @@
     <p>
       Search for <code>font-lock-comment-face</code>, set its colour
       to <code>magenta</code> and click "Apply and Save".  Inspecting
-      the Emacs initialisation file shows that only the customizations
+      the Emacs initialisation file shows that only the customisations
       for the string and comment faces have been saved to the file.
-      This confirms that only the customizations shown in the current
+      This confirms that only the customisations shown in the current
       buffer are saved.
     </p>
   </li>
   <li>
     <p>
       Type <code>M-x customize-customized RET</code>.  A new buffer
-      appears and shows the customization for keyword because it was
-      customized and applied but not saved.
+      appears and shows the customisation for keyword because it was
+      customised and applied but not saved.
     </p>
   </li>
   <li>
     <p>
       Type <code>M-x customize-saved RET</code>.  A new buffer appears
-      and shows the customizations for string and comment because they
-      were customized and saved.
+      and shows the customisations for string and comment because they
+      were customised and saved.
     </p>
   </li>
   <li>
     <p>
       Now search for <code>font-lock-comment-face</code> so that the
-      customize buffer contains only the customization entry for
-      comment.  Click "Revert ..." and then click "Erase
-      customizations".  Inspecting the Emacs initialisation file shows
-      that the customization for comment is removed but the
-      customization for string is still intact.  This confirms that
-      only the customization shown in the current buffer is erased.
+      customise buffer contains only the customisation entry for
+      comment.  Click "Revert ..." and then click
+      "Erase Customizations".  Inspecting the Emacs initialisation
+      file shows that the customisation for comment is removed but the
+      customisation for string is still intact.  This confirms that
+      only the customisation shown in the current buffer is erased.
     </p>
   </li>
 </ol>
@@ -874,7 +876,7 @@
 <ul>
   <li>
     Type <code>[</code> or <code>]</code> to go to the previous or
-    next node, respectively.  Typing <code>]</code> repeatedly is a
+    next node respectively.  Typing <code>]</code> repeatedly is a
     nice way to go from one node to the next one without skipping any
     content.  This provides an experience that very close to reading a
     book page by page although <code>SPC</code> (explained below)
@@ -882,12 +884,12 @@
   </li>
   <li>
     Type <code>l</code> or <code>r</code> to go back or forward in
-    history, respectively.
+    history respectively.
   </li>
   <li>
     Type <code>n</code> or <code>p</code> to go to the previous or
     next sibling node.  This is a nice way to go from one chapter to
-    next while skipping all the child nodes, or to go from one section
+    next while skipping all the child nodes or to go from one section
     to the next sibling section while skipping all child subsections.
   </li>
   <li>
@@ -905,7 +907,7 @@
   </li>
   <li>
     Type <code>TAB</code> to go to the next cross-reference or menu
-    item, i.e., anything that looks like a link.
+    item, i.e. anything that looks like a link.
     Type <code>S-TAB</code> or <code>C-M-i</code> to go back to the
     previous cross-reference or menu item.
   </li>
@@ -939,17 +941,17 @@
     When we open the Info reader with <code>C-h i</code> for the first
     time, immediately typing <code>m</code> is a convenient way to
     enter a particular menu item for a manual and jump to that manual,
-    e.g., type <code>C-h i m org RET</code> to go to the Org manual.
+    e.g. type <code>C-h i m org RET</code> to go to the Org manual.
   </li>
   <li>
     Since Emacs 28, we can also use <code>C-h R</code> to open a
-    specific manual from any buffer, i.e., we do not need to
+    specific manual from any buffer, i.e. we do not need to
     type <code>C-h i</code> first to enter Info.  For example,
     type <code>C-h R org RET</code> to enter the Org manual.
   </li>
   <li>
     To look up the documentation for a command, type <code>C-h
-      F</code>, e.g., <code>C-h F find-file RET</code>.
+    F</code>, e.g. <code>C-h F find-file RET</code>.
   </li>
   <li>
     Although not mentioned in the book, a popular way to point others
@@ -984,7 +986,7 @@
   <li>
     <code>M-x apropos RET ^whitespace RET</code>: Show all symbols
     that match the given regular expression pattern.  The matches
-    include symbols defined as functions, variables, and faces.
+    include symbols defined as functions, variables and faces.
   </li>
   <li>
     <code>C-h d cleanup-region RET</code>: Show symbols whose
@@ -1009,7 +1011,7 @@
   <li>
     <code>M-x apropos-user-option RET ^whitespace RET</code>: Show
     user options that match the given pattern.  This includes
-    variables that can be customized in the customie interface.
+    variables that can be customised in the customise interface.
   </li>
   <li>
     <code>M-x apropos-value RET ^[^ ]*text RET</code>: Show all
@@ -1073,7 +1075,7 @@
 <ul>
   <li>
     <a href="https://commons.wikimedia.org/wiki/File:Space-cadet.jpg">Picture
-      of the space-cadet keyboard with Hyper, Super, and Meta keys</a>
+      of the space-cadet keyboard with Hyper, Super and Meta keys</a>
   </li>
   <li>
     <a href="https://www.emacswiki.org/emacs/MovingTheCtrlKey">Moving

@@ -1,5 +1,5 @@
 <!-- date: 2023-06-16 -->
-<!-- title: Control, Escape, and Meta Tricks -->
+<!-- title: Control, Escape and Meta Tricks -->
 <!-- tag: Unix, Shell, Technology -->
 <!-- key: neaax -->
 <!-- import: extra.css -->
@@ -9,7 +9,7 @@
   macOS, ensure that the "Use Option as Meta Key" option is enabled in
   its "Preferences" section.  Now type <code>foo bar baz</code>
   followed by <kbd>meta</kbd>+<kbd>b</kbd>
-  (i.e., <kbd>alt</kbd>+<kbd>b</kbd> or <kbd>option</kbd>+<kbd>b</kbd>
+  (i.e. <kbd>alt</kbd>+<kbd>b</kbd> or <kbd>option</kbd>+<kbd>b</kbd>
   on modern keyboards).  In a typical desktop environment with a
   typical and modern terminal emulator running a modern shell like
   Bash, Zsh, etc., the cursor should move backward by one word.  Now
@@ -29,7 +29,7 @@
 </p>
 <ul>
   <li>
-    <kbd>meta</kbd>+<kbd>b</kbd> (i.e., <kbd>alt</kbd>+<kbd>b</kbd>
+    <kbd>meta</kbd>+<kbd>b</kbd> (i.e. <kbd>alt</kbd>+<kbd>b</kbd>
     or <kbd>option</kbd>+<kbd>b</kbd> on modern keyboards)
   </li>
   <li>
@@ -73,7 +73,7 @@
   character <code>[</code> has code 91 (binary 1011011) and holding
   the <kbd>ctrl</kbd> key while typing it results in a control code
   obtained by taking 91 (binary 1011011), keeping its five least
-  significant bits, and discarding the rest.  We get the control code
+  significant bits and discarding the rest.  We get the control code
   27 (binary 11011) as the result.  This is the code of
   the <em>escape</em> character.  This explains
   why <kbd>ctrl</kbd>+<kbd>[</kbd> produces the <em>escape</em>
@@ -172,9 +172,9 @@
 <p>
   This explains why typing <kbd>ctrl</kbd>+<kbd>g</kbd> in a modern
   terminal emulator produces an audible beep or a visual flash,
-  why <kbd>ctrl</kbd>+<kbd>h</kbd> erases a character, and so on.
-  This also explains why we can type <kbd>ctrl</kbd>+<kbd>[</kbd> in
-  Vim to escape from insert mode to normal mode.  While we can
+  why <kbd>ctrl</kbd>+<kbd>h</kbd> erases a character and so on.  This
+  also explains why we can type <kbd>ctrl</kbd>+<kbd>[</kbd> in Vim to
+  escape from insert mode to normal mode.  While we can
   type <em>escape</em> with the <kbd>esc</kbd> key on the keyboard, we
   can do so with the <kbd>ctrl</kbd>+<kbd>[</kbd> key too within the
   terminal.
@@ -200,7 +200,7 @@
   character <code>g</code> has the code 103 (decimal 1100111).  The
   five least significant bits are equal in both.  So when we pick the
   five least significant bits and discard the rest, we get the same
-  result, i.e., 7 (binary 111) which is the code of the <em>bell</em>
+  result, i.e. 7 (binary 111) which is the code of the <em>bell</em>
   character.  This is due to the fact that the five least significant
   bits of the code of a lowercase character is exactly the same as
   that of the corresponding uppercase character.  They differ only in
@@ -352,8 +352,8 @@
   can type <kbd>meta</kbd>+<kbd>:</kbd> to go directly from insert
   mode to command-line mode and enter Ex commands.  We can
   type <kbd>meta</kbd>+<kbd>0</kbd> to go directly from insert mode to
-  the first character of a line, or type <kbd>meta</kbd>+<kbd>$</kbd>
-  to go to the end of the line, and so on.  These are equivalent to
+  the first character of a line or type <kbd>meta</kbd>+<kbd>$</kbd>
+  to go to the end of the line and so on.  These are equivalent to
   typing <kbd>esc</kbd> <kbd>0</kbd>, <kbd>esc</kbd> <kbd>$</kbd>,
   etc.
 </p>
@@ -361,12 +361,12 @@
   More interestingly, we can type <kbd>meta</kbd>+<kbd>O</kbd> to open
   a line above, <kbd>meta</kbd>+<kbd>A</kbd> to append text at the end
   of the line, <kbd>meta</kbd>+<kbd>I</kbd> to append text at the
-  beginning of the line, or <kbd>meta</kbd>+<kbd>S</kbd> to delete the
+  beginning of the line or <kbd>meta</kbd>+<kbd>S</kbd> to delete the
   current line while staying in insert mode!  Since the Vim
-  commands <kbd>O</kbd>, <kbd>A</kbd>, <kbd>I</kbd>, and <kbd>S</kbd>
+  commands <kbd>O</kbd>, <kbd>A</kbd>, <kbd>I</kbd> and <kbd>S</kbd>
   leave us back in insert mode, we are able to perform an editing
   operation that involves leaving the insert mode, doing something
-  interesting, and returning to insert mode instantly using the
+  interesting and returning to insert mode instantly using the
   the <kbd>meta</kbd> key combination.  The following table summarises
   these observations:
 </p>

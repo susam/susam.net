@@ -7,7 +7,7 @@
   Linux:
 </p>
 <pre>
-<samp>$ <kbd>for ttl in {1..30}; do ping -4 -c 1 -t $ttl example.com && break; done | grep -i from | nl -s ' ' -w 2</kbd>
+<samp>$ <kbd>for ttl in {1..30}; do ping -4 -c 1 -t $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd>
  1 From router1-lon.linode.com (212.111.33.229) icmp_seq=1 Time to live exceeded
  2 From if-0-1-0-0-0.gw1.lon1.gb.linode.com (109.74.207.10) icmp_seq=1 Time to live exceeded
  3 From be5787.rcr51.lon10.atlas.cogentco.com (204.68.252.58) icmp_seq=1 Time to live exceeded
@@ -32,7 +32,7 @@
   "time-to-live exceeded" ICMP message.  Thus an echo request with TTL
   value set to 1 gets us an ICMP "time-to-live exceeded" message from
   the first router in the path, the next echo request with TTL value 2
-  gets us a similar ICMP message from the second router in the path,
+  gets us a similar ICMP message from the second router in the path
   and so on.  The traceroute is complete when we receive a successful
   ICMP echo reply.
 </p>
@@ -76,7 +76,7 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
   modified as follows:
 </p>
 <pre>
-<samp><kbd>for ttl in {1..30}; do ping -c 1 -t 1 -m $ttl example.com && break; done | grep -i from | nl -s ' ' -w 2</kbd></samp>
+<samp><kbd>for ttl in {1..30}; do ping -c 1 -t 1 -m $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd></samp>
 </pre>
 <p>
   On macOS, the <code>-t</code> option of the <code>ping</code>

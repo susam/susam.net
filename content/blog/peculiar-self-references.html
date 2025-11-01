@@ -94,7 +94,7 @@ target          ::=  identifier
   <p>
     (See section
     <a href="https://docs.python.org/3.7/reference/expressions.html#primaries">Primaries</a>
-    for the syntax definitions for attributeref, subscription, and
+    for the syntax definitions for attributeref, subscription and
     slicing.)
   </p>
   <p>
@@ -117,7 +117,7 @@ target          ::=  identifier
   and <code>a[0]</code>) and a <code>starred_expression</code> element
   (<code>[0]</code>).  As a result, the same list on the
   right-hand-side is assigned to both <code>a</code>
-  and <code>a[0]</code>, from left to right, i.e., the
+  and <code>a[0]</code>, from left to right, i.e. the
   list <code>[0]</code> is first assigned to <code>a</code>,
   then <code>a[0]</code> is set to the <em>same</em> list.  As a
   result, <code>a[0]</code> is set to <code>a</code> itself.
@@ -140,7 +140,7 @@ target          ::=  identifier
   and then assigning the result to each target list from left to right
   explains the behaviour we observed in the previous sections.  This
   left-to-right assignment is quite uncommon among mainstream
-  programming languages.  For example, in C, C++, Java, and JavaScript
+  programming languages.  For example, in C, C++, Java and JavaScript
   the simple assignment operator (<code>=</code>) has right-to-left
   associativity.  The left-to-right assignment in Python can be
   further demonstrated with some intentional errors.  Here is an

@@ -1,10 +1,10 @@
 <!-- date: 2019-11-19 -->
-<!-- title: File Transfer with SSH, Tee, and Base64 -->
+<!-- title: File Transfer with SSH, Tee and Base64 -->
 <!-- tag: Networking, Protocol, Technology -->
 <!-- key: ngbfb -->
 <p>
   Computer servers deployed in a secure environment may allow SSH
-  sessions but forbid SCP, SFTP, and execution of remote commands
+  sessions but forbid SCP, SFTP and execution of remote commands
   without a login shell.  Such restricted access is typically enforced
   with SSH gateways and firewalls.  An SSH gateway provides controlled
   access to the remote system.  A firewall can ensure that only an SSH
@@ -13,7 +13,7 @@
   now control what is allowed and what isn't.
 </p>
 <p>
-  Even if SCP, SFTP, port forwarding, and remote command execution
+  Even if SCP, SFTP, port forwarding and remote command execution
   without a login shell are forbidden, as long as we get a login shell
   on our terminal and we can print data on the terminal, we are
   already able to transfer data from the remote system to our local
@@ -92,10 +92,10 @@
   </li>
   <li>
     <p>
-      On the local system, extract the Base64 encoded payload and decode
-      it.  Assuming the shell prompt on the remote system ends with the
-      dollar sign (i.e., <code>$</code>), the following command does
-      this.
+      On the local system, extract the Base64 encoded payload and
+      decode it.  Assuming the shell prompt on the remote system ends
+      with the dollar sign (i.e. <code>$</code>), the following
+      command does this.
     </p>
     <pre><code>sed '1,/$ base64/d;/$ exit/,$d' ssh.txt | base64 --decode &gt; payload</code></pre>
   </li>
@@ -119,7 +119,7 @@
 <p>
   The steps above assume the use of the <code>sha1sum</code> command
   to compute checksum.  If this command is unavailable, use
-  <code>sha1</code>, <code>shasum</code>, or something else that serves
+  <code>sha1</code>, <code>shasum</code> or something else that serves
   this purpose well.  If you are worried about collision attacks, you
   might want <code>sha256sum</code>, <code>sha256</code>, <code>shasum
   -a 256</code>, etc. instead.

@@ -19,8 +19,8 @@
   a Debian system.  The comment form, however, is a dynamic web
   application served via another Common Lisp program that makes use of
   the Hunchentoot web server to serve the form, accept the input
-  submitted by the user, and then process it.  This comment form is a
-  very simple, minimal, and stateless application that fulfills the
+  submitted by the user and then process it.  This comment form is a
+  very simple, minimal and stateless application that fulfills the
   modest requirements of this modest website pretty well.
 </p>
 <p>
@@ -86,8 +86,8 @@
 <h2 id="bloated-expectations">Bloated Expectations</h2>
 <p>
   Depending on where the visitor is located, the comment form on this
-  website may take anywhere between 30 ms to 900 ms, and very rarely a
-  little longer, to accept the user's comment, save it successfully,
+  website may take anywhere between 30 ms to 900 ms (and very rarely a
+  little longer) to accept the user's comment, save it successfully
   and then display a success message to the user.  But apparently, a
   few hundred millseconds is too fast for many people to be able to
   trust that the comment application is actually doing its job.  I
@@ -129,8 +129,8 @@
   submission.  In their opinion, merely displaying a success message
   may not be assuring enough.  They further suggested that I should
   change the state of the form in some way on successful submission.
-  Popular recommendations included disabling, clearing, or removing
-  the form elements entirely on successful submission.
+  Popular recommendations included disabling, clearing or removing the
+  form elements entirely on successful submission.
 </p>
 <p>
   These suggestions are valid of course.  However, I also think that
@@ -141,14 +141,14 @@
 </p>
 <p>
   Do I really need to consider <em>artificially</em> clearing,
-  disabling, or removing the form elements and thus removing the
+  disabling or removing the form elements and thus removing the
   ability to edit a comment again and resubmit it (even if the user
   really so desires) with a single click of a button?  What if someone
   wants to post another comment immediately after the first one?  What
   if someone wants to edit their previous comment slightly and repost
   it?  Do I need to force the user to hop through separate links and
   buttons to be able to do these simple tasks?  "But every other
-  website clears, disables, or removes the form elements," you might
+  website clears, disables or removes the form elements," you might
   rightfully offer as a counterpoint.  I know.  I know.  But why is it
   so that the "right" user experience nowadays involves artifically
   encumbering the user or hiding the user's own submitted text from
@@ -175,9 +175,9 @@
   However, heeding some of the other advice I have received in the
   comments section, I have now made two tiny changes to the comment
   form application that is consistent with its original spirit of
-  simplicity, minimalism, and statelessness.  I have moved the success
+  simplicity, minimalism and statelessness.  I have moved the success
   message to the top of the response page.  I have also added
   additional text in the success message that explains that the
   submitted input has been left intact in case the submitter wants to
-  copy it, or edit it and resubmit it.
+  copy it or edit it and resubmit it.
 </p>

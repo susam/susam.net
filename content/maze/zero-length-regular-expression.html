@@ -47,14 +47,14 @@ public class RegexExperiment
         System.out.println(Pattern.compile("").matcher("foo").find());
     }
 }
-$ <kbd>javac RegexExperiment.java && java RegexExperiment</kbd>
+$ <kbd>javac RegexExperiment.java &amp;&amp; java RegexExperiment</kbd>
 true</samp>
 </pre>
 <h2 id="mzscheme">MzScheme</h2>
 <pre>
 <samp>$ <kbd>mzscheme</kbd>
 Welcome to MzScheme v4.0.1 [3m], Copyright (c) 2004-2008 PLT Scheme Inc.
-> <kbd>(regexp-match "" "foo")</kbd>
+&gt; <kbd>(regexp-match "" "foo")</kbd>
 ("")</samp>
 </pre>
 <h2 id="clisp">CLISP</h2>
@@ -78,14 +78,14 @@ Copyright (c) Sam Steingold, Bruno Haible 2001-2008
 
 Type :h and hit Enter for context help.
 
-[1]> <kbd>(regexp:match "" "foo")</kbd>
+[1]&gt; <kbd>(regexp:match "" "foo")</kbd>
 #S(REGEXP:MATCH :START 0 :END 0)</samp>
 </pre>
 <h2 id="c">C</h2>
 <pre>
 <samp>$ <kbd>ls -l /usr/lib/libpcre.so*</kbd>
-lrwxrwxrwx 1 root root     17 May  3 15:15 /usr/lib/libpcre.so -> libpcre.so.3.12.1
-lrwxrwxrwx 1 root root     17 Jan  6 14:57 /usr/lib/libpcre.so.3 -> libpcre.so.3.12.1
+lrwxrwxrwx 1 root root     17 May  3 15:15 /usr/lib/libpcre.so -&gt; libpcre.so.3.12.1
+lrwxrwxrwx 1 root root     17 Jan  6 14:57 /usr/lib/libpcre.so.3 -&gt; libpcre.so.3.12.1
 -rw-r--r-- 1 root root 162816 Jul 14  2008 /usr/lib/libpcre.so.3.12.1
 susam@swift:~$ <kbd>cat pcre.c</kbd>
 #include &lt;stdio.h&gt;
@@ -112,6 +112,6 @@ int main(int argc, char **argv)
 
     printf(ret &lt; 0 ? "no match\n" : "match\n");
 }
-$ <kbd>cc -lpcre pcre.c && ./a.out</kbd>
+$ <kbd>cc -lpcre pcre.c &amp;&amp; ./a.out</kbd>
 match</samp>
 </pre>

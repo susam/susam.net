@@ -6,9 +6,9 @@
 <!-- draft: yes -->
 <p>
   An algebraic structure consists of a nonempty set, a collection of
-  operations on the set, and a finite set of axioms that the
-  operations must satisfy.  This page describes some commonly used
-  algebraic structures.
+  operations on the set and a finite set of axioms that the operations
+  must satisfy.  This page describes some commonly used algebraic
+  structures.
 </p>
 {{ toc }}
 <!--
@@ -23,11 +23,11 @@
 </p>
 <h3 id="magma-closure-property">Magma Closure Property</h3>
 <p>
-  Some texts explicitly specify the closure property, i.e., for all \(
+  Some texts explicitly specify the closure property, i.e. for all \(
   a, b \in M \), we must have \( a \cdot b \in M \).  However, stating
   this propery explicity is redundant because a binary operation is
-  closed by definition.  A binary operation \( \cdot \) on a set \( M \)
-  is defined to be a function
+  closed by definition.  A binary operation \( \cdot \) on a set \(
+  M \) is defined to be a function
 
   \[
     \cdot : M \times M \to M; \; (x, y) \mapsto x \cdot y.
@@ -87,7 +87,7 @@
 </p>
 <h3 id="semigroup-closure-property">Semigroup Closure Property</h3>
 <p>
-  Some texts explicitly specify the closure property, i.e., for all \(
+  Some texts explicitly specify the closure property, i.e. for all \(
   a, b \in S \), we must have \( a \cdot b \in S \).  However, stating
   this propery explicity is redundant because a binary operation is
   closed by definition.
@@ -143,7 +143,7 @@
 </ol>
 <h3 id="monoid-closure-property">Monoid Closure Property</h3>
 <p>
-  Some texts explicitly specify the closure property, i.e., for all \(
+  Some texts explicitly specify the closure property, i.e. for all \(
   a, b \in S \), we must have \( a \cdot b \in S \).  However, stating
   this propery explicity is redundant because a binary operation is
   closed by definition.
@@ -190,7 +190,7 @@
 </ol>
 <h3 id="group-closure-property">Group Closure Property</h3>
 <p>
-  Some texts explicitly specify the closure property, i.e., for all \(
+  Some texts explicitly specify the closure property, i.e. for all \(
   a, b \in G \), we must have \( a \cdot b \in G \).  However, stating
   this propery explicity is redundant because a binary operation is
   closed by definition.
@@ -217,17 +217,17 @@
 </p>
 <h3 id="group-examples">Group Examples</h3>
 <p>
-  The ordered pair \( (\mathbb{Z}, +) \) forms a group, i.e., the set
+  The ordered pair \( (\mathbb{Z}, +) \) forms a group, i.e. the set
   of integers form a group under addition.  In fact, it is an abelian
-  group.  However it does not form a group under multiplication, i.e.,
+  group.  However it does not form a group under multiplication, i.e.
   \( (\mathbb{Z}, \cdot) \) does not form a group since there is no
   multiplicative inverse of \( 2 \) in the set of integers.
 </p>
 <h2 id="ring">Ring</h2>
 <h3 id="ring-axioms">Ring Axioms</h3>
 <p>
-  A ring is a triple \( (R, +, \cdot) \), where \( R \) is a set, and
-  \( + \) and \( \cdot \) are binary operations on \( R \), called
+  A ring is a triple \( (R, +, \cdot) \), where \( R \) is a set and
+  \( + \) and \( \cdot \) are binary operations on \( R \) called
   addition and multiplication respectively, that satisfies the
   following properties:
 </p>
@@ -281,7 +281,7 @@
 <p>
   The ring defined in this section is also called <em>noncommutative,
   non-unital ring</em> or <em>noncommutative pseudo-ring</em>
-  or <em>rng</em> (i.e., "ring" without "i", signifying the missing
+  or <em>rng</em> (i.e. "ring" without "i", signifying the missing
   requirement for multiplicative identity).
 </p>
 <h3 id="ring-closure-properties">Ring Closure Properties</h3>
@@ -366,8 +366,8 @@
 <h2 id="field">Field</h2>
 <h3 id="field-axioms">Field Axioms</h3>
 <p>
-  A field is a triple \( (F, +, \cdot) \), where \( F \) is a set, and
-  \( + \) and \( \cdot \) are binary operations on \( F \), called
+  A field is a triple \( (F, +, \cdot) \), where \( F \) is a set and
+  \( + \) and \( \cdot \) are binary operations on \( F \) called
   addition and multiplication respectively, that satisfies the
   following properties:
 </p>
@@ -459,9 +459,13 @@
 <p>
   A field is a triple consisting of a set and two binary operations,
   called addition and multiplication, such that the set is an abelian
-  group under addition and the nonzero elements (elements that are
-  unequal to the additive identity) of the set form an abelian group
-  under multplication, and multiplication distributes over addition.
+  group under addition, the nonzero elements of the set form an
+  abelian group under multplication and multiplication distributes
+  over addition.
+</p>
+<p>
+  Here, by <em>nonzero elements</em>, we mean the elements that are
+  unequal to the additive identity.
 </p>
 <h3 id="field-examples">Field Examples</h3>
 <p>

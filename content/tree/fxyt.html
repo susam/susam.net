@@ -117,7 +117,7 @@
       const MAX_CODE_LEN = 1024
       const MAX_DIST_LEN = 256
 
-      // Widget sizing and spacing.
+      // Widget size and spacing.
       const PADDING = 8
       const PANEL_HEIGHT = 40
 
@@ -161,7 +161,7 @@
         text = document.getElementById('text')
         buttons = document.getElementById('buttons')
 
-        // Initialize canvas.
+        // Initialise canvas.
         ctx = canvas.getContext('2d')
         canvas.width = GRID_SIZE * SCALE
         canvas.height = GRID_SIZE * SCALE
@@ -180,12 +180,12 @@
           test()
         }
 
-        // Initialize encoder maps.
+        // Initialise encoder maps.
         if (initEncoderMaps() === null) {
           return
         }
 
-        // Initialize the user interface.
+        // Initialise the user interface.
         createButtons()
         clearHelp()
         resize()
@@ -348,7 +348,7 @@
       }
 
       function frame () {
-        // Initialize iteration variables.
+        // Initialise iteration variables.
         if (startTime === null) {
           startTime = Date.now()
           nextFrameTime = startTime
@@ -368,7 +368,7 @@
             if (x === 0 && y === 0) {
               nextFrameInterval = result[4]
             }
-            if (validateColor(result[0], result[1], result[2], x, y, t) === false) {
+            if (validateColour(result[0], result[1], result[2], x, y, t) === false) {
               return
             }
             plot(x, y, result[0], result[1], result[2])
@@ -667,17 +667,17 @@
         }
       }
 
-      function validateColor (r, g, b, x, y, t) {
+      function validateColour (r, g, b, x, y, t) {
         const channels = ['Red', r, 'Green', g, 'Blue', b]
         for (let i = 0; i < channels.length; i += 2) {
           const channel = channels[i]
           const value = channels[i + 1]
           if (value < 0) {
-            colorError(x, y, t, channel, value, 'is negative')
+            colourError(x, y, t, channel, value, 'is negative')
             return false
           }
           if (value > 255) {
-            colorError(x, y, t, channel, value, 'exceeds 255')
+            colourError(x, y, t, channel, value, 'exceeds 255')
             return false
           }
         }
@@ -724,7 +724,7 @@
         error(coords + pos + '&lsquo;' + op + '&rsquo; ' + msg)
       }
 
-      function colorError (x, y, t, channel, value, msg) {
+      function colourError (x, y, t, channel, value, msg) {
         const coords = coordinates(x, y, t) + ': '
         error(coords + channel + ' value ' + value + ' ' + msg)
       }
@@ -780,17 +780,17 @@
             log('set code from hash:', text.value)
           }
         }
-        normalizeDraw()
+        normaliseDraw()
       }
 
       function actionKey (e) {
         if (e.key !== 'Shift') {
-          setTimeout(normalizeDraw, 10)
+          setTimeout(normaliseDraw, 10)
         }
       }
 
-      function normalizeDraw () {
-        sanitizeText()
+      function normaliseDraw () {
+        sanitiseText()
         updateCode()
         if (questioned) {
           toggleHelp()
@@ -800,7 +800,7 @@
         }
       }
 
-      function sanitizeText () {
+      function sanitiseText () {
         let cursorStart = text.selectionStart
         let cursorEnd = text.selectionEnd
         const cursorDir = text.selectionDirection
@@ -1216,7 +1216,7 @@
           <td>
             Pop two values from the data stack.  Then use the value
             popped first to divide the value popped second, discard
-            fractional part from the result, and push the integer
+            fractional part from the result and push the integer
             result to the data stack.
           </td>
         </tr>
@@ -1225,7 +1225,7 @@
           <td>
             Pop two values from the data stack.  Then use the value
             popped first to divide the value popped second, obtain a
-            nonnegative remainder, and push the remainder to the data
+            nonnegative remainder and push the remainder to the data
             stack.
           </td>
         </tr>
@@ -1263,15 +1263,15 @@
           <td><code>^</code></td>
           <td>
             Pop two values from the data stack, perform bitwise XOR
-            operation on the values, and push the result to the data
+            operation on the values and push the result to the data
             stack.
           </td>
         </tr>
         <tr>
-          <td><code>&</code></td>
+          <td><code>&amp;</code></td>
           <td>
             Pop two values from the data stack, perform bitwise AND
-            operation on the values, and push the result to the data
+            operation on the values and push the result to the data
             stack.
           </td>
         </tr>
@@ -1279,17 +1279,16 @@
           <td><code>|</code></td>
           <td>
             Pop two values from the data stack, perform bitwise OR
-            operation on the values, and push the result to the data
+            operation on the values and push the result to the data
             stack.
           </td>
         </tr>
         <tr>
           <td><code>C</code></td>
           <td>
-            Clip the value at the top of the data stack between 0 and
-            255, i.e., if the value is less than 0, change the value
-            to 0, and similarly, if the value is greater than 255,
-            change the value to 255.
+            Clip the value at the top of the data stack to the range
+            0-255, i.e. set it to 0 if it is less than 0 and to 255 if
+            it is greater than 255.
           </td>
         </tr>
         <tr>

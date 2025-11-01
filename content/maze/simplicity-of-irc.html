@@ -10,16 +10,16 @@
   growing up in the late 1990s and early 2000s.  For many of us who
   were introduced to the Internet during that time, writing an IRC bot
   turned out to be one of our first few non-trivial hobby programming
-  projects that involved network sockets, did something meaningful,
-  and served actual users.
+  projects that involved network sockets, did something meaningful and
+  served actual users.
 </p>
 <h2 id="simplicity">Simplicity</h2>
 <p>
   The underlying payloads that IRC servers and clients exchange during
   an IRC session are quite simple to read manually and understand.
   While implementing IRC servers still involves significant work to
-  keep track of users, channels, and exchanging network state and
-  messages between servers, implementing IRC clients can often be
+  keep track of users and channels as well as exchanging network state
+  and messages between servers, implementing IRC clients can often be
   quite simple.  With a convenient programming language, one can
   develop all kinds of fun tools and bots pretty quickly.  Only
   creativity is the limit!
@@ -42,7 +42,7 @@
   As a result of the simplicity of the IRC protocol, sometimes when I
   wanted to join an IRC channel, say to seek some technical help, from
   a system without an IRC client installed, I would often just start
-  a <code>telnet</code>, <code>nc</code>, or <code>openssl</code>
+  a <code>telnet</code>, <code>nc</code> or <code>openssl</code>
   connection directly to my favourite IRC network and type out IRC
   protocol commands by hand to join channels and talk to users.
 </p>
@@ -107,7 +107,7 @@ ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp>
 <p>
   In the above session, the user connects to the Libera Chat network
   with the nickname <code>humpty</code>, joins a channel
-  named <code>#test</code>, and posts a message.
+  named <code>#test</code> and posts a message.
 </p>
 <p>
   Note that the above session is not encrypted.  By convention, IRC
@@ -117,7 +117,7 @@ ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp>
   command line tool:
 </p>
 <pre>
-<samp>$ <kbd>openssl s_client -quiet -connect irc.libera.chat:6697 2> /dev/null</kbd>
+<samp>$ <kbd>openssl s_client -quiet -connect irc.libera.chat:6697 2&gt; /dev/null</kbd>
 :strontium.libera.chat NOTICE * :*** Checking Ident
 :strontium.libera.chat NOTICE * :*** Looking up your hostname...
 :strontium.libera.chat NOTICE * :*** Couldn't look up your hostname
@@ -136,7 +136,7 @@ USER humpty humpty irc.libera.chat :Humpty Dumpty
   It is worth noting here that although the payload format of IRC
   protocol is quite simple, as one starts writing IRC clients, one
   would stumble upon several tiny details about the protocol that
-  needs to be taken care of, e.g., authenticating to the network,
+  needs to be taken care of, e.g. authenticating to the network,
   responding to <code>PING</code> messages from the server to avoid
   ping timeouts, splitting messages into shorter messages so that the
   overall payload does not exceed the message length limit of 512
@@ -166,7 +166,7 @@ USER humpty humpty irc.libera.chat :Humpty Dumpty
   <li>
     <p>
       Join using Irssi: On macOS, run <code>brew install irssi</code>
-      to install it.  On Debian, Ubuntu, or a Debian-based Linux
+      to install it.  On Debian, Ubuntu or a Debian-based Linux
       system, run <code>sudo apt-get install irssi</code>.  Then
       enter <code>irssi -c irc.libera.chat</code> to connect to Libera
       Chat.  Then within Irssi, type <code>/join #python</code>.

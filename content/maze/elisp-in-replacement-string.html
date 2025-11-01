@@ -31,12 +31,12 @@
   What may be less commonly known is the ability to utilise Elisp
   expressions to dynamically compute portions of the replacement
   strings.  To employ this feature, simply write <code>\,</code>
-  (i.e., backslash and comma) followed by the Elisp expression in the
+  (i.e. backslash and comma) followed by the Elisp expression in the
   replacement string.  Consider the following key sequence:
 </p>
-<pre><code>C-M-% f.. RET \,(upcase \&) RET</code></pre>
+<pre><code>C-M-% f.. RET \,(upcase \&amp;) RET</code></pre>
 <p>
-  The backreference <code>\&</code> refers to the whole match.  We
+  The backreference <code>\&amp;</code> refers to the whole match.  We
   pass it as the argument to the Elisp function <code>upcase</code>.
   This function converts its argument to upper-case.  This example
   searches for strings that match the pattern <code>f..</code> and

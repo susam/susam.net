@@ -205,7 +205,7 @@
 <p>
   A \( 1 \times 1 \) board has room for only one knight, so we define
   \( f(1) = 0 \).  On a \( 2 \times 2 \) board, a knight cannot move
-  two squares in any direction, and therefore cannot attack.
+  two squares in any direction and therefore cannot attack.
   Therefore, \( f(2) = 0 \).  To summarise,
 
   \[
@@ -262,7 +262,7 @@
 </p>
 <p>
   Without loss of generality, suppose the new row and column are added
-  to the bottom and right, respectively.  We already know that
+  to the bottom and right respectively.  We already know that
 
   \begin{align*}
     \Delta f(2) &amp; = f(2) - f(1) = 0 - 0 = 0, \\
@@ -465,14 +465,14 @@
 <h3 id="type-c-squares">Type C Squares</h3>
 <p>
   The number of type C squares depends on the board size.  When we
-  increase the size of a board from \( (n - 1) \times (n - 1) \) to \(
-  n \times n \), where \( n \ge 4 \), we add \( n^2 - (n - 1)^2 = 2n -
-  1 \) new squares.  Among these, \( 3 \) are of type A, \( 2 \) are
-  of type B, and \( 2 \) are of type D.  That gives us a total of
-  \( 7 \) squares of type A, B, or D.  The remaining \( 2n - 1 - 7 =
-  2n - 8 \) squares are therefore of type C.  Note that when the board
-  size increases from \( 3 \times 3 \) to \( 4 \times 4 \), there are
-  \( 2 \times 4 - 8 = 0 \) squares of type C.
+  increase the size of a board from \( (n - 1) \times (n - 1) \) to
+  \(n \times n \), where \( n \ge 4 \), we add \( n^2 - (n - 1)^2 = 2n
+  - 1 \) new squares.  Among these, \( 3 \) are of type A, \( 2 \) are
+  of type B and \( 2 \) are of type D.  That gives us a total of \(
+  7 \) squares of type A, B or D.  The remaining \( 2n - 1 - 7 = 2n -
+  8 \) squares are therefore of type C.  Note that when the board size
+  increases from \( 3 \times 3 \) to \( 4 \times 4 \), there are \( 2
+  \times 4 - 8 = 0 \) squares of type C.
 </p>
 <figure>
   <table class="chess">
@@ -914,8 +914,8 @@
   the board grows, we consider <em>every</em> square on the board.  To
   make the counting easier, we no longer treat the knights as
   identical.  We first work with two distinct knights, count the
-  mutually attacking knight placements, and then divide the total by
-  \( 2 \) to get the result for identical knights.
+  mutually attacking knight placements and then divide the total by \(
+  2 \) to get the result for identical knights.
 </p>
 <h3 id="attacking-degrees-of-squares">Attacking Degrees of Squares</h3>
 <p>
@@ -1065,7 +1065,7 @@
   identical, the two arrangements are indistinguishable and count as
   one placement.  Hence, the number of mutually attacking placements
   for identical knights is exactly half of the number for distinct
-  knights, i.e.,
+  knights, i.e.
 
   \[
     f(n) = \frac{g(n)}{2}.
@@ -1202,7 +1202,7 @@
   Let us find a general formula now for \( n \ge 4 \).  We introduce
   one more notation.  Let \( D_k(n) \) denote the sum of the attacking
   degrees of all squares of attacking degree \( k \) on an \( n \times
-  n \) board, i.e.,
+  n \) board, i.e.
 
   \[
     D_k(n) = \sum_{\mathclap{\deg(S_i) = k}} \deg(S_i).
@@ -1251,7 +1251,7 @@
 
   We have counted the attacking degrees of all squares in the first
   two columns and rows as well as the last two columns and rows.  We
-  are left with \( (n - 4)^2 \) squares in the middle, and they all
+  are left with \( (n - 4)^2 \) squares in the middle and they all
   have attacking degree \( 8 \).  Therefore,
 
   \[
@@ -1268,11 +1268,11 @@
   \end{align*}
 
   Even though we assumed \( n \ge 4 \) while obtaining the above
-  formula, remarkably, it gives us the correct values for
-  \( n = 1, 2 \) and \( 3 \).  The number of mutually attacking knight
-  placements for distinct knights on an \( n \times n \) board is
-  \( 0 \) if \( n = 1 \) or \( 2 \), and \( 16 \) if \( n = 3 \), and
-  indeed the above formula gives us
+  formula, remarkably, it gives us the correct values for \( n = 1,
+  2 \) and \( 3 \).  The number of mutually attacking knight
+  placements for distinct knights on an \( n \times n \) board is \(
+  0 \) if \( n = 1 \) or \( 2 \).  It is \( 16 \) if \( n = 3 \).
+  Indeed the above formula gives us
 
   \[
     g(1) = g(2) = 0, \quad g(3) = 16.
@@ -1446,7 +1446,7 @@
   </li>
   <li>
     <a href="https://mathworld.wolfram.com/KnightGraph.html">Knight Graph</a>
-    by Eric W. by Weisstein
+    by Eric W. Weisstein
   </li>
   <li>
     <a href="https://oeis.org/A033996">OEIS Entry A033996</a>

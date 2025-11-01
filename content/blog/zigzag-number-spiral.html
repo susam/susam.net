@@ -64,7 +64,7 @@
   expression involving variables and constants, built using a finite
   combination of basic operations: addition, subtraction,
   multiplication, division, integer exponents, roots with integer
-  index, and functions such as exponentials, logarithms and
+  index and functions such as exponentials, logarithms and
   trigonometric functions.
 </p>
 <p>
@@ -131,13 +131,13 @@
 <p>
   Whenever the spiral touches the left edge at the \( m \)th row
   (where \( m \) is even), the number in the first column of that row
-  is \( m^2 \).  Hence, we conclude that \( f(m, 1) = m^2 \) when
-  \( m \) is even.  Immediately after touching the left edge, the
-  spiral turns downwards into the first column of the next row.  Thus,
-  in the next row, i.e., in the \( (m + 1) \)th row, we have \( f(m +
-  1, 1) = m^2 + 1 \), where \( m + 1 \) is odd.  This can be restated
-  as \( f(m, 1) = (m - 1)^2 + 1 \) when \( m \) is odd.  Since \( f(1,
-  1) = 1 \), we can summarise the two formulas we have found here as:
+  is \( m^2 \).  Hence, we conclude that \( f(m, 1) = m^2 \) when \( m
+  \) is even.  Immediately after touching the left edge, the spiral
+  turns downwards into the first column of the next row.  Thus, in the
+  next row, i.e. in the \( (m + 1) \)th row, we have \( f(m + 1, 1) =
+  m^2 + 1 \), where \( m + 1 \) is odd.  This can be restated as \(
+  f(m, 1) = (m - 1)^2 + 1 \) when \( m \) is odd.  Since \( f(1, 1) =
+  1 \), we can summarise the two formulas we have found here as:
 
   \[
     f(m, 1) =
@@ -187,7 +187,7 @@
 <h3 id="computing-all-grid-numbers-1">Computing All Grid Numbers</h3>
 <p>
  Since the spiral touches the left edge on even-numbered rows, then
- turns downwards into the next (odd-numbered) row, and then starts
+ turns downwards into the next (odd-numbered) row and then starts
  moving right until the diagonal (where it changes direction again),
  the following two rules hold:
 </p>
@@ -226,8 +226,8 @@
 </ul>
 <p>
   Now the numbers on or above the diagonal can be found using the
-  formula \( f(m, n) = f(1, n) - (m - 1) \) when \( n \) is odd, and
-  \( f(m, n) = f(1, n) + (m - 1) \), when \( n \) is even.
+  formula \( f(m, n) = f(1, n) - (m - 1) \) when \( n \) is odd and \(
+  f(m, n) = f(1, n) + (m - 1) \), when \( n \) is even.
 </p>
 <p>
   Can we determine from the values of \( m \) and \( n \) if the
@@ -334,7 +334,7 @@
   We have made some progress towards a closed-form expression.  We
   have collapsed the four expressions in the piecewise formula to just
   two.  The only difference between them lies in the sign of the
-  second term: it is positive when the dominant variable is even, and
+  second term: it is positive when the dominant variable is even and
   negative when it is odd.  This observation allows us to unify both
   cases into a single expression:
 
@@ -415,8 +415,8 @@
 <p>
   By a similar reasoning, for odd \( n \), the \( n \)th column has
   numbers that increase as we move up from the diagonal number towards
-  the top edge.  Therefore \( f(1, n) = n^2 \), and since \( n^2 -
-  f(n, n) = n - 1 \), we again obtain
+  the top edge.  Therefore \( f(1, n) = n^2 \) and since \( n^2 - f(n,
+  n) = n - 1 \), we again obtain
 
   \[
     f(n, n) = n^2 - n + 1 \quad \text{if } n \equiv 1 \pmod{2}.
@@ -438,13 +438,13 @@
   decrease as we go from the diagonal up to the top edge.  Therefore
   \( f(m, n) \le f(n, n) \) and \( f(m, n) = f(n, n) - (n - m) \).  If
   \( n \) is odd, then the numbers increase as we go from the diagonal
-  up to the top edge, and therefore \( f(m, n) \ge f(n, n) \) and \(
+  up to the top edge and therefore \( f(m, n) \ge f(n, n) \) and \(
   f(m, n) = f(n, n) + (n - m) \).
 </p>
 <p>
   If \( m \ge n \), then the number \( f(m, n) \) lies on or below the
   diagonal number \( f(m, m) \).  By a similar analysis, we find that
-  \( f(m, n) = f(m, m) + (m - n) \) if \( n \) is even, and \( f(m, n)
+  \( f(m, n) = f(m, m) + (m - n) \) if \( n \) is even and \( f(m, n)
   = f(m, m) - (m - n) \) if \( n \) is odd.  We summarise these
   results as follows:
 
@@ -482,12 +482,12 @@
 <p>
   If we take a close look at the last formula in the previous section,
   we find that in each expression, one variable plays a dominant role,
-  i.e., it occurs more frequently in the expression than the other.
-  In the first two expressions \( n \) plays the dominant role whereas
-  in the last two expressions \( m \) plays the dominant role.  In
-  fact, in each expression, the dominant variable is the one that is
-  greater than or equal to the other.  With this in mind, we can
-  rewrite the above formula as
+  i.e. it occurs more frequently in the expression than the other.  In
+  the first two expressions \( n \) plays the dominant role whereas in
+  the last two expressions \( m \) plays the dominant role.  In fact,
+  in each expression, the dominant variable is the one that is greater
+  than or equal to the other.  With this in mind, we can rewrite the
+  above formula as
 
   \[
     f(m, n) =

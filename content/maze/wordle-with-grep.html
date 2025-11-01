@@ -6,11 +6,11 @@
   Let us solve a couple of
   <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a> games
   with the Unix <code>grep</code> command and the
-  Unix <code>words</code> file.  The Wordle games #217, #218, and #219
-  for 22&nbsp;Jan&nbsp;2022, 23&nbsp;Jan&nbsp;2022, and
-  24&nbsp;Jan&nbsp;22, respectively, are used as examples in this
-  post.  The output examples shown below are obtained using the words
-  file <code>/usr/share/dict/words</code>, GNU grep 3.6, and GNU bash
+  Unix <code>words</code> file.  The Wordle games #217, #218 and #219
+  for 22&nbsp;Jan&nbsp;2022, 23&nbsp;Jan&nbsp;2022 and
+  24&nbsp;Jan&nbsp;22 respectively are used as examples in this post.
+  The output examples shown below are obtained using the words
+  file <code>/usr/share/dict/words</code>, GNU grep 3.6 and GNU bash
   5.1.4 on Debian GNU/Linux 11.2 (bullseye).
 </p>
 <p>
@@ -77,7 +77,7 @@ $ <kbd>words | wc -l</kbd>
 </pre>
     <p>
       The output shows that the letter 's' occurs in 2245 five-letter
-      words, followed by 'e' which occurs in 2149 five-letter words,
+      words, followed by 'e' which occurs in 2149 five-letter words
       and so on.
     </p>
   </li>
@@ -108,10 +108,10 @@ until</samp>
 </pre>
     <p>
       We found that there is no such word that contains 'i', 'l', 't',
-      'n', and 'd'.  So we got rid of 'd' in our search and included
+      'n' and 'd'.  So we got rid of 'd' in our search and included
       'u' (the next highest ranking letter after 'd') instead to find
       the word "until".  We will enter this word as the second guess
-      if and only if the first guess (i.e., "arose") does not lead to
+      if and only if the first guess (i.e. "arose") does not lead to
       any positive result.
     </p>
 </ol>
@@ -137,7 +137,7 @@ until</samp>
   <li>
     <p>
       The previous result shows that the letter 'e' occurs at the
-      fifth place.  Further, the letters 'a', 'r', 'o', and 's' do not
+      fifth place.  Further, the letters 'a', 'r', 'o' and 's' do not
       occur anywhere in the word.  Look for words satisfying these
       constraints.
     </p>
@@ -337,8 +337,8 @@ crimp</samp>
   <li>
     <p>
       The previous result shows that the third letter is 'o' and the
-      letters 'a', 'r', 's', and 'e' do not occur anywhere in the
-      word.  Search for words that match these constraints.
+      letters 'a', 'r', 's' and 'e' do not occur anywhere in the word.
+      Search for words that match these constraints.
     </p>
 <pre>
 <samp>$ <kbd>words | grep '..o..' | grep -v '[arse]' | head -n 5</kbd>

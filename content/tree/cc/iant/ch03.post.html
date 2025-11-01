@@ -56,13 +56,13 @@
     &amp; = kf(k) - (m + 1)f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
     &amp; = kf(k) - mf(m + 1) - f(m + 1) - \sum_{n=m + 2}^{k} f(n) \\
     &amp; = kf(k) - mf(m + 1) - \sum_{n=m + 1}^{k} f(n) \\
-    &amp; = kf(k) - mf(m + 1) - \sum_{y &lt; n \le x} f(n).
+    &amp; = kf(k) - mf(m + 1) - \sum_{y \lt n \le x} f(n).
   \end{align*}
 </p>
 <h3 id="equation-6-in-the-proof-of-eulers-summation-formula">Equation (6) in the proof of Euler's summation formula</h3>
 <p>
   \begin{align*}
-    \sum_{y &lt; n \le x} f(n)
+    \sum_{y \lt n \le x} f(n)
     &amp; = - \int_{m + 1}^k [t] f'(t) \, dt + k f(k) - m f(m + 1) \\
     &amp; = \begin{aligned}[t]
           &amp; \left( - \int_y^{m + 1} [t] f'(t) \, dt
@@ -96,7 +96,7 @@
   Final step of the proof:
 
   \begin{align*}
-    \sum_{y &lt; n \le x} f(n)
+    \sum_{y \lt n \le x} f(n)
     &amp; = -\int_y^x [t] f'(t) \, dt + k f(x) - m f(y) \\
     &amp; = \begin{aligned}[t]
           &amp; -\int_y^x [t] f'(t) \, dt + [x] f(x) - [y] f(y) \\

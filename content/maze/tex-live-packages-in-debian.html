@@ -5,7 +5,7 @@
 <!-- import: extra.css -->
 <p>
   In this post, I document an overview of the various TeX Live
-  packages available in Debian, their sizes, the faciliies they offer,
+  packages available in Debian, their sizes, the faciliies they offer
   and the relationship between these packages.  I have referred to a
   fresh new Debian GNU/Linux 10.0 (buster) installation while writing
   this post.
@@ -75,7 +75,7 @@
   <li>
     <p>
       <code>texlive-latex-base</code>: This package contains packages
-      that are either mandated by the core LaTeX team, or very widely
+      that are either mandated by the core LaTeX team or very widely
       used and strongly recommended in practice.
     </p>
     <p>
@@ -104,7 +104,7 @@
   <li>
     <p>
       <code>texlive-pictures</code>: It contains packages for
-      graphics, pictures, and diagrams including TikZ, pict, etc.
+      graphics, pictures and diagrams including TikZ, pict, etc.
     </p>
     <p>
       Installing this package also
@@ -122,7 +122,7 @@
     <p>
       <code>texlive-fonts-recommended</code>: This package contains
       the recommended fonts, including the base 35 PostScript fonts,
-      Latin Modern, TeX Gyre, and T1 and other encoding support for
+      Latin Modern, TeX Gyre and T1 and other encoding support for
       Computer Modern, in outline form.
     </p>
     <p>
@@ -142,9 +142,9 @@
       most common tasks.
     </p>
     <p>
-      This is a metapackage, i.e., it does not include any CTAN
+      This is a metapackage, i.e. it does not include any CTAN
       packages of its own.  It merely depends on
-      <code>texlive-latex-base</code>, <code>texlive-latex-recommended</code>,
+      <code>texlive-latex-base</code>, <code>texlive-latex-recommended</code>
       and <code>texlive-fonts-recommended</code>.  In other words,
       <code>apt-get install texlive</code> would be a convenient way
       to install a trimmed down TeX Live distribution with all the
@@ -154,7 +154,7 @@
   <li>
     <p>
       <code>texlive-plain-generic</code>: This package contains add-on
-      packages and macros that work with plain TeX, often LaTeX, and
+      packages and macros that work with plain TeX, often LaTeX and
       occasionally other formats.
     </p>
     <p>
@@ -171,7 +171,7 @@
       Installing this package also
       installs <code>texlive-latex-base</code>,
       <code>texlive-latex-recommended</code>, <code>texlive-pictures</code>,
-      <code>texlive-fonts-recommended</code>,
+      <code>texlive-fonts-recommended</code>
       and <code>texlive-plain-generic</code>.  This package depends on
       <code>texlive-latex-recommended</code> (which in turn depends on
       <code>texlive-latex-base</code>)
@@ -258,7 +258,7 @@
       missing), includes syntax-highlighted code blocks
       (<code>listings</code> and <code>xcolor</code> are missing),
       adds vertical space between paragraphs (<code>parskip</code> is
-      missing), or customises captions (<code>caption</code> is
+      missing) or customises captions (<code>caption</code> is
       missing).
     </p>
   </li>
@@ -271,8 +271,8 @@
       <code>parskip</code>, <code>caption</code>, etc.  I think one
       can go a long way with this installation.  However, it may not
       be sufficient if you want to draw diagrams with TikZ
-      (<code>pgf</code> is missing), or if you want to customise the
-      section headings (<code>titlesec</code> is missing), or if you
+      (<code>pgf</code> is missing) or if you want to customise the
+      section headings (<code>titlesec</code> is missing) or if you
       want to place boxes at absolute positions (<code>textpos</code>
       is missing).
     </p>
@@ -282,7 +282,7 @@
     installation.  It downloads 144 MB of archives and occupies 452 MB
     of disk space.  It includes a lot of packages.  Almost all
     frequently used stuff are present.  For example, <code>pgf</code>,
-    <code>titlesec</code>, and <code>textpos</code> are present.  This
+    <code>titlesec</code> and <code>textpos</code> are present.  This
     is what I usually install.  Even with the large number of
     packages, it has a few useful things missing that I occassionally
     rely on.  For example, I cannot include pretty icons with it

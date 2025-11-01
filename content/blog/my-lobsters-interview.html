@@ -28,7 +28,7 @@
 <h2 id="contents">Contents</h2>
 <ol>
   <li><a href="#lisp-and-other-things">Lisp and Other Things</a></li>
-  <li><a href="#lisp-emacs-and-mathematics">Lisp, Emacs, and Mathematics</a></li>
+  <li><a href="#lisp-emacs-and-mathematics">Lisp, Emacs and Mathematics</a></li>
   <li><a href="#interests-and-exploration">Interests and Exploration</a></li>
   <li><a href="#computing-for-fun">Computing for Fun</a></li>
   <li><a href="#computing-activities">Computing Activities</a></li>
@@ -53,7 +53,7 @@
   you as a Lisper, what other things do you use?
 </p>
 <p>
-  Yes, I use Lisp extensively for my personal projects, and much of
+  Yes, I use Lisp extensively for my personal projects and much of
   what I do in my leisure is built on it.  I ran
   a <a href="https://github.com/susam/mathb">mathematics pastebin</a>
   for close to thirteen years.  It was quite popular on some IRC
@@ -71,10 +71,10 @@
 </p>
 <p>
   I use plenty of other tools as well.  In my early adulthood, I spent
-  many years working with C, C++, Java, and PHP.  My
+  many years working with C, C++, Java and PHP.  My
   <a href="https://issues.apache.org/jira/browse/NUTCH-559">first
   substantial open source contribution</a> was to the Apache Nutch
-  project which was in Java, and one of my early original open source
+  project which was in Java and one of my early original open source
   projects was <a href="https://github.com/susam/uncap">Uncap</a>, a C
   program to remap keys on Windows.
 </p>
@@ -84,14 +84,14 @@
   small standalone tools directly in HTML and JavaScript, often with
   all the code in a single file in a readable, unminified form.
 </p>
-<!-- Lisp, Emacs, and mathematics -->
+<!-- Lisp, Emacs and mathematics -->
 <p class="question" id="lisp-emacs-and-mathematics">
   How did you first discover computing, then end up with Lisp, Emacs
   and mathematics?
 </p>
 <p>
   I got introduced to computers through the Logo programming language
-  as a kid.  Using simple arithmetic, geometry, logic, and code to
+  as a kid.  Using simple arithmetic, geometry, logic and code to
   manipulate a two-dimensional world had a lasting effect on me.
 </p>
 <p>
@@ -154,11 +154,11 @@
   me back then.  After a few minutes of thinking, I managed to prove
   it from scratch.  By the inclusion-exclusion principle, we count how
   many integers from \( 1 \) up to \( pq \) are not divisible by
-  \( p \) or \( q \).  There are \( pq \) integers in total.  Among
-  them, there are \( q \) integers divisible by \( p \), and \( p \)
+  \(p \) or \( q \).  There are \( pq \) integers in total.  Among
+  them, there are \( q \) integers divisible by \( p \) and \( p \)
   integers divisible by \( q \).  So we need to subtract \( p + q \)
-  from \( pq \).  But since one integer (\( pq \) itself) is counted
-  in both groups, we add \( 1 \) back.  Therefore
+  from \(pq \).  But since one integer (\( pq \) itself) is counted in
+  both groups, we add \( 1 \) back.  Therefore
 
   \[
     \varphi(pq) = pq - (p + q) + 1 = (p - 1)(q - 1).
@@ -188,12 +188,12 @@
 <p>
   So back then, most of my computing happened without an actual
   computer.  But even with that limited access to computers, a whole
-  new world opened up for me: one that showed me the joy of computing,
+  new world opened up for me: one that showed me the joy of computing
   and more importantly, the joy of sharing my little programs with my
   friends and teachers.  One particular Logo program I still remember
   very well drew a house with animated dashed lines, where the dashes
   moved around the outline of the house.  Everyone around me loved it,
-  copied it, and tweaked it to change the colours, alter the details,
+  copied it and tweaked it to change the colours, alter the details
   and add their own little touches.
 </p>
 <p>
@@ -209,10 +209,10 @@
 </p>
 <p>
   Sometimes computing for fun may mean crafting a minimal esoteric
-  drawing language, making a small game, or building a tool that
-  solves an interesting problem elegantly.  It is a bonus if the
-  exploration results in something working well enough that I can
-  share with others on the World Wide Web and others find it fun too.
+  drawing language, making a small game or building a tool that solves
+  an interesting problem elegantly.  It is a bonus if the exploration
+  results in something working well enough that I can share with
+  others on the World Wide Web and others find it fun too.
 </p>
 <!-- Pursuits -->
 <p class="question" id="interests-and-exploration">
@@ -229,7 +229,7 @@
   to challenge each other with mathematical puzzles.  This tool became
   a nice way to share solutions with each other.  Its use spread from
   my friends to their friends and colleagues, then to schools and
-  universities, and eventually to IRC channels.
+  universities and eventually to IRC channels.
 </p>
 <p>
   Similarly, I built <a href="https://github.com/susam/texme">TeXMe</a>
@@ -237,9 +237,9 @@
   subject.  I was not ready to share the notes online, but I did want
   to share them with my friends and colleagues who were also learning
   the same topic.  Normally I would write my notes in LaTeX, compile
-  them to PDF, and share the PDF, but in this case, I wondered, what
-  if I took some of the code from MathB and created a tool that would
-  let me write plain Markdown
+  them to PDF and share the PDF, but in this case, I wondered, what if
+  I took some of the code from MathB and created a tool that would let
+  me write plain Markdown
   (<a href="https://github.github.com/gfm/">GFM</a>) + LaTeX
   (<a href="https://www.mathjax.org/">MathJax</a>) in
   a <code>.html</code> file and have the tool render the file as soon
@@ -254,7 +254,7 @@
   <a href="journey-to-prime-number-theorem.html">analytic number
   theory book club</a> and I needed a way to type LaTeX snippets live
   on screen and see them immediately rendered.  That made me wonder:
-  what if I took TeXMe, made it interactive, and gave it a chalkboard
+  what if I took TeXMe, made it interactive and gave it a chalkboard
   look-and-feel?  That led to Muboard.
 </p>
 <p>
@@ -278,7 +278,7 @@
   (<a href="fxyt.html">FXYT</a>,
   <a href="https://github.com/susam/may4">may4.fs</a>,
   <a href="self-printing-machine-code.html">self-printing machine code</a>,
-  <a href="primegrid.html">prime number grid explorer</a>),
+  <a href="primegrid.html">prime number grid explorer</a>)
   and so on.  The list goes on.  When it comes to hobby computing, I
   don't think I can pick just one domain and say it interests me the
   most.  I have a lot of interests.
@@ -305,17 +305,17 @@
   Beyond such experiments, computing also includes more practical and
   concrete activities, such as installing and using my favourite Linux
   distribution (Debian), writing software tools in languages like
-  Common Lisp, Emacs Lisp, Python, and the shell command language, or
+  Common Lisp, Emacs Lisp, Python and the shell command language or
   customising my Emacs environment to automate repetitive tasks.
 </p>
 <p>
   To me, computing also includes the abstract stuff like spending time
   with abstract algebra and number theory and getting a deeper
-  understanding of the results pertaining to groups, rings, and
-  fields, as well as numerous number-theoretic results.  Browsing the
+  understanding of the results pertaining to groups, rings and fields,
+  as well as numerous number-theoretic results.  Browsing the
   <a href="https://oeis.org/">On-Line Encyclopedia of Integer
   Sequences</a> (OEIS), writing small programs to explore interesting
-  sequences, or just thinking about them is computing too.  I think
+  sequences or just thinking about them is computing too.  I think
   many of the interesting results in computer science have deep
   mathematical foundations.  I believe much of computer science is
   really discrete mathematics in action.
@@ -327,13 +327,13 @@
   make digital computing possible.  It is fascinating how, as a
   relatively new species on this planet, we have managed to take sand
   and find a way to use continuous voltages and currents in electronic
-  circuits built with silicon, and convert them into the discrete
+  circuits built with silicon and convert them into the discrete
   operations of digital logic.  We have machines that can simulate
   themselves!
 </p>
 <p>
   To me, all of this is fun.  To study and learn about these things,
-  to think about them, to understand them better, and to accomplish
+  to think about them, to understand them better and to accomplish
   useful or amusing results with this knowledge is all part of the
   fun.
 </p>
@@ -343,7 +343,7 @@
 </p>
 <p>
   I focus more on the domain than the tool.  Most of the time it is a
-  problem that catches my attention, and then I explore it to
+  problem that catches my attention and then I explore it to
   understand the domain and arrive at a solution.  The problem itself
   usually points me to one of the tools I already know.
 </p>
@@ -357,8 +357,8 @@
   work as a self-contained file that others can execute easily within
   their web browsers.  When I do that, I prefer to keep the HTML neat
   and readable, rather than bundled or minified, so that people who
-  like to 'View Source' can copy, edit, and customise the code
-  themselves, and immediately see their changes take effect.
+  like to 'View Source' can copy, edit and customise the code
+  themselves to immediately see their changes take effect.
 </p>
 <p>
   Let me share a specific example.  While working on a web-based game, I first
@@ -367,9 +367,9 @@
   text rendering quality, I began looking for IBM PC OEM fonts and
   similar retro fonts online.  After downloading a few font packs, I
   wrote a little Python script to convert them to bitmaps (arrays of
-  integers), and then used the bitmaps to draw text on the canvas
-  using JavaScript, one cell at a time, to get pixel-perfect results!
-  These tiny Python and JavaScript tools were good enough that I felt
+  integers) and then used the bitmaps to draw text on the canvas using
+  JavaScript, one cell at a time, to get pixel-perfect results!  These
+  tiny Python and JavaScript tools were good enough that I felt
   comfortable sharing them together as a tiny toolkit called
   <a href="https://susam.github.io/pcface/src/demo.html">PCFace</a>.
   This toolkit offers JavaScript bitmap arrays and tiny JavaScript
@@ -400,7 +400,7 @@
   me well because they were written in a composable way.  New problems
   can often be solved with small wrappers or combinations of existing
   functions.  I think APIs that consist of functions that are simple,
-  orthogonal, and flexible age well.  If each function in an API does
+  orthogonal and flexible age well.  If each function in an API does
   one thing and does it well (the Unix philosophy), it will have
   long-lasting utility.
 </p>
@@ -409,9 +409,9 @@
   extensions to an API, but I think it is very important to not give
   in to the temptation of enhancing the existing functions by making
   them more complicated with optional parameters, keyword arguments,
-  nested branches, and so on.  Personally, I have found that it is
-  much better to implement new functions that are small, orthogonal,
-  and flexible, each doing one thing and doing it well.
+  nested branches and so on.  Personally, I have found that it is much
+  better to implement new functions that are small, orthogonal and
+  flexible, each doing one thing and doing it well.
 </p>
 <p class="question" id="designing-for-composability">
   What design methods or tips do you have, to increase composability?
@@ -430,18 +430,18 @@
   repeatedly saying "a minute of data from one device".  Why not
   something less fancy like "chunk"?  Because we reserved "chunk" for
   subdivisions within a nugget.  Perhaps there were better choices,
-  but "nugget" was the term we settled on, and it quickly became
-  shared terminology between the collaborators.  Good terminology
-  naturally carries over into code.  With this vocabulary in place,
-  function names like <code>collect_nugget()</code>,
+  but "nugget" was the term we settled on and it quickly became shared
+  terminology between the collaborators.  Good terminology naturally
+  carries over into code.  With this vocabulary in place, function
+  names like <code>collect_nugget()</code>,
   <code>open_nugget()</code>, <code>parse_chunk()</code>,
   <code>index_chunk()</code>, <code>skip_chunk()</code>,
   etc. immediately become meaningful to everyone involved.
 </p>
 <p>
   Thinking about the vocabulary also ensures that we are thinking
-  about the data, concepts, and notions we are working with in a
-  deliberate manner, and that kind of thinking also helps when we
+  about the data, concepts and notions we are working with in a
+  deliberate manner and that kind of thinking also helps when we
   design the architecture of software.
 </p>
 <p>
@@ -449,7 +449,7 @@
   into writing functions that take some input and produce some desired
   effect, with variable names and function names decided on the fly.
   To me, this feels backwards.  I prefer the opposite approach.
-  Define the terms first, and let the code follow from them.
+  Define the terms first and let the code follow from them.
 </p>
 <p>
   I also prefer developing software in a layered manner, where complex
@@ -466,7 +466,7 @@
 <p>
   To summarise, I like to develop software with a clear vocabulary,
   consistent use of that vocabulary, a layered design where complex
-  functions are built from simpler ones, and by avoiding layer
+  functions are built from simpler ones and by avoiding layer
   violations.  I am sure none of this is new to the Lobsters
   community.  Some of these ideas also occur
   in <a href="https://en.wikipedia.org/wiki/Domain-driven_design">domain-driven
@@ -487,13 +487,13 @@
   track mentally with that approach.  The only viable way to develop
   software in Forth is to start with a small set of words that
   represent the important notions of the problem domain, test them
-  immediately, and then compose higher-level words from the
-  lower-level ones.  Forth naturally encourages a layered style of
-  development, where the programmer thinks carefully about the domain,
-  invents vocabulary, and expresses complex ideas in terms of simpler
-  ones, almost in a mathematical fashion.  In my experience, this kind
-  of deliberate design produces software that remains easy to
-  understand and reason about even years after it was written.
+  immediately and then compose higher-level words from the lower-level
+  ones.  Forth naturally encourages a layered style of development,
+  where the programmer thinks carefully about the domain, invents
+  vocabulary and expresses complex ideas in terms of simpler ones,
+  almost in a mathematical fashion.  In my experience, this kind of
+  deliberate design produces software that remains easy to understand
+  and reason about even years after it was written.
 </p>
 <!-- Small vs large functions -->
 <p class="question" id="small-vs-large-functions">
@@ -515,7 +515,7 @@
 </blockquote>
 <p>
   Personally, I enjoy working with a codebase that has thousands of
-  functions, provided most of them are small, well-scoped, and do one
+  functions, provided most of them are small, well-scoped and do one
   thing well.  That said, I am not dogmatically opposed to large
   functions.  It is always a matter of taste and judgement.  Sometimes
   one large, cohesive function is clearer than a pile of tiny ones.
@@ -534,7 +534,7 @@
 <p>
   So while I lean towards small, composable functions, the real goal
   is to strike a balance that keeps code maintainable in the long run.
-  Each function should be as small as it can reasonably be, and no
+  Each function should be as small as it can reasonably be and no
   smaller.
 </p>
 <!-- Domains -->
@@ -549,7 +549,7 @@
   comes from years of developing software for businesses, which has
   included solving problems such as network events parsing, indexing
   and querying, packet decoding, developing parser generators,
-  database session management, and TLS certificate lifecycle
+  database session management and TLS certificate lifecycle
   management.  The second comes from areas I pursue purely out of
   curiosity or for hobby computing.  This is the kind I am going to
   focus on in our conversation.
@@ -559,11 +559,11 @@
   as for many others, computing is also a hobby.
 </p>
 <p>
-  Personal hobby projects often lead me down various rabbit holes, and
+  Personal hobby projects often lead me down various rabbit holes and
   I end up learning new domains along the way.  For example, although
   I am not a web developer, I learnt to build small, interactive
-  single-page tools in plain HTML, CSS, and JavaScript simply because
-  I needed them for my hobby projects over and over again.  An early
+  single-page tools in plain HTML, CSS and JavaScript simply because I
+  needed them for my hobby projects over and over again.  An early
   example is <a href="quickqwerty.html">QuickQWERTY</a>, which I built
   to teach myself and my friends touch-typing on QWERTY keyboards.
   Another example is <a href="cfrs.html">CFRS[]</a>, which I created
@@ -595,7 +595,7 @@
   I learnt to use double spaces between sentences first with Vim and
   then later again with Emacs.  For example, in Vim,
   the <code>joinspaces</code> option is on by default, so when we join
-  sentences with the normal mode command <code>J</code>, or format
+  sentences with the normal mode command <code>J</code> or format
   paragraphs with <code>gqap</code>, Vim inserts two spaces after full
   stops.  We need to disable that behaviour with <code>:set
   nojoinspaces</code> if we want single spacing.
@@ -621,12 +621,12 @@
   The defaults in Vim and Emacs made me adopt double spacing.  The
   double spacing convention is also widespread across open source
   software.  If we look at the Vim help pages, Emacs built-in
-  documentation, or the Unix and Linux man pages, double spacing is the
-  norm.  Even inline comments in traditional open source projects often
-  use it.  For example, see Vim's
+  documentation or the Unix and Linux man pages, double spacing is the
+  norm.  Even inline comments in traditional open source projects
+  often use it.  For example, see Vim's
   <a href="https://github.com/vim/vim/blob/v9.1.1752/runtime/doc/usr_01.txt">:h usr_01.txt</a>,
   Emacs's
-  <a href="https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/doc/emacs/emacs.texi?h=emacs-30.2#n1556">(info "(emacs) Intro")</a>,
+  <a href="https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/doc/emacs/emacs.texi?h=emacs-30.2#n1556">(info "(emacs) Intro")</a>
   or the comments in the <a href="https://gcc.gnu.org/git/?p=gcc.git;f=gcc/cfg.cc;hb=releases/gcc-15.2.0">GCC source code</a>.
 </p>
 <!-- Learning -->
@@ -635,11 +635,11 @@
 </p>
 <p>
   When I take on a new domain, there is of course a lot of reading
-  involved from articles, books, and documentation.  But as I read, I
+  involved from articles, books and documentation.  But as I read, I
   constantly try to test what I learn.  Whenever I see a claim, I ask
   myself, "If this claim were wrong, how could I demonstrate it?"
-  Then I design a little experiment, perhaps write a snippet of code,
-  or run a command, or work through a concrete example, with the goal
+  Then I design a little experiment, perhaps write a snippet of code
+  or run a command or work through a concrete example, with the goal
   of checking the claim in practice.
 </p>
 <p>
@@ -670,7 +670,7 @@ f() or t() or f()
   Sometimes these experiments also expose gaps in my own
   understanding.  Suppose I didn't properly know what "short-circuit"
   means.  Then the results might contradict my expectations.  That
-  contradiction would push me to correct my misconception, and that's
+  contradiction would push me to correct my misconception and that's
   where the real learning happens.
 </p>
 <p>
@@ -688,7 +688,7 @@ f() or t() or f()
   expensive or unwieldy to do so.  For example, if I am learning
   something in the finance domain, it is not always possible to
   perform an actual transaction.  One can sometimes use simulation
-  software, mock environments, or sandbox systems to explore ideas
+  software, mock environments or sandbox systems to explore ideas
   safely.  Still, it is worth noting that this method has its
   limitations.
 </p>
@@ -712,7 +712,7 @@ f() or t() or f()
   studying mathematics textbooks.  With growing responsibilities and
   the time I devote to mathematics, I now get at most a few hours each
   week for hobby computing.  This automatically narrows down my
-  options.  I can explore perhaps one or at most two ideas in a month,
+  options.  I can explore perhaps one or at most two ideas in a month
   and that constraint makes me very deliberate about choosing my
   pursuits.
 </p>
@@ -722,7 +722,7 @@ f() or t() or f()
   notes archived in a private repository.  But once in a while, an
   exploration grows into something concrete and feels worth sharing on
   the Web.  That becomes a short-term hobby project.  I might work on
-  it over a weekend if it is small, or for a few weeks if it is more
+  it over a weekend if it is small or for a few weeks if it is more
   complex.  When that happens, the goal of sharing the project helps
   me focus.
 </p>
@@ -773,8 +773,8 @@ f() or t() or f()
   SLIME-like features in Vim!  That detail sent me down a very deep
   rabbit hole.  Now I needed to know how the two packages were
   different, what their strengths and weaknesses were, how routine
-  operations were performed in both, and so on.  What was meant to be
-  a short note turned into a nearly 10,000-word article.  As I was
+  operations were performed in both and so on.  What was meant to be a
+  short note turned into a nearly 10,000-word article.  As I was
   comparing the two SLIME-like packages for Vim, I also found a few
   bugs in Slimv and contributed fixes for them
   (<a href="https://github.com/kovisoft/slimv/pull/87">#87</a>,
@@ -807,7 +807,7 @@ f() or t() or f()
 </p>
 <p>
   The exchange of ideas!  Just as I enjoy sharing my own
-  computing-related thoughts, ideas, and projects, I also find joy in
+  computing-related thoughts, ideas and projects, I also find joy in
   reading what others have to share.
 </p>
 <p>
@@ -817,7 +817,7 @@ f() or t() or f()
 <p>
   After I've given time to the higher-priority parts of my life and to
   my own technical explorations, I use whatever spare time remains to
-  read articles, follow technical discussions, and occasionally add
+  read articles, follow technical discussions and occasionally add
   comments.
 </p>
 <!-- MathB.in -->
@@ -874,27 +874,27 @@ f() or t() or f()
   Kreyszig.  I don't often see this book recommended online, but for
   me it played a major role in broadening my horizons.  I think I
   studied the 8th edition back in the early 2000s.  It is a hefty book
-  with over a thousand pages, and I remember reading it cover to
-  cover, solving every exercise problem along the way.  It gave me a
-  solid foundation in routine areas like differential equations,
-  linear algebra, vector calculus, and complex analysis.  It also
-  introduced me to Fourier transforms and Laplace transforms, which I
-  found fascinating.
+  with over a thousand pages and I remember reading it cover to cover,
+  solving every exercise problem along the way.  It gave me a solid
+  foundation in routine areas like differential equations, linear
+  algebra, vector calculus and complex analysis.  It also introduced
+  me to Fourier transforms and Laplace transforms, which I found
+  fascinating.
 </p>
 <p>
   Of course, the Fourier transform has a wide range of applications in
-  signal processing, communications, spectroscopy, and more.  But I
+  signal processing, communications, spectroscopy and more.  But I
   want to focus on the fun and playful part.  In the early 2000s, I
   was also learning to play the piano as a hobby.  I used to record my
   amateur music compositions with
   <a href="https://github.com/audacity/audacity">Audacity</a> by
   connecting my digital piano to my laptop with a line-in cable.  It
   was great fun to plot the spectrum of my music on Audacity, apply
-  high-pass and low-pass filters, and observe how the Fourier
-  transform of the audio changed and then hear the effect on the
-  music.  That kind of hands-on tinkering made Fourier analysis
-  intuitive for me, and I highly recommend it to anyone who enjoys
-  both music and mathematics.
+  high-pass and low-pass filters and observe how the Fourier transform
+  of the audio changed and then hear the effect on the music.  That
+  kind of hands-on tinkering made Fourier analysis intuitive for me
+  and I highly recommend it to anyone who enjoys both music and
+  mathematics.
 </p>
 <p>
   The second book is <em>Introduction to Analytic Number Theory</em>
@@ -914,7 +914,7 @@ f() or t() or f()
 </p>
 <p>
   The third is <em>Galois Theory</em> by Ian Stewart.  It introduced
-  me to field extensions, field homomorphisms, and solubility by
+  me to field extensions, field homomorphisms and solubility by
   radicals.  I had long known that not all quintic equations are
   soluble by radicals, but I didn't know why.  Stewart's book taught
   me exactly why.  In particular, it demonstrated that the polynomial
@@ -924,7 +924,7 @@ f() or t() or f()
   remarkable.  To arrive at this result, the book takes us through a
   wonderful journey that includes the theory of polynomial rings,
   algebraic and transcendental field extensions, impossibility proofs
-  for ruler-and-compass constructions, the Galois correspondence, and
+  for ruler-and-compass constructions, the Galois correspondence and
   much more.
 </p>
 <p>
@@ -952,7 +952,7 @@ f() or t() or f()
 <blockquote>
   <p>
     I have never done anything 'useful'.  No discovery of mine has
-    made, or is likely to make, directly or indirectly, for good or
+    made or is likely to make, directly or indirectly, for good or
     ill, the least difference to the amenity of the world.
   </p>
 </blockquote>
@@ -966,7 +966,7 @@ f() or t() or f()
 <p>
   Similarly, it is amusing how something as abstract as abstract
   algebra finds very concrete applications in coding theory.  Concepts
-  such as polynomial rings, finite fields, and cosets of subspaces in
+  such as polynomial rings, finite fields and cosets of subspaces in
   vector spaces over finite fields play a crucial role in
   error-correcting codes, without which modern data transmission and
   storage would not be possible.
@@ -974,7 +974,7 @@ f() or t() or f()
 <p>
   On a more personal note, some simpler areas of mathematics have been
   directly useful in my own work.  While solving problems for
-  businesses, information entropy, combinatorics, and probability
+  businesses, information entropy, combinatorics and probability
   theory were crucial when I worked on gesture-based authentication
   about one and a half decades ago.
 </p>
@@ -982,7 +982,7 @@ f() or t() or f()
   Similarly, when I was developing Bloom filter-based indexing and
   querying for a network events database, again, probability theory
   was crucial in determining the parameters of the Bloom filters (such
-  as the number of hash functions, bits per filter, and elements per
+  as the number of hash functions, bits per filter and elements per
   filter) to ensure that the false positive rate remained below a
   certain threshold.  Subsequent testing with randomly sampled network
   events confirmed that the observed false positive rate matched the
@@ -993,8 +993,8 @@ f() or t() or f()
   Beyond these specific examples, studying mathematics also influences
   the way I think about problems.  Embarking on journeys like analytic
   number theory or Galois theory is humbling.  There are times when I
-  struggle to understand a small paragraph of the book, and it takes
-  me several hours (or even days) to work out the arguments in detail
+  struggle to understand a small paragraph of the book and it takes me
+  several hours (or even days) to work out the arguments in detail
   with pen and paper (lots of it) before I really grok them.  That
   experience of grappling with dense reasoning teaches humility and
   also makes me sceptical of complex, hand-wavy logic in day-to-day
@@ -1006,7 +1006,7 @@ f() or t() or f()
   correctly in all circumstances.  Explanations may sometimes be
   offered about why it works for reasonable inputs, but the reasoning
   is often not watertight.  The experience of working through
-  mathematical proofs, writing my own, making mistakes, and then
+  mathematical proofs, writing my own, making mistakes and then
   correcting them has taught me that if the reasoning for correctness
   is not clear and rigorous, something could be wrong.  In my
   experience, once such code sees real-world usage, a bug is nearly
@@ -1016,13 +1016,12 @@ f() or t() or f()
   That's why I usually insist either on simplifying the logic or on
   demonstrating correctness in a clear, rigorous way.  Sometimes this
   means doing a case-by-case analysis for different types of inputs or
-  conditions, and showing that the code behaves correctly in each
-  case.  There is also a bit of an art to reducing what seem like
-  numerous or even infinitely many cases to a small, manageable set of
-  cases by spotting structure, such as symmetries, invariants, or
-  natural partitions of the input space.  Alternatively, one can look
-  for a simpler argument that covers all cases.  These are techniques
-  we employ routinely in mathematics, and I think that kind of
-  thinking and reasoning is quite valuable in software development
-  too.
+  conditions and showing that the code behaves correctly in each case.
+  There is also a bit of an art to reducing what seem like numerous or
+  even infinitely many cases to a small, manageable set of cases by
+  spotting structure, such as symmetries, invariants or natural
+  partitions of the input space.  Alternatively, one can look for a
+  simpler argument that covers all cases.  These are techniques we
+  employ routinely in mathematics and I think that kind of thinking
+  and reasoning is quite valuable in software development too.
 </p>
