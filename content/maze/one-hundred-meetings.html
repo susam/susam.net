@@ -52,12 +52,12 @@
   group and how it was formed.  Back then, I knew little to nothing
   about analytic number theory.  Although I was familiar with some of
   the elementary concepts like divisibility, Euler's totient function,
-  modular arithmetic, calculus, and related theorems, chapter 2 of the
+  modular arithmetic, calculus and related theorems, chapter 2 of the
   book itself proved to be a significant challenge for me.  In the
   second chapter, it became clear to me that we will be building new
   levels of mathematical abstractions, use these abstractions to build
-  yet another layer of abstractions, and so on.  The chapter began
-  with a description of the M&ouml;bius function, a very neat and
+  yet another layer of abstractions and so on.  The chapter began with
+  a description of the M&ouml;bius function, a very neat and
   interesting function that I was previously unaware of.  That was
   fun!  But soon, this chapter began adding new layers of abstractions
   such as Dirichlet product, Dirichlet inverse, generalised
@@ -69,7 +69,7 @@
   would not become intuitive immediately.  I would understand the
   concepts, understand the related theorems, understand each step of
   the proofs, solve exercise problems, know how to apply the theorems
-  when needed, and yet I could not "feel" them.  I wanted to not just
+  when needed and yet I could not "feel" them.  I wanted to not just
   understand the concepts but I also wanted to "feel" the concepts
   like the way I could feel algebra, calculus, computer programming,
   etc.  In the initial days, I wondered if I was too old to develop
@@ -108,11 +108,11 @@
  \) is defined as follows:
 
  \[
-   \mu(1) = 1; \] If \( n &gt; 1,
- \)
+   \mu(1) = 1;
+ \]
 
- write \( n = p_1^{a_1} \dots p_k^{a_k} \) (prime factorisation).
- Then
+ If \( n \gt 1 \), write \( n = p_1^{a_1} \dots p_k^{a_k} \) (prime
+ factorisation).  Then
 
  \begin{align*}
    \mu(n) &amp; = (-1)^k \text{ if } a_1 = a_2 = \dots = a_k = 1, \\
@@ -125,7 +125,7 @@
    \sum_{d \mid n} \mu(d) =
    \begin{cases}
    1 &amp; \text{ if } n = 1, \\
-   0 &amp; \text{ if } n &gt; 1.
+   0 &amp; \text{ if } n \gt 1.
    \end{cases}
  \]
 </p>
@@ -143,14 +143,14 @@
 <p>
   As a more sophisticated example, the Dirichlet series with
   coefficients as the M&ouml;bius function is the multiplicative
-  inverse of the Riemann zeta function, i.e., if \( s = \sigma + it \)
-  is a complex number with its real part \( \sigma &gt; 1 \), we have
+  inverse of the Riemann zeta function, i.e. if \( s = \sigma + it \)
+  is a complex number with its real part \( \sigma \gt 1 \), we have
 
   \[
     \sum_{n=1}^{\infty} \frac{\mu(n)}{n^s} = \frac{1}{\zeta(s)}.
   \]
 
-  This immediately shows that \( \zeta(s) \ne 0 \) for \( \sigma &gt;
+  This immediately shows that \( \zeta(s) \ne 0 \) for \( \sigma \gt
   1 \).
 </p>
 <h3 id="dirichlet-product">Dirichlet Product</h3>
@@ -182,14 +182,14 @@
 <h3 id="hurwitz-zeta-function">Hurwitz Zeta Function</h3>
 <p>
   For complex numbers \( s = \sigma + it \), the Hurwitz zeta function
-  \( \zeta(s, a) \) is initially defined for \( \sigma &gt; 1 \) as
+  \( \zeta(s, a) \) is initially defined for \( \sigma \gt 1 \) as
 
   \[
     \zeta(s, a) = \sum_{n=0}^{\infty} \frac{1}{(n + a)^s}
   \]
 
-  where \( a \) is a fixed real number, \( 0 &lt; a &lt; 1 \).  Then
-  by analytic continuation, it is defined for \( \sigma \le 1 \) as
+  where \( a \) is a fixed real number, \( 0 \lt a \lt 1 \).  Then by
+  analytic continuation, it is defined for \( \sigma \le 1 \) as
 
   \[
     \zeta(s, a) = \Gamma(1 - s)I(s, a)
@@ -201,7 +201,7 @@
     \Gamma(s) =  \int_0^{\infty} x^{s - 1} e^{-x} \, dx
   \]
 
-  defined for \( \sigma &gt; 0 \) and also defined, by analytic
+  defined for \( \sigma \gt 0 \) and also defined, by analytic
   continuation, for \( \sigma \le 0 \) except for \( \sigma = 0, -1,
   -2, \dots \) (the nonpositive integers) and \( I(s, a) \) is defined
   by the contour integral
@@ -210,11 +210,11 @@
     I(s, a) = \frac{1}{2\pi i} \int_C \frac{z^{s-1} e^{az}}{1 - e^z} \, dz
   \]
 
-  where \( 0 &lt; a \le 1 \) and the contour \( C \) is a loop around
-  the negative real axis composed of three parts \( C_1 \), \( C_2 \),
-  and \( C_3 \) such that for \( c &lt; 2\pi \), we have \( z =
+  where \( 0 \lt a \le 1 \) and the contour \( C \) is a loop around
+  the negative real axis composed of three parts \( C_1 \), \( C_2 \)
+  and \( C_3 \) such that for \( c \lt 2\pi \), we have \( z =
   re^{-\pi i} \) on \( C_1 \) and \( z = re^{\pi i} \) on \( C_3 \) as
-  \( r \) varies from \( c \) to \( +\infty \), and \( z = ce^{i
+  \( r \) varies from \( c \) to \( +\infty \) and \( z = ce^{i
   \theta} \) on \( C_2 \), \( -\pi \le \theta \le \pi \).
 </p>
 <p>
@@ -245,7 +245,7 @@
   the Hurwitz zeta function opens new doors into the wonderful world
   of complex numbers and let us obtain beautiful and profound facts
   about the Riemann zeta function such as the fact that it has zeros
-  at negative even integers, i.e., \( \zeta(n) = 0 \) for \( n = -2,
+  at negative even integers, i.e. \( \zeta(n) = 0 \) for \( n = -2,
   -4, -6, \dots \) and the fact that \( \zeta(0) = -\frac{1}{2} \) and
   \( \zeta(-1) = -\frac{1}{12} \) and so on.
 </p>

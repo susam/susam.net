@@ -22,10 +22,10 @@
   contains a <code>JMP</code> instruction to another address,
   typically 0xf000:0xe05b.  This latter address contains the code to
   perform power-on self test (POST), perform several initialisations,
-  find the boot device, load the code from the boot sector into
-  memory, and execute it.  From here, the code in the boot sector
-  takes control.  In IBM-compatible PCs, the boot sector is the first
-  sector of a data storage device.  This is 512 bytes in length.  The
+  find the boot device, load the code from the boot sector into memory
+  and execute it.  From here, the code in the boot sector takes
+  control.  In IBM-compatible PCs, the boot sector is the first sector
+  of a data storage device.  This is 512 bytes in length.  The
   following table shows what the boot sector contains.
 </p>
 <table class="grid center textcenter">
@@ -123,14 +123,14 @@ ld --oformat binary -o a.com a.o</code>
   mapped to the segment 0xb800.  The first two instructions copy
   0xb800 into the data segment register, so that any data offsets
   specified is an offset in this segment.  Then the ASCII code for the
-  character 'A' (i.e., 0x41 or 65) is copied into the first location
-  in this segment and the attribute (0x1e) of this character to the
+  character 'A' (i.e. 0x41 or 65) is copied into the first location in
+  this segment and the attribute (0x1e) of this character to the
   second location.  The higher nibble (0x1) is the attribute for
   background colour and the lower nibble (0xe) is that of the
   foreground colour.  The highest bit of each nibble is the
   intensifier bit.  Depending on the video mode setup, the highest bit
   may also represent a blinking character.  The other three bits
-  represent red, green, and blue.  This is represented in a tabular
+  represent red, green and blue.  This is represented in a tabular
   form below.
 </p>
 <table class="grid center textcenter">
@@ -188,7 +188,7 @@ ld --oformat binary -o a.com a.o</code>
 <p>
   In the <code>ld</code> command earlier to generate the executable
   binary, we used the extension name <code>com</code> for the binary
-  file to make DOSBox believe that it is a DOS COM file, i.e., merely
+  file to make DOSBox believe that it is a DOS COM file, i.e. merely
   machine code and data with no headers.  In fact, the <code>--oformat
   binary</code> option in the <code>ld</code> command ensures that the
   output file contains only machine code.  This is why we are able to
@@ -218,7 +218,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code>
 <p>
   Finally, if you are feeling brave enough, you could write this image
   to the boot sector of an actual physical storage device, such as a
-  USB flash drive, and then boot your computer with it.  To do so, you
+  USB flash drive and then boot your computer with it.  To do so, you
   first need to determine the device file that represents the storage
   device.  There are many ways to do this.  A couple of commands that
   may be helpful to locate the storage device are <code>mount</code>
@@ -288,7 +288,7 @@ message:
   the register CS is set to 0 and the register IP is set to 0x7c00
   when the BIOS jumps to our program, the offset of the string is
   going to be greater than 0x7c00.  But if CS and IP are set to 0x07c0
-  and 0, respectively, when the BIOS jumps to our program, the offset
+  and 0 respectively, when the BIOS jumps to our program, the offset
   of the string is going to be much smaller.
 </p>
 <p>

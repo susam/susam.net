@@ -160,7 +160,7 @@ FC: no differences encountered</samp>
 </p>
 <p>
   However, we could also argue that the machine code is the input for
-  the CPU that the CPU fetches, decodes, and converts to a sequence of
+  the CPU that the CPU fetches, decodes and converts to a sequence of
   state changes in the CPU.  If we define a machine code quine to be a
   machine code program that writes its own bytes, then we could say
   that we have a machine code quine here.
@@ -293,7 +293,7 @@ diff foo.com OUT.COM</code>
   bytes or this DOS function would prematurely stop printing our data
   bytes as soon as it encounters this value.  That is why we set AL to
   0x23 in the first instruction, then increment it to 0x24 in the
-  second instruction, and then copy this value to the end of the data
+  second instruction and then copy this value to the end of the data
   bytes in the third instruction.  Finally, we execute <code>int
   0x21</code> twice to write the data bytes twice to standard output,
   so that the output matches the program itself.
@@ -321,7 +321,7 @@ diff foo.com OUT.COM</code>
   The <code>ret</code> instruction in the end too relies on DOS
   services.  When a .COM program starts, the register SP contains
   0xfffe.  The stack memory locations at offset 0xfffe and 0xffff
-  contain 0x00 and 0x00, respectively.  Further, the memory address at
+  contain 0x00 and 0x00 respectively.  Further, the memory address at
   offset 0x0000 contains the instruction <code>int 0x20</code> which
   is a DOS service that terminates the program.  As a result,
   executing the <code>ret</code> instruction pops 0x0000 off the stack
@@ -360,7 +360,7 @@ diff foo.com OUT.COM</code>
 dosbox foo.com</code>
 </pre>
 <p>
-  With the default code page active, i.e., with code page 437 active,
+  With the default code page active, i.e. with code page 437 active,
   the program should display an output that looks approximately like
   the following and halt:
 </p>
@@ -391,7 +391,7 @@ C:\&gt;</samp>
 <p>
   A proper way to verify that the output of the program represents the
   bytes of the program would be to take each symbol from the output of
-  the program, then look it up in a chart for code page 437, and
+  the program, then look it up in a chart for code page 437 and
   confirm that the byte value of each symbol matches each byte value
   that makes the program.  Here is one such chart that approximates
   the symbols in code page 437 with Unicode
@@ -539,9 +539,9 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <pre><code>qemu-system-i386 -fda boot.img</code></pre>
 <p>
   We could also write this image to the boot sector of an actual
-  physical storage device, such as a USB flash drive, and then boot
-  the computer with it.  Here is an example command that writes the
-  boot image to the drive represented by the device
+  physical storage device, such as a USB flash drive and then boot the
+  computer with it.  Here is an example command that writes the boot
+  image to the drive represented by the device
   path <code>/dev/sdx</code>.
 </p>
 <pre><code>cp a.img /dev/sdx</code></pre>
@@ -562,7 +562,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
   This looks like gibberish, however every symbol in the above output
   corresponds to a byte of the program mentioned earlier.  For
   example, the first symbol (omega) represents the byte value 0xea,
-  the second symbol (club) represents the byte value 0x05, and so on.
+  the second symbol (club) represents the byte value 0x05 and so on.
   The chart at <a href="code/cp437/cp437.html">cp437.html</a> can be
   used to confirm that every symbol in the output indeed represents
   every byte of the program.

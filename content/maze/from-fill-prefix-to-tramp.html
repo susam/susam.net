@@ -41,7 +41,7 @@
   completed discussing Chapter 7 of the book today which concluded
   this series of book club meetings.  In total, we have spent a little
   over 52 hours together to discuss this book, trying out every
-  concept and command introduced in the book, and sharing our insights
+  concept and command introduced in the book and sharing our insights
   about the material with each other.
 </p>
 <p>
@@ -130,7 +130,7 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
   characters in length and each line has the fill prefix.  Emacs took
   care to remove the fill prefix from each line, subtract the length
   of the fill prefix from the maximum character budget it has for each
-  line, reformat the lines, and then reinsert the fill prefix on each
+  line, reformat the lines and then reinsert the fill prefix on each
   line of the result.
 </p>
 <p>
@@ -157,7 +157,7 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
   first capturing group <code>\(f..\)</code> and
   similarly <code>\2</code> refers to the string matched by the second
   capturing group <code>\(b..\)</code>.  In this example, a string
-  like <code>foo-bar</code> is replaced with <code>bar-foo</code>,
+  like <code>foo-bar</code> is replaced with <code>bar-foo</code>
   or <code>playful-banter</code> with <code>playban-fulter</code>.
 </p>
 <p>
@@ -165,12 +165,12 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
   use Elisp expressions in the replacement strings.  The syntax to do
   so is to write <code>\,</code> followed by the Elisp expression in
   the replacement string.  For example, consider the key
-  sequence <code>C-M-% f.. RET \,(upcase \&) RET</code>.  Note how we
-  are using the backreference <code>\&</code> that refers to the whole
-  match as the argument to the Elisp function <code>upcase</code> that
-  converts its argument to upper-case.  This example searches for
-  strings that match the pattern <code>f..</code> and replaces them
-  with the upper-case form of the match.  A string
+  sequence <code>C-M-% f.. RET \,(upcase \&amp;) RET</code>.  Note how
+  we are using the backreference <code>\&amp;</code> that refers to
+  the whole match as the argument to the Elisp function
+  <code>upcase</code> that converts its argument to upper-case.  This
+  example searches for strings that match the pattern <code>f..</code>
+  and replaces them with the upper-case form of the match.  A string
   like <code>foo-bar</code> is replaced with <code>FOO-bar</code>.
 </p>
 <p>
@@ -195,7 +195,7 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
       <code>M-x keep-lines RET f.. RET</code>: Keep lines in region
       that match the regular expression <code>f..</code> and delete
       the rest.  If no region is active, then keep matching lines
-      between the point and end of buffer, and delete the rest.  The
+      between the point and end of buffer; delete the rest.  The
       deleted lines are not copied to kill ring.
     </p>
   </li>
@@ -305,7 +305,7 @@ garply:waldo:fred</code>
 </ol>
 <p>
   To summarise, <code>C-x (</code> starts recording a new keyboard
-  macro, <code>C-x )</code> stops recording the keyboard macro,
+  macro, <code>C-x )</code> stops recording the keyboard macro
   and <code>C-x e</code> replays the last keyboard macro.
   Alternatively, we could also use the function keys <code>F3</code>
   and <code>F4</code>.  To start recording a keyboard macro,
@@ -340,7 +340,7 @@ garply:waldo:fred</code>
   alternatively <code>C-3 F4</code>) to repeat the keyboard macro 3
   times.  We could also type <code>C-0 C-x e</code> (or
   alternatively <code>C-0 F4</code>) to repeat the keyboard macro
-  until there is an error (e.g., reaching the end of the buffer).
+  until there is an error (e.g. reaching the end of the buffer).
 </p>
 <h2 id="dabbrev">DAbbrev</h2>
 <p>
@@ -385,12 +385,12 @@ garply:waldo:fred</code>
 <p>
   But if we type <code>ap</code> and type <code>C-M-/</code>, the word
   expands to <code>appl</code> since that is the longest common prefix
-  among all the matching words.  If we type <code>C-M-/</code> again,
-  then <code>apple</code>, <code>appliance</code>,
+  among all the matching words.  If we type <code>C-M-/</code> again
+  then <code>apple</code>, <code>appliance</code>
   and <code>application</code> are presented as possible completions
   in a temporary buffer named <code>*Completions*</code>.  If we
   type <code>ic</code>, so that the word before the cursor
-  becomes <code>applic</code>, and type <code>C-M-/</code>, it is
+  becomes <code>applic</code> and type <code>C-M-/</code>, it is
   expanded to <code>application</code> because that is the only
   possible completion now.
 </p>
@@ -423,7 +423,7 @@ garply:waldo:fred</code>
   this is not something we normally have to worry about.  Most major
   modes set up all these variables appropriately, so that
   <code>TAB</code> almost always does what an experienced Emacs user
-  expects, i.e., indent the current line of code correctly.
+  expects, i.e. indent the current line of code correctly.
 </p>
 <p>
   But what if we really do want to just insert a tab or enough number
@@ -454,7 +454,7 @@ garply:waldo:fred</code>
  When we use a project command like <code>C-x p f</code> to visit a
  file in the current project, the command automatically detects the
  top-level directory of the project by checking parent directories for
- version control system artefacts (e.g., <code>.git</code> directory)
+ version control system artefacts (e.g. <code>.git</code> directory)
  and presents files within that top-level directory as autocomplete
  options.
 </p>
@@ -595,11 +595,11 @@ hello
 /tmp $ <kbd>python3 --version</kbd>
 Python 3.11.5
 /tmp $ <kbd>which cd echo cat python3 which</kbd>
-eshell/cd is a byte-compiled Lisp function in ‘em-dirs.el’.
-eshell/echo is a byte-compiled Lisp function in ‘em-basic.el’.
-eshell/cat is a byte-compiled Lisp function in ‘em-unix.el’.
+eshell/cd is a byte-compiled Lisp function in &lsquo;em-dirs.el&rsquo;.
+eshell/echo is a byte-compiled Lisp function in &lsquo;em-basic.el&rsquo;.
+eshell/cat is a byte-compiled Lisp function in &lsquo;em-unix.el&rsquo;.
 /usr/bin/python3
-eshell/which is a byte-compiled Lisp function in ‘esh-cmd.el’.</samp>
+eshell/which is a byte-compiled Lisp function in &lsquo;esh-cmd.el&rsquo;.</samp>
 </pre>
 <p>
   We also knew about TRAMP.  For example, when we type the key
@@ -677,9 +677,9 @@ Opening output file Permission denied /etc/wgetrc</samp>
   It has been a pleasure hosting these Emacs book club meetings
   throughout this year.  I have really enjoyed discussing the book in
   great detail, examining each new concept introduced in the book
-  carefully, and performing demos to illustrate the concepts.  A big
+  carefully and performing demos to illustrate the concepts.  A big
   thank you to the Emacs communities on Libera and Matrix networks who
   showed interest in these meetings, joined these meetings,
-  participated in the discussions, and helped make these meetings
+  participated in the discussions and helped make these meetings
   successful!
 </p>

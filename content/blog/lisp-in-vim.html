@@ -46,7 +46,7 @@
   popular programming languages today like C, Python, Ruby, etc.  Its
   homoiconic nature and its powerful macro system that can transform
   arbitrary Lisp expressions make it such a flexible, versatile,
-  extensible, and introspective language that articles describing Lisp
+  extensible and introspective language that articles describing Lisp
   often have the word "enlightenment" in them.  For example, see the
   following articles:
 </p>
@@ -115,7 +115,7 @@
   Developed in 1958 by John McCarthy, Lisp is the second oldest
   programming language in use today.  Only Fortran is older, by one
   year.  Some of the popular Lisp dialects today include Common Lisp,
-  Scheme, and Clojure.  Most of this article would focus on Common
+  Scheme and Clojure.  Most of this article would focus on Common
   Lisp.  Scheme and Clojure would be discussed briefly towards the end
   of this article.
 </p>
@@ -129,7 +129,7 @@
   Mode for Emacs.  First released in August 2003, SLIME was created by
   Eric Marsden and then later developed further by Luke Gorrie and
   Helmut Eller.  It offers a Read-Eval-Print-Loop (REPL), integrated
-  debugging, and interactive evaluation of expressions, all available
+  debugging and interactive evaluation of expressions, all available
   right within the editor.  There are several nifty key bindings
   available to compile and evaluate parts or whole of the code in the
   current buffer.
@@ -186,8 +186,8 @@
 <p>
   In fact, I have never used any Vim plugin manager myself.  Until Vim
   7, I used to create a <code>~/.vim/bundle</code> directory, then
-  copy each plugin to its own directory within it, and add the
-  plugin's directory path to Vim's <code>runtimepath</code> option.
+  copy each plugin to its own directory within it and add the plugin's
+  directory path to Vim's <code>runtimepath</code> option.
 </p>
 <p>
   Vim 8 has native support for packages which makes installing plugins
@@ -287,7 +287,7 @@
     <p>
       The default Vim in Debian is <code>vim.basic</code> provided by
       the <code>vim</code> package which does not have support for
-      Python interface.  Slimv is written in Vim script, Lisp, and
+      Python interface.  Slimv is written in Vim script, Lisp and
       Python 3, so it does need a Vim package that has support for
       Python interface.  One such package is <code>vim-nox</code> that
       provides the <code>vim.nox</code> command.  Installing it
@@ -299,11 +299,11 @@
       environment.  For the purpose of this article, I will stick
       to <code>vim-nox</code> because it is lightweight.  All steps
       meant for Slimv would run equally well on <code>vim-gtk</code>,
-      MacVim, and GVim.
+      MacVim and GVim.
     </p>
     <p>
       Installing tmux is optional.  Slimv can launch Swank server
-      automatically if Vim is running within tmux, GNU Screen, or a
+      automatically if Vim is running within tmux, GNU Screen or a
       desktop environment, so if you are using GNU Screen already, you
       don't need to install tmux.  Also, if you are running Slimv in a
       desktop environment, you don't really need to install either
@@ -314,7 +314,7 @@
     </p>
     <p>
       If you are going to run Slimv in a terminal without a desktop
-      environment, tmux, or GNU Screen, Swank server has to be run
+      environment, tmux or GNU Screen, Swank server has to be run
       manually.  Point 4 below explains how to do it.
     </p>
   </li>
@@ -336,7 +336,7 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
   <li>
     <p>
       This is an optional step.  Slimv supports starting Swank server
-      automatically if you are running Vim in tmux, GNU Screen, or a
+      automatically if you are running Vim in tmux, GNU Screen or a
       desktop environment.  To start tmux, enter this command:
     </p>
     <pre><code>tmux</code></pre>
@@ -345,7 +345,7 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
       to run tmux.
     </p>
     <p>
-      If you do not use tmux, GNU Screen, or a desktop environment,
+      If you do not use tmux, GNU Screen or a desktop environment,
       then you must start Swank server manually as explained in the
       next point.
     </p>
@@ -353,12 +353,12 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
   <li>
     <p>
       This step is necessary only if you are not using tmux, GNU
-      Screen, or a desktop environment.  The following command shows
+      Screen or a desktop environment.  The following command shows
       how to start Swank server manually:
     </p>
     <pre><code>sbcl --load ~/.vim/pack/plugins/start/slimv/slime/start-swank.lisp</code></pre>
     <p>
-      If you are using tmux, GNU Screen, or a desktop environment,
+      If you are using tmux, GNU Screen or a desktop environment,
       Slimv can start Swank server automatically when needed and you
       don't need to perform this step.
     </p>
@@ -379,7 +379,7 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
       <kbd>,</kbd><kbd>c</kbd>
     </p>
     <p>
-      If Vim is running within tmux, GNU Screen, or desktop
+      If Vim is running within tmux, GNU Screen or desktop
       environment, Slimv would automatically launch Swank server and
       connect to it.
     </p>
@@ -480,8 +480,8 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
     <pre><code>sudo apt-get install vim sbcl git curl</code></pre>
     <p>
       Note that unlike Slimv, Vlime can work with the default Vim in
-      Debian, i.e., <code>vim.basic</code>.  Vlime does not require
-      Vim with Python interface.
+      Debian, i.e. <code>vim.basic</code>.  Vlime does not require Vim
+      with Python interface.
     </p>
   </li>
   <li>
@@ -544,7 +544,7 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start
     </p>
     <p>
       We assume here that Vim <code>&lt;LocalLeader&gt;</code> is left
-      to its default, i.e., backslash.  If it is mapped to some other
+      to its default, i.e. backslash.  If it is mapped to some other
       key combination, then that must be used instead of backslash in
       the above command.
     </p>
@@ -614,7 +614,7 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start
     </p>
     <p><kbd>\</kbd><kbd>i</kbd></p>
     <p>
-      The same command disables interaction mode, i.e., this command
+      The same command disables interaction mode, i.e. this command
       toggles the state of interaction mode between on and off.  When
       interaction mode is on, evaluate an expression under the cursor
       by simply pressing <kbd>enter</kbd> in normal mode.
@@ -683,7 +683,7 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       Of course, there was no need to type the closing parenthesis
       because it was already present but typing it out to skip over it
       is more efficient than escaping to normal mode, then moving over
-      it, and then entering insert mode again.  This is, in fact, a
+      it and then entering insert mode again.  This is, in fact, a
       very nifty feature of Paredit.  We can enter code with the same
       keystrokes as we would without Paredit.
     </p>
@@ -874,7 +874,7 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
     <p>
       While the cursor is on a parenthesis, the normal mode
       commands <code>,&lt;</code> or <code>,&gt;</code> can be used in
-      this manner to move the parenthesis left or right, respectively,
+      this manner to move the parenthesis left or right respectively,
       thereby slurping or barfing expressions.
     </p>
   </li>
@@ -930,7 +930,7 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
   <li>
     <p>
       As soon as the defective form <code>(square "foo")</code> gets
-      evaluated, an error occurs.  The error, possible restarts, and
+      evaluated, an error occurs.  The error, possible restarts and
       the backtrace is displayed in a new split window for SLDB.  SLDB
       stands for Slime Debugger.  Here is an example of what may
       appear in the SLDB window:
@@ -967,7 +967,7 @@ Backtrace:
   <li>
     <p>
       In the SLDB window, move the cursor to the second line of
-      backtrace, i.e., on the following line:
+      backtrace, i.e. on the following line:
     </p>
     <pre><samp>  1: (SQUARE "foo")</samp></pre>
     <p>
@@ -984,7 +984,7 @@ Backtrace:
   <li>
     <p>
       Move the cursor to the line that begins with <code>in</code>,
-      i.e., on this line:
+      i.e. on this line:
     </p>
     <pre><samp>      in "(SB-INT:NAMED-LAMBDA SQUARE-----------------------------------</samp></pre>
     <p>
@@ -1013,7 +1013,7 @@ Backtrace:
       look like this:
     </p>
 <pre>
-<samp>Inspecting #&lt;(SIMPLE-ARRAY CHARACTER (3)) {100478AFAF}>
+<samp>Inspecting #&lt;(SIMPLE-ARRAY CHARACTER (3)) {100478AFAF}&gt;
 --------------------
 Press &lt;F1&gt; for Help
 
@@ -1090,7 +1090,7 @@ Contents:
   </li>
   <li>
     <p>
-      Save the file, connect to Vlime server, and enter
+      Save the file, connect to Vlime server and enter
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile
       the entire buffer.
     </p>
@@ -1098,7 +1098,7 @@ Contents:
   <li>
     <p>
       As soon as the defective form <code>(square "foo")</code> gets
-      evaluated, an error occurs.  The error, possible restarts, and
+      evaluated, an error occurs.  The error, possible restarts and
       the backtrace is displayed in a new split window for SLDB.  SLDB
       stands for Slime Debugger.  Here is an example of what may
       appear in the SLDB window:
@@ -1135,7 +1135,7 @@ Frames:
   <li>
     <p>
       In the SLDB window, move the cursor to the second line of
-      backtrace, i.e., on the following line:
+      backtrace, i.e. on the following line:
     </p>
     <pre><samp>  1.  (SQUARE "foo")</samp></pre>
     <p>
@@ -1176,7 +1176,7 @@ Location:
       <code>x</code> should now appear in the inspector window:
     </p>
 <pre>
-<samp>#&lt;(SIMPLE-ARRAY CHARACTER (3)) {1004617ABF}>
+<samp>#&lt;(SIMPLE-ARRAY CHARACTER (3)) {1004617ABF}&gt;
 ============================================
 
 Dimensions: (3)
@@ -1247,11 +1247,10 @@ Contents:
   </li>
   <li>
     <p>
-      Place the cursor on the function name, i.e., on
-      <code>square</code>, and enter <kbd>,</kbd><kbd>t</kbd> in
-      normal mode to toggle tracing for this function.  A prompt
-      appears to confirm the function name.  Type <kbd>enter</kbd> to
-      confirm.
+      Place the cursor on the function name, i.e. on
+      <code>square</code> and enter <kbd>,</kbd><kbd>t</kbd> in normal
+      mode to toggle tracing for this function.  A prompt appears to
+      confirm the function name.  Type <kbd>enter</kbd> to confirm.
     </p>
   </li>
   <li>
@@ -1270,7 +1269,7 @@ Contents:
 </pre>
     <p>
       This output contains information about each call to the traced
-      function, arguments passed to it, and the return values.
+      function, arguments passed to it and the return values.
     </p>
   </li>
 </ol>
@@ -1314,7 +1313,7 @@ Contents:
   </li>
   <li>
     <p>
-      Save the file, connect to Vlime server, and enter
+      Save the file, connect to Vlime server and enter
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile
       the entire buffer.
     </p>
@@ -1333,8 +1332,8 @@ Contents:
   </li>
   <li>
     <p>
-      Place the cursor on the function name, i.e., on
-      <code>square</code>, and enter
+      Place the cursor on the function name, i.e. on
+      <code>square</code> and enter
       <kbd>\</kbd><kbd>T</kbd><kbd>T</kbd> in normal mode to toggle
       tracing for this function.
     </p>
@@ -1426,7 +1425,7 @@ Contents:
       expression.
     </p>
     <p>
-      The current expression, i.e., <code>(/ 6 2)</code> should get
+      The current expression, i.e. <code>(/ 6 2)</code> should get
       evaluated and the result <code>3</code> should appear in the
       REPL buffer.
     </p>
@@ -1487,7 +1486,7 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
 </p>
 <h3 id="omni-completion">Omni-Completion</h3>
 <p>
-  Type a function name partially, e.g., <code>form</code>, and type
+  Type a function name partially, e.g. <code>form</code> and type
   <kbd>tab</kbd> while still in insert mode.  The omni-completion menu
   should appear with the list of completions if there are multiple
   choices.  Type <kbd>ctrl</kbd>+<kbd>n</kbd> to select the next choice
@@ -1546,7 +1545,7 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
       evaluate the entire buffer.
     </p>
     <p>
-      With Vlime, save the file, connect to Vlime server, and type
+      With Vlime, save the file, connect to Vlime server and type
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile the
       entire buffer.
     </p>
@@ -1617,7 +1616,7 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
       evaluate the entire buffer.
     </p>
     <p>
-      With Vlime, save the file, connect to Vlime server, and type
+      With Vlime, save the file, connect to Vlime server and type
       <kbd>\</kbd><kbd>o</kbd><kbd>f</kbd> in normal mode to compile the
       entire buffer.
     </p>
@@ -1697,7 +1696,7 @@ sudo apt-get install clisp</code></pre>
       To start Swank automatically from Slimv, there is nothing more
       to be done.  Just edit a Lisp source file and enter the normal
       mode command <kbd>,</kbd><kbd>c</kbd>.  While running in GNU
-      Screen, tmux, or a desktop environment, Slimv can automatically
+      Screen, tmux or a desktop environment, Slimv can automatically
       detect CLISP and start Swank server with it.
     </p>
   </li>
@@ -1739,7 +1738,7 @@ sudo apt-get install ecl</code></pre>
       To start Swank automatically from Slimv, there is nothing more
       to be done.  Just edit a Lisp source file and enter the normal
       mode command <kbd>,</kbd><kbd>c</kbd>.  While running in GNU
-      Screen, tmux, or a desktop environment, Slimv can automatically
+      Screen, tmux or a desktop environment, Slimv can automatically
       detect CLISP and start Swank server with it.
     </p>
     <p>
@@ -1769,8 +1768,8 @@ sudo apt-get install ecl</code></pre>
 <ol>
   <li>
     <p>
-      Let us assume we want to start afresh with CLISP, i.e., we do
-      not have previous artefacts created by SBCL.  To clean up old
+      Let us assume we want to start afresh with CLISP, i.e. we do not
+      have previous artefacts created by SBCL.  To clean up old
       artefacts, enter these commands:
     </p>
 <pre>
@@ -1837,7 +1836,7 @@ endfunction</code>
     <pre><samp>Vlime Connection 1 established.</samp></pre>
     <p>
       If the above message occurs, you can ignore this error, close
-      the debugger window as well as the console output window, and
+      the debugger window as well as the console output window and
       continue to use Vlime normally.
     </p>
     <p>
@@ -1857,7 +1856,7 @@ endfunction</code>
 <ol>
   <li>
     <p>
-      Let us assume we want to start afresh with ECL, i.e., we do not
+      Let us assume we want to start afresh with ECL, i.e. we do not
       have previous artefacts created by SBCL or ECL.  To clean up old
       artefacts, enter these commands:
     </p>
@@ -1945,16 +1944,16 @@ endfunction</code>
     </p>
     <pre><code>sudo apt-get mit-scheme</code></pre>
     <p>
-      Ensure that <code>vim-nox</code>, tmux, and Slimv are installed
-      as explained in
-      the <a href="#get-started-with-slimv-and-sbcl"><em>Get Started
-      with Slimv and SBCL</em></a> subsection earlier.
+      Ensure that <code>vim-nox</code>, tmux and Slimv are installed
+      as explained in the
+      <a href="#get-started-with-slimv-and-sbcl"><em>Get Started with
+      Slimv and SBCL</em></a> subsection earlier.
     </p>
   </li>
   <li>
     <p>
       This is an optional step.  To start Swank server automatically
-      from Slimv, run Vim in tmux, GNU Screen, or a desktop
+      from Slimv, run Vim in tmux, GNU Screen or a desktop
       environment.  In this article, we use tmux, so start tmux with
       this command:
     </p>
@@ -1963,7 +1962,7 @@ endfunction</code>
   <li>
     <p>
       This step is necessary only if you are not using tmux, GNU
-      Screen, or a desktop environment.  In such a case, enter this
+      Screen or a desktop environment.  In such a case, enter this
       command to start Swank server manually:
     </p>
     <pre><code>scheme --load ~/.vim/pack/plugins/start/slimv/slime/contrib/swank-mit-scheme.scm</code></pre>
@@ -2020,10 +2019,7 @@ fatal error: 'sys/types.h' file not found</samp>
   example, when I try to start Swank with MIT/GNU Scheme 10.1.5 on
   Debian GNU/Linux 10.1 (buster), the following error occurs:
 </p>
-<pre>
-<samp>;The object #[package 12 (user)], passed as an argument to
-->environment, is not an environment.</samp>
-</pre>
+<pre><samp>;The object #[package 12 (user)], passed as an argument to -&gt;environment, is not an environment.</samp></pre>
 <h3 id="use-slimv-with-clojure">Use Slimv with Clojure</h3>
 <p>
   Slimv works fine with Clojure too.  However, it may have some
@@ -2084,7 +2080,7 @@ mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code>
   </li>
   <li>
     <p>
-      Ensure that <code>vim-nox</code>, tmux, and Slimv are installed
+      Ensure that <code>vim-nox</code>, tmux and Slimv are installed
       as explained in
       the <a href="#get-started-with-slimv-and-sbcl"><em>Get Started
       with Slimv and SBCL</em></a> subsection earlier.
@@ -2093,7 +2089,7 @@ mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code>
   <li>
     <p>
       This is an optional step.  To start Swank server automatically
-      from Slimv, run Vim in tmux, GNU Screen, or a desktop
+      from Slimv, run Vim in tmux, GNU Screen or a desktop
       environment.  In this article, we use tmux, so start tmux with
       this command:
     </p>
@@ -2102,7 +2098,7 @@ mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code>
   <li>
     <p>
       This step is necessary only if you are not using tmux, GNU
-      Screen, or a desktop environment.  In such a case, enter these
+      Screen or a desktop environment.  In such a case, enter these
       commands to start Swank server manually:
     </p>
 <pre>
@@ -2199,7 +2195,7 @@ java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swan
     <tr>
       <td>
         <p>
-          Slimv requires Vim to be running within tmux, GNU Screen, or
+          Slimv requires Vim to be running within tmux, GNU Screen or
           a desktop environment to be able to start Swank server
           automatically.  If you have none of these, Swank server
           needs to be started manually.
@@ -2207,7 +2203,7 @@ java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swan
       </td>
       <td>
         <p>
-          Vlime does not require tmux, GNU Screen, or a desktop
+          Vlime does not require tmux, GNU Screen or a desktop
           environment in order to start Vlime server automatically.
           It can start Vlime server on its own.
         </p>
@@ -2310,7 +2306,7 @@ java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swan
     <tr>
       <td>
         <p>
-          Slimv supports programming in Common Lisp, MIT/GNU Scheme,
+          Slimv supports programming in Common Lisp, MIT/GNU Scheme
           and Clojure.
         </p>
       </td>
@@ -2377,7 +2373,7 @@ java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swan
   which were then promptly squashed:
   <a href="https://github.com/kovisoft/slimv/pull/87">#87</a>,
   <a href="https://github.com/kovisoft/slimv/pull/88">#88</a>,
-  <a href="https://github.com/kovisoft/slimv/pull/89">#89</a>, and
+  <a href="https://github.com/kovisoft/slimv/pull/89">#89</a> and
   <a href="https://github.com/kovisoft/slimv/pull/90">#90</a>.
 </p>
 <h2 id="references">References</h2>

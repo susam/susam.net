@@ -2,7 +2,7 @@
 2025-10-02 19:30 +0000 Running: 3.6 km, 240 kcal, 6.6 kmph peak, 169 bpm peak (38 min)
 2025-10-02 20:00 +0000 Weights: Leg Press 40 kg 20 20 20, Lat Pulldown 25 kg 15 15 15, Chest Press 20 kg 20 20 10, Shoulder Press 15 kg 07 07 15 (30 min)
 2025-10-02 22:30 +0000 Reading: Algebraic Graph Theory by Godsil and Royle (2001): Chapter 1: Section 1.2: Pages 3-4: Subgraphs (45 min)
-2025-10-03 21:00 +0000 Writing: Blog: I Reinstated My Guestbook After 20 Years! <https://susam.net/reinstated-guestbook.html> (30 min)
+2025-10-03 21:00 +0000 Writing: Blog: I Reinstated My Guestbook After 20 Years <https://susam.net/reinstated-guestbook.html> (30 min)
 2025-10-04 20:00 +0000 Website: Publish new comments to guestbook (30 min)
 2025-10-05 20:45 +0000 Coding: QuickQWERTY: Publish version 1.2.0 (60 min)
 2025-10-06 19:30 +0000 Running: 3.7 km, 250 kcal, 6.6 kmph peak, 166 bpm peak (40 min)

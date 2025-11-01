@@ -206,7 +206,7 @@ Disassembly of section .text:
   </tr>
 </table>
 <p>
-  If we add 9 to the address of the variable <code>a</code>, i.e.,
+  If we add 9 to the address of the variable <code>a</code>, i.e.
   <code>&amp;a</code>, we get the address where the return address is
   stored.  We saw earlier that if we increment this return address by
   10 bytes, it solves the problem.  Therefore here is the solution
@@ -331,8 +331,8 @@ _main:
   Just like in the previous <code>objdump</code> listing, in this
   listing too, the instruction at offset <code>4</code> shows where
   the variable <code>a</code> is allocated and the instructions at
-  offsets <code>25</code>, <code>2A</code>, and <code>2F</code> show
-  the instructions we want to skip, i.e., instead of returning to the
+  offsets <code>25</code>, <code>2A</code> and <code>2F</code> show
+  the instructions we want to skip, i.e. instead of returning to the
   instruction at offset <code>25</code>, we want the microprocessor to
   return to the instruction at offset <code>32</code>.  This involves
   skipping 13 bytes (0x32 - 0x25 = 13) of machine code.
@@ -368,7 +368,7 @@ _main:
   </tr>
 </table>
 <p>
-  If we add 5 to the address of the variable <code>a</code>, i.e.,
+  If we add 5 to the address of the variable <code>a</code>, i.e.
   <code>&amp;a</code>, we get the address where the return address is
   stored.  Here is the solution code:
 </p>

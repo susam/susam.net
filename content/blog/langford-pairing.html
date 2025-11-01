@@ -10,7 +10,7 @@
 <div class="highlight">
   <p>
     There is a sequence of \( 2n \) numbers where each natural number
-    from \( 1 \) to \( n \) is repeated twice, i.e.,
+    from \( 1 \) to \( n \) is repeated twice, i.e.
 
     \[
       (1, 1, 2, 2, \dots, n, n).
@@ -37,7 +37,7 @@
 <p>
   There is another question to consider: Is there a solution for every
   possible \( n \)?  One can easily see that there are no Langford
-  pairings for \( n = 1 \) and \( n = 2 \), i.e., the sequences \( (1,
+  pairings for \( n = 1 \) and \( n = 2 \), i.e. the sequences \( (1,
   1) \) and \( (1, 1, 2, 2) \) have no Langford pairings.
 </p>
 <p>
@@ -87,10 +87,10 @@
             s[i] = s[i + m + 1] = 0
 
 
-# Count solutions for 1 <= n <= 12.
+# Count solutions for 1 &lt;= n &lt;= 12.
 for n in range(1, 13):
     count = sum(1 for s in find_solutions(n))
-    print('n = {:2} => {:6} solutions'.format(n, count))</code>
+    print('n = {:2} =&gt; {:6} solutions'.format(n, count))</code>
 </pre>
 <p>
   It takes a few minutes for this program to run.  Here is the output
@@ -98,18 +98,18 @@ for n in range(1, 13):
 </p>
 <pre>
 <samp>$ <kbd>python3 langford.py</kbd>
-n =  1 =>      0 solutions
-n =  2 =>      0 solutions
-n =  3 =>      2 solutions
-n =  4 =>      2 solutions
-n =  5 =>      0 solutions
-n =  6 =>      0 solutions
-n =  7 =>     52 solutions
-n =  8 =>    300 solutions
-n =  9 =>      0 solutions
-n = 10 =>      0 solutions
-n = 11 =>  35584 solutions
-n = 12 => 216288 solutions</samp>
+n =  1 =&gt;      0 solutions
+n =  2 =&gt;      0 solutions
+n =  3 =&gt;      2 solutions
+n =  4 =&gt;      2 solutions
+n =  5 =&gt;      0 solutions
+n =  6 =&gt;      0 solutions
+n =  7 =&gt;     52 solutions
+n =  8 =&gt;    300 solutions
+n =  9 =&gt;      0 solutions
+n = 10 =&gt;      0 solutions
+n = 11 =&gt;  35584 solutions
+n = 12 =&gt; 216288 solutions</samp>
 </pre>
 <p>
   Note that we always talk about Langford pairings in plural in this
@@ -198,7 +198,7 @@ n = 12 => 216288 solutions</samp>
 </ol>
 <p>
   Do these observations hold good for every Langford pairing of any
-  aribrary \( S_n \) for every positive integer value of \( n \)? 
+  aribrary \( S_n \) for every positive integer value of \( n \)?
   Yes, they do.  We will now prove them one by one:
 </p>
 <ol>
@@ -208,7 +208,7 @@ n = 12 => 216288 solutions</samp>
       If the first occurrence of \( k \) lies at the \( i \)th
       position in the pairing, then its second occurrence lies at the
       \( (i + k + 1) \)th position.  Since \( k \) is even, \( i \)
-      and \( i + k + 1 \) have different parities, i.e., if \( i \) is
+      and \( i + k + 1 \) have different parities, i.e. if \( i \) is
       odd, then \( i + k + 1 \) is even and vice versa.  Therefore, if
       the first occurrence of \( k \) lies at an odd numbered
       position, its second occurrence must lie at an even numbered
@@ -297,7 +297,7 @@ n = 12 => 216288 solutions</samp>
 <h2 id="sufficiency">Sufficiency</h2>
 <p>
   If we can show that we can construct a Langford pairing for \( (1,
-  1, 2, 2, \dots, n, n ) \) for both cases, i.e., \( n \equiv 0
+  1, 2, 2, \dots, n, n ) \) for both cases, i.e. \( n \equiv 0
   \pmod{4} \) as well as \( n \equiv 3 \pmod{4} \), then it would
   complete the proof.
 </p>
@@ -432,13 +432,13 @@ n = 12 => 216288 solutions</samp>
   specified concatenation always leads to a Langford pairing.
 </p>
 <p>
-  Each sequence \( a \), \( b \), \( c \), and \( d \) has one number
-  each.  Each sequence \( p \), \( q \), \( r \), and \( s \) has \( x
+  Each sequence \( a \), \( b \), \( c \) and \( d \) has one number
+  each.  Each sequence \( p \), \( q \), \( r \) and \( s \) has \( x
   - 1 \) numbers each.
 </p>
 <p>
-  The two occurrences of \( a \) have \( q \), \( c \), and \( r \) in
-  between, i.e.,
+  The two occurrences of \( a \) have \( q \), \( c \) and \( r \) in
+  between, i.e.
 
   \[
     (x - 1) + 1 + (x - 1) = 2x - 1 = a
@@ -521,8 +521,8 @@ n = 12 => 216288 solutions</samp>
 </ul>
 <p>
   Let us do an example with \( n = 11 \).  For \( n = 12 \), we get \(
-  x = \frac{n + 1}{4} = 3 \).  Therefore, the sequences \( a \),
-  \( b \), \( c \), \( p \), \( q \), \( r \), and \( s \) are same as
+  x = \frac{n + 1}{4} = 3 \).  Therefore, the sequences \( a \), \(
+  b \), \( c \), \( p \), \( q \), \( r \) and \( s \) are same as
   those in the last example in the previous section.  After performing
   the specified concatenation, we get the following Langford pairing:
 

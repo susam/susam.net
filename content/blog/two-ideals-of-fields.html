@@ -5,27 +5,27 @@
 <!-- import: math.inc -->
 <p>
   A field has exactly two ideals: the zero ideal, which contains only
-  the additive identity, and the whole field itself.  These are known
+  the additive identity and the whole field itself.  These are known
   as trivial ideals.  Further if a commutative ring, with distinct
   additive and multiplicative identities, has no ideals other than the
   trivial ones, then it must be a field.  These two facts are elegant
   in their symmetry and simplicity.  In this article, we will explore
   why these facts are true.  Familiarity with algebraic structures
-  such as groups, rings, and fields is assumed.
+  such as groups, rings and fields is assumed.
 </p>
 {{ toc }}
 <h2 id="definition-of-ideals">Definition of Ideals</h2>
 <p>
   A left ideal of a ring \( R \) is a subset \( I \subseteq R \) such
-  that \( I \) is an additive subgroup of \( R \), and for all \( a
-  \in I \) and \( r \in R \), we have \( r \cdot a \in I \).  We say
-  that a left ideal absorbs multiplication from the left by any ring
+  that \( I \) is an additive subgroup of \( R \) and for all \( a \in
+  I \) and \( r \in R \), we have \( r \cdot a \in I \).  We say that
+  a left ideal absorbs multiplication from the left by any ring
   element, or equivalently, that it is closed under left
   multiplication by any ring element.
 </p>
 <p>
   Similarly, a right ideal of a ring \( R \) is a subset \( I
-  \subseteq R \) such that \( I \) is an additive subgroup of \( R \),
+  \subseteq R \) such that \( I \) is an additive subgroup of \( R \)
   and for all \( a \in I \) and \( r \in R \), we have \( a \cdot r
   \in I \).  We say that a right ideal absorbs multiplication from the
   right by any ring element, or equivalently, that it is closed under
@@ -33,7 +33,7 @@
 </p>
 <p>
   In a commutative ring \( R \), every left ideal is also a right
-  ideal, and vice versa.  This is because for all \( a \in I \) and \(
+  ideal and vice versa.  This is because for all \( a \in I \) and \(
   r \in R \), we have \( r \cdot a = a \cdot r \).  Therefore, when
   working with commutative rings, we do not need to distinguish
   between left and right ideals and we simply refer to them as ideals.
@@ -71,8 +71,8 @@
   polynomial \( h \in \mathbb{Z}[t] \), we obtain \( 2fh + tgh \),
   which is again an element of \( \langle 2, t \rangle \).  Hence \(
   \langle 2, t \rangle \) absorbs multiplication by any element of \(
-  \mathbb{Z}[t] \), i.e., it is closed under multiplication by
-  elements of \( \mathbb{Z}[t] \).
+  \mathbb{Z}[t] \), i.e. it is closed under multiplication by elements
+  of \( \mathbb{Z}[t] \).
 </p>
 <h2 id="known-results">Known Results</h2>
 <p>
@@ -98,8 +98,8 @@
       I_R &amp;= \{ a \cdot r : r \in R \}
     \end{align*}
 
-    are, respectively, a left ideal and a right ideal of \( R \).  If
-    \( R \) is commutative, then \( I_L = I_R \), and we write
+    are respectively a left ideal and a right ideal of \( R \).  If \(
+    R \) is commutative, then \( I_L = I_R \) and we write
 
     \[
       \langle a \rangle = \{ a \cdot r : r \in R \}
@@ -116,9 +116,9 @@
 </p>
 <p>
   Clearly \( \{ 0 \} \) is an ideal of \( K \), as it satisfies the
-  definition of an ideal.  It is the trivial additive subgroup of
-  \( K \), and by <a href="#zero-multiplication">Proposition 1</a>,
-  for all \( r \in K \), we have \( r \cdot 0 = 0 \in \{ 0 \} \).
+  definition of an ideal.  It is the trivial additive subgroup of \(
+  K \) and by <a href="#zero-multiplication">Proposition 1</a>, for
+  all \( r \in K \), we have \( r \cdot 0 = 0 \in \{ 0 \} \).
 </p>
 <p>
   Now \( K \) is also an ideal of itself.  Since \( K \) is an additive
@@ -134,32 +134,32 @@
   \ne \{ 0 \} \).  Suppose \( I \ne \{ 0 \} \).  Then there exists a
   non-zero element \( b \in I \).  Since \( b \ne 0 \) and \( K \) is
   a field, \( b \) has a multiplicative inverse \( b^{-1} \in K \).
-  Since \( b \in I \), \( b^{-1} \in K \), and \( I \) is closed under
+  Since \( b \in I \), \( b^{-1} \in K \) and \( I \) is closed under
   multiplication by any element of \( K \), we have
 
   \[
     1 = b \cdot b^{-1} \in I.
   \]
 
-  Now, let \( c \in K \).  Since \( 1 \in I \), \( c \in K \), and \(
+  Now, let \( c \in K \).  Since \( 1 \in I \), \( c \in K \) and \(
   I \) is an ideal of \( K \), we get
 
   \[
     c = 1 \cdot c \in I.
   \]
 
-  Thus \( K \subseteq I \), and since \( I \subseteq K \) by
+  Thus \( K \subseteq I \) and since \( I \subseteq K \) by
   definition, we conclude \( I = K \).  Therefore the only ideals of
   \( K \) are \( \{ 0 \} \) and \( K \) itself.
 </p>
 <h2 id="rings-with-trivial-ideals">Rings With Trivial Ideals</h2>
 <p>
-  We now show that if \( R \) is a commutative ring with
-  \( 1 \ne 0 \), and the only ideals of \( R \) are \( \{ 0 \} \) and
-  \( R \) itself, then \( R \) must be a field.  To do this, we first
-  show that every non-zero element of \( R \) has a multiplicative
-  inverse in \( R \).  Let \( a \in R \) with \( a \ne 0 \).  We now
-  show that there exists a multiplicative inverse \( a^{-1} \in R \).
+  We now show that if \( R \) is a commutative ring with \( 1 \ne 0 \)
+  and the only ideals of \( R \) are \( \{ 0 \} \) and \( R \) itself,
+  then \( R \) must be a field.  To do this, we first show that every
+  non-zero element of \( R \) has a multiplicative inverse in \( R \).
+  Let \( a \in R \) with \( a \ne 0 \).  We now show that there exists
+  a multiplicative inverse \( a^{-1} \in R \).
   By <a href="#principal-ideal">Proposition 2</a>, the set
 
   \[
@@ -177,26 +177,26 @@
   \]
 
   for some \( s \in R \).  Thus \( a \) has a multiplicative inverse
-  \( s \in R \), and this holds for every non-zero \( a \in R \).
+  \( s \in R \) and this holds for every non-zero \( a \in R \).
 </p>
 <p>
   The remaining properties of fields, namely, associativity and
   commutativity of addition and multiplication, the existence of
   distinct additive and multiplicative identities, the existence of
-  additive inverses, and the distributivity of multiplication over
+  additive inverses and the distributivity of multiplication over
   addition, are inherited from the ring \( R \).  Therefore \( R \) is
   a field.
 </p>
 <h2 id="conclusion">Conclusion</h2>
 <p>
   To summarise, any commutative ring with distinct additive and
-  multiplicative identities that has only trivial ideals is a field,
+  multiplicative identities that has only trivial ideals is a field
   and every field has only trivial ideals.
 </p>
 <p>
   Note that every field is also a commutative ring with distinct
   additive and multiplicative identities.  Therefore, we can say that
   every field is a commutative ring with distinct additive and
-  multiplicative identities and only trivial ideals, and vice versa.
+  multiplicative identities and only trivial ideals and vice versa.
   It is neat how the two facts align so nicely.
 </p>

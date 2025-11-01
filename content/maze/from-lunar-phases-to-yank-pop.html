@@ -8,12 +8,12 @@
   club</a> that meets every weekend to read and discuss the
   book <em><a href="https://www.masteringemacs.org/">Mastering
   Emacs</a></em>, 2022 edition written by Mickey Petersen.  We go
-  through a few pages of the book every time we meet, do some demos,
+  through a few pages of the book every time we meet, do some demos
   and talk about the concepts we learn from the book.  In
   the <a href="cc/mastering-emacs/log.html#36">36 meetings</a> that we
   have had so far, we have spent approximately 26 hours together
   carefully reading every line of the book, trying out the lessons on
-  an actual editor, and experimenting with the new concepts.  In the
+  an actual editor and experimenting with the new concepts.  In the
   last 3&half; months, we have completed four chapters of the book.
   We are currently reading the fifth chapter.  In this post, I'll
   share what the journey has been like so far and a few interesting
@@ -114,7 +114,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 <h2 id="returning-to-mark">Returning to Mark</h2>
 <p>
   Most members knew that we can set a mark with <code>C-SPC</code>
-  (i.e., <kbd>ctrl</kbd>+<kbd>space</kbd>) and then move around in the
+  (i.e. <kbd>ctrl</kbd>+<kbd>space</kbd>) and then move around in the
   buffer with motion keys to highlight a region that we can cut
   with <code>C-w</code> or copy with <code>M-w</code> and paste it
   elsewhere with <code>C-y</code>.  However, what was new to some
@@ -140,10 +140,10 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 <p>
   The key sequences involved are pretty convenient.
   Typing <code>C-SPC C-SPC</code> involves holding down
-  the <kbd>ctrl</kbd> key, then typing <kbd>space</kbd> twice, and
+  the <kbd>ctrl</kbd> key, then typing <kbd>space</kbd> twice and
   finally releasing the <kbd>ctrl</kbd> key.  Similarly,
   typing <code>C-u C-SPC</code> involves holding down
-  the <kbd>ctrl</kbd> key, typing <kbd>u</kbd>, then <kbd>space</kbd>,
+  the <kbd>ctrl</kbd> key, typing <kbd>u</kbd>, then <kbd>space</kbd>
   and then releasing the <kbd>ctrl</kbd> key.  Three keystrokes for
   each command.  They become muscle memory in no time!
 </p>
@@ -177,7 +177,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   side-by-side.  Each tab can be used as a workspace with a specific
   arrangement of windows that suits our workflow in that workspace.
   For example, we could arrange one tab to have three windows to
-  display source code, a debugger, and the current directory in Dired
+  display source code, a debugger and the current directory in Dired
   mode.  Then we could have another tab with two windows beside each
   other, perhaps one to display some source code and another to run
   the terminal.
@@ -256,7 +256,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 <p>
   Similarly, we can toggle the case-sensitivity of the search
   using <code>M-s c</code>.  If we type our search string in all
-  lowercase (e.g., <code>C-s foo</code>), then Emacs performs a
+  lowercase (e.g. <code>C-s foo</code>), then Emacs performs a
   case-sensitive search by default.  I think this is a reasonable
   default behaviour.  This is what we want most of the time.  When we
   do want case-sensitive search for a lowercase string, we can switch
@@ -265,7 +265,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
 </p>
 <p>
   The moment we introduce an uppercase character in our search string
-  (e.g., <code>C-s Foo</code>), Emacs switches to case-sensitive mode.
+  (e.g. <code>C-s Foo</code>), Emacs switches to case-sensitive mode.
   Although this behaviour may appear peculiar at first, it makes sense
   if you think about it.  If we have bothered to type an uppercase
   character in our search string, we probably care about the case, so
@@ -286,16 +286,16 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   But we soon realise that the code has the words <code>web</code>
   and <code>server</code> written together in all kinds of notation
   like <code>web-&gt;server</code>, <code>web::server</code>,
-  <code>web-server</code>, and even <code>web server</code> (perhaps
-  in inline comments).  We now decide that we want to match all of
-  them.  In most other editors, we'll probably have to cancel the
-  current search and resort to a clever regular-expression-based
-  search.  In Emacs, thanks to the toggles available in incremental
-  search, we can type <code>M-s w</code> and the currently ongoing
-  incremental search will change itself to word search mode where it
-  now matches all these other ways those two words are written.  In
-  word search mode, Emacs searches for a sequence of words while
-  ignoring any delimiters in between.
+  <code>web-server</code> and even <code>web server</code> (perhaps in
+  inline comments).  We now decide that we want to match all of them.
+  In most other editors, we'll probably have to cancel the current
+  search and resort to a clever regular-expression-based search.  In
+  Emacs, thanks to the toggles available in incremental search, we can
+  type <code>M-s w</code> and the currently ongoing incremental search
+  will change itself to word search mode where it now matches all
+  these other ways those two words are written.  In word search mode,
+  Emacs searches for a sequence of words while ignoring any delimiters
+  in between.
 </p>
 <h2 id="occur-mode">Occur Mode</h2>
 <p>
@@ -378,7 +378,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
   To understand what this command does we must first understand that
   after a kill command adds some new text to the kill ring, subsequent
   consecutive kills append to the same stretch of text in the kill
-  ring, i.e., consecutive kills form a single large stretch of text in
+  ring, i.e. consecutive kills form a single large stretch of text in
   the kill ring.  This can be tested by performing consecutive kills
   and then pasting with <code>C-y</code>.  For example, <code>M-d M-d
   M-d</code> kills 3 words and creates a single stretch of text
@@ -443,7 +443,7 @@ Saturday, May 27, 2023: First Quarter Moon 3:24pm (UTC)</code>
     kill ring.
   </li>
   <li>
-    Now type <code>C-y</code>.  The last kill, i.e., <code>baz</code>
+    Now type <code>C-y</code>.  The last kill, i.e. <code>baz</code>
     is now pasted into the buffer.
   </li>
   <li>

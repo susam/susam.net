@@ -44,10 +44,10 @@
   theorem talks about an interesting property of <em>unrestricted
   partitions</em>.  We study the number of ways a positive integer can
   be expressed as a sum of positive integers.  The number of summands
-  is unrestricted, repetition of summands is allowed, and the order of
+  is unrestricted, repetition of summands is allowed and the order of
   the summands is not taken into account.  For example, the number 3
-  has 3 partitions: 3, 2 + 1, and 1 + 1 + 1.  Similarly, the number 4
-  has 5 partitions: 4, 3 + 1, 2 + 2, 2 + 1 + 1, and 1 + 1 + 1 + 1.
+  has 3 partitions: 3, 2 + 1 and 1 + 1 + 1.  Similarly, the number 4
+  has 5 partitions: 4, 3 + 1, 2 + 2, 2 + 1 + 1 and 1 + 1 + 1 + 1.
 </p>
 <p>
   I have always wanted to learn about partitions more deeply, so I am
@@ -61,13 +61,13 @@
 <p>
   How many partitions of 6 are there?  There are 11 partitions of 6.
   They are 6, 5 + 1, 4 + 2, 4 + 1 + 1, 3 + 3, 3 + 2 + 1, 3 + 1 + 1 +
-  1, 2 + 2 + 2, 2 + 2 + 1 + 1, 2 + 1 + 1 + 1 + 1, and 1 + 1 + 1 + 1 +
-  1 + 1.  Now how many of these partitions are made up of 5 parts?
-  Each summand is called a part.  The answer is 2.  There are 2
-  partitions of 6 that are made up of 5 parts.  They are 3 + 1 + 1 + 1
-  and 2 + 2 + 1 + 1.  Let us represent both these partitions as
-  arrangements of lattice points.  Here is the representation of the
-  partition 3 + 1 + 1 + 1:
+  1, 2 + 2 + 2, 2 + 2 + 1 + 1, 2 + 1 + 1 + 1 + 1 and 1 + 1 + 1 + 1 + 1
+  + 1.  Now how many of these partitions are made up of 5 parts?  Each
+  summand is called a part.  The answer is 2.  There are 2 partitions
+  of 6 that are made up of 5 parts.  They are 3 + 1 + 1 + 1 and 2 + 2
+  + 1 + 1.  Let us represent both these partitions as arrangements of
+  lattice points.  Here is the representation of the partition 3 + 1 +
+  1 + 1:
 </p>
 <pre>
 <code>&bull; &bull; &bull;
@@ -76,12 +76,12 @@
 &bull;</code>
 </pre>
 <p>
-  Now if we read this arrangement from left-to-right,
-  column-by-column, we get another partition of 6, i.e., 4 + 1 + 1.
-  Note that the number of parts in 3 + 1 + 1 + 1 (i.e., 4) appears as
-  the largest part in 4 + 1 + 1.  Similarly, the number of parts in 4
-  + 1 + 1 (i.e., 3) appears as the largest part in 3 + 1 + 1 + 1.  Let
-  us see one more example of this relationship.  Here is the geometric
+  Now if we read this arrangement from left to right, column by
+  column, we get another partition of 6, i.e. 4 + 1 + 1.  Note that
+  the number of parts in 3 + 1 + 1 + 1 (i.e. 4) appears as the largest
+  part in 4 + 1 + 1.  Similarly, the number of parts in 4 + 1 + 1
+  (i.e. 3) appears as the largest part in 3 + 1 + 1 + 1.  Let us see
+  one more example of this relationship.  Here is the geometric
   representation of 2 + 2 + 1 + 1:
 </p>
 <pre>
@@ -91,10 +91,10 @@
 &bull;</code>
 </pre>
 <p>
-  Once again, reading this representation from left-to-right, we get 4
+  Once again, reading this representation from left to right, we get 4
   + 2, another partition of 6.  Once again, we can see that the number
-  of partitions in 2 + 2 + 1 + 1 (i.e., 4) appears as the largest part
-  in 4 + 2, and vice versa.  These observations lead to the first
+  of partitions in 2 + 2 + 1 + 1 (i.e. 4) appears as the largest part
+  in 4 + 2 and vice versa.  These observations lead to the first
   theorem in the chapter on partitions:
 </p>
 <blockquote>

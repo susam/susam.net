@@ -30,7 +30,7 @@
   insert a tab character.  The character <code>I</code> has code 73
   (binary 1001001) and holding the <kbd>ctrl</kbd> key while typing it
   results in a control code made by taking 73 (binary 1001001),
-  keeping its five least significant bits, and discarding the rest to
+  keeping its five least significant bits and discarding the rest to
   get the control code 9 (binary 1001) which is the code of the tab
   character.  In other words, we get the control code by performing a
   bitwise AND operation on the code of the character being modified
@@ -59,7 +59,7 @@
 <p>
   The bitwise operation mentioned earlier explains why
   typing <kbd>ctrl</kbd>+<kbd>h</kbd> sends a backspace,
-  typing <kbd>ctrl</kbd>+<kbd>j</kbd> sends a newline, and
+  typing <kbd>ctrl</kbd>+<kbd>j</kbd> sends a newline and
   typing <kbd>ctrl</kbd>+<kbd>g</kbd> plays a bell.  In modern
   terminal emulators these days, the bell often manifests in the form
   of an audible beep or a visual flash.  Here is a table that
@@ -333,7 +333,7 @@ echo baz</code>
 <p>
   After running the command, <kbd>ctrl</kbd>+<kbd>s</kbd> is no longer
   consumed by the terminal to pause the output.  To confirm that
-  forward incremental search works now, first run the above command,
+  forward incremental search works now, first run the above command
   and then run the following commands:
 </p>
 <pre>

@@ -100,11 +100,11 @@
   line.
 </p>
 <p>
-  There is a difference between <em>deleting</em>
-  and <em>killing</em>.  The first two commands <code>C-d</code>
+  There is a difference between <em>deleting</em> and
+  <em>killing</em>.  The first two commands <code>C-d</code>
   and <code>&lt;backspace&gt;</code> delete characters but the deleted
   characters are not added to the kill ring.  The remaining commands
-  in the list above kill text, i.e., remove the text from the buffer
+  in the list above kill text, i.e. remove the text from the buffer
   and add it to the kill ring.  The killed text can be pasted into the
   buffer using <code>C-y</code>.  For example, <code>M-d M-d M-d C-p
   C-p C-y</code> kills the next three words and pastes them two lines
@@ -120,12 +120,12 @@
   To understand what this command does we must first understand that
   after a kill command adds a new stretch of text to the kill ring,
   subsequent consecutive kills append to the same stretch of text in
-  the kill ring, i.e., consecutive kills form a single large stretch
-  of text in the kill ring.  This can be tested by performing
-  consecutive kills and then pasting with <code>C-y</code>.  For
-  example, <code>M-d M-d M-d C-p C-p C-y</code> kills 3 words, creates
-  a single stretch of text consisting of those 3 words in the kill
-  ring, and pastes that text two lines above.
+  the kill ring, i.e. consecutive kills form a single large stretch of
+  text in the kill ring.  This can be tested by performing consecutive
+  kills and then pasting with <code>C-y</code>.  For example,
+  <code>M-d M-d M-d C-p C-p C-y</code> kills 3 words, creates a single
+  stretch of text consisting of those 3 words in the kill ring and
+  pastes that text two lines above.
 </p>
 <p>
   However, the moment a non-kill command is used, it seals the stretch
@@ -212,8 +212,8 @@
     in the kill ring.
   </li>
   <li>
-    Now type <code>C-y</code>.  The last stretched of kill text,
-    i.e., <code>baz</code> is now pasted into the buffer.
+    Now type <code>C-y</code>.  The last stretched of kill text, i.e.
+    <code>baz</code> is now pasted into the buffer.
   </li>
   <li>
     Now without typing any other key sequence, type <code>M-y</code>.
@@ -337,7 +337,7 @@
   point is between the letters <code>h</code> and <code>e</code>.
   When we type a new character, the new character is inserted where
   the point is.  The key sequence <code>C-t</code> interchanges the
-  characters on both sides of the point, i.e., it exchanges the
+  characters on both sides of the point, i.e. it exchanges the
   character the cursor is blinking on with the character just before
   it.
 </p>
@@ -454,12 +454,12 @@
 <p>
   To demonstrate how changing <code>comment-style</code> changes the
   commenting behaviour try <code>M-x (setq comment-style 'indent)
-  RET</code>, then select a region, and type <code>M-;</code>.  The
+  RET</code>, then select a region and type <code>M-;</code>.  The
   selected region will be commented out with a comment box.
 </p>
 <p>
   However running <code>M-x (setq comment-style 'aligned) RET</code>,
-  selecting a region in a C buffer, and typing <code>M-;</code> does
+  selecting a region in a C buffer and typing <code>M-;</code> does
   not seem to do anything interesting.
 </p>
 <h2 id="search-and-replace">Search and Replace</h2>
@@ -545,9 +545,9 @@
   </li>
 </ul>
 <p>
-  Just like incremental search (<code>C-s</code>
-  or <code>C-M-s</code>), search and replace performs case folding,
-  i.e., performs case-insensitive match if the search string is a
+  Just like incremental search (<code>C-s</code> or
+  <code>C-M-s</code>), search and replace performs case folding,
+  i.e. performs case-insensitive match if the search string is a
   lowercase string.  However, the moment we include an uppercase
   character in the search string, search and replace performs
   case-sensitive search and replace.
@@ -637,7 +637,7 @@ web-server-port-HTTP-80
   <li>
     <code>C-M-s port-[[:upper:][:digit:]-]+</code>: Search for the
     string <code>port-</code> followed by consecutive sequence of one
-    or more upper-case letters, digits, or hyphen.
+    or more upper-case letters, digits or hyphen.
   </li>
   <li>
     <code>C-M-s \&lt;web</code>: Search for the
@@ -675,7 +675,7 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s \sw</code>: Search for word constituent character.
-    Typically uppercase letters, lowercase letters, and digits are
+    Typically uppercase letters, lowercase letters and digits are
     considered word constituents.
   </li>
   <li>
@@ -687,11 +687,11 @@ web-server-port-HTTP-80
   </li>
   <li>
     <code>C-M-s \s(</code>: Search for opening pair of a grouping
-    character, e.g., <code>(</code>, <code>[</code>, <code>{</code>.
+    character, e.g. <code>(</code>, <code>[</code>, <code>{</code>.
   </li>
   <li>
     <code>C-M-s \s)</code>: Search for closing pair of a grouping
-    character, e.g., <code>)</code>, <code>]</code>, <code>}</code>,
+    character, e.g. <code>)</code>, <code>]</code>, <code>}</code>,
     etc.
   </li>
   <li>
@@ -747,7 +747,7 @@ web-server-port-HTTP-80
   <li>
     <code>C-M-% \(foo-\)\sw+\(-baz\) RET \1\?\2 RET</code>: Search for
     the string <code>foo-</code> followed by a word and the
-    string <code>baz</code>, and replace the middle word with text
+    string <code>baz</code> and replace the middle word with text
     input provided by the user.  Before each replace operation, Emacs
     will prompt the user to edit the replacement pattern by putting
     the point where <code>\?</code> was in the original replacement
@@ -758,7 +758,7 @@ web-server-port-HTTP-80
     string <code>foo</code> and replace each match with an
     autoincrementing number.  The first match is replaced
     with <code>0</code>, the second one with <code>1</code>, the third
-    one with <code>2</code>, and so on.  Precisely speaking, the
+    one with <code>2</code> and so on.  Precisely speaking, the
     backreference <code>\#</code> refers to the count of the
     replacements already made in the current search and replace
     operation.
@@ -843,7 +843,7 @@ web-server-port-HTTP-80
 </p>
 <ul>
   <li>
-    <code>M-=</code>: Count lines, words, and characters in region.
+    <code>M-=</code>: Count lines, words and characters in region.
   </li>
   <li>
     <code>M-x count-words-region RET</code>: Same as above.
@@ -926,7 +926,7 @@ baz</code>
     <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
     match the regular expression <code>b..</code> and delete the rest.
     If no region is active, then keep matching lines between the point
-    and end of buffer, and delete the rest.  The deleted lines are not
+    and end of buffer and delete the rest.  The deleted lines are not
     copied to kill ring.
   </li>
   <li>
@@ -997,7 +997,7 @@ baz</code>
 <ul>
   <li>
     <code>M-x whitespace-mode RET</code>: Toggle visualisation of
-    spaces, tabs, newlines, and lines longer
+    spaces, tabs, newlines and lines longer
     than <code>whitespace-line-column</code> number of columns (80 by
     default) with special glyphs and colour.
   </li>
@@ -1063,7 +1063,7 @@ baz</code>
   read the variable <code>whitespace-style</code> to decide which
   whitespace issues to fix.  Say, we do not want to fix trailing
   whitespace issue but do want to fix other whitespace issues selected
-  by default (e.g., empty lines at the beginning or end of buffer,
+  by default (e.g. empty lines at the beginning or end of buffer,
   spaces before tab, etc.), then we need to update
   the <code>whitespace-style</code> variable as follows:
 </p>
@@ -1246,14 +1246,14 @@ baz</code>
   <li>
     Type <code>C-a F3 . SPC M-c C-n</code> to insert macro counter
     which <code>0</code> by default, followed by dot and space at the
-    beginning of the line, capitalise the first word, and move to the
+    beginning of the line, capitalise the first word and move to the
     next line.
   </li>
   <li>
     Type <code>C-x e</code> to stop macro recording and call the
-    recorded macro.  Now <code>1</code>, dot, and space is inserted at
-    the beginning of the line, the first word of the current line is
-    capitalised, and the cursor moves to the next line.
+    recorded macro.  Now <code>1</code>, dot and space is inserted at
+    the beginning of the line.  The first word of the current line is
+    capitalised and the cursor moves to the next line.
   </li>
   <li>
     Type <code>e</code> to repeat the macro call.  Keep
@@ -1276,9 +1276,9 @@ baz</code>
     <code>C-u C-x (</code>: Same as above.
   </li>
   <li>
-    <code>C-5 F3</code>: Start recording but set counter to 5, i.e.,
+    <code>C-5 F3</code>: Start recording but set counter to 5, i.e.
     while a macro is being recorded, typing <code>F3</code> inserts 5
-    the first time, 6 the second time, and so on.  The numeric prefix
+    the first time, 6 the second time and so on.  The numeric prefix
     argument sets the counter value.
   </li>
   <li>
@@ -1294,7 +1294,7 @@ baz</code>
     <code>C-7 C-x e</code>: Repeat the last macro 7 times.
   </li>
   <li>
-    <code>C-0 F3</code>: Repeat macro until there is an error (e.g.,
+    <code>C-0 F3</code>: Repeat macro until there is an error (e.g.
     reaching the end of a buffer).
   </li>
   <li>
@@ -1365,15 +1365,15 @@ baz</code>
 <p>
   In the above examples, when the macro playback prompts queries for
   user input, we can also type <code>C-l</code> to recentre the
-  screen, <code>C-r</code> to enter recursive edit,
-  or <code>C-M-c</code> to exit recursive edit.
+  screen, <code>C-r</code> to enter recursive edit or
+  <code>C-M-c</code> to exit recursive edit.
 </p>
 <p>
   Note that the key sequence <code>C-l</code> behaves a little
   differently from the regular <code>C-l</code>.  Unlike the
   regular <code>C-l</code>, successive invocations of this key
   sequence during macro query does not cause the window to reposition
-  at various places (centre, top, and bottom by default) in a cyclical
+  at various places (centre, top and bottom by default) in a cyclical
   order.  Successive invocations of <code>C-l</code> during macro
   query, leaves the screen centred.
 </p>
@@ -1472,7 +1472,7 @@ baz</code>
 </p>
 <p>
   Here are some complete key sequences that demonstrate how we can use
-  Abbrev to define an abbreviation, i.e., text that automatically gets
+  Abbrev to define an abbreviation, i.e. text that automatically gets
   replaced by another text:
 </p>
 <ul>
@@ -1560,13 +1560,13 @@ baz</code>
   </li>
   <li>
     Type <code>C-M-/</code> again.  The matching
-    words <code>apple</code>, <code>appliance</code>,
+    words <code>apple</code>, <code>appliance</code>
     and <code>application</code> are presented as possible completions
     in a temporary buffer named <code>*Completions*</code>.
   </li>
   <li>
     Now type <code>ic</code>, so that the word before the cursor
-    becomes <code>applic</code>, and type <code>C-M-/</code> again.
+    becomes <code>applic</code> and type <code>C-M-/</code> again.
     Now the word before the cursor expands to <code>application</code>
     because that is the only possible completion now.
   </li>
@@ -1684,7 +1684,7 @@ baz</code>
   point to the next indentation point where the indentation point is
   defined as the next non-whitespace character following whitespace.
   This can be useful in aligning the point with words in the previous
-  line.  If the previous line has no indentation point (e.g., the
+  line.  If the previous line has no indentation point (e.g. the
   previous line is an empty line or does not have whitespace),
   then <code>tab-to-tab-stop</code> is invoked which inserts tabs or
   spaces to move the point to the next tab stop column.
@@ -1722,9 +1722,9 @@ baz</code>
 <p>
   The behaviour of <code>M-i</code> can be customised further by
   manually defining tab stop columns.  Type <code>M-x edit-tab-stops
-  RET</code> first. A buffer named <code>*Tab Stops*</code> appears.
+  RET</code> first.  A buffer named <code>*Tab Stops*</code> appears.
   The second and third line of this buffer contains a ruler to
-  indicate the column numbers.  Type <code>:</code> (i.e., colon) in
+  indicate the column numbers.  Type <code>:</code> (i.e. colon) in
   the first line whereever you want to define tab stops.  Then
   type <code>C-c C-c</code> to install the changes.  Now
   when <code>M-i</code> is typed in a text buffer, each time it
@@ -1766,9 +1766,9 @@ baz</code>
   <li>
     <code>C-x TAB</code>: Interactively indent region.
     Type <code>&lt;right&gt;</code> or <code>&lt;left&gt;</code> to
-    increase or decrease indentation by one space, respectively.
+    increase or decrease indentation by one space respectively.
     Type <code>&lt;right&gt;</code> or <code>&lt;left&gt;</code> to
-    increase or decrease indentation by one tab stop, respectively.
+    increase or decrease indentation by one tab stop respectively.
   </li>
   <li>
 	<code>C-6 C-x TAB</code>: Indent region by 6 spaces.  Appropriate
@@ -1813,7 +1813,7 @@ baz</code>
     position of mark and column position of point.
   </li>
   <li>
-    <code>M-x sort-regexp-fields RET [A-Z]*->\(.*\) RET \1 RET</code>:
+    <code>M-x sort-regexp-fields RET [A-Z]*-&gt;\(.*\) RET \1 RET</code>:
     Sort the strings in each line matched by the given regular
     expression by the field matched by the first (and the only)
     capturing group in the regular expression.  The part of each line
@@ -1837,7 +1837,7 @@ baz</code>
   </li>
   <li>
     <code>M-x align-current RET</code>: Aligns current section.  A
-    section is a group of consecutive lines both below, above, and
+    section is a group of consecutive lines both below, above and
     including the current line for which the first alignment rule
     (according to the major mode) applies.
   </li>
@@ -1851,9 +1851,9 @@ baz</code>
                  ("country" . "UK")))</code>
 </pre>
 <p>
-  If we type <code>C-x h</code> followed by <code>M-x align
-  RET</code>, or if we put the cursor on any line of the above code
-  and type <code>M-x align-current RET</code>, we get the following
+  If we type <code>C-x h</code> followed by <code>M-x align RET</code>
+  or if we put the cursor on any line of the above code and
+  type <code>M-x align-current RET</code>, we get the following
   result:
 </p>
 <pre>
@@ -2092,7 +2092,7 @@ Carol     :Tokyo      :Japan</code>
   The spell checking commands of Emacs require a spell checking
   program to be installed on the system.  Emacs supports the spell
   checking programs <code>aspell</code>, <code>ispell</code>,
-  <code>hunspell</code>, and <code>enchant-2</code>.  If multiple
+  <code>hunspell</code> and <code>enchant-2</code>.  If multiple
   programs are present, it looks for them one by one in the order
   specified in the previous sentence and picks the first one that is
   found.  The following spell checking commands are introduced in the
@@ -2181,7 +2181,7 @@ Carol     :Tokyo      :Japan</code>
     displayed as <samp>^L</samp> in Emacs using the face
     named <code>escape-glyph</code>.  Emacs treats each form feed
     character as a page break and we can navigate back and forth
-    between pages with <code>C-x [</code> and <code>C-x ]</code>,
+    between pages with <code>C-x [</code> and <code>C-x ]</code>
     respectively.
   </li>
   <li>
@@ -2195,7 +2195,7 @@ Carol     :Tokyo      :Japan</code>
     <code>C-q TAB</code>: Insert a literal tab character.
   </li>
   <li>
-    <code>C-q C-j</code>: Insert a literal line feed character, i.e.,
+    <code>C-q C-j</code>: Insert a literal line feed character, i.e.
     a newline character.
   </li>
   <li>

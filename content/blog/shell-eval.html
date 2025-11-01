@@ -69,10 +69,10 @@ cat: 'bar"': No such file or directory</samp>
   space character is present in the value of <code>IFS</code>.
   Therefore, according to the POSIX specification, <code>$cmd</code>
   first expands to <code>cat "foo bar"</code>, then it is split into
-  three fields <code>cat</code>, <code>"foo</code>,
-  and <code>bar"</code>, and then the command <code>cat</code> is
-  executed with two arguments <code>"foo</code> and <code>bar"</code>.
-  Since no files with those names exist, an error occurs.
+  three fields <code>cat</code>, <code>"foo</code> and
+  <code>bar"</code> and then the command <code>cat</code> is executed
+  with two arguments <code>"foo</code> and <code>bar"</code>.  Since
+  no files with those names exist, an error occurs.
 </p>
 <h2 id="experiment-2">Experiment 2</h2>
 <p>
@@ -99,7 +99,7 @@ dash: 8: cat "foo bar": not found</samp>
 </p>
 <p>
   We need a way to somehow get the shell to parse <code>cat "foo
-  bar"</code> like a shell normally does, i.e., treat each unquoted
+  bar"</code> like a shell normally does, i.e. treat each unquoted
   token as a separate field and each quoted token as a single one.
   How do we get the shell to do that?  Well, we can just invoke the
   shell itself to parse our command:

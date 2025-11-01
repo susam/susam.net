@@ -63,7 +63,7 @@
   \]
 
   where \( k \) is a nonnegative integer, \( l \) is a positive
-  integer, and \( p \nmid l \).   Note that the power of \( p \) cannot
+  integer and \( p \nmid l \).  Note that the power of \( p \) cannot
   be even because \( n \) is not a perfect square.
 </p>
 <p>
@@ -221,36 +221,36 @@
 <h3 id="order-axioims">Order Axioms</h3>
 <p>
   The set \( \mathbb{Q} \), together with the addition and
-  multiplication operations and a relation \( &lt; \) satisfy the
-  order axioms presented below:
+  multiplication operations and a relation \( \lt \) satisfy the order
+  axioms presented below:
 </p>
 <ol>
   <li>
     <p>
       Transitive law:<br>
-      For all \( a, b, c \in \mathbb{Q} \), \( a &lt; b \) and \( b
-      &lt; c \) implies \( a &lt; c \).
+      For all \( a, b, c \in \mathbb{Q} \), \( a \lt b \) and \( b \lt
+      c \) implies \( a \lt c \).
     </p>
   </li>
   <li>
     <p>
       Trichotomy law:<br>
       For all \( a, b \in \mathbb{Q} \), exactly one of the following
-      holds: \( a &lt; b \), \( b &lt; a \), or \( a = b \).
+      holds: \( a \lt b \), \( b \lt a \) or \( a = b \).
     </p>
   </li>
   <li>
     <p>
       Compatibility with addition:<br>
-      For all \( a, b, c \in \mathbb{Q} \), \( a &lt; b \) implies \(
-      a + c &lt; b + c \).
+      For all \( a, b, c \in \mathbb{Q} \), \( a \lt b \) implies \( a
+      + c \lt b + c \).
     </p>
   </li>
   <li>
     <p>
       Compatibility with multiplication:<br>
-      For all \( a, b, c \in \mathbb{Q} \), \( a &lt; b \) and \( c
-      &gt; 0 \) implies \( ac &lt; bc \).
+      For all \( a, b, c \in \mathbb{Q} \), \( a \lt b \) and \( c \gt
+      0 \) implies \( ac \lt bc \).
     </p>
   </li>
 </ol>
@@ -259,21 +259,21 @@
   Let \( m, p \in \mathbb{Z} \) and \( n, q \in \mathbb{N} \).  Then
 
   \[
-    \frac{m}{n} &lt; \frac{p}{q}
-    \iff \frac{mq}{nq} &lt; \frac{np}{nq}
-    \iff mq &lt; np.
+    \frac{m}{n} \lt \frac{p}{q}
+    \iff \frac{mq}{nq} \lt \frac{np}{nq}
+    \iff mq \lt np.
   \]
 </p>
 <h3 id="density-property">Density Property</h3>
 <p>
   The set \( \mathbb{Q} \) has the property of the density.  For all
-  \( q, r \in \mathbb{Q} \) where \( q &lt; r \), there is \( s \in
-  \mathbb{Q} \) such that \( q &lt; s &lt; r \).  This is trivial to
+  \( q, r \in \mathbb{Q} \) where \( q \lt r \), there is \( s \in
+  \mathbb{Q} \) such that \( q \lt s \lt r \).  This is trivial to
   demonstrate by taking \( s = (q + r) / 2 \).
 </p>
 <p>
   Example: Between \( 5/10 \) and \( 7/10 \), there exists \( 6/10 \),
-  i.e., \( 5/10 &lt; 6/10 &lt; 7/10 \).
+  i.e. \( 5/10 \lt 6/10 \lt 7/10 \).
 </p>
 <p>
   There are infinitely many rational numbers between \( q \) and
@@ -281,12 +281,12 @@
 </p>
 <h3 id="archimedean-property">Archimedean Property</h3>
 <p>
-  For all \( q &gt; 0 \) in \( \mathbb{Q} \), there exists \( n \in
-  \mathbb{N} \) such that \( n &gt; q \).
+  For all \( q \gt 0 \) in \( \mathbb{Q} \), there exists \( n \in
+  \mathbb{N} \) such that \( n \gt q \).
 </p>
 <p>
-  Example: For \( q = 7/3 \), there exists \( n = 5 &gt; 7/3 \).  In
-  fact, there also exists \( n = 3 &gt; 7/3 \).
+  Example: For \( q = 7/3 \), there exists \( n = 5 \gt 7/3 \).  In
+  fact, there also exists \( n = 3 \gt 7/3 \).
 </p>
 <h3 id="upper-bound">Upper Bound</h3>
 <p>
@@ -295,7 +295,7 @@
   \ge b \) for all \( b \in B \).
 </p>
 <p>
-  Example: The set \( \{ a \in Q : a &lt; 4 \} \) is bounded above by
+  Example: The set \( \{ a \in Q : a \lt 4 \} \) is bounded above by
   \( 4 \).  It is also bounded above by \( 5 \), by \( 6 \), by \(
   100 \), etc.  The least upper bound is \( 4 \).
 </p>
@@ -352,8 +352,8 @@
 </p>
 <ul>
   <li>
-    Axiom of Archimedes: For all \( x &gt; 0 \in \mathbb{R} \), there
-    exists \( n \in \mathbb{N} \) such that \( n &gt; x \).
+    Axiom of Archimedes: For all \( x \gt 0 \in \mathbb{R} \), there
+    exists \( n \in \mathbb{N} \) such that \( n \gt x \).
   </li>
   <li>
     Axiom of Completeness: Every non-empty subset of \( \mathbb{R} \)
@@ -365,7 +365,7 @@
   completeness.  For example, the set
 
   \[
-    C = \{ a \in \mathbb{Q} : a &gt; 0 \text{ and } a^2 &lt; 2 \}
+    C = \{ a \in \mathbb{Q} : a \gt 0 \text{ and } a^2 \lt 2 \}
   \]
 
   is a non-empty subset of \( \mathbb{Q} \) that is bounded above but
@@ -397,12 +397,12 @@
 </p>
 <ul>
   <li>
-    \( c \) is an upper bound of \( A' \)
-    (i.e., \( c \ge a' \) for all \( a' \in A' \));
+    \( c \) is an upper bound of \( A' \) (i.e. \( c \ge a' \) for all
+    \( a' \in A' \));
   </li>
   <li>
     \( d \) is an upper bound of \( A' \) \( \implies \) \( d \ge c \)
-    (i.e., \( d \) satisfies \( d \ge a' \) for all \( a' \in A' \) \(
+    (i.e. \( d \) satisfies \( d \ge a' \) for all \( a' \in A' \) \(
     \implies \) \( d \ge c \)).
   </li>
 </ul>
@@ -460,6 +460,6 @@
 </p>
 <h3 id="irrational-between-rationals">Irrational Between Rationals</h3>
 <p>
-  If \( x, y \in \mathbb{Q} \) and \( x &lt; y \), then there exists
-  an irrational number \( u \) such that \( x &lt; u &lt; y \).
+  If \( x, y \in \mathbb{Q} \) and \( x \lt y \), then there exists an
+  irrational number \( u \) such that \( x \lt u \lt y \).
 </p>

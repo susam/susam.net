@@ -36,7 +36,7 @@
   or <kbd>ctrl</kbd>+<kbd>p</kbd> to bring back the previous input, we
   see something like the following instead:
 </p>
-<pre><samp>> <kbd>^[[A^[[A^P^P</kbd></samp></pre>
+<pre><samp>&gt; <kbd>^[[A^[[A^P^P</kbd></samp></pre>
 <p>
   It shows the keys typed literally rather than bringing up previous
   input like most other interactive programs with a command-line
@@ -63,7 +63,7 @@
 
 while True:
     try:
-        line = input('> ')
+        line = input('&gt; ')
         print(sum([int(n) for n in line.split()]))
     except ValueError as e:
         print('error:', e)
@@ -76,11 +76,11 @@ while True:
 </p>
 <pre>
 <samp>$ <kbd>python3 repl.py</kbd>
-> <kbd>10 20 30</kbd>
+&gt; <kbd>10 20 30</kbd>
 60
-> <kbd>40 50 60</kbd>
+&gt; <kbd>40 50 60</kbd>
 150
-> <kbd>40 50 60</kbd></samp>
+&gt; <kbd>40 50 60</kbd></samp>
 </pre>
 <p>
   The last line of input in the example above is obtained by typing
@@ -100,7 +100,7 @@ while True:
   inputs from the history.  However, it does not bring back inputs
   from a previous invocation of the REPL.  For example, if we start
   our toy REPL, enter some inputs, then quit it (say, by
-  typing <kbd>ctrl</kbd>+<kbd>c</kbd>), start our toy REPL again, and
+  typing <kbd>ctrl</kbd>+<kbd>c</kbd>), start our toy REPL again and
   type <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>, it does not
   bring back the input from the previous invocation.  For a full-blown
   REPL meant for sophisicated usage, we may want to preserve the
@@ -118,7 +118,7 @@ if os.path.exists(HISTORY_FILE):
 
 while True:
     try:
-        line = input('> ')
+        line = input('&gt; ')
         readline.write_history_file(HISTORY_FILE)
         print(sum([int(n) for n in line.split()]))
     except ValueError as e:

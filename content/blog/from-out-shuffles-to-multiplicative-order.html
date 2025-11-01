@@ -35,7 +35,7 @@
   positive even integer.  Let us denote these cards as \( c_0, c_1,
   \dots, c_{n-1} \) where \( c_0 \) is the card at index \( 0 \) (top
   of the deck), \( c_{n - 1} \) is the card at index \( n - 1 \)
-  (bottom of the deck), and \( c_i \) is the card at index \( i \)
+  (bottom of the deck) and \( c_i \) is the card at index \( i \)
   where \( 0 \le i \le n - 1 \).
 </p>
 <p>
@@ -54,12 +54,12 @@
 <p>
   From the problem description and the example above, we see that
   after a single out shuffle, a card at index \( i \) moves to index
-  \( 2i \bmod (n - 1) \) for \( 0 \le i &lt; n - 1 \) and the card at
+  \( 2i \bmod (n - 1) \) for \( 0 \le i \lt n - 1 \) and the card at
   index \( n - 1 \) remains at the same place.
 </p>
 <p>
   After \( m \) shuffles a card at index \( i \) moves to index \(
-  (2^m i) \bmod (n - 1) \) for \( 0 \le i &lt; n - 1 \).  The card at
+  (2^m i) \bmod (n - 1) \) for \( 0 \le i \lt n - 1 \).  The card at
   index \( n - 1 \) always remains at the same place.
 </p>
 <p>
@@ -70,7 +70,7 @@
     2^m i \equiv i \pmod{n - 1}.
   \]
 
-  for all integers \( i \) that satisfy the inequality \( 0 \le i &lt;
+  for all integers \( i \) that satisfy the inequality \( 0 \le i \lt
   n - 1 \).
 </p>
 <p>
@@ -82,7 +82,7 @@
     a \equiv b \pmod{n / \gcd(c, n)}.
   \]
 
-  where \( a \), \( b \), \( c \), and \( n \) are integers.  Therefore
+  where \( a \), \( b \), \( c \) and \( n \) are integers.  Therefore
 
   \[
     2^m i \equiv i \pmod{n - 1}
@@ -90,8 +90,8 @@
     2^m \equiv 1 \pmod{(n - 1) / \gcd(i, n - 1)}.
   \]
 
-  Let \( F_{ni} = \frac{n - 1}{\gcd(i, n - 1)} \) where \( 0 \le i
-  &lt; n - 1 \).  Now the above congruence relation can be written as
+  Let \( F_{ni} = \frac{n - 1}{\gcd(i, n - 1)} \) where \( 0 \le i \lt
+  n - 1 \).  Now the above congruence relation can be written as
 
   \[
     2^m \equiv 1 \pmod{F_{ni}}.
@@ -121,11 +121,11 @@
 </p>
 <p>
   If \( n = 2 \), \( F_{n0} = F_{n1} = 1 \), therefore \( 2^m \equiv 1
-  \pmod{F_{ni}} \) for \( 0 \le i &lt; n - 1 \) and all positive
+  \pmod{F_{ni}} \) for \( 0 \le i \lt n - 1 \) and all positive
   integers \( m \).  This proves the trivial observation that when
   there are only two cards \( c_0 \) and \( c_1 \), they remain at
-  index \( 0 \) and index \( 1 \), respectively, after any number of
-  out shuffles, i.e., their positions do not change with out shuffles.
+  index \( 0 \) and index \( 1 \) respectively, after any number of
+  out shuffles, i.e. their positions do not change with out shuffles.
 </p>
 <h4 id="case-1">Case \( n \ge 4 \)</h4>
 <p>
@@ -137,12 +137,12 @@
 <h5 id="subcase-1-1">Subcase \( i \) is coprime to \( n - 1 \)</h5>
 <p>
   For any arbitrary \( n \ge 4 \), let \( i \) be an integer that is
-  coprime to \( n - 1 \) such that \( 1 &lt; i &lt; n - 1 \).  Now \(
+  coprime to \( n - 1 \) such that \( 1 \lt i \lt n - 1 \).  Now \(
   \gcd(i, n - 1 ) = 1 \), so \( F_{ni} = \frac{n - 1}{\gcd(i, n - 1)}
-  = n - 1 \).  As a result, \( \ord_{F_{ni}}(2) = \ord_{n - 1}({2}) \).
-  This shows that any card at index \( i \) such that \( i \) is
-  coprime to \( n - 1 \) requires a minimum of \( \ord_{n - 1}(2) \)
-  out shuffles to return to its initial place.
+  = n - 1 \).  As a result, \( \ord_{F_{ni}}(2) = \ord_{n -
+  1}({2}) \).  This shows that any card at index \( i \) such that \(
+  i \) is coprime to \( n - 1 \) requires a minimum of \( \ord_{n -
+  1}(2) \) out shuffles to return to its initial place.
 </p>
 <h5 id="subcase-1-2">Subcase \( i \) is <em>not</em> coprime to \( n - 1 \)</h5>
 <p>

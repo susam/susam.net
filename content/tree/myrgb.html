@@ -1,5 +1,5 @@
 <!--
-  Guess My RGB 0.4.0.dev1
+  Guess My RGB 0.4.0.dev2
   Copyright (c) 2024 Susam Pal
   Source: https://github.com/susam/myrgb
   License: MIT
@@ -9,7 +9,7 @@
   <head>
     <title>Guess My RGB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A simple RGB color guessing game.">
+    <meta name="description" content="A simple RGB colour guessing game.">
     <style>
       html {
         height: 100%;
@@ -62,10 +62,11 @@
         padding: 0.5em;
       }
       div#status {
-        margin: 1em auto;
-        padding: 1em;
+        margin-top: 0.5em;
+        padding: 0.5em;
         border: medium double;
-        display: none;
+        display: inline-block;
+        visibility: hidden;
       }
       footer {
         line-height: 4em;
@@ -121,7 +122,7 @@
       }
 
       function setGame (rr, gg, bb) { // eslint-disable-line no-unused-vars
-        // Useful to set arbitrary colors for local testing.
+        // Useful to set arbitrary colours for local testing.
         r = rr
         g = gg
         b = bb
@@ -139,7 +140,7 @@
         info.style.display = 'inline-block'
         submit.style.display = 'none'
         restart.style.display = 'none'
-        status.style.display = 'none'
+        status.style.visibility = 'hidden'
         result.innerHTML = ''
         attempts = 0
         rin.disabled = gin.disabled = bin.disabled = false
@@ -283,7 +284,7 @@
         let opacity = 100
         let subtract = 0.01
 
-        status.style.display = 'inline-block'
+        status.style.visibility = 'visible'
         status.style.opacity = opacity + '%'
         status.innerHTML = msg
 
@@ -297,9 +298,10 @@
           if (statusTimer != null && opacity <= 0) {
             clearTimeout(statusTimer)
             statusTimer = null
-            status.style.display = 'none'
+            status.style.visibility = 'hidden'
+          } else {
+            status.style.opacity = opacity + '%'
           }
-          status.style.opacity = opacity + '%'
         }, 50)
       }
 
@@ -307,7 +309,7 @@
         const args = Array.prototype.slice.call(arguments)
         if (LOGGING) {
           console.log('attempts=' + attempts +
-                      ' color=' + r + ',' + g + ',' + b +
+                      ' colour=' + r + ',' + g + ',' + b +
                       ' hex=' + hex(r, g, b) +
                       ' ' + args.join(' '))
         }
@@ -370,11 +372,11 @@
         <option value="14" label="E"></option>
         <option value="15" label="F"></option>
       </datalist>
-      <div id="info">Move the sliders above to guess the background RGB color.</div>
+      <div id="info">Move the sliders above to guess the background RGB colour.</div>
       <button id="submit"></button>
       <button id="restart">New Game</button>
       <div id="result"></div>
-      <div id="status"></div>
+      <div id="status">...</div>
     </main>
     <footer>
       <a id="mode" href="#x">Mode</a>

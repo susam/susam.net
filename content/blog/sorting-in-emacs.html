@@ -22,19 +22,19 @@
       First create a buffer that has the following text:
     </p>
 <pre>
-<code>Carol  200  London  LHR->SFO
-Dan    20   Tokyo   HND->LHR
-Bob    100  London  LCY->CDG
-Alice  10   Paris   CDG->LHR
-Bob    30   Paris   ORY->HND</code>
+<code>Carol  200  London  LHR-&gt;SFO
+Dan    20   Tokyo   HND-&gt;LHR
+Bob    100  London  LCY-&gt;CDG
+Alice  10   Paris   CDG-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND</code>
 </pre>
     <p>
       Let us pretend that each line is a record that represents some
       details about different persons.  From left to right, we have
       each person's name, some sort of numerical ID, their current
-      location, and their upcoming travel plan.  For example, the
-      first line says that Carol from London is planning to travel
-      from London Heathrow (LHR) to San Francisco (SFO).
+      location and their upcoming travel plan.  For example, the first
+      line says that Carol from London is planning to travel from
+      London Heathrow (LHR) to San Francisco (SFO).
     </p>
   </li>
   <li> <!-- 2. sort-lines -->
@@ -44,11 +44,11 @@ Bob    30   Paris   ORY->HND</code>
       alphabetically.  The buffer looks like this now:
     </p>
 <pre>
-<code>Alice  10   Paris   CDG->LHR
-Bob    100  London  LCY->CDG
-Bob    30   Paris   ORY->HND
-Carol  200  London  LHR->SFO
-Dan    20   Tokyo   HND->LHR</code>
+<code>Alice  10   Paris   CDG-&gt;LHR
+Bob    100  London  LCY-&gt;CDG
+Bob    30   Paris   ORY-&gt;HND
+Carol  200  London  LHR-&gt;SFO
+Dan    20   Tokyo   HND-&gt;LHR</code>
 </pre>
   </li>
   <li> <!-- 3. sort-lines (reverse) -->
@@ -60,11 +60,11 @@ Dan    20   Tokyo   HND->LHR</code>
       looks like this now:
     </p>
 <pre>
-<code>Dan    20   Tokyo   HND->LHR
-Carol  200  London  LHR->SFO
-Bob    30   Paris   ORY->HND
-Bob    100  London  LCY->CDG
-Alice  10   Paris   CDG->LHR</code>
+<code>Dan    20   Tokyo   HND-&gt;LHR
+Carol  200  London  LHR-&gt;SFO
+Bob    30   Paris   ORY-&gt;HND
+Bob    100  London  LCY-&gt;CDG
+Alice  10   Paris   CDG-&gt;LHR</code>
 </pre>
   </li>
   <li> <!-- 4. sort-fields (first) -->
@@ -81,11 +81,11 @@ Alice  10   Paris   CDG->LHR</code>
       entire lines.
     </p>
 <pre>
-<code>Alice  10   Paris   CDG->LHR
-Bob    30   Paris   ORY->HND
-Bob    100  London  LCY->CDG
-Carol  200  London  LHR->SFO
-Dan    20   Tokyo   HND->LHR</code>
+<code>Alice  10   Paris   CDG-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Bob    100  London  LCY-&gt;CDG
+Carol  200  London  LHR-&gt;SFO
+Dan    20   Tokyo   HND-&gt;LHR</code>
 </pre>
   </li>
   <li> <!-- 5. sort-fields (second) -->
@@ -99,11 +99,11 @@ Dan    20   Tokyo   HND->LHR</code>
       looks like this:
     </p>
 <pre>
-<code>Alice  10   Paris   CDG->LHR
-Bob    100  London  LCY->CDG
-Dan    20   Tokyo   HND->LHR
-Carol  200  London  LHR->SFO
-Bob    30   Paris   ORY->HND</code>
+<code>Alice  10   Paris   CDG-&gt;LHR
+Bob    100  London  LCY-&gt;CDG
+Dan    20   Tokyo   HND-&gt;LHR
+Carol  200  London  LHR-&gt;SFO
+Bob    30   Paris   ORY-&gt;HND</code>
 </pre>
   </li>
   <li> <!-- 6. sort-numeric-fields -->
@@ -113,11 +113,11 @@ Bob    30   Paris   ORY->HND</code>
       the second field.  The result looks like this:
     </p>
 <pre>
-<code>Alice  10   Paris   CDG->LHR
-Dan    20   Tokyo   HND->LHR
-Bob    30   Paris   ORY->HND
-Bob    100  London  LCY->CDG
-Carol  200  London  LHR->SFO</code>
+<code>Alice  10   Paris   CDG-&gt;LHR
+Dan    20   Tokyo   HND-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Bob    100  London  LCY-&gt;CDG
+Carol  200  London  LHR-&gt;SFO</code>
 </pre>
   </li>
   <li> <!-- 7. sort-fields (third) -->
@@ -127,11 +127,11 @@ Carol  200  London  LHR->SFO</code>
       containing city names.  The result looks like this:
     </p>
 <pre>
-<code>Bob    100  London  LCY->CDG
-Carol  200  London  LHR->SFO
-Alice  10   Paris   CDG->LHR
-Bob    30   Paris   ORY->HND
-Dan    20   Tokyo   HND->LHR</code>
+<code>Bob    100  London  LCY-&gt;CDG
+Carol  200  London  LHR-&gt;SFO
+Alice  10   Paris   CDG-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Dan    20   Tokyo   HND-&gt;LHR</code>
 </pre>
     <p>
       Note that we cannot supply the prefix argument <code>C-u</code>
@@ -153,11 +153,11 @@ Dan    20   Tokyo   HND->LHR</code>
       this:
     </p>
 <pre>
-<code>Dan    20   Tokyo   HND->LHR
-Bob    30   Paris   ORY->HND
-Alice  10   Paris   CDG->LHR
-Carol  200  London  LHR->SFO
-Bob    100  London  LCY->CDG</code>
+<code>Dan    20   Tokyo   HND-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Alice  10   Paris   CDG-&gt;LHR
+Carol  200  London  LHR-&gt;SFO
+Bob    100  London  LCY-&gt;CDG</code>
 </pre>
   </li>
   <li> <!-- 9. sort-fields (negative) -->
@@ -171,11 +171,11 @@ Bob    100  London  LCY->CDG</code>
       from the right.  The result looks like this:
     </p>
 <pre>
-<code>Carol  200  London  LHR->SFO
-Bob    100  London  LCY->CDG
-Bob    30   Paris   ORY->HND
-Alice  10   Paris   CDG->LHR
-Dan    20   Tokyo   HND->LHR</code>
+<code>Carol  200  London  LHR-&gt;SFO
+Bob    100  London  LCY-&gt;CDG
+Bob    30   Paris   ORY-&gt;HND
+Alice  10   Paris   CDG-&gt;LHR
+Dan    20   Tokyo   HND-&gt;LHR</code>
 </pre>
   </li>
   <li> <!-- 10. sort-columns -->
@@ -193,15 +193,15 @@ Dan    20   Tokyo   HND->LHR</code>
     </p>
     <p>
       Finally type <code>M-x sort-columns RET</code> to sort the
-      columns bounded by the column positions of mark and point (i.e.,
+      columns bounded by the column positions of mark and point (i.e.
       the last two columns).  The result looks like this:
     </p>
 <pre>
-<code>Bob    100  London  LCY->CDG
-Carol  200  London  LHR->SFO
-Alice  10   Paris   CDG->LHR
-Bob    30   Paris   ORY->HND
-Dan    20   Tokyo   HND->LHR</code>
+<code>Bob    100  London  LCY-&gt;CDG
+Carol  200  London  LHR-&gt;SFO
+Alice  10   Paris   CDG-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Dan    20   Tokyo   HND-&gt;LHR</code>
 </pre>
   </li>
   <li> <!-- 11. sort-columns (reverse) -->
@@ -222,11 +222,11 @@ Dan    20   Tokyo   HND->LHR</code>
       the last two columns.
     </p>
 <pre>
-<code>Dan    20   Tokyo   HND->LHR
-Bob    30   Paris   ORY->HND
-Alice  10   Paris   CDG->LHR
-Carol  200  London  LHR->SFO
-Bob    100  London  LCY->CDG</code>
+<code>Dan    20   Tokyo   HND-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Alice  10   Paris   CDG-&gt;LHR
+Carol  200  London  LHR-&gt;SFO
+Bob    100  London  LCY-&gt;CDG</code>
 </pre>
   </li>
   <li> <!-- 12. sort-regexp-fields (warning) -->
@@ -246,11 +246,11 @@ Bob    100  London  LCY->CDG</code>
       (<code>\1</code>).  The result looks like this:
     </p>
 <pre>
-<code>Dan    20   Tokyo   LCY->CDG
-Bob    30   Paris   ORY->HND
-Alice  10   Paris   HND->LHR
-Carol  200  London  CDG->LHR
-Bob    100  London  LHR->SFO</code>
+<code>Dan    20   Tokyo   LCY-&gt;CDG
+Bob    30   Paris   ORY-&gt;HND
+Alice  10   Paris   HND-&gt;LHR
+Carol  200  London  CDG-&gt;LHR
+Bob    100  London  LHR-&gt;SFO</code>
 </pre>
     <p>
       Observe how all our travel records are messed up in this result.
@@ -291,11 +291,11 @@ Bob    100  London  LHR->SFO</code>
       RET .*-&gt;\(.*\) RET \1 RET</code>.
     </p>
 <pre>
-<code>Bob    100  London  LCY->CDG
-Bob    30   Paris   ORY->HND
-Dan    20   Tokyo   HND->LHR
-Alice  10   Paris   CDG->LHR
-Carol  200  London  LHR->SFO</code>
+<code>Bob    100  London  LCY-&gt;CDG
+Bob    30   Paris   ORY-&gt;HND
+Dan    20   Tokyo   HND-&gt;LHR
+Alice  10   Paris   CDG-&gt;LHR
+Carol  200  London  LHR-&gt;SFO</code>
 </pre>
     <p>
       Now the lines are sorted by the destination field and Dan from
@@ -312,11 +312,11 @@ Carol  200  London  LHR->SFO</code>
       in a reverse sort.  The result looks like this:
     </p>
 <pre>
-<code>Carol  200  London  LHR->SFO
-Dan    20   Tokyo   HND->LHR
-Alice  10   Paris   CDG->LHR
-Bob    30   Paris   ORY->HND
-Bob    100  London  LCY->CDG</code>
+<code>Carol  200  London  LHR-&gt;SFO
+Dan    20   Tokyo   HND-&gt;LHR
+Alice  10   Paris   CDG-&gt;LHR
+Bob    30   Paris   ORY-&gt;HND
+Bob    100  London  LCY-&gt;CDG</code>
 </pre>
   </li>
   <li> <!-- 15. shell-command-on-region -->
@@ -332,19 +332,19 @@ Bob    100  London  LCY->CDG</code>
       RET</code> to sort the lines but remove duplicate lines during
       the sort operation.  The <code>M-|</code> key sequence invokes
       the command <code>shell-command-on-region</code> which prompts
-      for a shell command, executes it, and usually displays the
-      output in the echo area.  If the output cannot fit in the echo
-      area, then it displays the output in a separate buffer.
-      However, if a prefix argument is supplied, say
-      with <code>C-u</code>, then it replaces the region with the
-      output.  As a result, the buffer now looks like this:
+      for a shell command, executes it and usually displays the output
+      in the echo area.  If the output cannot fit in the echo area,
+      then it displays the output in a separate buffer.  However, if a
+      prefix argument is supplied, say with <code>C-u</code>, then it
+      replaces the region with the output.  As a result, the buffer
+      now looks like this:
     </p>
     <pre>
-<code>Alice  10   Paris   CDG->LHR
-Bob    100  London  LCY->CDG
-Bob    30   Paris   ORY->HND
-Carol  200  London  LHR->SFO
-Dan    20   Tokyo   HND->LHR</code>
+<code>Alice  10   Paris   CDG-&gt;LHR
+Bob    100  London  LCY-&gt;CDG
+Bob    30   Paris   ORY-&gt;HND
+Carol  200  London  LHR-&gt;SFO
+Dan    20   Tokyo   HND-&gt;LHR</code>
 </pre>
     <p>
       This particular problem of removing duplicates while sorting can

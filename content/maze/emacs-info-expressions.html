@@ -44,7 +44,7 @@
 <pre><code>(emacs) Branches</code></pre>
 <p>
   Now we can go to the <code>*scratch*</code> buffer (or any buffer),
-  copy the node name, and complete the <code>info</code> expression
+  copy the node name and complete the <code>info</code> expression
   manually.  For example, we could type the following key sequence on
   a fresh new line to create the Elisp expression and copy it to the
   kill ring:
@@ -58,7 +58,7 @@
   (<code>C-y</code>), then selects the pasted text (<code>C-a C-SPC
   C-e</code>), then surrounds it within parentheses
   (<code>M-(</code>), then inserts the text <code>info</code> just
-  after the opening parentheses, and finally copies the resulting
+  after the opening parentheses and finally copies the resulting
   expression to the kill ring (<code>C-a C-k C-/</code>).  The
   expression copied to the kill ring looks like this:
 </p>
@@ -87,15 +87,16 @@
 <pre>
 <code>c runs the command Info-copy-current-node-name (found in
 Info-mode-map), which is an interactive byte-compiled Lisp function in
-‘info.el’.
+&lsquo;info.el&rsquo;.
 
 It is bound to c, w, &lt;menu-bar&gt; &lt;info&gt; &lt;Copy Node Name&gt;.
 
 (Info-copy-current-node-name &amp;optional ARG)
 
-Put the name of the current Info node into the kill ring.
-The name of the Info file is prepended to the node name in parentheses.
-With a zero prefix arg, put the name inside a function call to ‘info’.
+Put the name of the current Info node into the kill ring.  The name of
+the Info file is prepended to the node name in parentheses.  With a
+zero prefix arg, put the name inside a function call to
+&lsquo;info&rsquo;.
 
   Probably introduced at or before Emacs version 22.1.
 
@@ -110,6 +111,6 @@ With a zero prefix arg, put the name inside a function call to ‘info’.
   simply type <code>C-y C-x C-e</code> to paste the expression into a
   buffer and evaluate it immediately.  Alternatively, they might want
   to type <code>M-: C-y RET</code> to bring the
-  <code>eval-expression</code> minibuffer, paste the expression, and
+  <code>eval-expression</code> minibuffer, paste the expression and
   evaluate it.
 </p>

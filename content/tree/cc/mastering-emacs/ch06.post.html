@@ -22,7 +22,7 @@
     <p>
       Reading the manual.  For example, type <code>M-x info RET</code>
       or <code>C-h i</code>, then navigate to the <code>Emacs</code>
-      hyperlink, then type <code>C-s version control RET</code>, and
+      hyperlink, then type <code>C-s version control RET</code> and
       then navigate to the node named <code>Version Control</code> to
       read the corresponding manual.
     </p>
@@ -119,7 +119,7 @@
   f</code> to visit a file in the current project, this package
   automatically detects the top-level directory of the project by
   checking parent directories for version control system artifacts
-  (e.g., <code>.git</code> directory) and presents files within that
+  (e.g. <code>.git</code> directory) and presents files within that
   top-level directory as autocomplete options.
 </p>
 <p>
@@ -339,7 +339,7 @@
   type <code>M-.</code> to search that identifier in your environment.
   By default, it searches for the identifier in files of the same type
   found under the home directory with a tool like <code>ag</code>,
-  <code>rg</code>, or <code>grep</code> (the first one it finds).
+  <code>rg</code> or <code>grep</code> (the first one it finds).
   There is an exception to this rule though.  If
   neither <code>ag</code> nor <code>rg</code> is found and only GNU
   grep is found, then typing <code>M-.</code> on an indentifier
@@ -582,7 +582,7 @@
     <code>M-x keep-lines RET b.. RET</code>: Keep lines in region that
     match the regular expression <code>b..</code> and delete the rest.
     If no region is active, then keep matching lines between the point
-    and end of buffer, and delete the rest.  The deleted lines are not
+    and end of buffer and delete the rest.  The deleted lines are not
     copied to kill ring.  See section
     <a href="ch05.html#deleting-and-keeping-lines">Deleting and
     Keeping Lines</a> of chapter 5 notes for more details.
@@ -729,7 +729,7 @@ FOO  BAR  BAZ</code>
     <p>
       In a terminal, run the following command:
     </p>
-    <pre><code>: &gt; /tmp/log.txt && while true; do date >> /tmp/log.txt; sleep 1; done</code></pre>
+    <pre><code>: &gt; /tmp/log.txt &amp;&amp; while true; do date &gt;&gt; /tmp/log.txt; sleep 1; done</code></pre>
     <p>
       You could use <code>ansi-term</code> within Emacs too as the
       terminal if you are familiar with it.
@@ -802,7 +802,7 @@ FOO  BAR  BAZ</code>
     <p>
       Like in the previous section, run the following command:
     </p>
-    <pre><code>: &gt; /tmp/log.txt && while true; do date >> /tmp/log.txt; sleep 1; done</code></pre>
+    <pre><code>: &gt; /tmp/log.txt &amp;&amp; while true; do date &gt;&gt; /tmp/log.txt; sleep 1; done</code></pre>
   </li>
   <li>
     <p>
@@ -888,7 +888,7 @@ tar -xOf /tmp/foo.tgz</code>
   <li>
     <p>
       Type <code>n</code> and <code>p</code> to navigate the Tar
-      buffer down and up, respectively.
+      buffer down and up respectively.
     </p>
   </li>
   <li>
@@ -1001,8 +1001,8 @@ tar -xOf /tmp/foo.tgz</code>
 </ul>
 <h3 id="preview-buffer-quirks">Preview Buffer Quirks</h3>
 <p>
-  The <code>m</code>, <code>u</code>, or <code>d</code> commands in
-  the preview buffer are actually meant to mark, unmark, or flag the
+  The <code>m</code>, <code>u</code> or <code>d</code> commands in the
+  preview buffer are actually meant to mark, unmark or flag the
   corresponding files in the Dired buffer.  The highlighting or
   unhighlighting that occurs in the preview buffer is merely a
   convenience feature.  The preview buffer may not always accurately
@@ -1011,11 +1011,11 @@ tar -xOf /tmp/foo.tgz</code>
   state of the files.
 </p>
 <p>
-  Especially, if we go back to the Dired buffer and mark, unmark, or
+  Especially, if we go back to the Dired buffer and mark, unmark or
   flag files, the preview buffer does not reflect it automatically.
   We need to go to the preview buffer again and perform at least one
-  similar operation (<code>m</code>, <code>u</code>,
-  or <code>d</code>) in the preview buffer for it to be updated again.
+  similar operation (<code>m</code>, <code>u</code> or
+  <code>d</code>) in the preview buffer for it to be updated again.
   This is why it is important to keep an eye on the Dired buffer to
   get an accurate account of which files are marked or flagged.
 </p>
@@ -1048,7 +1048,7 @@ tar -xOf /tmp/foo.tgz</code>
 </p>
 <p>
   The key sequence <code>t t trip;oxford;uk RET</code> tags the target
-  images with the tags <code>trip</code>, <code>oxford</code>,
+  images with the tags <code>trip</code>, <code>oxford</code>
   and <code>uk</code>.  The tags must be separated by semicolon as
   shown in the preceding example.  The tags are saved in a path set in
   the <code>image-dired-db-file</code> variable.  Type <code>C-h v
@@ -1180,7 +1180,7 @@ tar -xOf /tmp/foo.tgz</code>
   <li>
     <code>P</code>: Fit the image to the window such that neither the
     document width nor the document height exceed the window width or
-    height, respectively.
+    height respectively.
   </li>
   <li>
     <code>F</code>: Resize the window so it just fits the page.  When
@@ -1189,7 +1189,7 @@ tar -xOf /tmp/foo.tgz</code>
   </li>
   <li>
     <code>M-x doc-view-presentation RET</code>: Display document in
-    presentation mode, i.e., as a full screen slide show.
+    presentation mode, i.e. as a full screen slide show.
   </li>
 </ul>
 <p>
@@ -1199,8 +1199,8 @@ tar -xOf /tmp/foo.tgz</code>
 </p>
 <ul>
   <li>
-    <code>C-s ^f..\> RET</code>: Initiate a new search for lines that
-    begin with a three-lettered word beginning with the
+    <code>C-s ^f..\&gt; RET</code>: Initiate a new search for lines
+    that begin with a three-lettered word beginning with the
     letter <code>f</code>.  The cursor does not move to the first
     match automatically.  To make the cursor move to the first match,
     type <code>C-s</code>.  This is also explained in the next point.
@@ -1210,9 +1210,9 @@ tar -xOf /tmp/foo.tgz</code>
     next match for the last search that was initiated.
   </li>
   <li>
-    <code>C-u C-s ^b..\> RET</code>: Initiate a new search.  This is
-    useful when a search was already initiated and we want to abandon
-    that search and start another new search.
+    <code>C-u C-s ^b..\&gt; RET</code>: Initiate a new search.  This
+    is useful when a search was already initiated and we want to
+    abandon that search and start another new search.
   </li>
   <li>
     <code>C-r</code>: Similar to <code>C-s</code> but works in reverse
@@ -1467,7 +1467,7 @@ debian
 <p>
   Bookmarks with key sequences like <code>C-x r m</code>
   (<code>bookmark-set</code>), <code>C-x r l</code>
-  (<code>bookmark-bmenu-list</code>), and <code>C-x r b</code>
+  (<code>bookmark-bmenu-list</code>) and <code>C-x r b</code>
   (<code>bookmark-jump</code>) work seamlessly for remote files
   (including multi-hops).
 </p>
@@ -1679,7 +1679,7 @@ Linux
   </li>
   <li>
     <code>q</code>: Quit Dired window.  The buffer remains intact,
-    i.e., the buffer is only buried, not killed.
+    i.e. the buffer is only buried, not killed.
   </li>
   <li>
     <code>C-u q</code>: Quit Dired window and kill the buffer.
@@ -1730,7 +1730,7 @@ Linux
 </ul>
 <p>
   The following key sequences describe the effects of prefix arguments
-  with marking, unmarking, and flagging commands:
+  with marking, unmarking and flagging commands:
 </p>
 <ul>
   <li>
@@ -1814,7 +1814,7 @@ Linux
   </li>
   <li>
     <code>* c * D</code>: Change all files marked with <code>*</code>
-    to be now marked with <code>D</code> (i.e., flagged for deletion).
+    to be now marked with <code>D</code> (i.e. flagged for deletion).
     Note that unlike the other commands, this command ignores the
     active region.  It performs the change in the whole buffer.
   </li>
@@ -1837,13 +1837,13 @@ Linux
 </p>
 <ul>
   <li>
-    <code>C</code>: Copy marked files, or copy the current file.  If
+    <code>C</code>: Copy marked files or copy the current file.  If
     one file is being copied, this command prompts for the target file
     path.  If multiple files are being copied, this command prompts
     for the target directory path.
   </li>
   <li>
-    <code>R</code>: Rename marked files, or the current file.  If one
+    <code>R</code>: Rename marked files or the current file.  If one
     file is being renamed, this command prompts for the target file
     path.  If multiple file are being renamed, this command prompts
     for the target directory path.
@@ -1865,12 +1865,12 @@ Linux
     supported.
   </li>
   <li>
-    <code>D</code>: Delete marked files, i.e., the files that are
+    <code>D</code>: Delete marked files, i.e. the files that are
     marked with <code>*</code> on the leftmost column of the Dired
     buffer.
   </li>
   <li>
-    <code>x</code>: Delete the files flagged for deletion, i.e., the
+    <code>x</code>: Delete the files flagged for deletion, i.e. the
     files that are marked with <code>D</code> on the leftmost column
     of the Dired buffer.
   </li>
@@ -1976,7 +1976,7 @@ Linux
   </li>
   <li>
     <code>M-s a C-s</code>: Perform multi-file incremental search
-    through all marked files, or the current file.  Marked directories
+    through all marked files or the current file.  Marked directories
     are ignored.  Action region is also ignored.  It performs the
     search across all marked files.  A complete key sequence may look
     like <code>M-s a C-s foo</code> and then repeat <code>C-s</code>
@@ -1986,7 +1986,7 @@ Linux
   </li>
   <li>
     <code>Q</code>: Perform multi-file regex-based search-and-replace
-    operation through all marked files, or the current file.  For any
+    operation through all marked files or the current file.  For any
     marked directories, the search-and-replace operation is performed
     in all its files recursively.  The active region is ignored.  A
     complete key sequence may look like <code>Q f.. RET \&amp;\&amp;
@@ -2002,9 +2002,9 @@ Linux
   </li>
   <li>
     <code>A</code>: Find matches for a regular expression pattern in
-    all marked files, or the current file.  For any marked
-    directories, all its files are searched recursively.  The active
-    region is ignored.  A complete key sequence may look like <code>A
+    all marked files or the current file.  For any marked directories,
+    all its files are searched recursively.  The active region is
+    ignored.  A complete key sequence may look like <code>A
     f.. RET</code>.  Note that this does not perform incremental
     search.  Instead the search results are displayed in
     <code>*xref*</code> buffer.
@@ -2013,7 +2013,7 @@ Linux
     <code>!</code>: Run a shell command on each marked file or
     directory (or the current file or directory if nothing is marked).
     The command is executed synchronously.  The active region is
-    ignored, or the current file or directory.  The command works on
+    ignored or the current file or directory.  The command works on
     all marked files and directories.  The output is displayed in a
     separate buffer.  If <code>*</code> is present in the command,
     then each <code>*</code> is replaced with the entire file list and
@@ -2026,7 +2026,7 @@ Linux
     multiple times, once for each marked file.
   </li>
   <li>
-    <code>&</code>: Like the previous command but runs the command
+    <code>&amp;</code>: Like the previous command but runs the command
     asynchronously.
   </li>
 </ul>
@@ -2041,9 +2041,9 @@ Linux
   updated to display the new file.
 </p>
 <p>
-  To understand the difference between <code>!</code>
-  and <code>&amp;</code> mark five files and then type the key
-  sequence <code>! sleep 1; echo</code>.  Emacs blocks (i.e., does not
+  To understand the difference between <code>!</code> and
+  <code>&amp;</code> mark five files and then type the key
+  sequence <code>! sleep 1; echo</code>.  Emacs blocks (i.e. does not
   react to our keystrokes) for 5 seconds while it runs the given
   command for each file.  When the <code>echo</code> output for all
   files is obtained after 5 seconds, the output appears and Emacs
@@ -2069,7 +2069,7 @@ Linux
   </li>
   <li>
     <code>C-u F</code>: Visit the marked files or the current file but
-    open them in background, i.e., do not show them on any window.
+    open them in background, i.e. do not show them on any window.
   </li>
   <li>
     <code>* .</code>: Mark files with a certain extension.  If the
@@ -2078,13 +2078,13 @@ Linux
     like <code>* . txt</code>.
   </li>
   <li>
-    <code>!</code> and <code>&</code>: These commands still work the
-    way they were described in the previous section.  However with
-    Dired-X enabled, when <code>!</code> or <code>&</code> is invoked
-    on a single file (either a single marked file or no marked file in
-    which case it operates on the current file), it automatically
-    determines the command to execute for the current file type and
-    offers that as the default input.
+    <code>!</code> and <code>&amp;</code>: These commands still work
+    the way they were described in the previous section.  However with
+    Dired-X enabled, when <code>!</code> or <code>&amp;</code> is
+    invoked on a single file (either a single marked file or no marked
+    file in which case it operates on the current file), it
+    automatically determines the command to execute for the current
+    file type and offers that as the default input.
   </li>
 </ul>
 <h3 id="dired-working-across-directories">Dired: Working Across Directories</h3>
@@ -2216,9 +2216,9 @@ Linux
 <p>
   The book also mentions that <code>C-u M-&amp;</code> is supposed to
   work like <code>C-u M-!</code> but asynchronously but I did not find
-  this to be true.  For example, <code>C-u M-& uname RET</code> led to
-  the following error <code>Wrong type argument: stringp, (4)</code>.
-  This may be a bug in Emacs 28.2.
+  this to be true.  For example, <code>C-u M-&amp; uname RET</code>
+  led to the following error <code>Wrong type argument: stringp,
+  (4)</code>.  This may be a bug in Emacs 28.2.
 </p>
 <h2 id="compiling-in-emacs">Compiling in Emacs</h2>
 <p>
@@ -2256,7 +2256,7 @@ Linux
     <code>M-g M-p</code>: Jump to the previous error.
   </li>
   <li>
-    <code>g</code>: Recompile, i.e., run the last compile command
+    <code>g</code>: Recompile, i.e. run the last compile command
     again.
   </li>
 </ul>
@@ -2269,14 +2269,14 @@ Linux
 </p>
 <ul>
   <li>
-    The TAB-completion mechanism of the underlying shell (e.g., Bash,
+    The TAB-completion mechanism of the underlying shell (e.g. Bash,
     Zsh, etc.) does not work.  In fact, <code>TAB</code> invokes
     Emacs's own completion mechanism.
   </li>
   <li>
     Programs like <code>top</code> and <code>man</code> that need to
     control the terminal do not work.  Only programs that perform
-    input/output via standard input, standard output, and standard
+    input/output via standard input, standard output and standard
     error, etc. work well.
   </li>
   <li>
@@ -2387,9 +2387,9 @@ Linux
 <h3 id="m-x-eshell">M-x eshell</h3>
 <p>
   The key sequence <code>M-x eshell RET</code> creates an interactive
-  Eshell buffer if none exists, or switches to an existing one.
-  Eshell is implemented in Elisp.  It provides Elisp implementation of
-  Unix commands like <code>ls</code>, <code>cp</code>, etc.
+  Eshell buffer if none exists or switches to an existing one.  Eshell
+  is implemented in Elisp.  It provides Elisp implementation of Unix
+  commands like <code>ls</code>, <code>cp</code>, etc.
 </p>
 <p>
   The list below provides examples of some commands we can enter
