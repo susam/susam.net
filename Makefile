@@ -422,6 +422,7 @@ checks: \
   check-bre-spell-yze \
   check-bre-spell-color \
   check-bre-spell-center \
+  check-bre-spell-license \
   check-bre-thatis \
   check-comment-files \
   check-copyright \
@@ -452,6 +453,7 @@ cat-my-text:
 	find content \( -name '*.html' -o -name '*.txt' \) \
 	  ! -path 'content/guestbook/guestbook.html' \
 	  ! -path '*/comments/*' \
+	  ! -path 'content/licence/mit.html' \
 	  -exec cat {} + > /tmp/cat
 	sed -n '/name: Susam/,/date:/p' content/comments/*.html >> /tmp/cat
 
@@ -493,14 +495,12 @@ check-bre-and: cat-my-text
 	  s/, and their inclusion in a list of/, .../g; \
 	  s/, and therefore cannot create an off-by-one/, .../g; \
 	  s/, and they are not/, .../g; \
-	  s/, and to permit persons to whom the/, .../g; \
 	  s/, and to permit persons to whom/, .../g; \
 	  s/, and we should be open to all interpretations/, .../g; \
 	  s/, and we will have/, .../g; \
-	  s/, and\/or sell copies of the Software/, .../g; \
 	' > /tmp/tr
-	grep -iE ', and( |/|$$)' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}, and( .{0,30}|/.{0,30}|$$)' /tmp/err || true
+	grep -iE ', and([^a-z]|$$)' /tmp/tr > /tmp/err || true
+	grep -iEno '.{0,30}, and([^a-z]|$$).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure there is no serial comma before 'or'.
@@ -522,8 +522,8 @@ check-bre-or: cat-my-text
 	  s/, or typographical error/, .../g; \
 	  s/, or until your heap/, .../g; \
 	' > /tmp/tr
-	grep -iE ', or( |$$)' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}, or( .{0,30}|$$)' /tmp/err || true
+	grep -iE ', or([^a-z]|$$)' /tmp/tr > /tmp/err || true
+	grep -iEno '.{0,30}, or([^a-z]|$$).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure there is no comma before 'respectively'.
@@ -620,6 +620,17 @@ check-bre-spell-center: cat-my-text
 	' /tmp/cat > /tmp/tr
 	grep -iE 'center' /tmp/tr > /tmp/err || true
 	grep -iEno '.{0,30}center.{0,30}' /tmp/err || true
+	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
+
+# Ensure 'license' spelling does not occur.
+check-bre-spell-license: cat-my-text
+	sed ' \
+	  s/"credits" or "license" for more information/.../g; \
+	  s/<code>[^<]*<\/code>/.../g; \
+	  s/LICENSE\.md/.../g; \
+	' /tmp/cat > /tmp/tr
+	grep -iE 'license' /tmp/tr > /tmp/err || true
+	grep -iEno '.{0,30}license.{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure 'i.e.' and 'e.g.' are not followed by comma.
