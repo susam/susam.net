@@ -415,6 +415,7 @@ test:
 
 checks: \
   cvsplit \
+  check-abbrev-spacing \
   check-bre-and \
   check-bre-or \
   check-bre-respectively \
@@ -457,186 +458,204 @@ cat-my-text:
 	  -exec cat {} + > /tmp/cat
 	sed -n '/name: Susam/,/date:/p' content/comments/*.html >> /tmp/cat
 
+cat-all-text:
+	find content -type f \
+	  ! -name '*.gif' \
+	  ! -name '*.ico' \
+	  ! -name '*.jpg' \
+	  ! -name '*.ly' \
+	  ! -name '*.midi' \
+	  ! -name '*.mp3' \
+	  ! -name '*.mp4' \
+	  ! -name '*.ogg' \
+	  ! -name '*.pdf' \
+	  ! -name '*.png' \
+	  -exec cat {} + > /tmp/cat
+
+# Check that mid-sentence abbrevations are followed by a single space.
+check-abbrev-spacing: cat-all-text
+	sed ' \
+	  s/, and Hello World, from the future\.  freenode is/x/g; \
+	  s/IRC\.  freenode is FOSS\.  freenode is freedom\./x/g; \
+	  s/I have a confusion\.  the calculation that was giving/x/g; \
+	' /tmp/cat > /tmp/tr
+	grep -En '\. {2,}[a-z]' /tmp/tr | tee /tmp/err || true
+	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
+
 # Check that there is no serial comma before 'and'.
 check-bre-and: cat-my-text
 	tr -s ' \n' ' ' < /tmp/cat | \
 	sed -e 's/<[^>]*>//g' -e '\
-	  s/, And Jill came tumbling after/, ...)/g; \
-	  s/, and ...\./, .,.\.)/g; \
-	  s/, and 11/, .../g; \
-	  s/, and 9[., ]/, .../g; \
-	  s/, and Hello World/, .../g; \
-	  s/, and I.ll do my best/, .../g; \
-	  s/, and \/n\//, .../g; \
-	  s/, and \\( \\tau \\)/, .../g; \
-	  s/, and \\( \\theta \\)/, .../g; \
-	  s/, and a great number of contorted trees/, .../g; \
-	  s/, and after a while/, .../g; \
-	  s/, and arithmetic expansion/, .../g; \
-	  s/, and at the scale/, .../g; \
-	  s/, and consider what/, .../g; \
-	  s/, and diverting myself/, .../g; \
-	  s/, and effectively subverts/, .../g; \
-	  s/, and even deeper/, .../g; \
-	  s/, and finally/, .../g; \
-	  s/, and he immediately declared/, .../g; \
-	  s/, and in the days/, .../g; \
-	  s/, and keeping fun/, .../g; \
-	  s/, and language that/, .../g; \
-	  s/, and log\.brigg\./, .../g; \
-	  s/, and odd, outlandish/, .../g; \
-	  s/, and off-by-one errors\. The punchline/, .../g; \
-	  s/, and second, as a homophone/, .../g; \
-	  s/, and suggested that never/, .../g; \
-	  s/, and symbolic forms/, .../g; \
-	  s/, and the absurdity of including/, .../g; \
-	  s/, and the man.s response/, .../g; \
-	  s/, and the third orders a quarter/, .../g; \
-	  s/, and their inclusion in a list of/, .../g; \
-	  s/, and therefore cannot create an off-by-one/, .../g; \
-	  s/, and they are not/, .../g; \
-	  s/, and to permit persons to whom/, .../g; \
-	  s/, and we should be open to all interpretations/, .../g; \
-	  s/, and we will have/, .../g; \
+	  s/, And Jill came tumbling after/x)/g; \
+	  s/, and .,.\.) For example, in a statement like/x/g; \
+	  s/, and 11/x/g; \
+	  s/, and 9[., ]/x/g; \
+	  s/, and Hello World, from the future/x/g; \
+	  s/, and I.ll do my best to/x/g; \
+	  s/, and \/n\/ or \/ŋ\//x/g; \
+	  s/, and \\( \\tau \\)/x/g; \
+	  s/, and \\( \\theta \\)/x/g; \
+	  s/, and a great number of contorted trees/x/g; \
+	  s/, and after a while we began to take their complaints/x/g; \
+	  s/, and arithmetic expansion/x/g; \
+	  s/, and at the scale of the UID/x/g; \
+	  s/, and consider what I wanted to/x/g; \
+	  s/, and effectively subverts/x/g; \
+	  s/, and even deeper, to the well-being of the world/x/g; \
+	  s/, and finally/x/g; \
+	  s/, and in the days before ubiquitous computing/x/g; \
+	  s/, and keeping fun in the house/x/g; \
+	  s/, and language that each implementation documents/x/g; \
+	  s/, and log\.brigg\./x/g; \
+	  s/, and odd, outlandish, swampy trees/x/g; \
+	  s/, and off-by-one errors\. The punchline/x/g; \
+	  s/, and second, as a homophone/x/g; \
+	  s/, and suggested that never knowing the exact answer/x/g; \
+	  s/, and symbolic forms often replaces the conceptual/x/g; \
+	  s/, and the absurdity of including off-by-one errors/x/g; \
+	  s/, and the man.s response that he has quit drinking/x/g; \
+	  s/, and the third orders a quarter of a beer/x/g; \
+	  s/, and their inclusion in a list of "hard things"/x/g; \
+	  s/, and therefore cannot create an off-by-one error/x/g; \
+	  s/, and they are not self-sustaining --- they depend/x/g; \
+	  s/, and we should be open to all interpretations/x/g; \
+	  s/, and we will have a much more careful review process/x/g; \
 	' > /tmp/tr
-	grep -iE ', and([^a-z]|$$)' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}, and([^a-z]|$$).{0,30}' /tmp/err || true
+	grep -Ei ', and([^a-z]|$$)' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}, and([^a-z]|$$).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure there is no serial comma before 'or'.
 check-bre-or: cat-my-text
 	tr -s ' \n' ' ' < /tmp/cat | \
 	sed -e 's/<[^>]*>//g' -e '\
-	  s/, or [0-9.]* beers/, .../g; \
-	  s/, or a play on words/, .../g; \
-	  s/, or a comment/, .../g; \
-	  s/, or calling a function/, .../g; \
-	  s/, or equivalently/, .../g; \
-	  s/, or even/, .../g; \
-	  s/, or most simply/, .../g; \
-	  s/, or other behavior/, .../g; \
-	  s/, or pinhole camera/, .../g; \
-	  s/, or simply move/, .../g; \
-	  s/, or spelling is bound/, .../g; \
-	  s/, or the Poincar/, .../g; \
-	  s/, or typographical error/, .../g; \
-	  s/, or until your heap/, .../g; \
+	  s/, or [0-9.]* beers/x/g; \
+	  s/, or a play on words/x/g; \
+	  s/, or a comment, the characters \/\/ introduce a comment/x/g; \
+	  s/, or calling a function that does any of those operations/x/g; \
+	  s/, or most simply l[ag]/x/g; \
+	  s/, or other behavior where this International Standard/x/g; \
+	  s/, or pinhole camera/x/g; \
+	  s/, or simply move on to other subjects and forget/x/g; \
+	  s/, or spelling is bound to contain at least one eror/x/g; \
+	  s/, or the Poincar&eacute; conjecture, really matter?/x/g; \
+	  s/, or typographical error/x/g; \
 	' > /tmp/tr
-	grep -iE ', or([^a-z]|$$)' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}, or([^a-z]|$$).{0,30}' /tmp/err || true
+	grep -Ei ', or([^a-z]|$$)' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}, or([^a-z]|$$).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure there is no comma before 'respectively'.
 check-bre-respectively: cat-my-text
-	tr -s ' \n' ' ' < /tmp/cat | grep -iE ', respectively' > /tmp/err || true
-	grep -iEno '.{0,30}, respectively.{0,30}|$$)' /tmp/err || true
+	tr -s ' \n' ' ' < /tmp/cat | grep -Ei ', respectively' > /tmp/err || true
+	grep -Eino '.{0,30}, respectively.{0,30}|$$)' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure '-ize' spellings do not occur.
 check-bre-spell-iz: cat-my-text
 	sed ' \
-	  s/0ZTIz/.../g; \
-	  s/<code>[^<]*<\/code>/.../g; \
-	  s/<em>The Customize Interface<\/em>/.../g; \
-	  s/AUTHorize/.../g; \
-	  s/Customize Jenkins/.../g; \
-	  s/Dehumanized/.../g; \
-	  s/ELIZA/.../g; \
-	  s/Erase Customizations/.../g; \
-	  s/I apologize for any confusion/.../g; \
-	  s/I apologize for misunderstanding the joke/.../g; \
-	  s/I apologize for the error/.../g; \
-	  s/M-x customize[-a-z]* RET/.../g; \
-	  s/Optimizing Compiler/.../g; \
-	  s/Registrant Organization/.../g; \
-	  s/ResizableDoubleArray/.../g; \
-	  s/Revert This Session.s Customizations/.../g; \
-	  s/Size/.../g; \
-	  s/Sizing/.../g; \
-	  s/Undo Edits in Customization Buffer/.../g; \
-	  s/[Hh]orizontal/.../g; \
-	  s/[Rr]esize/.../g; \
-	  s/[^[:alpha:]][Ss]ize$$/.../g; \
-	  s/[^[:alpha:]][Ss]ize[^[:alpha:]]/.../g; \
-	  s/[^[:alpha:]][Ss]ize[ds]$$/.../g; \
-	  s/[^[:alpha:]][Ss]ize[ds][^[:alpha:]]/.../g; \
-	  s/[^[:alpha:]]sizeof[^[:alpha:]]/.../g; \
-	  s/[_-]SIZE/.../g; \
-	  s/box-sizing/.../g; \
-	  s/horizons/.../g; \
-	  s/initializer (6.7.8)/.../g; \
-	  s/izz/.../g; \
-	  s/netizens/.../g; \
-	  s/package-initialize/.../g; \
-	  s/public synchronized/.../g; \
-	  s/quiz[a-z]*/.../g; \
-	  s/resizing/.../g; \
-	  s/seize/.../g; \
-	  s/traumatized by Java-esque/.../g; \
-	  s/verizon/.../g; \
-	  s/wizard/.../g; \
+	  s/0ZTIz/x/g; \
+	  s/<code>[^<]*<\/code>/x/g; \
+	  s/<em>The Customize Interface<\/em>/x/g; \
+	  s/Customize Jenkins/x/g; \
+	  s/ELIZA/x/g; \
+	  s/Erase Customizations/x/g; \
+	  s/I apologize for any confusion/x/g; \
+	  s/I apologize for misunderstanding the joke/x/g; \
+	  s/I apologize for the error/x/g; \
+	  s/M-x customize[-a-z]* RET/x/g; \
+	  s/Optimizing Compiler/x/g; \
+	  s/Registrant Organization/x/g; \
+	  s/ResizableDoubleArray/x/g; \
+	  s/Revert This Session.s Customizations/x/g; \
+	  s/Size$$/x/g; \
+	  s/Size[^a-z]/x/g; \
+	  s/Sizing[^a-z]/x/g; \
+	  s/Undo Edits in Customization Buffer/x/g; \
+	  s/[^A-Za-z]AUTHorize[^A-Za-z]/x/g; \
+	  s/[^A-Za-z]Dehumanized$$/x/g; \
+	  s/[^A-Za-z][Hh]orizontal[^A-Za-z]/x/g; \
+	  s/[^A-Za-z][Rr]esize/x/g; \
+	  s/[^A-Za-z][Ss]ize$$/x/g; \
+	  s/[^A-Za-z][Ss]ize[^A-Za-z]/x/g; \
+	  s/[^A-Za-z][Ss]ize[ds]$$/x/g; \
+	  s/[^A-Za-z][Ss]ize[ds][^A-Za-z]/x/g; \
+	  s/[^A-Za-z]box-sizing[^A-Za-z]/x/g; \
+	  s/[^A-Za-z]horizon/x/g; \
+	  s/[^A-Za-z]netizens[^A-Za-z]/x/g; \
+	  s/[^A-Za-z]quiz/x/g; \
+	  s/[^A-Za-z]resizing[^A-Za-z]/x/g; \
+	  s/[^A-Za-z]seize[^A-Za-z]/x/g; \
+	  s/[^A-Za-z]sizeof[^A-Za-z]/x/g; \
+	  s/[_-]SIZE/x/g; \
+	  s/initializer (6.7.8)/x/g; \
+	  s/izz/x/g; \
+	  s/package-initialize/x/g; \
+	  s/public synchronized/x/g; \
+	  s/traumatized by Java-esque/x/g; \
+	  s/[^A-Za-z]verizon/x/g; \
+	  s/[^A-Za-z]wizards\{0,1\}[^A-Za-z]/x/g; \
 	' /tmp/cat > /tmp/tr
-	grep -iE 'iz[a-z]' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}iz[a-z].{0,30}' /tmp/err || true
+	grep -Ei 'iz[a-z]' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}iz[a-z].{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure '-yze' spellings do not occur.
 check-bre-spell-yze: cat-my-text
 	sed ' \
-	  s/Field\.Index\.ANALYZED/.../g; \
-	  s/StandardAnalyzer/.../g; \
+	  s/Field\.Index\.ANALYZED/x/g; \
+	  s/StandardAnalyzer/x/g; \
 	' /tmp/cat > /tmp/tr
 	grep -in 'yze' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}yze.{0,30}' /tmp/err || true
+	grep -Eino '.{0,30}yze.{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure 'color' spelling does not occur.
 check-bre-spell-color: cat-my-text
 	sed ' \
-	  s/<code>[^<]*<\/code>/.../g; \
-	  s/<em>Supported colors<\/em>/.../g; \
-	  s/color: #/.../g; \
-	  s/color: linear-gradient/.../g; \
-	  s/href="[^"]*"/.../g; \
-	  s/id="[^"]*"/.../g; \
-	  s/prefers-color-scheme/.../g; \
-	  s/src="[^"]*"/.../g; \
-	  s/style="[^"]*"/.../g; \
-	  s/style\.accentColor/.../g; \
-	  s/style\.color/.../g; \
+	  s/<code>[^<]*<\/code>/x/g; \
+	  s/<em>Supported colors<\/em>/x/g; \
+	  s/color: #/x/g; \
+	  s/color: linear-gradient/x/g; \
+	  s/href="[^"]*"/x/g; \
+	  s/id="[^"]*"/x/g; \
+	  s/prefers-color-scheme/x/g; \
+	  s/src="[^"]*"/x/g; \
+	  s/style="[^"]*"/x/g; \
+	  s/style\.accentColor/x/g; \
+	  s/style\.color/x/g; \
 	' /tmp/cat > /tmp/tr
-	grep -iE 'color' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}color.{0,30}' /tmp/err || true
+	grep -Ei 'color' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}color.{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure 'center' spelling does not occur.
 check-bre-spell-center: cat-my-text
 	sed ' \
-	  s/align-items: center/.../g; \
-	  s/style\.[A-Za-z]* = .center./.../g; \
-	  s/text-align: center/.../g; \
-	  s/class="[^"]*"/.../g; \
-	  s/style="[^"]*"/.../g; \
+	  s/align-items: center/x/g; \
+	  s/style\.[A-Za-z]* = .center./x/g; \
+	  s/text-align: center/x/g; \
+	  s/class="[^"]*"/x/g; \
+	  s/style="[^"]*"/x/g; \
 	' /tmp/cat > /tmp/tr
-	grep -iE 'center' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}center.{0,30}' /tmp/err || true
+	grep -Ei 'center' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}center.{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure 'license' spelling does not occur.
 check-bre-spell-license: cat-my-text
 	sed ' \
-	  s/"credits" or "license" for more information/.../g; \
-	  s/<code>[^<]*<\/code>/.../g; \
-	  s/LICENSE\.md/.../g; \
+	  s/"credits" or "license" for more information/x/g; \
+	  s/<code>[^<]*<\/code>/x/g; \
+	  s/[^A-Za-z]LICENSE\.md[^A-Za-z]/x/g; \
 	' /tmp/cat > /tmp/tr
-	grep -iE 'license' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}license.{0,30}' /tmp/err || true
+	grep -Ei 'license' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}license.{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure 'i.e.' and 'e.g.' are not followed by comma.
 check-bre-thatis: cat-my-text
-	grep -E '(i\.e\.|e\.\g.),' /tmp/cat > /tmp/err || true
-	cat /tmp/err
+	grep -E '(i\.e\.|e\.\g.),' /tmp/cat | tee /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure each comment file has a corresponding post file.
@@ -663,22 +682,22 @@ check-entities:
 	' | \
 	tr -s ' \n' ' ' | \
 	sed -e 's/<[^>]*>//g' -e '\
-	  s/<!--/.../g; \
-	  s/-->/.../g; \
-	  s/&#[0-9]*;/.../g; \
-	  s/&#x[0-9A-Fa-f]*;/.../g; \
-	  s/&[0-9A-Za-z]*;/.../g; \
+	  s/<!--/x/g; \
+	  s/-->/x/g; \
+	  s/&#[0-9]*;/x/g; \
+	  s/&#x[0-9A-Fa-f]*;/x/g; \
+	  s/&[0-9A-Za-z]*;/x/g; \
 	' > /tmp/tr
-	grep -iE '[<>&]' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}[<>&].{0,30}' /tmp/err || true
+	grep -Ei '[<>&]' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}[<>&].{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure that 'i.e.' and 'e.g.' are preceded by commas.
 check-general-thatis:
 	find content \( -name '*.html' -o -name '*.txt' \) -exec cat {} + | \
 	tr -s ' \n' ' ' > /tmp/tr
-	grep -iE '[^,] (i\.e\.|e\.g\.)' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}[^,] (i\.e\.|e\.g\.).{0,30}' /tmp/err || true
+	grep -Ei '[^,] (i\.e\.|e\.g\.)' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}[^,] (i\.e\.|e\.g\.).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure '\)' is not preceded by punctuation.  For example, '.  \)'
@@ -689,11 +708,11 @@ check-general-thatis:
 check-tex-end:
 	find content -name '*.html' -exec cat {} + | \
 	tr -s ' \n' ' ' | \
-	sed 's/<code>[^<]*<\/code>/.../g' | \
+	sed 's/<code>[^<]*<\/code>/x/g' | \
 	tr -s ' \n' ' ' | \
 	sed "s/' \\\\)/\\\\prime \\\\)/g" > /tmp/tr
-	grep -iE '[^])}+*0-9A-Za-z] \\\)' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}[^])}+*0-9A-Za-z] \\\).{0,30}' /tmp/err || true
+	grep -Ei '[^])}+*0-9A-Za-z] \\\)' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}[^])}+*0-9A-Za-z] \\\).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 NX = NX=$$(printf '\nx'); NL=$${NX%x}
@@ -708,14 +727,14 @@ check-tex-ltgt:
 	$(NX); find content -name '*.html' -exec cat {} + | \
 	tr -s ' \n' ' ' | \
 	sed "\
-	  s/<code>[^<]*<\/code>/.../g; \
+	  s/<code>[^<]*<\/code>/x/g; \
 	  s/\\\\(/$(NL)&/g; \
 	  s/\\\\)/&$(NL)/g; \
 	  s/\\\\\\[/$(NL)&/g; \
 	  s/\\\\]/&$(NL)/g; \
 	  s/\\\\begin{[^}]*}/$(NL)&/g; \
 	  s/\\\\end{[^}]*}/&$(NL)/g; \
-	" | grep -iE '\\\(|\\\)|\\\[|\\\]|\\begin|\\end' > /tmp/tr
+	" | grep -Ei '\\\(|\\\)|\\\[|\\\]|\\begin|\\end' > /tmp/tr
 	grep '&[lg]t;' /tmp/tr > /tmp/err || true
 	cat /tmp/err
 	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
@@ -732,16 +751,16 @@ check-tex-site: dist
 	find _site -name '*.html' \
 	  ! -path '_site/nq.html' \
 	  -exec cat {} + | \
-	sed -e 's/<code>[^<]*<\/code>/.../g' \
+	sed -e 's/<code>[^<]*<\/code>/x/g' \
 	    -e "s/\\\\)'/\\\\\\\\prime)/g" \
 	    -e '\
-	  s/\\)<\/td>/.../g; \
-	  s/\\)[:)}<-]/.../g; \
-	  s/\\)\\n/.../g; \
-	  s/\\)rd/.../g; \
-	  s/\\)th/.../g; \
+	  s/\\)<\/td>/x/g; \
+	  s/\\)[:)}<-]/x/g; \
+	  s/\\)\\n/x/g; \
+	  s/\\)rd/x/g; \
+	  s/\\)th/x/g; \
 	' > /tmp/tr
-	grep -iE '\\\)[^ ]' /tmp/tr > /tmp/err || true
+	grep -Ei '\\\)[^ ]' /tmp/tr > /tmp/err || true
 	cat /tmp/err
 	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
@@ -751,10 +770,10 @@ check-newline:
 	  ! -path 'content/tree/nq.html' \
 	  -exec cat {} + | \
 	sed ' \
-	  s/\\\[<\/code>/.../g; \
-	  s/\\]<\/code>/.../g; \
+	  s/\\\[<\/code>/x/g; \
+	  s/\\]<\/code>/x/g; \
 	' > /tmp/tr
-	grep -iE '(<br>.|\\\[.|\\].)' /tmp/tr > /tmp/err || true
+	grep -Ei '(<br>.|\\\[.|\\].)' /tmp/tr > /tmp/err || true
 	cat /tmp/err
 	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
@@ -784,31 +803,30 @@ check-rendering:
 	echo "$@: PASS"
 
 # Ensure double spaces between sentences.
-check-sentence-spacing:
-	find . -name '.DS_Store' -exec rm {} +
-	find content -type f \
-	  ! -name '*.gif' \
-	  ! -name '*.ico' \
-	  ! -name '*.jpg' \
-	  ! -name '*.ly' \
-	  ! -name '*.midi' \
-	  ! -name '*.mp3' \
-	  ! -name '*.mp4' \
-	  ! -name '*.ogg' \
-	  ! -name '*.pdf' \
-	  ! -name '*.png' \
-	  -exec cat {} + | \
-	sed -e '\
-	  /<script>/,/<\/script>/d; \
-	' | \
-	awk '{printf "%s  ", $$0}' | \
+check-sentence-spacing: cat-all-text
+	awk '{printf "%s  ", $$0}' /tmp/cat | \
 	sed -e " \
-	  s/? [']/x/g; \
+	  s/  *'On Painting': '[^']*'/x/g; \
+	  s/  *'The Code Book': '[^']*'/x/g; \
+	  s/  *'Treasure Island': '[^']*'/x/g; \
+	  s/  *Control: '[^']*'/x/g; \
+	  s/  *Cosmos: '[^']*'/x/g; \
+	  s/  *Cosmos: '[^']*'/x/g; \
+	  s/  *Grip: '[^']*'/x/g; \
+	  s/  *Relativity: '[^']*'/x/g; \
+	  s/  *Sentences: '[^']*'/x/g; \
+	  s/  *Test: '[^']*'/x/g; \
+	  s/  *Words: '[^']*'/x/g; \
+	  s/ ? '/x/g; \
 	" -e ' \
 	  s/<code>[^<]*<\/code>/x/g; \
 	  s/<kbd>[^<]*<\/kbd>/x/g; \
 	  s/<samp>[^<]*<\/samp>/x/g; \
 	' -e ' \
+	  s/  *Hyperspace: "[^"]*"/x/g; \
+	  s/  *Sentences: "[^"]*"/x/g; \
+	  s/  *Test: "[^"]*"/x/g; \
+	  s/ ? [0-9A-Za-z`(-]/x/g; \
 	  s/(n - 1)! \\,/x/g; \
 	  s/0B66:[^<]*<\/samp>/x/g; \
 	  s/117C:[^<]*<\/samp>/x/g; \
@@ -816,9 +834,8 @@ check-sentence-spacing:
 	  s/<!-- title: [^>]*[?.] -->/<!-- x -->/g; \
 	  s/? "/x/g; \
 	  s/Mr\./x/g; \
-	  s/[A-Z]\. [A-Z]\./x/g; \
-	  s/[A-Z]\. [A-Z][a-z]/x/g; \
 	  s/[a-z]\. [a-z]/x/g; \
+	  s/\( [A-Z]\.\)\{1,3\}/ x/g; \
 	  s/\.\.\./x/g; \
 	  s/\\left\./x/g; \
 	  s/e\.g\./x/g; \
@@ -826,8 +843,8 @@ check-sentence-spacing:
 	  s/etc\. [a-z]/x/g; \
 	  s/i\.e\./x/g; \
 	' > /tmp/tr
-	grep -iE '[.?!] [^ ]' /tmp/tr > /tmp/err || true
-	grep -iEno '.{0,30}[.?!] [^ ].{0,30}' /tmp/err || true
+	grep -Ei '[.?!] [^ ]' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}[.?!] [^ ].{0,30}' /tmp/err || true
 	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Run HTML tidy on the website.
@@ -1005,13 +1022,27 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
+
+# Commit changes and publish website across all mirrors.
+copub: co pub
+
+# Publish website across all mirrors.
 pub: cu gh cb
 
+# Commit changes to the content update ('cu') branch.
+co:
+	git checkout cu
+	git status
+	git add -p
+	git commit --amend --reset-author
+
+# Publish the content update ('cu') branch to the web server.
 cu:
 	git push origin main
 	git push -f origin cu
 	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
 
+# Publish the content update ('cu') branch and restart the web server.
 cure:
 	git push origin main
 	git push -f origin cu

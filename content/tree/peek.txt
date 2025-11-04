@@ -24,3 +24,6 @@
 2025-10-26 10:30 +0000 Coding: Nerd Quiz: Move meta line setup into its own function (30 min)
 2025-10-27 23:30 +0000 Reading: Algebraic Graph Theory by Godsil and Royle (2001): Chapter 1: Section 1.8: Pages 12-15: Planar Graphs (60 min)
 2025-10-28 20:00 +0000 Coding: Nerd Quiz: Add question info dialog (30 min)
+2025-10-29 23:00 +0000 Coding: Nerd Quiz: Fix bug preventing quiz from starting on revisiting a quiz using an internal link (30 min)
+2025-10-31 22:00 +0000 Website: Update content checkers to be stricter (90 min)
+2025-11-01 23:30 +0000 Reading: Algebraic Graph Theory by Godsil and Royle (2001): Chapter 2: Section 2.1: Pages 19-20: Permutation Groups (60 min)

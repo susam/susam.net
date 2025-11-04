@@ -972,7 +972,7 @@
 
         // If the browser suspends audio when the game starts and a
         // human player pauses and resumes the game, two invocations
-        // of aCtx.resume() callbacks would interleave. The following
+        // of aCtx.resume() callbacks would interleave.  The following
         // clearTimeout() avoids two music loops running
         // simultaneously in such a case.
         clearTimeout(aTimer)
