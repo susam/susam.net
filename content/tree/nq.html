@@ -24,6 +24,9 @@
       dialog div:nth-of-type(2) {
         text-align: left;
       }
+      dialog button {
+        min-width: 10em;
+      }
       h1, h2, h3 {
         margin: 1em 0 0.5em 0;
         text-align: center;
@@ -70,17 +73,6 @@
       }
       blockquote, pre {
         padding: 0.5em;
-      }
-      dialog button {
-        box-sizing: border-box;
-        display: inline-block;
-        font-size: large;
-        margin-right: 0.5em;
-        padding: 0.25em 1em;
-        min-width: 10em;
-      }
-      dialog button:last-child {
-        margin-right: 0;
       }
       dialog::backdrop {
         background: #000;
@@ -379,30 +371,37 @@
         h1.textContent = 'Nerd Quiz' + titleSuffix
         document.title = docTitle + titleSuffix
 
-        // Set up submit button and prompt.
-        const submit = document.createElement('button')
-        const prompt = document.createElement('p')
-        submit.id = 'submit'
-        prompt.id = 'prompt'
-        if (revealing) {
-          submit.textContent = 'Try Quiz'
-          submit.addEventListener('click', redirectToTake)
-          prompt.style.display = 'none'
-        } else {
-          submit.textContent = 'Reveal ' + plural(models, 'Answer', 'Answers')
-          submit.addEventListener('click', redirectToReveal)
-          prompt.textContent = 'Select an answer to begin the quiz.'
-          prompt.style.fontStyle = 'italic'
-          prompt.style.textAlign = 'center'
-        }
-
         // Set up the quiz cards and the form.
         const form = document.createElement('form')
         form.id = 'form'
         for (let i = 0; i < models.length; i++) {
           form.append(setupCard(models[i]))
         }
-        form.append(submit, prompt)
+
+        // Set up reveal/try link, prompt and submit button.
+        const prompt = document.createElement('p')
+        const reveal = document.createElement('p')
+        const anchor = document.createElement('a')
+        const submit = document.createElement('button')
+        prompt.id = 'prompt'
+        reveal.id = 'reveal'
+        submit.id = 'submit'
+        prompt.style.textAlign = 'center'
+        reveal.style.textAlign = 'center'
+        submit.style.display = 'none'
+        reveal.append(anchor)
+        if (revealing) {
+          anchor.href = window.location.hash.replace('r', '')
+          anchor.textContent = 'Try Quiz'
+          prompt.style.display = 'none'
+        } else {
+          anchor.href = window.location.hash + 'r'
+          anchor.textContent = 'Reveal ' + plural(models, 'Answer', 'Answers')
+          prompt.textContent = 'Select an answer to begin the quiz.'
+          prompt.style.fontStyle = 'italic'
+          prompt.style.textAlign = 'center'
+        }
+        form.append(prompt, reveal, submit)
 
         // Add a blank dialog to the document to be triggered later.
         const dialog = document.createElement('dialog')
@@ -413,6 +412,7 @@
         main.replaceChildren(h1, form, dialog)
         log('scrolling to top immediately')
         window.scroll({ top: 0 })
+        renderKaTeX()
 
         // Reveal cards if requested.
         if (revealing) {
@@ -498,40 +498,34 @@
 
         // Set up text content.
         const div = document.createElement('div')
-        const visitLabel = 'Visit Question'
         let html = '<p>This question has the following '
         html += plural(model.tags, 'tag', 'tags') + ': '
         html += formatTags(model.tags) + '.  '
         html += 'You score ' + model.points + ' for a correct answer and lose '
         html += (-model.penalty).toFixed(2) + ' for an incorrect one.</p>'
+        div.innerHTML = html
+
+        // Initialise dialog box.
+        const dialog = document.getElementById('dialog')
+        dialog.replaceChildren(h3, by, div)
 
         // Set up buttons.
         const form = document.createElement('form')
         form.method = 'dialog'
         if (models.length > 1) {
-          const visit = document.createElement('button')
-          visit.value = 'visit'
-          visit.textContent = visitLabel
-          form.append(visit)
-          html += '<p>You can load this question on its own page by clicking the '
-          html += '\'' + visitLabel + '\' button below.</p>'
+          const div = document.createElement('div')
+          const visit = document.createElement('a')
+          visit.href = '#q' + model.qid
+          visit.textContent = 'Visit Question'
+          div.append(visit)
+          dialog.append(div)
         }
-        div.innerHTML = html
+
         const close = document.createElement('button')
         close.value = 'close'
         close.textContent = 'Close'
         form.append(close)
-
-        // Set up and show dialog.
-        const dialog = document.getElementById('dialog')
-        dialog.returnValue = null
-        dialog.addEventListener('close', function () {
-          log('info dialog return value:', dialog.returnValue)
-          if (dialog.returnValue === 'visit') {
-            window.location.hash = '#q' + model.qid
-          }
-        })
-        dialog.replaceChildren(h3, by, div, form)
+        dialog.append(form)
         dialog.showModal()
         close.focus()
       }
@@ -539,26 +533,16 @@
       function handleRadio () {
         if (!answering) {
           log('switching to answering mode')
-          const submit = document.getElementById('submit')
           const prompt = document.getElementById('prompt')
+          const reveal = document.getElementById('reveal')
+          const submit = document.getElementById('submit')
           submit.textContent = 'Submit ' + plural(models, 'Answer', 'Answers')
-          submit.removeEventListener('click', redirectToReveal)
           submit.addEventListener('click', markAnswers)
           prompt.style.display = 'none'
+          reveal.style.display = 'none'
+          submit.style.display = 'block'
           answering = true
         }
-      }
-
-      function redirectToReveal (e) {
-        log('redirecting to reveal hash')
-        e.preventDefault()
-        window.location.hash += 'r'
-      }
-
-      function redirectToTake (e) {
-        log('redirecting to take quiz hash')
-        e.preventDefault()
-        window.location.hash = window.location.hash.replace('r', '')
       }
 
       function answerCards () {
@@ -801,6 +785,7 @@
       }
 
       function renderKaTeX () {
+        log('rendering katex')
         window.renderMathInElement(document.body, {
           delimiters: [
             { left: '\\(', right: '\\)', display: false },
@@ -953,6 +938,84 @@
             'It is a tactic in which a piece is attacked but cannot move because\ndoing so would expose its king to check.'
           ],
           explanation: 'When two attacks are made with one move, it is called a <em>double\nattack</em>.  If both attacks are made by the same piece, it is called\na <em>fork</em>.  In other words, a fork occurs when one piece attacks\ntwo or more of the opponent\'s pieces at the same time.\n\nA <em>royal fork</em> is a special type of fork in which a single\npiece attacks the opponent\'s king and queen at the same time.  Since\nthe opponent must respond to the check against the king, the queen is\nusually captured on the following move, making this the highest\nmaterial-gaining fork possible.\n\nA fork involving the queen attacking two of the opponent\'s pieces is\nsimply called a <em>queen fork</em>, not a royal fork.\n\nThe opening tactic where the queen and bishop coordinate to deliver\ncheckmate on f7 by White or on f2 by Black is called the Scholar\'s\nMate.  Despite being a quick and threatening attack, it is easy to\ndefend against by developing minor pieces and defending the vulnerable\nf7 or f2 square early.  For this reason, it is rarely seen in serious\nplay.\n\nCheckmating with two queens is an elementary endgame pattern that\nrelies on restricting the opposing king\'s mobility and coordinating\nboth queens to force checkmate.  This pattern is unrelated to fork.\n\nIf a defending piece cannot move because doing so would expose a more\nvaluable piece behind it to attack, the situation is called a\n<em>pin</em>.  If the more valuable piece is the king, the pin is\ncalled an <em>absolute pin</em>.'
+        },
+        {
+          date: '2025-11-07',
+          title: 'Number of Simple, Undirected Graphs',
+          tags: [
+            'Mathematics',
+            'Graph Theory'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'How many simple, undirected graphs can be formed with \\( n \\)\nvertices?',
+          options: [
+            '\\( 2^{n(n - 1)/2} \\)',
+            '\\( 2^{n(n - 1)} \\)',
+            '\\( 2^{n^2} \\)',
+            '\\( n!   \\)',
+            '\\( (n!)!  \\)'
+          ],
+          explanation: 'A <em>simple graph</em> is one in which no vertex is connected to\nitself and no two vertices are joined by more than one edge.  In other\nwords, it has no loops or multiple edges.\n\nAn <em>undirected graph</em> is one in which edges have no direction.\nAn edge is represented simply as an unordered pair of vertices.\n\nFor a set of \\( n \\) vertices, each possible pair of distinct vertices\nmay either be connected by an edge or left unconnected.  The total\nnumber of such pairs is given by the binomial coefficient\n\\[\n  \\binom{n}{2} = \\frac{n(n - 1)}{2}.\n\\]\nEach pair of vertices gives two possibilites: an edge present between\nthem or no edge at all.  Therefore the total number of distinct\nsimple, undirected graphs that can be formed with \\( n \\) vertices is:\n\\[\n  2^{n(n - 1)/2}.\n\\]\nThis number represents all possible edge configurations in simple,\nundirected graphs.  Such graphs can be used to model symmetric\nrelationships such as mutual friendships, research collaboration\nnetworks and molecular structures.'
+        },
+        {
+          date: '2025-11-08',
+          title: 'Spelling Alphabet',
+          tags: [
+            'Linguistics',
+            'Communication'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'Which sport occurs in the International Radiotelephony Spelling Alphabet?',
+          options: [
+            'Golf',
+            'Football',
+            'Hockey',
+            'Polo',
+            'Tennis'
+          ],
+          explanation: 'The <em>International Radiotelephony Spelling Alphabet</em> assigns a\nunique word to each letter of the English alphabet to ensure clarity\nin spoken communication, especially over radio or telephone, where\nsignals may be noisy or distorted.  It is the standard used by the\nInternational Civil Aviation Organisation (ICAO), the North Atlantic\nTreaty Organisation (NATO) and several other organisations for\ncommunication over radio or telephone.  Therefore, it is also commonly\nknown as the NATO spelling alphabet or the ICAO spelling alphabet.\n\nIn this alphabet, each letter of the alphabet is represented by a code\nword.  The complete list of code words is: Alfa, Bravo, Charlie,\nDelta, Echo, Foxtrot, Golf, Hotel, India, Juliett, Kilo, Lima, Mike,\nNovember, Oscar, Papa, Quebec, Romeo, Sierra, Tango, Uniform, Victor,\nWhiskey, Xray, Yankee, Zulu.\n\nGolf is the only sport that appears in this list of code words.'
+        },
+        {
+          date: '2025-11-09',
+          title: 'Diskette',
+          tags: [
+            'Technology'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'If a floppy disk manufacturer were to make a 3&frac12; inch floppy\ndisk case measuring exactly 3&frac12; by 3&frac12; inches, would it be\nlarger or smaller than the standard 3&frac12; inch floppy disk\nspecification?',
+          options: [
+            'Smaller',
+            'Larger',
+            'Exactly the same size as specified in the 3&frac12; inch floppy disk\nspecification',
+            'Cannot be determined',
+            'No such floppy disk specification exists'
+          ],
+          explanation: 'The ECMA-147 standard specifies that a 3&frac12; inch floppy disk case\nmust have an external height of 94.0 mm (&pm;0.3 mm) and an external\nwidth of 90.0 mm (&plus;0.4 mm/&minus;0.1 mm).  The minimum permitted\nheight and width are therefore 93.7 mm and 89.9 mm respectively.\nConverted to inches, these minimums are approximately 3.69 by 3.54\ninches.  A case measuring exactly 3.5 by 3.5 inches would therefore be\nsmaller than the dimensions required by the standard.\n\nThe term \'3&frac12; inch\' is only a nominal size.  It does not\ndescribe any physical measurement in the specification.  The actual\ndimensions are defined entirely in millimetres.  As a result, the\nactual size of the standard case differs from the nominal inch-based\ndesignation.'
+        },
+        {
+          date: '2025-11-18',
+          title: 'Indonesia and Monaco',
+          tags: [
+            'Flag'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'The national flags of Indonesia and Monaco are very similar, each\nshowing a red band over a white band.  What is the primary difference\nbetween the two flags?',
+          options: [
+            'Their proportions differ.  Indonesia\'s is 2:3 but Monaco\'s is 4:5.',
+            'The shade of red differs.  Monaco\'s flag uses a darker shade of red.',
+            'One includes a coat of arms while the other does not.',
+            'One has a a white crescent moon facing a pentagon of five small white\nfive-pointed stars while the other does not.',
+            'None of the above.  Both flags are identical.'
+          ],
+          explanation: 'Although the flags of Indonesia and Monaco share a red-over-white\nbicolour design and look very similar, the principal difference lies\nin their proportions.  Indonesia specifies a ratio of 2:3 while Monaco\nuses 4:5.  The shade of red does differ slightly.  Monaco\'s flag has a\ndarker shade of red.  However, the difference in proportion is the\ndefinitive and formally specified distinction.\n\nNeither flag includes a coat of arms or any other emblem.\nIncidentally, the flag of Singapore also features a red-and-white\ndesign, yet it is easily distinguished by its white crescent moon\nfacing a pentagon of five small white stars.'
         }
       ]
     </script>
