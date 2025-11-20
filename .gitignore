@@ -12,4 +12,5 @@ _live/
 _gone/
 _cache/
 node_modules/
+texmf/
 venv
