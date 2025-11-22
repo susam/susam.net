@@ -1,4 +1,4 @@
-all:
+fizz:
 	python3 fizz1.py > out.txt
 	python3 fizz2.py > out2.txt
 	diff -u out.txt out2.txt
@@ -9,6 +9,13 @@ all:
 	python3 fizz5.py > out2.txt
 	diff -u out.txt out2.txt
 	rm -f out2.txt
+
+jazz:
+	python3 jazz1.py > out.txt
+	python3 jazz2.py > out2.txt
+	diff -u out.txt out2.txt
+	python3 jazz3.py > out2.txt
+	diff -u out.txt out2.txt
 
 deps:
 	python3 -m venv ~/.venv/matplotlib

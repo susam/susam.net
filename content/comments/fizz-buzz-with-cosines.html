@@ -1,0 +1,82 @@
+<!-- date: 2025-11-21 12:11:32 +0000 -->
+<!-- name: Tri -->
+<p>
+  Great!  Can it be extended to print 'Jazz' if the number is
+  divisible by 7?
+</p>
+<!-- date: 2025-11-21 12:28:39 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  Yes, it is quite straightforward to extend the solution to include
+  numbers divisible by 7.  The new indicator function can be defined
+  like this:
+
+  \[
+    I_7(n)
+    = \frac{1}{7} \sum_{k = 0}^6 e^{2 \pi i k n/7}
+    = \frac{1}{7} + \frac{2}{7} \cos \left( \frac{2 \pi n}{7} \right) +
+                    \frac{2}{7} \cos \left( \frac{4 \pi n}{7} \right) +
+                    \frac{2}{7} \cos \left( \frac{6 \pi n}{7} \right).
+  \]
+
+  The new Fourier series is going to be:
+
+  \[
+    g(n) = I_3(n) + 2 \, I_5(n) + 4 \, I_7(n) = f(n) + 4 \, I_7(n).
+  \]
+
+  So we only need to add the new term \( 4 \, I_7(n) \) to \( f(n) \),
+  which gives the new Fourier series
+
+  \begin{align*}
+    g(n) = \frac{137}{105}
+           &amp;+ \frac{2}{3} \cos \left( \frac{2 \pi n}{3} \right)
+           + \frac{4}{5} \cos \left( \frac{2 \pi n}{5} \right)
+           + \frac{4}{5} \cos \left( \frac{4 \pi n}{5} \right) \\
+           &amp;+ \frac{8}{7} \cos \left( \frac{2 \pi n}{7} \right)
+           + \frac{8}{7} \cos \left( \frac{4 \pi n}{7} \right)
+           + \frac{8}{7} \cos \left( \frac{6 \pi n}{7} \right).
+  \end{align*}
+
+  The indicators-based solution simply becomes:
+</p>
+<pre>
+<code>from math import cos, pi
+for n in range(1, 1001):
+    s = [n, 'Fizz', 'Buzz', 'FizzBuzz', 'Jazz', 'FizzJazz', 'BuzzJazz', 'FizzBuzzJazz']
+    i = (n % 3 == 0) + 2 * (n % 5 == 0) + 4 * (n % 7 == 0)
+    print(s[i])</code>
+</pre>
+<p>
+  The cosine-based solution becomes:
+</p>
+<pre>
+<code>from math import cos, pi
+for n in range(1, 1001):
+    s = [n, 'Fizz', 'Buzz', 'FizzBuzz', 'Jazz', 'FizzJazz', 'BuzzJazz', 'FizzBuzzJazz']
+    i = round((137 / 105) + (2 / 3) * cos(2 * pi * n / 3)
+                          + (4 / 5) * cos(2 * pi * n / 5)
+                          + (4 / 5) * cos(4 * pi * n / 5)
+                          + (8 / 7) * cos(2 * pi * n / 7)
+                          + (8 / 7) * cos(4 * pi * n / 7)
+                          + (8 / 7) * cos(6 * pi * n / 7))
+    print(s[i])</code>
+</pre>
+<p>
+  The value of \( g(n) \) in the formula above (or equivalently the
+  value of the variable <code>i</code> in the code) can be viewed as a
+  flag in which each bit corresponds to whether \( \mathtt{Fizz} \),
+  \( \mathtt{Buzz} \) or \( \mathtt{Jazz} \) appears in the \( n \)th
+  term of the sequence.  All other details follow from this idea.
+</p>
+<!-- date: 2025-11-21 16:54:51 +0000 -->
+<!-- name: Jose -->
+<p>
+  This was a beautiful reading.  Thanks.
+</p>
+<!-- date: 2025-11-22 11:06:05 +0000 -->
+<!-- name: Wayne -->
+<p>
+  Thanks, I enjoyed that!
+</p>

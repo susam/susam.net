@@ -1,17 +1,22 @@
 <!-- date: 2025-11-20 -->
-<!-- title: Fizz Buzz with Cosines -->
-<!-- tag: Mathematics, Puzzle -->
+<!-- title: Solving Fizz Buzz with Cosines -->
+<!-- tag: Python, Programming, Mathematics, Puzzle -->
 <!-- key: fzbzz -->
 <!-- import: extra.css, math.inc -->
+<div style="display: none">
+  \[
+    \gdef\arraystretch{1.2}
+  \]
+</div>
 <p>
-  Fizz Buzz is a children's word game that has become quite popular as
-  a simple computer programming exercise.  The game is simple.
-  Players say the numbers aloud in order beginning with one.  Whenever
-  a number is divisible by \( 3 \), they say 'Fizz' instead.  Whenever
-  a number is divisible by \( 5 \), they say 'Buzz'.  If a number is
-  divisible by both \( 3 \) and \( 5 \), the player says both 'Fizz'
-  and 'Buzz'.  Here is a typical Python program that prints this
-  sequence:
+  Fizz Buzz is a counting game that has become oddly popular in the
+  world of computer programming as a simple test of basic programming
+  skills.  The rules of the game are straightforward.  Players say the
+  numbers aloud in order beginning with one.  Whenever a number is
+  divisible by 3, they say 'Fizz' instead.  If it is divisible by 5,
+  they say 'Buzz'.  If it is divisible by both 3 and 5, the player
+  says both 'Fizz' and 'Buzz'.  Here is a typical Python program that
+  prints this sequence:
 </p>
 <pre><code>for n in range(1, 101):
     if n % 15 == 0:
@@ -24,19 +29,23 @@
         print(n)</code>
 </pre>
 <p>
-  Can we make it more complicated?  Perhaps we can use trigonometric
-  functions to encode all four cases in a single closed-form
-  expression?  That's what we are going to explore in this post.  In
-  fact, by the end of this post, we'll obtain a finite Fourier series
-  that can take an input integer \( n \) and look up the text to be
-  printed.
+  Here is the output:
+  <a href="files/blog/fizz-buzz.txt">fizz-buzz.txt</a>.  Can we make
+  the program more complicated?  The words 'Fizz', 'Buzz' and
+  'FizzBuzz' repeat in a periodic manner throughout the sequence.
+  What else is periodic?  Trigonometric functions!  Perhaps we can use
+  trigonometric functions to encode all four rules of the sequence in
+  a single closed-form expression.  That is what we are going to
+  explore in this article.  By the end, we will obtain a discrete
+  Fourier series that can take any integer \( n \) and select the
+  corresponding text to be printed.
 </p>
 {{ toc }}
 <h2 id="definitions">Definitions</h2>
 <p>
-  Before proceeding further, we establish a precise mathematical
-  definition for the Fizz Buzz sequence.  To do so, we first define a
-  set of functions we will call the symbol functions.
+  Before going any further, we establish a precise mathematical
+  definition for the Fizz Buzz sequence.  We begin by introducing a
+  few functions that will help us define the Fizz Buzz sequence later.
 </p>
 <h3 id="symbol-functions">Symbol Functions</h3>
 <p>
@@ -70,15 +79,20 @@
 
   \[
     f(n) = \begin{cases}
-      1 &amp; \text{if } n \equiv 0 \pmod{3} \text{ and } n \not\equiv 0 \pmod{5}, \\
-      2 &amp; \text{if } n \not\equiv 0 \pmod{3} \text{ and } n \equiv 0 \pmod{5}, \\
-      3 &amp; \text{if } n \equiv 0 \pmod{3} \text{ and } n \equiv 0 \pmod{5}, \\
+      1 &amp; \text{if } 3 \mid n \text{ and } 5 \nmid n, \\
+      2 &amp; \text{if } 3 \nmid n \text{ and } 5 \mid n, \\
+      3 &amp; \text{if } 3 \mid n \text{ and } 5 \mid n, \\
       0 &amp; \text{otherwise}.
     \end{cases}
   \]
 
-  With this definition in place, we can expand the first few terms
-  explicitly as follows:
+  The notation \( m \mid n \) means that the integer \( m \) divides
+  the integer \( n \), i.e. \( n \) is a multiple of \( m \).
+  Equivalently, there exists an integer \( c \) such that \( n = cm
+  \).  Similarly, \( m \nmid n \) means that \( m \) does not divide
+  \( n \), i.e. \( n \) is not a multiple of \( m \).  With the above
+  definitions in place, we can expand the first few terms of the
+  sequence explicitly as follows:
 
   \begin{align*}
     (s_{f(n)}(n))_{n = 1}^{\infty}
@@ -90,51 +104,40 @@
             \mathtt{Buzz}, \; \mathtt{Fizz}, \; 7, \; \dots).
   \end{align*}
 
-  Note how the function \( f(n) \) selects an index \( i \) that we
-  then use to look up the symbol function \( s_i(n) \) which produces
-  the \( n \)th term of the sequence.
+  Note how the function \( f(n) \) produces an index \( i \) which we
+  then use to select the symbol function \( s_i(n) \) to produce the
+  \( n \)th term of the sequence.  We therefore call \( f(n) \) the
+  index function.
 </p>
 <h2 id="indicator-functions">Indicator Functions</h2>
 <p>
-  In the previous section, we saw the function
+  Here is the index function \( f(n) \) from the previous section with
+  its cases and conditions rearranged to make it easier to spot
+  interesting patterns:
 
   \[
     f(n) = \begin{cases}
-      1 &amp; \text{if } n \equiv 0 \pmod{3} \text{ and } n \not\equiv 0 \pmod{5}, \\
-      2 &amp; \text{if } n \not\equiv 0 \pmod{3} \text{ and } n \equiv 0 \pmod{5}, \\
-      3 &amp; \text{if } n \equiv 0 \pmod{3} \text{ and } n \equiv 0 \pmod{5}, \\
-      0 &amp; \text{otherwise}.
+      0 &amp; \text{if } 5 \nmid n \text{ and } 3 \nmid n, \\
+      1 &amp; \text{if } 5 \nmid n \text{ and } 3 \mid n, \\
+      2 &amp; \text{if } 5 \mid n \text{ and } 3 \nmid n, \\
+      3 &amp; \text{if } 5 \mid n \text{ and } 3 \mid n.
     \end{cases}
   \]
 
-  which helps us to select a function \( s_{f(n)}(n) \) which in turn
-  determines the \( n \)th term of the Fizz Buzz sequence.
-</p>
-<p>
-  Our goal now is to replace this piecewise formula with a single
-  closed-form expression.  To do so, we first define indicator
+  This function helps us to select another function \( s_{f(n)}(n) \)
+  which in turn determines the \( n \)th term of the Fizz Buzz
+  sequence.  Our goal now is to replace this piecewise formula with a
+  single closed-form expression.  To do so, we first define indicator
   functions \( I_m(n) \) as follows:
 
   \[
     I_m(n) = \begin{cases}
-      1 &amp; \text{if } n \equiv 0 \pmod{m}, \\
-      0 &amp; \text{if } n \not\equiv 0 \pmod{m}.
+      1 &amp; \text{if } m \mid n, \\
+      0 &amp; \text{if } m \nmid n.
     \end{cases}
   \]
 
   The formula for \( f(n) \) can now be written as:
-
-  \[
-    f(n) = \begin{cases}
-      1 &amp; \text{if } I_3(n) = 1 \text{ and } I_5(n) = 0, \\
-      2 &amp; \text{if } I_3(n) = 0 \text{ and } I_5(n) = 1, \\
-      3 &amp; \text{if } I_3(n) = 1 \text{ and } I_5(n) = 1, \\
-      0 &amp; \text{if } I_3(n) = 0 \text{ and } I_5(n) = 0.
-    \end{cases}
-  \]
-
-  Let us reorder the cases and conditions to see if any pattern
-  emerges.
 
   \[
     f(n) = \begin{cases}
@@ -145,7 +148,7 @@
     \end{cases}
   \]
 
-  Do you see the pattern?  Here is the same function written as a table:
+  Do you see a pattern?  Here is the same function written as a table:
 </p>
 <table class="grid center textcenter">
   <tr>
@@ -176,19 +179,14 @@
 </table>
 <p>
   Do you see it now?  If we treat the values in the first two columns
-  as binary digits (bits) and the values in the third column as
-  decimal numbers, then in each row the first two columns give the
-  binary representation of the number in the third column.  For
-  example, \( 3_{10} = 11_2 \) and indeed in the last row of the
-  table, we see the bits \( 1 \) and \( 1 \) in the first two columns
-  and the number \( 3 \) in the last column.  In other words, if we
-  treat the values of \( I_5(n) \) and \( I_3(n) \) as bits, then
-
-  \[
-    (f(n))_{10} = \left( I_5(n) I_3(n) \right)_2.
-  \]
-
-  Therefore
+  as binary digits and the values in the third column as decimal
+  numbers, then in each row the first two columns give the binary
+  representation of the number in the third column.  For example, \(
+  3_{10} = 11_2 \) and indeed in the last row of the table, we see the
+  bits \( 1 \) and \( 1 \) in the first two columns and the number \(
+  3 \) in the last column.  In other words, writing the binary digits
+  \( I_5(n) \) and \( I_3(n) \) side by side gives us the binary
+  representation of \( f(n) \).  Therefore
 
   \[
     f(n) = 2 \, I_5(n) + I_3(n).
@@ -237,10 +235,7 @@
   functions such as exponentials, logarithms and trigonometric
   functions.  It turns out that the above formula can be rewritten
   using only addition, multiplication, division and the cosine
-  function.  Let us begin the translation.
-</p>
-<p>
-  Consider the sum
+  function.  Let us begin the translation.  Consider the sum
 
   \[
     S_m(n) = \sum_{k = 0}^{m - 1} e^{2 \pi i k n / m},
@@ -262,7 +257,8 @@
 
   \[
     S_m(n)
-    = \sum_{k = 0}^{m - 1} 1
+    = \sum_{k = 0}^{m - 1} e^{2 \pi i k n / m}
+    = \sum_{k = 0}^{m - 1} 1^k
     = m.
   \]
 
@@ -280,8 +276,8 @@
 
   \[
     S_m(n) = \begin{cases}
-      m &amp; \text{if } n \equiv 0 \pmod{m}, \\
-      0 &amp; \text{if } n \not\equiv 0 \pmod{m}.
+      m &amp; \text{if } m \mid n, \\
+      0 &amp; \text{if } m \nmid n.
     \end{cases}
   \]
 
@@ -289,8 +285,8 @@
 
   \[
     \frac{S_m(n)}{m} = \begin{cases}
-      1 &amp; \text{if } n \equiv 0 \pmod{m}, \\
-      0 &amp; \text{if } n \not\equiv 0 \pmod{m}.
+      1 &amp; \text{if } m \mid n, \\
+      0 &amp; \text{if } m \nmid n.
     \end{cases}
   \]
 
@@ -431,6 +427,168 @@ for n in range(1, 101):
                       + (4 / 5) * cos(4 * pi * n / 5))
     print(s[i])</code>
 </pre>
+<h2 id="dft">Discrete Fourier Transform</h2>
+<p>
+  The keen-eyed might notice that the expression we obtained for \(
+  f(n) \) is a finite Fourier series.  This is not surprising, since
+  the output of a Fizz Buzz programme depends only on \( n \bmod 15
+  \).  Any function on a finite cyclic group can be written exactly as
+  a finite Fourier expansion.  In this section, we recover the same
+  function \( f(n) \) using the discrete Fourier transform.  It is
+  worth mentioning here that the calculations presented here are quite
+  tedious to do by hand.  Nevertheless, this section offers a glimpse
+  of how such coefficients are calculated.  By the end, we will arrive
+  at exactly the same \( f(n) \) as before.  There is nothing new to
+  discover here.  We simply obtain the result by a different, more
+  direct and noticeably tedious method.  If this doesn't sound
+  interesting to you, you may safely skip this section.
+</p>
+<p>
+  We know that \( f(n) \) is a periodic function with period \( 15 \).
+  To apply the discrete Fourier transform, we look at one complete
+  period using the indices \( n = 1, 2, \dots, 15 \).  Over this
+  period, the values are:
+
+  \begin{array}{c|ccccccccccccccc}
+    n    & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 \\
+    \hline
+    f(n) & 0 & 0 & 1 & 0 & 2 & 1 & 0 & 0 & 1 &  2 &  0 &  1 &  0 &  0 &  3
+  \end{array}
+
+  The discrete Fourier transform gives us the constants defined by:
+
+  \[
+    c_k = \frac{1}{15} \sum_{n = 1}^{15} f(n) e^{-2 \pi i k n / 15},
+  \]
+
+  for \( k = 1, 2, \dots, 15 \).  These constants reconstruct \( f(n)
+  \) via the inverse transform:
+
+  \[
+    f(n) = \sum_{k = 1}^{15} c_k e^{2 \pi i k n / 15}
+  \]
+
+  where \( n \in \mathbb{Z} \).  Let us compute the first constant:
+
+  \[
+    c_1 = \frac{1}{15}\left(
+      \begin{aligned}
+        e^{-2 \pi i \cdot 3/15}
+        &amp;+ 2 e^{-2 \pi i \cdot 5/15}
+        + e^{-2 \pi i \cdot 6/15}
+        + e^{-2 \pi i \cdot 9/15} \\
+        &amp;+ 2 e^{-2 \pi i \cdot 10/15}
+        + e^{-2 \pi i \cdot 12/15}
+        + 3 e^{-2 \pi i \cdot 15/15}
+      \end{aligned}
+    \right) = 0.
+  \]
+
+  Similarly,
+
+  \[
+    c_2 = \frac{1}{15}\left(
+      \begin{aligned}
+        e^{-2 \pi i \cdot 6/15}
+        &amp;+ 2 e^{-2 \pi i \cdot 10/15}
+        + e^{-2 \pi i \cdot 12/15}
+        + e^{-2 \pi i \cdot 18/15} \\
+        &amp;+ 2 e^{-2 \pi i \cdot 20/15}
+        + e^{-2 \pi i \cdot 24/15}
+        + 3 e^{-2 \pi i \cdot 30/15}
+      \end{aligned}
+    \right) = 0.
+  \]
+
+  and
+
+  \[
+    c_3 = \frac{1}{15}\left(
+      \begin{aligned}
+        e^{-2 \pi i \cdot 9/15}
+        &amp;+ 2 e^{-2 \pi i \cdot 15/15}
+        + e^{-2 \pi i \cdot 18/15}
+        + e^{-2 \pi i \cdot 27/15} \\
+        &amp;+ 2 e^{-2 \pi i \cdot 30/15}
+        + e^{-2 \pi i \cdot 36/15}
+        + 3 e^{-2 \pi i \cdot 45/15}
+      \end{aligned}
+    \right) = \frac{2}{5}.
+  \]
+
+  Continuing in this manner, we find all the constants:
+
+  \begin{align*}
+    c_1 &amp;= c_2 = c_4 = c_7 = c_8 = c_{11} = c_{13} = c_{14} = 0, \\
+    c_3 &amp;= c_6 = c_9 = c_{12} = \frac{2}{5}, \\
+    c_5 &amp;= c_{10} = \frac{1}{3}, \\
+    c_{15} &amp;= \frac{11}{15}.
+  \end{align*}
+
+  Using the inverse transform, we get
+
+  \begin{align*}
+    f(n)
+    &= \sum_{k = 1}^{15} c_k \, e^{2 \pi i k n / 15} \\
+    &= \frac{11}{15} +
+      \frac{2}{5} \left(
+        e^{2 \pi i \cdot 3n/15} +
+        e^{2 \pi i \cdot 6n/15} +
+        e^{2 \pi i \cdot 9n/15} +
+        e^{2 \pi i \cdot 12n/15}
+      \right) \\
+    &\phantom{=} \phantom{\frac{11}{15}} +
+      \frac{1}{3} \left(
+        e^{2 \pi i \cdot 5n/15} +
+        e^{2 \pi i \cdot 10n/15}
+      \right) \\
+    &= \frac{11}{15} +
+      \frac{2}{5} \left(
+        e^{6 \pi i n/15} +
+        e^{12 \pi i n/15} +
+        e^{18 \pi i n/15} +
+        e^{24 \pi i n/15}
+      \right) \\
+    &\phantom{=} \phantom{\frac{11}{15}} +
+      \frac{1}{3} \left(
+        e^{10 \pi i n/15} +
+        e^{20 \pi i n/15}
+      \right) \\
+    &= \frac{11}{15} +
+       \frac{2}{5} \left(
+         e^{6 \pi i n/15} +
+         e^{12 \pi i n/15} +
+         e^{-12 \pi i n/15} +
+         e^{-6 \pi i n/15}
+       \right) \\
+    &\phantom{=} \phantom{\frac{11}{15}} +
+      \frac{1}{3} \left(
+        e^{10 \pi i n/15} +
+        e^{-10 \pi i n/15}
+      \right) \\
+    &= \frac{11}{15} +
+       \frac{2}{5} \left(
+         2 \cos \left( \frac{6 \pi n}{15} \right) +
+         2 \cos \left( \frac{12 \pi n}{15} \right)
+       \right) \\
+    &\phantom{=} \phantom{\frac{11}{15}} +
+      \frac{1}{3} \left(
+        2 \cos \left( \frac{10 \pi n}{15} \right)
+      \right) \\
+    &= \frac{11}{15} +
+       \frac{4}{5} \cos \left( \frac{2 \pi n}{5} \right) +
+       \frac{4}{5} \cos \left( \frac{4 \pi n}{5} \right) +
+       \frac{2}{3} \cos \left( \frac{2 \pi n}{3} \right).
+  \end{align*}
+
+  This gives us exactly the same function \( f(n) \) we obtained
+  earlier.  The difference is only in how we arrived there.  Working
+  out Fourier coefficients by hand is slow and mechanical.  In
+  practice these sums are almost always computed automatically by
+  numerical software or computer algebra systems.  Still, this
+  exercise shows that our humble Fizz Buzz index function can be
+  expressed precisely using the machinery of Fourier analysis.
+</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>
   To summarise, we have defined the Fizz Buzz sequence as
@@ -446,8 +604,7 @@ for n in range(1, 101):
     = \frac{11}{15} +
       \frac{2}{3} \cos \left( \frac{2 \pi n}{3} \right) +
       \frac{4}{5} \cos \left( \frac{2 \pi n}{5} \right) +
-      \frac{4}{5} \cos \left( \frac{4 \pi n}{5} \right)
-    \in \{ 0, 1, 2, 3 \}
+      \frac{4}{5} \cos \left( \frac{4 \pi n}{5} \right).
   \]
 
   and \( s_0(n) = n \), \( s_1(n) = \mathtt{Fizz} \), \( s_2(n) =
@@ -462,20 +619,18 @@ for n in range(1, 101):
     print([n, 'Fizz', 'Buzz', 'FizzBuzz'][round(11 / 15 + (2 / 3) * cos(2 * pi * n / 3) + (4 / 5) * (cos(2 * pi * n / 5) + cos(4 * pi * n / 5)))])</code>
 </pre>
 <p>
-  The keen-eyed might notice that the expression we have obtained for
-  \( f(n) \) is a finite Fourier series.  This is not surprising,
-  since the output of a Fizz Buzz program depends only on \( n \bmod
-  15 \).  Any function on a finite cyclic group can be written exactly
-  as a finite Fourier expansion.
+  We can also wrap this up nicely in a shell one-liner, in case you
+  want to share it with your friends and family and surprise them:
 </p>
+<pre><code>python3 -c 'from math import cos, pi; [print([n, "Fizz", "Buzz", "FizzBuzz"][round(11/15 + (2/3) * cos(2*pi*n/3) + (4/5) * (cos(2*pi*n/5) + cos(4*pi*n/5)))]) for n in range(1, 101)]'</code></pre>
 <p>
   We have taken a simple counting game and turned it into a
   trigonometric construction: a finite Fourier series with a constant
   term \( 11/15 \) and three cosine terms with coefficients \( 2/3 \),
   \( 4/5 \) and \( 4/5 \).  None of this makes Fizz Buzz any easier,
-  of course, but it does mean that every \( \mathtt{Fizz} \) and \(
-  \mathtt{Buzz} \) now owes its existence to its Fourier coefficients.
-  We began with the modest goal of making this simple problem more
-  complicated.  I think it is safe to say that we have not fallen
-  short.
+  of course, but it does show that every \( \mathtt{Fizz} \) and \(
+  \mathtt{Buzz} \) now owes its existence to a particular set of
+  Fourier coefficients.  We began with the modest goal of making this
+  simple problem more complicated.  I think it is safe to say that we
+  did not fall short.
 </p>
