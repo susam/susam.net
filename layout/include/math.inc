@@ -6,6 +6,8 @@
       overflow-x: auto; /* Allow horizontal scroll for wide equations. */
       overflow-y: hidden; /* Hide vertical scroll due to horizontal scroll. */
       padding-top: 2px; /* Prevent top clipping. */
+      padding-right: 2px; /* Prevent horizontal scroll on numbered equations. */
+      /* See also: <https://github.com/KaTeX/KaTeX/issues/3254> */
     }
   </style>
   <script defer src="{{ root }}js/katex/katex.min.js"></script>
