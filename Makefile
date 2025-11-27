@@ -1033,6 +1033,9 @@ pub: cu gh cb
 co:
 	git checkout cu
 	git status
+	@echo
+	@echo 'Press ENTER to proceed to commit.  Press Ctrl+C to cancel.' && read
+	@echo
 	git add -p
 	git commit --amend --reset-author
 

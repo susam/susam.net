@@ -14,8 +14,8 @@
 </ul>
 <p>
   By default, these commands are bound to the key sequences
-  <code>C-(</code>, <code>C-)</code>, <code>C-{</code>
-  and <code>C-}</code> respectively in Emacs.  These commands can make
+  <code>C-(</code>, <code>C-)</code>, <code>C-{</code> and
+  <code>C-}</code> respectively in Emacs.  These commands can make
   editing s-expressions very convenient.  However, often on IRC
   networks and other online forums, I come across users who have
   difficulty remembering the key sequence each command is bound to.  I
@@ -45,12 +45,12 @@
 </p>
 <pre><code>(* 10 20<span class="cursor"> </span>(+ 30 40))</code></pre>
 <p>
-  The key sequence <code>C-)</code> invokes
-  the <code>paredit-forward-slurp-sexp</code> command that adds the
+  The key sequence <code>C-)</code> invokes the
+  <code>paredit-forward-slurp-sexp</code> command that adds the
   expression following the current list into that list by moving the
-  closing delimiter ahead.  Similarly, there is the key
-  sequence <code>C-(</code> that invokes
-  the <code>paredit-backward-slurp-sexp</code> command which works
+  closing delimiter ahead.  Similarly, there is the key sequence
+  <code>C-(</code> that invokes the
+  <code>paredit-backward-slurp-sexp</code> command which works
   similarly except that it makes the current list consume the
   preceding expression.  Note that the slurp commands expand the
   current list to consume a neighbouring expression.
@@ -75,12 +75,12 @@
 </p>
 <pre><code>(* 10 20) <span class="cursor">(</span>+ 30 40)</code></pre>
 <p>
-  The key sequence <code>C-}</code> invokes
-  the <code>paredit-forward-barf-sexp</code> command that removes the
+  The key sequence <code>C-}</code> invokes the
+  <code>paredit-forward-barf-sexp</code> command that removes the
   last expression in the current list from that list by moving the
-  closing delimiter behind.  Similarly, there is the key
-  sequence <code>C-{</code> that invokes
-  the <code>paredit-backward-slurp-sexp</code> command which works
+  closing delimiter behind.  Similarly, there is the key sequence
+  <code>C-{</code> that invokes the
+  <code>paredit-backward-barf-sexp</code> command which works
   similarly except that it removes the first expression from the
   current list.  Note that the barf commands shrinks the current list
   to remove an expression from that list.
@@ -118,11 +118,11 @@
 <p>
   <em>
     <strong>Update on 01 Mar 2022:</strong> Jon Snader, who maintains
-    a very popular blog
-    named <a href="http://irreal.org/blog/">Irreal</a>, has discussed
-    this blog post on his own blog.  While he did not find my
-    mnemonics particularly helpful, he has shared his own way of
-    remembering the key sequences.  Quoting Jon below:
+    a very popular blog named
+    <a href="http://irreal.org/blog/">Irreal</a>, has discussed this
+    blog post on his own blog.  While he did not find my mnemonics
+    particularly helpful, he has shared his own way of remembering the
+    key sequences.  Quoting Jon below:
   </em>
 </p>
 <blockquote>
