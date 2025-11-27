@@ -5,6 +5,7 @@
     .katex-display {
       overflow-x: auto; /* Allow horizontal scroll for wide equations. */
       overflow-y: hidden; /* Hide vertical scroll due to horizontal scroll. */
+      padding-top: 2px; /* Prevent top clipping. */
     }
   </style>
   <script defer src="{{ root }}js/katex/katex.min.js"></script>
