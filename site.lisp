@@ -857,7 +857,7 @@ value, next-index."
         (list-layout (read-file "layout/guestbook/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
         (page (read-page "content/guestbook/guestbook.aux.html"))
-        (dst-path (render "{{ apex }}guestbook.html" params)))
+        (dst-path (render "{{ apex }}comments/guestbook.html" params)))
     (aput "title" "Guestbook" params)
     (aput "post-title" "Guestbook" params)
     (set-nested-template list-layout page-layout)
