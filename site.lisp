@@ -753,24 +753,12 @@ value, next-index."
       (push comment comments)
       (unless next-index
         (return)))
-    (values (reverse comments) slug)))
+    (reverse comments)))
 
-(defun collect-comments (src-patterns)
+(defun collect-comments (src-pattern)
   "Collect comments using the given glob patterns."
-  (let ((comments)
-        (seen-slugs (make-hash-table :test #'equal)))
-    ;; Iterate over each source pattern in source pattern list.
-    (dolist (src-pattern src-patterns)
-      ;; Iterate over each source path matched by the source pattern.
-      (dolist (src-path (directory src-pattern))
-        ;; Read comments and their slug from the source path.
-        (multiple-value-bind (src-comments slug) (read-comments src-path)
-          ;; Ensure new slug does not conflict with an existing slug.
-          (when (gethash slug seen-slugs)
-            (error "Duplicate slug ~a for comment file ~a" slug src-path))
-          (setf (gethash slug seen-slugs) t)
-          (setf comments (append comments src-comments)))))
-    comments))
+  (loop for src-path in (directory src-pattern)
+        append (read-comments src-path)))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
   "Generate comment list page.  Honour the order of comments provided."
@@ -851,9 +839,9 @@ value, next-index."
             (make-comment-none comment-dst none-layout comment-params))))
     enriched-comments))
 
-(defun make-guestbook (comments page-layout params)
+(defun make-guestbook (page-layout params)
   "Create guestbook page."
-  (let ((comments (comments-by-slug comments "guestbook"))
+  (let ((comments (read-comments "content/guestbook/guestbook.html"))
         (list-layout (read-file "layout/guestbook/list.html"))
         (item-layout (read-file "layout/comment/item.html"))
         (page (read-page "content/guestbook/guestbook.aux.html"))
@@ -1400,8 +1388,7 @@ value, next-index."
                       (cons "head" "main.css")
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
-        (comments (collect-comments (list "content/comments/*.html"
-                                          "content/guestbook/guestbook.html")))
+        (comments (collect-comments "content/comments/*.html"))
         (all-comments)
         (pages)
         (all-pages))
@@ -1422,7 +1409,7 @@ value, next-index."
     (make-meets page-layout params)
     ;; Guestbook.
     (multiple-value-bind (pages comments)
-        (make-guestbook comments page-layout params)
+        (make-guestbook page-layout params)
       (extend-list all-pages pages)
       (extend-list all-comments comments))
     ;; Music
