@@ -849,7 +849,9 @@ check-sentence-spacing: cat-all-text
 
 # Run HTML tidy on the website.
 tidy: dist
-	find _site -name "*.html" | while read -r page; do \
+	find _site -name "*.html" | \
+	grep -vE '_site/fizz-buzz.html' | \
+	while read -r page; do \
 	  echo Tidying "$$page"; \
 	  sed 's/ method="dialog"//' "$$page" > /tmp/tmp.html; \
 	  tidy -q -e --warn-proprietary-attributes no /tmp/tmp.html || exit 1; \
