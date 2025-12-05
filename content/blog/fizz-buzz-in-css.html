@@ -1,0 +1,42 @@
+<!-- date: 2025-12-06 -->
+<!-- title: Fizz Buzz in CSS -->
+<!-- tag: Web -->
+<!-- key: fzcps -->
+<p>
+  What is the smallest CSS code we can write to print the Fizz Buzz
+  sequence?  I think it can be done in four lines of CSS as shown below:
+</p>
+<pre>
+<code>li { counter-increment: n }
+li:not(:nth-child(5n))::before { content: counter(n) }
+li:nth-child(3n)::before { content: "Fizz" }
+li:nth-child(5n)::after { content: "Buzz" }</code>
+</pre>
+<p>
+  Here is a complete working example:
+  <a href="css-fizz-buzz.html">css-fizz-buzz.html</a>.
+</p>
+<p>
+  I am neither a web developer nor a code-golfer.  I am just an
+  ordinary programmer playing on the sea-shore and diverting myself in
+  now and then finding a rougher pebble or an uglier shell than
+  ordinary, whilst the great ocean of absurd contraptions lay all
+  undiscovered before me.  Experienced code-golfers looking for a
+  challenge can probably shrink this solution further.  However, such
+  wizards are also likely to scoff at any mention of counting lines of
+  code, since this mind sport treats such measures as pointless when
+  all of CSS can be collapsed into a single line.  The number of bytes
+  is probably more meaningful.  The code can also be minified slightly
+  by removing all whitespace:
+</p>
+<pre><code>$ curl -sS https://susam.net/css-fizz-buzz.html | sed -n '/counter/,/after/p' | tr -d '[:space:]'
+li{counter-increment:n}li:not(:nth-child(5n))::before{content:counter(n)}li:nth-child(3n)::before{content:"Fizz"}li:nth-child(5n)::after{content:"Buzz"}</code></pre>
+<p>
+  This minified version is composed of 152 characters:
+</p>
+<pre><code>$ curl -sS https://susam.net/css-fizz-buzz.html | sed -n '/counter/,/after/p' | tr -d '[:space:]' | wc -c
+152</code></pre>
+<p>
+  If you manage to create a shorter solution, please do leave a
+  comment.
+</p>
