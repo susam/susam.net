@@ -770,6 +770,8 @@ check-newline:
 	  ! -path 'content/tree/nq.html' \
 	  -exec cat {} + | \
 	sed ' \
+	  s/\\\[1.5em/x/g; \
+	  s/\\\[1em/x/g; \
 	  s/\\\[<\/code>/x/g; \
 	  s/\\]<\/code>/x/g; \
 	' > /tmp/tr
@@ -850,7 +852,7 @@ check-sentence-spacing: cat-all-text
 # Run HTML tidy on the website.
 tidy: dist
 	find _site -name "*.html" | \
-	grep -vE '_site/fizz-buzz.html' | \
+	grep -vE '_site/css-fizz-buzz\.html|_site/code/web/css-fizz-buzz-ol\.html' | \
 	while read -r page; do \
 	  echo Tidying "$$page"; \
 	  sed 's/ method="dialog"//' "$$page" > /tmp/tmp.html; \
@@ -1035,6 +1037,9 @@ pub: cu gh cb
 co:
 	git checkout cu
 	git status
+	@echo
+	@echo 'Press ENTER to proceed to commit.  Press Ctrl+C to cancel.' && read
+	@echo
 	git add -p
 	git commit --amend --reset-author
 

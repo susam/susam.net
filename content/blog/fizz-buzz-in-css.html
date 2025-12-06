@@ -1,10 +1,21 @@
 <!-- date: 2025-12-06 -->
 <!-- title: Fizz Buzz in CSS -->
-<!-- tag: Web -->
+<!-- tag: Absurd, Web, Technology, Puzzle -->
 <!-- key: fzcps -->
 <p>
-  What is the smallest CSS code we can write to print the Fizz Buzz
-  sequence?  I think it can be done in four lines of CSS as shown below:
+  What is the minimum number of lines of CSS we need to produce the
+  Fizz Buzz sequence, with one CSS selector and its declaration block
+  on each line?  One could of course do this with no CSS at all,
+  simply by placing the entire sequence as plain text in the HTML
+  body.  So to make the problem precise and keep it interesting, we
+  require that all text that appears in the output must come directly
+  from the CSS.  Placing any part of the output numbers or words
+  outside the stylesheet or using JavaScript is not allowed.
+</p>
+<p>
+  The second requirement may sound a bit odd but I'll explain that in
+  a moment.  With these constraints, I think it can be done in four
+  lines of CSS as shown below:
 </p>
 <pre>
 <code>li { counter-increment: n }
@@ -17,26 +28,44 @@ li:nth-child(5n)::after { content: "Buzz" }</code>
   <a href="css-fizz-buzz.html">css-fizz-buzz.html</a>.
 </p>
 <p>
-  I am neither a web developer nor a code-golfer.  I am just an
-  ordinary programmer playing on the sea-shore and diverting myself in
-  now and then finding a rougher pebble or an uglier shell than
-  ordinary, whilst the great ocean of absurd contraptions lay all
-  undiscovered before me.  Experienced code-golfers looking for a
-  challenge can probably shrink this solution further.  However, such
-  wizards are also likely to scoff at any mention of counting lines of
-  code, since this mind sport treats such measures as pointless when
-  all of CSS can be collapsed into a single line.  The number of bytes
-  is probably more meaningful.  The code can also be minified slightly
-  by removing all whitespace:
+  Seasoned code golfers looking for a challenge can probably shrink
+  this solution further.  A common trick to solve this problem is to
+  use an ordered list (<code>&lt;ol&gt;</code>) which provides the
+  integers in the form of list markers automatically thereby
+  eliminating the need to maintain a counter in the stylesheet.
+  However, this violates the requirement set out in the introduction.
+  We want every integer to be produced directly by the stylesheet.
+  Treating the integers in the list markers as part of the output
+  sequence breaks that rule.  Not to mention the output looks untidy
+  because of the unnecessary dot after each marker and also because
+  the numbers and words appear misaligned.  See an example of that
+  trick here:
+  <a href="code/web/css-fizz-buzz-ol.html">css-fizz-buzz-ol.html</a>.
+  Correcting the misaligned output calls for extra code that cancels
+  out the lines saved.  In any case, the requirement that all integers
+  of the output must come directly from the stylesheet prevents untidy
+  solutions like this and also helps demonstrates the capabilities of
+  CSS.
+</p>
+<p>
+  Although the intention in this post is to obtain the smallest
+  possible code in terms of lines, with one selector and declaration
+  block per line, many code golfers take minimising the number of
+  bytes as a challenge.  The example above is not crafted to minimise
+  the number of bytes.  However, it might still be interesting to
+  measure how many bytes it consumes.  To do so, we first minify the
+  code by removing all whitespace:
 </p>
 <pre><code>$ curl -sS https://susam.net/css-fizz-buzz.html | sed -n '/counter/,/after/p' | tr -d '[:space:]'
 li{counter-increment:n}li:not(:nth-child(5n))::before{content:counter(n)}li:nth-child(3n)::before{content:"Fizz"}li:nth-child(5n)::after{content:"Buzz"}</code></pre>
 <p>
-  This minified version is composed of 152 characters:
+  This minified version is composed of 152 bytes:
 </p>
 <pre><code>$ curl -sS https://susam.net/css-fizz-buzz.html | sed -n '/counter/,/after/p' | tr -d '[:space:]' | wc -c
 152</code></pre>
 <p>
-  If you manage to create a shorter solution, please do leave a
-  comment.
+  Further reduction in the number of bytes can be achieved by using
+  the <code>&lt;p&gt;</code> element instead
+  of <code>&lt;li&gt;</code>, nesting CSS selectors, etc.  I'll leave
+  that as an exercise for the reader.
 </p>
