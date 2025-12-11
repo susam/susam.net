@@ -1140,14 +1140,14 @@ value, next-index."
     (aput "average-members" (fstr "~,1f" (/ members past-count)) params)
     (write-page dst list-layout params)))
 
-(defun validate-meets-dates (meets)
-  "Check that meets are arranged in chronological order."
+(defun validate-date-order (items)
+  "Check that entries are arranged in chronological order."
   (let ((prev-date)
         (curr-date))
-    (dolist (meet meets)
-      (setf curr-date (getf meet :date))
+    (dolist (item items)
+      (setf curr-date (getf item :date))
       (when (and prev-date (string< curr-date prev-date))
-        (error "Incorrect order for meet ~a" curr-date))
+        (error "Incorrect order for item ~a" curr-date))
       (setf prev-date curr-date))))
 
 (defun make-meets (page-layout params)
@@ -1157,12 +1157,46 @@ value, next-index."
         (list-layout (read-file "layout/meets/list.html"))
         (item-layout (read-file "layout/meets/item.html")))
     (set-nested-template list-layout page-layout)
-    (validate-meets-dates meets)
+    (validate-date-order meets)
     (push (list nil nil) slugs)
     (loop for (slug track) in slugs
           do (make-meet-log meets slug slugs track
                             list-layout item-layout params))))
 
+;;; Backlinks
+;;; ---------
+
+(defun parse-domain (url)
+  "Parse printable domain name from URL."
+  (let* ((start-index (+ (search "://" url) 3))
+         (end-index (position #\/ url :start start-index))
+         (host (subseq url start-index end-index)))
+    (string-replace "www." "" host)))
+
+(defun make-backlinks (page-layout params)
+  "Create backlinks page."
+  (let ((backlinks (read-list "content/lisp/backlinks.lisp"))
+        (list-layout (read-file "layout/backlinks/list.html"))
+        (item-layout (read-file "layout/backlinks/item.html"))
+        (dst "_site/backlinks.html")
+        (rendered-items))
+    (set-nested-template list-layout page-layout)
+    (validate-date-order backlinks)
+    (dolist (backlink backlinks)
+      (let ((item-params))
+        (aput "simple-date"
+              (format-short-date (parse-content-date (getf backlink :date)))
+              item-params)
+        (aput "domain" (parse-domain (getf backlink :url1)) item-params)
+        (aput "txt1" (getf backlink :txt1) item-params)
+        (aput "url1" (getf backlink :url1) item-params)
+        (aput "txt2" (getf backlink :txt2) item-params)
+        (aput "url2" (getf backlink :url2) item-params)
+        (push (render item-layout item-params) rendered-items)))
+    (aput "body" (join-strings rendered-items) params)
+    (aput "count" (length backlinks) params)
+    (aput "title" "Backlinks" params)
+    (write-page dst list-layout params)))
 
 ;;; CSS
 ;;; ---
@@ -1407,6 +1441,7 @@ value, next-index."
     ;; Tree.
     (setf all-pages (make-tree "content/tree/" (aget "apex" params) page-layout params))
     (make-meets page-layout params)
+    (make-backlinks page-layout params)
     ;; Guestbook.
     (multiple-value-bind (pages comments)
         (make-guestbook page-layout params)
