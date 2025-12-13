@@ -86,8 +86,8 @@
  (:date "2022-03-01"
   :txt1 "Using Paredit's Slurp and Barf"
   :url1 "https://irreal.org/blog/?p=10361"
-  :txt2 "https://susam.net/paredit-slurp-and-barf-mnemonics.html"
-  :url2 "Paredit Slurp and Barf Mnemonics")
+  :txt2 "Paredit Slurp and Barf Mnemonics"
+  :url2 "https://susam.net/paredit-slurp-and-barf-mnemonics.html")
 
  (:date "2022-05-25"
   :txt1 "Challenge The Cyber 2022 Challenges Discord Q&A"
@@ -220,6 +220,12 @@
   :url1 "https://www.microsiervos.com/archivo/juegos-y-diversion/andromeda-invaders-clasico-videojuegos.html"
   :txt2 "Andromeda Invaders"
   :url2 "invaders.html")
+
+ (:date "2024-07-20"
+  :txt1 "Devilish Fun With a Modeless Modal Editing Mode"
+  :url1 "https://www.rousette.org.uk/archives/devilish-fun-with-a-modeless-modal-editor/"
+  :txt2 "Devil Mode"
+  :url2 "https://susam.github.io/devil/")
 
  (:date "2025-04-11"
   :txt1 "This Week In Python"
