@@ -1173,6 +1173,10 @@ value, next-index."
          (host (subseq url start-index end-index)))
     (string-replace "www." "" host)))
 
+(defun format-backlink (s)
+  "Encode special characters as HTML entities."
+  (string-replace "&" "&amp;" s))
+
 (defun make-backlinks (page-layout params)
   "Create backlinks page."
   (let ((backlinks (read-list "content/lisp/backlinks.lisp"))
@@ -1188,10 +1192,10 @@ value, next-index."
               (format-short-date (parse-content-date (getf backlink :date)))
               item-params)
         (aput "domain" (parse-domain (getf backlink :url1)) item-params)
-        (aput "txt1" (getf backlink :txt1) item-params)
-        (aput "url1" (getf backlink :url1) item-params)
-        (aput "txt2" (getf backlink :txt2) item-params)
-        (aput "url2" (getf backlink :url2) item-params)
+        (aput "txt1" (format-backlink (getf backlink :txt1)) item-params)
+        (aput "url1" (format-backlink (getf backlink :url1)) item-params)
+        (aput "txt2" (format-backlink (getf backlink :txt2)) item-params)
+        (aput "url2" (format-backlink (getf backlink :url2)) item-params)
         (push (render item-layout item-params) rendered-items)))
     (aput "body" (join-strings rendered-items) params)
     (aput "count" (length backlinks) params)
