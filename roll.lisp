@@ -35,7 +35,7 @@
 (defun make-feed-item (universal-time title link domain)
   "Create an alist for the given feed item."
   (list (cons "date" (format-content-date universal-time))
-        (cons "simple-date" (format-short-date universal-time))
+        (cons "short-date" (format-short-date universal-time))
         (cons "title" (html-escape
                        (string-trim-ws
                         (string-truncate-words

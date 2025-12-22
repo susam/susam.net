@@ -282,6 +282,14 @@ value, next-index."
     (format nil "~2,'0d ~a ~4,'0d~a~2,'0d:~2,'0d ~a"
             date (month-name month) year sep hour minute "UTC")))
 
+(defmacro insert-formatted-dates (item)
+  "Insert formatted dates into the given page or comment."
+  `(let ((date (aget "date" ,item)))
+     (when date
+       (aput "short-date" (format-short-date (parse-content-date date)) ,item)
+       (aput "long-date" (format-long-date (parse-content-date date)) ,item)
+       (aput "rss-date" (format-rss-date (parse-content-date date)) ,item))))
+
 (defun date-slug (filename)
   "Parse filename to extract date and slug."
   (let* ((basename (file-namestring filename))
@@ -593,7 +601,6 @@ value, next-index."
 (defun read-page-content (text filename)
   "Parse content file."
   (let ((page)
-        (date)
         (draft))
     (multiple-value-bind (date slug) (date-slug filename)
       (aput "date" date page)
@@ -601,11 +608,7 @@ value, next-index."
     (multiple-value-bind (headers next-index) (read-headers text 0)
       (setf page (append headers page))
       (aput "body" (subseq text next-index) page))
-    ;; Date.
-    (setf date (aget "date" page))
-    (when (aget "date" page)
-      (aput "rss-date" (format-rss-date (parse-content-date date)) page)
-      (aput "simple-date" (format-short-date (parse-content-date date)) page))
+    (insert-formatted-dates page)
     ;; Updated date.
     (aput "update-mark" "" page)
     (let ((updated (aget "updated" page)))
@@ -713,22 +716,18 @@ value, next-index."
 (defun read-comment (text start-index)
   "Read a single comment from a comment file."
   (let ((start-token "<!-- ") ; Header prefix.
-        (date)                ; Date.
         (commenter)           ; Rendered commenter display name.
         (url)                 ; URL of commenter.
         (comment)             ; Parsed comment parameters.
         (next-index))         ; Index at which to search next comment.
     (setf (values comment start-index) (read-headers text start-index))
+    (insert-formatted-dates comment)
     ;; Determine commenter's display name.
     (setf commenter (aget "name" comment))
     (setf url (aget "url" comment))
     (when url
       (setf commenter (fstr "<a href=\"~a\">~a</a>" url commenter)))
     (aput "commenter" commenter comment)
-    ;; Formatted dates.
-    (setf date (aget "date" comment))
-    (aput "rss-date" (format-rss-date (parse-content-date date)) comment)
-    (aput "simple-date" (format-long-date (parse-content-date date)) comment)
     ;; Select content until next header or end-of-text as body.
     (setf next-index (search start-token text :start2 start-index))
     (aput "body" (subseq text start-index next-index) comment)
@@ -740,14 +739,14 @@ value, next-index."
         (next-index 0)
         (slug (nth-value 1 (date-slug filename)))
         (serial 0)
-        (page)
+        (talk-page)
         (comment)
         (comments))
     (loop
-      (aput "slug" slug page)
+      (aput "slug" slug talk-page)
       (setf (values comment next-index) (read-comment text next-index))
       (cond ((and (zerop serial) (aget "title" comment))
-             (setf page (read-page-content (subseq text 0 next-index) filename)))
+             (setf talk-page (read-page-content (subseq text 0 next-index) filename)))
             (t
              (let ((date (aget "date" comment)))
                (when (and (consp comments) (string< date (aget "date" (car comments))))
@@ -758,7 +757,11 @@ value, next-index."
              (push comment comments)))
       (unless next-index
         (return)))
-    (values page (reverse comments))))
+    ;; Backfill date into the page information.
+    (setf comments (reverse comments))
+    (aput "date" (aget "date" (car comments)) talk-page)
+    (insert-formatted-dates talk-page)
+    (values talk-page comments)))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
   "Generate comment list page.  Honour the order of comments provided."
@@ -807,32 +810,32 @@ value, next-index."
   "Find a page by the given slug in the given list of pages."
   (find slug pages :test #'string= :key (lambda (page) (aget "slug" page))))
 
-(defun make-post-comments (header comments pages page-layout params)
+(defun make-post-comments (comments talk-page parent-page page-layout params)
   "Generate comment list page for a particular page."
   (let* ((item-layout (read-file "layout/comment/item.html"))
          (dst-path (render "{{ apex }}comments/{{ slug }}.html"
-                           (append header params)))
-         (page (page-by-slug pages (aget "slug" header)))
-         (found-page (not (null page)))
-         (listed-comment-pages)
-         (list-layout))
-    (aput "post-title" (or (aget "title" page)
-                           (aget "title" header)) page)
-    (aput "post-path" (or (aget "neat-path" page)
-                          (neat-path dst-path params)) page)
-    (setf comments (enrich-comments comments page dst-path params))
-    (cond (found-page
+                           (append talk-page params)))
+         (slug-layout-path "layout/comment/{{ slug }}.html")
+         (talk-layout-path "layout/comment/talk.html")
+         (list-layout)
+         (comment-page (append talk-page parent-page)))
+    (aput "post-title" (aget "title" comment-page) comment-page)
+    (aput "post-path" (or (aget "neat-path" comment-page)
+                          (neat-path dst-path params)) comment-page)
+    (setf comments (enrich-comments comments comment-page dst-path params))
+    (cond ((aget "blog-name" comment-page)
            (setf list-layout (read-file "layout/comment/list.html"))
-           (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
-           (setf params (append params params page)))
-          ((string= (aget "slug" header) "guestbook")
-           (setf list-layout (read-file "layout/comment/guestbook.html"))
-           (setf params (append params header))
-           (add-page-params dst-path header params)
-           (push header listed-comment-pages)))
+           (aput "title" (fstr "Comments on ~a" (aget "title" comment-page)) params))
+          (t
+           (setf slug-layout-path (render slug-layout-path comment-page))
+           (setf list-layout (read-file (if (probe-file slug-layout-path)
+                                            slug-layout-path talk-layout-path)))
+           (string= (aget "slug" comment-page) "guestbook")
+           (add-page-params dst-path comment-page params)))
     (set-nested-template list-layout page-layout)
+    (setf params (append params comment-page))
     (make-comment-list comments dst-path list-layout item-layout params)
-    (values comments listed-comment-pages)))
+    (values comment-page comments)))
 
 (defun make-void-comments (page page-layout params)
   "Generate a comment page with no comments."
@@ -840,10 +843,10 @@ value, next-index."
   (let ((none-layout (read-file "layout/comment/void.html"))
         (dst-path (render "{{ apex }}comments/{{ slug }}.html" (append page params))))
     (set-nested-template none-layout page-layout)
+    (setf params (append params page))
     (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
     (aput "post-title" (aget "title" page) params)
     (aput "post-path" (aget "neat-path" page) params)
-    (aput "slug" (aget "slug" page) params)
     (write-page dst-path none-layout params)))
 
 (defun make-all-comments (comments page-layout params)
@@ -867,18 +870,25 @@ value, next-index."
   "Generate comment list pages for all comment pages."
   (let ((all-comments)
         (listed-comment-pages)
-        (slugs))
+        (commented-on-slugs)
+        (parent-page)
+        (comment-page))
     (dolist (src (append (directory "content/comments/*.html")
                          (directory "content/talk/*.html")))
-      (multiple-value-bind (header comments) (read-comments src)
-        (push (aget "slug" header) slugs)
-        (multiple-value-setq (comments listed-comment-pages)
-          (make-post-comments header comments pages page-layout params))
+      (multiple-value-bind (talk-page comments) (read-comments src)
+        (setf parent-page (page-by-slug pages (aget "slug" talk-page)))
+        (setf (values comment-page comments)
+              (make-post-comments comments talk-page parent-page
+                                  page-layout params))
+        (push (aget "slug" comment-page) commented-on-slugs)
+        (unless (aget "blog-name" comment-page)
+          (push comment-page listed-comment-pages))
         (extend-list all-comments comments)))
     (make-all-comments all-comments page-layout params)
-    (dolist (page (select-uncommented-pages posts slugs))
+    (dolist (page (select-uncommented-pages posts commented-on-slugs))
       (make-void-comments page page-layout params))
     listed-comment-pages))
+
 
 ;;; Tree
 ;;; ----
@@ -1070,7 +1080,9 @@ value, next-index."
          (list-dst "{{ apex }}{{ blog-slug }}.html")
          (pages))
     (setf pages (make-posts src page-dst list-dst page-layout params))
-    pages))
+    (loop for page in pages
+          do (aput "blog-name" name page)
+          collect page)))
 
 
 ;;; Meets
@@ -1209,7 +1221,7 @@ value, next-index."
     (validate-date-order backlinks)
     (dolist (backlink backlinks)
       (let ((item-params))
-        (aput "simple-date"
+        (aput "short-date"
               (format-short-date (parse-content-date (getf backlink :date)))
               item-params)
         (aput "domain" (parse-domain (getf backlink :url1)) item-params)
@@ -1468,7 +1480,6 @@ value, next-index."
     (extend-list all-pages pages)
     ;; Comments.
     (setf pages (make-comments posts all-pages page-layout params))
-    (format t ":::: pages: ~a~%" pages)
     (extend-list all-pages pages)
     ;; Aggregates validation.
     (validate-required-params all-pages)

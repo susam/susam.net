@@ -100,11 +100,11 @@ hr {
 footer {
   text-align: center;
 }
-nav a {
+footer nav a {
   margin-right: 1.5em;
   line-height: 2.5;
 }
-nav a:last-child  {
+footer nav a:last-child  {
   margin-right: 0;
 }
 @media (prefers-color-scheme: dark) {
