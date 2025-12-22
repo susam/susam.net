@@ -813,7 +813,7 @@ value, next-index."
         do (aput "comment-list-serial" serial comment)
         collect comment))
 
-(defun make-page-comments (pages all-comments name page-layout params)
+(defun make-page-comments (pages all-comments page-layout params)
   "Generate comment list pages or no comments pages for all pages."
   (let ((none-layout (read-file "layout/comment/none.html"))
         (list-layout (read-file "layout/comment/list.html"))
@@ -823,8 +823,6 @@ value, next-index."
     ;; Combine layouts to form final layouts.
     (set-nested-template none-layout page-layout)
     (set-nested-template list-layout page-layout)
-    ;; All parent pages belong to the same blog.
-    (aput "blog-name" name params)
     ;; For each page, render its comment list page.
     (dolist (page pages)
       (let* ((page-comments (comments-by-slug all-comments (aget "slug" page)))
@@ -1455,12 +1453,12 @@ value, next-index."
     (extend-list all-pages (make-music "content/music/*.html" page-layout params))
     ;; Maze.
     (setf pages (make-blog "content/maze/*.html" "Maze" page-layout params))
-    (extend-list all-comments (make-page-comments pages comments "Maze" page-layout params))
+    (extend-list all-comments (make-page-comments pages comments page-layout params))
     (extend-list all-pages pages)
     ;; Blog.
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
     (make-home pages page-layout params)
-    (extend-list all-comments (make-page-comments pages comments "Blog" page-layout params))
+    (extend-list all-comments (make-page-comments pages comments page-layout params))
     (extend-list all-pages pages)
     ;; Aggregates validation.
     (validate-required-params all-pages)
