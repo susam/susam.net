@@ -1,24 +1,24 @@
 main > nav {
   margin: 1.5em 0;
 }
-.comment h2 {
+section h2 {
   font-size: 1em;
   margin-top: 0;
 }
-.comment {
+section {
   border: thin solid {{ light-line-color }};
   padding: 0.625em;
   margin: 1em 0;
 }
-.comment > :last-child {
+section > :last-child {
   margin-bottom: 0;
 }
-.comment.author {
+section.author {
   border-width: medium;
   border-style: double;
 }
 @media (prefers-color-scheme: dark) {
-  .comment {
+  section {
     border-color: {{ dark-line-color }};
   }
 }
