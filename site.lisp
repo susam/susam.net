@@ -590,10 +590,9 @@ value, next-index."
 ;;; Pages
 ;;; -----
 
-(defun read-page (filename)
+(defun read-page-content (text filename)
   "Parse content file."
-  (let ((text (read-file filename))
-        (page)
+  (let ((page)
         (date)
         (draft))
     (multiple-value-bind (date slug) (date-slug filename)
@@ -622,6 +621,10 @@ value, next-index."
     (setf draft (aget "draft" page))
     (aput "draft-mark" (if draft " [draft]" "") page)
     page))
+
+(defun read-page (filename)
+  "Parse page file."
+  (read-page-content (read-file filename) filename))
 
 (defun make-page (src-path dst layout params)
   "Generate page from content file."
@@ -737,28 +740,25 @@ value, next-index."
         (next-index 0)
         (slug (nth-value 1 (date-slug filename)))
         (serial 0)
+        (page)
         (comment)
         (comments))
     (loop
+      (aput "slug" slug page)
       (setf (values comment next-index) (read-comment text next-index))
-      ;; Current comment date must be more recent than the previous comment.
-      (let ((date (aget "date" comment)))
-        (when (and (consp comments) (string< date (aget "date" (car comments))))
-          (error "Incorrect order for comment ~a in ~a" date filename))
-        ;; Ensure time zone is specified in comment date.
-        (unless (and (= (length date) 25) (string-ends-with " +0000" date))
-          (error "Time zone missing in comment date ~a in ~a" date filename)))
-      (aput "slug" slug comment)
-      (aput "comment-file-serial" (incf serial) comment)
-      (push comment comments)
+      (cond ((and (zerop serial) (aget "title" comment))
+             (setf page (read-page-content (subseq text 0 next-index) filename)))
+            (t
+             (let ((date (aget "date" comment)))
+               (when (and (consp comments) (string< date (aget "date" (car comments))))
+                 (error "Incorrect order for comment ~a in ~a" date filename))
+               (unless (and (= (length date) 25) (string-ends-with " +0000" date))
+                 (error "Time zone missing in comment date ~a in ~a" date filename)))
+             (aput "comment-file-serial" (incf serial) comment)
+             (push comment comments)))
       (unless next-index
         (return)))
-    (reverse comments)))
-
-(defun collect-comments (src-pattern)
-  "Collect comments using the given glob patterns."
-  (loop for src-path in (directory src-pattern)
-        append (read-comments src-path)))
+    (values page (reverse comments))))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
   "Generate comment list page.  Honour the order of comments provided."
@@ -781,23 +781,13 @@ value, next-index."
     (aput "body" (join-strings (reverse rendered-comments)) params)
     (write-page comment-dst list-layout params)))
 
-(defun make-comment-none (dst none-layout params)
-  "Generate a comment page with no comments."
-  (aput "import" "" params)             ; Empty list needs no imports.
-  (write-page dst none-layout params))
-
-(defun comments-by-slug (comments slug)
-  "Filter comments by slug and return comments with matching slug."
-  (remove-if-not (lambda (c) (string= (aget "slug" c) slug)) comments))
-
-
 (defun enrich-comments (comments page dst-path params)
   "Enrich a comment by adding relevant page metadata to it."
   (let ((enriched-comments))
     (dolist (comment comments)
       (aput "unlist" (aget "unlist" page) comment)
-      (aput "commented-page-title" (aget "title" page) comment)
-      (aput "commented-page-path" (aget "neat-path" page) comment)
+      (aput "post-title" (aget "post-title" page) comment)
+      (aput "post-path" (aget "post-path" page) comment)
       (aput "comment-page-path" (neat-path dst-path params) comment)
       (aput "comment-class" (if (string= (aget "name" comment)
                                          (aget "author" params))
@@ -813,45 +803,82 @@ value, next-index."
         do (aput "comment-list-serial" serial comment)
         collect comment))
 
-(defun make-page-comments (pages all-comments page-layout params)
-  "Generate comment list pages or no comments pages for all pages."
-  (let ((none-layout (read-file "layout/comment/none.html"))
-        (list-layout (read-file "layout/comment/list.html"))
-        (item-layout (read-file "layout/comment/item.html"))
-        (comment-dst "{{ apex }}comments/{{ slug }}.html")
-        (enriched-comments))
-    ;; Combine layouts to form final layouts.
-    (set-nested-template none-layout page-layout)
-    (set-nested-template list-layout page-layout)
-    ;; For each page, render its comment list page.
-    (dolist (page pages)
-      (let* ((page-comments (comments-by-slug all-comments (aget "slug" page)))
-             (comment-params (append params page))
-             (dst-path (render comment-dst comment-params)))
-        (aput "title" (fstr "Comments on ~a" (aget "title" page)) comment-params)
-        (aput "post-title" (aget "title" page) comment-params)
-        (setf page-comments (enrich-comments page-comments page dst-path params))
-        (extend-list enriched-comments page-comments)
-        (if page-comments
-            (make-comment-list page-comments comment-dst list-layout item-layout comment-params)
-            (make-comment-none comment-dst none-layout comment-params))))
-    enriched-comments))
+(defun page-by-slug (pages slug)
+  "Find a page by the given slug in the given list of pages."
+  (find slug pages :test #'string= :key (lambda (page) (aget "slug" page))))
 
-(defun make-guestbook (page-layout params)
-  "Create guestbook page."
-  (let ((comments (read-comments "content/guestbook/guestbook.html"))
-        (list-layout (read-file "layout/guestbook/list.html"))
-        (item-layout (read-file "layout/comment/item.html"))
-        (page (read-page "content/guestbook/guestbook.aux.html"))
-        (dst-path (render "{{ apex }}comments/guestbook.html" params)))
-    (aput "title" "Guestbook" params)
-    (aput "post-title" "Guestbook" params)
-    (set-nested-template list-layout page-layout)
-    (add-page-params dst-path page params)
+(defun make-post-comments (header comments pages page-layout params)
+  "Generate comment list page for a particular page."
+  (let* ((item-layout (read-file "layout/comment/item.html"))
+         (dst-path (render "{{ apex }}comments/{{ slug }}.html"
+                           (append header params)))
+         (page (page-by-slug pages (aget "slug" header)))
+         (found-page (not (null page)))
+         (listed-comment-pages)
+         (list-layout))
+    (aput "post-title" (or (aget "title" page)
+                           (aget "title" header)) page)
+    (aput "post-path" (or (aget "neat-path" page)
+                          (neat-path dst-path params)) page)
     (setf comments (enrich-comments comments page dst-path params))
+    (cond (found-page
+           (setf list-layout (read-file "layout/comment/list.html"))
+           (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
+           (setf params (append params params page)))
+          ((string= (aget "slug" header) "guestbook")
+           (setf list-layout (read-file "layout/comment/guestbook.html"))
+           (setf params (append params header))
+           (add-page-params dst-path header params)
+           (push header listed-comment-pages)))
+    (set-nested-template list-layout page-layout)
     (make-comment-list comments dst-path list-layout item-layout params)
-    (values (list page) comments)))
+    (values comments listed-comment-pages)))
 
+(defun make-void-comments (page page-layout params)
+  "Generate a comment page with no comments."
+  (aput "import" "" params)
+  (let ((none-layout (read-file "layout/comment/void.html"))
+        (dst-path (render "{{ apex }}comments/{{ slug }}.html" (append page params))))
+    (set-nested-template none-layout page-layout)
+    (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
+    (aput "post-title" (aget "title" page) params)
+    (aput "post-path" (aget "neat-path" page) params)
+    (aput "slug" (aget "slug" page) params)
+    (write-page dst-path none-layout params)))
+
+(defun make-all-comments (comments page-layout params)
+  "Generate consolidated comment list page for the full website."
+  (let ((list-layout (read-file "layout/comment/list-all.html"))
+        (item-layout (read-file "layout/comment/item-all.html")))
+    (set-nested-template list-layout page-layout)
+    (aput "import" "extra.css, math.inc" params)
+    (aput "title" "All Comments" params)
+    (setf comments (reverse (number-comments (only-listed-items comments))))
+    (make-comment-list comments "{{ apex }}comments/index.html"
+                       list-layout item-layout params)))
+
+(defun select-uncommented-pages (commentable-pages commented-slugs)
+  "Select the pages that have received no comments."
+  (remove-if (lambda (page)
+               (member (aget "slug" page) commented-slugs :test #'string=))
+             commentable-pages))
+
+(defun make-comments (posts pages page-layout params)
+  "Generate comment list pages for all comment pages."
+  (let ((all-comments)
+        (listed-comment-pages)
+        (slugs))
+    (dolist (src (append (directory "content/comments/*.html")
+                         (directory "content/talk/*.html")))
+      (multiple-value-bind (header comments) (read-comments src)
+        (push (aget "slug" header) slugs)
+        (multiple-value-setq (comments listed-comment-pages)
+          (make-post-comments header comments pages page-layout params))
+        (extend-list all-comments comments)))
+    (make-all-comments all-comments page-layout params)
+    (dolist (page (select-uncommented-pages posts slugs))
+      (make-void-comments page page-layout params))
+    listed-comment-pages))
 
 ;;; Tree
 ;;; ----
@@ -1019,15 +1046,11 @@ value, next-index."
 
 (defun make-posts (src page-dst list-dst page-layout params)
   "Generate blog post pages for all posts in a blog directory."
-  (let ((post-layout (read-file "layout/blog/post.html"))
-        (list-layout (read-file "layout/blog/list.html"))
-        (item-layout (read-file "layout/blog/item.html"))
-        (list-override (render "layout/{{ blog-slug }}/list.html" params))
-        (pages))
-    ;; Look for overriding layouts.
-    (when (probe-file list-override)
-      (write-log "Using list layout override ~a ..." list-override)
-      (setf list-layout (read-file list-override)))
+  (let* ((list-layout-path (render "layout/blog/{{ blog-slug }}.html" params))
+         (list-layout (read-file list-layout-path))
+         (post-layout (read-file "layout/blog/post.html"))
+         (item-layout (read-file "layout/blog/item.html"))
+         (pages))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
     (set-nested-template list-layout page-layout)
@@ -1365,17 +1388,6 @@ value, next-index."
     (aput "title" "All Pages" params)
     (make-page-list pages "{{ apex }}pages.html" list-layout item-layout params)))
 
-(defun make-full-comments (comments page-layout params)
-  "Generate comment list for the full website."
-  (let ((list-layout (read-file "layout/comment/list-all.html"))
-        (item-layout (read-file "layout/comment/item-all.html")))
-    (set-nested-template list-layout page-layout)
-    (aput "import" "extra.css, math.inc" params)
-    (aput "title" "All Comments" params)
-    (setf comments (reverse (number-comments (only-listed-items comments))))
-    (make-comment-list comments "{{ apex }}comments/index.html"
-                       list-layout item-layout params)))
-
 (defun make-short (pages page-layout params)
   "Generate a short links listing page."
   (let ((list-layout (read-file "layout/short/list.html"))
@@ -1424,9 +1436,8 @@ value, next-index."
                       (cons "head" "main.css")
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
-        (comments (collect-comments "content/comments/*.html"))
-        (all-comments)
         (pages)
+        (posts)
         (all-pages))
     (remove-directory (aget "apex" params))
     ;; If params file exists, merge it with local params.
@@ -1444,21 +1455,20 @@ value, next-index."
     (setf all-pages (make-tree "content/tree/" (aget "apex" params) page-layout params))
     (make-meets page-layout params)
     (make-backlinks page-layout params)
-    ;; Guestbook.
-    (multiple-value-bind (pages comments)
-        (make-guestbook page-layout params)
-      (extend-list all-pages pages)
-      (extend-list all-comments comments))
     ;; Music
     (extend-list all-pages (make-music "content/music/*.html" page-layout params))
     ;; Maze.
     (setf pages (make-blog "content/maze/*.html" "Maze" page-layout params))
-    (extend-list all-comments (make-page-comments pages comments page-layout params))
+    (extend-list posts pages)
     (extend-list all-pages pages)
     ;; Blog.
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
     (make-home pages page-layout params)
-    (extend-list all-comments (make-page-comments pages comments page-layout params))
+    (extend-list posts pages)
+    (extend-list all-pages pages)
+    ;; Comments.
+    (setf pages (make-comments posts all-pages page-layout params))
+    (format t ":::: pages: ~a~%" pages)
     (extend-list all-pages pages)
     ;; Aggregates validation.
     (validate-required-params all-pages)
@@ -1466,7 +1476,6 @@ value, next-index."
     ;; Aggregates rendering.
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
-    (make-full-comments all-comments page-layout params)
     (make-short all-pages page-layout (cons (cons "import" "noindex.inc") params))
     (make-feed all-pages params)
     ;; Directory indices.
