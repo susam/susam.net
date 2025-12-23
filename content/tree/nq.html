@@ -61,7 +61,7 @@
       pre {
         overflow: auto;
       }
-      pre, code {
+      pre, code, samp {
         font-family: monospace,monospace;
         font-size: 0.9em;
       }
@@ -70,6 +70,9 @@
       }
       code {
         color: #050;
+      }
+      samp {
+        color: #730;
       }
       blockquote, pre {
         padding: 0.5em;
@@ -219,6 +222,9 @@
         }
         code, pre kbd {
           color: #9c6;
+        }
+        samp {
+          color: #db0;
         }
         .new label:hover {
           background: #333;
@@ -822,8 +828,8 @@
           date: '2025-10-10',
           title: 'Integral Domain and Field',
           tags: [
-            'Mathematics',
-            'Abstract Algebra'
+            'Abstract Algebra',
+            'Mathematics'
           ],
           authors: [
             'Susam Pal'
@@ -883,7 +889,7 @@
           title: 'Chess-Playing Computer',
           tags: [
             'Chess',
-            'Technology',
+            'Computing',
             'History'
           ],
           authors: [
@@ -903,8 +909,8 @@
           date: '2025-10-16',
           title: 'Phosphor',
           tags: [
-            'Physics',
-            'Chemistry'
+            'Chemistry',
+            'Physics'
           ],
           authors: [
             'Susam Pal'
@@ -943,8 +949,8 @@
           date: '2025-11-07',
           title: 'Number of Simple, Undirected Graphs',
           tags: [
-            'Mathematics',
-            'Graph Theory'
+            'Graph Theory',
+            'Mathematics'
           ],
           authors: [
             'Susam Pal'
@@ -963,8 +969,8 @@
           date: '2025-11-08',
           title: 'Spelling Alphabet',
           tags: [
-            'Linguistics',
-            'Communication'
+            'Communication',
+            'Linguistics'
           ],
           authors: [
             'Susam Pal'
@@ -983,7 +989,7 @@
           date: '2025-11-09',
           title: 'Diskette',
           tags: [
-            'Technology'
+            'Computing'
           ],
           authors: [
             'Susam Pal'
@@ -1016,6 +1022,106 @@
             'None of the above.  Both flags are identical.'
           ],
           explanation: 'Although the flags of Indonesia and Monaco share a red-over-white\nbicolour design and look very similar, the principal difference lies\nin their proportions.  Indonesia specifies a ratio of 2:3 while Monaco\nuses 4:5.  The shade of red does differ slightly.  Monaco\'s flag has a\ndarker shade of red.  However, the difference in proportion is the\ndefinitive and formally specified distinction.\n\nNeither flag includes a coat of arms or any other emblem.\nIncidentally, the flag of Singapore also features a red-and-white\ndesign, yet it is easily distinguished by its white crescent moon\nfacing a pentagon of five small white stars.'
+        },
+        {
+          date: '2025-12-20',
+          title: 'The Mother of All Demos',
+          tags: [
+            'Computing',
+            'History'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: '<em>The Mother of All Demos</em> is regarded as a landmark computer\ndemonstration that featured the introduction of a particular computer\nhardware and software system.  Who delivered this demo?',
+          options: [
+            'Douglas Engelbart',
+            'Steve Jobs',
+            'Alan Kay',
+            'Tim Berners-Lee',
+            'Adele Goldberg'
+          ],
+          explanation: '<em>The Mother of All Demos </em> was a live computer demonstration\npresented on 09 Dec 1968 at the Fall Joint Computer Conference in San\nFrancisco.  During this 90 minute presentation, a wide range of\ngroundbreaking concepts were shown that would later become central to\nmodern computing.\n\nThe demonstration introduced ideas such as the computer mouse,\nwindowed graphical interfaces, hypertext, real time text editing,\nvideo conferencing and collaborative work on networked computers.\nThese concepts were decades ahead of what was commonly available at\nthe time and profoundly influenced the future of human computer\ninteraction.\n\nThe presentation was delivered by Douglas Engelbart, a computer\nscientist at the Stanford Research Institute, who led the team that\ndeveloped the system used in the demonstration.'
+        },
+        {
+          date: '2025-12-20',
+          title: 'Triangle-Free Line Graph',
+          tags: [
+            'Graph Theory',
+            'Mathematics'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'If the line graph \\( L(X) \\) of a graph \\( X \\) has no triangle, what does this imply about \\( X \\)?',
+          options: [
+            '\\( X \\) has no vertices of degree at least \\( 3 \\).',
+            '\\( X \\) has no vertices of degree at least \\( 2 \\).\n',
+            '\\( X \\) has no vertices of degree at least \\( 4 \\).',
+            '\\( X \\) is a path.',
+            '\\( X \\) is a cycle.'
+          ],
+          explanation: 'The line graph \\( L(X) \\) has a vertex for each edge of \\( X \\), with\ntwo vertices adjacent if the corresponding edges in \\( X \\) share a\ncommon vertex.  A triangle in \\( L(X) \\) corresponds to three edges in\n\\( X \\) that are pairwise adjacent, which happens exactly when those\nthree edges meet at a single vertex.  Therefore, if \\( L(X) \\) has no\ntriangle, the graph \\( X \\) cannot have any vertex incident to three\nor more edges.  Equivalently, every vertex of \\( X \\) has degree at\nmost \\( 2 \\), so \\( X \\) is a disjoint union of paths and cycles.  No\nvertex has degree greater than or equal to \\( 3 \\).'
+        },
+        {
+          date: '2025-12-20',
+          title: 'PostgreSQL Origin',
+          tags: [
+            'Computing',
+            'History'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'The popular free and open-source relational database management system\nnamed PostgreSQL was originally named POSTGRES.  What did that name\nmean?',
+          options: [
+            'The name POSTGRES referred to its origin as a successor to the INGRES\ndatabase from University of California, Berkeley.',
+            'The name POSTGRES was an acronym formed from the initials of its\noriginal developers.',
+            'The name POSTGRES described a database management for postgraduate\nresearch.',
+            'The name POSTGRES referred to its use of a relational data model based\non extended relational algebra.',
+            'The name POSTGRES referred to a database system intended to be used\nonly after all other databases had failed.'
+          ],
+          explanation: 'POSTGRES stood for "post Ingres".  It was a research project led by\nMichael Stonebraker at the University of California, Berkeley,\nintended as a successor to the earlier INGRES database system.\nVersion 1 was released to a small number of users in Jun 1989.  After\nthe release of version 4.2 in Jun 1994, the project was released under\nan MIT Licence variant.\n\nAt that time, the database system used a query language named\nPOSTQUEL.  In 1994, Berkeley graduate students Andrew Yu and Jolly\nChen developed support for Structured Query Language (SQL) to replace\nPOSTQUEL.  This led to the release of a new project named Postgres95\nin 1995.  Finally, in 1996, the project was renamed to PostgreSQL to\nreflect its support for SQL.'
+        },
+        {
+          date: '2025-12-23',
+          title: 'A Dozen Dozen',
+          tags: [
+            'Miscellaneous',
+            'Terminology'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is a dozen dozen also known as?',
+          options: [
+            'Gross',
+            'Score',
+            'Baker\'s dozen',
+            'Quire',
+            'Ream'
+          ],
+          explanation: 'A <em>dozen</em> is a group of twelve items.  A <em>dozen dozen</em>\ntherefore equals 144.  A dozen dozen is also known as a\n<em>gross</em>.\n\nA <em>score</em> refers to a group of twenty items.  A baker\'s dozen\nrefers to thirteen items.  This term originated from the practice\namong bakers including a thirteenth piece of bread when selling a\ndozen to err on the side of caution to ensure that minimum weight\nrequirements were being met.\n\nThe terms <em>quire</em> and <em>ream</em> refer to quantities of\npaper.  A quire is typically 25 sheets of paper.  In an older system,\na quire referred to 24 sheets.  A ream is 20 quires.'
+        },
+        {
+          date: '2025-12-23',
+          title: 'NR vs FNR',
+          tags: [
+            'Computing',
+            'Unix'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'In the Unix <code>awk</code> command, what is the difference between\nthe <code>NR</code> and <code>FNR</code> variables?',
+          options: [
+            '<code>NR</code> is the ordinal number of the current record across all\ninput whereas <code>FNR</code> is the ordinal number of the current\nrecord in the current input file.',
+            '<code>NR</code> is the ordinal number of the current record across all\ninput whereas <code>FNR</code> is the ordinal number of the current\nfile in the list of input files.',
+            '<code>NR</code> is the number of lines across all input whereas\n<code>FNR</code> is the number of lines in the current file.\n',
+            '<code>NR</code> is the ordinal number of the current record in the\ninput whereas <code>FNR</code> is the ordinal number of the current\nrecord in the input subtracted from the total number of records in the\ninput.',
+            'None of the above; <code>NR</code> and <code>FNR</code> are synonyms.'
+          ],
+          explanation: 'Both <code>NR</code> and <code>FNR</code> represent ordinal numbers of\nrecords.  <code>NR</code> is the ordinal number of the current record\nacross all input files processed so far.  <code>FNR</code> is the\nordinal number of the current record in the current input file.  For\nexample, consider the following sequence of commands:\n\n<pre>\n<code>printf \'foo\\nbar\\n\' > foo.txt\nprintf \'baz\\nqux\\nquz\\n\' > baz.txt\nawk \'{print NR, FNR, $0}\' foo.txt baz.txt</code>\n</pre>\n\nThe above sequence of commands prints the following output:\n\n<pre>\n<samp>1 1 foo\n2 2 bar\n3 1 baz\n4 2 qux\n5 3 quz</samp>\n</pre>\n\n<code>FNR</code> is reset to 1 each time <code>awk</code> begins\nreading a new file.  <code>NR</code> increases monotonically as\n<code>awk</code> reads successive records, even when moving from one\ninput file to the next.'
         }
       ]
     </script>
@@ -1080,16 +1186,12 @@
         </p>
         <ul>
           <li>
-            Matrix: <a href="https://app.element.io/#/room/#susam:matrix.org">#susam:matrix.org</a>
+            Website: <a href="https://susam.net/comments/nq.html">Discuss Nerd Quiz</a>
           </li>
           <li>
             IRC: <a href="https://web.libera.chat/#susam">#susam:libera.chat</a>
           </li>
         </ul>
-        <p>
-          You can also post a comment to my website using this
-          <a href="https://susam.net/form/comment/?p=nq">comment form</a>.
-        </p>
         <h2>Enjoy</h2>
         <p>
           Go to <a href="#">Nerd Quiz</a> now and try the latest quiz.
@@ -1107,6 +1209,7 @@
       <nav>
         <a href="#">Quiz</a>
         <a href="#about">About</a>
+        <a href="https://susam.net/comments/nq.html">Comments</a>
         <a href="https://github.com/susam/nq">GitHub</a>
         <a href="https://mastodon.social/@susam">Mastodon</a>
         <p>&copy; 2025 Susam Pal</p>
