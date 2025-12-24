@@ -265,7 +265,8 @@ value, next-index."
       (decode-universal-time universal-time 0)
     (declare (ignore dst))
     (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d ~a"
-            (weekday-name day) date (month-name month) year hour minute second (format-tz tz))))
+            (weekday-name day) date (month-name month) year
+            hour minute second (format-tz tz))))
 
 (defun format-short-date (universal-time)
   "Convert universal-time (integer) to a simple human-readable date."
