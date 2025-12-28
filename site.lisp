@@ -614,7 +614,7 @@ value, next-index."
     (aput "update-mark" "" page)
     (let ((updated (aget "updated" page)))
       (when updated
-        (aput "update-mark" (fstr " (updated on ~a)"
+        (aput "update-mark" (fstr " | Updated on ~a"
                                   (format-short-date (parse-content-date updated)))
               page)))
     ;; Other metadata to be parsed.
