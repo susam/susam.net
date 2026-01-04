@@ -1,15 +1,14 @@
 <!-- date: 2011-06-03 -->
 <!-- title: URL in C -->
-<!-- tag: C, Programming, Technology, Puzzle -->
+<!-- tag: Absurd, C, Programming, Technology, Puzzle -->
 <!-- key: vnjtr -->
 <p>
-  Here is an interesting C puzzle I created recently.  It is a silly
-  one but you might find it amusing.
+  Here is a silly little C puzzle:
 </p>
 <pre>
 <code>#include &lt;stdio.h&gt;
 
-int main()
+int main(void)
 {
     https://susam.net/
     printf("hello, world\n");
@@ -26,7 +25,7 @@ hello, world</samp>
 <p>
   However, the
   <a href="http://www.open-std.org/JTC1/SC22/WG14/www/docs/n1256.pdf">C99
-  standard</a> does not mention anywhere that a URL is a valid
+  standard draft</a> does not mention anywhere that a URL is a valid
   syntactic element in C.  How does this code work then?
 </p>
 <p>
@@ -42,8 +41,8 @@ hello, world</samp>
   wondering if <code>//</code> is indeed a valid comment in C, yes, it
   is, since C99.  Download the
   <a href="http://www.open-std.org/JTC1/SC22/WG14/www/docs/n1256.pdf">C99
-  standard</a>, go to section 6.4.9 (Comments) and read the second
-  point which mentions this:
+  standard draft</a>, go to section 6.4.9 (Comments) and read the
+  second point which mentions this:
 </p>
 <blockquote>
   Except within a character constant, a string literal, or a comment,
