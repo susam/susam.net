@@ -1,0 +1,81 @@
+<!-- date: 2025-12-05 22:24:53 +0000 -->
+<!-- name: Losso -->
+<!-- url: https://bsky.app/profile/losso3000.bsky.social -->
+<p>
+  With two cheap tricks I got 147:
+</p>
+<ol>
+  <li>
+    Put everything in a <code>li{}</code> block and use the <code>&amp;</code> nesting selector.
+  </li>
+  <li>
+    Shorten <code>::before</code> and <code>::after</code>
+    to <code>:before</code> and <code>:after</code>, as modern
+    browsers support both, apparently.
+  </li>
+</ol>
+<pre><code>li{counter-increment:n;&amp;:not(:nth-child(5n)):before{content:counter(n)}&amp;:nth-child(3n):before{content:"Fizz"}&amp;:nth-child(5n):after{content:"Buzz"}}</code></pre>
+<p>
+  It could be promising to switch from <code>&lt;ul&gt;</code>
+  to <code>&lt;ol&gt;</code>, but maybe that fizz-, erm, fuzzes with
+  the target too much?  :)
+</p>
+<!-- date: 2025-12-05 23:18:16 +0000 -->
+<!-- name: Metaboat -->
+<!-- url: https://news.ycombinator.com/user?id=Metaboat -->
+<p>
+  104
+</p>
+<pre><code>:nth-child(3n){list-style:"Fizz"}:nth-child(5n){list-style:"Buzz"}:nth-child(15n){list-style:"FizzBuzz"}</code></pre>
+<pre><code>data:text/html,&lt;style&gt;:nth-child(3n){list-style:"Fizz"}:nth-child(5n){list-style:"Buzz"}:nth-child(15n){list-style:"FizzBuzz"}&lt;/style&gt;&lt;ol id=o&gt;&lt;script&gt;o.innerHTML='&lt;li&gt;'.repeat(99)&lt;/script&gt;</code></pre>
+<!-- date: 2025-12-05 23:29:26 +0000 -->
+<!-- name: Susam Pal -->
+<!-- url: https://susam.net/ -->
+<p>
+  That's an interesting solution.  It is worth noting that your
+  solution treats the list markers as part of the output, which the
+  version of the problem in my post avoids.  One of the requirements I
+  set out is that all text in the output sequence must be produced
+  directly by the stylesheet.  Nevertheless, your solution is an
+  independent and interesting solution to a slightly different version
+  of the stated problem.
+</p>
+<!-- date: 2025-12-05 23:42:59 +0000 -->
+<!-- name: Steve -->
+<p>
+  You can save two characters using nesting.
+</p>
+<pre>
+<code>li{
+  counter-increment: n;
+  &amp;:not(:nth-child(5n))::before { content: counter(n) }
+  &amp;:nth-child(3n)::before { content: "Fizz" }
+  &amp;:nth-child(5n)::after { content: "Buzz" }
+}</code>
+</pre>
+<p>
+  After minifying this:
+<pre>
+<code>li{counter-increment:n;&amp;:not(:nth-child(5n))::before{content:counter(n)}&amp;:nth-child(3n)::before{content:"Fizz"}&amp;:nth-child(5n)::after{content:"Buzz"}}</code>
+</pre>
+<p>
+  Also, debatable whether this counts, but browsers don't care if you
+  only use one colon for <code>::before</code>
+  and <code>::after</code> so that could be another -3.
+</p>
+<!-- date: 2025-12-06 00:10:45 +0000 -->
+<!-- name: luap42 -->
+<!-- url: https://chaos.social/@luap42 -->
+<p>
+  Hi,
+</p>
+<p>
+  I think I found a solution that is just ever so slightly shorter (150 characters):
+</p>
+<pre><code>li{counter-increment:n;&amp;:before{content:counter(n)}&amp;:nth-child(5n){&amp;:after{content:"Buzz"}&amp;:before{content:""}}&amp;:nth-child(3n):before{content:"Fizz"}}</code></pre>
+<p>
+  Curious if someone will find a significantly shorter solution.
+</p>
+<p>
+  ~ luap42
+</p>

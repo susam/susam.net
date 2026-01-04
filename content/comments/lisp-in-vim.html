@@ -33,37 +33,48 @@
 </p>
 <ol>
   <li>
-    It does not understand s-expressions.  It can only send the
-    current text paragraph or text selected in visual mode to a
-    terminal running in GNU Screen, tmux, Neovim, etc.  Therefore, it
-    cannot send, say, only the current expression or an entire
-    function definition or a top-level form to the terminal.
+    <p>
+      It does not understand s-expressions.  It can only send the
+      current text paragraph or text selected in visual mode to a
+      terminal running in GNU Screen, tmux, Neovim, etc.  Therefore,
+      it cannot send, say, only the current expression or an entire
+      function definition or a top-level form to the terminal.
+    </p>
   </li>
   <li>
-    Since it is language-agnostic and really only sends text from a
-    buffer to a terminal, it does not care whether the text is code or
-    prose.  It also does not care if the terminal is running a Unix
-    shell or a REPL.  It is the user's responsibility to ensure that
-    the correct REPL is running on the terminal and the corresponding
-    code is being sent from Vim using vim-slime.
+    <p>
+      Since it is language-agnostic and really only sends text from a
+      buffer to a terminal, it does not care whether the text is code
+      or prose.  It also does not care if the terminal is running a
+      Unix shell or a REPL.  It is the user's responsibility to ensure
+      that the correct REPL is running on the terminal and the
+      corresponding code is being sent from Vim using vim-slime.
+    </p>
   </li>
   <li>
-    Since it does not implement the client-server architecture that
-    SLIME and Swank implement together, it has none of the interactive
-    debugging features of SLIME.  It cannot automatically launch the
-    integrated Slime Debugger (SLDB) when an unhandled condition
-    occurs.  As a result, all debugging features like inspecting code,
-    inspecting variables, etc. are missing.
+    <p>
+      Since it does not implement the client-server architecture that
+      SLIME and Swank implement together, it has none of the
+      interactive debugging features of SLIME.  It cannot
+      automatically launch the integrated Slime Debugger (SLDB) when
+      an unhandled condition occurs.  As a result, all debugging
+      features like inspecting code, inspecting variables, etc. are
+      missing.
+    </p>
   </li>
   <li>
-    Almost all of the SLIME features are missing from it.  It does not
-    support displaying argument lists as we type function calls,
-    Common Lisp HyperSpec (CLHS) lookup and completion, describing
-    symbols, cross-referencing, etc.
+    <p>
+      Almost all of the SLIME features are missing from it.  It does
+      not support displaying argument lists as we type function calls,
+      Common Lisp HyperSpec (CLHS) lookup and completion, describing
+      symbols, cross-referencing, etc.
+    </p>
   </li>
   <li>
-    It does not provide any key-bindings for common tasks such as
-    macro expansion, function tracing, etc.
+    <p>
+      It does not provide any key-bindings for common tasks such as
+      macro expansion, function tracing, etc.
+    </p>
   </li>
 </ol>
 <p>
@@ -126,6 +137,6 @@
 <!-- date: 2024-02-25 04:04:03 +0000 -->
 <!-- name: Aweso -->
 <p>
-  Still the best article on setting up Vim with lisp in 2024.  Great
+  Still the best article on setting up Vim with Lisp in 2024.  Great
   resource!
 </p>

@@ -1,0 +1,16 @@
+<svg width="942" height="1189" viewBox="0 0 991 1189" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    svg {
+      border: 1px solid red;
+    }
+    rect {
+      fill-opacity: 0;
+    }
+    rect, line {
+      stroke: #000;
+      stroke-width: 4px;
+    }
+  </style>
+  <rect width="841" height="1189" x="0" y="0"/>
+  <line x1="841" y1="0" x2="991" y2="0"/>
+</svg>

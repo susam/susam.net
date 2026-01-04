@@ -86,8 +86,8 @@
  (:date "2022-03-01"
   :txt1 "Using Paredit's Slurp and Barf"
   :url1 "https://irreal.org/blog/?p=10361"
-  :txt2 "https://susam.net/paredit-slurp-and-barf-mnemonics.html"
-  :url2 "Paredit Slurp and Barf Mnemonics")
+  :txt2 "Paredit Slurp and Barf Mnemonics"
+  :url2 "https://susam.net/paredit-slurp-and-barf-mnemonics.html")
 
  (:date "2022-05-25"
   :txt1 "Challenge The Cyber 2022 Challenges Discord Q&A"
@@ -174,7 +174,7 @@
   :url2 "myrgb.html")
 
  (:date "2024-04-01"
-  :txt1 "Guess My Rgb, a Simple Color Matching Game"
+  :txt1 "Guess My RGB, a Simple Color Matching Game"
   :url1 "https://www.neatorama.com/2024/04/01/Guess-My-RGB-a-Simple-Color-Matching-Game/"
   :txt2 "Guess My RGB"
   :url2 "myrgb.html")
@@ -186,7 +186,7 @@
   :url2 "myrgb.html")
 
  (:date "2024-04-06"
-  :txt1 "Guess My RGB Is a Game Where You Guess What the R, G and B Values of a Color"
+  :txt1 "Guess My RGB Is a Game Where You Guess the R, G and B Values of a Color"
   :url1 "https://gigazine.net/gsc_news/en/20240406-guess-rgb/"
   :txt2 "Guess My RGB"
   :url2 "myrgb.html")
@@ -221,6 +221,12 @@
   :txt2 "Andromeda Invaders"
   :url2 "invaders.html")
 
+ (:date "2024-07-20"
+  :txt1 "Devilish Fun With a Modeless Modal Editing Mode"
+  :url1 "https://www.rousette.org.uk/archives/devilish-fun-with-a-modeless-modal-editor/"
+  :txt2 "Devil Mode"
+  :url2 "https://susam.github.io/devil/")
+
  (:date "2025-04-11"
   :txt1 "This Week In Python"
   :url1 "https://dev.to/bascodes/this-week-in-python-4cpp"
@@ -244,6 +250,12 @@
   :url1 "https://pythonpro.substack.com/p/pythonpro-68-python-314-changes-googles"
   :txt2 "Elliptical Python Programming"
   :url2 "elliptical-python-programming.html")
+
+ (:date "2025-08-06"
+  :txt1 "Making the Two-Dimensional One-Dimensional"
+  :url1 "https://www.johndcook.com/blog/2025/08/06/making-2d-1d/"
+  :txt2 "Zigzag Number Spiral"
+  :url2 "zigzag-number-spiral.html")
 
  (:date "2025-11-21"
   :txt1 "TensorFizzBuzz"
@@ -316,4 +328,22 @@
   :url1 "https://syntax.fm/snackpack/22133687"
   :txt2 "Fizz Buzz in CSS"
   :url2 "fizz-buzz-in-css.html")
+
+ (:date "2025-12-14"
+  :txt1 "I Read a Very Fascinating Post"
+  :url1 "https://vale.rocks/micros/20251214-0503"
+  :txt2 "I Fed 24 Years of My Blog Posts to a Markov Model"
+  :url2 "fed-24-years-of-posts-to-markov-model.html")
+
+ (:date "2025-12-24"
+  :txt1 "Double Maths First Thing: Issue 44"
+  :url1 "https://aperiodical.com/2025/12/double-maths-first-thing-issue-44/"
+  :txt2 "Fizz Buzz with Cosines"
+  :url2 "fed-24-years-of-posts-to-markov-model.html")
+
+ (:date "2026-01-03"
+  :txt1 "Which Part of the Indie Web Ethos is the Bigger Priority?"
+  :url1 "https://osteophage.dreamwidth.org/12661.html"
+  :txt2 "The IndieWeb Doesn't Need to 'Take Off'"
+  :url2 "https://osteophage.neocities.org/essays/indie-web-priorities")
 )

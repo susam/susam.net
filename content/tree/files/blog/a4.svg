@@ -1,0 +1,24 @@
+<svg width="370" height="515" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    rect {
+    fill: red;
+      stroke-width: 1px;
+      stroke: #000;
+    }
+    text {
+      text-anchor: middle;
+      dominant-baseline: central;
+      font-family: monospace;
+      font-size: 160px;
+    }
+  </style>
+  <rect width="350" height="495" x="0" y="0"/>
+  <rect width="350" height="248" x="0" y="247"/>
+  <rect width="175" height="248" x="175" y="247"/>
+  <rect width="175" height="124" x="175" y="371"/>
+  <rect width="88"  height="124" x="262" y="371"/>
+  <text x="175" y="124">A1</text>
+  <text x="88" y="371">A2</text>
+  <text x="262" y="309">A3</text>
+  <text x="218" y="433">A4</text>
+</svg>

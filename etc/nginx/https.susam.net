@@ -47,6 +47,7 @@ server {
     # Short-term redirects.
     rewrite ^/comments.html$ /comments/ redirect;
     rewrite ^/guestbook-reinstated.html$ /reinstated-guestbook.html redirect;
+    rewrite ^/fizz-buzz-in-four-lines-of-css.html$ /fizz-buzz-in-css.html redirect;
 }
 
 # https://(www.susam.net|susam.in)/ => https://susam.net/
