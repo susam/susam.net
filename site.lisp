@@ -1211,6 +1211,10 @@ value, next-index."
   "Encode special characters as HTML entities."
   (string-replace "&" "&amp;" s))
 
+(defun format-lang (s)
+  "Format the language text to be displayed along with a backlink."
+  (if (string= s "English") "" (fstr " (~a)" s)))
+
 (defun make-backlinks (page-layout params)
   "Create backlinks page."
   (let ((backlinks (read-list "content/lisp/backlinks.lisp"))
@@ -1225,6 +1229,7 @@ value, next-index."
         (aput "short-date"
               (format-short-date (parse-content-date (getf backlink :date)))
               item-params)
+        (aput "lang" (format-lang (getf backlink :lang)) item-params)
         (aput "domain" (parse-domain (getf backlink :url1)) item-params)
         (aput "txt1" (format-backlink (getf backlink :txt1)) item-params)
         (aput "url1" (format-backlink (getf backlink :url1)) item-params)
