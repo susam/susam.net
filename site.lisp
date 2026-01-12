@@ -701,7 +701,6 @@ value, next-index."
     ;; Add list parameters.
     (aput "body" (join-strings rendered-pages) params)
     (aput "count" count params)
-    (aput "page-label" (if (= count 1) "page" "pages") params)
     ;; Determine destination path and URL.
     (write-page dst list-layout params)))
 
@@ -1055,35 +1054,37 @@ value, next-index."
 ;;; Blog
 ;;; ----
 
-(defun make-posts (src page-dst list-dst page-layout params)
+(defun make-blog (src name page-layout params)
   "Generate blog post pages for all posts in a blog directory."
-  (let* ((list-layout-path (render "layout/blog/{{ blog-slug }}.html" params))
-         (list-layout (read-file list-layout-path))
+  (let* ((list-layout (read-file "layout/blog/list.html"))
          (post-layout (read-file "layout/blog/post.html"))
          (item-layout (read-file "layout/blog/item.html"))
+         (desc-path (fstr "layout/blog/~a.html" (string-downcase name)))
+         (desc-layout (if (probe-file desc-path) (read-file desc-path) ""))
+         (page-dst "{{ apex }}{{ slug }}.html")
          (pages))
     ;; Combine layouts to form final layouts.
     (set-nested-template post-layout page-layout)
     (set-nested-template list-layout page-layout)
     ;; Read and render all pages.
+    (aput "blog-name" name params)
+    (aput "blog-slug" (string-downcase name) params)
     (setf pages (make-pages src page-dst post-layout params))
+    (setf pages (loop for page in pages
+                      do (aput "blog-name" name page)
+                      collect page))
     ;; Create blog list page.
-    (aput "title" (render "{{ nick }}'s {{ blog-name }}" params) params)
+    (aput "description" (render desc-layout params) params)
+    (aput "page-label" (if (= (length pages) 1) "post" "posts") params)
     (aput "subtitle" "" params)
+    (cond ((string= (aget "blog-name" params) "Blog")
+           (setf list-dst "{{ apex }}index.html")
+           (aput "title" (aget "author" params) params))
+          (t
+           (setf list-dst "{{ apex }}{{ blog-slug }}.html")
+           (aput "title" (render "{{ nick }}'s {{ blog-name }}" params) params)))
     (make-page-list pages list-dst list-layout item-layout params)
     pages))
-
-(defun make-blog (src name page-layout params)
-  "Create a complete top-level blog with blog, tags, and list page."
-  (aput "blog-name" name params)
-  (aput "blog-slug" (string-downcase name) params)
-  (let* ((page-dst "{{ apex }}{{ slug }}.html")
-         (list-dst "{{ apex }}{{ blog-slug }}.html")
-         (pages))
-    (setf pages (make-posts src page-dst list-dst page-layout params))
-    (loop for page in pages
-          do (aput "blog-name" name page)
-          collect page)))
 
 
 ;;; Meets
@@ -1394,6 +1395,7 @@ value, next-index."
       (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
       (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Pages" params)
             params)
+      (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
       (make-page-list pages list-dst list-layout item-layout params)
       (make-feed-list pages 20 mini-feed-dst feed-xml item-xml params)
       (make-feed-list pages 10000 full-feed-dst feed-xml item-xml params))))
@@ -1404,6 +1406,7 @@ value, next-index."
         (item-layout (read-file "layout/full/item.html")))
     (set-nested-template list-layout page-layout)
     (aput "title" "All Pages" params)
+    (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
     (make-page-list pages "{{ apex }}pages.html" list-layout item-layout params)))
 
 (defun make-short (pages page-layout params)
@@ -1412,6 +1415,7 @@ value, next-index."
         (item-layout (read-file "layout/short/item.html")))
     (set-nested-template list-layout page-layout)
     (aput "title" "Short Links" params)
+    (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
     (make-page-list pages "{{ apex }}p/index.html" list-layout item-layout params)))
 
 (defun make-feed (pages params)
@@ -1423,19 +1427,6 @@ value, next-index."
     (aput "description" (render "{{ nick }}'s Feed" params) params)
     (make-feed-list pages 20 "{{ apex }}feed.xml" feed-xml item-xml params)
     (make-feed-list pages 10000 "{{ apex }}feed-full.xml" feed-xml item-xml params)))
-
-
-;;; Home Page
-;;; ---------
-
-(defun make-home (pages page-layout params)
-  "Generate home page."
-  (let ((home-layout (read-file "layout/home/list.html"))
-        (item-layout (read-file "layout/blog/item.html")))
-    (set-nested-template home-layout page-layout)
-    (aput "title" (aget "author" params) params)
-    (aput "subtitle" "" params)
-    (make-page-list pages "{{ apex }}index.html" home-layout item-layout params)))
 
 
 ;;; Complete Website
@@ -1481,7 +1472,6 @@ value, next-index."
     (extend-list all-pages pages)
     ;; Blog.
     (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
-    (make-home pages page-layout params)
     (extend-list posts pages)
     (extend-list all-pages pages)
     ;; Comments.
