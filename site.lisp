@@ -294,14 +294,18 @@ value, next-index."
 (defun date-slug (filename)
   "Parse filename to extract date and slug."
   (let* ((basename (file-namestring filename))
-         (dot-index (search "." basename))
-         (slug (subseq basename 0 dot-index))
+         (slug)
          (date))
-    (when (and (>= (length basename) 11)
+    (setf basename (string-replace ".aux.html" ".html" basename))
+    (setf basename (string-replace ".page.html" ".html" basename))
+    (setf basename (string-replace ".post.html" ".html" basename))
+    (cond ((and (>= (length basename) 11)
                (every #'digit-char-p (loop for i in '(0 1 2 3 5 6 8 9)
                                            collect (char basename i))))
-      (setf date (subseq basename 0 10))
-      (setf slug (subseq basename 11 dot-index)))
+           (setf date (subseq basename 0 10))
+           (setf slug (subseq basename 11 (position #\. basename :from-end t))))
+          (t
+           (setf slug (subseq basename 0 (position #\. basename :from-end t)))))
     (values date slug)))
 
 (defun render (template params)
@@ -388,18 +392,26 @@ value, next-index."
      (cond ((string-starts-with (render "{{ apex }}cc/" ,params) ,dst-path)
             (setf zone-index (render "cc/{{ index }}" ,params))
             (setf zone-name "Club"))
-           ((string/= blog-name "Blog")
+           ((string/= blog-name "Main")
             (setf zone-index (fstr "~a.html" (string-downcase blog-name)))
             (setf zone-name blog-name)))
      (when (and zone-index zone-name)
        (setf zone-link (fstr "~%    <a href=\"~a~a\">~a</a>"
                              root zone-index zone-name)))
-     (aput "zone-link" zone-link ,params)
-     (when (string= blog-name "Maze")
-       (let ((zone-title (render "{{ nick }}'s Maze" ,params)))
-         (if (string= ,dst-path (render "{{ apex }}{{ blog-slug }}.html" ,params))
-             (aput "title" zone-title ,params)
-             (aput "subtitle" (fstr " - ~a" zone-title) ,params))))))
+     (aput "zone-link" zone-link ,params)))
+
+(defun comment-slug (page)
+  "Return a slug to be used for the comment page."
+  (let ((neat-path (aget "neat-path" page))
+        (cslug (aget "slug" page))
+        (last)
+        (prev))
+    (when (or (string-starts-with "cc/" neat-path)
+              (string-starts-with "code/news/" neat-path))
+      (when (setf last (position #\/ neat-path :from-end t))
+        (when (setf prev (position #\/ neat-path :from-end t :end last))
+          (setf cslug (fstr "~a-~a" (subseq neat-path (1+ prev) last) cslug)))))
+    cslug))
 
 (defmacro add-page-params (dst page params)
   `(let* ((all-params (append ,page ,params))
@@ -411,6 +423,7 @@ value, next-index."
      (aput "keys-for-list" (format-keys-for-list ,page) ,page)
      (aput "neat-path" (neat-path dst-path ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
+     (aput "comment-slug" (comment-slug ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)))
@@ -590,9 +603,9 @@ value, next-index."
   ;; This function happens to be one common place where the neat-url
   ;; parameter can be added to all such pages.
   (add-page-params dst-path params params)
-  (write-log "Writing ~a ..." dst-path)
   (add-zone-params dst-path params)
   ;; Perform format-markup only for .html pages.
+  (write-log "Writing ~a ..." dst-path)
   (write-file dst-path (format-markup (render layout params))))
 
 
@@ -620,6 +633,8 @@ value, next-index."
     ;; Other metadata to be parsed.
     (aput "keys" (string-split (aget "key" page) ", ") page)
     (aput "tags" (string-split (aget "tag" page) ", ") page)
+    (aput "blogs" (string-split (aget "blog" page) ", ") page)
+    (aput "blog-name" (car (aget "blogs" page)) page)
     (aput "pkey" (car (aget "keys" page)) page)
     ;; Draft status.
     (setf draft (aget "draft" page))
@@ -661,15 +676,16 @@ value, next-index."
     (add-page-params dst-path page params)
     page))
 
-(defun sort-by-date-desc (items)
-  "Sort items in reverse chronological order."
-  (sort (copy-list items) (lambda (x y) (string> (aget "date" x)
-                                                 (aget "date" y)))))
-
 (defun sort-by-date (items)
   "Sort items in chronological order."
-  (sort (copy-list items) (lambda (x y) (string< (aget "date" x)
-                                                 (aget "date" y)))))
+  (sort (copy-list items)
+        (lambda (x y)
+          (or (string< (aget "date" x)
+                       (aget "date" y))
+              (and (string= (aget "date" x)
+                            (aget "date" y))
+                   (string< (aget "pkey" x)
+                            (aget "pkey" y)))))))
 
 (defun make-pages (src dst layout params)
   "Generate pages from content files."
@@ -678,19 +694,26 @@ value, next-index."
       (push (make-page src-path dst layout params) pages))
     pages))
 
-(defun only-listed-items (items)
+(defun select-listed-items (items)
   "Select items that are allowed to be listed on pages."
   (remove-if (lambda (item) (string= (aget "unlist" item) "yes")) items))
 
-(defun only-feeding-items (items)
+(defun select-feeding-items (items)
   "Select items that are allowed to be listed on web feeds."
   (remove-if (lambda (item) (or (string= (aget "unfeed" item) "yes")
                                 (string= (aget "unlist" item) "yes")
                                 (string= (aget "draft" item) "yes"))) items))
 
+(defun select-blog-items (names items)
+  "Select items belonging to any of the specified blogs."
+  (remove-if-not
+   (lambda (item)
+     (intersection names (aget "blogs" item) :test #'string=))
+   items))
+
 (defun make-page-list (pages dst list-layout item-layout params)
   "Generate list page for content pages that are allowed to be listed."
-  (setf pages (sort-by-date (only-listed-items pages)))
+  (setf pages (sort-by-date (select-listed-items pages)))
   (let ((count (length pages))
         (rendered-pages))
     ;; Render each page.
@@ -706,7 +729,7 @@ value, next-index."
 
 (defun make-feed-list (pages limit dst list-layout item-layout params)
   "Generate feed list for pages that are not draft and allowed to be listed."
-  (make-page-list (last-n limit (sort-by-date (only-feeding-items pages)))
+  (make-page-list (last-n limit (sort-by-date (select-feeding-items pages)))
                   dst list-layout item-layout params))
 
 
@@ -739,14 +762,14 @@ value, next-index."
         (next-index 0)
         (slug (nth-value 1 (date-slug filename)))
         (serial 0)
-        (talk-page)
+        (info)
         (comment)
         (comments))
     (loop
-      (aput "slug" slug talk-page)
+      (aput "slug" slug info)
       (setf (values comment next-index) (read-comment text next-index))
       (cond ((and (zerop serial) (aget "title" comment))
-             (setf talk-page (read-page-content (subseq text 0 next-index) filename)))
+             (setf info (read-page-content (subseq text 0 next-index) filename)))
             (t
              (let ((date (aget "date" comment)))
                (when (and (consp comments) (string< date (aget "date" (car comments))))
@@ -759,9 +782,9 @@ value, next-index."
         (return)))
     ;; Backfill date into the page information.
     (setf comments (reverse comments))
-    (aput "date" (aget "date" (car comments)) talk-page)
-    (insert-formatted-dates talk-page)
-    (values talk-page comments)))
+    (aput "date" (aget "date" (car comments)) info)
+    (insert-formatted-dates info)
+    (values info comments)))
 
 (defun make-comment-list (comments dst list-layout item-layout params)
   "Generate comment list page.  Honour the order of comments provided."
@@ -806,42 +829,45 @@ value, next-index."
         do (aput "comment-list-serial" serial comment)
         collect comment))
 
-(defun page-by-slug (pages slug)
+(defun page-by-comment-slug (pages cslug)
   "Find a page by the given slug in the given list of pages."
-  (find slug pages :test #'string= :key (lambda (page) (aget "slug" page))))
+  (find cslug pages :test #'string=
+        :key (lambda (page) (aget "comment-slug" page))))
 
-(defun make-post-comments (comments talk-page parent-page page-layout params)
+(defun make-post-comments (comments info parent page-layout params)
   "Generate comment list page for a particular page."
   (let* ((item-layout (read-file "layout/comment/item.html"))
          (dst-path (render "{{ apex }}comments/{{ slug }}.html"
-                           (append talk-page params)))
+                           (append info params)))
+         ;; slug-layout if present overrides talk-layout.
          (slug-layout-path "layout/comment/{{ slug }}.html")
          (talk-layout-path "layout/comment/talk.html")
-         (list-layout)
-         (comment-page (append talk-page parent-page)))
-    (aput "post-title" (aget "title" comment-page) comment-page)
-    (aput "post-path" (or (aget "neat-path" comment-page)
-                          (neat-path dst-path params)) comment-page)
-    (setf comments (enrich-comments comments comment-page dst-path params))
-    (cond ((aget "blog-name" comment-page)
-           (setf list-layout (read-file "layout/comment/list.html"))
-           (aput "title" (fstr "Comments on ~a" (aget "title" comment-page)) params))
+         (list-layout))
+    (setf info (append info parent))
+    (aput "post-title" (aget "title" info) info)
+    (aput "post-path" (or (aget "neat-path" info)
+                          (neat-path dst-path params)) info)
+    (setf comments (enrich-comments comments info dst-path params))
+    (cond (parent
+           (setf list-layout (read-file "layout/comment/post.html"))
+           (aput "title" (fstr "Comments on ~a" (aget "title" parent)) params))
           (t
-           (setf slug-layout-path (render slug-layout-path comment-page))
+           (setf slug-layout-path (render slug-layout-path info))
            (setf list-layout (read-file (if (probe-file slug-layout-path)
                                             slug-layout-path talk-layout-path)))
-           (string= (aget "slug" comment-page) "guestbook")
-           (add-page-params dst-path comment-page params)))
+           (string= (aget "slug" info) "guestbook")
+           (add-page-params dst-path info params)))
     (set-nested-template list-layout page-layout)
-    (setf params (append params comment-page))
+    (setf params (append params info))
     (make-comment-list comments dst-path list-layout item-layout params)
-    (values comment-page comments)))
+    (values info comments)))
 
 (defun make-void-comments (page page-layout params)
   "Generate a comment page with no comments."
   (aput "import" "" params)
   (let ((none-layout (read-file "layout/comment/void.html"))
-        (dst-path (render "{{ apex }}comments/{{ slug }}.html" (append page params))))
+        (dst-path (render "{{ apex }}comments/{{ comment-slug }}.html"
+                          (append page params))))
     (set-nested-template none-layout page-layout)
     (setf params (append params page))
     (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
@@ -856,36 +882,40 @@ value, next-index."
     (set-nested-template list-layout page-layout)
     (aput "import" "extra.css, math.inc" params)
     (aput "title" "All Comments" params)
-    (setf comments (reverse (number-comments (only-listed-items comments))))
+    (setf comments (reverse (number-comments (select-listed-items comments))))
     (make-comment-list comments "{{ apex }}comments/index.html"
                        list-layout item-layout params)))
 
-(defun select-uncommented-pages (commentable-pages commented-slugs)
+(defun select-uncommented-pages (pages commented-slugs)
   "Select the pages that have received no comments."
-  (remove-if (lambda (page)
-               (member (aget "slug" page) commented-slugs :test #'string=))
-             commentable-pages))
+  (setf pages (remove-if-not
+               (lambda (x) (string= (aget "type" x) "post")) pages))
+  (remove-if (lambda (x) (member (aget "comment-slug" x) commented-slugs
+                                 :test #'string=)) pages))
 
-(defun make-comments (posts pages page-layout params)
+(defun make-comments (pages page-layout params)
   "Generate comment list pages for all comment pages."
   (let ((all-comments)
         (listed-comment-pages)
-        (commented-on-slugs)
-        (parent-page)
+        (commented-slugs)
+        (parent)
         (comment-page))
     (dolist (src (append (directory "content/comments/*.html")
                          (directory "content/talk/*.html")))
-      (multiple-value-bind (talk-page comments) (read-comments src)
-        (setf parent-page (page-by-slug pages (aget "slug" talk-page)))
+      (setf src (enough-namestring src))
+      (multiple-value-bind (info comments) (read-comments src)
+        (setf parent (page-by-comment-slug pages (aget "slug" info)))
         (setf (values comment-page comments)
-              (make-post-comments comments talk-page parent-page
-                                  page-layout params))
-        (push (aget "slug" comment-page) commented-on-slugs)
-        (unless (aget "blog-name" comment-page)
+              (make-post-comments comments info parent page-layout params))
+        (when (string-starts-with "content/talk/" src)
           (push comment-page listed-comment-pages))
+        (when (and (string-starts-with "content/comments/" src)
+                   (not parent))
+          (error "Parent post is missing for comment ~a" (aget "slug" info)))
+        (push (aget "slug" comment-page) commented-slugs)
         (extend-list all-comments comments)))
     (make-all-comments all-comments page-layout params)
-    (dolist (page (select-uncommented-pages posts commented-on-slugs))
+    (dolist (page (select-uncommented-pages pages commented-slugs))
       (make-void-comments page page-layout params))
     listed-comment-pages))
 
@@ -911,20 +941,24 @@ value, next-index."
 (defun make-tree-recursively (src dst page-layout post-layout params)
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
-  (let ((pages))
+  (let ((pages)
+        (page))
     (dolist (pathname (uiop:directory-files src))
       (let* ((basename (file-namestring pathname))
              (destpath (namestring (merge-pathnames basename dst))))
         (cond ((string-ends-with ".page.html" basename)
                (setf destpath (string-replace ".page.html" ".html" destpath))
-               (push (make-page pathname destpath page-layout params) pages))
+               (setf page (make-page pathname destpath page-layout params))
+               (push (cons (cons "type" "page") page) pages))
               ((string-ends-with ".post.html" basename)
                (setf destpath (string-replace ".post.html" ".html" destpath))
-               (push (make-page pathname destpath post-layout params) pages))
+               (setf page (make-page pathname destpath post-layout params))
+               (push (cons (cons "type" "post") page) pages))
               ((string-ends-with ".aux.html" basename)
                (write-log "Skipping ~a" basename))
               ((string-ends-with ".html" basename)
-               (push (copy-page pathname destpath params) pages))
+               (setf page (copy-page pathname destpath params))
+               (push (cons (cons "type" "aux") page) pages))
               (t
                (uiop:copy-file pathname destpath)))))
     (dolist (pathname (uiop:subdirectories src))
@@ -932,15 +966,17 @@ value, next-index."
              (destpath (merge-pathnames basename dst)))
         (make-directory destpath)
         (setf pages (append pages (make-tree-recursively pathname destpath
-                                                         page-layout post-layout
+                                                         page-layout
+                                                         post-layout
                                                          params)))))
     pages))
 
-(defun make-tree (src dst page-layout params)
+(defun make-tree (page-layout params)
   "Make tree of files and folders from the content tree."
   (let ((post-layout (read-file "layout/tree/post.html")))
     (set-nested-template post-layout page-layout)
-    (make-tree-recursively src dst page-layout post-layout params)))
+    (make-tree-recursively "content/tree/" (aget "apex" params)
+                           page-layout post-layout params)))
 
 
 ;;; Directory Listing
@@ -1054,37 +1090,24 @@ value, next-index."
 ;;; Blog
 ;;; ----
 
-(defun make-blog (src name page-layout params)
+(defun make-blog (name title dst pages page-layout params)
   "Generate blog post pages for all posts in a blog directory."
   (let* ((list-layout (read-file "layout/blog/list.html"))
-         (post-layout (read-file "layout/blog/post.html"))
          (item-layout (read-file "layout/blog/item.html"))
          (desc-path (fstr "layout/blog/~a.html" (string-downcase name)))
-         (desc-layout (if (probe-file desc-path) (read-file desc-path) ""))
-         (page-dst "{{ apex }}{{ slug }}.html")
-         (pages))
-    ;; Combine layouts to form final layouts.
-    (set-nested-template post-layout page-layout)
+         (desc-layout (if (probe-file desc-path) (read-file desc-path) "")))
+    ;; Combine layout to form final layout.
     (set-nested-template list-layout page-layout)
     ;; Read and render all pages.
     (aput "blog-name" name params)
     (aput "blog-slug" (string-downcase name) params)
-    (setf pages (make-pages src page-dst post-layout params))
-    (setf pages (loop for page in pages
-                      do (aput "blog-name" name page)
-                      collect page))
+    (setf pages (select-blog-items (list name) pages))
     ;; Create blog list page.
     (aput "description" (render desc-layout params) params)
     (aput "page-label" (if (= (length pages) 1) "post" "posts") params)
+    (aput "title" (render title params) params)
     (aput "subtitle" "" params)
-    (cond ((string= (aget "blog-name" params) "Blog")
-           (setf list-dst "{{ apex }}index.html")
-           (aput "title" (aget "author" params) params))
-          (t
-           (setf list-dst "{{ apex }}{{ blog-slug }}.html")
-           (aput "title" (render "{{ nick }}'s {{ blog-name }}" params) params)))
-    (make-page-list pages list-dst list-layout item-layout params)
-    pages))
+    (make-page-list pages dst list-layout item-layout params)))
 
 
 ;;; Meets
@@ -1335,12 +1358,16 @@ value, next-index."
 
 (defun collect-tags (pages)
   "Group page by tags and return an alist of tag and page list."
-  (setf pages (only-listed-items pages))
+  (setf pages (select-listed-items pages))
   (let ((tags))
     (dolist (page pages)
       (dolist (tag (aget "tags" page))
         (aput-list tag page tags)))
-    (sort tags (lambda (x y) (< (length (cdr x)) (length (cdr y)))))))
+    (sort tags
+          (lambda (x y)
+            (or (< (length (cdr x)) (length (cdr y)))
+                (and (= (length (cdr x)) (length (cdr y)))
+                     (string< (car x) (car y))))))))
 
 (defun tags-html (tags params)
   "Render tag list as HTML."
@@ -1446,7 +1473,6 @@ value, next-index."
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
         (pages)
-        (posts)
         (all-pages))
     (remove-directory (aget "apex" params))
     ;; If params file exists, merge it with local params.
@@ -1461,21 +1487,18 @@ value, next-index."
     (make-css params)
     (make-xsl params)
     ;; Tree.
-    (setf all-pages (make-tree "content/tree/" (aget "apex" params) page-layout params))
+    (setf all-pages (make-tree page-layout params))
     (make-meets page-layout params)
     (make-backlinks page-layout params)
     ;; Music
     (extend-list all-pages (make-music "content/music/*.html" page-layout params))
-    ;; Maze.
-    (setf pages (make-blog "content/maze/*.html" "Maze" page-layout params))
-    (extend-list posts pages)
-    (extend-list all-pages pages)
     ;; Blog.
-    (setf pages (make-blog "content/blog/*.html" "Blog" page-layout params))
-    (extend-list posts pages)
-    (extend-list all-pages pages)
+    (make-blog "Main" "{{ author }}" "{{ apex }}index.html"
+               all-pages page-layout params)
+    (make-blog "Maze" "{{ nick }}'s {{ blog-name }}"
+               "{{ apex }}{{ blog-slug }}.html" all-pages page-layout params)
     ;; Comments.
-    (setf pages (make-comments posts all-pages page-layout params))
+    (setf pages (make-comments all-pages page-layout params))
     (extend-list all-pages pages)
     ;; Aggregates validation.
     (validate-required-params all-pages)

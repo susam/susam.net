@@ -1,0 +1,158 @@
+<!-- date: 2010-03-23 -->
+<!-- title: ResizableDoubleArray contract() and expand() -->
+<!-- tag: Java, Programming, Technology -->
+<!-- key: xlpxy -->
+<!-- blog: Maze -->
+<p>
+  Here is a diff of the changes I made to Apache Common Math's
+  <code>ResizableDoubleArray</code> class to investigate how it
+  contracts or expands its internal capacity.
+</p>
+<pre>
+<code>Index: src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java
+===================================================================
+--- src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java (revision 925455)
++++ src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java (working copy)
+@@ -157,6 +157,14 @@
+     public ResizableDoubleArray(int initialCapacity) {
+         setInitialCapacity(initialCapacity);
+         internalArray = new double[this.initialCapacity];
++        System.out.println(":::: initialCapacity: " + initialCapacity);
++        System.out.println(":::: expansionMode: " +
++                           (expansionMode == 0 ? "MULTIPLICATIVE_MODE"
++                                               : "ADDITIVE_MODE" ));
++        System.out.println(":::: expansionFactor: " + expansionFactor);
++        System.out.println(":::: contractionCriteria: " +
++                           contractionCriteria);
++        System.out.println();
+     }
+
+     /**
+@@ -264,14 +272,33 @@
+      * @param value to be added to end of array
+      */
+     public synchronized void addElement(double value) {
++        System.out.println(":::: addElement(" + value + ")");
++        System.out.println(":::: startIndex: " + startIndex);
++        System.out.println(":::: internalArray.length: " +
++                           internalArray.length);
+         numElements++;
++        System.out.println(":::: numElements incremented to: " +
++                           numElements);
++
+         if ((startIndex + numElements) &gt; internalArray.length) {
++            System.out.println(":::: expanding ...");
+             expand();
++            System.out.println(":::: expanded; internalArray.length: " +
++                               internalArray.length);
+         }
+         internalArray[startIndex + (numElements - 1)] = value;
++        System.out.print(":::: internalArray: ");
++        for (int i = 0; i &lt; startIndex + numElements; i++) {
++            System.out.print(internalArray[i] + ", ");
++        }
++        System.out.println();
+         if (shouldContract()) {
++            System.out.println(":::: contracting ...");
+             contract();
++            System.out.println(":::: contracted; internalArray.length: " +
++                               internalArray.length);
+         }
++        System.out.println();
+     }
+
+     /**</code>
+</pre>
+<p>
+  Here is a tiny test program to use <code>ResizableDoubleArray</code>.
+</p>
+<pre>
+<code>import org.apache.commons.math.util.ResizableDoubleArray;
+
+public class RDAContractExpand
+{
+    public static void main(String[] args)
+    {
+        ResizableDoubleArray rda = new ResizableDoubleArray(10);
+        for (int i = 0; i &lt; 10; i++)
+            rda.addElement(i);
+    }
+}</code>
+</pre>
+<p>
+  Here is the output of the above program:
+</p>
+<pre>
+<samp>:::: initialCapacity: 10
+:::: expansionMode: MULTIPLICATIVE_MODE
+:::: expansionFactor: 2.0
+:::: contractionCriteria: 2.5
+
+:::: addElement(0.0)
+:::: startIndex: 0
+:::: internalArray.length: 10
+:::: numElements incremented to: 1
+:::: internalArray: 0.0,
+:::: contracting ...
+:::: contracted; internalArray.length: 2
+
+:::: addElement(1.0)
+:::: startIndex: 0
+:::: internalArray.length: 2
+:::: numElements incremented to: 2
+:::: internalArray: 0.0, 1.0,
+
+:::: addElement(2.0)
+:::: startIndex: 0
+:::: internalArray.length: 2
+:::: numElements incremented to: 3
+:::: expanding ...
+:::: expanded; internalArray.length: 4
+:::: internalArray: 0.0, 1.0, 2.0,
+
+:::: addElement(3.0)
+:::: startIndex: 0
+:::: internalArray.length: 4
+:::: numElements incremented to: 4
+:::: internalArray: 0.0, 1.0, 2.0, 3.0,
+
+:::: addElement(4.0)
+:::: startIndex: 0
+:::: internalArray.length: 4
+:::: numElements incremented to: 5
+:::: expanding ...
+:::: expanded; internalArray.length: 8
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0,
+
+:::: addElement(5.0)
+:::: startIndex: 0
+:::: internalArray.length: 8
+:::: numElements incremented to: 6
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0,
+
+:::: addElement(6.0)
+:::: startIndex: 0
+:::: internalArray.length: 8
+:::: numElements incremented to: 7
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
+
+:::: addElement(7.0)
+:::: startIndex: 0
+:::: internalArray.length: 8
+:::: numElements incremented to: 8
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0,
+
+:::: addElement(8.0)
+:::: startIndex: 0
+:::: internalArray.length: 8
+:::: numElements incremented to: 9
+:::: expanding ...
+:::: expanded; internalArray.length: 16
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0,
+
+:::: addElement(9.0)
+:::: startIndex: 0
+:::: internalArray.length: 16
+:::: numElements incremented to: 10
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,</samp>
+</pre>

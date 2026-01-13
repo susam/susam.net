@@ -1,0 +1,45 @@
+<!-- date: 2017-07-09 -->
+<!-- title: Unix Line Discard -->
+<!-- tag: Unix, Shell, Technology -->
+<!-- key: jxiwr -->
+<!-- blog: Maze -->
+<p>
+  Type <code>C-u</code> (i.e. <kbd>ctrl</kbd>+<kbd>u</kbd>) in Bash or
+  Zsh to discard the current line of input.  To read more about it,
+  enter <code>man bash</code> and then type
+  <code>/unix-line-discard</code> to locate the relevant section of
+  the manual.  Here is an excerpt:
+</p>
+<pre>
+<code>unix-line-discard (C-u)
+       Kill backward from point to the beginning of the line.
+       The killed text is saved on the kill-ring.</code>
+</pre>
+<p>
+  Similarly, for Zsh, type <code>man zshzle</code> and then
+  type <code>/kill-whole-line</code>.  We find this:
+</p>
+<pre>
+<code>kill-whole-line (^U) (unbound) (unbound)
+       Kill the current line.</code>
+</pre>
+<p>
+  By the way, Emacs-style key sequence like <code>C-a C-k</code> works
+  too.
+</p>
+<p>
+  Furthermore, it is quite likely that <code>C-u</code> is mapped to
+  delete the current line of input in the terminal itself.  To confirm
+  this, type the command <code>stty -a</code> and check the output.
+  If the output contains the text <code>kill = ^U</code>, then
+  typing <code>C-u</code> anytime in the terminal would delete the
+  current line of input.  This would happen regardless of what program
+  is running in the terminal.  For example, programs
+  like <code>cat</code>, <code>sbcl</code>, etc. do not support key
+  sequences like <code>C-a</code>, <code>C-k</code>, <code>C-u</code>,
+  etc. the way Bash or Zsh does.  Despite this limitation,
+  typing <code>C-u</code> in <code>sbcl</code> would delete the
+  current line of input if the output of <code>stty -a</code>
+  indicates that the terminal has mapped this key sequence to the
+  operation of deleting the current line.
+</p>

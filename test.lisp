@@ -498,7 +498,7 @@ Foo
     (assert (string= (aget "title" post) "Foo Bar"))
     (assert (string= (aget "body" post) "Baz Qux"))
     (assert (string= (aget "rss-date" post) "Mon, 01 Jun 2020 00:00:00 +0000"))
-    (assert (string= (aget "simple-date" post) "01 Jun 2020"))))
+    (assert (string= (aget "short-date" post) "01 Jun 2020"))))
 
 (test-case read-page-without-date
   (write-file "test-tmp/quux-quuz.html" "Baz Qux")
@@ -770,10 +770,10 @@ foo]")))
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]" nil)))
     (make-page-list posts "test-tmp/list.html"
-                    "[{{ count }} {{ page-label }} {{ body }}]"
+                    "[{{ count }} {{ body }}]"
                     "[{{ body }}]" nil))
   (assert (string= (read-file "test-tmp/list.html")
-                   "[3 pages [baz][bar][foo]]")))
+                   "[3 [baz][bar][foo]]")))
 
 (test-case make-page-list-post-call-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
@@ -819,17 +819,21 @@ x
 yz
 "))
     (assert (equal (multiple-value-list (read-comment text 0))
-                   `((("body" . ,(format nil "x~%"))
-                      ("simple-date" . "01 Jun 2020 07:08 UTC")
-                      ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                   '((("body" . "x
+")
                       ("commenter" . "Alice")
+                      ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                      ("long-date" . "01 Jun 2020 07:08 UTC")
+                      ("short-date" . "01 Jun 2020")
                       ("name" . "Alice")
                       ("date" . "2020-06-01 07:08:09 +0000")) 64)))
     (assert (equal (multiple-value-list (read-comment text 64))
-                   `((("body" . ,(format nil "yz~%"))
-                      ("simple-date" . "02 Jun 2020 17:18 UTC")
-                      ("rss-date" . "Tue, 02 Jun 2020 17:18:19 +0000")
+                   '((("body" . "yz
+")
                       ("commenter" . "<a href=\"https://example.com/\">Bob</a>")
+                      ("rss-date" . "Tue, 02 Jun 2020 17:18:19 +0000")
+                      ("long-date" . "02 Jun 2020 17:18 UTC")
+                      ("short-date" . "02 Jun 2020")
                       ("url" . "https://example.com/")
                       ("name" . "Bob")
                       ("date" . "2020-06-02 17:18:19 +0000")) nil)))))
@@ -839,14 +843,19 @@ yz
 <!-- name: Alice -->
 Bar")
   (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
-                 '(((("comment-file-serial" . 1)
-                     ("slug" . "foo")
+                 '((("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                    ("long-date" . "01 Jun 2020 07:08 UTC")
+                    ("short-date" . "01 Jun 2020")
+                    ("date" . "2020-06-01 07:08:09 +0000")
+                    ("slug" . "foo"))
+                   ((("comment-file-serial" . 1)
                      ("body" . "Bar")
-                     ("simple-date" . "01 Jun 2020 07:08 UTC")
-                     ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
                      ("commenter" . "Alice")
+                     ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                     ("long-date" . "01 Jun 2020 07:08 UTC")
+                     ("short-date" . "01 Jun 2020")
                      ("name" . "Alice")
-                     ("date" . "2020-06-01 07:08:09 +0000"))) "foo"))))
+                     ("date" . "2020-06-01 07:08:09 +0000")))))))
 
 (test-case read-comments-multiple
   (write-file "test-tmp/foo.txt" "<!-- date: 2020-06-01 00:00:01 +0000 -->
@@ -859,30 +868,41 @@ Y
 <!-- author: Carol -->
 Z")
   (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
-                 `(((("comment-file-serial" . 1)
-                     ("slug" . "foo")
-                     ("body" . ,(format nil "X~%"))
-                     ("simple-date" . "01 Jun 2020 00:00 UTC")
-                     ("rss-date" . "Mon, 01 Jun 2020 00:00:01 +0000")
+                 '((("rss-date"
+                     . "Mon, 01 Jun 2020 00:00:01 +0000")
+                    ("long-date" . "01 Jun 2020 00:00 UTC")
+                    ("short-date" . "01 Jun 2020")
+                    ("date" . "2020-06-01 00:00:01 +0000")
+                    ("slug" . "foo") ("slug" . "foo")
+                    ("slug" . "foo"))
+                   ((("comment-file-serial" . 1)
+                     ("body" . "X
+")
                      ("commenter")
+                     ("rss-date"
+                      . "Mon, 01 Jun 2020 00:00:01 +0000")
+                     ("long-date" . "01 Jun 2020 00:00 UTC")
+                     ("short-date" . "01 Jun 2020")
                      ("author" . "Alice")
                      ("date" . "2020-06-01 00:00:01 +0000"))
                     (("comment-file-serial" . 2)
-                     ("slug" . "foo")
-                     ("body" . ,(format nil "Y~%"))
-                     ("simple-date" . "02 Jun 2020 00:00 UTC")
-                     ("rss-date" . "Tue, 02 Jun 2020 00:00:02 +0000")
+                     ("body" . "Y
+")
                      ("commenter")
+                     ("rss-date"
+                      . "Tue, 02 Jun 2020 00:00:02 +0000")
+                     ("long-date" . "02 Jun 2020 00:00 UTC")
+                     ("short-date" . "02 Jun 2020")
                      ("author" . "Bob")
                      ("date" . "2020-06-02 00:00:02 +0000"))
-                    (("comment-file-serial" . 3)
-                     ("slug" . "foo")
-                     ("body" . "Z")
-                     ("simple-date" . "03 Jun 2020 00:00 UTC")
-                     ("rss-date" . "Wed, 03 Jun 2020 00:00:03 +0000")
+                    (("comment-file-serial" . 3) ("body" . "Z")
                      ("commenter")
+                     ("rss-date"
+                      . "Wed, 03 Jun 2020 00:00:03 +0000")
+                     ("long-date" . "03 Jun 2020 00:00 UTC")
+                     ("short-date" . "03 Jun 2020")
                      ("author" . "Carol")
-                     ("date" . "2020-06-03 00:00:03 +0000"))) "foo"))))
+                     ("date" . "2020-06-03 00:00:03 +0000")))))))
 
 (test-case make-comment-list
   (let ((comments '((("date" . "2020-06-01")
@@ -920,16 +940,6 @@ Z")
    (string= (read-file "test-tmp/comments.html")
             "[  <link rel=\"stylesheet\" href=\"../css/comment.css\">
 ]")))
-
-(test-case make-comment-none
-  (make-comment-none "test-tmp/{{ slug }}.html"
-                     "[{{ title }} {{ post-title }} {{ a }}]"
-                     '(("a" . "apple")
-                       ("slug" . "foo")
-                       ("title" . "Comments on Foo")
-                       ("post-title" . "Foo")))
-  (assert (string= (read-file "test-tmp/foo.html")
-                   "[Comments on Foo Foo apple]")))
 
 
 ;;; Test Cases for Blogroll

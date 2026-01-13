@@ -1,0 +1,23 @@
+<!-- date: 2024-02-20 -->
+<!-- title: Search User Comment on Jira -->
+<!-- tag: Technology -->
+<!-- key: xrnzg -->
+<!-- blog: Maze -->
+<p>
+  I have been using Jira for a very long time now.  I first came
+  across it while contributing to Apache projects in 2006.  I find the
+  search features of Jira to be remarkably clumsy and inadequate.
+  Nevertheless, very recently I learnt to solve a common problem of
+  mine.  Let us say, I know a user named <code>jdoe</code> has
+  commented about a specific topic in some Jira ticket.  How do I find
+  that ticket?  Here is the search filter for it:
+</p>
+<pre><code>issueFunction in commented("by jdoe") and comment ~ "hello"</code></pre>
+<p>
+  The above example would search all comments by
+  user <code>jdoe</code> that contains the
+  string <code>"hello"</code>.  However one limitation of this
+  solution is that the <code>issueFunction</code> field is provided by
+  ScriptRunner for Jira, so you need this app to be available on your
+  Jira for this solution to work.
+</p>

@@ -1,0 +1,178 @@
+<!-- date: 2019-02-21 -->
+<!-- title: Peculiar Self-References -->
+<!-- tag: Python, Programming, Technology -->
+<!-- key: svacn -->
+<!-- blog: Main -->
+<h2 id="self-referential-lists">Peculiar Results</h2>
+<p>
+  Here is a tiny Python example that creates a self-referential list
+  and demonstrates the self-reference:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a = a[0] = [0]</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+[[...]]
+&gt;&gt;&gt; <kbd>a[0]</kbd>
+[[...]]
+&gt;&gt;&gt; <kbd>a[0][0]</kbd>
+[[...]]
+&gt;&gt;&gt; <kbd>a is a[0]</kbd>
+True</samp>
+</pre>
+<p>
+  The output shows that <code>a[0]</code> refers to <code>a</code>
+  itself which makes it a self-referential list.  Why does this simple
+  code create a self-referential list?  Should it not have failed
+  with <code>NameError</code> because <code>a</code> is not yet
+  defined while assigning the list <code>[0]</code>
+  to <code>a[0]</code>?
+</p>
+<p>
+  Here is another similar example that creates a self-referential list
+  too:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a = a[0] = [0, 0]</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+[[...], 0]</samp>
+</pre>
+<p>
+  Here is a similar example for dictionary:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a = a[0] = {}</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+{0: {...}}</samp>
+</pre>
+<p>
+   Note that <code>0</code> is used as a dictionary key in the above
+  example.  Here is another very simple example that uses a string
+  key:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
+&gt;&gt;&gt; <kbd>a</kbd>
+{'k': {...}}</samp>
+</pre>
+<h2 id="language-reference">The Language Reference</h2>
+<p>
+  My first guess was that the statement
+</p>
+<pre><code>a = a[0] = [0]</code></pre>
+<p>
+  behaves like
+</p>
+<pre>
+<code>new = [0]
+a = new
+a[0] = new</code>
+</pre>
+<p>
+  which would indeed create a self-referential list.
+</p>
+<p>
+  <a href="https://docs.python.org/3.7/reference/simple_stmts.html#assignment-statements">Section
+  7.2 (Assignment statements)</a> of <em>The Python Language
+  Reference</em> confirms this behaviour.  Quoting the relevant part
+  from this section here:
+</p>
+<blockquote>
+  <p>
+    Assignment statements are used to (re)bind names to values and to
+    modify attributes or items of mutable objects:
+  </p>
+  <pre>
+<code>assignment_stmt ::=  (target_list "=")+ (starred_expression | yield_expression)
+target_list     ::=  target ("," target)* [","]
+target          ::=  identifier
+                     | "(" [target_list] ")"
+                     | "[" [target_list] "]"
+                     | attributeref
+                     | subscription
+                     | slicing
+                     | "*" target</code>
+</pre>
+  <p>
+    (See section
+    <a href="https://docs.python.org/3.7/reference/expressions.html#primaries">Primaries</a>
+    for the syntax definitions for attributeref, subscription and
+    slicing.)
+  </p>
+  <p>
+    An assignment statement evaluates the expression list (remember
+    that this can be a single expression or a comma-separated list,
+    the latter yielding a tuple) and assigns the single resulting
+    object to each of the target lists, from left to right.
+  </p>
+</blockquote>
+<p>
+  We see that the assignment statement is defined as follows:
+</p>
+<pre><code>assignment_stmt ::=  (target_list "=")+ (starred_expression | yield_expression)</code></pre>
+<p>
+  Thus the statement
+</p>
+<pre><code>a = a[0] = [0]</code></pre>
+<p>
+  has two <code>target_list</code> elements (<code>a</code>
+  and <code>a[0]</code>) and a <code>starred_expression</code> element
+  (<code>[0]</code>).  As a result, the same list on the
+  right-hand-side is assigned to both <code>a</code>
+  and <code>a[0]</code>, from left to right, i.e. the
+  list <code>[0]</code> is first assigned to <code>a</code>,
+  then <code>a[0]</code> is set to the <em>same</em> list.  As a
+  result, <code>a[0]</code> is set to <code>a</code> itself.
+</p>
+<p>
+  The behaviour of the statement
+</p>
+<pre><code>a = a[0] = {}</code></pre>
+<p>
+  can be explained in a similar way.  The dictionary object on the
+  right-hand-side is first assigned to <code>a</code>.  Then a
+  key <code>0</code> is inserted within the <em>same</em> dictionary.
+  Finally the value of <code>a[0]</code> is set to the <em>same</em>
+  dictionary.  In other words, <code>a[0]</code> is set
+  to <code>a</code> itself.
+</p>
+<h2 id="more-experiments">More Experiments</h2>
+<p>
+  The evaluation of the expression list on the right hand side first
+  and then assigning the result to each target list from left to right
+  explains the behaviour we observed in the previous sections.  This
+  left-to-right assignment is quite uncommon among mainstream
+  programming languages.  For example, in C, C++, Java and JavaScript
+  the simple assignment operator (<code>=</code>) has right-to-left
+  associativity.  The left-to-right assignment in Python can be
+  further demonstrated with some intentional errors.  Here is an
+  example:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a[0] = a = [0]</kbd>
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'a' is not defined</samp>
+</pre>
+<p>
+  In this example, when the assignment to <code>a[0]</code> occurs,
+  the variable named <code>a</code> is not defined yet, so it leads
+  to <code>NameError</code>.
+</p>
+<p>
+  Here is another example:
+</p>
+<pre>
+<samp>&gt;&gt;&gt; <kbd>a = a[0] = 0</kbd>
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: 'int' object does not support item assignment</samp>
+</pre>
+<p>
+  In this example, <code>0</code> is first assigned to <code>a</code>.
+  Then <code>a[0]</code> needs to be evaluated before <code>0</code>
+  can be assigned to it but this evaluation fails
+  because <code>a</code> is an <code>int</code>, a type that does not
+  support
+  <a href="https://docs.python.org/3.7/reference/expressions.html#subscriptions">subscription</a>
+  (also known as indexing), so it fails with <code>TypeError</code>.
+</p>

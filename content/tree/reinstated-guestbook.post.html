@@ -1,0 +1,77 @@
+<!-- date: 2025-10-03 -->
+<!-- title: Reinstated My Guestbook After 20 Years -->
+<!-- tag: Web, Technology -->
+<!-- key: gbret -->
+<!-- blog: Main -->
+<p>
+  I have reinstated the <a href="comments/guestbook.html">guestbook</a>
+  on this website after 20 years!  As I have written in the
+  <a href="about.html">About</a> page, this website began its life as
+  an intranet portal in my university network back in 2001–2005.  That
+  portal first ran on Microsoft Personal Web Server (PWS) and later on
+  Microsoft Internet Information Services (IIS), with the guestbook
+  data stored in a Microsoft Access database.  At the same time, I
+  also maintained a small public website on the Internet, hosted on a
+  subdomain provided by a free hosting service, where I published a
+  subset of the articles from the intranet portal.  Both the intranet
+  portal and the public website had guestbooks.  The guestbook on the
+  public website was powered by a CGI script provided by the hosting
+  service, which inserted each comment directly into the guestbook
+  HTML page.  As some of you might guess, yes, it was vulnerable to
+  cross-site scripting, but that's beside the point.
+</p>
+<p>
+  After leaving the university, I registered my own domain name and
+  set up my current website on the World Wide Web and included some of
+  the content from both the original intranet portal and the old
+  public website.  For some reason, though, I never thought to include
+  a guestbook.  And so this website went on without a guestbook for
+  the next 20 years.  Finally, in June 2025, I decided to bring the
+  guestbook back.  I already had a commenting system implemented for
+  this website using Common Lisp and Hunchentoot, so I simply reused
+  it for the guestbook.  The
+  <a href="https://github.com/susam/susam.net/blob/0.3.0/form.lisp">server program</a>
+  accepts POST requests to receive comments and writes them to text
+  files on the web server for manual review.  The comments are then
+  rendered as static HTML pages by my static site generator.  In a
+  way, it is less a comment system and more a static comment pages
+  generator.
+</p>
+<p>
+  Unfortunately, I could not restore all the comments from the
+  original guestbooks.  The ASP source code of my intranet portal as
+  well as the guestbook database are now lost to time.  Note that what
+  I refer to as ASP here is now known as Classic ASP, to avoid
+  confusion with ASP.NET.  A CD-ROM backup eventually succumbed to
+  disc rot and with it vanished the source code and the database.  But
+  a handful of comments had survived because they had found their way
+  into other files and correspondence and I have now included them
+  here.  I had better luck with the guestbook of the old public
+  website, from which I was able to recover a greater number of
+  comments.  It is still only a small fraction of what once existed,
+  but it feels good to have even those fragments preserved.  The new
+  guestbook is now available here:
+  <a href="comments/guestbook.html">Guestbook</a>.
+</p>
+<p>
+  I wasn't expecting anybody to notice the new guestbook.  It is only
+  mentioned in the <a href="about.html">About</a> and
+  <a href="links.html">Links</a> pages, neither of which see much
+  traffic.  Here are a few examples:
+</p>
+<blockquote>
+  <p>
+    I love that your website has a guestbook!  :D
+  </p>
+</blockquote>
+<blockquote>
+  <p>
+    Love the guestbook!  We need more of these.  Makes you feel
+    invited.
+  </p>
+</blockquote>
+<p>
+  It's a small addition to my website, but after two decades, it feels
+  good to see the guestbook alive again and even better to see
+  visitors enjoying it!
+</p>

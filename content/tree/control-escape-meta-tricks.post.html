@@ -1,0 +1,446 @@
+<!-- date: 2023-06-16 -->
+<!-- title: Control, Escape and Meta Tricks -->
+<!-- tag: Unix, Shell, Technology -->
+<!-- key: neaax -->
+<!-- blog: Main -->
+<!-- import: extra.css -->
+<h2 id="terminal-tricks">Terminal Tricks</h2>
+<p>
+  Open a Unix or Linux terminal emulator.  If you have Terminal.app on
+  macOS, ensure that the "Use Option as Meta Key" option is enabled in
+  its "Preferences" section.  Now type <code>foo bar baz</code>
+  followed by <kbd>meta</kbd>+<kbd>b</kbd>
+  (i.e. <kbd>alt</kbd>+<kbd>b</kbd> or <kbd>option</kbd>+<kbd>b</kbd>
+  on modern keyboards).  In a typical desktop environment with a
+  typical and modern terminal emulator running a modern shell like
+  Bash, Zsh, etc., the cursor should move backward by one word.  Now
+  type <kbd>esc</kbd> <kbd>b</kbd>.  The cursor should move back again
+  by one word.  Finally type <kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>b</kbd>
+  and the same thing should happen again.  How are we able to perform
+  the same operation in three different ways?
+</p>
+<p>
+  Note that if the desktop environment or the terminal emulator or the
+  set of shell key bindings is configured differently, the results may
+  vary.  But we will assume that the typical defaults are in effect in
+  the remainder of this post.  To understand why these three key
+  sequences yield the same result, it might be a good exercise to run
+  the command <code>cat</code> and type the three key sequences again.
+  The three key sequences we are talking about are:
+</p>
+<ul>
+  <li>
+    <kbd>meta</kbd>+<kbd>b</kbd> (i.e. <kbd>alt</kbd>+<kbd>b</kbd>
+    or <kbd>option</kbd>+<kbd>b</kbd> on modern keyboards)
+  </li>
+  <li>
+    <kbd>esc</kbd> <kbd>b</kbd>
+  </li>
+  <li>
+    <kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>b</kbd>
+  </li>
+</ul>
+<p>
+  When we run <code>cat</code> and type the three key sequences
+  mentioned above, the following output may appear:
+</p>
+<pre>
+<samp>$ <kbd>cat
+^[b^[b^[b</kbd></samp>
+</pre>
+<p>
+  The output shows that the terminal sends the same input
+  to <code>cat</code> each time: the <em>escape</em> character that
+  appears as <code>^[</code> in the output and the
+  character <code>b</code>.  This becomes more apparent if instead of
+  running <code>cat</code>, we run <code>od -t d1</code> and type the
+  three key sequences followed
+  by <kbd>ctrl</kbd>+<kbd>d</kbd> <kbd>enter</kbd>:
+</p>
+<pre>
+<samp>$ <kbd>od -t d1
+^[b^[b^[b</kbd>
+0000000    27  98  27  98  27  98  10
+0000007</samp>
+</pre>
+<p>
+  Indeed decimal 27 is the code of the <em>escape</em> character.
+  Similarly decimal 98 is the code of the character <code>b</code>.
+</p>
+<h2 id="control-codes">Control Codes</h2>
+<p>
+  Let us first discuss why typing <kbd>ctrl</kbd>+<kbd>[</kbd>
+  produces the <em>escape</em> character.  The
+  character <code>[</code> has code 91 (binary 1011011) and holding
+  the <kbd>ctrl</kbd> key while typing it results in a control code
+  obtained by taking 91 (binary 1011011), keeping its five least
+  significant bits and discarding the rest.  We get the control code
+  27 (binary 11011) as the result.  This is the code of
+  the <em>escape</em> character.  This explains
+  why <kbd>ctrl</kbd>+<kbd>[</kbd> produces the <em>escape</em>
+  character and why the <em>escape</em> character is represented
+  as <code>^[</code> while typing it into the standard input.  The
+  caret sign (<code>^</code>) here is a notation for
+  the <code>ctrl</code> modifier.
+</p>
+<p>
+  The following table provides some more examples of control codes
+  that can be obtained by typing the <kbd>ctrl</kbd> key along with
+  some other key.
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th rowspan="2">Key</th>
+      <th colspan="3">Modified Character</th>
+      <th colspan="3">Control Character</th>
+    </tr>
+    <tr>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>@</kbd></td>
+      <td>1000000</td>
+      <td>64</td>
+      <td>@</td>
+      <td>00000</td>
+      <td>0</td>
+      <td>Null</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>g</kbd></td>
+      <td>1000111</td>
+      <td>71</td>
+      <td>G</td>
+      <td>00111</td>
+      <td>7</td>
+      <td>Bell</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>h</kbd></td>
+      <td>1001000</td>
+      <td>72</td>
+      <td>H</td>
+      <td>01000</td>
+      <td>8</td>
+      <td>Backspace</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>i</kbd></td>
+      <td>1001001</td>
+      <td>73</td>
+      <td>I</td>
+      <td>01001</td>
+      <td>9</td>
+      <td>Horizontal Tab</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>j</kbd></td>
+      <td>1001010</td>
+      <td>74</td>
+      <td>I</td>
+      <td>01010</td>
+      <td>10</td>
+      <td>Line Feed</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>m</kbd></td>
+      <td>1001101</td>
+      <td>77</td>
+      <td>M</td>
+      <td>01101</td>
+      <td>13</td>
+      <td>Carriage Return</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>[</kbd></td>
+      <td>1011011</td>
+      <td>91</td>
+      <td>[</td>
+      <td>11011</td>
+      <td>27</td>
+      <td>Escape</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  This explains why typing <kbd>ctrl</kbd>+<kbd>g</kbd> in a modern
+  terminal emulator produces an audible beep or a visual flash,
+  why <kbd>ctrl</kbd>+<kbd>h</kbd> erases a character and so on.  This
+  also explains why we can type <kbd>ctrl</kbd>+<kbd>[</kbd> in Vim to
+  escape from insert mode to normal mode.  While we can
+  type <em>escape</em> with the <kbd>esc</kbd> key on the keyboard, we
+  can do so with the <kbd>ctrl</kbd>+<kbd>[</kbd> key too within the
+  terminal.
+</p>
+<p>
+  The keen eyed may notice that the table above has lowercase letters
+  in the first column but the second and third columns use the code of
+  the corresponding uppercase letters.  The lowercase letters in the
+  first column is merely a notation I am using in this post to
+  identify the keys on a keyboard.  They don't actually mean lowercase
+  characters.  In fact, the very early keyboards only had uppercase
+  letters and they simply toggled the 7th least significant bit of the
+  modified character to obtain the control code.
+</p>
+<p>
+  By the way, an interesting thing worth noting here is that even if
+  we do consider the code of the lowercase character and pick only its
+  five least significant bits, we get the same control code as we
+  would get if we started with the corresponding uppercase character.
+  For example, consider the key sequence
+  <kbd>ctrl</kbd>+<kbd>g</kbd>.  The uppercase character <code>G</code>
+  has the code 71 (decimal 1000111) and the lowercase
+  character <code>g</code> has the code 103 (decimal 1100111).  The
+  five least significant bits are equal in both.  So when we pick the
+  five least significant bits and discard the rest, we get the same
+  result, i.e. 7 (binary 111) which is the code of the <em>bell</em>
+  character.  This is due to the fact that the five least significant
+  bits of the code of a lowercase character is exactly the same as
+  that of the corresponding uppercase character.  They differ only in
+  their sixth least significant bit.  This is only an interesting
+  observation.  It is of little significance though because like I
+  mentioned earlier, the early keyboards only flipped a bit in the
+  code of the uppercase characters when the <kbd>ctrl</kbd> modifier
+  was applied.
+</p>
+<p>
+  In addition to what we have discussed so far, some terminal
+  emulators also implement a few special rules such as the following:
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th rowspan="2">Key</th>
+      <th colspan="3">Modified Character</th>
+      <th colspan="3">Resulting Character</th>
+    </tr>
+    <tr>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+      <th>Binary</th>
+      <th>Decimal</th>
+      <th>Character</th>
+    </tr>
+  </thead>
+  <tbody style="font-family: monospace, monospace">
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>space</kbd></td>
+      <td>0100000</td>
+      <td>32</td>
+      <td>Space</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Null</td>
+    </tr>
+    <tr>
+      <td><kbd>ctrl</kbd>+<kbd>?</kbd></td>
+      <td>0111111</td>
+      <td>63</td>
+      <td>?</td>
+      <td>1111111</td>
+      <td>127</td>
+      <td>Delete</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  One could argue that the first row shows a straightforward example
+  of picking the least significiant five bits to arrive at the control
+  code, so it is not really a special case.  That is a fair point.
+  However, in the history of computing, different systems have
+  implemented slightly different methods to compute the resulting
+  control codes from our input.  Flipping the 7th least significant
+  bit was one of the early methods.  Turning off only the the 6th and
+  the 7th least significant bits has been another method.  Subtracting
+  64 from the character code has been yet another one.  These
+  different methods produce identical results for the first table but
+  not so for the second table.  For example, while turning off the 6th
+  and 7th least significnat bits of 32 (the code of the <em>space</em>
+  character) does give us 0 but merely flipping its 7th bit does not.
+  Further, note that allowing <kbd>ctrl</kbd>+<kbd>space</kbd> to
+  produce the null character is a bit redundant
+  because <kbd>ctrl</kbd>+<kbd>@</kbd> already did that right from the
+  days of very early keyboards.  The second entry above is also a
+  special rule because we neither turn off bits nor subtract 64.
+  Instead, we flip the 7th least significant bit which amounts to
+  adding 64 to the code of the modified character.  It is also the
+  only control code that has its 6th and 7th least significant bits
+  turned on.
+</p>
+<h2 id="meta-key-sequences">Meta Key Sequences</h2>
+<p>
+  The <kbd>meta</kbd> key no longer exists on modern keyboards.  On
+  modern keyboards, we use the <kbd>alt</kbd> or <kbd>option</kbd> key
+  instead of <kbd>meta</kbd>.  For example, when a shell's manual says
+  that we need to type <kbd>meta</kbd>+<kbd>b</kbd> to move the cursor
+  back by one word, what we really type on a modern keyboard is
+  either <kbd>alt</kbd>+<kbd>b</kbd>
+  or <kbd>option</kbd>+<kbd>b</kbd>.  In fact, the <code>cat</code>
+  and <code>od</code> experiments mentioned earlier show that when we
+  type the modern alternative for the <kbd>meta</kbd> key along with
+  another key, what most terminals really send to the underlying
+  program is an <em>escape</em> control code (27) followed by the code
+  of the modified character.
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th>Meta Key Sequence</th>
+      <th>Escape Key Sequence</th>
+      <th>Control Key Sequence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><kbd>meta</kbd>+<kbd>b</kbd></td>
+      <td><kbd>esc</kbd> <kbd>b</kbd></td>
+      <td><kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>b</kbd></td>
+    </tr>
+    <tr>
+      <td><kbd>meta</kbd>+<kbd>f</kbd></td>
+      <td><kbd>esc</kbd> <kbd>f</kbd></td>
+      <td><kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>f</kbd></td>
+    </tr>
+    <tr>
+      <td><kbd>meta</kbd>+<kbd>/</kbd></td>
+      <td><kbd>esc</kbd> <kbd>/</kbd></td>
+      <td><kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>/</kbd></td>
+    </tr>
+    <tr>
+      <td><kbd>meta</kbd>+<kbd>:</kbd></td>
+      <td><kbd>esc</kbd> <kbd>:</kbd></td>
+      <td><kbd>ctrl</kbd>+<kbd>[</kbd> <kbd>:</kbd></td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  There are several layers of software involved between the keyboard
+  input and the application running in the terminal and the exact
+  behaviour of the <kbd>alt</kbd> or <kbd>option</kbd> key may vary
+  depending on the configuration of each of these layers.  Terminal
+  configuration alone is a complex topic that can be discussed
+  extensively.  However, the behaviour described here is one of the
+  popular defaults.  Alternative behaviours exist but they generally
+  produce similar effects for the user.
+</p>
+<h2 id="awkward-vim-tricks">Awkward Vim Tricks</h2>
+<p>
+  Most Vim users know that we can go from insert mode to command-line
+  mode and search for patterns by typing
+  either <kbd>esc</kbd> <kbd>/</kbd> or <kbd>C-[</kbd> <kbd>/</kbd>.
+  But what some people may find surprising is that we can also go from
+  insert mode to searching patterns simply by typing
+  <kbd>meta</kbd>+<kbd>/</kbd>.  Yes, this can be verified by running
+  Vim in a terminal emulator.  While insert mode is active,
+  type <kbd>alt</kbd>+<kbd>/</kbd> or <kbd>option</kbd>+<kbd>/</kbd>
+  and the current mode should instantly switch to the command-line
+  mode with the forward-slash (<samp>/</samp>) prompt waiting for our
+  search pattern.  This works only in a terminal emulator.  It may not
+  work in the graphical version of Vim.  The table above illustrates
+  why this works in a terminal emulator.
+</p>
+<p>
+  Similarly, in a Vim instance running within a terminal emulator, we
+  can type <kbd>meta</kbd>+<kbd>:</kbd> to go directly from insert
+  mode to command-line mode and enter Ex commands.  We can
+  type <kbd>meta</kbd>+<kbd>0</kbd> to go directly from insert mode to
+  the first character of a line or type <kbd>meta</kbd>+<kbd>$</kbd>
+  to go to the end of the line and so on.  These are equivalent to
+  typing <kbd>esc</kbd> <kbd>0</kbd>, <kbd>esc</kbd> <kbd>$</kbd>,
+  etc.
+</p>
+<p>
+  More interestingly, we can type <kbd>meta</kbd>+<kbd>O</kbd> to open
+  a line above, <kbd>meta</kbd>+<kbd>A</kbd> to append text at the end
+  of the line, <kbd>meta</kbd>+<kbd>I</kbd> to append text at the
+  beginning of the line or <kbd>meta</kbd>+<kbd>S</kbd> to delete the
+  current line while staying in insert mode!  Since the Vim
+  commands <kbd>O</kbd>, <kbd>A</kbd>, <kbd>I</kbd> and <kbd>S</kbd>
+  leave us back in insert mode, we are able to perform an editing
+  operation that involves leaving the insert mode, doing something
+  interesting and returning to insert mode instantly using the
+  the <kbd>meta</kbd> key combination.  The following table summarises
+  these observations:
+</p>
+<table class="grid mono">
+  <thead>
+    <tr>
+      <th>Initial Mode</th>
+      <th>Meta Key Sequence</th>
+      <th>Equivalent To</th>
+      <th>Operation</th>
+      <th>Final State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>/</kbd></td>
+      <td><kbd>esc</kbd> <kbd>/</kbd></td>
+      <td>Enter command-line mode to search a pattern</td>
+      <td>Command-line</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>:</kbd></td>
+      <td><kbd>esc</kbd> <kbd>:</kbd></td>
+      <td>Enter command-line mode to enter Ex command</td>
+      <td>Command-line</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>0</kbd></td>
+      <td><kbd>esc</kbd> <kbd>0</kbd></td>
+      <td>Move to the first character of the line</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>$</kbd></td>
+      <td><kbd>esc</kbd> <kbd>$</kbd></td>
+      <td>Move to the end of the line</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>O</kbd></td>
+      <td><kbd>esc</kbd> <kbd>O</kbd></td>
+      <td>Begin a new line above and insert text</td>
+      <td>Insert</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>A</kbd></td>
+      <td><kbd>esc</kbd> <kbd>A</kbd></td>
+      <td>Append text to the end of line</td>
+      <td>Insert</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>I</kbd></td>
+      <td><kbd>esc</kbd> <kbd>I</kbd></td>
+      <td>Insert text before the first non-blank in line</td>
+      <td>Insert</td>
+    </tr>
+    <tr>
+      <td>Insert</td>
+      <td><kbd>meta</kbd>+<kbd>S</kbd></td>
+      <td><kbd>esc</kbd> <kbd>S</kbd></td>
+      <td>Delete line and insert text</td>
+      <td>Insert</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  There is no good reason to use Vim like this but it works, thanks to
+  the quirky history of Unix terminals and keyboards!
+</p>

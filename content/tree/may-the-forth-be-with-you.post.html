@@ -1,0 +1,193 @@
+<!-- date: 2021-05-04 -->
+<!-- title: May the Forth Be With You -->
+<!-- tag: Forth, Programming, Technology -->
+<!-- key: icfkw -->
+<!-- blog: Maze -->
+<p>
+  I wrote a tiny Forth program today to celebrate the Star Wars Day!
+  Today, i.e. 04 May, is the Star Wars Day.  The date (May the fourth)
+  is a pun on the popular Star Wars catchphrase, "May the Force be
+  with you."  Forth, the programming language, is named so as a
+  shortened form of the word "Fourth".  The name stood for "fourth
+  generation".  Quoting from
+  <a href="https://web.archive.org/web/20160409083846/http://www.colorforth.com/HOPL.html">Forth
+  - The Early Years</a>:
+</p>
+<blockquote>
+  The file holding the interpreter was labeled FORTH, for 4th (next)
+  generation software - but the operating system restricted file names
+  to 5 characters.
+</blockquote>
+<p>
+  So the Forth program presented in this post to print a slightly
+  altered Star Wars catchphrase using ASCII stars (asterisks) is like
+  a double pun!  Or is that a triple pun?
+</p>
+<p>
+  Also, if Yoda were a programmer, I think Forth would be his most
+  favourite programming language.  Yoda would say, "A Forth programmer
+  I am.  Hrmmm," and he would add two and two with, <code>2 2
+  +</code>.  It just makes a lot of sense to celebrate May the 4th
+  with some Forth programming.
+</p>
+<p>
+  Here is the program I wrote to celebrate the day:
+</p>
+<pre>
+<code>: stars
+   0  do  [char] * emit  loop  ;
+
+: lines
+   0  do  cr  loop  ;
+
+: print
+   dup 40 &gt; if  40 - lines  else
+   dup 20 &gt; if  20 - spaces  else
+      stars
+   then then  ;
+
+: start
+   0  do  print  loop  ;
+
+                      41 11 37 11 36 5 28 41 5 27 5
+                     31 5 27 5 33 5 28 41 5 31 5 27
+                    5 31 5 31  5 28 41 5  33 5 25 5
+                   33 5 30 5 28 41 5 35 5 23 5 35 5
+                  29 5 28 41  5 35 5 23 5 35 5 27 9
+                 26 41 5 35  5 23 5 35  5 26 5 21 5
+                25 41 5 35 5 23 5 35 5 25 5 23 5 24
+               41 5 35 5 24 5 33  5 25 5 25 5 23 41
+              5 35 5  25 5 31 5   25 5 27 5 22 41 5
+             35 5 27 5 27 5 26    5 29 5 21 41 5 35
+            5 30 11 28 5 31 5     43 2 24 2 25 2 25
+           2  26 1 26 1 28 8      23 7 33 41 2 24 2
+          25 2 25 2 25 3 24       3 33 2  22 1 25 2
+         33 41 8 25 2 25 2        24 2 21 2 22 2 21
+        2 29 5 23 7 33 41         2 24 2  25 2 25 2
+       23 2 24 3 23 2 31          2 22 1 25 2 33 41
+      2 24 2  22 8 22 2           22 2 26 1 25 2 24
+     8 23 7 22 11 43 3            27 3 27 3 26 3 28
+    3 26 8  35 3 41 3             27 3 27 3 27 3 27
+   3  24 3 26 3 33 3              41 3 27 3 27 3 28
+  3 26 3 23 3  28 3               32 3 41 3 27 3 27
+ 3 29 3  25 3 22 3                30 3 31  3  41 13
+27 3  29 11  22 3 30 3 25 9 41 13 27 3 27 13 22 3 30 3 25 9
+41 3 27 3 27 3 26 3 28 3  22 3 30 3 31 3  41 3 27 3 27 3 26
+3 28 3 23 3 28 3 32 3 41 3 27 3 22 13 22 13 24 4 25 3 23 13
+41 3 27 3 22 13 24 11  26 8 25 13 43 11 22 8 22 2 24 2 25 2
+30 2 23 2 25 2 22 2 23 1 23 2 41 2 22 2 24 2 25 2 30 2 24 7
+23 2 22 3 22 2 41 5 22 8 25 2 29 4 24 2 21 2 24 2 21 2 21 2
+                                  21  2 41 2  22  2
+                                  24 2 25 2 28 2 22
+                                  2 24 3 25 4 23  4
+                                  41  8 22 2  24  2
+                                  22 8 24 2 24 2 24
+                                  1  26 3 25  3 473
+start
+bye</code>
+</pre>
+<p>
+  Here is the output:
+</p>
+<pre>
+<samp>***     ***      *    **    **    ********  **    **  ********
+****   ****     ***    **  **        **     **    **  **
+** ** ** **    ** **    ****         **     ********  *****
+**  ***  **   *******    **          **     **    **  **
+**   *   **  **     **   **          **     **    **  ********  ***********
+
+
+*************     ********      ***********    *************  ***       ***
+*************   ***     ****    *************  *************  ***       ***
+***            ***        ***   ***        ***      ***       ***       ***
+***           ***          ***  ***        ***      ***       ***       ***
+*********     ***          ***  *************       ***       *************
+*********     ***          ***  ***********         ***       *************
+***           ***          ***  ***     ***         ***       ***       ***
+***            ***        ***   ***      ***        ***       ***       ***
+***             ***      ***    ***       ***       ***       ***       ***
+***               ********      ***        ***      ***       ***       ***
+
+
+***********  *******   ********    **     *      **  **  ********  **    **
+             **     *  **           **   ***    **   **     **     **    **
+             *******   *****         ** **  ** **    **     **     ********
+             **     *  **             ***    ***     **     **     **    **
+             *******   ********        *      *      **     **     **    **
+
+
+*****           *****        ***********          *****               *****
+ *****         *****      *****       *****       *****               *****
+  *****       *****     *****           *****     *****               *****
+   *****     *****     *****             *****    *****               *****
+    *****   *****     *****               *****   *****               *****
+     ***** *****      *****               *****   *****               *****
+      *********       *****               *****   *****               *****
+        *****         *****               *****   *****               *****
+        *****          *****             *****     *****             *****
+        *****           *****           *****       *****           *****
+        *****             *****       *****           *****       *****
+        *****                ***********                 ***********</samp>
+</pre>
+<p>
+  To run this program on your system and obtain the above output,
+  follow these steps:
+</p>
+<ol>
+  <li>
+    <p>
+      Install GForth.  On macOS, enter the following command if you
+      have Homebrew:
+    </p>
+    <pre><code>brew install gforth</code></pre>
+    <p>
+      On Debian, Ubuntu or another Debian-based Linux system, enter
+      the following command:
+    </p>
+    <pre><code>sudo apt-get install gforth</code></pre>
+    <p>
+      For other systems or environments,
+      see <a href="https://gforth.org/">gforth.org</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Save the above program in a file, say, <code>may4.fs</code> and
+      run it with this command:
+    </p>
+    <pre><code>gforth may4.fs</code></pre>
+  </li>
+  <li>
+    <p>
+      Enjoy!
+    </p>
+  </li>
+</ol>
+<p>
+  If you do not know Forth but found this post fun and want to learn a
+  little bit of Forth,
+  see <a href="https://www.forth.com/starting-forth/">Starting
+  Forth</a>.
+</p>
+<p>
+  The Forth program in this post and the output is also available as a
+  Git repository
+  here: <a href="https://github.com/susam/may4">github.com/susam/may4</a>.
+</p>
+<p>
+  By the way, Forth brings back the fun in computing for me that I
+  once experienced when I began learning to code with Logo.  It is
+  simple, distraction-free and fun!  I will conclude this post with a
+  famous quote from Alan J. Perlis:
+</p>
+<blockquote>
+  I think that it's extraordinarily important that we in computer
+  science keep fun in computing.  When it started out, it was an awful
+  lot of fun.  Of course, the paying customers got shafted every now
+  and then, and after a while we began to take their complaints
+  seriously.  We began to feel as if we really were responsible for
+  the successful, error-free perfect use of these machines.  I don't
+  think we are.  I think we're responsible for stretching them,
+  setting them off in new directions, and keeping fun in the house.  I
+  hope the field of computer science never loses its sense of fun.
+</blockquote>

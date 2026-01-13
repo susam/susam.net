@@ -1,0 +1,128 @@
+<!-- date: 2025-04-05 -->
+<!-- title: Hacker News Hug of Deaf -->
+<!-- bkptitle: When HN Folks Made My Terminal Beep 19044 Times -->
+<!-- key: fcycm -->
+<!-- blog: Main -->
+<!-- tag: Absurd, Unix, Shell, Networking, Technology -->
+<!-- import: extra.css -->
+<blockquote>
+  <p>
+    "It's essentially the Hacker News Hug of Deaf."
+    &ndash;
+    <a href="https://news.ycombinator.com/item?id=30146019#30147639">@TonyTrapp</a>
+  </p>
+</blockquote>
+<p>
+  About three years ago, I set up a tiny <code>netcat</code> loop on
+  one of my Debian servers to accept arbitrary connections from the
+  Hacker News (HN) community.  The loop ran for 24 hours and did
+  exactly three things whenever a client connected:
+</p>
+<ol>
+  <li>
+    Send a simple <code>ok</code> message to the client.
+  </li>
+  <li>
+    Close the connection immediately.
+  </li>
+  <li>
+    Make my terminal beep four times.
+  </li>
+</ol>
+<p>
+  That's it!  It was a playful experiment in response to a thread
+  about quirky, do-it-yourself alerting systems for friends and
+  family.  See
+  <a href="https://news.ycombinator.com/item?id=30146019#30146451">this
+  HN thread</a> for the original discussion.  Here is the exact
+  command I ran on my server:
+</p>
+<pre class="wrap"><code>while true; do (echo ok | nc -q 1 -vlp 8000 2&gt;&amp;1; echo; date -u) | tee -a beeper.log; for i in 1 2 3 4; do printf '\a'; sleep 1; done &amp; done</code></pre>
+<p>
+  The <code>nc</code> command closes the connection immediately after
+  sending the <code>ok</code> message and runs an
+  inner <code>for</code> loop in a background shell that
+  asynchronously prints the bell character to the terminal four times.
+  Meanwhile, the outer <code>while</code> command loops back quickly
+  to run a new <code>nc</code> process, thus making this one-liner
+  script instantly ready to accept the next incoming connection.
+</p>
+<p>
+  Soon after I shared this, members of the HN community began
+  connecting to the demo running on <code>susam.net:8000</code>.
+  Anyone on the Internet could use any client of their choice to
+  connect.  Here's how I explained it in the HN thread:
+</p>
+<blockquote>
+  <p>
+    Now anytime someone connects to port 8000 of my system
+    by <em>any</em> means, I will hear 4 beeps!  The other party can
+    use <em>whatever client</em> they have to connect to port 8000 of
+    my system, e.g. a web browser, <code>nc HOST
+    8000</code>, <code>curl HOST:8000</code> or even <code>ssh HOST -p
+    8000</code>, <code>irssi -c HOST -p 8000</code>, etc.
+  </p>
+</blockquote>
+<p>
+  In the next 24 hours, I received over 4761 connections, each one
+  triggering four beeps.  That's a total of 19&#x202f;044 terminal
+  beeps echoing throughout the day!
+</p>
+<figure class="soft">
+  <img src="files/blog/beeper1.png" alt="Graph">
+  <figcaption>
+    Number of connections received every hour since 31 Jan 2022 10:00 UTC
+  </figcaption>
+</figure>
+<p>
+  The data for the above graph is available at
+  <a href="https://gist.github.com/susam/159c7d92659b3185eb0b0d683998a3b7">beeper.log</a>.
+  Now, 4761 isn't a huge number in the grand scheme of things, but it
+  was still pretty cool to see people notice an obscure comment buried
+  in a regular HN thread, act on it and make my terminal beep
+  thousands of time.
+</p>
+<p>
+  At the end of the day, this was a fun experiment.  Pointless, but
+  fun!  Computing isn't always about solving problems.  Sometimes,
+  it's also about exploring quirky ideas.  The joy is in the
+  exploration and having others join in made it even more enjoyable.
+  Activities like this keep computing fun for me!
+</p>
+<hr>
+<p id="update-2025-04-10">
+  <strong>Update on 10 Apr 2025:</strong>
+  I <a href="https://news.ycombinator.com/item?id=43642123">shared
+  this article on Hacker News</a> today and saw another surge in
+  connections to my beeper loop.
+</p>
+<figure class="soft">
+  <img src="files/blog/beeper2.png" alt="Graph">
+  <figcaption>
+    Number of connections received every hour since 10 Apr 2025 10:00 UTC
+  </figcaption>
+</figure>
+<p>
+  The data for the above graph is available at
+  <a href="https://gist.github.com/susam/3cec5db1a78a9db527327460656daeae">beeper2.log</a>.
+  The data shows a total of 352&#x202f;831 connections from 1396
+  unique client addresses over 14 hours.  That amounts to a total of
+  1&#x202f;411&#x202f;324 beeps!  Much of the traffic seems to have
+  come from persistent client loops constantly connecting to my beeper
+  loop.  In particular, the client identified by the anonymised
+  identifier C0276 made the largest number of connections by far, with
+  327&#x202f;209 total connections.  The second most active client,
+  C0595, made only 6771 connections.  There were 491 clients that
+  connected exactly once.  If you'd like to see the number of
+  connections by each client, see
+  <a href="https://gist.github.com/susam/d6766f4b722f899250a8f3da0c98f993">beeperclient2.log</a>.
+</p>
+<p>
+  In conclusion, the difference in the volume of connections between
+  the earlier experiment and today's is striking.  In the first round,
+  three years ago, there were only 4761 connections from some readers
+  of a comment thread.  But in today's round, with this post being
+  featured on the HN front page, there were 352&#x202f;831
+  connections!  It is fascinating to see how odd experiments like this
+  can find so many participants within the HN community!
+</p>
