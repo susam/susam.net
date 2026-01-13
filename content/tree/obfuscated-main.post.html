@@ -1,0 +1,62 @@
+<!-- date: 2003-11-02 -->
+<!-- title: Obfuscated Main -->
+<!-- tag: Absurd, C, Programming, Technology, Puzzle -->
+<!-- key: hdzwp -->
+<!-- blog: Main -->
+<p>
+  I have been running a mailing list called <em>ncoders</em> on Yahoo
+  Groups for the past few months.  I created it to host discussions on
+  computers, programming and network protocols among university
+  students.  There are currently about 150 students from various
+  universities across the world on the list.  A few weeks ago, someone
+  posted a C programming puzzle to the group.  The puzzle asked
+  whether it was possible to write a C program such that the
+  <code>main()</code> function <em>does not seem to appear</em> in the
+  code.  Here's a solution I came up with, which involves obfuscating
+  the identifier <code>main</code> using preprocessor macros and
+  the <code>##</code> token-pasting operator.
+</p>
+<pre>
+<code>#include &lt;stdio.h&gt;
+
+#define decode(s,t,u,m,p,e,d) m ## s ## u ## t
+#define begin decode(a,n,i,m,a,t,e)
+
+int begin()
+{
+    printf("Stumped?\n");
+}</code>
+</pre>
+<p>
+  This program compiles and runs successfully.  Here is the output:
+</p>
+<pre><samp>Stumped?</samp></pre>
+<p>
+  Let me explain how this code works.  When the C preprocessor runs on
+  this code, the following preprocessing steps occur:
+</p>
+<ul>
+  <li>
+    <code>begin</code> is replaced with <code>decode(a,n,i,m,a,t,e)</code>,
+  </li>
+  <li>
+    <code>decode(a,n,i,m,a,t,e)</code> is replaced with <code>m ## a
+    ## i ## n</code> and
+  </li>
+  <li>
+    <code>m ## a ## i ## n</code> is replaced with <code>main</code>.
+  </li>
+</ul>
+<p>
+  Thus <code>begin()</code> is replaced with <code>main()</code>.
+</p>
+<p>
+  <strong>Update on 31 Jul 2007:</strong> Although the mailing list
+  referred to in this post no longer exists, this tiny piece of code
+  seems to have survived on the web.  A
+  <a href="https://www.google.com/search?q=%22decode%28s%2Ct%2Cu%2Cm%2Cp%2Ce%2Cd%29%22">quick
+  search</a> shows so many occurrences of this code on the web.  It is
+  quite surprising to me that a rather silly piece of code written
+  during a Sunday afternoon to solve an equally silly puzzle has been
+  the subject of much discussion!
+</p>

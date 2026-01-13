@@ -1,3 +1,6 @@
 <h1>{{ title }}</h1>
 <div>By <b>{{ author }}</b> on {{ short-date }}{{ update-mark }}{{ draft-mark }}</div>
-{{ body }}
+{{ body }}<div>
+  <a href="{{ root }}comments/{{ comment-slug }}.html">Comments</a> |
+  {{ tags-for-page }}
+</div>

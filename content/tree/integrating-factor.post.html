@@ -1,0 +1,285 @@
+<!-- date: 2021-11-10 -->
+<!-- title: Integrating Factor -->
+<!-- tag: Mathematics -->
+<!-- key: cczvm -->
+<!-- blog: Main -->
+<!-- import: math.inc -->
+<h2 id="introduction">Introduction</h2>
+<p>
+  One of the many techniques for solving ordinary differential
+  equations involves using an <em>integrating factor</em>.  An
+  integrating factor is a function that a differential equation is
+  multiplied by to simplify it and make it integrable.  It almost
+  appears to work like magic!
+</p>
+<h2 id="method">The Method</h2>
+<p>
+  Let us first see how the integrating factor method works.  In this
+  post, we will work with linear first-order ordinary differential
+  equations of type
+
+  \[
+    \frac{dy}{dx} + y P(x) = Q(x)
+  \]
+
+  to discuss, reason about and illustrate this method.  We will also
+  often use the Leibniz's notation \( dy/dx \) and the Lagrange's
+  notation \( y'(x) \) or simply \( y' \) interchangeably as is
+  typical in calculus.  They all mean the same thing: the derivative
+  of the function \( y \) with respect to \( x \).  Thus the above
+  differential equation may also be written as
+
+  \[
+    y' + y P(x) = Q(x).
+  \]
+
+  Given a differential equation of this form, we first find an
+  integrating factor \( M(x) \) using the formula
+
+  \[
+    M(x) = e^{\int P(x) \, dx}.
+  \]
+
+  Then we multiply both sides of the differential equation by this
+  integrating factor.  Now remarkably, the left-hand side (LHS)
+  reduces to a single term consisting only of a derivative.  As a
+  result, we can get rid of that derivative by integrating both sides
+  of the equation and we then proceed to obtain a solution.
+</p>
+<h2 id="example">An Example</h2>
+<p>
+  Here is an example that demonstrates the method of using an
+  integrating factor.  Let us say we want to solve the differential
+  equation
+
+  \[
+    y' + y \left( \frac{x + 1}{x} \right) = \frac{1}{x}.
+  \]
+
+  Indeed this is in the form \( y' + y P(x) = Q(x) \) with \( P(x) =
+  (x + 1)/x \) and \( Q(x) = 1/x \).  We first obtain the integrating
+  factor
+
+  \[
+    M(x)
+    = e^{\int P(x) \, dx}
+    = e^{\int (x + 1)/x \, dx}
+    = e^{\int (1 + 1/x) \, dx}
+    = e^{x + \ln x}
+    = x e^x.
+  \]
+
+  Now we multiply both sides of the differential equation by this
+  integrating factor and get
+
+  \[
+    y' x e^x + y (x + 1) e^x = e^x.
+  \]
+
+  The LHS can now be simplified to \( \frac{d}{dx} (y x e^x) \).  This
+  can be verified using the product rule for derivatives.  This
+  simplification of the LHS is the remarkable feature of this method.
+  Therefore the above equation can be written as
+
+  \[
+    \frac{d}{dx} (y x e^x) = e^x.
+  \]
+
+  Note that the expression on the LHS is a product of the function \(
+  y \) and the integrating factor \( x e^x \).  We will discuss this
+  observation in more detail a little later.  Let us first complete
+  solving this differential equation.  Since the LHS is now a single
+  term that consists of a derivative, obtaining a solution now simply
+  involves integrating both sides with respect to \( x \).
+  Integrating both sides we get
+
+  \[
+    y x e^x = e^x + C
+  \]
+
+  where \( C \) is the constant of integration.  Finally, we divide
+  both sides by the integrating factor \( x e^x \) to get
+
+  \[
+    y = \frac{1}{x} + \frac{C}{x e^x}.
+  \]
+
+  We have now obtained a solution for the differential equation.  If
+  we review the steps above, we will find that after multiplying both
+  sides of the given differential equation by the integrating factor,
+  the differential equation becomes significantly simpler and
+  integrable.  In fact, after multiplying both sides of the given
+  differential equation by the integrating factor, the LHS always
+  becomes the derivative of the product of the function \( y \) and
+  the integrating factor.  We will now see why this is so.
+</p>
+<h2 id="interesting-relationship">An Interesting Relationship</h2>
+<p>
+  Consider once again the linear first-order differential equation
+
+  \begin{equation}
+    \label{eq-if-diff}
+    y' + yP(x) = Q(x).
+  \end{equation}
+
+  We first find the integrating factor
+
+  \begin{equation}
+    \label{eq-if-integrating-factor}
+    M(x) = e^{\int P(x)\, dx}.
+  \end{equation}
+
+  The integrating factor obtained like this satisfies an interesting
+  relationship:
+
+  \begin{equation}
+    \label{eq-if-property}
+    M'(x) = M(x) P(x).
+  \end{equation}
+
+  We can prove this relationship easily by differentiating both sides
+  of \( \eqnref{eq-if-integrating-factor}{2} \) as follows:
+
+  \[
+    M'(x)
+    = \frac{d}{dx} \left( e^{\int P(x)\, dx} \right)
+    = e^{\int P(x)\, dx} \frac{d}{dx} \left( \int P(x)\, dx \right)
+    = M(x) P(x).
+  \]
+
+  Note that we use the chain rule to work out the derivative above.
+  This beautiful result is due to how the derivative of the
+  exponential function works.  When we apply the chain rule to obtain
+  the derivative of \( e^{f(x)} \) we get
+
+  \[
+    \frac{d}{dx} e^{f(x)} = e^{f(x)} f'(x).
+  \]
+
+  This nice property of the exponential function leads to the
+  interesting relationship in \( \eqnref{eq-if-property}{3} \).
+</p>
+<h2 id="simplification-of-lhs">Simplification of LHS</h2>
+<p>
+  Now let us multiply both sides of the differential equation \(
+  \eqnref{eq-if-diff}{1} \) by the integrating factor \( M(x) \) By
+  doing so, we get
+
+  \[
+    y' M(x) + y P(x) M(x) = Q(x) M(x).
+  \]
+
+  But from \( \eqnref{eq-if-property}{3} \) we know that \( P(x) M(x)
+  = M'(x) \), so the above equation can be written as
+
+  \[
+    y' M(x) + y M'(x) = Q(x) M(x).
+  \]
+
+  Look what we have got on the LHS!  We have the expansion of \(
+  \frac{d}{dx}(yM(x)) \) on the LHS.  By product rule of
+  differentiation, we have
+  \( \frac{d}{dx}(yM(x)) = y' M(x) + y M'(x) \).  Therefore the above
+  equation can be written as
+
+  \[
+    \frac{d}{dx}(yM(x)) = Q(x) M(x).
+  \]
+
+  The "magic" has occurred here!  Multiplying both sides of the
+  differential equation by the integrating factor has led us to an
+  equation that has got a single derivative only on the LHS.  As a
+  result, finding the solution is now a simple matter of integrating
+  both sides, i.e.
+
+  \[
+    y M(x) = \int Q(x) M(x) \, dx.
+  \]
+
+  Thus
+
+  \[
+    y = \frac{1}{M(x)} \int Q(x) M(x) \, dx.
+  \]
+
+  Note that the result of indefinite integral on the RHS will contain
+  the constant of integration, which we will denote as \( C \), so the
+  final solution looks like
+
+  \begin{equation}
+    \label{eq-if-general-solution}
+    y = \frac{1}{M(x)} \int Q(x) M(x) \, dx + \frac{C}{M(x)}.
+  \end{equation}
+</p>
+<h2 id="illustration">Illustration</h2>
+<p>
+  Let us illustrate the method and its magic with a very simple
+  differential equation:
+
+  \[
+    y' + \frac{y}{x} = x.
+  \]
+
+  First we note that this equation is in the form
+  \( y' + yP(x) = Q(x) \) with \( P(x) = 1/x \) and \( Q(x) = x \).
+  We then find the integrating factor
+
+  \[
+  M(x)
+  = e^{\int P(x) \, dx}
+  = e^{\int \frac{1}{x} \, dx}
+  = e^{\ln x}
+  = x.
+  \]
+
+  Then we multiply both sides of the differential equation by the
+  integrating factor to get
+
+  \[
+    y'x + y = x^2.
+  \]
+
+  Now indeed the LHS can be written down as a single derivative as
+  shown below:
+
+  \[
+    \frac{d}{dx} yx = x^2.
+  \]
+
+  Note that the LHS is the derivative of the product of \( y \) and
+  the integrating factor \( x \).  This is exactly what we discussed
+  in the previous section.  We integrate both sides of the above
+  equation to get
+
+  \[
+    yx = \frac{x^3}{3} + C.
+  \]
+
+  Finally we divide both sides by the integrating factor \( x \) to
+  get
+
+  \[
+    y = \frac{x^2}{3} + \frac{C}{x}.
+  \]
+
+  We have arrived at the solution \( y(x) \) for the differential
+  equation.
+</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>
+  In this post, we used very simple and convenient differential
+  equations that led to nice closed-form solutions.  In practice,
+  differential equations can be quite complicated and may not always
+  lead to closed-form solutions.  In such cases, we leave the result
+  in the form of an expression that contains an unsolved integral.
+  Such solutions may resemble the form shown in
+  \( \eqnref{eq-if-general-solution}{4} \).
+</p>
+<p>
+  The method of using integrating factors to solve differential
+  equations can also be extended to linear higher-order differential
+  equations.  That is something we did not discuss in this post.
+  However, I hope that the intuition gained from understanding how and
+  why this method works for linear first-order differential equations
+  will be useful while studying such extensions of this method.
+</p>

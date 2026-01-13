@@ -1,0 +1,56 @@
+<!-- date: 2025-04-02 -->
+<!-- title: PDF Dimmer Bookmarklet -->
+<!-- tag: Web, Technology -->
+<!-- key: bgigh -->
+<!-- blog: Maze -->
+<!-- import: extra.css -->
+<p>
+  I often read PDF documents in Firefox and sometimes I prefer to work
+  in dark mode, especially at night when the room lights are dimmed.
+  However, the bright white background of the Firefox PDF viewer can
+  be glaring and uncomfortable when dark mode is enabled.
+  Additionally, writing a userscript to invert the background and text
+  colours in the PDF viewer does not work.  I have confirmed with
+  Firefox version 137.0 that userscripts do not run within the PDF
+  viewer.
+</p>
+<p>
+  For example, consider this simple userscript that just prints a
+  "hello" message when a web page loads:
+  <a href="code/lab/userscript/hello.js">hello.js</a>.  This script
+  works on regular web pages but does not execute when viewing a PDF
+  file in Firefox.
+  See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1454760">Bug
+  1454760</a> for more details about this restriction.
+</p>
+<p>
+  While userscripts are often my go-to solution for customisations
+  like this, for this particular problem, I resorted to writing a tiny
+  bookmarklet to work around the above limitation.  Here is the
+  bookmarklet:
+</p>
+<pre><code>javascript:(()=&gt;{['thumbnailView','viewer'].map(id=&gt;document.getElementById(id).style.filter='invert(0.9)saturate(0)')})()</code></pre>
+<p>
+  To add this to Firefox, from the Firefox menu, select "Bookmarks".
+  Then in the left sidebar, right click on either "Bookmarks Toolbar"
+  or "Bookmarks Menu", depending on where you want to add the
+  bookmarklet and select "Add Bookmark".  Enter some name in the
+  "Name" field and then in the "URL" field, enter the above line of
+  code.  Click "Save" and you are done.  The next time you open a PDF
+  file in Firefox, find the bookmark in the bookmarks menu or toolbar,
+  click on it and it should instantly invert the colour scheme of the
+  PDF viewer.
+</p>
+<p>
+  Alternatively, simply drag the following link and drop it onto your
+  Firefox toolbar:
+</p>
+<p class="textcenter">
+  <a href="javascript:(()=%3e%7b%5b'thumbnailView','viewer'%5d.map(id=%3edocument.getElementById(id).style.filter='invert(0.9)saturate(0)')%7d)()">Dim PDF</a>
+</p>
+<p>
+  While the default PDF viewer of Firefox does not support
+  userscripts, this bookmarklet is a simple, effective way to give
+  PDFs a darker look.  If you're like me and often read books and
+  papers in PDF format at night, you might find this handy.
+</p>

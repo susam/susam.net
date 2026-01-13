@@ -1,0 +1,142 @@
+<!-- date: 2022-02-28 -->
+<!-- title: Paredit Slurp and Barf Mnemonics -->
+<!-- tag: Emacs, Lisp, Programming, Technology -->
+<!-- key: bnphd -->
+<!-- blog: Maze -->
+<p>
+  Of the several sophisticated Paredit commands to edit s-expressions,
+  I believe, the following four commands are the most important ones:
+</p>
+<ul>
+  <li><code>paredit-backward-slurp-sexp</code></li>
+  <li><code>paredit-forward-slurp-sexp</code></li>
+  <li><code>paredit-backward-barf-sexp</code></li>
+  <li><code>paredit-forward-barf-sexp</code></li>
+</ul>
+<p>
+  By default, these commands are bound to the key sequences
+  <code>C-(</code>, <code>C-)</code>, <code>C-{</code> and
+  <code>C-}</code> respectively in Emacs.  These commands can make
+  editing s-expressions very convenient.  However, often on IRC
+  networks and other online forums, I come across users who have
+  difficulty remembering the key sequence each command is bound to.  I
+  will share some mnemonics in this post that make this easier to
+  remember.  Before discussing the mnemonics, let us see what these
+  commands do.  However, if you already know what these commands do,
+  skip right ahead to the
+  <em><a href="#mnemonics">Mnemonics</a></em> section.
+</p>
+
+<h2 id="slurp-demo">Slurp Demo</h2>
+<p>
+  Say, we have the following Lisp expressions in our editor:
+</p>
+<pre><code>(* 10 20) (+ 30 40)<span class="cursor"> </span></code></pre>
+<p>
+  The block above shows where the cursor is placed.  Let us now bring
+  the expression <code>(+ 30 40)</code> inside the expression <code>(*
+  10 20)</code>.  To do so, we first place the cursor somewhere inside
+  the first expression, say, as shown below:
+</p>
+<pre><code>(* 10 20<span class="cursor">)</span> (+ 30 40)</code></pre>
+<p>
+  Now type <code>C-)</code> and the closing parenthesis of the first
+  expression moves forward to <em>slurp</em> the next expression.  The
+  result looks like this:
+</p>
+<pre><code>(* 10 20<span class="cursor"> </span>(+ 30 40))</code></pre>
+<p>
+  The key sequence <code>C-)</code> invokes the
+  <code>paredit-forward-slurp-sexp</code> command that adds the
+  expression following the current list into that list by moving the
+  closing delimiter ahead.  Similarly, there is the key sequence
+  <code>C-(</code> that invokes the
+  <code>paredit-backward-slurp-sexp</code> command which works
+  similarly except that it makes the current list consume the
+  preceding expression.  Note that the slurp commands expand the
+  current list to consume a neighbouring expression.
+</p>
+
+<h2 id="barf-demo">Barf Demo</h2>
+<p>
+  Say, we have the following Lisp expression in our editor:
+</p>
+<pre><code>(* 10 20 (+ 30 40))<span class="cursor"> </span></code></pre>
+<p>
+  We now want to move <code>(+ 30 40)</code> out of the first
+  expression.  To do so, we first place the cursor somewhere inside
+  the outer expression but not inside the inner expression.  Here is
+  an example of where we place the cursor:
+</p>
+<pre><code>(* 10 20 <span class="cursor">(</span>+ 30 40))</code></pre>
+<p>
+  Now type <code>C-}</code> and the closing parenthesis of the outer
+  expression moves behind to <em>barf</em> the inner expression out.
+  The result looks like this:
+</p>
+<pre><code>(* 10 20) <span class="cursor">(</span>+ 30 40)</code></pre>
+<p>
+  The key sequence <code>C-}</code> invokes the
+  <code>paredit-forward-barf-sexp</code> command that removes the
+  last expression in the current list from that list by moving the
+  closing delimiter behind.  Similarly, there is the key sequence
+  <code>C-{</code> that invokes the
+  <code>paredit-backward-barf-sexp</code> command which works
+  similarly except that it removes the first expression from the
+  current list.  Note that the barf commands shrinks the current list
+  to remove an expression from that list.
+</p>
+
+<h2 id="mnemonics">Mnemonics</h2>
+<p>
+  When I began using Paredit for the first time, several years ago, I
+  could never remember which key sequences <em>slurp</em> and which
+  ones <em>barf</em>.  Then I made up these mnemonics:
+</p>
+<ul>
+  <li>
+    <code>C-(</code> and <code>C-)</code> have parentheses that look
+    nice and round.  They expand the current list to consume another
+    expression.  Nom nom!
+  </li>
+  <li>
+    <code>C-{</code> and <code>C-}</code> have braces that look
+    squiggly and wiggly.  They shrink the current list and barf an
+    expression.
+  </li>
+</ul>
+<p>
+  I do not need these mnemonics anymore because after using these key
+  sequences a few times, they get burnt into our muscle memory.
+  However, in the initial days of using Paredit, these mnemonics were
+  quite useful.  Now whenever I find someone complaining about how
+  easy it is to forget the key sequences bound to these commands, I
+  share these mnemonics with them and they never have any problem
+  again with the slurp and barf commands.  These mnemonics have served
+  me and many others I know quite well.
+</p>
+<hr>
+<p>
+  <em>
+    <strong>Update on 01 Mar 2022:</strong> Jon Snader, who maintains
+    a very popular blog named
+    <a href="http://irreal.org/blog/">Irreal</a>, has discussed this
+    blog post on his own blog.  While he did not find my mnemonics
+    particularly helpful, he has shared his own way of remembering the
+    key sequences.  Quoting Jon below:
+  </em>
+</p>
+<blockquote>
+  <em>
+    To me, the braces suggest pointing out
+    so <kbd>Ctrl</kbd>+<kbd>}</kbd> and <kbd>Ctrl</kbd>+<kbd>{</kbd>
+    are clearly for barfing.
+  </em>
+</blockquote>
+<p>
+  <em>
+    That is quite an interesting and elegant mnemonic.  See his
+    post <a href="https://irreal.org/blog/?p=10361">Using Paredit's
+    Slurp and Barf</a> to read his complete views on this topic.
+  </em>
+</p>

@@ -1,0 +1,218 @@
+<!-- date: 2025-12-24 -->
+<!-- title: My Coding Adventures in 2025 -->
+<!-- tag: Programming, Technology, Retrospective -->
+<!-- key: cdtwf -->
+<!-- blog: Maze -->
+<p>
+  In this post, I return with a retrospective on my coding adventures,
+  where I summarise my hobby projects and recreational programming
+  activities from the current year.  I did the last such retrospective
+  in <a href="code-2023.html">2023</a>.  So I think this is a good
+  time to do another retrospective.
+</p>
+<p>
+  At the outset, I should mention that I have done less hobby
+  computing this year than in the past few, largely because I spent a
+  substantial portion of my leisure time studying Galois theory and
+  algebraic graph theory.  In case you are wondering where I am
+  learning these subjects from, the books are <em>Galois Theory</em>,
+  5th ed. by Ian Stewart and <em>Algebraic Graph Theory</em> by Godsil
+  and Royle.  Both are absolutely fascinating subjects and the two
+  books I mentioned are quite good as well.  I highly recommend them.
+</p>
+<p>
+  Now back to the coding adventures.  Here they go:
+</p>
+<ul>
+  <li>
+    <p>
+      <a href="https://github.com/susam/mathb">MathB</a>: The year
+      began not with the release of a new project but with the
+      opposite: discontinuing a project I had maintained for 13 years.
+      MathB.in, a mathematics pastebin service, was discontinued early
+      this year.  This is a project I developed in 2012 for myself and
+      my friends.  Although a rather simple project, it was close to
+      my heart, as I have many fond memories of exchanging
+      mathematical puzzles and solutions with my friends using this
+      service.  Over time, the project grew quite popular on IRC
+      networks, as well as in some schools and universities, where IRC
+      users, learners and students used the service to share problems
+      and solutions with one another, much as my friends and I had
+      done in its early days.
+    </p>
+    <p>
+      I shut it down this year because I wanted to move on from the
+      project.  Before the shutdown, a kind member of the
+      <a href="https://wiki.archiveteam.org/">Archive Team</a> worked
+      with me to
+      <a href="https://web.archive.org/web/*/https://mathb.in/">archive</a>
+      all posts from the now-defunct website.  Although shutting down
+      this service was a bittersweet event for me, I feel relieved
+      that I no longer have to run a live service in my spare time.
+      While this was a good hobby ten years ago, it no longer is.  See
+      my blog post
+      <a href="mathbin-is-shutting-down.html">MathB.in Is Shutting
+      Down</a> for more details on the reasons behind this decision.
+      The source code of this project remains open source and
+      available at
+      <a href="https://github.com/susam/mathb">github.com/susam/mathb</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="https://github.com/susam/quickqwerty">QuickQWERTY</a>:
+      This is a touch-typing tutor that runs in a web browser.  I
+      originally developed it in 2008 for myself and my friends.
+      While I learnt touch typing on an actual typewriter as a child,
+      those lessons did not stick with me.  Much later, while I was at
+      university, I came across a Java applet-based touch-typing tutor
+      that finally helped me learn touch typing properly.  I disliked
+      installing Java plugins in the web browser, which is why I later
+      developed this project in plain HTML and JavaScript.  This year,
+      I carried out a major refactoring to collapse the entire project
+      into a single standalone HTML file with no external
+      dependencies.  The source code has been greatly simplified as
+      well.
+    </p>
+    <p>
+      When I was younger and more naive, inspired by the complexity
+      and multiple layers of abstraction I saw in popular open source
+      and professional projects, I tended to introduce similar
+      abstractions and complexity into my personal projects.  Over
+      time, however, I began to appreciate simplicity.  The new code
+      for this project is smaller and simpler.  I am quite happy with
+      the end result.  You can take a look at the code here:
+      <a href="https://github.com/susam/quickqwerty/blob/main/quickqwerty.html">quickqwerty.html</a>.
+      If you want to use the typing tutor, go here:
+      <a href="quickqwerty.html">QuickQWERTY</a>.  Unfortunately, it
+      does not support keyboard layouts other than QWERTY.  When I
+      originally developed this project, my view of the computing
+      world was rather limited.  I was not even aware that other
+      keyboard layouts existed.  You are, however, very welcome to
+      fork the project and adapt the lessons for other layouts.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="https://github.com/susam/cfrs">CFRS[]</a>: This project
+      was my first contribution to the quirky world of esolangs.
+      CFRS[] is an extremely minimal drawing language consisting of
+      only six simple commands: <code>C</code>, <code>F</code>,
+      <code>R</code>, <code>S</code>, <code>[</code> and
+      <code>]</code>.  I developed it in 2023 and have since been
+      maintaining it with occasional bug fixes.  This year, I
+      <a href="https://github.com/susam/cfrs/commit/9bae21f">fixed an
+      annoying bug</a> that caused the drawing canvas to overflow on
+      some mobile web browsers.  A new demo also arrived from the
+      community this year and has now been added to the community demo
+      page.  See
+      <a href="https://susam.github.io/cfrs/demo.html#glimmering-galaxy">Glimmering
+      Galaxy</a> for the new demo.  If you want to play with CFRS[]
+      now, visit <a href="cfrs.html">CFRS[]</a>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="https://github.com/susam/fxyt">FXYT</a>: This is
+      another esolang project of mine.  This too is a minimal drawing
+      language, though not as minimal as CFRS[].  Instead, it is a
+      stack-based, postfix canvas colouring language with only 36
+      simple commands.  The canvas overflow bug described in the
+      previous entry affected this project as well.  That has now been
+      fixed.  Further, by popular demand, the maximum allowed code
+      length has been increased from 256 bytes to 1024 bytes.  This
+      means there is now more room for writing more complex FXYT
+      programs.  Additionally, the maximum code length for
+      distributable demo links has been increased from 64 bytes to 256
+      bytes.  This allows several more impressive demos to have their
+      own distributable links.  Visit <a href="fxyt.html">FXYT</a> to
+      try it out now.  See also the
+      <a href="https://susam.github.io/fxyt/demo.html">Community Demos</a> to
+      view some fascinating artwork created by the community.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="https://github.com/susam/nq">Nerd Quiz</a>: This is a
+      new project I created a couple of months ago.  It is a simple
+      HTML tool that lets you test your nerdiness through short
+      quizzes.  Each question is drawn from my everyday moments of
+      reading, writing, thinking, learning and exploring.  The project
+      is meant to serve as a repository of interesting facts I come
+      across in daily life, captured in the form of quiz questions.
+      Go here to try it out: <a href="nq.html">Nerd Quiz</a>.  I hope
+      you will enjoy these little bits of knowledge as much as I
+      enjoyed discovering them.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="primegrid.html">Prime Number Grid Explorer</a>: This is
+      a simple prime number grid visualiser I wrote for fun.  It plots
+      the prime numbers in a grid where you can set the number of rows
+      and the number of columns.  It uses the Miller-Rabin primality
+      test with bases drawn from
+      <a href="https://oeis.org/A014233">oeis.org/A014233</a> to
+      determine whether a number is prime.  This allows it to
+      accurately test whether a number is prime up to
+      3317044064679887385961980.  For example,
+      <a href="primegrid.html#3317044064679887385961781-20-10">this
+      grid</a> shows the upper limit of the numbers this tool can
+      check. The three circles displayed there represent the prime
+      numbers 3317044064679887385961783, 3317044064679887385961801 and
+      3317044064679887385961813.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="https://github.com/susam/mvs">Mark V. Shaney
+      Junior</a>: Finally, I have my own Markov gibberish generator.
+      Always wanted to have one.  The project is inspired by the
+      legendary Usenet bot named Mark V. Shaney that used to post
+      messages to various newsgroups in the 1980s.  My Markov chain
+      program is written in about 30 lines of Python.  I ran it on my
+      24 years of blog posts consisting of over 200 posts and about
+      200,000 words and it generated some pretty interesting
+      gibberish.  See my blog post
+      <a href="fed-24-years-of-posts-to-markov-model.html">Fed 24
+      Years of My Posts to Markov Model</a> to see the examples.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="elliptical-python-programming.html">Elliptical Python
+      Programming</a>: If the previous item was not silly enough, this
+      one surely is.  Earlier this year, I wrote a blog post
+      describing the fine art of Python programming using copious
+      amounts of ellipses.  I will not discuss it further here to
+      avoid spoilers.  I'll just say that any day I'm able to do
+      something pointless, whimsical and fun with computers is a good
+      day for me.  And it was a good day when I wrote this post.
+      Please visit the link above to read the post.  I hope you find
+      it fun.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="fizz-buzz-with-cosines.html">Fizz Buzz with
+      Cosines</a>: Another silly post in which I explain how to
+      compute the discrete Fourier transform of the Fizz Buzz sequence
+      and derive a closed-form expression that can be used to print
+      the sequence.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="fizz-buzz-in-css.html">Fizz Buzz in CSS</a>: Yet
+      another Fizz Buzz implementation, this time using just four
+      lines of CSS.
+    </p>
+  </li>
+</ul>
+<p>
+  That wraps up my coding adventures for this year.  There were fewer
+  hobby projects than usual but I enjoyed spending more time learning
+  new things and revisiting old ones.  One long-running project came
+  to an end, another was cleaned up and a few small new ideas appeared
+  along the way.  Looking forward to what the next year brings.
+</p>

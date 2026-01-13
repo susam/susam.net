@@ -1,0 +1,88 @@
+<!-- date: 2022-02-01 -->
+<!-- title: Toy Traceroute With Ping -->
+<!-- tag: Networking, Protocol, Shell, Technology -->
+<!-- key: fdvfj -->
+<!-- blog: Maze -->
+<p>
+  Here is an example of a toy traceroute using <code>ping</code> on
+  Linux:
+</p>
+<pre>
+<samp>$ <kbd>for ttl in {1..30}; do ping -4 -c 1 -t $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd>
+ 1 From router1-lon.linode.com (212.111.33.229) icmp_seq=1 Time to live exceeded
+ 2 From if-0-1-0-0-0.gw1.lon1.gb.linode.com (109.74.207.10) icmp_seq=1 Time to live exceeded
+ 3 From be5787.rcr51.lon10.atlas.cogentco.com (204.68.252.58) icmp_seq=1 Time to live exceeded
+ 4 From be2589.ccr41.lon13.atlas.cogentco.com (154.54.59.37) icmp_seq=1 Time to live exceeded
+ 5 From be2099.ccr31.bos01.atlas.cogentco.com (154.54.82.34) icmp_seq=1 Time to live exceeded
+ 6 From verizondms.bos01.atlas.cogentco.com (154.54.11.54) icmp_seq=1 Time to live exceeded
+ 7 From ae-66.core1.bsa.edgecastcdn.net (152.195.233.129) icmp_seq=1 Time to live exceeded
+ 8 64 bytes from 93.184.216.34 (93.184.216.34): icmp_seq=1 ttl=57 time=63.0 ms</samp>
+</pre>
+<p>
+  The output above was obtained on a Debian GNU/Linux 11.2 (bullseye)
+  system.  The above loop sends multiple ICMP echo requests with
+  different Time to Live (TTL) values to reach the host
+  for <code>example.com</code>.  The TTL occurs as an 8-bit field in
+  the Internet Protocol (IP) header of each packet.  It is the 9th
+  octet in an IPv4 header and the 8th octet in an IPv6 header.
+</p>
+<p>
+  When a router on the path to the destination receives a packet, it
+  decrements the TTL value in the IP header by one.  If the TTL value
+  becomes 0 after the decrement operation, the router responds with a
+  "time-to-live exceeded" ICMP message.  Thus an echo request with TTL
+  value set to 1 gets us an ICMP "time-to-live exceeded" message from
+  the first router in the path, the next echo request with TTL value 2
+  gets us a similar ICMP message from the second router in the path
+  and so on.  The traceroute is complete when we receive a successful
+  ICMP echo reply.
+</p>
+<p>
+  For comparison, here is the output of the
+  actual <code>traceroute</code> command:
+</p>
+<pre>
+<samp>$ <kbd>traceroute example.com</kbd>
+traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
+ 1  router1-lon.linode.com (212.111.33.229)  0.602 ms  1.202 ms  1.326 ms
+ 2  if-0-1-0-1-0.gw1.lon1.gb.linode.com (109.74.207.14)  0.502 ms if-11-1-0-0-0.gw2.lon1.gb.linode.com (109.74.207.26)  0.401 ms if-11-0-0-0-0.gw2.lon1.gb.linode.com (109.74.207.30)  0.379 ms
+ 3  be5787.rcr51.lon10.atlas.cogentco.com (204.68.252.58)  0.573 ms  0.563 ms  0.566 ms
+ 4  be2589.ccr41.lon13.atlas.cogentco.com (154.54.59.37)  1.271 ms  1.311 ms ldn-bb1-link.ip.twelve99.net (62.115.122.188)  1.400 ms
+ 5  be2099.ccr31.bos01.atlas.cogentco.com (154.54.82.34)  63.511 ms  63.540 ms nyk-bb1-link.ip.twelve99.net (62.115.112.244)  73.397 ms
+ 6  nyk-b1-link.ip.twelve99.net (62.115.135.131)  70.113 ms verizondms.bos01.atlas.cogentco.com (154.54.11.54)  63.657 ms nyk-b1-link.ip.twelve99.net (62.115.135.131)  70.190 ms
+ 7  ae-66.core1.bsa.edgecastcdn.net (152.195.233.129)  63.535 ms edgecast-ic317659-nyk-b6.ip.twelve99-cust.net (62.115.147.199)  77.802 ms ae-66.core1.bsa.edgecastcdn.net (152.195.233.129)  63.582 ms
+ 8  93.184.216.34 (93.184.216.34)  62.895 ms ae-71.core1.nyb.edgecastcdn.net (152.195.69.139)  72.312 ms ae-70.core1.nyb.edgecastcdn.net (152.195.68.141)  69.419 ms
+ 9  93.184.216.34 (93.184.216.34)  70.827 ms  62.896 ms  73.342 ms</samp>
+</pre>
+<p>
+  Each line in the output above corresponds to a hop.  Each line shows
+  one or more addresses.  A maximum of three addresses can be seen in
+  the result for each hop.  That is because there are multiple paths
+  to the destination and the <code>traceroute</code> command sends 3
+  UDP probe packets by default for each hop.  In this manner, it ends
+  up discovering multiple routes to the destination.  It is worth
+  noting here that by default <code>traceroute</code> sends UDP
+  packets, not ICMP echo requests, with different TTL values as probe
+  packets.  But the route discovery mechanism remains the same.  After
+  sending each probe packet, it waits for ICMP "time-to-live exceeded
+  messages" from the routers that fall in the path to the destination.
+</p>
+<p>
+  By comparing the two outputs above, we can see that the route found
+  by the toy traceroute using <code>ping</code> is one of the several
+  routes found by the <code>traceroute</code> command.
+</p>
+<p>
+  For those on macOS, the <code>ping</code> command options need to be
+  modified as follows:
+</p>
+<pre>
+<samp><kbd>for ttl in {1..30}; do ping -c 1 -t 1 -m $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd></samp>
+</pre>
+<p>
+  On macOS, the <code>-t</code> option of the <code>ping</code>
+  command specifies a timeout (not IP TTL) that prevents it from
+  waiting for too long for a successful echo reply which we don't
+  expect to receive.  Further, on macOS, the <code>-m</code> option of
+  the <code>ping</code> command specifies the IP TTL.
+</p>

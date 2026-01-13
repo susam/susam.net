@@ -1,0 +1,118 @@
+<!-- date: 2010-05-03 -->
+<!-- title: Zero Length Regular Expression -->
+<!-- tag: Perl, Python, Java, Lisp, Programming, Technology -->
+<!-- key: ywxjf -->
+<!-- blog: Maze -->
+<p>
+  This post presents a list of how zero length regular expression is
+  handled in various tools and programming languages.  All of them
+  compile the zero length regular expression pattern and the regular
+  expression matches all strings.
+</p>
+<h2 id="gnu-grep">GNU grep</h2>
+<pre>
+<samp>$ <kbd>printf "foo\nbar\n" | grep ""</kbd>
+foo
+bar</samp>
+</pre>
+<h2 id="bsd-grep">BSD grep</h2>
+<pre>
+<samp>$ <kbd>printf "foo\nbar\n" | grep ""</kbd>
+foo
+bar</samp>
+</pre>
+<h2 id="perl">Perl</h2>
+<pre>
+<samp>$ <kbd>perl -e 'print(("foo" =~ //) . "\n")'</kbd>
+1</samp>
+</pre>
+<h2 id="python">Python</h2>
+<pre>
+<samp>$ <kbd>python</kbd>
+Python 2.5.2 (r252:60911, Jan  4 2009, 21:59:32)
+[GCC 4.3.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; <kbd>import re; re.compile('').search('foo')</kbd>
+&lt;_sre.SRE_Match object at 0x7fc6c5a2c510&gt;</samp>
+</pre>
+<h2 id="java">Java</h2>
+<pre>
+<samp>$ <kbd>cat RegexExperiment.java</kbd>
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class RegexExperiment
+{
+    public static void main(String[] args)
+    {
+        System.out.println(Pattern.compile("").matcher("foo").find());
+    }
+}
+$ <kbd>javac RegexExperiment.java &amp;&amp; java RegexExperiment</kbd>
+true</samp>
+</pre>
+<h2 id="mzscheme">MzScheme</h2>
+<pre>
+<samp>$ <kbd>mzscheme</kbd>
+Welcome to MzScheme v4.0.1 [3m], Copyright (c) 2004-2008 PLT Scheme Inc.
+&gt; <kbd>(regexp-match "" "foo")</kbd>
+("")</samp>
+</pre>
+<h2 id="clisp">CLISP</h2>
+<pre>
+<samp>$ <kbd>clisp</kbd>
+  i i i i i i i       ooooo    o        ooooooo   ooooo   ooooo
+  I I I I I I I      8     8   8           8     8     o  8    8
+  I  \ `+' /  I      8         8           8     8        8    8
+   \  `-+-'  /       8         8           8      ooooo   8oooo
+    `-__|__-'        8         8           8           8  8
+        |            8     o   8           8     o     8  8
+  ------+------       ooooo    8oooooo  ooo8ooo   ooooo   8
+
+Welcome to GNU CLISP 2.44.1 (2008-02-23) &lt;http://clisp.cons.org/&gt;
+
+Copyright (c) Bruno Haible, Michael Stoll 1992, 1993
+Copyright (c) Bruno Haible, Marcus Daniels 1994-1997
+Copyright (c) Bruno Haible, Pierpaolo Bernardi, Sam Steingold 1998
+Copyright (c) Bruno Haible, Sam Steingold 1999-2000
+Copyright (c) Sam Steingold, Bruno Haible 2001-2008
+
+Type :h and hit Enter for context help.
+
+[1]&gt; <kbd>(regexp:match "" "foo")</kbd>
+#S(REGEXP:MATCH :START 0 :END 0)</samp>
+</pre>
+<h2 id="c">C</h2>
+<pre>
+<samp>$ <kbd>ls -l /usr/lib/libpcre.so*</kbd>
+lrwxrwxrwx 1 root root     17 May  3 15:15 /usr/lib/libpcre.so -&gt; libpcre.so.3.12.1
+lrwxrwxrwx 1 root root     17 Jan  6 14:57 /usr/lib/libpcre.so.3 -&gt; libpcre.so.3.12.1
+-rw-r--r-- 1 root root 162816 Jul 14  2008 /usr/lib/libpcre.so.3.12.1
+susam@swift:~$ <kbd>cat pcre.c</kbd>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;pcre.h&gt;
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;pcre.h&gt;
+
+int main(int argc, char **argv)
+{
+    pcre *p;
+    char *re = "";
+    char *s  = "foo";
+    const char *errmsg;
+    int errpos;
+    int ovector[10];
+    int ret;
+
+    p = pcre_compile(re, 0, &amp;errmsg, &amp;errpos, NULL);
+    ret = pcre_exec(p, NULL, s, strlen(s), 0, 0,
+                    ovector, sizeof ovector / sizeof *ovector);
+
+    printf(ret &lt; 0 ? "no match\n" : "match\n");
+}
+$ <kbd>cc -lpcre pcre.c &amp;&amp; ./a.out</kbd>
+match</samp>
+</pre>

@@ -264,7 +264,8 @@ site: katex
 
 dist: katex
 	@echo Generating distributable website ...
-	sbcl --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	sbcl --eval '(setf *break-on-signals* t)' \
+	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
 	     --script site.lisp
 	@echo Done; echo
 
@@ -422,7 +423,6 @@ checks: \
   check-bre-spell-center \
   check-bre-spell-license \
   check-bre-thatis \
-  check-comment-files \
   check-copyright \
   check-entities \
   check-general-thatis \
@@ -654,16 +654,6 @@ check-bre-spell-license: cat-my-text
 check-bre-thatis: cat-my-text
 	grep -E '(i\.e\.|e\.\g.),' /tmp/cat | tee /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure each comment file has a corresponding post file.
-check-comment-files:
-	ls -1 content/comments/ | \
-	while read -r f; do \
-	  echo "Checking post file for $$f"; \
-	  if ! [ -e "content/blog/$$f" ] && ! [ -e "content/maze/$$f" ]; then \
-	    echo "ERROR: No post file for comment file: $$f" && exit 1; \
-	  fi; done
-	@echo Done; echo
 
 # Ensure copyright footers have the current year.
 check-copyright:

@@ -1,0 +1,96 @@
+<!-- date: 2018-05-10 -->
+<!-- title: Building Common Lisp Executables -->
+<!-- tag: Lisp, Programming, Technology -->
+<!-- key: nwdzf -->
+<!-- blog: Maze -->
+<p>
+  Since Common Lisp is a language standard (not an implementation) it
+  is hard to provide a single set of instructions or guidelines that
+  would work for all implementations.  There are various
+  implementations of Common Lisp that target native machine code, C
+  code, bytecode, JVM, etc.  So the build instructions, project
+  structure, etc. depend on the target.
+</p>
+<h2 id="using-sbcl">Using SBCL</h2>
+<p>
+  Here is a minimal example that builds a Lisp program into a binary
+  executable with SBCL:
+</p>
+<pre>
+<code>(defun main ()
+  (format t "hello, world~%"))
+(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)</code>
+</pre>
+<p>
+  The SBCL-specific <code>save-lisp-and-die</code> function saves the
+  Lisp process as a core image.  The <code>:executable t</code>
+  keyword argument includes the SBCL runtime in the image to ensure
+  that the image is a standalone executable.  This is why the
+  executable for even a simple hello-world program tends to be quite
+  large (30 MB to 50 MB)!  The <code>:toplevel</code> argument
+  specifies the function to run when the core file is run.
+</p>
+<p>
+  Here are some example commands to get you started:
+</p>
+<pre>
+<samp>$ <kbd>cat hello.lisp</kbd>
+(defun main ()
+  (format t "hello, world~%"))
+(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)
+$ <kbd>sbcl --load hello.lisp</kbd>
+$ <kbd>./hello</kbd>
+hello, world</samp>
+</pre>
+
+<h2 id="moving-unportable-code-to-command-line-argument">Moving Unportable Code to Command Line Argument</h2>
+<p>
+  If you would rather not have SBCL specific code in the Lisp source
+  code file, then you could move
+  the <code>sb-ext:save-lisp-and-die</code> call out of your source
+  file to the SBCL command invocation.  The source code now looks like
+  this:
+</p>
+<pre>
+<code>(defun main ()
+  (format t "hello, world~%"))</code>
+</pre>
+<p>
+  The shell commands now look like this:
+</p>
+<pre>
+<samp>$ <kbd>cat hello.lisp</kbd>
+(defun main ()
+  (format t "hello, world~%"))
+$ <kbd>sbcl --load hello.lisp --eval "(sb-ext:save-lisp-and-die \"hello\" :executable t :toplevel #'main)"</kbd>
+$ <kbd>./hello</kbd>
+hello, world</samp>
+</pre>
+
+<h2 id="using-buildapp">Using Buildapp</h2>
+<p>
+  By the way, there is also
+  <a href="https://www.xach.com/lisp/buildapp/">Buildapp</a> that
+  provides a layer of abstraction for building executables from Lisp
+  programs.  It works with SBCL and CCL.  It requires the toplevel
+  function to be called with an argument though.  Therefore the source
+  code needs to be modified to the following:
+</p>
+<pre>
+<code>(defun main (argv)
+  (declare (ignore argv))
+  (format t "hello, world~%"))</code>
+</pre>
+<p>
+Then Buildapp can be invoked like this:
+</p>
+<pre>
+<samp>$ <kbd>cat hello.lisp</kbd>
+(defun main (argv)
+  (declare (ignore argv))
+  (format t "hello, world~%"))
+$ <kbd>buildapp --load hello.lisp --entry main --output hello</kbd>
+;; loading file #P"/Users/susam/hello.lisp"
+$ <kbd>./hello</kbd>
+hello, world</samp>
+</pre>
