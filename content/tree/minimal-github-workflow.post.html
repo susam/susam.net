@@ -1,0 +1,234 @@
+<!-- date: 2026-01-15 -->
+<!-- title: Minimal GitHub Workflow -->
+<!-- tag: Technology -->
+<!-- key: mghwf -->
+<!-- blog: Maze -->
+<p>
+  This is a note where I capture the various errors we receive when we
+  create GitHub workflows that are smaller than the smallest possible
+  workflow.  I do not know why anyone would ever need this information
+  and I doubt it will serve any purpose for me either but sometimes
+  you just want to know things, no matter how useless they might be.
+  This is one of the useless things I wanted to know today.
+</p>
+{{ toc }}
+<h2 id="empty-workflow">Empty Workflow</h2>
+<p>
+  For the first experiment we just create a zero byte file and push it
+  to GitHub as follows, say, like this:
+</p>
+<pre>
+<code>mkdir -p .github/workflows/
+touch .github/workflows/hello.yml
+git add .github/
+git commit -m 'Empty workflow'
+git push -u origin main</code>
+</pre>
+<p>
+  Under the GitHub repo's <strong>Actions</strong> tab, we find this
+  error:
+</p>
+<pre>
+<samp>Error
+No event triggers defined in `on`</samp>
+</pre>
+<h2 id="on">On</h2>
+<p>
+  Then we update the workflow as follows:
+</p>
+<pre><code>on:</code></pre>
+<p>
+  Now we get this error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 1, Col: 4): Unexpected value '', (Line: 1, Col: 1): Required property is missing: jobs</samp>
+</pre>
+<h2 id="on-push">On Push</h2>
+<p>
+  Next update:
+</p>
+<pre><code>on: push</code></pre>
+<p>
+  Corresponding error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 1, Col: 1): Required property is missing: jobs</samp>
+</pre>
+<h2 id="jobs">Jobs</h2>
+<p>
+  Workflow:
+</p>
+<pre><code>on: push
+jobs:</code></pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 2, Col: 6): Unexpected value ''</samp>
+</pre>
+<h2 id="jobs">Jobs</h2>
+<p>
+  Workflow:
+</p>
+<pre><code>on: push
+jobs:</code></pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 2, Col: 6): Unexpected value ''</samp>
+</pre>
+<h2 id="job-id">Job ID</h2>
+<p>
+  Workflow:
+</p>
+<pre><code>on: push
+jobs:
+  world:</code>
+</pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 3, Col: 9): Unexpected value ''</samp>
+</pre>
+<h2 id="steps">Steps</h2>
+<p>
+  Workflow:
+</p>
+<pre><code>on: push
+jobs:
+  world:
+    steps:</code>
+</pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 4, Col: 11): Unexpected value '', (Line: 4, Col: 5): Required property is missing: runs-on</samp>
+</pre>
+<h2 id="runs-on">Runs On</h2>
+<p>
+  Workflow:
+</p>
+<pre>
+<code>on: push
+jobs:
+  world:
+    runs-on:
+    steps:</code>
+</pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 4, Col: 13): Unexpected value '', (Line: 5, Col: 11): Unexpected value ''</samp>
+</pre>
+<h2 id="runs-on">Runs On Ubuntu Latest</h2>
+<p>
+  Workflow:
+</p>
+<pre>
+<code>on: push
+jobs:
+  world:
+    runs-on: ubuntu-latest
+    steps:</code>
+</pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
+(Line: 5, Col: 11): Unexpected value ''</samp>
+</pre>
+<h2 id="empty-steps">Empty Steps</h2>
+<p>
+  Workflow:
+</p>
+<pre>
+<code>on: push
+jobs:
+  world:
+    runs-on: ubuntu-latest
+    steps: []</code>
+</pre>
+<p>
+  Error:
+</p>
+<pre>
+<samp> Invalid workflow file: .github/workflows/hello.yml#L1
+No steps defined in `steps` and no workflow called in `uses` for the following jobs: world</samp>
+</pre>
+<h2 id="run">Run</h2>
+<p>
+  Workflow:
+</p>
+<pre>
+<code>on: push
+jobs:
+  world:
+    runs-on: ubuntu-latest
+    steps:
+      - run:</code>
+</pre>
+<p>
+  Success:
+</p>
+<pre><samp>
+&#x25bc; Run
+
+  shell: /usr/bin/bash -e {0}</samp>
+</pre>
+<h2 id="run-echo">Run Echo</h2>
+<p>
+  Workflow:
+</p>
+<pre>
+<code>on: push
+jobs:
+  world:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo</code>
+</pre>
+<p>
+  Success:
+</p>
+<pre><samp>&#x25bc; Run
+  echo
+  shell: /usr/bin/bash -e {0}
+
+</samp>
+</pre>
+<h2 id="hello-world">Hello, World</h2>
+<p>
+  Workflow:
+</p>
+<pre>
+<code>on: push
+jobs:
+  world:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo hello, world</code>
+</pre>
+<p>
+  Success:
+</p>
+<pre><samp>&#x25bc; Run echo hello, world
+  echo hello, world
+  shell: /usr/bin/bash -e {0}
+hello, world</samp>
+</pre>
+<p>
+  The experiments are preserved in the commit history of
+  <a href="https://github.com/spxy/minighwf">github.com/spxy/minighwf</a>.
+</p>
