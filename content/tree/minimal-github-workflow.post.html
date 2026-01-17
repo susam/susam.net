@@ -69,19 +69,6 @@ jobs:</code></pre>
 <samp>Invalid workflow file: .github/workflows/hello.yml#L1
 (Line: 2, Col: 6): Unexpected value ''</samp>
 </pre>
-<h2 id="jobs">Jobs</h2>
-<p>
-  Workflow:
-</p>
-<pre><code>on: push
-jobs:</code></pre>
-<p>
-  Error:
-</p>
-<pre>
-<samp>Invalid workflow file: .github/workflows/hello.yml#L1
-(Line: 2, Col: 6): Unexpected value ''</samp>
-</pre>
 <h2 id="job-id">Job ID</h2>
 <p>
   Workflow:
@@ -164,7 +151,7 @@ jobs:
   Error:
 </p>
 <pre>
-<samp> Invalid workflow file: .github/workflows/hello.yml#L1
+<samp>Invalid workflow file: .github/workflows/hello.yml#L1
 No steps defined in `steps` and no workflow called in `uses` for the following jobs: world</samp>
 </pre>
 <h2 id="run">Run</h2>
@@ -182,8 +169,8 @@ jobs:
 <p>
   Success:
 </p>
-<pre><samp>
-&#x25bc; Run
+<pre>
+<samp>&#x25bc; Run
 
   shell: /usr/bin/bash -e {0}</samp>
 </pre>
@@ -205,7 +192,6 @@ jobs:
 <pre><samp>&#x25bc; Run
   echo
   shell: /usr/bin/bash -e {0}
-
 </samp>
 </pre>
 <h2 id="hello-world">Hello, World</h2>

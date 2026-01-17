@@ -159,7 +159,7 @@ backup:
 	ls -lh /opt/cache/
 	df -h /
 
-BOT_RE = tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
+BOT_RE = tt-rss|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
 
 follow-log:
 	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)"
@@ -1013,12 +1013,10 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
+# Publish website.
+copub: co cu gh cb
 
-# Commit changes and publish website across all mirrors.
-copub: co pub
-
-# Publish website across all mirrors.
-pub: cu gh cb
+mirrors: gh cb
 
 # Commit changes to the content update ('cu') branch.
 co:
