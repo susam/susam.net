@@ -1,0 +1,241 @@
+<!-- date: 2026-01-19 -->
+<!-- title: The Art of Nested Code Fencing in Markdown -->
+<!-- tag: Web, Technology -->
+<!-- key: ncfim -->
+<!-- import: extra.css -->
+<!-- blog: Main -->
+<p>
+  In case you didn't know, it is easy to nest code block delimiters in
+  CommonMark.  Since GitHub Flavoured Markdown (GFM) is a strict
+  superset of CommonMark, whatever we discuss in this post applies
+  equally well to both CommonMark and GFM.
+</p>
+<p>
+  Why would we ever need to nest code block delimiters within a pair
+  of code block delimiters?  Let us start with a simple example.
+</p>
+{{ toc }}
+<h2 id="code-fences">Code Fences</h2>
+<h3 id="basic-code-fences">Basic Code Fences</h3>
+<p>
+  Say we are writing a README.md where we want to teach how to write
+  Markdown.  Naturally, we would write the Markdown examples within
+  fenced code blocks so that the raw Markdown source text is
+  preserved.  For example, we might write:
+</p>
+<pre>
+<code>To add emphasis to some text, wrap it in a pair of asterisks.
+For example:
+
+```
+hello, *world*
+```</code>
+</pre>
+<p>
+  A CommonMark renderer converts the above Markdown text to the
+  following HTML:
+</p>
+<pre>
+<code>&lt;p&gt;To add emphasis to some text, wrap it in a pair of asterisks.
+For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;hello, *world*
+&lt;/code&gt;&lt;/pre&gt;</code>
+</pre>
+<p>
+  The rendered output looks like this:
+</p>
+<div class="box">
+<p>To add emphasis to some text, wrap it in a pair of asterisks.
+For example:</p>
+<pre><code>hello, *world*
+</code></pre>
+</div>
+<p>
+  But what if we want to use triple backticks within the fenced code
+  block?  Perhaps we want to teach how to use code fences in our
+  README.md.  This presents a difficulty.  We cannot write triple
+  backticks within a fenced code block that is started with triple
+  backticks.  The second occurrence of triple backticks would be
+  interpreted as the closing code fence, thereby terminating the code
+  block.  CommonMark offers two options to resolve this difficulty.
+</p>
+<h3 id="fancy-code-fences">Fancy Code Fences</h3>
+<p>
+  There are several ways to include triple backticks within fenced
+  code blocks.  First, we can use tildes as the code fence:
+</p>
+<pre>
+<code>To write a code block, wrap it in a pair of triple backticks.
+For example:
+
+~~~
+```
+echo 'hello, world'
+```
+~~~</code>
+</pre>
+<p>
+  In fact, the code fence need not be exactly three backticks or
+  tidles.  Any number of backticks or tidles is allowed as long as the
+  number is at least three.  So the following is equivalent:
+</p>
+<pre>
+<code>To write a code block, wrap it in a pair of triple backticks.
+For example:
+
+~~~~~~~~~~~~~~~~~~~
+```
+echo 'hello, world'
+```
+~~~~~~~~~~~~~~~~~~~</code>
+</pre>
+<p>
+  So is this:
+</p>
+<pre>
+<code>To write a code block, wrap it in a pair of triple backticks.
+For example:
+
+```````````````````
+```
+echo 'hello, world'
+```
+```````````````````</code>
+</pre>
+<p>
+  All three examples above produce the following HTML:
+</p>
+<pre>
+&lt;p&gt;To write a code block, wrap it in a pair of triple backticks.
+For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;```
+echo 'hello, world'
+```
+&lt;/code&gt;&lt;/pre&gt;
+</pre>
+<p>
+  The rendered output looks like this:
+</p>
+<div class="box">
+<p>To write a code block, wrap it in a pair of triple backticks.
+For example:</p>
+<pre><code>```
+echo 'hello, world'
+```
+</code></pre>
+</div>
+<h2 id="code-spans">Code Spans</h2>
+<h3 id="basic-code-spans">Basic Code Spans</h3>
+<p>
+  A similar problem arises with inline code spans as well.  Most
+  Markdown users know to use backticks to delimit code spans.  For
+  example:
+</p>
+<pre><code>The `echo` command writes arguments to standard output.</code></pre>
+<p>
+  This produces the following HTML:
+</p>
+<pre><code>&lt;p&gt;The &lt;code&gt;echo&lt;/code&gt; command writes arguments to standard output.&lt;/p&gt;</code></pre>
+<p>
+  The rendered HTML looks like this:
+</p>
+<div class="box">
+<p>The <code>echo</code> command writes arguments to standard output.</p>
+</div>
+<p>
+  However, what do we do when we need to write a backtick within an
+  inline code span?
+</p>
+<h3 id="fancy-code-spans">Fancy Code Spans</h3>
+<p>
+  A code span delimiter need not be exactly one backtick.  It can be
+  any number of backticks.  So <code>`echo`</code>
+  and <code>``echo``</code> produce identical HTML.  There is another
+  important but less-known detail.  When the text within an inline
+  code span both begins <em>and</em> ends with spaces, a single space
+  is removed from both ends.  So <code>`echo`</code> and
+  <code>` echo `</code> are equivalent.  Therefore, when we need to
+  put backticks within an inline code span, we can use multiple
+  backticks and a space to start the code span.  Here is an example:
+</p>
+<pre><code>The string `` `${a}` `` is an example of a template literal.</code></pre>
+<p>
+  Here is the HTML produced:
+</p>
+<pre><code>&lt;p&gt;The string &lt;code&gt;`${a}`&lt;/code&gt; is an example of a template literal.&lt;/p&gt;</code></pre>
+<p>
+  Here is the rendered HTML:
+</p>
+<div class="box">
+<p>The string <code>`${a}`</code> is an example of a template literal.</p>
+</div>
+<h2 id="specification">Specification</h2>
+<p>
+  In this section, I'll note down excerpts from
+  the <a href="https://spec.commonmark.org/0.30/">CommonMark Spec
+  Version 0.30</a>, which is by now over four years old.
+</p>
+<p>
+  From section
+  <a href="https://spec.commonmark.org/0.30/#fenced-code-blocks">4.5
+  Fenced Code Blocks</a>:
+</p>
+<blockquote>
+  <p>
+    A <a href="https://spec.commonmark.org/0.30/#code-fence">code
+    fence</a> is a sequence of at least three consecutive backtick
+    characters (<code>`</code>) or tildes (<code>~</code>).  (Tildes
+    and backticks cannot be mixed.)
+  </p>
+</blockquote>
+<blockquote>
+  <p>
+    The content of the code block consists of all subsequent lines,
+    until a closing
+    <a href="https://spec.commonmark.org/0.30/#code-fence">code fence</a>
+    of the same type as the code block began with (backticks or tildes),
+    and with at least as many backticks or tildes as the opening code
+    fence.
+  </p>
+</blockquote>
+<p>
+  From section
+  <a href="https://spec.commonmark.org/0.30/#code-spans">6.1 Code
+  Spans</a>:
+</p>
+<blockquote>
+  <p>
+    A <a href="https://spec.commonmark.org/0.30/#backtick-string">backtick
+    string</a> is a string of one or more backtick characters
+    (<code>`</code>) that is neither preceded nor followed by a
+    backtick.
+  </p>
+  <p>
+    A <a href="https://spec.commonmark.org/0.30/#code-span">code
+    span</a> begins with a backtick string and ends with a backtick
+    string of equal length.  The contents of the code span are the
+    characters between these two backtick strings, normalized in the
+    following ways:
+  </p>
+  <ul>
+    <li>
+      First, <a href="https://spec.commonmark.org/0.30/#line-ending">line endings</a>
+      are converted to <a href="https://spec.commonmark.org/0.30/#space">spaces</a>.
+    </li>
+    <li>
+      If the resulting string both begins <em>and</em> ends with a
+      <a href="https://spec.commonmark.org/0.30/#space">space</a>
+      character, but does not consist entirely of
+      <a href="https://spec.commonmark.org/0.30/#space">space</a>
+      characters, a single
+      <a href="https://spec.commonmark.org/0.30/#space">space</a>
+      character is removed from the front and back.  This allows you
+      to include code that begins or ends with backtick characters,
+      which must be separated by whitespace from the opening or
+      closing backtick strings.
+    </li>
+  </ul>
+</blockquote>
+<p>
+  I hope this will be useful to you some day.
+</p>
