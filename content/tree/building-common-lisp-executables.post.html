@@ -16,11 +16,9 @@
   Here is a minimal example that builds a Lisp program into a binary
   executable with SBCL:
 </p>
-<pre>
-<code>(defun main ()
+<pre><code>(defun main ()
   (format t "hello, world~%"))
-(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)</code>
-</pre>
+(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)</code></pre>
 <p>
   The SBCL-specific <code>save-lisp-and-die</code> function saves the
   Lisp process as a core image.  The <code>:executable t</code>
@@ -33,15 +31,13 @@
 <p>
   Here are some example commands to get you started:
 </p>
-<pre>
-<samp>$ <kbd>cat hello.lisp</kbd>
+<pre><samp>$ <kbd>cat hello.lisp</kbd>
 (defun main ()
   (format t "hello, world~%"))
 (sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)
 $ <kbd>sbcl --load hello.lisp</kbd>
 $ <kbd>./hello</kbd>
-hello, world</samp>
-</pre>
+hello, world</samp></pre>
 
 <h2 id="moving-unportable-code-to-command-line-argument">Moving Unportable Code to Command Line Argument</h2>
 <p>
@@ -51,21 +47,17 @@ hello, world</samp>
   file to the SBCL command invocation.  The source code now looks like
   this:
 </p>
-<pre>
-<code>(defun main ()
-  (format t "hello, world~%"))</code>
-</pre>
+<pre><code>(defun main ()
+  (format t "hello, world~%"))</code></pre>
 <p>
   The shell commands now look like this:
 </p>
-<pre>
-<samp>$ <kbd>cat hello.lisp</kbd>
+<pre><samp>$ <kbd>cat hello.lisp</kbd>
 (defun main ()
   (format t "hello, world~%"))
 $ <kbd>sbcl --load hello.lisp --eval "(sb-ext:save-lisp-and-die \"hello\" :executable t :toplevel #'main)"</kbd>
 $ <kbd>./hello</kbd>
-hello, world</samp>
-</pre>
+hello, world</samp></pre>
 
 <h2 id="using-buildapp">Using Buildapp</h2>
 <p>
@@ -76,21 +68,17 @@ hello, world</samp>
   function to be called with an argument though.  Therefore the source
   code needs to be modified to the following:
 </p>
-<pre>
-<code>(defun main (argv)
+<pre><code>(defun main (argv)
   (declare (ignore argv))
-  (format t "hello, world~%"))</code>
-</pre>
+  (format t "hello, world~%"))</code></pre>
 <p>
 Then Buildapp can be invoked like this:
 </p>
-<pre>
-<samp>$ <kbd>cat hello.lisp</kbd>
+<pre><samp>$ <kbd>cat hello.lisp</kbd>
 (defun main (argv)
   (declare (ignore argv))
   (format t "hello, world~%"))
 $ <kbd>buildapp --load hello.lisp --entry main --output hello</kbd>
 ;; loading file #P"/Users/susam/hello.lisp"
 $ <kbd>./hello</kbd>
-hello, world</samp>
-</pre>
+hello, world</samp></pre>

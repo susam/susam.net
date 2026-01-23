@@ -65,14 +65,12 @@
   1752 when the British Empire switched from the Julian calendar to
   the Gregorian calendar:
 </p>
-<pre>
-<samp>$ <kbd>cal 9 1752</kbd>
+<pre><samp>$ <kbd>cal 9 1752</kbd>
    September 1752
 Su Mo Tu We Th Fr Sa
        1  2 14 15 16
 17 18 19 20 21 22 23
-24 25 26 27 28 29 30</samp>
-</pre>
+24 25 26 27 28 29 30</samp></pre>
 <p>
   The above output can be obtained by running the <code>cal</code>
   command as shown above on a Unix or Linux system.  Ignoring this gap
@@ -111,21 +109,18 @@ Su Mo Tu We Th Fr Sa
   or 3&#8239;155&#8239;760&#8239;000 seconds.  Here is a quick
   demonstration of this with a simple Python program:
 </p>
-<pre>
-<code>#!/usr/bin/env python3
+<pre><code>#!/usr/bin/env python3
 
 import datetime
 
 for year in range(1, 2400, 100):
     delta = datetime.date(year + 100, 1, 1) - datetime.date(year, 1, 1)
     print('{:04}-{:04}: {} d = {} s'
-          .format(year, year + 99, delta.days, delta.total_seconds()))</code>
-</pre>
+          .format(year, year + 99, delta.days, delta.total_seconds()))</code></pre>
 <p>
   Here is the output of this program:
 </p>
-<pre>
-<samp>0001-0100: 36524 d = 3155673600.0 s
+<pre><samp>0001-0100: 36524 d = 3155673600.0 s
 0101-0200: 36524 d = 3155673600.0 s
 0201-0300: 36524 d = 3155673600.0 s
 0301-0400: 36525 d = 3155760000.0 s
@@ -148,8 +143,7 @@ for year in range(1, 2400, 100):
 2001-2100: 36524 d = 3155673600.0 s
 2101-2200: 36524 d = 3155673600.0 s
 2201-2300: 36524 d = 3155673600.0 s
-2301-2400: 36525 d = 3155760000.0 s</samp>
-</pre>
+2301-2400: 36525 d = 3155760000.0 s</samp></pre>
 <p>
   Thus one millionth of a century has 3155.6736 or 3155.7600 seconds,
   that is 52 minutes 35.6736 seconds or 52 minutes 35.7600 seconds.

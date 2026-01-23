@@ -45,19 +45,15 @@
 <p>
   You can save two characters using nesting.
 </p>
-<pre>
-<code>li{
+<pre><code>li{
   counter-increment: n;
   &amp;:not(:nth-child(5n))::before { content: counter(n) }
   &amp;:nth-child(3n)::before { content: "Fizz" }
   &amp;:nth-child(5n)::after { content: "Buzz" }
-}</code>
-</pre>
+}</code></pre>
 <p>
   After minifying this:
-<pre>
-<code>li{counter-increment:n;&amp;:not(:nth-child(5n))::before{content:counter(n)}&amp;:nth-child(3n)::before{content:"Fizz"}&amp;:nth-child(5n)::after{content:"Buzz"}}</code>
-</pre>
+<pre><code>li{counter-increment:n;&amp;:not(:nth-child(5n))::before{content:counter(n)}&amp;:nth-child(3n)::before{content:"Fizz"}&amp;:nth-child(5n)::after{content:"Buzz"}}</code></pre>
 <p>
   Also, debatable whether this counts, but browsers don't care if you
   only use one colon for <code>::before</code>

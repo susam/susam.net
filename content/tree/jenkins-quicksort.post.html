@@ -144,11 +144,9 @@
       at the bottom and paste the following pipeline script and
       click <em>Save</em>.
     </p>
-<pre>
-<code>node {
+<pre><code>node {
     echo "hello, world"
-}</code>
-</pre>
+}</code></pre>
   </li>
   <li>
     <p>
@@ -189,8 +187,7 @@
   job can recursively call itself.  We are not going to write
   something like the following:
 </p>
-<pre>
-<code>properties([
+<pre><code>properties([
     parameters([
         string(
             name: 'INPUT',
@@ -206,16 +203,14 @@ def factorial(n) {
 
 node {
     echo "${factorial(params.INPUT as int)}"
-}</code>
-</pre>
+}</code></pre>
 <p>
   The code above is an example of a function that calls itself
   recursively.  However, we want the <em>build job</em> (not the
   function) to call itself recursively.  So we write the following
   instead:
 </p>
-<pre>
-<code>properties([
+<pre><code>properties([
     parameters([
         string(
             name: 'INPUT',
@@ -245,8 +240,7 @@ node {
 
     echo "RESULT: ${env.RESULT}"
     currentBuild.description = "${params.INPUT} -&gt; ${env.RESULT}"
-}</code>
-</pre>
+}</code></pre>
 <p>
   This code example demonstrates a few things worth noting:
 </p>
@@ -379,8 +373,7 @@ node {
   the standard library is quite straightforward in Groovy.  Here is an
   example in the form of Jenkins pipeline:
 </p>
-<pre>
-<code>properties([
+<pre><code>properties([
     parameters([
         string(
             name: 'INPUT',
@@ -393,16 +386,14 @@ node {
 node {
     def numbers = params.INPUT.split('\\s*,\\s*').collect {it as int}
     echo "${numbers.sort()}"
-}</code>
-</pre>
+}</code></pre>
 <p>
   It can't get simpler than this.  However, we are not here to
   demonstrate the standard library methods.  We are here to
   demonstrate recursion in Jenkins!  We write the following pipeline
   script instead:
 </p>
-<pre>
-<code>properties([
+<pre><code>properties([
     parameters([
         string(
             name: 'INPUT',
@@ -451,8 +442,7 @@ node {
     env.RESULT = (results.lo + [pivot] + results.hi).join(', ')
     echo "RESULT: ${env.RESULT}"
     currentBuild.description = "${params.INPUT} -&gt; ${env.RESULT}"
-}</code>
-</pre>
+}</code></pre>
 <p>
   Some of the code is similar to the one in the previous section.  For
   example, the <code>properties</code> step to set up the build

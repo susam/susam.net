@@ -11,27 +11,23 @@
   integers entered as input into the REPL prompt.  Here is the
   program:
 </p>
-<pre>
-<code>while True:
+<pre><code>while True:
     try:
         line = input('&gt; ')
         print(sum([int(n) for n in line.split()]))
     except ValueError as e:
         print('error:', e)
     except (KeyboardInterrupt, EOFError):
-        break</code>
-</pre>
+        break</code></pre>
 <p>
   Here is how it works:
 </p>
-<pre>
-<samp>$ <kbd>python3 repl.py</kbd>
+<pre><samp>$ <kbd>python3 repl.py</kbd>
 &gt; <kbd>10 20 30</kbd>
 60
 &gt; <kbd>40 50 60</kbd>
 150
-&gt; </samp>
-</pre>
+&gt; </samp></pre>
 <p>
   If we now type <kbd>&uarr;</kbd> (the up arrow key)
   or <kbd>ctrl</kbd>+<kbd>p</kbd> to bring back the previous input, we
@@ -59,8 +55,7 @@
   add <code>import readline</code> to our program.  Here is how our
   program would look:
 </p>
-<pre>
-<code>import readline
+<pre><code>import readline
 
 while True:
     try:
@@ -69,20 +64,17 @@ while True:
     except ValueError as e:
         print('error:', e)
     except (KeyboardInterrupt, EOFError):
-        break</code>
-</pre>
+        break</code></pre>
 <p>
   Now <kbd>&uarr;</kbd>, <kbd>ctrl</kbd>+<kbd>p</kbd>, etc. work as
   expected.
 </p>
-<pre>
-<samp>$ <kbd>python3 repl.py</kbd>
+<pre><samp>$ <kbd>python3 repl.py</kbd>
 &gt; <kbd>10 20 30</kbd>
 60
 &gt; <kbd>40 50 60</kbd>
 150
-&gt; <kbd>40 50 60</kbd></samp>
-</pre>
+&gt; <kbd>40 50 60</kbd></samp></pre>
 <p>
   The last line of input in the example above is obtained by typing
   either <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>.  In fact,
@@ -109,8 +101,7 @@ while True:
   achieved by using the <code>read_history_file()</code>
   and <code>write_history_file()</code> functions as shown below:
 </p>
-<pre>
-<code>import readline
+<pre><code>import readline
 import os
 
 HISTORY_FILE = os.path.expanduser('~/.repl_history')
@@ -125,8 +116,7 @@ while True:
     except ValueError as e:
         print('error:', e)
     except (KeyboardInterrupt, EOFError):
-        break</code>
-</pre>
+        break</code></pre>
 <p>
   For more information on how to use this module, see the
   Python <a href="https://docs.python.org/3/library/readline.html">readline
@@ -143,14 +133,12 @@ while True:
   installed from package repositories of various operating systems.
   Here is a demonstration of this tool:
 </p>
-<pre>
-<samp>$ <kbd>rlwrap cat</kbd>
+<pre><samp>$ <kbd>rlwrap cat</kbd>
 <kbd>hello</kbd>
 hello
 <kbd>world</kbd>
 world
-<kbd>world</kbd></samp>
-</pre>
+<kbd>world</kbd></samp></pre>
 <p>
   The last line of input in the example above is obtained by typing
   either <kbd>&uarr;</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd>.  In the

@@ -13,8 +13,7 @@
   represents the list of data points.
 </p>
 <h2 id="example-data-table">Example Data Table</h2>
-<pre>
-<samp>$ <kbd>cat perf.sql</kbd>
+<pre><samp>$ <kbd>cat perf.sql</kbd>
 CREATE TABLE performance
 (
     name VARCHAR,
@@ -53,11 +52,9 @@ statistics=# <kbd>select * from performance;</kbd>
  FREE |      198
 (7 rows)
 
-statistics=#</samp>
-</pre>
+statistics=#</samp></pre>
 <h2 id="useful-details-to-create-our-function">Useful Details to Create Our Function</h2>
-<pre>
-<samp>statistics=# <kbd>SELECT aggtransfn, aggfinalfn, aggtranstype::regtype, agginitval</kbd>
+<pre><samp>statistics=# <kbd>SELECT aggtransfn, aggfinalfn, aggtranstype::regtype, agginitval</kbd>
 statistics-# <kbd>FROM pg_aggregate</kbd>
 statistics-# <kbd>WHERE aggfnoid='stddev(double precision)'::regprocedure;</kbd>
   aggtransfn  |     aggfinalfn     |    aggtranstype    | agginitval
@@ -73,11 +70,9 @@ statistics-# <kbd>WHERE aggfnoid='avg(double precision)'::regprocedure;</kbd>
  float8_accum | float8_avg | double precision[] | {0,0,0}
 (1 row)
 
-statistics=#</samp>
-</pre>
+statistics=#</samp></pre>
 <h2 id="function-definition">Function Definition</h2>
-<pre>
-<samp>$ <kbd>cat cv.sql</kbd>
+<pre><samp>$ <kbd>cat cv.sql</kbd>
 CREATE OR REPLACE FUNCTION finalcv(double precision[])
 RETURNS double precision
 AS $$
@@ -90,11 +85,9 @@ CREATE AGGREGATE cv(double precision)
     stype = double precision[],
     finalfunc = finalcv,
     initcond = '{0, 0, 0}'
-);</samp>
-</pre>
+);</samp></pre>
 <h2 id="usage">Usage</h2>
-<pre>
-<samp>$ <kbd>psql statistics</kbd>
+<pre><samp>$ <kbd>psql statistics</kbd>
 psql (8.4.3)
 Type "help" for help.
 
@@ -119,8 +112,7 @@ statistics=# <kbd>select cv(duration) from performance;</kbd>
  0.211354592616754
 (1 row)
 
-statistics=#</samp>
-</pre>
+statistics=#</samp></pre>
 <h2 id="bessel-correction">Bessel's Correction</h2>
 <p>
   Checked whether
@@ -128,14 +120,12 @@ statistics=#</samp>
   correction</a> was used in the <code>stddev()</code> function of
   PostgreSQL.  Yes, it was used.
 </p>
-<pre>
-<samp>$ <kbd>octave -q</kbd>
+<pre><samp>$ <kbd>octave -q</kbd>
 octave:1&gt; <kbd>std([101, 157, 209, 176, 197, 193, 198], 0)</kbd>
 ans =  37.168
 octave:2&gt; <kbd>std([101, 157, 209, 176, 197, 193, 198], 1)</kbd>
 ans =  34.411
-octave:3&gt;</samp>
-</pre>
+octave:3&gt;</samp></pre>
 <p>
   The <code>std()</code> function in MATLAB and GNU Octave applies
   Bessel's correction when invoked with the second argument

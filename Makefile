@@ -159,7 +159,7 @@ backup:
 	ls -lh /opt/cache/
 	df -h /
 
-BOT_RE = tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
+BOT_RE = tt-rss|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
 
 follow-log:
 	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)"
@@ -517,6 +517,7 @@ check-bre-and: cat-my-text
 	  s/, and they are not self-sustaining --- they depend/x/g; \
 	  s/, and we should be open to all interpretations/x/g; \
 	  s/, and we will have a much more careful review process/x/g; \
+	  s/, and with at least as many backticks/x/g; \
 	' > /tmp/tr
 	grep -Ei ', and([^a-z]|$$)' /tmp/tr > /tmp/err || true
 	grep -Eino '.{0,30}, and([^a-z]|$$).{0,30}' /tmp/err || true
@@ -589,6 +590,7 @@ check-bre-spell-iz: cat-my-text
 	  s/izz/x/g; \
 	  s/package-initialize/x/g; \
 	  s/public synchronized/x/g; \
+	  s/these two backtick strings, normalized in the/x/g; \
 	  s/traumatized by Java-esque/x/g; \
 	  s/[^A-Za-z]verizon/x/g; \
 	  s/[^A-Za-z]wizards\{0,1\}[^A-Za-z]/x/g; \
@@ -839,7 +841,9 @@ check-sentence-spacing: cat-all-text
 # Run HTML tidy on the website.
 tidy: dist
 	find _site -name "*.html" | \
-	grep -vE '_site/css-fizz-buzz\.html|_site/code/web/css-fizz-buzz-ol\.html' | \
+	grep -v '_site/css-fizz-buzz\.html' | \
+	grep -v '_site/code/web/css-fizz-buzz-ol\.html' | \
+	grep -v '_site/nested-code-fences.html' | \
 	while read -r page; do \
 	  echo Tidying "$$page"; \
 	  sed 's/ method="dialog"//' "$$page" > /tmp/tmp.html; \
@@ -1013,12 +1017,10 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
+# Publish website.
+copub: co cu gh cb
 
-# Commit changes and publish website across all mirrors.
-copub: co pub
-
-# Publish website across all mirrors.
-pub: cu gh cb
+mirrors: gh cb
 
 # Commit changes to the content update ('cu') branch.
 co:

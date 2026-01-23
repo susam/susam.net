@@ -18,8 +18,7 @@
   I solved them with Awk.
 </p>
 <p>Wordle #217:</p>
-<pre>
-<samp>$ <kbd>alias words='awk '/^[a-z][a-z][a-z][a-z][a-z]$/' /usr/share/dict/words'</kbd>
+<pre><samp>$ <kbd>alias words='awk '/^[a-z][a-z][a-z][a-z][a-z]$/' /usr/share/dict/words'</kbd>
 $ <kbd>words | awk '/^....e/ &amp;&amp; !/[aros]/' | head -n 5</kbd>
 beige
 belie
@@ -36,30 +35,25 @@ $ <kbd>words | awk '/[^e]i[^iec][^e]e/ &amp;&amp; /c/ &amp;&amp; !/[arosbgfh]/' 
 mince
 wince
 $ <kbd>words | awk '/[^e]ince/ &amp;&amp; !/[arosbgfhm]/' | head -n 5</kbd>
-wince</samp>
-</pre>
+wince</samp></pre>
 <p>Wordle #218:</p>
-<pre>
-<samp>$ <kbd>words | awk '/.r.../ &amp;&amp; !/[aose]/' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | awk '/.r.../ &amp;&amp; !/[aose]/' | head -n 5</kbd>
 brick
 bring
 brink
 briny
 bruin
 $ <kbd>words | awk '/.ri[^c]./ &amp;&amp; /c/ &amp;&amp; !/[aosebk]/' | head -n 5</kbd>
-crimp</samp>
-</pre>
+crimp</samp></pre>
 <p>Wordle #219:</p>
-<pre>
-<samp>$ <kbd>words | awk '/..o../ &amp;&amp; !/[arse]/' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | awk '/..o../ &amp;&amp; !/[arse]/' | head -n 5</kbd>
 block
 blond
 blood
 bloom
 blown
 $ <kbd>words | awk '/.[^l]o.[^k]/ &amp;&amp; /l/ &amp;&amp; /k/ &amp;&amp; !/[arsebc]/' | head -n 5</kbd>
-knoll</samp>
-</pre>
+knoll</samp></pre>
 <!-- date: 2022-01-23 14:26:21 +0000 -->
 <!-- name: Fillon -->
 <blockquote>
