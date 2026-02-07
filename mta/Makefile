@@ -31,7 +31,7 @@ smtp: checkroot checkpass rmsmtp
 	# Enabling AUTH PLAIN ...
 	# --------------------------------------------------------------
 	cp /etc/exim4/exim4.conf.template /etc/exim4/exim4.conf.bkp
-	sed -e "/plain_server/,/endif/ s/# //" \
+	sed -e "/^# plain_server/,/endif/ s/# //" \
 	    /etc/exim4/exim4.conf.template > /tmp/exim4.conf.template
 	mv /tmp/exim4.conf.template /etc/exim4
 	echo "$(SMTP_USER):$$(mkpasswd -m sha-512 "$(smtppass)")" \
@@ -77,8 +77,8 @@ smtp: checkroot checkpass rmsmtp
 	@echo "Add the following TXT records to DNS:"
 	@echo
 	@echo "@ TXT v=spf1 mx -all"
-	@echo "s1._domainkey TXT p=$$(cat /tmp/publickey)"
 	@echo "_dmarc TXT v=DMARC1; p=reject; adkim=s; aspf=s"
+	@echo "s1._domainkey TXT p=$$(cat /tmp/publickey)"
 	@echo
 	@echo Done; echo
 
