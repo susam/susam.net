@@ -83,13 +83,11 @@
   bar and the splash screen.  The following Elisp code shows how these
   UI elements can be disabled:
 </p>
-<pre>
-<code>(menu-bar-mode 0)
+<pre><code>(menu-bar-mode 0)
 (when (display-graphic-p)
   (tool-bar-mode 0)
   (scroll-bar-mode 0))
-(setq inhibit-startup-screen t)</code>
-</pre>
+(setq inhibit-startup-screen t)</code></pre>
 <p>
   After saving the code in the initialisation file (such
   as <code>~/.emacs</code>, <code>~/.emacs.d/init.el</code>, etc.) and
@@ -123,14 +121,12 @@
   Although not mentioned in the book, here is a quick way to test out
   all of these modifier keys:
 </p>
-<pre>
-<code>(global-set-key (kbd "C-j") (lambda () (interactive) (message "You typed C-j")))
+<pre><code>(global-set-key (kbd "C-j") (lambda () (interactive) (message "You typed C-j")))
 (global-set-key (kbd "M-j") (lambda () (interactive) (message "You typed M-j")))
 (global-set-key (kbd "C-S-j") (lambda () (interactive) (message "You typed C-S-j")))
 (global-set-key (kbd "s-j") (lambda () (interactive) (message "You typed s-j")))
 (global-set-key (kbd "H-j") (lambda () (interactive) (message "You typed H-j")))
-(global-set-key (kbd "A-j") (lambda () (interactive) (message "You typed A-j")))</code>
-</pre>
+(global-set-key (kbd "A-j") (lambda () (interactive) (message "You typed A-j")))</code></pre>
 <p>
   Go to some buffer, say, the scratch buffer with
   <code>C-x b *scratch* RET</code>, then copy the above code to it,
@@ -352,18 +348,14 @@
 <p>
   The following function written in Elisp is interactive:
 </p>
-<pre>
-<code>(defun hello ()
+<pre><code>(defun hello ()
   (interactive)
-  (message "hello"))</code>
-</pre>
+  (message "hello"))</code></pre>
 <p>
   However, the following function is not interactive:
 </p>
-<pre>
-<code>(defun hola ()
-  (message "hola"))</code>
-</pre>
+<pre><code>(defun hola ()
+  (message "hola"))</code></pre>
 <p>
   The <code>(interactive)</code> expression declares a function as
   interactive which allows it to be called interactively

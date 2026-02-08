@@ -43,14 +43,12 @@
     Consider the following pseudocode with <code>k</code> nested
     loops:
   </p>
-<pre>
-<code>x = 0
+<pre><code>x = 0
 for c<sub>1</sub> in 0 to (n - 1):
     for c<sub>2</sub> in 0 to (c<sub>1</sub> - 1):
         ...
             for c<sub>k</sub> in 0 to (c<sub>k-1</sub> - 1):
-                x = x + 1</code>
-</pre>
+                x = x + 1</code></pre>
   <p>
     What is the final value of <code>x</code> after the outermost loop
     terminates?

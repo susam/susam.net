@@ -200,8 +200,7 @@
   Here's a dependency graph which shows how the various Debian
   packages for TeX Live depend on each other.
 </p>
-<pre>
-<code>                          texlive-latex-extra
+<pre><code>                          texlive-latex-extra
                              |   |   :   :
            +-----------------+   |   :   :..................
            |                     |   :                     :
@@ -223,19 +222,16 @@
                      +----------+ | +----------+
                                 | | |
                                 v v v
-                         texlive-latex-base</code>
-</pre>
+                         texlive-latex-base</code></pre>
 <p>
   Here's the legend for the above graph:
 </p>
-<pre>
-<code>          A                       A
+<pre><code>          A                       A
           |                       :
           v                       v
           B                       B
 
-    A depends on B          A recommends B</code>
-</pre>
+    A depends on B          A recommends B</code></pre>
 <p>
   The <code>texlive-full</code> package depends on all of the packages
   shown above (except <code>texlive</code> of course because that's a
