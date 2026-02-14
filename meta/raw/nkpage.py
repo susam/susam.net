@@ -29,7 +29,6 @@ def read_items(fname):
             if 'href' in line:
                 m = re.search(r'<a href=".*">(.*)</a> \((.*)\)', line)
                 if m is not None:
-                    print(m.group(1), m.group(2))
                     items.append((m.group(2), m.group(1)))
     return items
 

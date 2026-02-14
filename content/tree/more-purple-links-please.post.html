@@ -41,14 +41,12 @@
   userscript.  For example the following userscript can override the
   website's stylesheet to colour visited links purple again:
 </p>
-<pre>
-<code>// ==UserScript==
+<pre><code>// ==UserScript==
 // @name Purple Links
 // @match *://*/*
 // ==/UserScript==
 document.head.appendChild(document.createElement('style'))
-document.head.lastElementChild.innerHTML = 'a:visited {color: #518}'</code>
-</pre>
+document.head.lastElementChild.innerHTML = 'a:visited {color: #518}'</code></pre>
 <p>
   This little userscript should work well on most web pages with light
   backgrounds.  But if a web page uses a dark theme or a custom colour

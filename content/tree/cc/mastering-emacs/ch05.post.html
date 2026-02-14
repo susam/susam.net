@@ -558,8 +558,7 @@
   search as well as search-and-replace.  Here is a simple text buffer
   where the commands to be presented later can be tried out.
 </p>
-<pre>
-<code>foo-bar-baz
+<pre><code>foo-bar-baz
 foo-baar-baz
 foo-baaar-baz
 foo-baaaar-baz
@@ -597,8 +596,7 @@ web-server-port-HTTP-80
 ; comment
 # comment
 // comment
-/* comment */</code>
-</pre>
+/* comment */</code></pre>
 <p>
   Here are some complete key sequences that demonstrate regular
   expressions in search operations:
@@ -832,10 +830,8 @@ web-server-port-HTTP-80
   type <code>SPC</code>.  Also, adding the following to the Emacs
   initialisation file permanently enables it.
 </p>
-<pre>
-<code>(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)</code>
-</pre>
+<pre><code>(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)</code></pre>
 <h2 id="counting">Counting</h2>
 <p>
   Here are some commands to count lines, words, characters, patterns,
@@ -866,8 +862,7 @@ web-server-port-HTTP-80
   The commands that are presented in this section can be tested with a
   buffer like this:
 </p>
-<pre>
-<code>foo
+<pre><code>foo
 bar
 
 foo
@@ -883,8 +878,7 @@ foo
 
 baz
 baz
-baz</code>
-</pre>
+baz</code></pre>
 <p>
   Here are the commands:
 </p>
@@ -1067,9 +1061,7 @@ baz</code>
   spaces before tab, etc.), then we need to update
   the <code>whitespace-style</code> variable as follows:
 </p>
-<pre>
-<code>(setq whitespace-style (delete 'trailing whitespace-style))</code>
-</pre>
+<pre><code>(setq whitespace-style (delete 'trailing whitespace-style))</code></pre>
 <p>
   Now running <code>whitespace-cleanup</code>
   or <code>whitespace-cleanup-region</code> is going to skip fixing
@@ -1845,22 +1837,18 @@ baz</code>
 <p>
   Consider the following Elisp buffer:
 </p>
-<pre>
-<code>(defvar person '(("name" . "Alice")
+<pre><code>(defvar person '(("name" . "Alice")
                  ("city" . "London")
-                 ("country" . "UK")))</code>
-</pre>
+                 ("country" . "UK")))</code></pre>
 <p>
   If we type <code>C-x h</code> followed by <code>M-x align RET</code>
   or if we put the cursor on any line of the above code and
   type <code>M-x align-current RET</code>, we get the following
   result:
 </p>
-<pre>
-<code>(defvar alice '(("name"    . "Alice")
+<pre><code>(defvar alice '(("name"    . "Alice")
                 ("city"    . "London")
-                ("country" . "UK")))</code>
-</pre>
+                ("country" . "UK")))</code></pre>
 <p>
   There is also an <code>align-regexp</code> command that allows us to
   parts of lines by regular expressions.  The following experiments
@@ -1869,11 +1857,9 @@ baz</code>
 <ol>
   <li>
     First create a buffer with the following text:
-<pre>
-<code>Alice:London:UK
+<pre><code>Alice:London:UK
 Bob:Paris:France
-Carol:Tokyo:Japan</code>
-</pre>
+Carol:Tokyo:Japan</code></pre>
   </li>
   <li>
     <p>
@@ -1881,11 +1867,9 @@ Carol:Tokyo:Japan</code>
         \(\s-*\): RET 1 RET 1 RET y RET</code>.  The result looks like
         this:
     </p>
-<pre>
-<code>Alice :London :UK
+<pre><code>Alice :London :UK
 Bob   :Paris  :France
-Carol :Tokyo  :Japan</code>
-</pre>
+Carol :Tokyo  :Japan</code></pre>
     <p>
       Note that the regular expression capturing
       group <code>\(\s-*\)</code> appears as the default in the
@@ -1912,11 +1896,9 @@ Carol :Tokyo  :Japan</code>
       only difference this time is that we place the colon before the
       parenthesis group.  The result looks like this:
     </p>
-<pre>
-<code>Alice: London: UK
+<pre><code>Alice: London: UK
 Bob:   Paris:  France
-Carol: Tokyo:  Japan</code>
-</pre>
+Carol: Tokyo:  Japan</code></pre>
   </li>
   <li>
     <p>
@@ -1930,11 +1912,9 @@ Carol: Tokyo:  Japan</code>
       Notice the lack of space after <code>Alice</code>
       and <code>Carol</code>.
     </p>
-<pre>
-<code>Alice:London:UK
+<pre><code>Alice:London:UK
 Bob  :Paris :France
-Carol:Tokyo :Japan</code>
-</pre>
+Carol:Tokyo :Japan</code></pre>
   </li>
   <li>
     <p>
@@ -1946,11 +1926,9 @@ Carol:Tokyo :Japan</code>
       spacing this time, so a minimum of 5 spaces are used for
       alignment.
     </p>
-<pre>
-<code>Alice     :London     :UK
+<pre><code>Alice     :London     :UK
 Bob       :Paris      :France
-Carol     :Tokyo      :Japan</code>
-</pre>
+Carol     :Tokyo      :Japan</code></pre>
   </li>
 </ol>
 <h2 id="zap-to-char">Zap to Char</h2>

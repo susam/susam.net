@@ -10,8 +10,7 @@
   behaviour in C before we discuss the puzzle I want to share in this
   post.
 </p>
-<pre>
-<code>#include &lt;stdio.h&gt;
+<pre><code>#include &lt;stdio.h&gt;
 
 int main()
 {
@@ -20,8 +19,7 @@ int main()
         printf(".");
     }
     return 0;
-}</code>
-</pre>
+}</code></pre>
 <p>
   This code invokes undefined behaviour.  The value in variable
   <code>i</code> decrements to <code>INT_MIN</code> after
@@ -33,10 +31,8 @@ int main()
   code prints print <code>|INT_MIN| + 1</code> dots.  With 32-bit integers,
   that amounts to 2147483649 dots.  Here is one such example output:
 </p>
-<pre>
-<samp>$ <kbd>gcc -std=c89 -Wall -Wextra -pedantic foo.c &amp;&amp; ./a.out | wc -c</kbd>
-2147483649</samp>
-</pre>
+<pre><samp>$ <kbd>gcc -std=c89 -Wall -Wextra -pedantic foo.c &amp;&amp; ./a.out | wc -c</kbd>
+2147483649</samp></pre>
 <p>
   It is worth noting that the above behaviour is only one of the many
   possible ones.  The code invokes undefined behaviour and the ISO
@@ -47,10 +43,8 @@ int main()
   optimise it to an infinite loop if we compile the code with
   the <code>-O2</code> option.
 </p>
-<pre>
-<samp><kbd># This never terminates!</kbd>
-$ <kbd>gcc -O2 -std=c89 -Wall -Wextra -pedantic foo.c &amp;&amp; ./a.out</kbd></samp>
-</pre>
+<pre><samp><kbd># This never terminates!</kbd>
+$ <kbd>gcc -O2 -std=c89 -Wall -Wextra -pedantic foo.c &amp;&amp; ./a.out</kbd></samp></pre>
 <h2 id="puzzle">Puzzle</h2>
 <p>
   Let us take a look at the puzzle now.
@@ -60,21 +54,17 @@ $ <kbd>gcc -O2 -std=c89 -Wall -Wextra -pedantic foo.c &amp;&amp; ./a.out</kbd></
   Add or modify exactly one operator in the following code such that
   it prints exactly 6 dots.
 </p>
-<pre>
-<code>for (i = 0; i &lt; 6; i--) {
+<pre><code>for (i = 0; i &lt; 6; i--) {
     printf(".");
-}</code>
-</pre>
+}</code></pre>
 </div>
 <p>
   An obvious solution is to change <code>i--</code>
   to <code>i++</code>.
 </p>
-<pre>
-<code>for (i = 0; i &lt; 6; i++) {
+<pre><code>for (i = 0; i &lt; 6; i++) {
     printf(".");
-}</code>
-</pre>
+}</code></pre>
 <p>
   There are a few more solutions to this puzzle.  One of the solutions
   is very interesting.  We will discuss the interesting solution in
@@ -119,11 +109,9 @@ $ <kbd>gcc -O2 -std=c89 -Wall -Wextra -pedantic foo.c &amp;&amp; ./a.out</kbd></
   an arbitrary positive integer \( n \).  The loop in the last
   solution now becomes:
 </p>
-<pre>
-<code>for (i = 0; i ^= n; i--) {
+<pre><code>for (i = 0; i ^= n; i--) {
     printf(".");
-}</code>
-</pre>
+}</code></pre>
 <p>
   If we denote the value of the variable <code>i</code> set by the
   execution of <code>i ^= n</code> after \( k \) dots are printed as

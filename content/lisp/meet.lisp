@@ -960,34 +960,4 @@
   :topic "Chapter 6: Pages 299-308: The Practical of Emacs: Dired: Working Across Directories, Shell Commands, Compiling in Emacs, Shells in Emacs: M-x shell, M-x ansi-term, M-x eshell; Chapter 7: Pages 319-314: Conclusion"
   :duration 90
   :members 9)
- (:date "2024-07-27 19:00"
-  :slug "real-analysis"
-  :topic "Preface; Sections 1.1-1.2: Pages 1-3: Foreword, The Concept of Number"
-  :duration 45
-  :members 5)
- (:date "2024-08-02 19:00"
-  :slug "real-analysis"
-  :topic "Sections 1.2-1.3: Pages 3-4: Irrationality of \\( \\sqrt{2} + \\sqrt{3} \\)"
-  :duration 40
-  :members 5)
- (:date "2024-08-03 19:00"
-  :slug "real-analysis"
-  :topic "Section 1.3: Pages 4-7: The Language of Set Theory"
-  :duration 40
-  :members 11)
- (:date "2024-08-04 19:00"
-  :slug "real-analysis"
-  :topic "Section 1.4: Pages 7-9: Real Numbers: Field, Ordered Field"
-  :duration 40
-  :members 13)
- (:date "2024-08-17 19:00"
-  :slug "real-analysis"
-  :topic "Section 1.4: Pages 9-10: Real Numbers: Density Property, Archimedean Property, Completeness Property"
-  :duration 40
-  :members 7)
- (:date "2024-09-21 19:00"
-  :slug "real-analysis"
-  :topic "Section 1.4: Pages 10-11: Real Numbers: Supremum and Infimum"
-  :duration 25
-  :members 3)
  )
