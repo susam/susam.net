@@ -1,0 +1,20 @@
+<!-- date: 2026-02-11 -->
+<!-- title: Soju User Delete Hash -->
+<!-- tag: Shell, IRC -->
+<!-- key: sudhs -->
+<!-- blog: Maze -->
+<p>
+  I have recently switched from ZNC to Soju as my IRC bouncer.  I
+  already like it quite a bit.  No more manually maintaining a
+  configuration file for my various IRC connections.
+</p>
+<p>
+  On Debian 13 (trixie), it is quite straightforward to set it up.
+  Here are some example commands that show how straightforward it is
+  to set it up.
+</p>
+<pre><code>sudo apt-get update
+sudo apt-get -y install soju
+sudo sojuctl user create -username soju -password PASSWORD_GOES_HERE
+sudo sojuctl user run soju network create -addr irc.libera.chat -nick YOUR_NICK
+</pre>
