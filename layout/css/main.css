@@ -1,5 +1,4 @@
 body {
-  color: {{ light-body-color }};
   font-family: {{ font-family }};
   font-size: large;
   line-height: 1.5;
@@ -14,18 +13,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 main h1 + div {
   margin: 0.5em 0;
-}
-a:link {
-  color: {{ light-link-color }};
-}
-a:visited {
-  color: {{ light-visited-color }};
-}
-a:focus, a:hover {
-  color: {{ light-hover-color }};
-}
-a:active {
-  color: {{ light-active-color }};
 }
 a:empty:before {
   content: "#";

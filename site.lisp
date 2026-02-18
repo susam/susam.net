@@ -1274,16 +1274,11 @@ value, next-index."
    ;; HTML elements.
    (cons "font-family" "georgia, serif")
    ;; Light color scheme.
-   (cons "light-body-color" "#333")     ; contrast 10.9, 12.6
-   (cons "light-link-color" "#00e")     ; contrast  1.3,  9.4, 12.6
-   (cons "light-visited-color" "#518")  ; contrast  1.1, 11.5, 12.6
-   (cons "light-hover-color" "#03f")    ; contrast  1.8,  7.2, 12.6
-   (cons "light-active-color" "#a00")   ; contrast  1.6,  7.8, 12.6
    (cons "light-fill-color" "#eee")     ; contrast  1.2
    (cons "light-shade-color" "#ccc")    ; contrast  1.6
-   (cons "light-code-color" "#050")     ; contrast  1.4,  7.9,  9.1
-   (cons "light-samp-color" "#730")     ; contrast  1.4,  8.0,  9.3
-   (cons "light-hl-color" "#808")       ; contrast  1.4,  7.5,  8.7
+   (cons "light-code-color" "#050")     ; contrast  2.3,  7.9,  9.1
+   (cons "light-samp-color" "#730")     ; contrast  2.3,  8.0,  9.3
+   (cons "light-hl-color" "#808")       ; contrast  2.4,  7.5,  8.7
    (cons "light-line-color" "#999")     ; contrast  2.8
    (cons "light-success-color" "#060")  ; contrast  7.2
    (cons "light-error-color" "#900")    ; contrast  8.9
