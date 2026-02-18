@@ -1,0 +1,79 @@
+<!-- date: 2026-02-12 -->
+<!-- title: From ZNC to Soju -->
+<!-- tag: IRC, Technology, How-To -->
+<!-- key: fztsj -->
+<!-- blog: Maze -->
+<p>
+  I have recently switched from ZNC to Soju as my IRC bouncer and I am
+  already quite pleased with it.  I usually run my bouncer on a Debian
+  machine, where Soju is well packaged and runs smoothly right after
+  installation.  By contrast, the ZNC package included with Debian 13
+  (Trixie) fails to start after installation because of a missing
+  configuration file.  As a result, I maintain my own configuration
+  file along with a PEM bundle, copy them to the Debian system and
+  carefully set the correct file permissions before I can run ZNC
+  successfully.  None of this is necessary with Soju, since installing
+  it from the Debian package repository automatically sets up the
+  configuration and certificate files.  I no longer have to manage any
+  configuration or certificate files myself.
+</p>
+<h2 id="setup">Setup</h2>
+<p>
+  It is quite straightforward to install and set up Soju on Debian.
+  The following two commands install Soju:
+</p>
+<pre><code>sudo apt-get update
+sudo apt-get -y install soju</code>
+</pre>
+<p>
+  Then setting up an IRC connection involves another two commands:
+</p>
+<pre>
+<code>sudo sojuctl user create -username soju -password YOUR_SOJU_PASSWORD
+sudo sojuctl user run soju network create -name bnc1 -addr irc.libera.chat -nick YOUR_NICK -pass YOUR_NICK_PASSWORD</code>
+</pre>
+<p>
+  Here, <code>YOUR_SOJU_PASSWORD</code> is a placeholder for a new
+  password you must choose for your Soju user.  Finally, we restart
+  Soju as follows:
+</p>
+<pre><code>sudo systemctl restart soju</code></pre>
+<h2 id="database">Database</h2>
+<p>
+  What previously involved maintaining several files that had to be
+  installed and configured on each machine running ZNC is now reduced
+  to the two <code>sojuctl</code> commands above, which store my
+  configuration in a SQLite database.  Here is a glimpse of what the
+  database looks like:
+</p>
+<pre><samp>$ <kbd>sudo sqlite3 /var/lib/soju/main.db '.tables'</kbd>
+Channel              MessageFTS_data      ReadReceipt
+DeliveryReceipt      MessageFTS_docsize   User
+Message              MessageFTS_idx       WebPushConfig
+MessageFTS           MessageTarget        WebPushSubscription
+MessageFTS_config    Network
+$ <kbd>sudo sqlite3 /var/lib/soju/main.db 'SELECT * from User'</kbd>
+1|soju|$2a$10$mM5Qcz8.OPMi9lyWDxPRh.bNxzq7jtLdxcoPl09AYTnqcmLmEqzSO|0|||2026-02-17T23:24:24.926Z|1||-1
+$ <kbd>sudo sqlite3 /var/lib/soju/main.db 'SELECT * from Network'</kbd>
+1|bnc1|1|irc.libera.chat|YOUR_NICK||||YOUR_NICK_PASSWORD|||||||1|1</samp></pre>
+<h2 id="client">Client Configuration</h2>
+<p>
+  Finally, the IRC client can be configured to connect to port 6697 on
+  the system running Soju.  Here is an example of how this can be done
+  in Irssi:
+</p>
+<pre><code>/network add -nick YOUR_NICK -user soju/bnc1 net1
+/server add -tls -network bnc1 YOUR_SOJU_HOST 6697 YOUR_SOJU_PASSWORD
+/connect net1
+</code></pre>
+<p>
+  You can also set up multiple connections to IRC networks through the
+  same Soju instance.  All you need to do is repeat
+  the <code>sojuctl</code> commands to create additional networks such
+  as <code>bnc2</code>, <code>bnc3</code> and so on, then repeat the
+  configuration in your IRC client using new network names such as
+  <code>net2</code>, <code>net3</code>, etc.  These network names are
+  entirely user defined, so you can choose any names you like.  The
+  names <code>bnc2</code>, <code>net2</code> and so on are only
+  examples.
+</p>

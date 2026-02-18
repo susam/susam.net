@@ -1,20 +1,52 @@
-<!-- date: 2026-02-11 -->
+<!-- date: 2026-02-14 -->
 <!-- title: Soju User Delete Hash -->
-<!-- tag: Shell, IRC -->
+<!-- tag: Shell, IRC, Technology, How-To -->
 <!-- key: sudhs -->
 <!-- blog: Maze -->
 <p>
-  I have recently switched from ZNC to Soju as my IRC bouncer.  I
-  already like it quite a bit.  No more manually maintaining a
-  configuration file for my various IRC connections.
+  In <a href="from-znc-to-soju.html">my last post</a>, I talked about
+  switching from ZNC to Soju as my IRC bouncer.  One thing that caught
+  my attention while creating and deleting Soju users was that the
+  delete command asks for a confirmation, like so:
 </p>
+<pre><samp>$ <kbd>sudo sojuctl user delete soju</kbd>
+To confirm user deletion, send "user delete soju 4664cd"
+$ <kbd>sudo sojuctl user delete soju 4664cd</kbd>
+deleted user "soju"</samp></pre>
 <p>
-  On Debian 13 (trixie), it is quite straightforward to set it up.
-  Here are some example commands that show how straightforward it is
-  to set it up.
+  That confirmation token for a specific user never changes, no matter
+  how many times we create or delete it.  The confirmation token is
+  not saved in the Soju database, as can be confirmed here:
 </p>
-<pre><code>sudo apt-get update
-sudo apt-get -y install soju
-sudo sojuctl user create -username soju -password PASSWORD_GOES_HERE
-sudo sojuctl user run soju network create -addr irc.libera.chat -nick YOUR_NICK
-</pre>
+<pre><samp>$ <kbd>sudo sqlite3 -table /var/lib/soju/main.db 'SELECT * FROM User'</kbd>
++----+----------+--------------------------------------------------------------+-------+----------+------+--------------------------+---------+--------------------------+--------------+
+| id | username |                           password                           | admin | realname | nick |        created_at        | enabled | downstream_interacted_at | max_networks |
++----+----------+--------------------------------------------------------------+-------+----------+------+--------------------------+---------+--------------------------+--------------+
+| 1  | soju     | $2a$10$yRj/oYlR2Zwd8YQxZPuAQuNo2j7FVJWeNdIAHF2MinYkKLmBjtf0y | 0     |          |      | 2026-02-16T13:49:46.119Z | 1       |                          | -1           |
++----+----------+--------------------------------------------------------------+-------+----------+------+--------------------------+---------+--------------------------+--------------+</samp></pre>
+<p>
+  Surely, then, the confirmation token is derived from the user
+  definition?  Yes, indeed it is.  This can be confirmed at the
+  <a href="https://codeberg.org/emersion/soju/src/commit/v0.10.1/service.go#L1185-L1203">source
+  code here</a>.  Quoting the most relevant part from the source code:
+</p>
+<pre><code>hashBytes := sha1.Sum([]byte(username))
+hash := fmt.Sprintf("%x", hashBytes[0:3])</code></pre>
+<p>
+  Indeed if we compute the same hash ourselves, we get the same token:
+</p>
+<pre><samp>$ <kbd>printf soju | sha1sum | head -c6</kbd>
+4664cd</samp></pre>
+<p>
+  This allows us to automate the two step Soju user deletion process
+  in a single command:
+</p>
+<pre><code>sudo sojuctl user delete soju "$(printf soju | sha1sum | head -c6)"</code></pre>
+<p>
+  But of course, the implementation of the confirmation token may
+  change in future and Soju helpfully outputs the deletion command
+  with the confirmation token when we first invoke it without the
+  token, so it is perhaps more prudent to just take that output and
+  feed it back to Soju, like so:
+</p>
+<pre><code>sudo sojuctl $(sudo sojuctl user delete soju | sed 's/.*"\(.*\)"/\1/')</code></pre>
