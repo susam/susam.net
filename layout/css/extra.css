@@ -12,9 +12,6 @@ figure img, figure video {
 .stretch img {
   width: 100%;
 }
-.soft img {
-  opacity: 0.8; /* (0xff - 0x33) / 0xff */
-}
 .lightshadow img {
   box-shadow: 0em 0em 0.5em {{ light-line-color }};
 }
