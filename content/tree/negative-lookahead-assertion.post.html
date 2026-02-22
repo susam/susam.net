@@ -7,12 +7,10 @@
   Here is an example of negative lookahead assertion in regular
   expression using Python:
 </p>
-<pre>
-<code>import re
+<pre><code>import re
 strings = ['foo', 'bar', 'baz', 'foo-bar', 'bar-baz', 'baz-foo']
 matches = [s for s in strings if re.search('^(?!.*foo)', s)]
-print(matches)</code>
-</pre>
+print(matches)</code></pre>
 <p>
   The regular expression <code>^(?!.*foo)</code> in the above example
   matches strings that do not contain the pattern <code>foo</code>.

@@ -10,10 +10,8 @@
   file that contains a space in its name and define a variable as
   follows:
 </p>
-<pre>
-<samp>$ <kbd>echo lorem ipsum &gt; "foo bar"</kbd>
-$ <kbd>cmd='cat "foo bar"'</kbd></samp>
-</pre>
+<pre><samp>$ <kbd>echo lorem ipsum &gt; "foo bar"</kbd>
+$ <kbd>cmd='cat "foo bar"'</kbd></samp></pre>
 <p>
   We will use this file and the variable in the experiments below.
   All output examples below are obtained using Dash 0.5.11 on a Debian
@@ -28,11 +26,9 @@ $ <kbd>cmd='cat "foo bar"'</kbd></samp>
   Now simply enter <code>$cmd</code> as a command into the shell.  The
   following error occurs:
 </p>
-<pre>
-<samp>$ <kbd>$cmd</kbd>
+<pre><samp>$ <kbd>$cmd</kbd>
 cat: '"foo': No such file or directory
-cat: 'bar"': No such file or directory</samp>
-</pre>
+cat: 'bar"': No such file or directory</samp></pre>
 <p>
   The error occurs because the above command expands to the
   command <code>cat</code> followed by two
@@ -59,12 +55,10 @@ cat: 'bar"': No such file or directory</samp>
   By default, the space character belongs to <code>IFS</code>.  Here
   is an example command to verify this:
 </p>
-<pre>
-<samp>$ <kbd>printf "$IFS" | od -tcx1</kbd>
+<pre><samp>$ <kbd>printf "$IFS" | od -tcx1</kbd>
 0000000      \t  \n
          20  09  0a
-0000003</samp>
-</pre>
+0000003</samp></pre>
 <p>
   The hexadecimal code <samp>20</samp> in the output confirms that the
   space character is present in the value of <code>IFS</code>.
@@ -79,10 +73,8 @@ cat: 'bar"': No such file or directory</samp>
 <p>
   Next we try to double-quote the previous command to prevent field
   splitting and see what happens:
-<pre>
-<samp>$ <kbd>"$cmd"</kbd>
-dash: 8: cat "foo bar": not found</samp>
-</pre>
+<pre><samp>$ <kbd>"$cmd"</kbd>
+dash: 8: cat "foo bar": not found</samp></pre>
 <p>
   The excerpt from the POSIX.1-2017 specification quoted in the
   previous section shows that field splitting does not occur for
@@ -105,15 +97,11 @@ dash: 8: cat "foo bar": not found</samp>
   How do we get the shell to do that?  Well, we can just invoke the
   shell itself to parse our command:
 </p>
-<pre>
-<samp>$ <kbd>sh -c "$cmd"</kbd>
-lorem ipsum</samp>
-</pre>
+<pre><samp>$ <kbd>sh -c "$cmd"</kbd>
+lorem ipsum</samp></pre>
 <p>
   But the above command invokes a new shell process.  Can we avoid
   that?  Yes, using the <code>eval</code> command:
 </p>
-<pre>
-<samp>$ <kbd>eval "$cmd"</kbd>
-lorem ipsum</samp>
-</pre>
+<pre><samp>$ <kbd>eval "$cmd"</kbd>
+lorem ipsum</samp></pre>

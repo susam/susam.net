@@ -9,9 +9,7 @@
 <p>
   to the following:
 </p>
-<pre>
-<code>(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)</code>
-</pre>
+<pre><code>(sb-ext:save-lisp-and-die "hello" :executable t :toplevel #'main)</code></pre>
 <!-- date: 2023-04-10 07:23:18 +0000 -->
 <!-- name: Susam Pal -->
 <!-- url: https://susam.net/ -->
@@ -19,11 +17,9 @@
   Thank you, Héctor, for your comment!  I updated the example program
   in this post as follows to test the compression feature:
 </p>
-<pre>
-<code>(defun main ()
+<pre><code>(defun main ()
   (format t "hello, world~%"))
-(sb-ext:save-lisp-and-die "hello" :executable t :compression t :toplevel #'main)</code>
-</pre>
+(sb-ext:save-lisp-and-die "hello" :executable t :compression t :toplevel #'main)</code></pre>
 <p>
   Indeed this created an executable that was only 8.1 MB in size
   whereas without compression the executable size is 35 MB.

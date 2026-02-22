@@ -8,14 +8,15 @@
   already quite pleased with it.  I usually run my bouncer on a Debian
   machine, where Soju is well packaged and runs smoothly right after
   installation.  By contrast, the ZNC package included with Debian 13
-  (Trixie) fails to start after installation because of a missing
-  configuration file.  As a result, I maintain my own configuration
-  file along with a PEM bundle, copy them to the Debian system and
-  carefully set the correct file permissions before I can run ZNC
-  successfully.  None of this is necessary with Soju, since installing
-  it from the Debian package repository automatically sets up the
-  configuration and certificate files.  I no longer have to manage any
-  configuration or certificate files myself.
+  (Trixie) and earlier fails to start after installation because of a
+  missing configuration file.  As a result, I was forced to maintain
+  my own configuration file along with a necessary PEM bundle, copy
+  them to the Debian system and carefully set the correct file
+  permissions before I could run ZNC successfully.  None of this is
+  necessary with Soju, since installing it from the Debian package
+  repository automatically sets up the configuration and certificate
+  files.  I no longer have to manage any configuration or certificate
+  files myself.
 </p>
 <h2 id="setup">Setup</h2>
 <p>
@@ -23,15 +24,12 @@
   The following two commands install Soju:
 </p>
 <pre><code>sudo apt-get update
-sudo apt-get -y install soju</code>
-</pre>
+sudo apt-get -y install soju</code></pre>
 <p>
   Then setting up an IRC connection involves another two commands:
 </p>
-<pre>
-<code>sudo sojuctl user create -username soju -password YOUR_SOJU_PASSWORD
-sudo sojuctl user run soju network create -name bnc1 -addr irc.libera.chat -nick YOUR_NICK -pass YOUR_NICK_PASSWORD</code>
-</pre>
+<pre><code>sudo sojuctl user create -username soju -password YOUR_SOJU_PASSWORD
+sudo sojuctl user run soju network create -name bnc1 -addr irc.libera.chat -nick YOUR_NICK -pass YOUR_NICK_PASSWORD</code></pre>
 <p>
   Here, <code>YOUR_SOJU_PASSWORD</code> is a placeholder for a new
   password you must choose for your Soju user.  Finally, we restart

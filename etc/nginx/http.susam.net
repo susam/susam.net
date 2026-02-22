@@ -43,9 +43,7 @@ server {
     rewrite ^/now$ /now.html redirect;
     rewrite ^/nq$ /nq.html redirect;
     # Short-term redirects.
-    rewrite ^/comments.html$ /comments/ redirect;
-    rewrite ^/guestbook-reinstated.html$ /reinstated-guestbook.html redirect;
-    rewrite ^/fizz-buzz-in-four-lines-of-css.html$ /fizz-buzz-in-css.html redirect;
+    rewrite ^/attention-media-is-not-social-media.html$ /attention-media-vs-social-networks.html redirect;
 }
 
 # http://(www.susam.net|susam.in)/ => http://susam.net/

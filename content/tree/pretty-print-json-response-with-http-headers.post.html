@@ -8,8 +8,7 @@
   response, I need to print the HTTP response headers along with the
   JSON response.  Here is an example that shows how this can be done:
 </p>
-<pre>
-<samp>$ <kbd>curl -sSi https://susam.net/code/lab/json/books.json</kbd>
+<pre><samp>$ <kbd>curl -sSi https://susam.net/code/lab/json/books.json</kbd>
 HTTP/1.1 200 OK
 Server: nginx/1.18.0
 Date: Sat, 05 Apr 2024 11:53:24 GMT
@@ -23,8 +22,7 @@ Accept-Ranges: bytes
 [
   {"title": "Gulliver's Travels", "author": "Jonathan Swift", "published": 1726},
   {"title": "Treasure Island", "author": "Robert Louis Stevenson", "published": 1883}
-]</samp>
-</pre>
+]</samp></pre>
 <p>
   The above output is obtained using curl 7.77.0
   (x86_64-apple-darwin21.0).  The <code>-i</code> option is
@@ -51,8 +49,7 @@ Accept-Ranges: bytes
   pretty-print the stream or file that contains the JSON response.
   Here is an example that shows how to do this:
 </p>
-<pre>
-<samp>$ <kbd>curl -sSD head.txt -o out.json https://susam.net/code/lab/json/books.json &amp;&amp; cat head.txt &amp;&amp; jq . out.json</kbd>
+<pre><samp>$ <kbd>curl -sSD head.txt -o out.json https://susam.net/code/lab/json/books.json &amp;&amp; cat head.txt &amp;&amp; jq . out.json</kbd>
 HTTP/1.1 200 OK
 Server: nginx/1.18.0
 Date: Sat, 05 Apr 2024 11:53:51 GMT
@@ -74,16 +71,14 @@ Accept-Ranges: bytes
     "author": "Robert Louis Stevenson",
     "published": 1883
   }
-]</samp>
-</pre>
+]</samp></pre>
 <p>
   Alternatively, we can achieve this using a single command by
   printing the the HTTP headers to standard error.  This ensures that
   only the JSON response is printed to standard output, which we can
   then pretty-print using <code>jq</code>.  Here is an example:
 </p>
-<pre>
-<samp>$ <kbd>curl -sSD /dev/stderr https://susam.net/code/lab/json/books.json | jq .</kbd>
+<pre><samp>$ <kbd>curl -sSD /dev/stderr https://susam.net/code/lab/json/books.json | jq .</kbd>
 HTTP/1.1 200 OK
 Server: nginx/1.18.0
 Date: Sat, 05 Apr 2024 11:54:12 GMT
@@ -105,5 +100,4 @@ Accept-Ranges: bytes
     "author": "Robert Louis Stevenson",
     "published": 1883
   }
-]</samp>
-</pre>
+]</samp></pre>

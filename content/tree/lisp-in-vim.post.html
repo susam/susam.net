@@ -1,6 +1,6 @@
 <!-- date: 2019-12-07 -->
 <!-- title: Lisp in Vim -->
-<!-- tag: Lisp, Programming, Vim, Technology -->
+<!-- tag: Lisp, Programming, Vim, Technology, How-To -->
 <!-- key: bgxhz -->
 <!-- blog: Main -->
 <!-- import: extra.css -->
@@ -323,10 +323,8 @@
     <p>
       Installing Slimv is pretty simple.  Here is one way to do it:
     </p>
-<pre>
-<code>git clone https://github.com/kovisoft/slimv.git ~/.vim/pack/plugins/start/slimv
-vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
-</pre>
+<pre><code>git clone https://github.com/kovisoft/slimv.git ~/.vim/pack/plugins/start/slimv
+vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code></pre>
     <p>
       That is it!  Slimv is set up.  It's that straightforward.  The
       commands above show how to set up Slimv with just two shell
@@ -489,11 +487,9 @@ vim +'helptags ~/.vim/pack/plugins/start/slimv/doc' +q</code>
     <p>
       Install Quicklisp with these commands:
     </p>
-<pre>
-<code>curl -O https://beta.quicklisp.org/quicklisp.lisp
+<pre><code>curl -O https://beta.quicklisp.org/quicklisp.lisp
 sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(exit)'
-sbcl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(exit)'</code>
-</pre>
+sbcl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(exit)'</code></pre>
     <p>
       Type <kbd>enter</kbd> in the end, when prompted, to complete the
       installation.
@@ -503,12 +499,10 @@ sbcl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(exit)
     <p>
       Install Vlime and Paredit with these commands:
     </p>
-<pre>
-<code>git clone https://github.com/l04m33/vlime.git ~/.vim/bundle/vlime
+<pre><code>git clone https://github.com/l04m33/vlime.git ~/.vim/bundle/vlime
 git clone https://github.com/kovisoft/paredit ~/.vim/pack/plugins/start/paredit
 echo 'set runtimepath^=~/.vim/bundle/vlime/vim' &gt;&gt; ~/.vimrc
-vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start/paredit/doc' +q</code>
-</pre>
+vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start/paredit/doc' +q</code></pre>
     <p>
       Unlike Slimv, Vlime does not bundle
       <a href="https://github.com/kovisoft/paredit">Paredit</a> along
@@ -628,10 +622,8 @@ vim +'helptags ~/.vim/bundle/vlime/vim/doc' +'helptags ~/.vim/pack/plugins/start
       Vlime are installed as described in the points 2 and 3 above,
       run these commands to uninstall them:
     </p>
-<pre>
-<code>rm -rf ~/quicklisp ~/.vim/bundle/vlime ~/.vim/pack/plugins/start/paredit
-sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
-</pre>
+<pre><code>rm -rf ~/quicklisp ~/.vim/bundle/vlime ~/.vim/pack/plugins/start/paredit
+sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code></pre>
     <p>
       Optionally, remove <code>~/.sblrc</code> or edit it to remove
       the code pertaining to loading
@@ -696,19 +688,15 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       happen.  If electric return is disabled, then a newline is
       inserted as expected like this:
     </p>
-<pre>
-<code>(defun square (x))
-  <span class="cursor">)</span></code>
-</pre>
+<pre><code>(defun square (x))
+  <span class="cursor">)</span></code></pre>
     <p>
       If electric return is enabled, two newlines are inserted to
       create an empty line in between:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   <span class="cursor"> </span>
-  )</code>
-</pre>
+  )</code></pre>
     <p>
       In both cases, indentation of two spaces is inserted
       automatically.  The new empty line inserted by electric return
@@ -742,22 +730,18 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       Again, Paredit would have inserted the closing parenthesis
       automatically.  The code should look like this now:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x<span class="cursor">)</span>
-  )</code>
-</pre>
+  )</code></pre>
   </li>
   <li>
     <p>
       Now, type one more closing parenthesis to advance past the
       automatically inserted closing parenthesis like this:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x)<span class="cursor"> </span>
-  )</code>
-</pre>
+  )</code></pre>
   </li>
   <li>
     <p>
@@ -765,10 +749,8 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       the lone closing parenthesis that is present in its own line and
       move it at the end of the current line like this:
     </p>
-<pre>
-<code>(defun square (x)
-  (* x x))<span class="cursor"> </span></code>
-</pre>
+<pre><code>(defun square (x)
+  (* x x))<span class="cursor"> </span></code></pre>
     <p>
       This behaviour of consuming the extra newline inserted by an
       electric return on typing a closing parenthesis helps the code
@@ -787,19 +769,15 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       left so that the cursor is placed on the parenthesis just after
       the last <code>x</code> in the code like this:
     </p>
-<pre>
-<code>(defun square (x)
-  (* x x<span class="cursor">)</span>)</code>
-</pre>
+<pre><code>(defun square (x)
+  (* x x<span class="cursor">)</span>)</code></pre>
     <p>
       Type <kbd>x</kbd> to delete the closing parenthesis the cursor
       is on.  Nothing gets deleted!  Instead the cursor just skips
       over the parenthesis like this:
     </p>
-<pre>
-<code>(defun square (x)
-  (* x x)<span class="cursor">)</span></code>
-</pre>
+<pre><code>(defun square (x)
+  (* x x)<span class="cursor">)</span></code></pre>
     <p>
       Paredit refuses to delete the closing parenthesis because it
       encloses a non-empty list.  It would have deleted the closing
@@ -820,10 +798,8 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       Let us now try to delete the current line.  Type
       <kbd>d</kbd><kbd>d</kbd> to do so.  The result looks like this:
     </p>
-<pre>
-<code>(defun square (x)
-  <span class="cursor">)</span></code>
-</pre>
+<pre><code>(defun square (x)
+  <span class="cursor">)</span></code></pre>
     <p>
       Note how the closing parenthesis has been left intact to keep
       the parentheses balanced.  Again, Paredit has remapped the
@@ -916,12 +892,10 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       Create a file with Vim, say <code>foo.lisp</code> and enter the
       following code into it:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x))
 
-(square "foo")</code>
-</pre>
+(square "foo")</code></pre>
   </li>
   <li>
     <p>
@@ -936,8 +910,7 @@ sed -i.bkp '/runtimepath.*vlime/d' ~/.vimrc</code>
       stands for Slime Debugger.  Here is an example of what may
       appear in the SLDB window:
     </p>
-<pre>
-<samp>The value
+<pre><samp>The value
   "foo"
 is not of type
   NUMBER
@@ -957,8 +930,7 @@ Backtrace:
   4: (EVAL (SQUARE "foo"))
   5: (SWANK::EVAL-REGION "(defun square (x) ..)
   6: ((LAMBDA NIL :IN SWANK-REPL::REPL-EVAL))
-  ...</samp>
-</pre>
+  ...</samp></pre>
     <p>
       The ellipsis in the end is added by me to denote that the actual
       output has been truncated in this article for the sake of
@@ -975,12 +947,10 @@ Backtrace:
       Then type <kbd>enter</kbd>.  This line should now unfold to show
       the following details:
     </p>
-<pre>
-<samp>  1: (SQUARE "foo")
+<pre><samp>  1: (SQUARE "foo")
       in "(SB-INT:NAMED-LAMBDA SQUARE-----------------------------------
     Locals:
-      X = "foo"</samp>
-</pre>
+      X = "foo"</samp></pre>
   </li>
   <li>
     <p>
@@ -992,14 +962,12 @@ Backtrace:
       Then type <kbd>enter</kbd>.  Some information about its source
       code should appear like this:
     </p>
-<pre>
-<samp>  1: (SQUARE "foo")
+<pre><samp>  1: (SQUARE "foo")
       in "(SB-INT:NAMED-LAMBDA SQUARE
     (X)
   (BLOCK SQUARE (#:***HERE*** (* X X))))" byte 1
     Locals:
-      X = "foo"</samp>
-</pre>
+      X = "foo"</samp></pre>
   </li>
   <li>
     <p>
@@ -1013,8 +981,7 @@ Backtrace:
       appear with more details about this variable.  This window should
       look like this:
     </p>
-<pre>
-<samp>Inspecting #&lt;(SIMPLE-ARRAY CHARACTER (3)) {100478AFAF}&gt;
+<pre><samp>Inspecting #&lt;(SIMPLE-ARRAY CHARACTER (3)) {100478AFAF}&gt;
 --------------------
 Press &lt;F1&gt; for Help
 
@@ -1029,8 +996,7 @@ Contents:
 2: #\o
 
 
-[&lt;&lt;] Exit Inspector</samp>
-</pre>
+[&lt;&lt;] Exit Inspector</samp></pre>
   </li>
   <li>
     <p>
@@ -1082,12 +1048,10 @@ Contents:
       Create a file with Vim, say <code>foo.lisp</code> and enter the
       following code into it:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x))
 
-(square "foo")</code>
-</pre>
+(square "foo")</code></pre>
   </li>
   <li>
     <p>
@@ -1104,8 +1068,7 @@ Contents:
       stands for Slime Debugger.  Here is an example of what may
       appear in the SLDB window:
     </p>
-<pre>
-<samp>Thread: 1; Level: 1
+<pre><samp>Thread: 1; Level: 1
 
 The value
   "foo"
@@ -1125,8 +1088,7 @@ Frames:
   3.  (SB-FASL::LOAD-AS-FASL #&lt;SB-SYS:FD-STREAM for "file /home/susam/foo.fasl" {10045E76A3}&gt; NIL NIL)
   4.  ((FLET SB-FASL::THUNK :IN LOAD))
   5.  (SB-FASL::CALL-WITH-LOAD-BINDINGS #&lt;CLOSURE (FLET SB-FASL::THUNK :IN LOAD) {7F7B9B0B60BB}&gt; #&lt;SB-SYS:FD-STREAM for "file /home/susam/foo.fasl" {10045E76A3}&gt;)
-  ...</samp>
-</pre>
+  ...</samp></pre>
     <p>
       The ellipsis in the end is added by me to denote that the actual
       output has been truncated in this article for the sake of
@@ -1143,8 +1105,7 @@ Frames:
       Then type <kbd>d</kbd>.  A new split window should appear with
       the following details about this frame:
     </p>
-<pre>
-<samp>Frame: 1 (Restartable)
+<pre><samp>Frame: 1 (Restartable)
 
 Locals:
   X: "foo"
@@ -1155,8 +1116,7 @@ Location:
   Snippet:
     (* x x))
 
-    (square "foo")</samp>
-</pre>
+    (square "foo")</samp></pre>
   </li>
   <li>
 	<p>
@@ -1176,8 +1136,7 @@ Location:
       <kbd>enter</kbd>.  The following details about the variable
       <code>x</code> should now appear in the inspector window:
     </p>
-<pre>
-<samp>#&lt;(SIMPLE-ARRAY CHARACTER (3)) {1004617ABF}&gt;
+<pre><samp>#&lt;(SIMPLE-ARRAY CHARACTER (3)) {1004617ABF}&gt;
 ============================================
 
 Dimensions: (3)
@@ -1233,12 +1192,10 @@ Contents:
       Create a file with Vim, say <code>foo.lisp</code> and enter the
       following code into it:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x))
 
-(square (square 2))</code>
-</pre>
+(square (square 2))</code></pre>
   </li>
   <li>
     <p>
@@ -1260,14 +1217,12 @@ Contents:
       <kbd>,</kbd><kbd>d</kbd> in normal mode to evaluate the top-level
       form.  The following output appears in the REPL buffer.
     </p>
-<pre>
-<code>(square (square 2))
+<pre><code>(square (square 2))
   0: (SQUARE 2)
   0: SQUARE returned 4
   0: (SQUARE 4)
   0: SQUARE returned 16
-16</code>
-</pre>
+16</code></pre>
     <p>
       This output contains information about each call to the traced
       function, arguments passed to it and the return values.
@@ -1284,12 +1239,10 @@ Contents:
     <p>
       Add the following statement to <code>~/.vimrc</code>:
     </p>
-<pre>
-<code>let g:vlime_contribs = ['SWANK-ASDF', 'SWANK-PACKAGE-FU',
+<pre><code>let g:vlime_contribs = ['SWANK-ASDF', 'SWANK-PACKAGE-FU',
                       \ 'SWANK-PRESENTATIONS', 'SWANK-FANCY-INSPECTOR',
                       \ 'SWANK-C-P-C', 'SWANK-ARGLISTS', 'SWANK-REPL',
-                      \ 'SWANK-FUZZY', 'SWANK-TRACE-DIALOG']</code>
-</pre>
+                      \ 'SWANK-FUZZY', 'SWANK-TRACE-DIALOG']</code></pre>
     <p>
       The above variable defines the list of Swank contrib modules to
       load while initialising a Vlime connection.  All modules
@@ -1305,12 +1258,10 @@ Contents:
       Create a file with Vim, say <code>foo.lisp</code> and enter the
       following code into it:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x))
 
-(square (square 2))</code>
-</pre>
+(square (square 2))</code></pre>
   </li>
   <li>
     <p>
@@ -1372,15 +1323,13 @@ Contents:
       <kbd>z</kbd><kbd>o</kbd> in normal mode to open the fold.  After
       opening both the folds, the following result should be visible:
     </p>
-    <pre>
-<code>0 - COMMON-LISP-USER::SQUARE
+    <pre><code>0 - COMMON-LISP-USER::SQUARE
     &gt; 2
     &lt; 4
 1 - COMMON-LISP-USER::SQUARE
     &gt; 4
     &lt; 16
-    16</code>
-</pre>
+    16</code></pre>
     <p>
       The lines starting with <code>&gt;</code> show the arguments and
       the ones starting with <code>&lt;</code> show the return values.
@@ -1464,17 +1413,13 @@ Contents:
   plugins that support rainbow parentheses.  Here are the steps to
   install one such plugin that is quite popular:
 </p>
-<pre>
-<code>git clone https://github.com/junegunn/rainbow_parentheses.vim.git ~/.vim/pack/plugins/start/rainbow_parentheses
-echo 'autocmd FileType lisp,scheme,clojure RainbowParentheses' &gt;&gt; ~/.vimrc</code>
-</pre>
+<pre><code>git clone https://github.com/junegunn/rainbow_parentheses.vim.git ~/.vim/pack/plugins/start/rainbow_parentheses
+echo 'autocmd FileType lisp,scheme,clojure RainbowParentheses' &gt;&gt; ~/.vimrc</code></pre>
 <p>
   In case you ever want to uninstall it, enter these commands:
 </p>
-<pre>
-<code>rm -rf ~/.vim/pack/plugins/start/rainbow_parentheses
-sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
-</pre>
+<pre><code>rm -rf ~/.vim/pack/plugins/start/rainbow_parentheses
+sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code></pre>
 <h3 id="argument-list">Argument List</h3>
 <p>
   You must have seen this feature already while trying out the
@@ -1530,15 +1475,13 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
       Create a file with Vim, say <code>foo.lisp</code> and enter the
       following code into it:
     </p>
-<pre>
-<code>(defmacro calc (a op b)
+<pre><code>(defmacro calc (a op b)
   (list op a b))
 
 (defmacro square (x)
   (list 'calc x '* x))
 
-(square 2)</code>
-</pre>
+(square 2)</code></pre>
   </li>
   <li>
     <p>
@@ -1597,8 +1540,7 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
       Create a file with Vim, say <code>foo.lisp</code> and enter the
       following code into it:
     </p>
-<pre>
-<code>(defun square (x)
+<pre><code>(defun square (x)
   (* x x))
 
 (defun square-of-sum (x y)
@@ -1608,8 +1550,7 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
   (+ (square x) (square y)))
 
 (square-of-sum 2 3)
-(sum-of-squares 2 3)</code>
-</pre>
+(sum-of-squares 2 3)</code></pre>
   </li>
   <li>
     <p>
@@ -1677,8 +1618,7 @@ sed -i.bkp '/autocmd.*RainbowParentheses/d' ~/.vimrc</code>
     <p>
       Uninstall SBCL and install CLISP with these commands:
     </p>
-    <pre>
-<code>sudo apt-get remove sbcl
+    <pre><code>sudo apt-get remove sbcl
 sudo apt-get install clisp</code></pre>
   </li>
   <li>
@@ -1719,8 +1659,7 @@ sudo apt-get install clisp</code></pre>
     <p>
       Ensure that SBCL and CLISP are uninstalled and ECL is installed.
     </p>
-    <pre>
-<code>sudo apt-get remove sbcl clisp
+    <pre><code>sudo apt-get remove sbcl clisp
 sudo apt-get install ecl</code></pre>
   </li>
   <li>
@@ -1773,10 +1712,8 @@ sudo apt-get install ecl</code></pre>
       have previous artefacts created by SBCL.  To clean up old
       artefacts, enter these commands:
     </p>
-<pre>
-<code>rm -rf ~/.sbclrc ~/quicklisp
-sudo apt-get remove sbcl</code>
-</pre>
+<pre><code>rm -rf ~/.sbclrc ~/quicklisp
+sudo apt-get remove sbcl</code></pre>
   </li>
   <li>
     <p>
@@ -1788,11 +1725,9 @@ sudo apt-get remove sbcl</code>
     <p>
       Install Quicklisp using CLISP with these commands:
     </p>
-    <pre>
-<code>curl -O https://beta.quicklisp.org/quicklisp.lisp
+    <pre><code>curl -O https://beta.quicklisp.org/quicklisp.lisp
 clisp -i quicklisp.lisp -x '(quicklisp-quickstart:install)'
-clisp -i ~/quicklisp/setup.lisp -x '(ql:add-to-init-file)'</code>
-</pre>
+clisp -i ~/quicklisp/setup.lisp -x '(ql:add-to-init-file)'</code></pre>
     <p>
       Type <kbd>enter</kbd> in the end, when prompted, to complete the
       installation.
@@ -1802,14 +1737,12 @@ clisp -i ~/quicklisp/setup.lisp -x '(ql:add-to-init-file)'</code>
     <p>
       Add the following code to <code>~/.vimrc</code>:
     </p>
-<pre>
-<code>let g:vlime_cl_impl = 'clisp'
+<pre><code>let g:vlime_cl_impl = 'clisp'
 function! VlimeBuildServerCommandFor_clisp(vlime_loader, vlime_eval)
     return ['clisp', '-i', a:vlime_loader,
                    \ '-x', a:vlime_eval,
                    \ '-repl']
-endfunction</code>
-</pre>
+endfunction</code></pre>
     <p>
       Unlike Slimv, automatic start of Swank server with Common Lisp
       implementations other than SBCL are not supported out of the
@@ -1861,10 +1794,8 @@ endfunction</code>
       have previous artefacts created by SBCL or ECL.  To clean up old
       artefacts, enter these commands:
     </p>
-<pre>
-<code>rm -rf ~/.sbclrc ~/.clisprc.lisp ~/quicklisp
-sudo apt-get remove sbcl clisp</code>
-</pre>
+<pre><code>rm -rf ~/.sbclrc ~/.clisprc.lisp ~/quicklisp
+sudo apt-get remove sbcl clisp</code></pre>
   </li>
   <li>
     <p>
@@ -1876,11 +1807,9 @@ sudo apt-get remove sbcl clisp</code>
     <p>
       Install Quicklisp using ECL with these commands:
     </p>
-    <pre>
-<code>curl -O https://beta.quicklisp.org/quicklisp.lisp
+    <pre><code>curl -O https://beta.quicklisp.org/quicklisp.lisp
 ecl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(quit)'
-ecl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(quit)'</code>
-</pre>
+ecl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(quit)'</code></pre>
     <p>
       Type <kbd>enter</kbd> in the end, when prompted, to complete the
       installation.
@@ -1890,13 +1819,11 @@ ecl --load ~/quicklisp/setup.lisp --eval '(ql:add-to-init-file)' --eval '(quit)'
     <p>
       Add the following code to <code>~/.vimrc</code>:
     </p>
-<pre>
-<code>let g:vlime_cl_impl = 'ecl'
+<pre><code>let g:vlime_cl_impl = 'ecl'
 function! VlimeBuildServerCommandFor_ecl(vlime_loader, vlime_eval)
     return ['ecl', '--load', a:vlime_loader,
                  \ '--eval', a:vlime_eval]
-endfunction</code>
-</pre>
+endfunction</code></pre>
   </li>
   <li>
     <p>
@@ -2011,10 +1938,8 @@ endfunction</code>
   trying to start Swank server with MIT/GNU Scheme 9.2 on macOS High
   Sierra 10.13.6 fails with this error:
 </p>
-<pre>
-<samp>; /usr/local/Cellar/mit-scheme/9.2_2/lib/mit-scheme-c/include/config.h:879:10:
-fatal error: 'sys/types.h' file not found</samp>
-</pre>
+<pre><samp>; /usr/local/Cellar/mit-scheme/9.2_2/lib/mit-scheme-c/include/config.h:879:10:
+fatal error: 'sys/types.h' file not found</samp></pre>
 <p>
   Further, the version of MIT/GNU Scheme really needs to be 9.x.  For
   example, when I try to start Swank with MIT/GNU Scheme 10.1.5 on
@@ -2059,25 +1984,21 @@ fatal error: 'sys/types.h' file not found</samp>
     <p>
       Choose one of the two sets of commands below to install Maven:
     </p>
-<pre>
-<code># On Debian, Ubuntu, etc.
+<pre><code># On Debian, Ubuntu, etc.
 sudo apt-get install maven
 
 # On macOS
 brew install openjdk maven
 export JAVA_HOME=/usr/local/opt/openjdk
-export PATH="$JAVA_HOME/bin:$PATH"</code>
-</pre>
+export PATH="$JAVA_HOME/bin:$PATH"</code></pre>
   </li>
   <li>
     <p>
       Enter these commands to install Clojure:
     </p>
-<pre>
-<code>git clone https://github.com/clojure/clojure.git ~/clojure
+<pre><code>git clone https://github.com/clojure/clojure.git ~/clojure
 git -C ~/clojure checkout clojure-1.10.1
-mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code>
-</pre>
+mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code></pre>
   </li>
   <li>
     <p>
@@ -2102,10 +2023,8 @@ mvn -f ~/clojure/pom.xml -Plocal -Dmaven.test.skip=true package</code>
       Screen or a desktop environment.  In such a case, enter these
       commands to start Swank server manually:
     </p>
-<pre>
-<code>SWANK_DIR=~/.vim/pack/plugins/start/slimv/swank-clojure
-java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swank/swank.clj" -e '(swank.swank/start-repl)' -r</code>
-</pre>
+<pre><code>SWANK_DIR=~/.vim/pack/plugins/start/slimv/swank-clojure
+java -cp "$HOME/clojure/clojure.jar:$SWANK_DIR" clojure.main -i "$SWANK_DIR/swank/swank.clj" -e '(swank.swank/start-repl)' -r</code></pre>
   </li>
   <li>
     <p>

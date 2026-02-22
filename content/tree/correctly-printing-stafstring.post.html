@@ -10,8 +10,7 @@
   to <code>STAFResult::STAFString</code> not being null-terminated.
   Here is an example C++ program that demonstrates the issue:
 </p>
-<pre>
-<code>#include &lt;iostream&gt;
+<pre><code>#include &lt;iostream&gt;
 #include &lt;string&gt;
 using namespace std;
 
@@ -40,17 +39,14 @@ int main(int argc, char **argv)
 
     STAFString output = result-&gt;result;
     std::cout &lt;&lt; "Output: " &lt;&lt; output.buffer() &lt;&lt; "\n";
-}</code>
-</pre>
+}</code></pre>
 <p>
   Here is an example output of the above program:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>echo %DUMMY%</kbd>
+<pre><samp>C:\&gt;<kbd>echo %DUMMY%</kbd>
 Why__does__it__break
 C:\&gt;<kbd>STAFExperiments.exe</kbd>
-Output: Why__does__it__break/Env/DUMMY}}</samp>
-</pre>
+Output: Why__does__it__break/Env/DUMMY}}</samp></pre>
 <p>
   The substring <code>/Env/DUMMY</code> at the end of the output is
   garbage.  The result is not null-terminated in the output buffer.

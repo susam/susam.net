@@ -2,7 +2,6 @@ form {
   margin: 1em 0;
 }
 input, textarea, button {
-  color: {{ light-body-color }};
   border-color: {{ light-line-color }};
   font-family: {{ font-family }};
   font-size: 1em;

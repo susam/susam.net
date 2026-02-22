@@ -166,8 +166,7 @@
   difference (<code>error</code>) between the actual fare and
   approximate fare:
 </p>
-<pre>
-<code>print('  km   meter  actual  approx  error')
+<pre><code>print('  km   meter  actual  approx  error')
 
 km = 1.9
 
@@ -180,8 +179,7 @@ while km &lt; 30.01:
     print('{:4.1f}  {:6.2f}  {:6.2f}  {:6.2f}  {:5.2f}'.format(
           km, old_fare, new_fare, approx_fare, error))
 
-    km += 0.1</code>
-</pre>
+    km += 0.1</code></pre>
 <p>
   The output of the above program is provided below.  Scroll down to
   see the complete output.
@@ -469,8 +467,7 @@ while km &lt; 30.01:
 29.7  326.90  386.40  390.90   4.50
 29.8  328.00  387.70  392.00   4.30
 29.9  329.10  389.00  393.10   4.10
-30.0  330.20  390.30  396.20   5.90</samp>
-</pre>
+30.0  330.20  390.30  396.20   5.90</samp></pre>
 <p>
   The error does not exceed 2.70 rupees for the first 15 km and 5.90
   rupees for the first 30 km.  We can say that the three-step method

@@ -135,14 +135,12 @@
       Create a text file named <code>foo.txt</code> with the following
       content:
     </p>
-    <pre>
-<code>#include &lt;iostream&gt;
+    <pre><code>#include &lt;iostream&gt;
 
 int main() {
   std::cout << "hello, world\n";
   return 0;
-}</code>
-</pre>
+}</code></pre>
     <p>
       Then open this file in Emacs (say, with <code>C-x C-f foo.txt
       RET</code>).  Emacs sets the major mode to <code>Text</code>
@@ -165,16 +163,14 @@ int main() {
       Now edit the previous file to add file-local variables in the
       header as follows:
     </p>
-    <pre>
-<code>// -*- mode: c++; c-basic-offset: 4 -*-
+    <pre><code>// -*- mode: c++; c-basic-offset: 4 -*-
 
 #include &lt;iostream&gt;
 
 int main() {
   std::cout << "hello, world\n";
   return 0;
-}</code>
-</pre>
+}</code></pre>
     <p>
       Now reload the buffer.  You could simply kill the buffer
       with <code>C-x k</code> and reopen the file with <code>C-x C-f
@@ -194,8 +190,7 @@ int main() {
       File-local variables may be specified in the footer too as shown
       below:
     </p>
-    <pre>
-<code>#include &lt;iostream&gt;
+    <pre><code>#include &lt;iostream&gt;
 
 int main() {
     std::cout << "hello, world\n";
@@ -205,8 +200,7 @@ int main() {
 // Local Variables:
 // mode: c++
 // c-basic-offset: 6
-// End:</code>
-</pre>
+// End:</code></pre>
     <p>
       Now reloading the buffer should show that <code>c++-mode</code>
       is enabled and typing <code>C-x h TAB</code> should reformat the
@@ -219,8 +213,7 @@ int main() {
       footer contradict each other?  To test this out, edit the buffer
       to have the following content:
     </p>
-    <pre>
-<code>// -*- mode: c++; c-basic-offset: 4 -*-
+    <pre><code>// -*- mode: c++; c-basic-offset: 4 -*-
 
 #include &lt;iostream&gt;
 
@@ -232,8 +225,7 @@ int main() {
 // Local Variables:
 // mode: python
 // c-basic-offset: 6
-// End:</code>
-</pre>
+// End:</code></pre>
     <p>
       Reloading the buffer should show that <code>c++-mode</code> is
       active.  Typing <code>C-x h TAB</code> should reformat the code

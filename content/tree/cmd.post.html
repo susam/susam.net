@@ -1,0 +1,18 @@
+<!-- date: 2022-11-18 -->
+<!-- title: Commands -->
+<!-- tag: Shell, Technology -->
+<!-- key: cmnds -->
+<!-- blog: Maze -->
+<!-- updated: 2026-02-19 -->
+<p>
+  On this page, I collect both frequently and rarely used commands.
+</p>
+{{ toc }}
+<!-- gs join -->
+<h2 id="join-pdf-files-with-ghostscript">Join PDF Files With Ghostscript</h2>
+<pre><code>gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=out.pdf 1.pdf 2.pdf 3.pdf</code></pre>
+<p>Last tested with gs 10.0.0 on 18 Nov 2022.</p>
+<!-- osascript resize -->
+<h2 id="resize-window-on-macos">Resize Window on macOS</h2>
+<pre><code>osascript -e 'tell app "Firefox" to set bounds of front window to {0, 0, 1200, 720}'</code></pre>
+<p>Last tested on macOS 15.3.2 on 19 Feb 2026.</p>

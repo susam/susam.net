@@ -59,24 +59,20 @@
   paragraphs with <code>M-q</code>.  Consider the following badly
   formatted paragraphs with very long and very short lines:
 </p>
-<pre>
-<code>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+<pre><code>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore
 magna aliqua.  Arcu dui vivamus arcu felis bibendum ut tristique et egestas.
 Bibendum arcu vitae
-elementum curabitur vitae.</code>
-</pre>
+elementum curabitur vitae.</code></pre>
 <p>
   Now put the point (cursor) anywhere on the paragraph and
   type <code>M-q</code>.  The paragraph gets neatly formatted to
   something like this:
 </p>
-<pre>
-<code>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+<pre><code>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua.  Arcu dui
 vivamus arcu felis bibendum ut tristique et egestas.  Bibendum arcu
-vitae elementum curabitur vitae.</code>
-</pre>
+vitae elementum curabitur vitae.</code></pre>
 <p>
   The key sequence <code>M-q</code> invokes
   the <code>fill-paragraph</code> command that reformats the paragraph
@@ -88,24 +84,20 @@ vitae elementum curabitur vitae.</code>
   illustrate this concept, we will first consider this badly formatted
   paragraph:
 </p>
-<pre>
-<code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+<pre><code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 :::: incididunt ut labore et dolore
 :::: magna aliqua.  Arcu dui vivamus arcu felis bibendum ut tristique et egestas.
 :::: Bibendum arcu vitae
-:::: elementum curabitur vitae.</code>
-</pre>
+:::: elementum curabitur vitae.</code></pre>
 <p>
   Each line has a prefix consisting of four colons and a space.  After
   we reformat this paragraph with <code>M-q</code>, we get something
   like this:
 </p>
-<pre>
-<code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+<pre><code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 eiusmod tempor :::: incididunt ut labore et dolore :::: magna aliqua.
 Arcu dui vivamus arcu felis bibendum ut tristique et egestas.  ::::
-Bibendum arcu vitae :::: elementum curabitur vitae.</code>
-</pre>
+Bibendum arcu vitae :::: elementum curabitur vitae.</code></pre>
 <p>
   This is not what we want.  We want the paragraph to be formatted
   such that each line does not exceed 70 characters in length (which
@@ -120,12 +112,10 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
   has been set as the fill prefix.  Then type <code>M-q</code> and the
   paragraph is now neatly formatted to look like this:
 </p>
-<pre>
-<code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+<pre><code>:::: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 :::: eiusmod tempor incididunt ut labore et dolore magna aliqua.  Arcu
 :::: dui vivamus arcu felis bibendum ut tristique et egestas.
-:::: Bibendum arcu vitae elementum curabitur vitae.</code>
-</pre>
+:::: Bibendum arcu vitae elementum curabitur vitae.</code></pre>
 <p>
   Note how every line is as long as possible without exceeding 70
   characters in length and each line has the fill prefix.  Emacs took
@@ -255,12 +245,10 @@ Bibendum arcu vitae :::: elementum curabitur vitae.</code>
 <p>
   Say, we have a buffer that looks like this:
 </p>
-<pre>
-<code>foo:bar:baz
+<pre><code>foo:bar:baz
 bar:baz:qux
 quux:corge:grault
-garply:waldo:fred</code>
-</pre>
+garply:waldo:fred</code></pre>
 <p>
   Now suppose we want to swap the first two fields separated by colon
   in each line.  Of course, we could do it using regular expressions,
@@ -588,8 +576,7 @@ garply:waldo:fred</code>
   implemented purely in Elisp and we can use it much like a regular
   shell.  Here is an example session:
 </p>
-<pre>
-<samp>~ $ <kbd>cd /tmp/</kbd>
+<pre><samp>~ $ <kbd>cd /tmp/</kbd>
 /tmp $ <kbd>echo hello &gt; hello.txt</kbd>
 /tmp $ <kbd>cat hello.txt</kbd>
 hello
@@ -600,8 +587,7 @@ eshell/cd is a byte-compiled Lisp function in &lsquo;em-dirs.el&rsquo;.
 eshell/echo is a byte-compiled Lisp function in &lsquo;em-basic.el&rsquo;.
 eshell/cat is a byte-compiled Lisp function in &lsquo;em-unix.el&rsquo;.
 /usr/bin/python3
-eshell/which is a byte-compiled Lisp function in &lsquo;esh-cmd.el&rsquo;.</samp>
-</pre>
+eshell/which is a byte-compiled Lisp function in &lsquo;esh-cmd.el&rsquo;.</samp></pre>
 <p>
   We also knew about TRAMP.  For example, when we type the key
   sequence <code>C-x C-f /ssh:alice@box:/tmp/foo.txt RET</code>, TRAMP
@@ -628,8 +614,7 @@ eshell/which is a byte-compiled Lisp function in &lsquo;esh-cmd.el&rsquo;.</samp
   TRAMP work together.  Here is an example Eshell session that
   illustrates this point:
 </p>
-<pre>
-<samp>~ $ <kbd>cd /ssh:alice@box:/tmp/</kbd>
+<pre><samp>~ $ <kbd>cd /ssh:alice@box:/tmp/</kbd>
 /ssh:alice@box:/tmp $ <kbd>echo foo &gt; foo.txt</kbd>
 /ssh:alice@box:/tmp $ <kbd>ls</kbd>
 foo.txt
@@ -640,8 +625,7 @@ bar.txt
 /tmp $ <kbd>cp /ssh:alice@box:/tmp/foo.txt .</kbd>
 /tmp $ <kbd>ls</kbd>
 bar.txt  foo.txt
-/tmp $</samp>
-</pre>
+/tmp $</samp></pre>
 <p>
   Look at how the command <code>cd /ssh:alice@box:/tmp/</code> above
   has seamlessly and transparently set the current directory of the
@@ -652,19 +636,15 @@ bar.txt  foo.txt
   have the permissions to write to the local <code>/etc/</code>
   directory:
 </p>
-<pre>
-<samp>~ $ <kbd>cp /ssh:alice@box:/etc/wgetrc /etc/</kbd>
-Opening output file Permission denied /etc/wgetrc</samp>
-</pre>
+<pre><samp>~ $ <kbd>cp /ssh:alice@box:/etc/wgetrc /etc/</kbd>
+Opening output file Permission denied /etc/wgetrc</samp></pre>
 <p>
   But if the current user has <code>sudo</code> privilege, we can do
   something like this:
 </p>
-<pre>
-<samp>~ $ <kbd>cp /ssh:alice@box:/etc/wgetrc /sudo::/etc/</kbd>
+<pre><samp>~ $ <kbd>cp /ssh:alice@box:/etc/wgetrc /sudo::/etc/</kbd>
 ~ $ <kbd>ls /etc/wgetrc</kbd>
-/etc/wgetrc</samp>
-</pre>
+/etc/wgetrc</samp></pre>
 <p>
   We copied a file from a remote system and wrote it to a protected
   directory on the local system by using the <code>sudo</code>

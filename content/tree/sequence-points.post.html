@@ -8,16 +8,14 @@
   A particular type of question comes up often in C programming
   forums.  Here is an example of such a question:
 </p>
-<pre>
-<code>#include &lt;stdio.h&gt;
+<pre><code>#include &lt;stdio.h&gt;
 
 int main()
 {
     int i = 5;
     printf("%d %d %d\n", i, i--, ++i);
     return 0;
-}</code>
-</pre>
+}</code></pre>
 <p>
   The output is <code>5 6 5</code> when compiled with GCC and
   <code>6 6 6</code> when compiled with the C compiler that comes with
@@ -36,8 +34,7 @@ int main()
 <p>
   Here is another example of such a question:
 </p>
-<pre>
-<code>#include &lt;stdio.h&gt;
+<pre><code>#include &lt;stdio.h&gt;
 
 int main()
 {
@@ -45,8 +42,7 @@ int main()
     a += a++ + a++;
     printf("%d\n", a);
     return 0;
-}</code>
-</pre>
+}</code></pre>
 <p>
   In this case, I got the output <code>17</code> with both the
   compilers.
@@ -105,10 +101,8 @@ int main()
     on whether <code>n</code> is incremented before <code>power</code>
     is called.  The solution, of course, is to write
   </p>
-<pre>
-<code>++n;
-printf("%d %d\n", n, power(2, n));</code>
-</pre>
+<pre><code>++n;
+printf("%d %d\n", n, power(2, n));</code></pre>
 </blockquote>
 <p>
   They provide one more example in this section:
@@ -117,9 +111,7 @@ printf("%d %d\n", n, power(2, n));</code>
   <p>
     One unhappy situation is typified by the statement
   </p>
-<pre>
-<code>a[i] = i++;</code>
-</pre>
+<pre><code>a[i] = i++;</code></pre>
   <p>
     The question is whether the subscript is the old value
     of <code>i</code> or the new.  Compilers can interpret this in

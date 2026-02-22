@@ -55,18 +55,15 @@
 
   The indicators-based solution simply becomes:
 </p>
-<pre>
-<code>from math import cos, pi
+<pre><code>from math import cos, pi
 for n in range(1, 1001):
     s = [n, 'Fizz', 'Buzz', 'FizzBuzz', 'Jazz', 'FizzJazz', 'BuzzJazz', 'FizzBuzzJazz']
     i = (n % 3 == 0) + 2 * (n % 5 == 0) + 4 * (n % 7 == 0)
-    print(s[i])</code>
-</pre>
+    print(s[i])</code></pre>
 <p>
   The cosine-based solution becomes:
 </p>
-<pre>
-<code>from math import cos, pi
+<pre><code>from math import cos, pi
 for n in range(1, 1001):
     s = [n, 'Fizz', 'Buzz', 'FizzBuzz', 'Jazz', 'FizzJazz', 'BuzzJazz', 'FizzBuzzJazz']
     i = round((137 / 105) + (2 / 3) * cos(2 * pi * n / 3)
@@ -75,8 +72,7 @@ for n in range(1, 1001):
                           + (8 / 7) * cos(2 * pi * n / 7)
                           + (8 / 7) * cos(4 * pi * n / 7)
                           + (8 / 7) * cos(6 * pi * n / 7))
-    print(s[i])</code>
-</pre>
+    print(s[i])</code></pre>
 <p>
   The value of \( g(n) \) in the formula above (or equivalently the
   value of the variable <code>i</code> in the code) can be viewed as a

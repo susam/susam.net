@@ -63,8 +63,7 @@
   editing problem.  Consider the following text buffer with a list of
   numbered items:
 </p>
-<pre>
-<code>### 1) apple
+<pre><code>### 1) apple
 ### 2) ball
 ### 3) bat
 ### 4) cat
@@ -76,8 +75,7 @@
 ### 10) ink
 ### 11) jug
 ### 12) kite
-### 13) lion</code>
-</pre>
+### 13) lion</code></pre>
 <p>
   While this is a toy example presented here for the sake of
   simplicity and clarity, this example is based on an actual text
@@ -92,8 +90,7 @@
   (cursor) to that line and type <code>C-S-&lt;backspace&gt;</code>
   or <code>C-a C-k</code> to kill that line.  We get this:
 </p>
-<pre>
-<code>### 1) apple
+<pre><code>### 1) apple
 ### 2) ball
 ### 4) cat
 ### 5) dog
@@ -104,8 +101,7 @@
 ### 10) ink
 ### 11) jug
 ### 12) kite
-### 13) lion</code>
-</pre>
+### 13) lion</code></pre>
 <p>
   How do we now renumber all the items starting from <code>4)
   cat</code>?  This is where the support for Elisp expressions in
@@ -120,8 +116,7 @@
   like <code>### 4</code> gets replaced with <code>### 3</code>.
   After completing the replacement, the buffer looks like this:
 </p>
-<pre>
-<code>### 1) apple
+<pre><code>### 1) apple
 ### 2) ball
 ### 3) cat
 ### 4) dog
@@ -132,8 +127,7 @@
 ### 9) ink
 ### 10) jug
 ### 11) kite
-### 12) lion</code>
-</pre>
+### 12) lion</code></pre>
 <p>
   I hope this was useful.  Do you have an interesting
   Elisp-in-replacement-string story?  Please share it in the comments.

@@ -408,7 +408,34 @@
  (:date "2026-01-03"
   :lang "English"
   :txt1 "Which Part of the Indie Web Ethos is the Bigger Priority?"
-  :url1 "https://osteophage.dreamwidth.org/12661.html"
+  :url1 "https://osteophage.neocities.org/essays/indie-web-priorities"
   :txt2 "The IndieWeb Doesn't Need to 'Take Off'"
-  :url2 "https://osteophage.neocities.org/essays/indie-web-priorities")
-)
+  :url2 "indieweb-does-not-need-to-take-off.html")
+
+ (:date "2026-01-23"
+  :lang "English"
+  :txt1 "Web Review, Week 2026-04"
+  :url1 "https://ervin.ipsquad.net/blog/2026/01/23/web-review-week-2026-04/"
+  :txt2 "Writing First, Tooling Second"
+  :url2 "writing-first-tooling-second.html")
+
+ (:date "2026-01-23"
+  :lang "English"
+  :txt1 "Web Review, Week 2026-04"
+  :url1 "https://ervin.ipsquad.net/blog/2026/01/23/web-review-week-2026-04/"
+  :txt2 "Attention Media ≠ Social Media"
+  :url2 "attention-media-is-not-social-media.html")
+
+ (:date "2026-02-13"
+  :lang "English"
+  :txt1 "Hacker Newsletter #782"
+  :url1 "https://buttondown.com/hacker-newsletter/archive/782/"
+  :txt2 "Twenty Five Years of Computing"
+  :url2 "twenty-five-years-of-computing.html")
+
+ (:date "2026-02-15"
+  :lang "English"
+  :txt1 "Joy & Curiosity #74"
+  :url1 "https://registerspill.thorstenball.com/p/joy-and-curiosity-74"
+  :txt2 "Twenty Five Years of Computing"
+  :url2 "twenty-five-years-of-computing.html"))
