@@ -1,6 +1,6 @@
 <!-- date: 2020-09-01 -->
 <!-- title: Good Quality DOSBox Video Capture -->
-<!-- tag: DOS, Technology -->
+<!-- tag: DOS, Technology, How-To -->
 <!-- key: dyzhs -->
 <!-- blog: Main -->
 <!-- import: extra.css -->
@@ -150,14 +150,10 @@
   the screenshots appear in the console output at the terminal where
   DOSBox was launched.  For example:
 </p>
-<pre>
-<samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_000.png
-Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_001.png</samp>
-</pre>
-<pre>
-<samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/digger_000.png
-Capturing Screenshot to /Users/susam/Library/Preferences/capture/digger_001.png</samp>
-</pre>
+<pre><samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_000.png
+Capturing Screenshot to /Users/susam/Library/Preferences/capture/logo_001.png</samp></pre>
+<pre><samp>Capturing Screenshot to /Users/susam/Library/Preferences/capture/digger_000.png
+Capturing Screenshot to /Users/susam/Library/Preferences/capture/digger_001.png</samp></pre>
 <p>
   The screenshots obtained in this manner have an aspect ratio of 8:5
   which makes the output look stretched horizontally.  The old CRT
@@ -166,14 +162,10 @@ Capturing Screenshot to /Users/susam/Library/Preferences/capture/digger_001.png<
   resizing the images to an aspect ratio of 4:3.  Here are the
   commands used to fix the aspect ratio and produce the images:
 </p>
-<pre>
-<code>convert logo_000.png -sample '1920x1440!' dosbox-logo-0.png
-convert logo_001.png -sample '1920x1440!' dosbox-logo-1.png</code>
-</pre>
-<pre>
-<code>convert digger_000.png -sample '1920x1440!' dosbox-digger-0.png
-convert digger_001.png -sample '1920x1440!' dosbox-digger-1.png</code>
-</pre>
+<pre><code>convert logo_000.png -sample '1920x1440!' dosbox-logo-0.png
+convert logo_001.png -sample '1920x1440!' dosbox-logo-1.png</code></pre>
+<pre><code>convert digger_000.png -sample '1920x1440!' dosbox-digger-0.png
+convert digger_001.png -sample '1920x1440!' dosbox-digger-1.png</code></pre>
 <!--
 According to Screen Resolution Statistics for January 2020 by
 w3schools.com, here are the statistics of browser resolutions:
@@ -238,10 +230,8 @@ x 1440 is larger than 92.7% displays
   combination stops capturing video.  The following output appears in
   the console output to show where the video file is saved:
 </p>
-<pre>
-<samp>Capturing Video to /Users/susam/Library/Preferences/capture/logo_000.avi
-Stopped capturing video.</samp>
-</pre>
+<pre><samp>Capturing Video to /Users/susam/Library/Preferences/capture/logo_000.avi
+Stopped capturing video.</samp></pre>
 <p>
   Say, I want to share a video capture of DOSBox with Logo running on
   it with my friends who might be on devices that do not support
@@ -249,11 +239,9 @@ Stopped capturing video.</samp>
   to a format that can be distributed widely and played on a wide
   range of devices and players:
 </p>
-<pre>
-<code>ffmpeg -i logo_000.avi -an -c:v libx264 -preset veryslow \
+<pre><code>ffmpeg -i logo_000.avi -an -c:v libx264 -preset veryslow \
        -crf 17 -vf format=yuv420p,scale=1920:1440:flags=neighbor,fps=30 \
-       dosbox-logo.mp4</code>
-</pre>
+       dosbox-logo.mp4</code></pre>
 <p>
   Here is what the output looks like:
 </p>
@@ -354,29 +342,25 @@ Stopped capturing video.</samp>
       version 10.4 on macOS High Sierra as well as Android 9.0.0 was
       unable to play this format.
     </p>
-<pre>
-<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 dosbox-logo.mp4</kbd>
+<pre><samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 dosbox-logo.mp4</kbd>
 $ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt dosbox-logo.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=High 4:4:4 Predictive
 pix_fmt=yuv444p
-[/STREAM]</samp>
-</pre>
+[/STREAM]</samp></pre>
     <p>
       With this video filter option, we get the output in the YUV
       4:2:0 planar format.  Now both QuickTime Player version 10.4 as
       well as Android 9.0.0 could play this format.
     </p>
-<pre>
-<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -vf format=yuv420p dosbox-logo.mp4</kbd>
+<pre><samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -vf format=yuv420p dosbox-logo.mp4</kbd>
 $ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt dosbox-logo.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=High
 pix_fmt=yuv420p
-[/STREAM]</samp>
-</pre>
+[/STREAM]</samp></pre>
     <p>
       For maximum compatibility with very old or obsolete devices, we
       could add the <code>-profile:v baseline</code> option that setst
@@ -389,15 +373,13 @@ pix_fmt=yuv420p
       while not technically lossless is much better than visually
       lossless.
     </p>
-<pre>
-<samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -vf format=yuv420p -profile:v baseline dosbox-logo.mp4</kbd>
+<pre><samp>$ <kbd>ffmpeg -v quiet -i logo_000.avi -an -c:v libx264 -vf format=yuv420p -profile:v baseline dosbox-logo.mp4</kbd>
 $ <kbd>ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt dosbox-logo.mp4</kbd>
 [STREAM]
 codec_name=h264
 profile=Constrained Baseline
 pix_fmt=yuv420p
-[/STREAM]</samp>
-</pre>
+[/STREAM]</samp></pre>
   </li>
   <li>
     <p>
@@ -465,19 +447,15 @@ pix_fmt=yuv420p
   video.  The following output appears in the console output to show
   where the video file is saved:
 </p>
-<pre>
-<samp>Capturing Video to /Users/susam/Library/Preferences/capture/digger_000.avi
-Stopped capturing video.</samp>
-</pre>
+<pre><samp>Capturing Video to /Users/susam/Library/Preferences/capture/digger_000.avi
+Stopped capturing video.</samp></pre>
 <p>
   Here is the command to convert the video capture of Digger to a
   distributable format:
 </p>
-<pre>
-<code>ffmpeg -i digger_000.avi -c:a aac -b:a 256k -c:v libx264 -preset veryslow \
+<pre><code>ffmpeg -i digger_000.avi -c:a aac -b:a 256k -c:v libx264 -preset veryslow \
        -crf 17 -vf format=yuv420p,scale=1920:1440:flags=neighbor,fps=50 \
-       dosbox-digger.mp4</code>
-</pre>
+       dosbox-digger.mp4</code></pre>
 <p>
   Here is the output:
 </p>
@@ -520,12 +498,10 @@ Stopped capturing video.</samp>
       the output file turns out to be 245k because that is enough to
       encode the audio stream in the input file.
     </p>
-<pre>
-<samp>$ <kbd>ffprobe -v error -select_streams a -show_entries stream=bit_rate dosbox-digger.mp4</kbd>
+<pre><samp>$ <kbd>ffprobe -v error -select_streams a -show_entries stream=bit_rate dosbox-digger.mp4</kbd>
 [STREAM]
 bit_rate=245184
-[/STREAM]</samp>
-</pre>
+[/STREAM]</samp></pre>
   </li>
   <li>
     <p>
@@ -575,12 +551,10 @@ bit_rate=245184
   Here are the commands to convert the Logo video capture to GIF
   animation:
 </p>
-<pre>
-<samp>ffmpeg -i logo_000.avi -vf palettegen palette.png
+<pre><samp>ffmpeg -i logo_000.avi -vf palettegen palette.png
 ffmpeg -i logo_000.avi -i palette.png \
        -lavfi 'scale=1920:1440:flags=neighbor,paletteuse,fps=30' \
-       dosbox-logo.gif</samp>
-</pre>
+       dosbox-logo.gif</samp></pre>
 <p>
   The first command generates a colour palette from the video capture.
   The second command uses this colour palette to generate a GIF
@@ -599,12 +573,10 @@ ffmpeg -i logo_000.avi -i palette.png \
   Here are the commands to convert the Digger video capture to GIF
   animation:
 </p>
-<pre>
-<samp>ffmpeg -i digger_000.avi -vf palettegen palette.png
+<pre><samp>ffmpeg -i digger_000.avi -vf palettegen palette.png
 ffmpeg -i digger_000.avi -i palette.png \
        -lavfi 'scale=1920:1440:flags=neighbor,paletteuse,fps=50' \
-       dosbox-digger.gif</samp>
-</pre>
+       dosbox-digger.gif</samp></pre>
 <figure id="digger-gif">
   <a href="files/blog/dosbox-digger.gif"><img
       src="files/blog/dosbox-digger.gif"

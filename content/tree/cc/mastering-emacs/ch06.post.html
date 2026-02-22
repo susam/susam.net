@@ -314,8 +314,7 @@
   Here is a minimal Elisp code that sets up <code>dumb-jump</code>
   from scratch and configures it as mentioned above:
 </p>
-<pre>
-<code>(require 'package)
+<pre><code>(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 (unless package-archive-contents
@@ -323,8 +322,7 @@
 (dolist (package '(dumb-jump))
   (unless (package-installed-p package)
     (package-install package)))
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)</code>
-</pre>
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)</code></pre>
 <p>
   The above code configures Emacs to use MELPA, retrieve the latest
   list of packages available there, install <code>dumb-jump</code>
@@ -611,14 +609,12 @@
     <p>
       First create a buffer with the following content.
     </p>
-<pre>
-<code>foo bar baz
+<pre><code>foo bar baz
 Foo Bar Baz
 FOO BAR BAZ
 foo  bar  baz
 Foo  Bar  Baz
-FOO  BAR  BAZ</code>
-</pre>
+FOO  BAR  BAZ</code></pre>
   </li>
   <li>
     <p>
@@ -861,22 +857,18 @@ FOO  BAR  BAZ</code>
       First, create a directory of text files with the following shell
       commands:
     </p>
-<pre>
-<code>mkdir -p foo/bar/baz/
+<pre><code>mkdir -p foo/bar/baz/
 echo hello foo &gt; foo/foo.txt
 echo hello bar &gt; foo/bar/bar.txt
 echo hello baz &gt; foo/bar/baz/baz.txt
-tar -caf /tmp/foo.tgz foo/</code>
-</pre>
+tar -caf /tmp/foo.tgz foo/</code></pre>
   </li>
   <li>
     <p>
       Confirm that the tarball looks good with these shell commands:
     </p>
-<pre>
-<code>tar -tf /tmp/foo.tgz
-tar -xOf /tmp/foo.tgz</code>
-</pre>
+<pre><code>tar -tf /tmp/foo.tgz
+tar -xOf /tmp/foo.tgz</code></pre>
   </li>
   <li>
     <p>
@@ -1409,16 +1401,14 @@ tar -xOf /tmp/foo.tgz</code>
   With Eshell we can go directly into remote directories seamlessly.
   The following Eshell session illustrates this:
 </p>
-<pre>
-<samp>Welcome to the Emacs shell
+<pre><samp>Welcome to the Emacs shell
 
 ~ $ <kbd>uname</kbd>
 Darwin
 ~ $ <kbd>cd /ssh:alice@box:~/foo/</kbd>
 /ssh:alice@box:/home/alice/foo $ <kbd>hostname</kbd>
 debian
-/ssh:alice@box:/home/alice/foo $</samp>
-</pre>
+/ssh:alice@box:/home/alice/foo $</samp></pre>
 <h3 id="multi-hops">Multi-Hops</h3>
 <p>
   Here are some commands that illustrate how multi-hops work:
@@ -1475,14 +1465,12 @@ debian
   Eshell works seamlessy too across multi-hops.  Here is an Eshell
   session that illustrates it:
 </p>
-<pre>
-<samp>~ $ <kbd>uname</kbd>
+<pre><samp>~ $ <kbd>uname</kbd>
 Darwin
 ~ $ <kbd>cd '/ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar/'</kbd>
 /ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar $ <kbd>uname</kbd>
 Linux
-/ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar $</samp>
-</pre>
+/ssh:alice@box1|ssh:bob@box2|ssh:carol@box3:/home/carol/foo/bar $</samp></pre>
 <h2 id="eww">EWW: Emacs Web Wowser</h2>
 <p>
   The following commands are useful to get started with EWW.

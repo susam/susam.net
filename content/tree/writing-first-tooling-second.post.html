@@ -1,18 +1,21 @@
 <!-- date: 2026-01-10 -->
 <!-- title: Writing First, Tooling Second -->
-<!-- tag: Miscellaneous -->
+<!-- tag: Web, Technology -->
 <!-- key: wftss -->
 <!-- blog: Main -->
 <p>
-  I am a strong proponent of running independent personal websites on
-  your own domains and publishing your writing there.  Doing so keeps
-  the web diverse and decentralised, rather than concentrating most
-  writing and discussion inside a small number of large platforms.  It
-  gives authors long term control over their work without being
-  subject to changing policies or incentives.  I think that a web made
-  up of many small, individually run websites is more resilient and
-  also more interesting than one dominated by a handful of social
-  media services.
+  I am a strong proponent of running
+  <a href="https://hnpwd.github.io/">independent personal websites</a>
+  on your own domains and publishing your writing there.  Doing so
+  keeps the web diverse and decentralised, rather than concentrating
+  most writing and discussion inside a small number of large
+  platforms.  It gives authors long term control over their work
+  without being subject to
+  <a href="attention-media-is-not-social-media.html">changing policies
+  or incentives</a>.  I think that a web made up of many small,
+  individually run websites is more resilient and also more
+  interesting than one dominated by a handful of social media
+  services.
 </p>
 <p>
   I often participate in discussions pertaining to authoring personal
@@ -33,38 +36,45 @@
   came much later, in fact many years later.  As the number of pages
   grew, I naturally wanted some consistency.  I wanted a common layout
   for my pages, navigation links, a footer that did not need to be
-  edited in twenty places.  The first version of this website used
-  HTML frames to accomplish these goals.  Later, I rewrote the website
-  in PHP.  All of this came later, after I had been maintaining this
-  website for several years.  None of this was required to begin.
+  edited in twenty places.  An early version of this website used HTML
+  frames to accomplish these goals.  Later, I rewrote the website in
+  PHP.  Now this website is generated using Common Lisp.  All of these
+  additions came later, after I had been maintaining this website for
+  several years.  None of this was required to begin.
 </p>
 <p>
-  Around 2006, when blogging had already become quite fashionable, I
-  reorganised a large portion of this website into a chronological
-  list of posts.  I added an RSS feed and adopted some of the
-  conventions that people now associate with blogs.  Even so, the
-  transformation was never total.  To this day, many pages remain as
-  loose documents, scattered in various <a href="links.html">corners</a>
-  of this website, never folded into the blog format at all.  My point
-  is that not everything needs to belong to a blog.  Not every website
-  needs to be a blog.  A website can just as well be a collection of
-  pages, arranged in whatever way makes sense to you.  The blog is
-  merely one possible organising principle, not a requirement.  If
-  your goal is to share your thoughts on your personal web space, then
-  worrying about blogging and tooling can become counterproductive.
-  Just write your posts first, in plain HTML if need be.
+  Around 2006, when blogging had become quite fashionable, I
+  experimented with blogging too.  Eventually, I returned to a loose,
+  chaotic collection of pages.  I do have an
+  <a href="./{{ index }}">index page</a> and an <a href="feed.xml">RSS
+  feed</a> that resemble a blog, but they are simply a list of
+  selected pages arranged in reverse chronological order.  The pages
+  themselves are scattered across various
+  <a href="links.html">corners</a> of this website.  My point is that
+  not every website needs to be a blog.  A website can just as well be
+  a collection of pages, arranged in whatever way makes sense to you.
+  The blog is merely one possible organising principle, not a
+  requirement.  If your goal is simply to share your thoughts on your
+  own web space, worrying about blogging and tooling can easily become
+  counterproductive.  Just write your posts first, in plain HTML if
+  need be.
 </p>
 <p>
   If you truly dislike writing HTML, that is fine too.  Write in
   Markdown, AsciiDoc or whatever plain text format you find pleasant
   and convert it to HTML using Pandoc or a similar tool.  Yes, I am
-  slightly undermining my own advice here by talking about tooling to
-  make your writing process enjoyable is reasonable.  Tooling should
-  exist to reduce friction, not to become the main event.  Personally,
-  I write all my posts directly in HTML.  I do not mind it at all.  In
-  fact, I enjoy it.  But if you do not, it is easy to run your
-  Markdown files through a converter and publish the result with only
-  a little extra tooling overhead.
+  slightly undermining my own point here but I think a little bit of
+  tooling to make your writing process enjoyable is reasonable.
+  Tooling should exist to reduce friction, not to become the main
+  ceremony.  Personally, I write all my posts directly in HTML.  I use
+  Emacs, which provides a number of convenient key sequences and
+  functions that make writing HTML very comfortable.  For example, it
+  takes only a few keystrokes in Emacs to wrap text in a
+  <code>&lt;blockquote&gt;</code> element, insert a code block or
+  close any open tags.  But that is just me.  I enjoy writing HTML
+  documents in Emacs.  If you do not, it is easy to run your Markdown
+  files through a converter and publish the result with only a little
+  extra tooling overhead.
 </p>
 <p>
   It is easy to spend days and weeks polishing a website setup,
@@ -75,10 +85,9 @@
   goal.  By contrast, a scrappy website made up of standalone HTML
   pages might be useful to you as well as others.  You can refer back
   to it months later.  You can send someone a link.  You can build on
-  it gradually.  Even if you never turn it into a blog, never add RSS,
-  never migrate to the latest tooling, it still fulfills its most
-  important purpose: it exists and it says something you wanted to
-  say.
+  it gradually.  Even if you never turn it into a blog, never add RSS
+  or never add any tooling, it still fulfills its most important
+  purpose: it exists and it says something you wanted to say.
 </p>
 <p>
   So to summarise my post here: Create the website.  Publish

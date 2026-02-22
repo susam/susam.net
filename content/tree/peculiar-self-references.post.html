@@ -8,8 +8,7 @@
   Here is a tiny Python example that creates a self-referential list
   and demonstrates the self-reference:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a[0] = [0]</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a[0] = [0]</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
 [[...]]
 &gt;&gt;&gt; <kbd>a[0]</kbd>
@@ -17,8 +16,7 @@
 &gt;&gt;&gt; <kbd>a[0][0]</kbd>
 [[...]]
 &gt;&gt;&gt; <kbd>a is a[0]</kbd>
-True</samp>
-</pre>
+True</samp></pre>
 <p>
   The output shows that <code>a[0]</code> refers to <code>a</code>
   itself which makes it a self-referential list.  Why does this simple
@@ -31,29 +29,23 @@ True</samp>
   Here is another similar example that creates a self-referential list
   too:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a[0] = [0, 0]</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a[0] = [0, 0]</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-[[...], 0]</samp>
-</pre>
+[[...], 0]</samp></pre>
 <p>
   Here is a similar example for dictionary:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a[0] = {}</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a[0] = {}</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-{0: {...}}</samp>
-</pre>
+{0: {...}}</samp></pre>
 <p>
    Note that <code>0</code> is used as a dictionary key in the above
   example.  Here is another very simple example that uses a string
   key:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-{'k': {...}}</samp>
-</pre>
+{'k': {...}}</samp></pre>
 <h2 id="language-reference">The Language Reference</h2>
 <p>
   My first guess was that the statement
@@ -62,11 +54,9 @@ True</samp>
 <p>
   behaves like
 </p>
-<pre>
-<code>new = [0]
+<pre><code>new = [0]
 a = new
-a[0] = new</code>
-</pre>
+a[0] = new</code></pre>
 <p>
   which would indeed create a self-referential list.
 </p>
@@ -81,8 +71,7 @@ a[0] = new</code>
     Assignment statements are used to (re)bind names to values and to
     modify attributes or items of mutable objects:
   </p>
-  <pre>
-<code>assignment_stmt ::=  (target_list "=")+ (starred_expression | yield_expression)
+  <pre><code>assignment_stmt ::=  (target_list "=")+ (starred_expression | yield_expression)
 target_list     ::=  target ("," target)* [","]
 target          ::=  identifier
                      | "(" [target_list] ")"
@@ -90,8 +79,7 @@ target          ::=  identifier
                      | attributeref
                      | subscription
                      | slicing
-                     | "*" target</code>
-</pre>
+                     | "*" target</code></pre>
   <p>
     (See section
     <a href="https://docs.python.org/3.7/reference/expressions.html#primaries">Primaries</a>
@@ -147,12 +135,10 @@ target          ::=  identifier
   further demonstrated with some intentional errors.  Here is an
   example:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a[0] = a = [0]</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a[0] = a = [0]</kbd>
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-NameError: name 'a' is not defined</samp>
-</pre>
+NameError: name 'a' is not defined</samp></pre>
 <p>
   In this example, when the assignment to <code>a[0]</code> occurs,
   the variable named <code>a</code> is not defined yet, so it leads
@@ -161,12 +147,10 @@ NameError: name 'a' is not defined</samp>
 <p>
   Here is another example:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a[0] = 0</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a[0] = 0</kbd>
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-TypeError: 'int' object does not support item assignment</samp>
-</pre>
+TypeError: 'int' object does not support item assignment</samp></pre>
 <p>
   In this example, <code>0</code> is first assigned to <code>a</code>.
   Then <code>a[0]</code> needs to be evaluated before <code>0</code>

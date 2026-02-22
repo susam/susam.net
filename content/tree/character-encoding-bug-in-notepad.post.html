@@ -59,8 +59,7 @@
   UTF-16LE encoded characters, we get 9 UTF-16LE encoded characters
   with the following code points:
 </p>
-<pre>
-<samp><a href="https://www.fileformat.info/info/unicode/char/6874/">6874</a> <!--
+<pre><samp><a href="https://www.fileformat.info/info/unicode/char/6874/">6874</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/7369/">7369</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/6120/">6120</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/7070/">7070</a> <!--
@@ -68,8 +67,7 @@
 --><a href="https://www.fileformat.info/info/unicode/char/6e61/">6e61</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/6220/">6220</a> <!--
 --><a href="https://www.fileformat.info/info/unicode/char/6572/">6572</a> <!--
---><a href="https://www.fileformat.info/info/unicode/char/6b61/">6b61</a></samp>
-</pre>
+--><a href="https://www.fileformat.info/info/unicode/char/6b61/">6b61</a></samp></pre>
 <p>
   Click the codes above to see what the characters they represent look
   like.  Each code represents a CJK ideograph.  CJK stands for
@@ -105,16 +103,14 @@
   Let us create the file for the first time and see what each byte
   looks like using the <samp>debug</samp> program of DOS.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>debug foo.txt</kbd>
+<pre><samp>C:\&gt;<kbd>debug foo.txt</kbd>
 -<kbd>r ip</kbd>
 IP 0100
 :
 -<kbd>d 100 11f</kbd>
 0B66:0100  74 68 69 73 20 61 70 70-20 63 61 6E 20 62 72 65  this app can bre
 0B66:0110  61 6B BC 00 72 16 03 D3-13 C8 E8 B3 34 00 55 0B  ak..r.......4.U.
--</samp>
-</pre>
+-</samp></pre>
 <p>
   When we open this file using Notepad and edit, Notepad considers the
   text to be in UTF-16LE encoding due to reasons explained earlier in
@@ -124,16 +120,14 @@ IP 0100
   UTF-16LE encoding (not ASCII encoding like the first time).  This
   can be confirmed with the <samp>debug</samp> command.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>debug a.txt</kbd>
+<pre><samp>C:\&gt;<kbd>debug a.txt</kbd>
 -<kbd>r ip</kbd>
 IP 0100
 :
 -<kbd>d 100 11f</kbd>
 0B66:0100  FF FE 74 00 68 00 69 00-73 00 20 00 61 00 70 00   ..t.h.i.s.  .a.p.
 0B66:0110  70 00 20 00 63 00 61 00-6E 00 20 00 62 00 72 00   p. .c.a.n.  .b.r.
--</samp>
-</pre>
+-</samp></pre>
 <p>
   The two bytes <samp>FF</samp> and <samp>EE</samp> in the beginning
   is the byte order mark (BOM) for UTF-16LE encoding.  The remaining

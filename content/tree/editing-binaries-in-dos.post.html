@@ -1,6 +1,6 @@
 <!-- date: 2002-07-18 -->
 <!-- title: Editing Binaries in DOS -->
-<!-- tag: Assembly, Programming, DOS, Technology -->
+<!-- tag: Assembly, Programming, DOS, Technology, How-To -->
 <!-- key: xomdn -->
 <!-- blog: Main -->
 <p>
@@ -32,31 +32,26 @@
   Here is another example of this command that shows the current
   settings for serial port COM1:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>MODE COM1</kbd>
+<pre><samp>C:\&gt;<kbd>MODE COM1</kbd>
 
 Status for device COM1:
 -----------------------
 Retry=NONE
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   An invalid parameter leads to an error like this:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>MODE 0</kbd>
+<pre><samp>C:\&gt;<kbd>MODE 0</kbd>
 
 Invalid parameter - 0
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   We will edit this error message to be slightly more helpful.  The
   following debugger session shows how.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG C:\DOS\MODE.COM</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG C:\DOS\MODE.COM</kbd>
 -<kbd>S 0 FFFF 'Invalid parameter'</kbd>
 117C:19D1
 -<kbd>D 19D0 19FF</kbd>
@@ -73,8 +68,7 @@ C:\&gt;</samp>
 Writing 05C11 bytes
 -<kbd>Q</kbd>
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   We first open <code>MODE.COM</code> with the debugger.  When we do
   so, the entire program is loaded into offset 0x100 of the code
@@ -119,14 +113,12 @@ C:\&gt;</samp>
   the <code>Q</code> command quits the debugger.  Now we can test the
   new program as follows:
 </p>
-<pre>
-<samp>
+<pre><samp>
 C:\&gt;<kbd>SOUP 0</kbd>
 
 No soup for you! - 0
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <h2 id="editing-machine-instructions">Editing Machine Instructions</h2>
 <p>
   In this section, we will see how to edit the binary we created in
@@ -134,8 +126,7 @@ C:\&gt;</samp>
   print a welcome message when the program starts.  Here is an example
   debugger session that shows how to do it.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG SOUP.COM</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG SOUP.COM</kbd>
 -<kbd>U</kbd>
 117C:0100 E99521        JMP     2298
 117C:0103 51            PUSH    CX
@@ -174,8 +165,7 @@ C:\&gt;</samp>
 Writing 05C11 bytes
 -<kbd>Q</kbd>
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   At the beginning, we use the debugger command <code>U</code> to
   unassemble (disassemble) some bytes at the top of the program to see
@@ -212,8 +202,7 @@ C:\&gt;</samp>
 <p>
   Now our updated program should behave as shown below:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>SOUP COM1</kbd>
+<pre><samp>C:\&gt;<kbd>SOUP COM1</kbd>
 Welcome to Soup Kitchen!
 
 Status for device COM1:
@@ -225,8 +214,7 @@ Welcome to Soup Kitchen!
 
 No soup for you! - 0
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   That's our modified program that prints a welcome message and our
   own error message created with the humble DOS debugger.

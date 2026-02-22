@@ -7,8 +7,7 @@
   Here is an example of a toy traceroute using <code>ping</code> on
   Linux:
 </p>
-<pre>
-<samp>$ <kbd>for ttl in {1..30}; do ping -4 -c 1 -t $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd>
+<pre><samp>$ <kbd>for ttl in {1..30}; do ping -4 -c 1 -t $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd>
  1 From router1-lon.linode.com (212.111.33.229) icmp_seq=1 Time to live exceeded
  2 From if-0-1-0-0-0.gw1.lon1.gb.linode.com (109.74.207.10) icmp_seq=1 Time to live exceeded
  3 From be5787.rcr51.lon10.atlas.cogentco.com (204.68.252.58) icmp_seq=1 Time to live exceeded
@@ -16,8 +15,7 @@
  5 From be2099.ccr31.bos01.atlas.cogentco.com (154.54.82.34) icmp_seq=1 Time to live exceeded
  6 From verizondms.bos01.atlas.cogentco.com (154.54.11.54) icmp_seq=1 Time to live exceeded
  7 From ae-66.core1.bsa.edgecastcdn.net (152.195.233.129) icmp_seq=1 Time to live exceeded
- 8 64 bytes from 93.184.216.34 (93.184.216.34): icmp_seq=1 ttl=57 time=63.0 ms</samp>
-</pre>
+ 8 64 bytes from 93.184.216.34 (93.184.216.34): icmp_seq=1 ttl=57 time=63.0 ms</samp></pre>
 <p>
   The output above was obtained on a Debian GNU/Linux 11.2 (bullseye)
   system.  The above loop sends multiple ICMP echo requests with
@@ -41,8 +39,7 @@
   For comparison, here is the output of the
   actual <code>traceroute</code> command:
 </p>
-<pre>
-<samp>$ <kbd>traceroute example.com</kbd>
+<pre><samp>$ <kbd>traceroute example.com</kbd>
 traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
  1  router1-lon.linode.com (212.111.33.229)  0.602 ms  1.202 ms  1.326 ms
  2  if-0-1-0-1-0.gw1.lon1.gb.linode.com (109.74.207.14)  0.502 ms if-11-1-0-0-0.gw2.lon1.gb.linode.com (109.74.207.26)  0.401 ms if-11-0-0-0-0.gw2.lon1.gb.linode.com (109.74.207.30)  0.379 ms
@@ -52,8 +49,7 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
  6  nyk-b1-link.ip.twelve99.net (62.115.135.131)  70.113 ms verizondms.bos01.atlas.cogentco.com (154.54.11.54)  63.657 ms nyk-b1-link.ip.twelve99.net (62.115.135.131)  70.190 ms
  7  ae-66.core1.bsa.edgecastcdn.net (152.195.233.129)  63.535 ms edgecast-ic317659-nyk-b6.ip.twelve99-cust.net (62.115.147.199)  77.802 ms ae-66.core1.bsa.edgecastcdn.net (152.195.233.129)  63.582 ms
  8  93.184.216.34 (93.184.216.34)  62.895 ms ae-71.core1.nyb.edgecastcdn.net (152.195.69.139)  72.312 ms ae-70.core1.nyb.edgecastcdn.net (152.195.68.141)  69.419 ms
- 9  93.184.216.34 (93.184.216.34)  70.827 ms  62.896 ms  73.342 ms</samp>
-</pre>
+ 9  93.184.216.34 (93.184.216.34)  70.827 ms  62.896 ms  73.342 ms</samp></pre>
 <p>
   Each line in the output above corresponds to a hop.  Each line shows
   one or more addresses.  A maximum of three addresses can be seen in
@@ -76,9 +72,7 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
   For those on macOS, the <code>ping</code> command options need to be
   modified as follows:
 </p>
-<pre>
-<samp><kbd>for ttl in {1..30}; do ping -c 1 -t 1 -m $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd></samp>
-</pre>
+<pre><samp><kbd>for ttl in {1..30}; do ping -c 1 -t 1 -m $ttl example.com &amp;&amp; break; done | grep -i from | nl -s ' ' -w 2</kbd></samp></pre>
 <p>
   On macOS, the <code>-t</code> option of the <code>ping</code>
   command specifies a timeout (not IP TTL) that prevents it from

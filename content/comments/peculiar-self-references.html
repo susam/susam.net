@@ -72,8 +72,7 @@
   a function call".  Notably, <code>self.a = a = {}</code> is not
   always the same as <code>a = self.a = {}</code>.  Proof:
 </p>
-<pre>
-<code>#!/usr/bin/env python3
+<pre><code>#!/usr/bin/env python3
 
 class Foo:
     def __init__(self):
@@ -89,8 +88,7 @@ class Foo:
         self.__dict__[name] = val
 
 if __name__ == '__main__':
-    Foo()</code>
-</pre>
+    Foo()</code></pre>
 <!-- date: 2021-11-13 20:13:27 +0000 -->
 <!-- name: Susam Pal -->
 <!-- url: https://susam.net/ -->
@@ -98,10 +96,8 @@ if __name__ == '__main__':
   For those who are wondering what the code in the previous comment
   does, here is its output:
 </p>
-<pre>
-<samp>2
-3</samp>
-</pre>
+<pre><samp>2
+3</samp></pre>
 <p>
   When <code>a = self.a = 2</code> is evaluated, the assignment
   to <code>self.a</code> triggers the <code>__setattr__</code> call
@@ -130,21 +126,18 @@ if __name__ == '__main__':
   differently.  Python allows self-referential objects and is able to
   handle this gracefully while printing them.
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = {}</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = {}</kbd>
 &gt;&gt;&gt; <kbd>a['self'] = a</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
 {'self': {...}}
 &gt;&gt;&gt; <kbd>a['self']</kbd>
 {'self': {...}}
 &gt;&gt;&gt; <kbd>a['self']['self']</kbd>
-{'self': {...}}</samp>
-</pre>
+{'self': {...}}</samp></pre>
 <p>
   Python also allows chained assignments.
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = b = c = d = 23.4567</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = b = c = d = 23.4567</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
 23.4567
 &gt;&gt;&gt; <kbd>b</kbd>
@@ -152,46 +145,36 @@ if __name__ == '__main__':
 &gt;&gt;&gt; <kbd>c</kbd>
 23.4567
 &gt;&gt;&gt; <kbd>d</kbd>
-23.4567</samp>
-</pre>
+23.4567</samp></pre>
 <p>
   Also, a dictionary has to be initialized before a key access.
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a['k'] = {}</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a['k'] = {}</kbd>
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-NameError: name 'a' is not defined</samp>
-</pre>
+NameError: name 'a' is not defined</samp></pre>
 <p>
   So what the following example teaches us is how Python goes about
   allocating things in a chained assignment.
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a['k'] = {}</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-{'k': {...}}</samp>
-</pre>
+{'k': {...}}</samp></pre>
 <p>
   Let us look at something else with recursion which is easier for me
   to illustrate
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a[0] = [0, 1]</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a[0] = [0, 1]</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
-[[...], 1]</samp>
-</pre>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>a = a[1] = [0, 1]</kbd>
+[[...], 1]</samp></pre>
+<pre><samp>&gt;&gt;&gt; <kbd>a = a[1] = [0, 1]</kbd>
 &gt;&gt;&gt; <kbd>a</kbd>
 [0, [...]]</samp></pre>
 <p>
 The operations look like following:
 </p>
-<pre>
-<code>[0, 1] &rarr; a
-a &rarr; a[0]</code>
-</pre>
+<pre><code>[0, 1] &rarr; a
+a &rarr; a[0]</code></pre>
 <p>
   If we extend the chain (<code>a = b = c = d = ...</code>) what is
   the pattern?
@@ -200,19 +183,15 @@ a &rarr; a[0]</code>
   I could not think of a test that would let me dissociate if what is
   happening is
 </p>
-<pre>
-<code>a = x
+<pre><code>a = x
 b = a
 c = a
-d = a</code>
-</pre>
+d = a</code></pre>
 or
-<pre>
-<code>a = x
+<pre><code>a = x
 b = a
 c = b
-d = c</code>
-</pre>
+d = c</code></pre>
 <p>
   I might think of something tomorrow.
 </p>
@@ -232,9 +211,7 @@ d = c</code>
 <p>
   Carl, Yes, indeed!
 </p>
-<pre>
-<code>None.__eq__.__eq__.__eq__.__eq__.__eq__ # and so on ...</code>
-</pre>
+<pre><code>None.__eq__.__eq__.__eq__.__eq__.__eq__ # and so on ...</code></pre>
 <!-- date: 2021-11-18 13:36:32 +0000 -->
 <!-- name: Blind Mathematician -->
 <!-- source: https://www.reddit.com/r/programming/comments/qwnspv/_/hl4a4m7/ -->

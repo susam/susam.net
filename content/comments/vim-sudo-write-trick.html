@@ -105,11 +105,9 @@ cat bar.txt</code></pre>
   In the spirit of this trick, you could set the <code>SPELL</code>
   environment variable to a script that does
 </p>
-<pre>
-<code>#!/bin/sh
+<pre><code>#!/bin/sh
 read -p "Path: " FILENAME
-cat "$1" | sudo tee "$FILENAME"</code>
-</pre>
+cat "$1" | sudo tee "$FILENAME"</code></pre>
 <p>
   and then invoke it with <code>^T</code> from nano.  Bonus points:
   Extract the destination filename automatically from <code>ps -p
@@ -125,31 +123,25 @@ cat "$1" | sudo tee "$FILENAME"</code>
   automatically detect the destination filename when invoked
   with <code>^T</code> from nano.
 </p>
-<pre>
-<code>#!/bin/sh
+<pre><code>#!/bin/sh
 set -e
 COMMAND=$(ps -p $PPID -o args=)
 FILENAME=${COMMAND#*nano }
 printf "Write to $FILENAME? (y/n) "
 read ANSWER
-[ "$ANSWER" = y ] &amp;&amp; sudo tee "$FILENAME" &lt; "$1" &gt; /dev/null</code>
-</pre>
+[ "$ANSWER" = y ] &amp;&amp; sudo tee "$FILENAME" &lt; "$1" &gt; /dev/null</code></pre>
 <p>
   After saving this file to, say,
   <code>/usr/local/bin/sudowrite</code>, it can be set up for usage
   like this:
 </p>
-<pre>
-<code>sudo chmod u+x /usr/local/bin/sudowrite
-export SPELL=/usr/local/bin/sudowrite</code>
-</pre>
+<pre><code>sudo chmod u+x /usr/local/bin/sudowrite
+export SPELL=/usr/local/bin/sudowrite</code></pre>
 <p>
   Here is how to test it:
 </p>
-<pre>
-<code>sudo touch foo.txt
-nano foo.txt</code>
-</pre>
+<pre><code>sudo touch foo.txt
+nano foo.txt</code></pre>
 <p>
   Now write some text and try to save it by typing
   <kbd>ctrl</kbd>&nbsp;+&nbsp;<kbd>o</kbd> followed

@@ -25,11 +25,9 @@
       <code>/usr/share/qemu/</code>.  This is necessary to
       prevent <code>qemu-system-ppc</code> from complaining about it.
     </p>
-    <pre>
-<code>wget https://sourceforge.net/projects/mac-on-linux/files/mac-on-linux/mol-0.9.72.1/mol-0.9.72.1.tar.bz2
+    <pre><code>wget https://sourceforge.net/projects/mac-on-linux/files/mac-on-linux/mol-0.9.72.1/mol-0.9.72.1.tar.bz2
 tar -xjf mol-0.9.72.1.tar.bz2
-sudo cp mol-0.9.72.1/mollib/drivers/video.x /usr/share/qemu/</code>
-</pre>
+sudo cp mol-0.9.72.1/mollib/drivers/video.x /usr/share/qemu/</code></pre>
   </li>
   <li>
     <p>
@@ -42,10 +40,8 @@ sudo cp mol-0.9.72.1/mollib/drivers/video.x /usr/share/qemu/</code>
       Download Debian for PowerPC and install it on the QEMU hard disk
       image.
     </p>
-    <pre>
-<code>wget http://cdimage.debian.org/debian-cd/5.0.4/powerpc/iso-cd/debian-504-powerpc-CD-1.iso
-qemu-system-ppc -m 512 -boot d -hda powerpc.img -cdrom debian-504-powerpc-CD-1.iso</code>
-</pre>
+    <pre><code>wget http://cdimage.debian.org/debian-cd/5.0.4/powerpc/iso-cd/debian-504-powerpc-CD-1.iso
+qemu-system-ppc -m 512 -boot d -hda powerpc.img -cdrom debian-504-powerpc-CD-1.iso</code></pre>
   </li>
   <li>
     <p>
@@ -58,24 +54,20 @@ qemu-system-ppc -m 512 -boot d -hda powerpc.img -cdrom debian-504-powerpc-CD-1.i
       Write a small program inside the new Debian system,
       say, <code>endian.c</code> like this:
     </p>
-    <pre>
-<code>#include &lt;stdio.h&gt;
+    <pre><code>#include &lt;stdio.h&gt;
 
 int main()
 {
     int n = 1;
     printf(*((char *) &amp;n) ? "little-endian\n" : "big-endian\n");
     return 0;
-}</code>
-</pre>
+}</code></pre>
   </li>
   <li>
     <p>
       Compile and execute the C program.
     </p>
-    <pre>
-<code>$ <kbd>gcc endian.c &amp;&amp; ./a.out</kbd>
-big-endian</code>
-</pre>
+    <pre><code>$ <kbd>gcc endian.c &amp;&amp; ./a.out</kbd>
+big-endian</code></pre>
   </li>
 </ol>

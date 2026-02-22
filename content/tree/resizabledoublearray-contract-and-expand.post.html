@@ -8,8 +8,7 @@
   <code>ResizableDoubleArray</code> class to investigate how it
   contracts or expands its internal capacity.
 </p>
-<pre>
-<code>Index: src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java
+<pre><code>Index: src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java
 ===================================================================
 --- src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java (revision 925455)
 +++ src/main/java/org/apache/commons/math/util/ResizableDoubleArray.java (working copy)
@@ -61,13 +60,11 @@
 +        System.out.println();
      }
 
-     /**</code>
-</pre>
+     /**</code></pre>
 <p>
   Here is a tiny test program to use <code>ResizableDoubleArray</code>.
 </p>
-<pre>
-<code>import org.apache.commons.math.util.ResizableDoubleArray;
+<pre><code>import org.apache.commons.math.util.ResizableDoubleArray;
 
 public class RDAContractExpand
 {
@@ -77,13 +74,11 @@ public class RDAContractExpand
         for (int i = 0; i &lt; 10; i++)
             rda.addElement(i);
     }
-}</code>
-</pre>
+}</code></pre>
 <p>
   Here is the output of the above program:
 </p>
-<pre>
-<samp>:::: initialCapacity: 10
+<pre><samp>:::: initialCapacity: 10
 :::: expansionMode: MULTIPLICATIVE_MODE
 :::: expansionFactor: 2.0
 :::: contractionCriteria: 2.5
@@ -154,5 +149,4 @@ public class RDAContractExpand
 :::: startIndex: 0
 :::: internalArray.length: 16
 :::: numElements incremented to: 10
-:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,</samp>
-</pre>
+:::: internalArray: 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,</samp></pre>

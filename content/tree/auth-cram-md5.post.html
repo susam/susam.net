@@ -19,8 +19,7 @@
   Here is an example of a session that uses the PLAIN authentication
   mechanism:
 </p>
-<pre>
-<samp>$ <kbd>telnet susam.in 25</kbd>
+<pre><samp>$ <kbd>telnet susam.in 25</kbd>
 Trying 106.187.41.241...
 Connected to susam.in.
 Escape character is '^]'.
@@ -50,8 +49,7 @@ This is a test email.
 250 OK id=1RNQef-0004e7-7s
 <kbd>QUIT</kbd>
 221 tesseract.susam.in closing connection
-Connection closed by foreign host.</samp>
-</pre>
+Connection closed by foreign host.</samp></pre>
 <p>
   The string <code>"AGFsaWNlAHdvbmRlcmxhbmQ="</code> in the <code>AUTH
   PLAIN</code> command is the the base64 encoding of the string
@@ -63,10 +61,8 @@ Connection closed by foreign host.</samp>
   client.  Here is an example of decoding the base64 response with
   Python 2.7:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>'AGFsaWNlAHdvbmRlcmxhbmQ='.decode('base64')</kbd>
-'\x00alice\x00wonderland'</samp>
-</pre>
+<pre><samp>&gt;&gt;&gt; <kbd>'AGFsaWNlAHdvbmRlcmxhbmQ='.decode('base64')</kbd>
+'\x00alice\x00wonderland'</samp></pre>
 <p>
   This is also susceptible to replay attacks as the eavesdropper can
   use the <code>AUTH PLAIN</code> line containing the base64 encoded
@@ -78,27 +74,23 @@ Connection closed by foreign host.</samp>
 <p>
   Here is another example snippet that shows the LOGIN mechanism:
 </p>
-<pre>
-<samp><kbd>AUTH LOGIN</kbd>
+<pre><samp><kbd>AUTH LOGIN</kbd>
 334 VXNlcm5hbWU6
 <kbd>YWxpY2U=</kbd>
 334 UGFzc3dvcmQ6
 <kbd>d29uZGVybGFuZA==</kbd>
-235 Authentication succeeded</samp>
-</pre>
+235 Authentication succeeded</samp></pre>
 <p>
   Here are the base64 responses decoded with Python 2.7:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>'VXNlcm5hbWU6'.decode('base64')</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>'VXNlcm5hbWU6'.decode('base64')</kbd>
 'Username:'
 &gt;&gt;&gt; <kbd>'YWxpY2U='.decode('base64')</kbd>
 'alice'
 &gt;&gt;&gt; <kbd>'UGFzc3dvcmQ6'.decode('base64')</kbd>
 'Password:'
 &gt;&gt;&gt; <kbd>'d29uZGVybGFuZA=='.decode('base64')</kbd>
-'wonderland'</samp>
-</pre>
+'wonderland'</samp></pre>
 <p>
   If the session isn't encrypted, LOGIN authentication mechanism is
   susceptible to the same problems that PLAIN authentication mechanism
@@ -110,10 +102,8 @@ Connection closed by foreign host.</samp>
   When the client selects the CRAM-MD5 authentication mechanism, the
   server sends a base64 encoded challenge like this:
 </p>
-<pre>
-<samp><kbd>AUTH CRAM-MD5</kbd>
-334 PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg==</samp>
-</pre>
+<pre><samp><kbd>AUTH CRAM-MD5</kbd>
+334 PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg==</samp></pre>
 <p>
   An HMAC is calculated for this challenge with the password as the
   key and MD5 as the hash function.  A string is formed by
@@ -123,36 +113,30 @@ Connection closed by foreign host.</samp>
   Python 2.7 show how a response can be formed for the above
   challenge:
 </p>
-<pre>
-<samp>&gt;&gt;&gt; <kbd>'PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg=='.decode('base64')</kbd>
+<pre><samp>&gt;&gt;&gt; <kbd>'PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg=='.decode('base64')</kbd>
 '&lt;17893.1320679123@tesseract.susam.in&gt;'
 &gt;&gt;&gt; <kbd>import hmac, hashlib</kbd>
 &gt;&gt;&gt; <kbd>hmac.new('wonderland', '&lt;17893.1320679123@tesseract.susam.in&gt;', hashlib.md5).hexdigest()</kbd>
 '64b2a43c1f6ed6806a980914e23e75f0'
 &gt;&gt;&gt; <kbd>'alice 64b2a43c1f6ed6806a980914e23e75f0'.encode('base64')</kbd>
-'YWxpY2UgNjRiMmE0M2MxZjZlZDY4MDZhOTgwOTE0ZTIzZTc1ZjA=\n'</samp>
-</pre>
+'YWxpY2UgNjRiMmE0M2MxZjZlZDY4MDZhOTgwOTE0ZTIzZTc1ZjA=\n'</samp></pre>
 <p>
   Of course, this can be written as a small function:
 </p>
-<pre>
-<code>import hmac, hashlib
+<pre><code>import hmac, hashlib
 def cram_md5_response(username, password, base64challenge):
     return (username + ' ' +
             hmac.new(password,
                      base64challenge.decode('base64'),
-                     hashlib.md5).hexdigest()).encode('base64')</code>
-</pre>
+                     hashlib.md5).hexdigest()).encode('base64')</code></pre>
 <p>
   The following snippet shows the SMTP server accepting the
   client-response:
 </p>
-<pre>
-<samp><kbd>AUTH CRAM-MD5</kbd>
+<pre><samp><kbd>AUTH CRAM-MD5</kbd>
 334 PDE3ODkzLjEzMjA2NzkxMjNAdGVzc2VyYWN0LnN1c2FtLmluPg==
 <kbd>YWxpY2UgNjRiMmE0M2MxZjZlZDY4MDZhOTgwOTE0ZTIzZTc1ZjA=</kbd>
-235 Authentication succeeded</samp>
-</pre>
+235 Authentication succeeded</samp></pre>
 <p>
   When the connection is not secured, CRAM-MD5 authentication
   mechanism is relatively more secure than the other two mechanisms

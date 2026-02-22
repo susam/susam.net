@@ -13,28 +13,21 @@
   timestamp to a human-readable date.
 </p>
 <h3 id="python">Python</h3>
-<pre>
-<samp>$ <kbd>python3 -q</kbd>
+<pre><samp>$ <kbd>python3 -q</kbd>
 &gt;&gt;&gt; <kbd>from datetime import datetime</kbd>
 &gt;&gt;&gt; <kbd>datetime.utcfromtimestamp(1_600_000_000)</kbd>
-datetime.datetime(2020, 9, 13, 12, 26, 40)</samp>
-</pre>
+datetime.datetime(2020, 9, 13, 12, 26, 40)</samp></pre>
 <h3 id="gnu-date">GNU date (Linux)</h3>
-<pre>
-<samp>$ <kbd>date -ud @1600000000</kbd>
-Sun Sep 13 12:26:40 UTC 2020</samp>
-</pre>
+<pre><samp>$ <kbd>date -ud @1600000000</kbd>
+Sun Sep 13 12:26:40 UTC 2020</samp></pre>
 <h3 id="bsd-date">BSD date (macOS, FreeBSD, OpenBSD, etc.)</h3>
-<pre>
-<samp>$ <kbd>date -ur 1600000000</kbd>
-Sun Sep 13 12:26:40 UTC 2020</samp>
-</pre>
+<pre><samp>$ <kbd>date -ur 1600000000</kbd>
+Sun Sep 13 12:26:40 UTC 2020</samp></pre>
 <h2 id="other-such-dates">Other Such Dates</h2>
 <p>
   All such dates (in UTC) until the end of the current century:
 </p>
-<pre>
-<samp>$ <kbd>python3 -q</kbd>
+<pre><samp>$ <kbd>python3 -q</kbd>
 &gt;&gt;&gt; <kbd>from datetime import datetime</kbd>
 &gt;&gt;&gt; <kbd>for t in range(0, 4_200_000_000, 100_000_000):</kbd>
 ... <kbd>    print(f'{t:13_d} - {datetime.utcfromtimestamp(t)}')</kbd>
@@ -80,8 +73,7 @@ Sun Sep 13 12:26:40 UTC 2020</samp>
 3_800_000_000 - 2090-06-01 11:33:20
 3_900_000_000 - 2093-08-01 21:20:00
 4_000_000_000 - 2096-10-02 07:06:40
-4_100_000_000 - 2099-12-03 16:53:20</samp>
-</pre>
+4_100_000_000 - 2099-12-03 16:53:20</samp></pre>
 <h2 id="update">Update</h2>
 <p>
   Here is a screenshot I took at Unix timestamp 1600000000:
@@ -90,16 +82,14 @@ Sun Sep 13 12:26:40 UTC 2020</samp>
 <p>
   Reproduced as text below:
 </p>
-<pre>
-<samp>$ <kbd>date -u; date; date +%s</kbd>
+<pre><samp>$ <kbd>date -u; date; date +%s</kbd>
 Sun Sep 13 12:26:39 UTC 2020
 Sun Sep 13 17:56:39 IST 2020
 1599999999
 $ <kbd>date -u; date; date +%s</kbd>
 Sun Sep 13 12:26:40 UTC 2020
 Sun Sep 13 17:56:40 IST 2020
-1600000000</samp>
-</pre>
+1600000000</samp></pre>
 <p>
   An important point worth noting from the POSIX.1-2008 specification:
 </p>

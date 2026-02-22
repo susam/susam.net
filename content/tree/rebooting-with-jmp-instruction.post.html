@@ -1,6 +1,6 @@
 <!-- date: 2003-03-02 -->
 <!-- title: Rebooting With JMP Instruction -->
-<!-- tag: Assembly, Programming, DOS, Technology -->
+<!-- tag: Assembly, Programming, DOS, Technology, How-To -->
 <!-- key: mqkfs -->
 <!-- blog: Main -->
 <p>
@@ -9,10 +9,8 @@
   jumping to the memory address FFFF:0000.  Here is an
   example <code>DEBUG.EXE</code> session from MS-DOS 6.22:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG</kbd>
-<kbd>G =FFFF:0000</kbd></samp>
-</pre>
+<pre><samp>C:\&gt;<kbd>DEBUG</kbd>
+<kbd>G =FFFF:0000</kbd></samp></pre>
 <p>
   In the above example, we start the DOS debugger and then enter
   the <code>G</code> (go) command to execute the program at FFFF:0000.
@@ -25,11 +23,9 @@
   the BIOS ROM that contains a far jump instruction to go to another
   address, typically F000:E05B.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>U FFFF:0000 4</kbd>
-FFFF:0000 EA5BE000F0    JMP     F000:E05B</samp>
-</pre>
+FFFF:0000 EA5BE000F0    JMP     F000:E05B</samp></pre>
 <p>
   The address F000:E05B contains the BIOS start-up program which
   performs a power-on self-test (POST), initialises the peripheral
@@ -51,8 +47,7 @@ FFFF:0000 EA5BE000F0    JMP     F000:E05B</samp>
   Here is a complete <code>DEBUG.EXE</code> session that shows how we
   could write a simple reboot program:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>A</kbd>
 1165:0100 <kbd>JMP FFFF:0000</kbd>
 1165:0105
@@ -64,8 +59,7 @@ CX 0000
 Writing 00005 bytes
 -<kbd>Q</kbd>
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   Note that the <code>N</code> (name) command specifies the name of
   the file where we write the binary machine code to.  Also, note that
@@ -87,24 +81,21 @@ C:\&gt;</samp>
   these debugger inputs in a separate text file and feed that to the
   debugger.  Here is how the content of such a text file would look:
 </p>
-<pre>
-<code>A
+<pre><code>A
 JMP FFFF:0000
 
 N REBOOT.COM
 R CX
 5
 W
-Q</code>
-</pre>
+Q</code></pre>
 <p>
   If the above input is saved in a file, say, <code>REBOOT.TXT</code>,
   then we can run the DOS command <code>DEBUG &lt; REBOOT.TXT</code>
   to assemble the program and create the binary executable file.  The
   following DOS session example shows how this command behaves:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG &lt; REBOOT.TXT</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG &lt; REBOOT.TXT</kbd>
 -A
 1165:0100 JMP FFFF:0000
 1165:0105
@@ -116,18 +107,15 @@ CX 0000
 Writing 00005 bytes
 -Q
 
-C:&gt;</samp>
-</pre>
+C:&gt;</samp></pre>
 <h2 id="disassembly">Disassembly</h2>
 <p>
   Here is a quick demonstration of how we can disassemble the
   executable code:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG REBOOT.COM</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG REBOOT.COM</kbd>
 -<kbd>U 100 104</kbd>
-117C:0100 EA0000FFFF    JMP     FFFF:0000</samp>
-</pre>
+117C:0100 EA0000FFFF    JMP     FFFF:0000</samp></pre>
 <p>
   While we did not really need to disassemble this tiny program, the
   above example shows how we can use the debugger

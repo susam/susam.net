@@ -53,8 +53,7 @@
   a minimal IRC session that involves joining a channel and posting a
   message:
 </p>
-<pre>
-<samp>$ <kbd>nc irc.libera.chat 6667</kbd>
+<pre><samp>$ <kbd>nc irc.libera.chat 6667</kbd>
 :strontium.libera.chat NOTICE * :*** Checking Ident
 :strontium.libera.chat NOTICE * :*** Looking up your hostname...
 :strontium.libera.chat NOTICE * :*** Couldn't look up your hostname
@@ -103,8 +102,7 @@
 :humpty!~humpty@178.79.176.169 PART #test
 <kbd>QUIT</kbd>
 :humpty!~humpty@178.79.176.169 QUIT :Client Quit
-ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp>
-</pre>
+ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp></pre>
 <p>
   In the above session, the user connects to the Libera Chat network
   with the nickname <code>humpty</code>, joins a channel
@@ -117,8 +115,7 @@ ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp>
   example of an encrypted IRC session established with the OpenSSL
   command line tool:
 </p>
-<pre>
-<samp>$ <kbd>openssl s_client -quiet -connect irc.libera.chat:6697 2&gt; /dev/null</kbd>
+<pre><samp>$ <kbd>openssl s_client -quiet -connect irc.libera.chat:6697 2&gt; /dev/null</kbd>
 :strontium.libera.chat NOTICE * :*** Checking Ident
 :strontium.libera.chat NOTICE * :*** Looking up your hostname...
 :strontium.libera.chat NOTICE * :*** Couldn't look up your hostname
@@ -126,8 +123,7 @@ ERROR :Closing Link: 178.79.176.169 (Client Quit)</samp>
 NICK humpty
 USER humpty humpty irc.libera.chat :Humpty Dumpty
 :strontium.libera.chat 001 humpty :Welcome to the Libera.Chat Internet Relay Chat Network humpty
-...</samp>
-</pre>
+...</samp></pre>
 <p>
   The ellipsis denotes lines omitted for the sake of brevity.  The
   remainder of the session is quite similar to the first example in

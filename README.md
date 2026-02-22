@@ -52,7 +52,7 @@ On 06 Jan 2022, I moved my website to [susam.net][WEBSITE].
 Copyright
 ---------
 
-Copyright (c) 2006-2025 Susam Pal\
+Copyright (c) 2006-2026 Susam Pal\
 All Rights Reserved.
 
 The Common Lisp source code files [site.lisp](site.lisp) and

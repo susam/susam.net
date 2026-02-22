@@ -16,8 +16,7 @@
   the identifier <code>main</code> using preprocessor macros and
   the <code>##</code> token-pasting operator.
 </p>
-<pre>
-<code>#include &lt;stdio.h&gt;
+<pre><code>#include &lt;stdio.h&gt;
 
 #define decode(s,t,u,m,p,e,d) m ## s ## u ## t
 #define begin decode(a,n,i,m,a,t,e)
@@ -25,8 +24,7 @@
 int begin()
 {
     printf("Stumped?\n");
-}</code>
-</pre>
+}</code></pre>
 <p>
   This program compiles and runs successfully.  Here is the output:
 </p>

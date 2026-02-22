@@ -44,10 +44,8 @@
   When we run <code>cat</code> and type the three key sequences
   mentioned above, the following output may appear:
 </p>
-<pre>
-<samp>$ <kbd>cat
-^[b^[b^[b</kbd></samp>
-</pre>
+<pre><samp>$ <kbd>cat
+^[b^[b^[b</kbd></samp></pre>
 <p>
   The output shows that the terminal sends the same input
   to <code>cat</code> each time: the <em>escape</em> character that
@@ -57,12 +55,10 @@
   three key sequences followed
   by <kbd>ctrl</kbd>+<kbd>d</kbd> <kbd>enter</kbd>:
 </p>
-<pre>
-<samp>$ <kbd>od -t d1
+<pre><samp>$ <kbd>od -t d1
 ^[b^[b^[b</kbd>
 0000000    27  98  27  98  27  98  10
-0000007</samp>
-</pre>
+0000007</samp></pre>
 <p>
   Indeed decimal 27 is the code of the <em>escape</em> character.
   Similarly decimal 98 is the code of the character <code>b</code>.

@@ -1,6 +1,6 @@
 <!-- date: 2003-02-11 -->
 <!-- title: Programming With DOS Debugger -->
-<!-- tag: Assembly, Programming, DOS, Technology -->
+<!-- tag: Assembly, Programming, DOS, Technology, How-To -->
 <!-- key: tkxiv -->
 <!-- blog: Main -->
 <h2 id="introduction">Introduction</h2>
@@ -30,8 +30,7 @@
   character <code>A</code> to standard output.  The
   following <code>DEBUG.EXE</code> session shows how we do it.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>A</kbd>
 1165:0100 <kbd>MOV AH, 2</kbd>
 1165:0102 <kbd>MOV DL, 41</kbd>
@@ -49,16 +48,13 @@ CX 0000
 Writing 00007 bytes
 -<kbd>Q</kbd>
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   Now we can execute this program as follows:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>A</kbd>
+<pre><samp>C:\&gt;<kbd>A</kbd>
 A
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   The debugger command <code>A</code> creates machine executable code
   from assembly language instructions.  The machine code created is
@@ -92,8 +88,7 @@ C:\&gt;</samp>
   The following <code>DEBUG.EXE</code> session shows how to create a
   program that prints a string.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>A</kbd>
 1165:0100 <kbd>MOV AH, 9</kbd>
 1165:0102 <kbd>MOV DX, 108</kbd>
@@ -113,17 +108,14 @@ CX 0000
 Writing 00017 bytes
 -<kbd>Q</kbd>
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   Now we can execute this 23-byte program like this:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>HELLO</kbd>
+<pre><samp>C:\&gt;<kbd>HELLO</kbd>
 hello, world
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   In the program above we use the pseudo-instruction <code>DB</code>
   to define the bytes of the string we want to print.  We add the
@@ -160,8 +152,7 @@ C:\&gt;</samp>
   file with MS-DOS Editor, then type in the following debugger
   commands and then save and exit the editor.
 </p>
-<pre>
-<code>A
+<pre><code>A
 MOV AH, 9
 MOV DX, 108
 INT 21
@@ -172,8 +163,7 @@ N HELLO.COM
 R CX
 17
 W
-Q</code>
-</pre>
+Q</code></pre>
 <p>
   This is almost the same as the inputs we typed into the debugger in
   the previous section.  The only difference from the previous section
@@ -187,8 +177,7 @@ Q</code>
   a DOS session example that shows what the output of this command
   looks like:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG &lt; HELLO.TXT</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG &lt; HELLO.TXT</kbd>
 -A
 1165:0100 MOV AH, 9
 1165:0102 MOV DX, 108
@@ -204,8 +193,7 @@ CX 0000
 Writing 00017 bytes
 -Q
 
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   The output is in fact very similar to the debugger session in the
   previous section.
@@ -217,20 +205,17 @@ C:\&gt;</samp>
   disassemble the binary executable files.  This could be useful when
   we want to debug an existing program.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG A.COM</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG A.COM</kbd>
 -<kbd>U 100 106</kbd>
 117C:0100 B402          MOV     AH,02
 117C:0102 B241          MOV     DL,41
 117C:0104 CD21          INT     21
-117C:0106 C3            RET</samp>
-</pre>
+117C:0106 C3            RET</samp></pre>
 <p>
   The debugger command <code>U</code> (unassemble) is used to
   translate the binary machine code to assembly language mnemonics.
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG HELLO.COM</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG HELLO.COM</kbd>
 -<kbd>U 100 116</kbd>
 117C:0100 B409          MOV     AH,09
 117C:0102 BA0801        MOV     DX,0108
@@ -248,8 +233,7 @@ C:\&gt;</samp>
 117C:0114 0D0A24        OR      AX,240A
 -<kbd>D 100 116</kbd>
 117C:0100  B4 09 BA 08 01 CD 21 C3-68 65 6C 6C 6F 2C 20 77   ......!.hello, w
-117C:0110  6F 72 6C 64 0D 0A 24                              orld..$</samp>
-</pre>
+117C:0110  6F 72 6C 64 0D 0A 24                              orld..$</samp></pre>
 <h2 id="int-20-vs-ret">INT 20 vs RET</h2>
 <p>
   Another way to terminate a .COM program is to simply use the
@@ -265,16 +249,14 @@ C:\&gt;</samp>
   instruction <code>INT 20</code>.  Here is a demonstration of these
   facts using the debugger program:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG HELLO.COM</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG HELLO.COM</kbd>
 -<kbd>R SP</kbd>
 SP FFFE
 :
 -<kbd>D FFFE</kbd>
 117C:FFF0                                            00 00
 -<kbd>U 0 1</kbd>
-117C:0000 CD20          INT     20</samp>
-</pre>
+117C:0000 CD20          INT     20</samp></pre>
 <p>
   As a result, executing the <code>RET</code> instruction pops 0000
   off the stack at FFFE and loads it into IP.  This results in the

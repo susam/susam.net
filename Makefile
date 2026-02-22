@@ -159,7 +159,7 @@ backup:
 	ls -lh /opt/cache/
 	df -h /
 
-BOT_RE = tt-rss|bot|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
+BOT_RE = tt-rss|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
 
 follow-log:
 	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)"
@@ -431,6 +431,7 @@ checks: \
   check-tex-site \
   check-newline \
   check-nginx \
+  check-pre \
   check-quote \
   check-rendering \
   check-sentence-spacing \
@@ -457,6 +458,7 @@ cat-my-text:
 
 cat-all-text:
 	find content -type f \
+	  ! -name '.DS_Store' \
 	  ! -name '*.gif' \
 	  ! -name '*.ico' \
 	  ! -name '*.jpg' \
@@ -517,6 +519,7 @@ check-bre-and: cat-my-text
 	  s/, and they are not self-sustaining --- they depend/x/g; \
 	  s/, and we should be open to all interpretations/x/g; \
 	  s/, and we will have a much more careful review process/x/g; \
+	  s/, and with at least as many backticks/x/g; \
 	' > /tmp/tr
 	grep -Ei ', and([^a-z]|$$)' /tmp/tr > /tmp/err || true
 	grep -Eino '.{0,30}, and([^a-z]|$$).{0,30}' /tmp/err || true
@@ -561,6 +564,7 @@ check-bre-spell-iz: cat-my-text
 	  s/I apologize for misunderstanding the joke/x/g; \
 	  s/I apologize for the error/x/g; \
 	  s/M-x customize[-a-z]* RET/x/g; \
+	  s/MessageFTS_docsize/x/g; \
 	  s/Optimizing Compiler/x/g; \
 	  s/Registrant Organization/x/g; \
 	  s/ResizableDoubleArray/x/g; \
@@ -589,6 +593,7 @@ check-bre-spell-iz: cat-my-text
 	  s/izz/x/g; \
 	  s/package-initialize/x/g; \
 	  s/public synchronized/x/g; \
+	  s/these two backtick strings, normalized in the/x/g; \
 	  s/traumatized by Java-esque/x/g; \
 	  s/[^A-Za-z]verizon/x/g; \
 	  s/[^A-Za-z]wizards\{0,1\}[^A-Za-z]/x/g; \
@@ -780,6 +785,21 @@ check-nginx:
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	echo "$@: PASS"
 
+check-pre:
+	find content -name '*.html' \
+	  ! -path 'content/comments/eql.html' \
+	  ! -path 'content/tree/cfrs.html' \
+	  ! -path 'content/tree/code/web/miller-rabin-speed-test.html' \
+	  ! -path 'content/tree/code/test/lorem.page.html' \
+	  ! -path 'content/tree/eql.post.html' \
+	  ! -path 'content/tree/fxyt.html' \
+	  ! -path 'content/tree/pc.html' \
+	  -exec cat {} + | \
+	grep -E '</?pre>' | \
+	grep -vE '<pre><code>|<pre><samp>|</code></pre>|</samp></pre>' > /tmp/err || true
+	cat /tmp/err
+	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
+
 # Ensure curly quotes do not occur.
 check-quote:
 	grep -r '[‘’“”]'  content; [ $$? = 1 ]
@@ -839,7 +859,9 @@ check-sentence-spacing: cat-all-text
 # Run HTML tidy on the website.
 tidy: dist
 	find _site -name "*.html" | \
-	grep -vE '_site/css-fizz-buzz\.html|_site/code/web/css-fizz-buzz-ol\.html' | \
+	grep -v '_site/css-fizz-buzz\.html' | \
+	grep -v '_site/code/web/css-fizz-buzz-ol\.html' | \
+	grep -v '_site/nested-code-fences.html' | \
 	while read -r page; do \
 	  echo Tidying "$$page"; \
 	  sed 's/ method="dialog"//' "$$page" > /tmp/tmp.html; \
@@ -1013,12 +1035,10 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
+# Publish website.
+copub: co cu gh cb
 
-# Commit changes and publish website across all mirrors.
-copub: co pub
-
-# Publish website across all mirrors.
-pub: cu gh cb
+mirrors: gh cb
 
 # Commit changes to the content update ('cu') branch.
 co:

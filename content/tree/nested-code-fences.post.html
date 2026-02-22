@@ -1,179 +1,227 @@
 <!-- date: 2026-01-19 -->
-<!-- title: The Art of Nested Code Fencing in Markdown -->
+<!-- title: Nested Code Fences in Markdown -->
 <!-- tag: Web, Technology -->
 <!-- key: ncfim -->
 <!-- import: extra.css -->
 <!-- blog: Main -->
 <p>
-  In case you didn't know, it is easy to nest code block delimiters in
-  CommonMark.  Since GitHub Flavoured Markdown (GFM) is a strict
-  superset of CommonMark, whatever we discuss in this post applies
-  equally well to both CommonMark and GFM.
+  Today, we will meet a spiky-haired nerd named Corey Dumm, who
+  normally lives within Markdown code fences.  We will get to know him
+  a bit, smile with him when his fences hold and weep quietly when
+  misfortune strikes.
 </p>
 <p>
-  Why would we ever need to nest code block delimiters within a pair
-  of code block delimiters?  Let us start with a simple example.
+  One of the caveats of the Markdown universe is the wide variety of
+  Markdown implementations available.  In these parallel universes,
+  the rules of Markdown rendering differ subtly.  In this post, we
+  will focus only on the CommonMark specification.  Since GitHub
+  Flavoured Markdown (GFM) is a strict superset of CommonMark,
+  whatever we discuss here applies equally well to both CommonMark and
+  GFM.
 </p>
 {{ toc }}
-<h2 id="code-fences">Code Fences</h2>
-<h3 id="basic-code-fences">Basic Code Fences</h3>
+<h2 id="basic-code-fences">Basic Code Fences</h2>
 <p>
-  Say we are writing a README.md where we want to teach how to write
-  Markdown.  Naturally, we would write the Markdown examples within
-  fenced code blocks so that the raw Markdown source text is
-  preserved.  For example, we might write:
+  Corey had a knack for working with computers ever since he was a
+  kid.
 </p>
-<pre>
-<code>To add emphasis to some text, wrap it in a pair of asterisks.
-For example:
+<!-- Markdown #1 -->
+<pre><code>Corey at his computer:
 
 ```
-hello, *world*
-```</code>
-</pre>
+(o_o)--.|[_]|
+```</code></pre>
 <p>
-  A CommonMark renderer converts the above Markdown text to the
-  following HTML:
+  Everything was perfect in Corey's world.  The CommonMark renderer
+  would convert the Markdown above to the following HTML:
 </p>
-<pre>
-<code>&lt;p&gt;To add emphasis to some text, wrap it in a pair of asterisks.
-For example:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;hello, *world*
-&lt;/code&gt;&lt;/pre&gt;</code>
-</pre>
-<p>
-  The rendered output looks like this:
-</p>
+<!-- Rendered HTML #1 -->
 <div class="box">
-<p>To add emphasis to some text, wrap it in a pair of asterisks.
-For example:</p>
-<pre><code>hello, *world*
+<p>Corey at his computer:</p>
+<pre><code>(o_o)--.|[_]|
 </code></pre>
 </div>
+<!-- Raw HTML #1 -->
+<details>
+<summary>View HTML</summary>
+<pre><code>&lt;p&gt;Corey at his computer:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(o_o)--.|[_]|
+&lt;/code&gt;&lt;/pre&gt;</code></pre>
+</details>
 <p>
-  But what if we want to use triple backticks within the fenced code
-  block?  Perhaps we want to teach how to use code fences in our
-  README.md.  This presents a difficulty.  We cannot write triple
-  backticks within a fenced code block that is started with triple
-  backticks.  The second occurrence of triple backticks would be
-  interpreted as the closing code fence, thereby terminating the code
-  block.  CommonMark offers two options to resolve this difficulty.
+  At this point, all was well.  Corey grew quickly.  Before long, he
+  had a head full of spiky hair.  Then the fences began to matter.
 </p>
-<h3 id="fancy-code-fences">Fancy Code Fences</h3>
+<!-- Markdown #2 -->
+<pre><code>Corey, all grown up:
+
+```
+ ```
+(o_o)--.|[_]|
+```</code></pre>
 <p>
-  There are several ways to include triple backticks within fenced
-  code blocks.  First, we can use tildes as the code fence:
+  Let us see how this renders.  I must warn you that during the
+  Markdown-to-HTML translation, Corey loses his hair.  Some viewers
+  may find the following scene disturbing.  Viewer discretion is
+  advised.  Here is the rendered HTML:
 </p>
-<pre>
-<code>To write a code block, wrap it in a pair of triple backticks.
-For example:
+<!-- Rendered HTML #2 -->
+<div class="box">
+<p>Corey, all grown up:</p>
+<pre><code></code></pre>
+<p>(o_o)--.|[_]|</p>
+<pre><code></code></pre>
+</div>
+<!-- Raw HTML #2 -->
+<details>
+<summary>View HTML</summary>
+<pre><code>&lt;p&gt;Corey, all grown up:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(o_o)--.|[_]|&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</code></pre>
+</details>
+<p>
+  Corey's hair is gone!  What a catastrophic accident!  Corey is
+  alright, though.  He is still quite afraid of Markdown fences, but
+  otherwise well and bouncing back.  Why did this happen?  The second
+  set of triple backticks immediately ends the fenced code block
+  started by the first set of triple backticks.  As a result, Corey's
+  smiley face ends up outside the fenced code block.  The triple
+  backticks that were once Corey's hair are now woven into the fabric
+  of the surrounding HTML.  Fortunately, CommonMark offers a few ways
+  to avoid such accidents.
+</p>
+<h2 id="fancy-code-fences">Fancy Code Fences</h2>
+<p>
+  In CommonMark, there are two main ways to include triple backticks
+  within fenced code blocks.  First, we can use tildes as the code
+  fence:
+</p>
+<!-- Markdown #3a -->
+<pre><code>Corey, all grown up:
 
 ~~~
-```
-echo 'hello, world'
-```
-~~~</code>
-</pre>
+ ```
+(o_o)--.|[_]|
+~~~</code></pre>
 <p>
-  In fact, the code fence need not be exactly three backticks or
-  tidles.  Any number of backticks or tidles is allowed as long as the
-  number is at least three.  So the following is equivalent:
+  In fact, a code fence need not consist of exactly three backticks or
+  tildes.  Any number of backticks or tildes is allowed, as long as
+  that number is at least three.  The following is therefore
+  equivalent:
 </p>
-<pre>
-<code>To write a code block, wrap it in a pair of triple backticks.
-For example:
+<!-- Markdown #3b -->
+<pre><code>Corey, all grown up:
 
-~~~~~~~~~~~~~~~~~~~
-```
-echo 'hello, world'
-```
-~~~~~~~~~~~~~~~~~~~</code>
-</pre>
+~~~~~
+ ```
+(o_o)--.|[_]|
+~~~~~</code></pre>
 <p>
-  So is this:
+  And so is this:
 </p>
-<pre>
-<code>To write a code block, wrap it in a pair of triple backticks.
-For example:
+<!-- Markdown #3c -->
+<pre><code>Corey, all grown up:
 
-```````````````````
-```
-echo 'hello, world'
-```
-```````````````````</code>
-</pre>
+`````
+ ```
+(o_o)--.|[_]|
+`````</code></pre>
 <p>
-  All three examples above produce the following HTML:
+  All three examples render like this:
 </p>
-<pre>
-&lt;p&gt;To write a code block, wrap it in a pair of triple backticks.
-For example:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```
-echo 'hello, world'
-```
-&lt;/code&gt;&lt;/pre&gt;
-</pre>
-<p>
-  The rendered output looks like this:
-</p>
+<!-- Rendered HTML #3 -->
 <div class="box">
-<p>To write a code block, wrap it in a pair of triple backticks.
-For example:</p>
-<pre><code>```
-echo 'hello, world'
-```
+<p>Corey, all grown up:</p>
+<pre><code> ```
+(o_o)--.|[_]|
 </code></pre>
 </div>
-<h2 id="code-spans">Code Spans</h2>
-<h3 id="basic-code-spans">Basic Code Spans</h3>
+<!-- Raw HTML #3 -->
+<details>
+<summary>View HTML</summary>
+<pre><code>&lt;p&gt;Corey, all grown up:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```
+(o_o)--.|[_]|
+&lt;/code&gt;&lt;/pre&gt;</code></pre>
+</details>
 <p>
-  A similar problem arises with inline code spans as well.  Most
-  Markdown users know to use backticks to delimit code spans.  For
+  No hair is lost in translation.
+</p>
+<h2 id="basic-code-spans">Basic Code Spans</h2>
+<p>
+  A similar problem arises with inline code spans.  Most Markdown
+  users know to use backticks to delimit inline code spans.  For
   example:
 </p>
-<pre><code>The `echo` command writes arguments to standard output.</code></pre>
+<!-- Markdown 4 -->
+<pre><code>An old picture of Corey at his computer: `(o_o)--.|[_]|`</code></pre>
 <p>
-  This produces the following HTML:
+  This produces the following output:
 </p>
-<pre><code>&lt;p&gt;The &lt;code&gt;echo&lt;/code&gt; command writes arguments to standard output.&lt;/p&gt;</code></pre>
-<p>
-  The rendered HTML looks like this:
-</p>
+<!-- Rendered HTML 4 -->
 <div class="box">
-<p>The <code>echo</code> command writes arguments to standard output.</p>
+<p>An old picture of Corey at his computer: <code>(o_o)--.|[_]|</code></p>
 </div>
+<!-- Raw HTML 4 -->
+<details>
+<summary>View HTML</summary>
+<pre><code>&lt;p&gt;An old picture of Corey at his computer: &lt;code&gt;(o_o)--.|[_]|&lt;/code&gt;&lt;/p&gt;</code></pre>
+</details>
 <p>
-  However, what do we do when we need to write a backtick within an
-  inline code span?
+  However, what do we do when we need to put Corey's dear friend Becky
+  Trace within an inline code span?  Becky has short, straight hair
+  tucked neatly on either side of her face.  Here's a picture of her:
 </p>
-<h3 id="fancy-code-spans">Fancy Code Spans</h3>
+<p class="textcenter">
+  <code>`(o_o)`</code>
+</p>
 <p>
-  A code span delimiter need not be exactly one backtick.  It can be
-  any number of backticks.  So <code>`echo`</code>
-  and <code>``echo``</code> produce identical HTML.  There is another
-  important but less-known detail.  When the text within an inline
-  code span both begins <em>and</em> ends with spaces, a single space
-  is removed from both ends.  So <code>`echo`</code> and
-  <code>` echo `</code> are equivalent.  Therefore, when we need to
-  put backticks within an inline code span, we can use multiple
-  backticks and a space to start the code span.  Here is an example:
+  I believe you can already see the difficulty here.  Inline code
+  spans use backticks as delimiters.  So when we put Becky within a
+  code span, the first backtick in Becky's face would terminate the
+  code span immediately and then the rest of Becky would lie outside
+  it.  CommonMark offers solutions for this kind of situation as well.
 </p>
-<pre><code>The string `` `${a}` `` is an example of a template literal.</code></pre>
+<h2 id="fancy-code-spans">Fancy Code Spans</h2>
 <p>
-  Here is the HTML produced:
+  An inline code span delimiter need not consist of exactly one
+  backtick.  It can consist of any number of backticks.  So
+  <code>`foo`</code> and <code>``foo``</code> produce identical HTML.
+  There is another important but less well-known detail.  When the
+  text inside an inline code span begins and ends with spaces, one
+  space is removed from each end before rendering.  So
+  <code>`foo`</code> and <code>` foo `</code> are equivalent.
+  Therefore, when we need to put backticks within an inline code span,
+  we can start the code span using multiple backticks and a space.
+  For example:
 </p>
-<pre><code>&lt;p&gt;The string &lt;code&gt;`${a}`&lt;/code&gt; is an example of a template literal.&lt;/p&gt;</code></pre>
+<!-- Markdown #5 -->
+<pre><code>Meet Corey's friend Becky Trace: `` `(o_o)` ``</code></pre>
 <p>
-  Here is the rendered HTML:
+  Here is the rendered output:
 </p>
+<!-- Rendered HTML #5 -->
 <div class="box">
-<p>The string <code>`${a}`</code> is an example of a template literal.</p>
+<p>Meet Corey's friend Becky Trace: <code>`(o_o)`</code></p>
 </div>
+<!-- Raw HTML #5 -->
+<details>
+<summary>View HTML</summary>
+<pre><code>&lt;p&gt;Meet Corey's friend Becky Trace: &lt;code&gt;`(o_o)`&lt;/code&gt;&lt;/p&gt;</code></pre>
+</details>
+<p>
+  Becky has her hair intact too.  We have avoided the mishap that once
+  caused great distress to Corey.  That, my friends, is how backticks
+  survive nesting in Markdown.
+</p>
 <h2 id="specification">Specification</h2>
 <p>
-  In this section, I'll note down excerpts from
-  the <a href="https://spec.commonmark.org/0.30/">CommonMark Spec
-  Version 0.30</a>, which is by now over four years old.
+  Before I finish this post, let us take a look at the CommonMark
+  specification to see where these details are defined.  The excerpts
+  quoted below are taken from
+  <a href="https://spec.commonmark.org/0.30/">CommonMark Spec Version
+  0.30</a>, which is by now over four years old.
 </p>
 <p>
   From section
@@ -237,5 +285,6 @@ echo 'hello, world'
   </ul>
 </blockquote>
 <p>
-  I hope this will be useful to you some day.
+  I hope these little nuggets of Markdown trivialities will one day
+  prove useful in your own Markdown misfortunes.
 </p>

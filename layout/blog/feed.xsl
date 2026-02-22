@@ -16,10 +16,10 @@
         <h1><xsl:value-of select="description"/></h1>
         <div>(<xsl:value-of select="count(item)"/> items)</div>
         <p>
-          This is an RSS news feed from
-          <a href="https://susam.net/">susam.net</a>.
-          This document is intended for feed readers, not humans.
-          Please copy the URL of this document into your feed reader.
+          This is an RSS news feed.  It is meant to be read using a
+          feed reader application rather than viewed directly in a web
+          browser.  To use it, copy this document's URL from your
+          browser's address bar and add it to your feed reader.
         </p>
         <xsl:for-each select="item">
           <details>

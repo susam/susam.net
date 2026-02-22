@@ -1,6 +1,6 @@
 <!-- date: 2023-08-09 -->
 <!-- title: Sorting in Emacs -->
-<!-- tag: Emacs, Technology -->
+<!-- tag: Emacs, Technology, How-To -->
 <!-- key: umnyp -->
 <!-- blog: Main -->
 <!-- import: extra.css -->
@@ -22,13 +22,11 @@
     <p>
       First create a buffer that has the following text:
     </p>
-<pre>
-<code>Carol  200  London  LHR-&gt;SFO
+<pre><code>Carol  200  London  LHR-&gt;SFO
 Dan    20   Tokyo   HND-&gt;LHR
 Bob    100  London  LCY-&gt;CDG
 Alice  10   Paris   CDG-&gt;LHR
-Bob    30   Paris   ORY-&gt;HND</code>
-</pre>
+Bob    30   Paris   ORY-&gt;HND</code></pre>
     <p>
       Let us pretend that each line is a record that represents some
       details about different persons.  From left to right, we have
@@ -44,13 +42,11 @@ Bob    30   Paris   ORY-&gt;HND</code>
       type <code>M-x sort-lines RET</code> to sort lines
       alphabetically.  The buffer looks like this now:
     </p>
-<pre>
-<code>Alice  10   Paris   CDG-&gt;LHR
+<pre><code>Alice  10   Paris   CDG-&gt;LHR
 Bob    100  London  LCY-&gt;CDG
 Bob    30   Paris   ORY-&gt;HND
 Carol  200  London  LHR-&gt;SFO
-Dan    20   Tokyo   HND-&gt;LHR</code>
-</pre>
+Dan    20   Tokyo   HND-&gt;LHR</code></pre>
   </li>
   <li> <!-- 3. sort-lines (reverse) -->
     <p>
@@ -60,13 +56,11 @@ Dan    20   Tokyo   HND-&gt;LHR</code>
       indicates that a reverse sort must be performed.  The buffer
       looks like this now:
     </p>
-<pre>
-<code>Dan    20   Tokyo   HND-&gt;LHR
+<pre><code>Dan    20   Tokyo   HND-&gt;LHR
 Carol  200  London  LHR-&gt;SFO
 Bob    30   Paris   ORY-&gt;HND
 Bob    100  London  LCY-&gt;CDG
-Alice  10   Paris   CDG-&gt;LHR</code>
-</pre>
+Alice  10   Paris   CDG-&gt;LHR</code></pre>
   </li>
   <li> <!-- 4. sort-fields (first) -->
     <p>
@@ -81,13 +75,11 @@ Alice  10   Paris   CDG-&gt;LHR</code>
       before Bob from Paris because the sorting was performed by
       entire lines.
     </p>
-<pre>
-<code>Alice  10   Paris   CDG-&gt;LHR
+<pre><code>Alice  10   Paris   CDG-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
 Bob    100  London  LCY-&gt;CDG
 Carol  200  London  LHR-&gt;SFO
-Dan    20   Tokyo   HND-&gt;LHR</code>
-</pre>
+Dan    20   Tokyo   HND-&gt;LHR</code></pre>
   </li>
   <li> <!-- 5. sort-fields (second) -->
     <p>
@@ -99,13 +91,11 @@ Dan    20   Tokyo   HND-&gt;LHR</code>
       performed an alphabetical sort, not numerical sort.  The result
       looks like this:
     </p>
-<pre>
-<code>Alice  10   Paris   CDG-&gt;LHR
+<pre><code>Alice  10   Paris   CDG-&gt;LHR
 Bob    100  London  LCY-&gt;CDG
 Dan    20   Tokyo   HND-&gt;LHR
 Carol  200  London  LHR-&gt;SFO
-Bob    30   Paris   ORY-&gt;HND</code>
-</pre>
+Bob    30   Paris   ORY-&gt;HND</code></pre>
   </li>
   <li> <!-- 6. sort-numeric-fields -->
     <p>
@@ -113,13 +103,11 @@ Bob    30   Paris   ORY-&gt;HND</code>
       sort-numeric-fields RET</code> to sort the lines numerically by
       the second field.  The result looks like this:
     </p>
-<pre>
-<code>Alice  10   Paris   CDG-&gt;LHR
+<pre><code>Alice  10   Paris   CDG-&gt;LHR
 Dan    20   Tokyo   HND-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
 Bob    100  London  LCY-&gt;CDG
-Carol  200  London  LHR-&gt;SFO</code>
-</pre>
+Carol  200  London  LHR-&gt;SFO</code></pre>
   </li>
   <li> <!-- 7. sort-fields (third) -->
     <p>
@@ -127,13 +115,11 @@ Carol  200  London  LHR-&gt;SFO</code>
       RET</code> to sort the lines alphabetically by the third field
       containing city names.  The result looks like this:
     </p>
-<pre>
-<code>Bob    100  London  LCY-&gt;CDG
+<pre><code>Bob    100  London  LCY-&gt;CDG
 Carol  200  London  LHR-&gt;SFO
 Alice  10   Paris   CDG-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
-Dan    20   Tokyo   HND-&gt;LHR</code>
-</pre>
+Dan    20   Tokyo   HND-&gt;LHR</code></pre>
     <p>
       Note that we cannot supply the prefix argument <code>C-u</code>
       to this command to perform a reverse sort by a specific field
@@ -153,13 +139,11 @@ Dan    20   Tokyo   HND-&gt;LHR</code>
       reverse sorts the lines by city names.  The result looks like
       this:
     </p>
-<pre>
-<code>Dan    20   Tokyo   HND-&gt;LHR
+<pre><code>Dan    20   Tokyo   HND-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
 Alice  10   Paris   CDG-&gt;LHR
 Carol  200  London  LHR-&gt;SFO
-Bob    100  London  LCY-&gt;CDG</code>
-</pre>
+Bob    100  London  LCY-&gt;CDG</code></pre>
   </li>
   <li> <!-- 9. sort-fields (negative) -->
     <p>
@@ -171,13 +155,11 @@ Bob    100  London  LCY-&gt;CDG</code>
       argument <code>-2</code> to sort the lines by the second field
       from the right.  The result looks like this:
     </p>
-<pre>
-<code>Carol  200  London  LHR-&gt;SFO
+<pre><code>Carol  200  London  LHR-&gt;SFO
 Bob    100  London  LCY-&gt;CDG
 Bob    30   Paris   ORY-&gt;HND
 Alice  10   Paris   CDG-&gt;LHR
-Dan    20   Tokyo   HND-&gt;LHR</code>
-</pre>
+Dan    20   Tokyo   HND-&gt;LHR</code></pre>
   </li>
   <li> <!-- 10. sort-columns -->
     <p>
@@ -197,13 +179,11 @@ Dan    20   Tokyo   HND-&gt;LHR</code>
       columns bounded by the column positions of mark and point (i.e.
       the last two columns).  The result looks like this:
     </p>
-<pre>
-<code>Bob    100  London  LCY-&gt;CDG
+<pre><code>Bob    100  London  LCY-&gt;CDG
 Carol  200  London  LHR-&gt;SFO
 Alice  10   Paris   CDG-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
-Dan    20   Tokyo   HND-&gt;LHR</code>
-</pre>
+Dan    20   Tokyo   HND-&gt;LHR</code></pre>
   </li>
   <li> <!-- 11. sort-columns (reverse) -->
     <p>
@@ -222,13 +202,11 @@ Dan    20   Tokyo   HND-&gt;LHR</code>
       Now type <code>C-u M-x sort-columns RET</code> to reverse sort
       the last two columns.
     </p>
-<pre>
-<code>Dan    20   Tokyo   HND-&gt;LHR
+<pre><code>Dan    20   Tokyo   HND-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
 Alice  10   Paris   CDG-&gt;LHR
 Carol  200  London  LHR-&gt;SFO
-Bob    100  London  LCY-&gt;CDG</code>
-</pre>
+Bob    100  London  LCY-&gt;CDG</code></pre>
   </li>
   <li> <!-- 12. sort-regexp-fields (warning) -->
     <p>
@@ -246,13 +224,11 @@ Bob    100  London  LCY-&gt;CDG</code>
       lines by the field matched by this capturing group
       (<code>\1</code>).  The result looks like this:
     </p>
-<pre>
-<code>Dan    20   Tokyo   LCY-&gt;CDG
+<pre><code>Dan    20   Tokyo   LCY-&gt;CDG
 Bob    30   Paris   ORY-&gt;HND
 Alice  10   Paris   HND-&gt;LHR
 Carol  200  London  CDG-&gt;LHR
-Bob    100  London  LHR-&gt;SFO</code>
-</pre>
+Bob    100  London  LHR-&gt;SFO</code></pre>
     <p>
       Observe how all our travel records are messed up in this result.
       Now Dan from Tokyo is travelling from LCY to CDG instead of
@@ -291,13 +267,11 @@ Bob    100  London  LHR-&gt;SFO</code>
       Type <code>C-x h</code> followed by <code>M-x sort-regexp-fields
       RET .*-&gt;\(.*\) RET \1 RET</code>.
     </p>
-<pre>
-<code>Bob    100  London  LCY-&gt;CDG
+<pre><code>Bob    100  London  LCY-&gt;CDG
 Bob    30   Paris   ORY-&gt;HND
 Dan    20   Tokyo   HND-&gt;LHR
 Alice  10   Paris   CDG-&gt;LHR
-Carol  200  London  LHR-&gt;SFO</code>
-</pre>
+Carol  200  London  LHR-&gt;SFO</code></pre>
     <p>
       Now the lines are sorted by the destination field and Dan from
       Tokyo is travelling from HND to LHR.
@@ -312,13 +286,11 @@ Carol  200  London  LHR-&gt;SFO</code>
       This key combination specifies a negative argument that results
       in a reverse sort.  The result looks like this:
     </p>
-<pre>
-<code>Carol  200  London  LHR-&gt;SFO
+<pre><code>Carol  200  London  LHR-&gt;SFO
 Dan    20   Tokyo   HND-&gt;LHR
 Alice  10   Paris   CDG-&gt;LHR
 Bob    30   Paris   ORY-&gt;HND
-Bob    100  London  LCY-&gt;CDG</code>
-</pre>
+Bob    100  London  LCY-&gt;CDG</code></pre>
   </li>
   <li> <!-- 15. shell-command-on-region -->
     <p>
@@ -340,13 +312,11 @@ Bob    100  London  LCY-&gt;CDG</code>
       replaces the region with the output.  As a result, the buffer
       now looks like this:
     </p>
-    <pre>
-<code>Alice  10   Paris   CDG-&gt;LHR
+    <pre><code>Alice  10   Paris   CDG-&gt;LHR
 Bob    100  London  LCY-&gt;CDG
 Bob    30   Paris   ORY-&gt;HND
 Carol  200  London  LHR-&gt;SFO
-Dan    20   Tokyo   HND-&gt;LHR</code>
-</pre>
+Dan    20   Tokyo   HND-&gt;LHR</code></pre>
     <p>
       This particular problem of removing duplicates while sorting can
       be also be accomplished by typing <code>C-x h</code> followed
@@ -379,8 +349,7 @@ Dan    20   Tokyo   HND-&gt;LHR</code>
       characters in Emacs.  In case you do not, insert them yourself
       by typing <code>C-q C-l</code>.
     </p>
-<pre>
-<code>Emacs is an advanced, extensible, customisable,
+<pre><code>Emacs is an advanced, extensible, customisable,
 self-documenting editor.
 
 Emacs editing commands operate in terms of
@@ -401,8 +370,7 @@ which is called point.
 If you are editing several files in Emacs, each in
 its own buffer, each buffer has its own value of
 point.
-<span class="ctrl-l hl">&#12;</span></code>
-</pre>
+<span class="ctrl-l hl">&#12;</span></code></pre>
   </li>
   <li> <!-- 2. sort-pages -->
     <p>
@@ -413,8 +381,7 @@ point.
       bottom because it begins with the letter "W".  The buffer now
       looks like this now:
     </p>
-<pre>
-<code>Emacs is an advanced, extensible, customisable,
+<pre><code>Emacs is an advanced, extensible, customisable,
 self-documenting editor.
 
 Emacs editing commands operate in terms of
@@ -435,8 +402,7 @@ window or terminal screen occupied by Emacs.
 At the very bottom of the frame is an echo area.
 The main area of the frame, above the echo area,
 is called the window.
-<span class="ctrl-l hl">&#12;</span></code>
-</pre>
+<span class="ctrl-l hl">&#12;</span></code></pre>
   </li>
   <li> <!-- 3. sort-paragraphs -->
     <p>
@@ -444,8 +410,7 @@ is called the window.
       sort-paragraphs</code> to sort the paragraphs alphabetically.
       The buffer looks like this now:
     </p>
-<pre>
-<code>At the very bottom of the frame is an echo area.
+<pre><code>At the very bottom of the frame is an echo area.
 The main area of the frame, above the echo area,
 is called the window.
 
@@ -466,8 +431,7 @@ which is called point.
 
 We will use the term frame to mean a graphical
 window or terminal screen occupied by Emacs.
-<span class="ctrl-l hl">&#12;</span></code>
-</pre>
+<span class="ctrl-l hl">&#12;</span></code></pre>
   </li>
 </ol>
 <h2 id="references">References</h2>

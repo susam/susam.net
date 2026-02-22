@@ -1,6 +1,6 @@
 <!-- date: 2007-11-19 -->
 <!-- title: Writing Boot Sector Code -->
-<!-- tag: Assembly, Programming, Linux, Technology -->
+<!-- tag: Assembly, Programming, Linux, Technology, How-To -->
 <!-- key: qtplr -->
 <!-- blog: Main -->
 <!-- import: extra.css -->
@@ -9,10 +9,10 @@
   In this article, we discuss how to write our own
   <code>"hello, world"</code> program into the boot sector.  At the
   time of this writing, most such code examples available on the web
-  were meant for the Netwide Assembler (NASM).  Very little material
-  was available that could be tried with the readily available GNU
-  tools like the GNU assembler (as) and the GNU linker (ld).  This
-  article is an effort to fill this gap.
+  are meant for the Netwide Assembler (NASM).  Very little material is
+  available that could be tried with the readily available GNU tools
+  like the GNU assembler (as) and the GNU linker (ld).  This article
+  is an effort to fill this gap.
 </p>
 <h2 id="boot-sector">Boot Sector</h2>
 <p>
@@ -89,8 +89,7 @@ http://archive.debian.org/debian/dists/etch/main/binary-i386/Packages.gz
   The following code prints the character 'A' in yellow on a blue
   background:
 </p>
-<pre>
-<code>.code16
+<pre><code>.code16
 .section .text
 .globl _start
 _start:
@@ -101,16 +100,13 @@ _start:
   mov %ax, (%di)
 idle:
   hlt
-  jmp idle</code>
-</pre>
+  jmp idle</code></pre>
 <p>
   We save the above code in a file, say <code>a.s</code>, then
   assemble and link this code with the following commands:
 </p>
-<pre>
-<code>as -o a.o a.s
-ld --oformat binary -o a.com a.o</code>
-</pre>
+<pre><code>as -o a.o a.s
+ld --oformat binary -o a.com a.o</code></pre>
 <p>
   The above commands should generate a 15-byte output file
   named <code>a.com</code>.  The <code>.code16</code> directive in the
@@ -202,10 +198,8 @@ ld --oformat binary -o a.com a.o</code>
   in DOSBox, we create a boot image file with this command: sector
   with these commands:
 </p>
-<pre>
-<code>cp a.com a.img
-echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code>
-</pre>
+<pre><code>cp a.com a.img
+echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code></pre>
 <p>
   This boot image can be tested with DOSBox using the following
   command:
@@ -245,8 +239,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code>
   The following code prints the string "hello, world" in yellow on a
   blue background:
 </p>
-<pre>
-<code>.code16
+<pre><code>.code16
 
 .section .text
 .globl _start
@@ -272,8 +265,7 @@ idle:
 
 .section .data
 message:
-  .ascii "hello, world"</code>
-</pre>
+  .ascii "hello, world"</code></pre>
 <p>
   The BIOS reads the code from the first sector of the boot device
   into the memory at physical address 0x7c00 and jumps to that
@@ -331,12 +323,10 @@ message:
   worth looking at how the binary code looks like with a trial linking
   with the following commands:
 </p>
-<pre>
-<code>as -o hello.o hello.s
+<pre><code>as -o hello.o hello.s
 ld --oformat binary -Ttext 0 -Tdata 40 -o hello.com hello.o
 objdump -bbinary -mi8086 -D hello.com
-xxd -g1 hello.com</code>
-</pre>
+xxd -g1 hello.com</code></pre>
 <p>
   The <code>-Ttext 0</code> option tells the linker to assume that the
   text section should be loaded at offset 0x0 in the code segment.
@@ -348,8 +338,7 @@ xxd -g1 hello.com</code>
   generated binary file.  This shows where the text section and data
   section are placed.
 </p>
-<pre>
-<samp>$ <kbd>objdump -bbinary -mi8086 -D hello.com</kbd>
+<pre><samp>$ <kbd>objdump -bbinary -mi8086 -D hello.com</kbd>
 
 hello.com:     file format binary
 
@@ -381,22 +370,19 @@ Disassembly of section .data:
   45:   2c 20                   sub    $0x20,%al
   47:   77 6f                   ja     0xb8
   49:   72 6c                   jb     0xb7
-  4b:   64                      fs</samp>
-</pre>
+  4b:   64                      fs</samp></pre>
 <p>
   Note that the <samp>...</samp> above indicates zero bytes skipped
   by <code>objdump</code>.  The text section is above these zero bytes
   and the data section is below them.  Let us also see the output of
   the <code>xxd</code> command:
 </p>
-<pre>
-<samp>$ <kbd>xxd -g1 hello.com</kbd>
+<pre><samp>$ <kbd>xxd -g1 hello.com</kbd>
 00000000: ea 05 00 00 00 b8 00 b8 8e d8 31 ff be 40 00 b4  ..........1..@..
 00000010: 1e 2e 8a 04 89 05 46 47 47 83 ff 18 75 f3 f4 eb  ......FGG...u...
 00000020: fd 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-00000040: 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64              hello, world</samp>
-</pre>
+00000040: 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64              hello, world</samp></pre>
 <p>
   Both outputs above show that the text section occupies the first
   0x21 bytes (33 bytes).  The data section is 0xc bytes (12 bytes) in
@@ -417,11 +403,9 @@ Disassembly of section .data:
   address 0x7c00 of the memory.  We create a new binary in this manner
   and test it with DOSBox with these commands:
 </p>
-<pre>
-<code>grep -v ljmp hello.s &gt; dos-hello.s
+<pre><code>grep -v ljmp hello.s &gt; dos-hello.s
 as -o hello.o dos-hello.s
-ld --oformat binary -Ttext 100 -Tdata 121 -o hello.com hello.o</code>
-</pre>
+ld --oformat binary -Ttext 100 -Tdata 121 -o hello.com hello.o</code></pre>
 <p>
   Now we can test this program with DOSBox with the following command:
 </p>
@@ -430,11 +414,9 @@ ld --oformat binary -Ttext 100 -Tdata 121 -o hello.com hello.o</code>
   If everything looks fine, we assemble and link our program once
   again for boot sector and create a boot image with these commands:
 </p>
-<pre>
-<code>as -o hello.o hello.s
+<pre><code>as -o hello.o hello.s
 ld --oformat binary -Ttext 7c00 -Tdata 7c21 -o hello.img hello.o
-echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code>
-</pre>
+echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=hello.img</code></pre>
 <p>
   Now we can test this image with DOSBox like this:
 </p>

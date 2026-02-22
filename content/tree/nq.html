@@ -77,6 +77,15 @@
       blockquote, pre {
         padding: 0.5em;
       }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: thin solid #999;
+        padding: 0.3em 0.4em;
+        text-align: left;
+      }
       dialog::backdrop {
         background: #000;
         opacity: 0.7;
@@ -226,6 +235,9 @@
         samp {
           color: #db0;
         }
+        th, td {
+          border-color: #666;
+        }
         .new label:hover {
           background: #333;
         }
@@ -292,7 +304,6 @@
 
       function setupPage () {
         log('setting up page')
-        const maxSet = Math.floor(CARDS.length / CARDS_PER_SET)
         let hash = window.location.hash.slice(1)
         let revealing = false
 
@@ -313,7 +324,7 @@
           setupQuiz(models, revealing, null)
         } else if (/^\d+$/.test(hash)) {
           const n = parseInt(hash)
-          if (n < 1 || n > maxSet) {
+          if (n < 1 || n > maxSet()) {
             setupError('Quiz set #' + n + ' does not exist.')
             return
           }
@@ -321,10 +332,12 @@
             range(CARDS_PER_SET * (n - 1) + 1, CARDS_PER_SET * n + 1)
           )
           setupQuiz(models, revealing, n)
+        } else if (hash === 'toc') {
+          setupToC()
         } else if (hash in SCREENS) {
           setupScreen(hash)
         } else {
-          window.location.hash = '#' + maxSet
+          window.location.hash = '#' + maxSet()
         }
         log('set up page')
       }
@@ -692,6 +705,57 @@
         log('set up screen', name)
       }
 
+      function setupToC () {
+        log('setting up toc')
+        const div = document.createElement('div')
+        const h1 = document.createElement('h1')
+        const table = document.createElement('table')
+        const trHead = document.createElement('tr')
+        const th1 = document.createElement('th')
+        const th2 = document.createElement('th')
+        const th3 = document.createElement('th')
+        h1.innerHTML = 'Table of Contents'
+        th1.innerHTML = 'Quiz'
+        th2.innerHTML = 'Question'
+        th3.innerHTML = 'Title'
+        div.append(h1, table)
+        table.append(trHead)
+        trHead.append(th1, th2, th3)
+        for (let n = 1; n <= maxSet(); n++) {
+          const qStart = (n - 1) * CARDS_PER_SET + 1
+          const qEnd = n * CARDS_PER_SET
+          for (let q = qStart; q <= qEnd; q++) {
+            const tr = document.createElement('tr')
+            if (q === qStart) {
+              const tdQuiz = document.createElement('td')
+              const aQuiz = document.createElement('a')
+              tdQuiz.rowSpan = CARDS_PER_SET
+              aQuiz.href = '#' + n
+              aQuiz.innerHTML = '#' + n
+              tdQuiz.append(aQuiz)
+              tr.append(tdQuiz)
+            }
+            const tdQuestion = document.createElement('td')
+            const aQuestion = document.createElement('a')
+            const tdTitle = document.createElement('td')
+            aQuestion.href = '#q' + q
+            aQuestion.innerHTML = 'Q#' + q
+            tdTitle.innerHTML = CARDS[q - 1].title
+            table.append(tr)
+            tr.append(tdQuestion, tdTitle)
+            tdQuestion.append(aQuestion)
+          }
+        }
+        document.querySelector('main').replaceChildren(div)
+        log('scrolling to top immediately')
+        window.scroll({ top: 0 })
+        log('set up toc')
+      }
+
+      function maxSet () {
+        return Math.floor(CARDS.length / CARDS_PER_SET)
+      }
+
       function range (m, n) {
         const result = []
         for (let i = m; i < n; i++) {
@@ -757,6 +821,8 @@
       }
 
       function formatParagraphs (s) {
+        s = s.replaceAll('\n\n<', '</p><')
+        s = s.replaceAll('>\n\n', '><p>')
         s = s.replaceAll('\n\n', '</p><p>')
         return '<p>' + s + '</p>'
       }
@@ -1075,7 +1141,7 @@
           ],
           question: 'The popular free and open-source relational database management system\nnamed PostgreSQL was originally named POSTGRES.  What did that name\nmean?',
           options: [
-            'The name POSTGRES referred to its origin as a successor to the INGRES\ndatabase from University of California, Berkeley.',
+            'The name POSTGRES referred to its origin as a successor to the INGRES\ndatabase.',
             'The name POSTGRES was an acronym formed from the initials of its\noriginal developers.',
             'The name POSTGRES described a database management for postgraduate\nresearch.',
             'The name POSTGRES referred to its use of a relational data model based\non extended relational algebra.',
@@ -1121,7 +1187,85 @@
             '<code>NR</code> is the ordinal number of the current record in the\ninput whereas <code>FNR</code> is the ordinal number of the current\nrecord in the input subtracted from the total number of records in the\ninput.',
             'None of the above; <code>NR</code> and <code>FNR</code> are synonyms.'
           ],
-          explanation: 'Both <code>NR</code> and <code>FNR</code> represent ordinal numbers of\nrecords.  <code>NR</code> is the ordinal number of the current record\nacross all input files processed so far.  <code>FNR</code> is the\nordinal number of the current record in the current input file.  For\nexample, consider the following sequence of commands:\n\n<pre>\n<code>printf \'foo\\nbar\\n\' > foo.txt\nprintf \'baz\\nqux\\nquz\\n\' > baz.txt\nawk \'{print NR, FNR, $0}\' foo.txt baz.txt</code>\n</pre>\n\nThe above sequence of commands prints the following output:\n\n<pre>\n<samp>1 1 foo\n2 2 bar\n3 1 baz\n4 2 qux\n5 3 quz</samp>\n</pre>\n\n<code>FNR</code> is reset to 1 each time <code>awk</code> begins\nreading a new file.  <code>NR</code> increases monotonically as\n<code>awk</code> reads successive records, even when moving from one\ninput file to the next.'
+          explanation: 'Both <code>NR</code> and <code>FNR</code> represent ordinal numbers of\nrecords.  <code>NR</code> is the ordinal number of the current record\nacross all input files processed so far.  <code>FNR</code> is the\nordinal number of the current record in the current input file.  For\nexample, consider the following sequence of commands:\n\n<pre>\n<code>printf \'foo\\nbar\\n\' > foo.txt\nprintf \'baz\\nqux\\nquz\\n\' > baz.txt\nawk \'{print NR, FNR, $0}\' foo.txt baz.txt</code>\n</pre>\n\nThe above sequence of commands prints the following output:\n\n<pre><samp>1 1 foo\n2 2 bar\n3 1 baz\n4 2 qux\n5 3 quz</samp></pre>\n\n<code>FNR</code> is reset to 1 each time <code>awk</code> begins\nreading a new file.  <code>NR</code> increases monotonically as\n<code>awk</code> reads successive records, even when moving from one\ninput file to the next.'
+        },
+        {
+          date: '2026-01-10',
+          title: 'A4 Paper Mass',
+          tags: [
+            'Miscellaneous'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is the approximate mass of a single sheet of A4 paper with a\ngrammage of \\( 80 \\, \\mathrm{gsm} \\)?',
+          options: [
+            '\\( 5 \\, \\mathrm{g} \\)',
+            '\\( 2 \\, \\mathrm{g} \\)',
+            '\\( 10 \\, \\mathrm{g} \\)',
+            '\\( 15 \\, \\mathrm{g} \\)',
+            '\\( 20 \\, \\mathrm{g} \\)'
+          ],
+          explanation: 'A standard sheet of A0 paper has an area of \\( 1 \\, \\mathrm{m}^2 \\).\nIf we cut a sheet of A0 paper in half parallel to its shorter side,\neach half is a sheet of A1 paper.  Thus a sheet of A1 paper has an\narea \\( 1/2 \\, \\mathrm{m}^2 \\).  We can keep cutting the halves like\nthis to obtain sheets of A2 paper, A3 paper and so on.  Therefore the\narea of a sheet of A2 paper is \\( 1/4 \\, \\mathrm{m}^2 \\) and that of a\nsheet of A3 paper is \\( 1/8 \\, \\mathrm{m}^2 \\).  Similarly, the area\nof a sheet of A4 paper is \\( 1/16 \\, \\mathrm{m}^2 \\).\n\nThe grammage \\( 80 \\, \\mathrm{gsm} \\) means that the paper has an area\ndensity of \\( 80 \\, \\mathrm{g}/\\mathrm{m}^2 \\).  Therefore the mass of\na sheet of A4 paper is\n\n\\[\n  80 \\, \\mathrm{g}/\\mathrm{m}^2 \\cdot \\frac{1}{16} \\, \\mathrm{m}^2\n  = 5 \\, \\mathrm{g}.\n\\]'
+        },
+        {
+          date: '2026-01-31',
+          title: 'Arctic',
+          tags: [
+            'Etymology',
+            'Miscellaneous'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is the original meaning of the term <em>Arctic</em>?',
+          options: [
+            'Near the bear',
+            'Land of the bear',
+            'Eternal ice',
+            'Land of ice',
+            'Northern territory'
+          ],
+          explanation: 'The word <em>Arctic</em> comes from the Greek word <em>arktikos</em>,\nwhich means <em>of the bear</em> or <em>near the bear</em>.  This, in\nturn, comes from <em>arktos</em>, the Greek word for <em>bear</em>.\n\nThe name refers to the constellation Ursa Major, the Great Bear, which\nis prominent in the northern sky.  The Arctic Circle is the region of\nthe Earth located under this northern sky, near the constellation of\nthe bear.\n\nBy contrast, <em>Antarctic</em> comes from the Greek\n<em>antarktikos</em>, meaning <em>opposite the bear</em>.'
+        },
+        {
+          date: '2026-02-21',
+          title: 'Tree Well',
+          tags: [
+            'Etymology',
+            'Miscellaneous'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is the meaning of the term <em>tree well</em>?',
+          options: [
+            'An area of loose snow around the trunk of a tree.',
+            'A natural spring at the base of a tree.',
+            'A pit dug for planting a tree.',
+            'A brick structure built around a tree for protection and irrigation.',
+            'A cleared ring of soil around a tree to prevent competing vegetation.'
+          ],
+          explanation: 'A <em>tree well</em> is a depression that forms around the base of a\ntree when snow accumulates around it.  The lower branches of trees\nprevent snow from settling closely around the trunk, leaving a loose,\nhidden cavity.\n\nTree wells can pose a danger to skiers and snowboarders, who may fall\ninto the concealed cavity and become trapped in the loose snow.'
+        },
+        {
+          date: '2026-02-21',
+          title: 'Andromeda Galaxy',
+          tags: [
+            'Astronomy'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is the Messier catalogue number of the Andromeda Galaxy?',
+          options: [
+            'M31',
+            'M13',
+            'M42',
+            'M45',
+            'None of the above'
+          ],
+          explanation: 'The Messier objects are a set of 110 astronomical objects catalogued\nby the French astronomer Charles Messier.  M31 is the Messier\ndesignation of the Andromeda Galaxy, the nearest major galaxy to the\nMilky Way and visible to the naked eye under dark skies.  The\nAndromeda Galaxy is also known as NGC 224 in the New General\nCatalogue.\n\nBy contrast, M13 is the Great Globular Cluster in the constellation\nHercules, a dense spherical cluster of hundreds of thousands of\nancient stars.  M42 is the Orion Nebula in the constellation Orion, a\nbright diffuse nebula and active stellar nursery.  M45 is the Pleiades\nin the constellation Taurus, an cluster often called the Seven\nSisters.'
         }
       ]
     </script>
@@ -1152,25 +1296,18 @@
           New quizzes are published whenever I have five fresh
           questions ready.  There is no fixed schedule.
         </p>
-        <h2>URL Tricks</h2>
+        <h2>Navigate</h2>
         <p>
           The hash value in the URL determines the quiz presented to
-          you.  If it is an integer like <a href="#1">#1</a>,
-          <a href="#2">#2</a>, etc., then the corresponding quiz with a set
-          of five questions is loaded.  However, if the hash value
-          starts with the prefix "q", like <a href="#q1">#q1</a>,
-          <a href="#q2">#q2</a>, etc., then a specific question is
-          loaded.  You can also mix and match questions to form a
-          custom quiz.  To do so, use the prefix "q" followed by
-          comma-separated integers as the hash value, e.g.
-          <a href="#q1,3,5">#q1,3,5</a>.
+          you.  Visit <a href="#toc">Table of Contents</a> to find
+          links to all quizzes and questions.
         </p>
         <p>
-          This is a very new project, so currently there is only one
-          quiz.  As more quizzes are added, a few navigation links
-          will be added too to make it easy to to explore the
-          collection, jump to a random quiz or generate a custom set
-          of questions on the fly.
+          Note that while a URL hash like <a href="#1">#1</a> loads a
+          quiz set, a hash like <a href="#q1">#q1</a> loads a specific
+          question.  Further, you can extend the latter by specifying
+          multiple comma separated integers to create an assorted
+          quiz, e.g. <a href="#q1,2,3">#q1,2,3</a>.
         </p>
         <h2>Issues</h2>
         <p>
@@ -1208,11 +1345,12 @@
       <hr>
       <nav>
         <a href="#">Quiz</a>
+        <a href="#toc">Index</a>
         <a href="#about">About</a>
         <a href="https://susam.net/comments/nq.html">Comments</a>
         <a href="https://github.com/susam/nq">GitHub</a>
         <a href="https://mastodon.social/@susam">Mastodon</a>
-        <p>&copy; 2025 Susam Pal</p>
+        <p>&copy; 2025&ndash;2026 Susam Pal</p>
       </nav>
     </footer>
   </body>

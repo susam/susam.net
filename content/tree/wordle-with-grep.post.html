@@ -38,8 +38,7 @@
       Make a shell alias named <code>words</code> that selects all 5
       letter words from the words file.
     </p>
-<pre>
-<samp>$ <kbd>alias words='grep "^[a-z]\{5\}$" /usr/share/dict/words'</kbd>
+<pre><samp>$ <kbd>alias words='grep "^[a-z]\{5\}$" /usr/share/dict/words'</kbd>
 $ <kbd>words | head -n 3</kbd>
 abaci
 aback
@@ -49,8 +48,7 @@ zoned
 zones
 zooms
 $ <kbd>words | wc -l</kbd>
-4594</samp>
-</pre>
+4594</samp></pre>
   </li>
   <li>
     <p>
@@ -58,8 +56,7 @@ $ <kbd>words | wc -l</kbd>
       five-letter words that contain the letter.  Rank each letter by
       this count.
     </p>
-<pre>
-<samp>$ <kbd>for c in {a..z}; do echo $(words | grep $c | wc -l) $c; done | sort -rn | head -n 15</kbd>
+<pre><samp>$ <kbd>for c in {a..z}; do echo $(words | grep $c | wc -l) $c; done | sort -rn | head -n 15</kbd>
 2245 s
 2149 e
 1736 a
@@ -74,8 +71,7 @@ $ <kbd>words | wc -l</kbd>
 757 c
 708 p
 633 h
-623 y</samp>
-</pre>
+623 y</samp></pre>
     <p>
       The output shows that the letter 's' occurs in 2245 five-letter
       words, followed by 'e' which occurs in 2149 five-letter words
@@ -87,10 +83,8 @@ $ <kbd>words | wc -l</kbd>
       Find a word that contains the top five letters found in the
       previous step.
     </p>
-<pre>
-<samp>$ <kbd>words | grep s | grep e | grep a | grep r | grep o</kbd>
-arose</samp>
-</pre>
+<pre><samp>$ <kbd>words | grep s | grep e | grep a | grep r | grep o</kbd>
+arose</samp></pre>
     <p>
       We will enter this word as the first guess in every Wordle game.
     </p>
@@ -102,11 +96,9 @@ arose</samp>
       word that contains the next five top letters in the list found
       above.
     </p>
-<pre>
-<samp>$ <kbd>words | grep i | grep l | grep t | grep n | grep d</kbd>
+<pre><samp>$ <kbd>words | grep i | grep l | grep t | grep n | grep d</kbd>
 $ <kbd>words | grep i | grep l | grep t | grep n | grep u</kbd>
-until</samp>
-</pre>
+until</samp></pre>
     <p>
       We found that there is no such word that contains 'i', 'l', 't',
       'n' and 'd'.  So we got rid of 'd' in our search and included
@@ -142,14 +134,12 @@ until</samp>
       occur anywhere in the word.  Look for words satisfying these
       constraints.
     </p>
-<pre>
-<samp>$ <kbd>words | grep '....e' | grep -v '[aros]' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | grep '....e' | grep -v '[aros]' | head -n 5</kbd>
 beige
 belie
 belle
 bible
-bilge</samp>
-</pre>
+bilge</samp></pre>
     <p>
       Pick the word "beige" for the second guess and enter it into the
       Wordle game.  Note that since we are following a quick and dirty
@@ -177,14 +167,12 @@ bilge</samp>
       answer word.  Refine the previous command to add these
       constraints.
     </p>
-<pre>
-<samp>$ <kbd>words | grep '[^e][^e][^ie][^e]e' | grep i | grep -v '[arosbg]' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | grep '[^e][^e][^ie][^e]e' | grep i | grep -v '[arosbg]' | head -n 5</kbd>
 fiche
 indue
 lithe
 mince
-niche</samp>
-</pre>
+niche</samp></pre>
     <p>
       Enter "fiche" as the third guess.  The following result appears:
     </p>
@@ -204,11 +192,9 @@ niche</samp>
       do not occur anywhere in the word.  Refine the previous command
       further to add these constraints:
     </p>
-<pre>
-<samp>$ <kbd>words | grep '[^e]i[^iec][^e]e' | grep c | grep -v '[arosbgfh]' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | grep '[^e]i[^iec][^e]e' | grep c | grep -v '[arosbgfh]' | head -n 5</kbd>
 mince
-wince</samp>
-</pre>
+wince</samp></pre>
     <p>
       Enter the word "mince" for the fourth guess.  It leads to the
       following result:
@@ -229,10 +215,8 @@ wince</samp>
       For the sake of completeness, here is a refined search that
       selects the answer word based on the constraints known so far:
     </p>
-<pre>
-<samp>$ <kbd>words | grep '[^e]ince' | grep -v '[arosbgfhm]' | head -n 5</kbd>
-wince</samp>
-</pre>
+<pre><samp>$ <kbd>words | grep '[^e]ince' | grep -v '[arosbgfhm]' | head -n 5</kbd>
+wince</samp></pre>
     <p>
       It looks like we have found the answer word.  Enter "wince" as
       the fifth guess to get the following result:
@@ -273,14 +257,12 @@ wince</samp>
     <p>
       Now search for words based on the previous result.
     </p>
-<pre>
-<samp>$ <kbd>words | grep '.r...' | grep -v '[aose]' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | grep '.r...' | grep -v '[aose]' | head -n 5</kbd>
 brick
 bring
 brink
 briny
-bruin</samp>
-</pre>
+bruin</samp></pre>
     <p>
       Enter the word "brick" as the second guess.  This leads to the
       following result:
@@ -297,10 +279,8 @@ bruin</samp>
     <p>
       Use the previous result to refine the search further.
     </p>
-<pre>
-<samp>$ <kbd>words | grep '.ri[^c].' | grep c | grep -v '[aosebk]' | head -n 5</kbd>
-crimp</samp>
-</pre>
+<pre><samp>$ <kbd>words | grep '.ri[^c].' | grep c | grep -v '[aosebk]' | head -n 5</kbd>
+crimp</samp></pre>
     <p>
       Enter "crimp" as the third guess.  This leads to the following
       result:
@@ -341,14 +321,12 @@ crimp</samp>
       letters 'a', 'r', 's' and 'e' do not occur anywhere in the word.
       Search for words that match these constraints.
     </p>
-<pre>
-<samp>$ <kbd>words | grep '..o..' | grep -v '[arse]' | head -n 5</kbd>
+<pre><samp>$ <kbd>words | grep '..o..' | grep -v '[arse]' | head -n 5</kbd>
 block
 blond
 blood
 bloom
-blown</samp>
-</pre>
+blown</samp></pre>
     <p>
       Enter "block" as the second guess.  This leads to the following
       result:
@@ -369,10 +347,8 @@ blown</samp>
       Further, the letters 'b' and 'c' do not occur anywhere in the
       word.  Search for words that match these constraints.
     </p>
-<pre>
-<samp>$ <kbd>words | grep '.[^l]o.[^k]' | grep l | grep k | grep -v '[arsebc]' | head -n 5</kbd>
-knoll</samp>
-</pre>
+<pre><samp>$ <kbd>words | grep '.[^l]o.[^k]' | grep l | grep k | grep -v '[arsebc]' | head -n 5</kbd>
+knoll</samp></pre>
     <p>
       Enter "knoll" as the third guess.  It leads to the following
       result:

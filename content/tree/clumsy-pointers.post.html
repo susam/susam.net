@@ -25,10 +25,8 @@
     pointer that is equivalent to the following declaration
     of <code>x</code>:
   </p>
-<pre>
-<code>typedef void (*func_t)(int *);
-func_t (*x)(func_t [10]);</code>
-</pre>
+<pre><code>typedef void (*func_t)(int *);
+func_t (*x)(func_t [10]);</code></pre>
 </div>
 <p>
   <em>If you want to think about this puzzle, this is a good time to
@@ -83,8 +81,7 @@ func_t (*x)(func_t [10]);</code>
   Here is an example that uses the above pointer declaration in a
   program in order to verify that it works as expected:
 </p>
-<pre>
-<code>#include &lt;stdio.h&gt;
+<pre><code>#include &lt;stdio.h&gt;
 
 /* A function which has int * argument and void return type.  */
 void g(int *a)
@@ -116,13 +113,11 @@ int main()
     int i = 10;
     y(&amp;i);
     return 0;
-}</code>
-</pre>
+}</code></pre>
 <p>
   Here is the output of this program:
 </p>
-<pre>
-<samp>$ gcc -Wall -Wextra -pedantic -std=c99 foo.c &amp;&amp; ./a.out
+<pre><samp>$ gcc -Wall -Wextra -pedantic -std=c99 foo.c &amp;&amp; ./a.out
 g(): a = 0
 g(): a = 1
 g(): a = 2
@@ -133,8 +128,7 @@ g(): a = 6
 g(): a = 7
 g(): a = 8
 g(): a = 9
-g(): a = 10</samp>
-</pre>
+g(): a = 10</samp></pre>
 <h2 id="further-reading">Further Reading</h2>
 <p>
   The book

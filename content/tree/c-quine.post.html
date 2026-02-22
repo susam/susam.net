@@ -28,14 +28,12 @@
 <p>
   Here are some commands that demonstrate the quine:
 </p>
-<pre>
-<samp>$ <kbd>printf '%s' 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}' &gt; quine.c</kbd>
+<pre><samp>$ <kbd>printf '%s' 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}' &gt; quine.c</kbd>
 $ <kbd>cc quine.c &amp;&amp; ./a.out &gt; out.txt &amp;&amp; diff quine.c out.txt</kbd>
 $ <kbd>cat quine.c; echo</kbd>
 main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}
 $ <kbd>./a.out</kbd>
-main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</samp>
-</pre>
+main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</samp></pre>
 <p>
   The source code of this quine does not end with a newline.
   The <code>-n</code> option of GNU echo ensures that the source code
@@ -47,13 +45,11 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
   section works.  Let us add some newlines in the source code of this
   quine for the sake of clarity.
 </p>
-<pre>
-<code>main()
+<pre><code>main()
 {
     char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";
     printf(s,34,s,34);
-}</code>
-</pre>
+}</code></pre>
 <p>
   This is almost the same program presented in the previous section.
   Only a few newlines have been added to it to make the program easier
@@ -111,9 +107,7 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
 <p>
   Writing them all out in a single line, we get this:
 </p>
-<pre>
-<samp>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</samp>
-</pre>
+<pre><samp>main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</samp></pre>
 <p>
   This output matches the source code of the program thus confirming
   that our program is a quine.
@@ -135,14 +129,12 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34);}";printf(s,34,s,34);}</sa
   the output ends with a newline.  Here is a demonstration of this
   quine:
 </p>
-<pre>
-<samp>$ <kbd>echo 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}' &gt; quine.c</kbd>
+<pre><samp>$ <kbd>echo 'main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}' &gt; quine.c</kbd>
 $ <kbd>cc quine.c &amp;&amp; ./a.out &gt; out.txt &amp;&amp; diff quine.c out.txt</kbd>
 $ <kbd>cat quine.c</kbd>
 main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}
 $ <kbd>./a.out</kbd>
-main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}</samp>
-</pre>
+main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,10);}</samp></pre>
 <h2 id="c89-quine">C89 Quine</h2>
 <p>
   The classic C quines presented above are written in K&amp;C.  They
@@ -150,15 +142,12 @@ main(){char*s="main(){char*s=%c%s%c;printf(s,34,s,34,10);}%c";printf(s,34,s,34,1
   to the quines presented above, we can get a quine that conforms to
   the C89 standard:
 </p>
-<pre>
-<code>#include &lt;stdio.h&gt;
-int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}</code>
-</pre>
+<pre><code>#include &lt;stdio.h&gt;
+int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}</code></pre>
 <p>
   Here is a demonstration of this quine:
 </p>
-<pre>
-<samp>$ <kbd>echo '#include &lt;stdio.h&gt;
+<pre><samp>$ <kbd>echo '#include &lt;stdio.h&gt;
 int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}' &gt; quine.c</kbd>
 $ <kbd>cc -std=c89 -Wall -Wextra -pedantic quine.c &amp;&amp; ./a.out &gt; out.txt &amp;&amp; diff quine.c out.txt</kbd>
 $ <kbd>cat quine.c</kbd>
@@ -166,5 +155,4 @@ $ <kbd>cat quine.c</kbd>
 int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}
 $ <kbd>./a.out</kbd>
 #include &lt;stdio.h&gt;
-int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}</samp>
-</pre>
+int main(){char*s="#include &lt;stdio.h&gt;%cint main(){char*s=%c%s%c;printf(s,10,34,s,34,10);return 0;}%c";printf(s,10,34,s,34,10);return 0;}</samp></pre>

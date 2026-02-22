@@ -19,19 +19,16 @@
   On a Unix or Linux system, the following commands demonstrate this
   program with the help of DOSBox:
 </p>
-<pre>
-<code>echo fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3 | xxd -r -p &gt; foo.com
+<pre><code>echo fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3 | xxd -r -p &gt; foo.com
 dosbox -c 'MOUNT C .' -c 'C:\FOO &gt; C:\OUT.COM' -c 'EXIT'
-diff foo.com OUT.COM</code>
-</pre>
+diff foo.com OUT.COM</code></pre>
 <p>
   The <code>diff</code> command should produce no output confirming
   that the output of the program is identical to the program itself.
   On an actual MS-DOS 6.22 system or a Windows 98 system, we can
   demonstrate this program in the following manner:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>DEBUG</kbd>
+<pre><samp>C:\&gt;<kbd>DEBUG</kbd>
 -<kbd>E 100 fc b1 0c ac 92 b4 02 cd 21 e2 f8 c3</kbd>
 -<kbd>N</kbd> FOO.COM
 -<kbd>R CX</kbd>
@@ -45,8 +42,7 @@ C:\&gt;<kbd>FOO &gt; OUT.COM</kbd>
 
 C:\&gt;<kbd>FC FOO.COM OUT.COM</kbd>
 Comparing files FOO.COM and OUT.COM
-FC: no differences encountered</samp>
-</pre>
+FC: no differences encountered</samp></pre>
 <p>
   In the <code>DEBUG</code> session shown above, we use the debugger
   command <code>E</code> to enter the machine code at offset 0x100 of
@@ -65,8 +61,7 @@ FC: no differences encountered</samp>
   output below is generated using the Netwide Disassembler (NDISASM),
   a tool that comes with Netwide Assembler (NASM):
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
 00000100  FC                cld
 00000101  B10C              mov cl,0xc
 00000103  AC                lodsb
@@ -74,8 +69,7 @@ FC: no differences encountered</samp>
 00000105  B402              mov ah,0x2
 00000107  CD21              int 0x21
 00000109  E2F8              loop 0x103
-0000010B  C3                ret</samp>
-</pre>
+0000010B  C3                ret</samp></pre>
 <p>
   When DOS executes a program in .COM file, it loads the machine code
   in the file at offset 0x100 of the code segment chosen by DOS.  That
@@ -193,24 +187,19 @@ FC: no differences encountered</samp>
   previous program that keeps the machine instructions to be executed
   separate from the data bytes to be read by the program.
 </p>
-<pre>
-<code>fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3
-fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3</code>
-</pre>
+<pre><code>fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3
+fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3</code></pre>
 <p>
   Here is how we can demonstrate this 40-byte program:
 </p>
-<pre>
-<code>echo fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3 | xxd -r -p &gt; foo.com
+<pre><code>echo fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3 | xxd -r -p &gt; foo.com
 echo fc b3 02 b1 14 be 14 01 ac 92 b4 02 cd 21 e2 f8 4b 75 f0 c3 | xxd -r -p &gt;&gt; foo.com
 dosbox -c 'MOUNT C .' -c 'C:\FOO &gt; C:\OUT.COM' -c 'EXIT'
-diff foo.com OUT.COM</code>
-</pre>
+diff foo.com OUT.COM</code></pre>
 <p>
   Here is the disassembly:
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
 00000100  FC                cld
 00000101  B302              mov bl,0x2
 00000103  B114              mov cl,0x14
@@ -234,8 +223,7 @@ diff foo.com OUT.COM</code>
 00000122  E2F8              loop 0x11c
 00000124  4B                dec bx
 00000125  75F0              jnz 0x117
-00000127  C3                ret</samp>
-</pre>
+00000127  C3                ret</samp></pre>
 <p>
   The first 20 bytes is the executable part of the program.  The next
   20 bytes is the data read by the program.  The executable bytes are
@@ -248,24 +236,19 @@ diff foo.com OUT.COM</code>
 <p>
   Here is another simpler 32-byte quine based on this approach:
 </p>
-<pre>
-<code>b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3
-b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3</code>
-</pre>
+<pre><code>b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3
+b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3</code></pre>
 <p>
   Here are the commands to demostrate this quine:
 </p>
-<pre>
-<code>echo b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3 | xxd -r -p &gt; foo.com
+<pre><code>echo b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3 | xxd -r -p &gt; foo.com
 echo b8 23 09 fe c0 a2 20 01 ba 10 01 cd 21 cd 21 c3 | xxd -r -p &gt;&gt; foo.com
 dosbox -c 'MOUNT C .' -c 'C:\FOO &gt; C:\OUT.COM' -c 'EXIT'
-diff foo.com OUT.COM</code>
-</pre>
+diff foo.com OUT.COM</code></pre>
 <p>
   Here is the disassembly:
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
 00000100  B82309            mov ax,0x923
 00000103  FEC0              inc al
 00000105  A22001            mov [0x120],al
@@ -279,8 +262,7 @@ diff foo.com OUT.COM</code>
 00000118  BA1001            mov dx,0x110
 0000011B  CD21              int 0x21
 0000011D  CD21              int 0x21
-0000011F  C3                ret</samp>
-</pre>
+0000011F  C3                ret</samp></pre>
 <p>
   This example too has two parts.  The first half has the executable
   bytes and the second half has the data bytes.  Both parts are
@@ -356,10 +338,8 @@ diff foo.com OUT.COM</code>
 <p>
   Here are the commands to create and run this program:
 </p>
-<pre>
-<code>echo fc b4 b8 8e c0 31 ff b1 12 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p &gt; foo.com
-dosbox foo.com</code>
-</pre>
+<pre><code>echo fc b4 b8 8e c0 31 ff b1 12 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p &gt; foo.com
+dosbox foo.com</code></pre>
 <p>
   With the default code page active, i.e. with code page 437 active,
   the program should display an output that looks approximately like
@@ -374,12 +354,10 @@ dosbox foo.com</code>
   its output seem consistent with the output above.  Here is an
   example:
 </p>
-<pre>
-<samp>C:\&gt;<kbd>TYPE FOO.COM</kbd>
+<pre><samp>C:\&gt;<kbd>TYPE FOO.COM</kbd>
 &#x207F;&#x2524;&#x2555;&#xC4;&#x2514;&#x31;&#xA0;&#x2592;&#x2195;&#x2524;
           &#xBC;&#xBD;&#x393;&#x207F;&#x2320;&#x3B4;&#xB2;
-C:\&gt;</samp>
-</pre>
+C:\&gt;</samp></pre>
 <p>
   This output looks very similar to the previous one except that the
   byte value 0x0a is rendered as a line break in this output whereas
@@ -401,8 +379,7 @@ C:\&gt;</samp>
 <p>
   Here is the disassembly of the above program:
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
 00000100  FC                cld
 00000101  B4B8              mov ah,0xb8
 00000103  8EC0              mov es,ax
@@ -413,8 +390,7 @@ C:\&gt;</samp>
 0000010C  AB                stosw
 0000010D  E2FC              loop 0x10b
 0000010F  F4                hlt
-00000110  EBFD              jmp short 0x10f</samp>
-</pre>
+00000110  EBFD              jmp short 0x10f</samp></pre>
 <p>
   This program sets ES to 0xb800 and DI to 0.  Thus ES:DI points to
   the video memory at address 0xb800:0x0000.  DS:SI points to the
@@ -437,22 +413,18 @@ C:\&gt;</samp>
   executable bytes, we can keep the bytes we read separate from the
   bytes the CPU executes.  Here is a 54-byte program that does this:
 </p>
-<pre>
-<code>fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4
+<pre><code>fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4
 0a ac ab e2 fc 4b 75 f1 f4 eb fd fc b3 02 b4 b8
 8e c0 31 ff be 1b 01 b9 1b 00 b4 0a ac ab e2 fc
-4b 75 f1 f4 eb fd</code>
-</pre>
+4b 75 f1 f4 eb fd</code></pre>
 <p>
   Here is how we can create and run this program:
 </p>
-<pre>
-<code>echo fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4 | xxd -r -p &gt; foo.com
+<pre><code>echo fc b3 02 b4 b8 8e c0 31 ff be 1b 01 b9 1b 00 b4 | xxd -r -p &gt; foo.com
 echo 0a ac ab e2 fc 4b 75 f1 f4 eb fd fc b3 02 b4 b8 | xxd -r -p &gt;&gt; foo.com
 echo 8e c0 31 ff be 1b 01 b9 1b 00 b4 0a ac ab e2 fc | xxd -r -p &gt;&gt; foo.com
 echo 4b 75 f1 f4 eb fd | xxd -r -p &gt;&gt; foo.com
-dosbox foo.com</code>
-</pre>
+dosbox foo.com</code></pre>
 <p>
   With code page 437 active, the output should look approximately like
   this:
@@ -467,8 +439,7 @@ dosbox foo.com</code>
   twice so that the output bytes is an exact copy of all 54 bytes in
   the program.  Here is the disassembly:
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x100 foo.com</kbd>
 00000100  FC                cld
 00000101  B302              mov bl,0x2
 00000103  B4B8              mov ah,0xb8
@@ -498,8 +469,7 @@ dosbox foo.com</code>
 00000130  4B                dec bx
 00000131  75F1              jnz 0x124
 00000133  F4                hlt
-00000134  EBFD              jmp short 0x133</samp>
-</pre>
+00000134  EBFD              jmp short 0x133</samp></pre>
 <p>
   This disassembly is rather long but we can clearly see that the
   bytes from offset 0x100 to offset 0x11a are identical to the bytes
@@ -523,11 +493,9 @@ ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd</code></pre>
   On a Unix or Linux system, the following commands can be used to
   create a boot image with the above program:
 </p>
-<pre>
-<code>echo ea 05 7c 00 00 fc b8 00 b8 8e c0 8c c8 8e d8 31 | xxd -r -p &gt; boot.img
+<pre><code>echo ea 05 7c 00 00 fc b8 00 b8 8e c0 8c c8 8e d8 31 | xxd -r -p &gt; boot.img
 echo ff be 00 7c b9 20 00 b4 0a ac ab e2 fc f4 eb fd | xxd -r -p &gt;&gt; boot.img
-echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
-</pre>
+echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code></pre>
 <p>
   Now we can test this boot image using DOSBox with the following
   command:
@@ -571,8 +539,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 <p>
   Here is the disassembly of the program:
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x7c00 boot.img</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x7c00 boot.img</kbd>
 00007C00  EA057C0000        jmp 0x0:0x7c05
 00007C05  FC                cld
 00007C06  B800B8            mov ax,0xb800
@@ -590,8 +557,7 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
 00007C1E  EBFD              jmp short 0x7c1d
 00007C20  0000              add [bx+si],al
 00007C22  0000              add [bx+si],al
-...</samp>
-</pre>
+...</samp></pre>
 <p>
   The ellipsis in the end represents the remainder of the bytes that
   contains zeroes and the boot sector magic bytes 0x55 and 0xaa in the
@@ -632,24 +598,20 @@ echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
   memory.  We do not execute these bytes.  We only read them and copy
   them to video memory.  The following 76-byte program does this:
 </p>
-<pre>
-<code>ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8
+<pre><code>ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8
 8e d8 31 ff be 26 7c b9 26 00 b4 0a ac ab e2 fc
 4b 75 f1 f4 eb fd ea 05 7c 00 00 fc bb 02 00 b8
 00 b8 8e c0 8c c8 8e d8 31 ff be 26 7c b9 26 00
-b4 0a ac ab e2 fc 4b 75 f1 f4 eb fd</code>
-</pre>
+b4 0a ac ab e2 fc 4b 75 f1 f4 eb fd</code></pre>
 <p>
   Here is how we can create a boot image with this:
 </p>
-<pre>
-<code>echo ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8 | xxd -r -p &gt; boot.img
+<pre><code>echo ea 05 7c 00 00 fc bb 02 00 b8 00 b8 8e c0 8c c8 | xxd -r -p &gt; boot.img
 echo 8e d8 31 ff be 26 7c b9 26 00 b4 0a ac ab e2 fc | xxd -r -p &gt;&gt; boot.img
 echo 4b 75 f1 f4 eb fd ea 05 7c 00 00 fc bb 02 00 b8 | xxd -r -p &gt;&gt; boot.img
 echo 00 b8 8e c0 8c c8 8e d8 31 ff be 26 7c b9 26 00 | xxd -r -p &gt;&gt; boot.img
 echo b4 0a ac ab e2 fc 4b 75 f1 f4 eb fd | xxd -r -p &gt;&gt; boot.img
-echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code>
-</pre>
+echo 55 aa | xxd -r -p | dd seek=510 bs=1 of=boot.img</code></pre>
 <p>
   Here are the commands to test this boot image:
 </p>
@@ -662,8 +624,7 @@ qemu-system-i386 -fda boot.img</code></pre>
 <p>
   Here is the disassembly of this program:
 </p>
-<pre>
-<samp>$ <kbd>ndisasm -o 0x7c00 boot.img</kbd>
+<pre><samp>$ <kbd>ndisasm -o 0x7c00 boot.img</kbd>
 00007C00  EA057C0000        jmp 0x0:0x7c05
 00007C05  FC                cld
 00007C06  BB0200            mov bx,0x2

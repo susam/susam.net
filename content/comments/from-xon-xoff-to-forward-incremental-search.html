@@ -10,8 +10,7 @@
 <pre><code>bind '"\C-f": forward-search-history'</code></pre>
 <!-- date: 2022-08-14 16:47:04 +0000 -->
 <!-- name: Peter -->
-<pre>
-<code># bash: a small cantrip to disable ixon before readline and
+<pre><code># bash: a small cantrip to disable ixon before readline and
 # turning it on again afterwards during command execution
 # (assuming trap DEBUG not in use)
 #
@@ -80,18 +79,15 @@ echo test ^s incremental search during readline:
 <p>
   was causing this error:
 </p>
-<pre>
-<samp>bash: PROMPT_COMMAND: line 0: syntax error near unexpected token `;'
-bash: PROMPT_COMMAND: line 0: `; : _IXONOFF'</samp>
-</pre>
+<pre><samp>bash: PROMPT_COMMAND: line 0: syntax error near unexpected token `;'
+bash: PROMPT_COMMAND: line 0: `; : _IXONOFF'</samp></pre>
 <p>
   Here is how I modified your script to check
   if <code>PROMPT_COMMAND</code> is set before expanding it.  If it is
   not set we use the null command <code>:</code> before the semicolon
   separator.
 </p>
-<pre>
-<code>unset _IXON
+<pre><code>unset _IXON
 PROMPT_COMMAND="${PROMPT_COMMAND:-:}; : _IXONOFF"
 function _TRAP_DEBUG {
    if [ "$BASH_COMMAND" = ": _IXONOFF" ]; then
@@ -102,8 +98,7 @@ function _TRAP_DEBUG {
       unset _IXON
    fi
 }
-trap _TRAP_DEBUG DEBUG</code>
-</pre>
+trap _TRAP_DEBUG DEBUG</code></pre>
 <p>
   To test this, we can add the above script to <code>~/.bashrc</code>,
   then run something like <code>ping localhost</code> and confirm
