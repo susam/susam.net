@@ -1229,7 +1229,8 @@ value, next-index."
   (let* ((start-index (+ (search "://" url) 3))
          (end-index (position #\/ url :start start-index))
          (host (subseq url start-index end-index)))
-    (string-replace "www." "" host)))
+    (values (string-replace "www." "" host)
+            (subseq url (1+ end-index)))))
 
 (defun format-backlink (s)
   "Encode special characters as HTML entities."
@@ -1451,6 +1452,82 @@ value, next-index."
     (make-feed-list pages 10000 "{{ apex }}feed-full.xml" feed-xml item-xml params)))
 
 
+;;; Activity Log
+;;; ------------
+
+(defun make-link (link params)
+  "Create a neat link for display in HTML."
+  (let ((site-url (aget "site-url" params))
+        (href link))
+    (multiple-value-bind (domain path) (parse-domain link)
+      (when (string-starts-with site-url link)
+        (setf href (fstr "~a~a" (aget "root" params) path)))
+      (fstr "<a href=\"~a\">~a/~a</a>" href domain path))))
+
+(defun activity-body (body params)
+  ("Format activity body.")
+  (let* ((angle-start)
+         (angle-end))
+    (loop
+     (setf angle-start (search "<http" body))
+     (setf angle-end (search ">" body))
+     (unless (and angle-start angle-end)
+       (return))
+     (setf body (fstr "~a&lt;~a&gt;~a"
+                      (subseq body 0 angle-start)
+                      (make-link (subseq body (1+ angle-start) angle-end) params)
+                      (subseq body (1+ angle-end))))))
+  body)
+
+(defun activity-row-html (serial item params)
+  ("Format activity entry as HTML.")
+  (with-output-to-string (s)
+    (format s "<tr id=\"~a\">~%" serial)
+    (format s "  <td>~a<a href=\"#~a\"></a></td>~%" serial serial)
+    (format s "  <td>~a</td>~%" (getf item :date))
+    (format s "  <td>~a</td>~%" (getf item :mins))
+    (format s "  <td>~a</td>~%" (getf item :type))
+    (format s "  <td>~a</td>~%" (activity-body (getf item :body) params))
+    (format s "</tr>~%")))
+
+(defun read-activity-entry (line)
+  "Parse a singe line of activity entry"
+  (let* ((date (subseq line 0 10))
+         (mins (subseq line 12 14))
+         (delim (position #\] line))
+         (type (subseq line 17 delim))
+         (body (subseq line (+ delim 2))))
+    (list
+     :date date
+     :mins mins
+     :type type
+     :body body)))
+
+(defun read-activity ()
+  "Read activity entries."
+  (let* ((data (read-file "content/tree/dd/dd.txt"))
+         (lines (string-split data (fstr "~%"))))
+    (loop for line in lines
+          collect (read-activity-entry line))))
+
+(defun make-activity (page-layout params)
+  "Create activity log page."
+  (let ((activity (read-activity))
+        (list-layout (read-file "layout/activity/list.html"))
+        (dst-path "_site/dd/index.html")
+        (rendered-items))
+    (set-nested-template list-layout page-layout)
+    (validate-date-order activity)
+    (add-page-params dst-path params params)
+    (setf rendered-items (loop for serial from 1 to (length activity)
+                               for item in activity
+                               collect (activity-row-html serial item params)))
+    (aput "title" "Activity Log" params)
+    (aput "head" (fstr "~a, extra.css, activity.css, math.inc"
+                       (aget "head" params)) params)
+    (aput "rows" (join-strings (reverse rendered-items)) params)
+    (write-page "_site/dd/index.html" list-layout params)))
+
 ;;; Complete Website
 ;;; ----------------
 
@@ -1484,6 +1561,7 @@ value, next-index."
     ;; Tree.
     (setf all-pages (make-tree page-layout params))
     (make-meets page-layout params)
+    (make-activity page-layout params)
     (make-backlinks page-layout params)
     ;; Music
     (extend-list all-pages (make-music "content/music/*.html" page-layout params))
