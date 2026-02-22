@@ -368,6 +368,12 @@ value, next-index."
              (error "Unknown import type ~a in ~a" name import-header))))
     (if snippets (fstr "~{~a~}" (reverse snippets)) "")))
 
+(defun also-html (fname params)
+  "Given the name of a also-file, return content from it."
+  (if (string/= fname "")
+      (render (read-file (fstr "layout/also/~a" fname)) params)
+      ""))
+
 (defun relative-root-path (path params)
   "Return relative path to web root from the given rendered file path."
   (let ((depth (count #\/ (string-replace (aget "apex" params) "" path))))
@@ -420,6 +426,7 @@ value, next-index."
      (aput "root" root ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
+     (aput "also" (also-html (aget "also" ,params) ,params) ,params)
      (aput "keys-for-list" (format-keys-for-list ,page) ,page)
      (aput "neat-path" (neat-path dst-path ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
@@ -1559,6 +1566,7 @@ value, next-index."
                       (cons "head" "main.css")
                       (cons "index" "")
                       (cons "head" "main.css")
+                      (cons "also" "")
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
         (pages)
