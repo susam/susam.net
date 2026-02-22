@@ -1,0 +1,6 @@
+body {
+  max-width: none;
+}
+td:nth-child(3) {
+  text-align: center;
+}
