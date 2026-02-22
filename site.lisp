@@ -1465,7 +1465,7 @@ value, next-index."
       (fstr "<a href=\"~a\">~a/~a</a>" href domain path))))
 
 (defun activity-body (body params)
-  ("Format activity body.")
+  "Format activity body."
   (let* ((angle-start)
          (angle-end))
     (loop
@@ -1479,16 +1479,18 @@ value, next-index."
                       (subseq body (1+ angle-end))))))
   body)
 
-(defun activity-row-html (serial item params)
-  ("Format activity entry as HTML.")
+(defun activity-row-html (item prev-date params)
+  "Format activity entry as HTML."
   (with-output-to-string (s)
-    (format s "<tr id=\"~a\">~%" serial)
-    (format s "  <td>~a<a href=\"#~a\"></a></td>~%" serial serial)
-    (format s "  <td>~a</td>~%" (getf item :date))
-    (format s "  <td>~a</td>~%" (getf item :mins))
-    (format s "  <td>~a</td>~%" (getf item :type))
-    (format s "  <td>~a</td>~%" (activity-body (getf item :body) params))
-    (format s "</tr>~%")))
+    (format s "  <tr id=\"~a\">~%" (getf item :serial))
+    (format s "    <td>&nbsp;~a<a href=\"#~a\"></a></td>~%"
+            (getf item :serial) (getf item :serial))
+    (when (string/= (getf item :date) prev-date)
+      (format s "    <td rowspan=\"~a\">~a</td>~%" (getf item :day-serial) (getf item :date)))
+    (format s "    <td class=\"mins\">~a</td>~%" (getf item :mins))
+    (format s "    <td>~a</td>~%" (getf item :type))
+    (format s "    <td>~a</td>~%" (activity-body (getf item :body) params))
+    (format s "  </tr>~%")))
 
 (defun read-activity-entry (line)
   "Parse a singe line of activity entry"
@@ -1506,22 +1508,37 @@ value, next-index."
 (defun read-activity ()
   "Read activity entries."
   (let* ((data (read-file "content/tree/dd/dd.txt"))
-         (lines (string-split data (fstr "~%"))))
-    (loop for line in lines
-          collect (read-activity-entry line))))
+         (lines (string-split data (fstr "~%")))
+         (serial 1)
+         (day-serial)
+         (prev-date)
+         (item)
+         (items))
+    (dolist (line lines)
+      (setf item (read-activity-entry line))
+      (if (string= (getf item :date) prev-date)
+          (incf day-serial)
+          (setf day-serial 1))
+      (setf (getf item :serial) serial)
+      (setf (getf item :day-serial) day-serial)
+      (push item items)
+      (setf prev-date (getf item :date))
+      (incf serial))
+    (reverse items)))
 
 (defun make-activity (page-layout params)
   "Create activity log page."
-  (let ((activity (read-activity))
+  (let ((items (read-activity))
         (list-layout (read-file "layout/activity/list.html"))
         (dst-path "_site/dd/index.html")
-        (rendered-items))
+        (rendered-items)
+        (prev-date))
     (set-nested-template list-layout page-layout)
-    (validate-date-order activity)
+    (validate-date-order items)
     (add-page-params dst-path params params)
-    (setf rendered-items (loop for serial from 1 to (length activity)
-                               for item in activity
-                               collect (activity-row-html serial item params)))
+    (dolist (item (reverse items))
+      (push (activity-row-html item prev-date params) rendered-items)
+      (setf prev-date (getf item :date)))
     (aput "title" "Activity Log" params)
     (aput "head" (fstr "~a, extra.css, activity.css, math.inc"
                        (aget "head" params)) params)
