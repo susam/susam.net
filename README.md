@@ -57,6 +57,6 @@ All Rights Reserved.
 
 The Common Lisp source code files [site.lisp](site.lisp) and
 [test.lisp](test.lisp) are available under the terms of the MIT
-License.
+Licence.
 
 See [COPYRIGHT.md](COPYRIGHT.md) for more details.

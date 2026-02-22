@@ -1,12 +1,12 @@
 Copyright
 =========
 
-All rights are reserved for all content, data, and media files
+All rights are reserved for all content, data and media files
 available in this repository.
 
 The Common Lisp source code files [site.lisp](site.lisp) and
 [test.lisp](test.lisp) are available under the terms of the MIT
-License.  See the license details in the section "The MIT License
+Licence.  See the licence details in the section "The MIT Licence
 (MIT)" below.
 
 
@@ -17,15 +17,15 @@ Copyright (c) 2001-2026 Susam Pal\
 All rights reserved.
 
 Permission is not granted to use, copy, modify, publish, merge,
-distribute, sublicense, and/or sell copies of content, data, and media
+distribute, sublicence and/or sell copies of content, data and media
 files available in this repository.
 
-All content, data, and media files available in this repository is
+All content, data and media files available in this repository is
 made available "AS IS", WITHOUT WARRANTY OF ANY KIND, express or
 implied.
 
 
-The MIT License (MIT)
+The MIT Licence (MIT)
 ---------------------
 
 Copyright (c) 2021-2026 Susam Pal
