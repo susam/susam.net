@@ -854,6 +854,7 @@ value, next-index."
     (aput "post-title" (aget "title" info) info)
     (aput "post-path" (or (aget "neat-path" info)
                           (neat-path dst-path params)) info)
+    (aput "post-comment-slug" (aget "comment-slug" info) params)
     (setf comments (enrich-comments comments info dst-path params))
     (cond (parent
            (setf list-layout (read-file "layout/comment/post.html"))
@@ -880,6 +881,7 @@ value, next-index."
     (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
     (aput "post-title" (aget "title" page) params)
     (aput "post-path" (aget "neat-path" page) params)
+    (aput "post-comment-slug" (aget "comment-slug" page) params)
     (write-page dst-path none-layout params)))
 
 (defun make-all-comments (comments page-layout params)
