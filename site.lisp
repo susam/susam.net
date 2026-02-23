@@ -1393,6 +1393,14 @@ value, next-index."
       (push (render item-layout params) rendered-tags))
     (join-strings rendered-tags)))
 
+(defun tag-title (tag)
+  "Determine title for a tag page."
+  (let* ((special-titles (list (cons "Monthly" "{{ nick }}'s Monthly Notes")
+                               (cons "Puzzle" "{{ nick }}'s Puzzles")
+                               (cons "Web" "{{ nick }}'s Web Posts")))
+         (special-title (aget tag special-titles)))
+    (if special-title special-title "{{ nick }}'s {{ tag }} Pages")))
+
 (defun make-tags (pages page-layout params)
   "Generate tag index, tag lists, and tag feeds."
   (let* ((tags-layout (read-file "layout/tag/tags.html"))
@@ -1422,7 +1430,7 @@ value, next-index."
       (setf pages (cdr tag-entry))
       (aput "tag" tag params)
       (aput "tag-slug" (tag-slug tag) params)
-      (aput "title" (render "{{ nick }}'s {{ tag }} Pages" params) params)
+      (aput "title" (render (tag-title tag) params) params)
       (aput "subtitle" "" params)
       (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
       (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Pages" params)
