@@ -1,0 +1,167 @@
+<!-- date: 2026-01-29 -->
+<!-- title: Jan '26 Notes -->
+<!-- tag: Monthly, Mathematics, Programming, JavaScript, Shell -->
+<!-- key: ntjts -->
+<!-- blog: Maze -->
+<!-- import: math.inc -->
+<p>
+  In these monthly notes, I jot down ideas and references I
+  encountered during the month that I did not have time to expand into
+  their own posts.  A few of these may later develop into independent
+  posts but most of them will likely not.  In any case, this format
+  ensures that I record them here.  I spent a significant part of this
+  month studying the book <em>Algebraic Graph Theory</em> by Godsil
+  and Royle, so many of the notes here are about it.  There are a few
+  non-mathematical, technical notes towards the end.
+</p>
+{{ toc }}
+<h2 id="cayley-graphs">Cayley Graphs</h2>
+<p>
+  Let \( G \) be a group and let \( C \subseteq G \) such that \( C \)
+  is closed under taking inverses and does not contain the identity,
+  i.e., \[ \forall x \in C, \; x^{-1} \in C, \qquad e \notin C.  \]
+  Then the Cayley graph \( X(G, C) \) is the graph with the vertex set
+  \( V(X(G, C)) \) and edge set \( E(X(G, C)) \) defined by
+
+  \begin{align*}
+    V(X(G, C)) &amp;= G, \\
+    E(X(G, C)) &amp;= \{ gh : hg^{-1} \in C \}.
+  \end{align*}
+
+  The set \( C \) is known as the connection set.
+</p>
+<h2 id="vertex-transitive-graphs">Vertex Transitive Graphs</h2>
+<p>
+  A graph \( X \) is <em>vertex transitive</em> if its automorphism
+  group acts transitively on its set of vertices \( V(X) \).
+  Intuitively, this means that no vertex has a special role.  We can
+  'move' the graph around so that any chosen vertex becomes any other
+  vertex.  In other words, all vertices are indistinguishable.  The
+  graph looks the same from each vertex.
+</p>
+<p>
+  The \( k \)-cube \( Q_k \) is vertex transitive.  So are the Cayley
+  graphs \( X(G, C) \).  However the path graph \( P_3 \) is not
+  vertex transitive since no automorphism can send the middle vertex
+  of valency \( 2 \) to an end vertex of valency \( 1 \).
+</p>
+<h2 id="arc-transitive-graphs">Arc-Transitive Graphs</h2>
+<p>
+  The cube \( Q_3 \) is \( 2 \)-arc transitive but not \( 3 \)-arc
+  transitive.  In \( Q_3 \), a \( 3 \)-arc belonging to a \( 4
+  \)-cycle cannot be sent to a \( 3 \)-arc that does not belong to a
+  \( 4 \)-cycle.  This is easy to explain.  The end vertices of a \( 3
+  \)-arc belonging to a \( 4 \)-cycle are adjacent but the end
+  vertices of a \( 3 \)-arc not belonging to a \( 4 \)-cycle are not
+  adjacent.  Therefore, no automorphism can map the end vertices of
+  the first \( 3 \)-arc to those of the second \( 3 \)-arc.
+</p>
+<p>
+  For intuition, imagine that a traveller stands on a vertex and
+  chooses an edge to move along.  They do this \( s \) times thereby
+  walking along an arc of length \( s \), also known as an \( s
+  \)-arc.  By the definition of \( s \)-arcs, the traveller is not
+  allowed to backtrack from one vertex to the previous one
+  immediately.  In an \( s \)-arc transitive graph, these arcs look
+  the same no matter which vertex they start from or which edges they
+  choose.  In the cube, this is indeed true for \( s = 2 \).  All arcs
+  of length \( 2 \) are indistinguishable.  No matter which arc of
+  length \( 2 \) the traveller has walked along, the graph would look
+  the same from their perspective at each vertex along the arc.
+  However, this no longer holds good for arcs of length \( 3 \) since
+  there are two distinct kinds of arcs of length \( 3 \).  The first
+  kind ends at a distance of \( 1 \) from the starting vertex of the
+  arc (when the arc belongs to a \( 4 \)-cycle).  The second kind ends
+  at a distance \( 3 \) from the starting vertex of the arc (when the
+  arc does not belong to a \( 4 \)-cycle).  Therefore the cube is not
+  \( 3 \)-arc transitive.
+</p>
+<h2 id="bipartite-graphs-and-cycle-parity">Bipartite Graphs and Cycle Parity</h2>
+<p>
+  A graph is bipartite if and only if it contains no cycles of odd
+  length.  Equivalently, every cycle in a bipartite graph has even
+  length.  Conversely, if every cycle in a graph has even length, then
+  the graph is bipartite.
+</p>
+<h2 id="tutte-theorem">Tutte's Theorem</h2>
+<p>
+  For any \( s \)-arc transitive cubic graph, \( s \le 5 \).  This was
+  demonstrated by W. T. Tutte in 1947.  A proof can be found in
+  Chapter 18 of <em>Algebraic Graph Theory</em> by Norman Biggs.
+</p>
+<p>
+  In 1973, Richward Weiss established a more general theorem that
+  proves that for any \( s \)-arc transitive graph, \( s \le 7 \).
+  The bound is weaker but it applies to all graphs rather than only to
+  cubic ones.
+</p>
+<h2 id="tutte-8-cage">Tutte's 8-Cage</h2>
+<p>
+  The book <em>Algebraic Graph Theory</em> by Godsil and Royle offers
+  the following two descriptions of Tutte's 8-cage on 30 vertices:
+</p>
+<blockquote>
+  Take the cube and an additional vertex \( \infty \).  In each set of
+  four parallel edges, join the midpoint of each pair of opposite
+  edges by an edge, then join the midpoint of the two new edges by an
+  edge, and finally join the midpoint of this edge to \( \infty \).
+</blockquote>
+<blockquote>
+  Construct a bipartite graph \( T \) with the fifteen edges as one
+  colour class and the fifteen \( 1 \)-factors as the other, where
+  each edge is adjacent to the three \( 1 \)-factors that contain it.
+</blockquote>
+<p>
+  It can be shown that both descriptions construct a cubic bipartite
+  graph on \( 30 \) vertices of girth \( 8 \).  It can be further
+  shown that there is a unique cubic bipartite graph on \( 30 \)
+  vertices with girth \( 8 \).  As a result both descriptions above
+  construct the same graph.
+</p>
+<h2 id="lcg">Linear Congruential Generator</h2>
+<p>
+  Here is a simple linear congruential generator (LCG) implementation
+  in JavaScript:
+</p>
+<pre><code>function srand (seed) {
+  let x = seed
+  return function () {
+    x = (1664525 * x + 1013904223) % 4294967296
+    return x
+  }
+}</code></pre>
+<p>
+  Here is an example usage:
+</p>
+<pre><samp>&gt; <kbd>const rand = srand(0)</kbd>
+undefined
+&gt; <kbd>rand()</kbd>
+1013904223
+&gt; <kbd>rand()</kbd>
+1196435762
+&gt; <kbd>rand()</kbd>
+3519870697</samp></pre>
+<h2 id="cat-n">Numbering Lines</h2>
+<p>
+  Both BSD and GNU <code>cat</code> can number output lines with
+  the <code>-n</code> option.  For example:
+</p>
+<pre><samp>$ <kbd>printf 'foo\nbar\nbaz\n' | cat -n</kbd>
+     1  foo
+     2  bar
+     3  baz</samp></pre>
+<p>
+  However I have always used <code>nl</code> for this.  For example:
+</p>
+<pre><samp>$ <kbd>printf 'foo\nbar\nbaz\n' | nl</kbd>
+     1  foo
+     2  bar
+     3  baz</samp></pre>
+<p>
+  While <code>nl</code> is
+  <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/nl.html">specified
+  in POSIX</a>, the <code>cat -n</code> option
+  <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/cat.html">is
+  not</a>.
+
+</p>

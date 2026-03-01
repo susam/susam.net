@@ -33,17 +33,8 @@ server {
     rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /obsolete.xml redirect;
     rewrite ^/(?:blog|maze)/([^./]*)(?:\.html|/)?$ /$1.html redirect;
     # Short URLs.
-    rewrite ^/about$ /about.html redirect;
-    rewrite ^/cfrs$ /cfrs.html redirect;
-    rewrite ^/fxyt$ /fxyt.html redirect;
-    rewrite ^/ideas$ /ideas.html redirect;
+    rewrite ^/(about|cfrs|cmd|fxyt|invaders|myrgb|now|nq)$ /$1.html redirect;
     rewrite ^/inv$ /invaders.html redirect;
-    rewrite ^/invaders$ /invaders.html redirect;
-    rewrite ^/myrgb$ /myrgb.html redirect;
-    rewrite ^/now$ /now.html redirect;
-    rewrite ^/nq$ /nq.html redirect;
-    # Short-term redirects.
-    rewrite ^/attention-media-is-not-social-media.html$ /attention-media-vs-social-networks.html redirect;
 }
 
 # http://(www.susam.net|susam.in)/ => http://susam.net/

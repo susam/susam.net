@@ -395,7 +395,7 @@
   :lang "English"
   :txt1 "I Read a Very Fascinating Post"
   :url1 "https://vale.rocks/micros/20251214-0503"
-  :txt2 "I Fed 24 Years of My Blog Posts to a Markov Model"
+  :txt2 "Fed 24 Years of My Blog Posts to a Markov Model"
   :url2 "fed-24-years-of-posts-to-markov-model.html")
 
  (:date "2025-12-24"
@@ -426,6 +426,13 @@
   :txt2 "Attention Media ≠ Social Media"
   :url2 "attention-media-is-not-social-media.html")
 
+ (:date "2026-02-05"
+  :lang "French"
+  :txt1 "How Do AI chatbots Work?"
+  :url1 "https://couleur-science.eu/?d=987d1c--comment-fonctionnent-les-chatbot-ia"
+  :txt2 "Fed 24 Years of My Blog Posts to a Markov Model"
+  :url2 "fed-24-years-of-posts-to-markov-model.html")
+
  (:date "2026-02-13"
   :lang "English"
   :txt1 "Hacker Newsletter #782"
@@ -438,4 +445,12 @@
   :txt1 "Joy & Curiosity #74"
   :url1 "https://registerspill.thorstenball.com/p/joy-and-curiosity-74"
   :txt2 "Twenty Five Years of Computing"
-  :url2 "twenty-five-years-of-computing.html"))
+  :url2 "twenty-five-years-of-computing.html")
+
+ (:date "2026-02-22"
+  :lang "German"
+  :txt1 "Anyone Who Experienced SchülerVZ/StudiVZ and Facebook"
+  :url1 "https://blog.holz.nu/2026/02/22/0.html"
+  :txt2 "Attention Media ≠ Social Media"
+  :url2 "attention-media-is-not-social-media.html")
+ )

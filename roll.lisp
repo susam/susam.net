@@ -150,6 +150,7 @@
          (params (list (cons "apex" "_cache/roll/")
                        (cons "current-year" (nth-value 5 (get-decoded-time)))
                        (cons "head" "main.css")
+                       (cons "also" "")
                        (cons "index" ""))))
     (when (probe-file "params.lisp")
       (setf params (append (read-list "params.lisp") params)))
