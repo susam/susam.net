@@ -427,9 +427,15 @@
 
 (test-case toc-html-none
   (let ((toc (fstr "<h2 id=\"contents\">Contents</h2>~%")))
-    (assert (string= (toc-html "") toc))
-    (assert (string= (toc-html "foo bar") toc))
-    (assert (string= (toc-html "<h2>H2</h2>") toc))))
+    (assert (string= (toc-html "" nil) toc))
+    (assert (string= (toc-html "foo bar" nil) toc))
+    (assert (string= (toc-html "<h2>H2</h2>" nil) toc))))
+
+(test-case tocn-html-none
+  (let ((toc (fstr "<h2 id=\"contents\">Contents</h2>~%")))
+    (assert (string= (toc-html "" t) toc))
+    (assert (string= (toc-html "foo bar" t) toc))
+    (assert (string= (toc-html "<h2>H2</h2>" t) toc))))
 
 (test-case toc-html-single
   (let ((body "<h2 id=\"h2\">H2</h2>")
@@ -437,7 +443,15 @@
 <ul>
   <li><a href=\"#h2\">H2</a></li>
 </ul>"))
-    (assert (string= (toc-html body) toc))))
+    (assert (string= (toc-html body nil) toc))))
+
+(test-case tocn-html-single
+  (let ((body "<h2 id=\"h2\">H2</h2>")
+        (toc "<h2 id=\"contents\">Contents</h2>
+<ol>
+  <li><a href=\"#h2\">H2</a></li>
+</ol>"))
+    (assert (string= (toc-html body t) toc))))
 
 (test-case toc-html-multiple
   (let ((body "<h2 id=\"h2\">H2</h2>
@@ -469,7 +483,39 @@ Foo
   </li>
   <li><a href=\"#h2\">H2</a></li>
 </ul>"))
-    (assert (string= (toc-html body) toc))))
+    (assert (string= (toc-html body nil) toc))))
+
+(test-case tocn-html-multiple
+  (let ((body "<h2 id=\"h2\">H2</h2>
+
+Foo
+
+<h2 id=\"h2\">H2</h2>
+<h3 id=\"h3\">H3</h3>
+<h3 id=\"h3\">H3</h3>
+<h4 id=\"h4\">H4</h4>
+<h5 id=\"h5\">H5</h5>
+<h2 id=\"h2\">H2</h2>")
+        (toc "<h2 id=\"contents\">Contents</h2>
+<ol>
+  <li><a href=\"#h2\">H2</a></li>
+  <li><a href=\"#h2\">H2</a>
+    <ol type=\"a\">
+      <li><a href=\"#h3\">H3</a></li>
+      <li><a href=\"#h3\">H3</a>
+        <ol type=\"i\">
+          <li><a href=\"#h4\">H4</a>
+            <ol type=\"a\">
+              <li><a href=\"#h5\">H5</a></li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href=\"#h2\">H2</a></li>
+</ol>"))
+    (assert (string= (toc-html body t) toc))))
 
 (test-case toc-html-deep-end
   (let ((body "<h2 id=\"h2\">H2</h2>
@@ -487,7 +533,25 @@ Foo
     </ul>
   </li>
 </ul>"))
-    (assert (string= (toc-html body) toc))))
+    (assert (string= (toc-html body nil) toc))))
+
+(test-case tocn-html-deep-end
+  (let ((body "<h2 id=\"h2\">H2</h2>
+<h3 id=\"h3\">H3</h3>
+<h4 id=\"h4\">H4</h4>")
+        (toc "<h2 id=\"contents\">Contents</h2>
+<ol>
+  <li><a href=\"#h2\">H2</a>
+    <ol type=\"a\">
+      <li><a href=\"#h3\">H3</a>
+        <ol type=\"i\">
+          <li><a href=\"#h4\">H4</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>"))
+    (assert (string= (toc-html body t) toc))))
 
 (test-case read-page
   (write-file "test-tmp/2020-06-01-quux-quuz.html"
