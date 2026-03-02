@@ -369,8 +369,8 @@ value, next-index."
     (if snippets (fstr "~{~a~}" (reverse snippets)) "")))
 
 (defun also-html (fname params)
-  "Given the name of a also-file, return content from it."
-  (if (string/= fname "")
+  "Given the name of an also-file, return content from it."
+  (if fname
       (render (read-file (fstr "layout/also/~a" fname)) params)
       ""))
 
@@ -426,7 +426,7 @@ value, next-index."
      (aput "root" root ,params)
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
-     (aput "also" (also-html (aget "also" ,params) ,params) ,params)
+     (aput "more" (also-html (aget "also" ,params) ,params) ,params)
      (aput "keys-for-list" (format-keys-for-list ,page) ,page)
      (aput "neat-path" (neat-path dst-path ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
@@ -480,7 +480,13 @@ value, next-index."
   "Create leading indentation items in table of contents."
   (repeat-string (* 2 level) " "))
 
-(defun toc-html (text)
+(defun toc-ol-tag (level)
+  "Create an <ol> tag with a marker decided by the list level."
+  (if (= level 2)
+      "<ol>"                            ; First level is <h2>
+      (format nil "<ol type=\"~a\">" (char "012aiai" level))))
+
+(defun toc-html (text ordered)
   "Generate HTML for table of contents."
   (with-output-to-string (tt)
     (let* ((h-begin-index)              ; -> <h2 id="foo">
@@ -491,6 +497,8 @@ value, next-index."
            (indent -1)                  ; We want the first indent to be 0.
            (new-level 1)                ; We want the first heading to be <h2>.
            (old-level)
+           (open-tag (if ordered "<ol>" "<ul>"))
+           (close-tag (if ordered "</ol>" "</ul>"))
            (href)
            (title)
            (init))
@@ -508,13 +516,15 @@ value, next-index."
               (setf h-close-index (search "</h" text :start2 (+ id-end-index 2)))
               (setf href (fstr "#~a" (subseq text (+ h-begin-index 8) id-end-index)))
               (setf title (subseq text title-begin-index h-close-index))
+              (when ordered
+                (setf open-tag (toc-ol-tag new-level)))
               (cond ((string= href "#contents"))
                     ((> new-level (1+ old-level))
                      (error "Incorrect heading level ~a after ~a: ~a (~a)"
                             new-level old-level href title))
                     ((= new-level (1+ old-level))
                      (format tt (if init "~%" ""))
-                     (format tt "~a<ul>~%" (toc-indent (incf indent)))
+                     (format tt "~a~a~%" (toc-indent (incf indent)) open-tag)
                      (format tt "~a<li><a href=\"~a\">~a</a>"
                              (toc-indent (incf indent)) href title)
                      (setf init t))
@@ -525,7 +535,7 @@ value, next-index."
                     ((< new-level old-level)
                      (format tt "</li>~%")
                      (dotimes (n (- old-level new-level))
-                       (format tt "~a</ul>~%" (toc-indent (decf indent)))
+                       (format tt "~a~a~%" (toc-indent (decf indent)) close-tag)
                        (format tt "~a</li>~%" (toc-indent (decf indent))))
                      (format tt "~a<li><a href=\"~a\">~a</a>"
                              (toc-indent indent) href title)))
@@ -535,9 +545,9 @@ value, next-index."
       (when init
         (format tt "</li>~%")
         (dotimes (n (floor indent 2))
-          (format tt "~a</ul>~%" (toc-indent (decf indent)))
+          (format tt "~a~a~%" (toc-indent (decf indent)) close-tag)
           (format tt "~a</li>~%" (toc-indent (decf indent))))
-        (format tt "</ul>")))))
+        (format tt "~a" close-tag)))))
 
 (defun format-size (size)
   "Convert size in bytes to human-readable size."
@@ -665,7 +675,8 @@ value, next-index."
     (invoke-callbacks params)
     ;; Render placeholders in page body if requested.
     (when (string= (aget "render" params) "yes")
-      (aput "toc" (toc-html (aget "body" params)) params)
+      (aput "toc" (toc-html (aget "body" params) nil) params)
+      (aput "tocn" (toc-html (aget "body" params) t) params)
       (setf body (render (aget "body" params) params))
       (aput "body" body params)
       ;; Update body in page to the rendered body.
@@ -1576,7 +1587,6 @@ value, next-index."
                       (cons "head" "main.css")
                       (cons "index" "")
                       (cons "head" "main.css")
-                      (cons "also" "")
                       (cons "render" "yes")))
         (page-layout (read-file "layout/page.html"))
         (pages)
