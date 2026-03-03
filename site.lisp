@@ -906,6 +906,11 @@ value, next-index."
     (make-comment-list comments "{{ apex }}comments/index.html"
                        list-layout item-layout params)))
 
+(defun reset-pages-for-comments (pages)
+  "Update page metadata suitable for generating comment pages."
+  (loop for page in pages
+        collect (cons (cons "also" nil) page)))
+
 (defun select-uncommented-pages (pages commented-slugs)
   "Select the pages that have received no comments."
   (setf pages (remove-if-not
@@ -920,6 +925,7 @@ value, next-index."
         (commented-slugs)
         (parent)
         (comment-page))
+    (setf pages (reset-pages-for-comments pages))
     (dolist (src (append (directory "content/comments/*.html")
                          (directory "content/talk/*.html")))
       (setf src (enough-namestring src))
