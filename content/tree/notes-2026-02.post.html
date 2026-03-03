@@ -1,0 +1,292 @@
+<!-- date: 2026-02-27 -->
+<!-- title: Feb '26 Notes -->
+<!-- tag: Monthly, Mathematics -->
+<!-- key: ntfts -->
+<!-- blog: Maze -->
+<!-- import: math.inc -->
+<p>
+  Since last month, I have been collecting brief notes on ideas and
+  references that caught my attention during each month but did not
+  make it into full articles.  Some of these fragments may eventually
+  grow into standalone posts, though most will probably remain as they
+  are.  At the very least, this approach allows me to keep a record of
+  them.
+</p>
+<p>
+  Most of <a href="notes-2026-01.html">last month's notes</a> grew out
+  of my reading of <em>Algebraic Graph Theory</em> by Godsil and
+  Royle.  I am still exploring and learning this subject.  This month,
+  however, I dove into another book with the same title but this book
+  is written by Norman Biggs.  As a result, many of the notes that
+  follow are drawn from Biggs's treatment of the topic.
+</p>
+<p>
+  Since I already had a good understanding of the subject from the
+  earlier book, I decided to skip the first fourteen chapters of the
+  new book.  I began with Chapter 15, which discusses automorphisms of
+  graphs and then moved on to the following chapters on graph
+  symmetries.  My main reason for picking up Biggs's book was to
+  understand Tutte's well known result that any \( s \)-arc-transitive
+  finite cubic graph must satisfy \( s \le 5 \).  While I did not
+  reach that chapter this month, I made substantial progress with the
+  book.  I hope to work through the proof of Tutte's theorem next
+  month.
+</p>
+{{ tocn }}
+<h2 id="degree-of-vertices-in-an-orbit">Degree of Vertices in an Orbit</h2>
+<p>
+  If two vertices of a graph belong to the same orbit, then they have
+  the same degree.  In other words, for a graph \( X \), if \( x, y
+  \in V(X) \) and there is an automorphism \( \alpha \) such that \(
+  \alpha(x) = y \), then \( \deg(x) = \deg(y) \).
+</p>
+<p>
+  The proof is quite straightforward.  Let
+
+  \begin{align*}
+    N(x) &amp;= \{ v_1, \dots, v_r \}, \\
+    N(y) &amp;= \{ w_1, \dots, w_s \}
+  \end{align*}
+
+  represent the neighbours of \( x \) and \( y \), respectively.
+  Therefore we have
+
+  \[
+    x \sim v_1, \; \dots, \; x \sim v_r.
+  \]
+
+  Since an automorphism preserves adjacency, we get
+
+  \[
+    \alpha(x) \sim \alpha(v_1), \; \dots, \;
+    \alpha(x) \sim \alpha(v_r).
+  \]
+
+  Substituting \( \alpha(x) = y \), we get
+
+  \[
+    y \sim \alpha(v_1), \; \dots, \; y \sim \alpha(v_r).
+  \]
+
+  Thus
+
+  \[
+    \alpha(N(x))
+    = \{ \alpha(v_1), \; \dots, \; \alpha(v_r) \}
+    \subseteq N(y).
+  \]
+
+  A similar argument works in reverse as well.  By the definition of
+  automorphism, if \( \alpha \) is an automorphism, so is \(
+  \alpha^{-1} \).  From the definition of \( N(y) \) above, we have
+
+  \[
+    y \sim w_1, \; \dots, \; y \sim w_s.
+  \]
+
+  Therefore
+
+  \[
+    \alpha^{-1}(y) \sim \alpha^{-1}(w_1), \; \dots, \;
+    \alpha^{-1}(y) \sim \alpha^{-1}(w_s).
+  \]
+
+  This is equivalent to
+
+  \[
+    x \sim \alpha^{-1}(w_1), \; \dots, \; x \sim \alpha^{-1}(w_s).
+  \]
+
+  Thus
+
+  \[
+    \alpha^{-1}(N(y))
+    = \{ \alpha^{-1}(w_1), \; \dots, \; \alpha^{-1}(w_s) \}
+    \subseteq N(x)
+  \]
+
+  This can be rewritten as
+
+  \[
+    \{ \alpha^{-1}(w_1), \; \dots, \; \alpha^{-1}(w_s) \}
+    \subseteq \{ v_1, \dots, v_r \}.
+  \]
+
+  Therefore
+
+  \[
+    N(y)
+    = \{ w_1, \dots, w_s \}
+    \subseteq \{ \alpha(v_1), \dots, \alpha(v_r) \}
+    = \alpha(N(x)).
+  \]
+
+  We have shown that \( \alpha(N(x)) \subseteq N(y) \) and \( N(y)
+  \subseteq \alpha(N(x)) \).  Thus
+
+  \[
+    \alpha(N(x)) = N(y).
+  \]
+
+  Thus
+
+  \[
+    \lvert N(y) \rvert = \lvert \alpha(N(x)) \rvert = r.
+  \]
+
+  Therefore both \( x \) and \( y \) have \( r \) neighbours each.
+  Hence \( \deg(x) = \deg(y) \).
+</p>
+<h2 id="regular-non-vertex-transitive-graphs">Regular Non-Vertex-Transitive Graphs</h2>
+<p>
+  The <a href="https://en.wikipedia.org/wiki/Frucht_graph">Frucht graph</a>
+  and the
+  <a href="https://en.wikipedia.org/wiki/Folkman_graph">Folkman
+  graph</a> are examples of graphs that are \( k \)-regular but not
+  vertex-transitive.  In fact, the Folkman graph is a semi-symmetric
+  graph, i.e. it is regular and edge-transitive but not
+  vertex-transitive.
+</p>
+<h2 id="vertex-transitive-but-not-edge-transitive">Vertex-transitive But Not Edge-transitive</h2>
+<p>
+  The circular ladder graph \( CL_3 \), i.e. the triangular prism
+  graph, is vertex-transitive but not edge-transitive.
+</p>
+<p>
+  Every vertex has the same local structure.  Every vertex has degree
+  \( 3 \) and it lies on exactly one of the two triangles and it has
+  exactly one 'vertical' edge connecting it to the corresponding edge
+  on the other triangle.  Any vertex can be sent to any other by an
+  automorphism.
+</p>
+<p>
+  Since triangle edges are in a triangle and vertical edges are in no
+  triangle, no automorphism can send a triangle edge to a vertical
+  edge or vice versa.  Therefore the graph is not edge-transitive.
+</p>
+<h2 id="edge-transitive-but-not-vertex-transitive">Edge-transitive But Not Vertex-transitive</h2>
+<p>
+  The complete bipartite graphs \( K_{m,n} \) with \( m \ne n \) are
+  edge-transitive but not vertex-transitive.
+</p>
+<p>
+  Every edge connects one vertex from the \( m \)-part to one vertex
+  from the \( n \)-part.  Any permutation of vertices inside the \( m
+  \)-part preserves adjacency.  Similarly, any permutation of vertices
+  inside the \( n \)-part preserves adjacency.
+</p>
+<p>
+  Take two arbitrary edges
+
+  \[
+    uv, \; u'v' \in E(K_{m,n})
+  \]
+
+  where \( u, u' \) are vertices that lie in the \( m \)-part and \(
+  v, v' \) are vertices that lie in the \( n \)-part.  Permute
+  vertices within the \( m \)-part to send \( u \) to \( u' \).
+  Similarly, permute vertices within the \( n \)-part to send \( v \)
+  to \( v' \).  This gives an automorphism that sends the edge \( uv
+  \) to \( u'v' \).  In this manner we can find an automorphism that
+  sends any edge to any other.  Therefore, \( K_{m,n} \) is edge
+ -transitive.
+</p>
+<p>
+  However, \( K_{m,n} \) is not vertex-transitive since no
+  automorphism can send a vertex in the \( m \)-part to a vertex in
+  the \( n \)-part since the vertices in the \( m \)-part have degree
+  \( n \) and the vertices in the \( n \)-part have degree \( m \).
+</p>
+<h2 id="bipartiteness-as-a-necessary-condition">Bipartiteness as a Necessary Condition</h2>
+<p>
+  If a connected graph is edge-transitive but not vertex-transitive,
+  then it must be bipartite.
+</p>
+<h2 id="graph-with-an-automorphism-group">Graph with an Automorphism Group</h2>
+<p>
+  In 1938, Frucht proved that for every finite abstract group \( G \),
+  there exists a graph whose automorphism group is isomorphic to \( G
+  \).
+</p>
+<p>
+  Remarkably, this result remains valid even when we restrict our
+  attention to cubic graphs.  That is, for every finite abstract group
+  \( G \), there exists a cubic graph whose automorphism group is
+  isomorphic to \( G \).  Moreover, the result has been extended to
+  graphs satisfying various additional graph-theoretical properties,
+  such as \( k \)-connectivity, \( k \)-regularity and prescribed
+  chromatic number.
+</p>
+<h2 id="permutation-groups-need-not-be-automorphism-groups">Permutation Groups Need Not Be Automorphism Groups</h2>
+<p>
+  Consider the following specialised version of the problem discussed
+  in the previous section: Given a permutation group on a set \( X \),
+  must there exist a graph with vertex set \( X \) whose automorphism
+  group is precisely that permutation group?
+</p>
+<p>
+  The answer is no.  Consider the cyclic group \( C_3 \) acting on \(
+  X = \{ a, b, c \} \).  There is no graph \( \Gamma \) with \(
+  V(\Gamma) = X \) and \( \operatorname{Aut}(\Gamma) \cong C_3 \).  If
+  we take \( \Gamma = K_3 \), then \( C_3 \subset S_3 =
+  \operatorname{Aut}(K_3) \) but \( C_3 \ne \operatorname{Aut}(K_3)
+  \).
+</p>
+<h2 id="symmetric-graphs">Symmetric Graphs</h2>
+<p>
+  It is interesting that while we study graph symmetry through
+  concepts such as graph automorphisms, vertex-transitivity,
+  edge-transitivity, etc. the name <em>symmetric graph</em> is
+  reserved for graphs that are \( 1 \)-arc-transitive.  A
+  vertex-transitive graph or an edge-transitive graph need not be
+  \(1\)-arc-transitive and therefore need not be symmetric.
+</p>
+<p>
+  However, every \( s \)-arc-transitive graph is \(1 \)-arc-transitive
+  for \( s \ge 1 \).  Consequently, every \( s \)-arc-transitive graph
+  is symmetric.  Moreover, every distance-transitive graph is also
+  \( 1 \)-arc-transitive, and hence symmetric.
+</p>
+<p>
+  Formally, we say that a graph \( \Gamma \) is \( 1 \)-arc-transitive
+  (or equivalently, symmetric) if for all \( 1 \)-arcs \( uv \) and \(
+  u'v' \) of \( \Gamma \), there is an automorphism \( \alpha \in
+  \operatorname{Aut}(\Gamma) \) such that \( \alpha(uv) = u'v' \).
+</p>
+<p>
+  Stated in more basic terms, we can say that \( \Gamma \) is
+  symmetric if for all \( u, v, u', v' \in V(\Gamma) \) satisfying \(
+  u \sim v \) and \( u' \sim v' \), there exists \( \alpha \in
+  \operatorname{Aut}(\Gamma) \) such that \( \alpha(u) = u' \) and \(
+  \alpha(v) = v' \).
+</p>
+<p>
+  Switching gears now, we say that \( \Gamma \) is distance-transitive
+  if for all \( u, v, u', v' \in V(\Gamma) \) satisfying \( d(u, v) =
+  d(u', v') \), there exists \( \alpha \in \operatorname{Aut}(\Gamma)
+  \) such that \( \alpha(u) = u' \) and \( \alpha(v) = v' \).  Since
+  all \( 1 \)-arcs \( uv \) and \( u'v' \) satisfy \( d(u, v) = d(u',
+  v') = 1 \), distance-transitivity implies that there is an
+  automorphism that sends \( uv \) to \( u'v' \).  Therefore a
+  distance-transitive graph is also \( 1 \)-arc-transitive.
+</p>
+<p>
+  To summarise, a graph must possess a certain degree of symmetry in
+  order to be called symmetric.  It turns out that merely having a
+  non-trivial automorphism group is not sufficient.  Even being
+  vertex-transitive or edge-transitive is not enough for a graph to be
+  called symmetric.  The graph needs to be at least \( 1
+  \)-arc-transitive to be called symmetric.
+</p>
+<p>
+  Another interesting aspect of this terminology is that the property
+  of being asymmetric is not the exact opposite of being symmetric.
+  For example, a vertex-transitive graph need not be symmetric.
+  However, that does not make it asymmetric.  A graph is called
+  asymmetric if it has no non-trivial automorphisms, i.e. its
+  automorphism group contains only the identity permutation.  Thus, if
+  a graph has at least two vertices and is vertex-transitive, it must
+  admit a non-trivial automorphism that maps one vertex to another.
+  So while such a vertex-transitive graph is not symmetric, it isn't
+  asymmetric either!
+</p>
