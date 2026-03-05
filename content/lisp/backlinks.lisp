@@ -419,13 +419,6 @@
   :txt2 "Writing First, Tooling Second"
   :url2 "writing-first-tooling-second.html")
 
- (:date "2026-01-23"
-  :lang "English"
-  :txt1 "Web Review, Week 2026-04"
-  :url1 "https://ervin.ipsquad.net/blog/2026/01/23/web-review-week-2026-04/"
-  :txt2 "Attention Media ≠ Social Media"
-  :url2 "attention-media-is-not-social-media.html")
-
  (:date "2026-02-13"
   :lang "English"
   :txt1 "Hacker Newsletter #782"

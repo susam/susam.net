@@ -79,11 +79,9 @@ debs:
 
 cldeps:
 	rm -rf /opt/cl/
-	mkdir -p /opt/cl/form/ /opt/cl/roll/
+	mkdir -p /opt/cl/form/
 	set -x; while read -r url; do curl -sSL "$$url" | \
 	tar -C /opt/cl/form/ -xz; done < meta/cldeps/form.txt
-	set -x; while read -r url; do curl -sSL "$$url" | \
-	tar -C /opt/cl/roll/ -xz; done < meta/cldeps/roll.txt
 
 quicklisp:
 	rm -rf /opt/quicklisp.lisp /opt/quicklisp
@@ -250,7 +248,7 @@ rdform:
 # Low-Level Targets
 # -----------------
 
-live: site roll
+live: site
 	@echo Setting up live directory ...
 	mv _live _gone || :
 	mv _site _live
@@ -297,51 +295,6 @@ mathjax:
 	else \
 	    echo MathJax is already cached.; \
 	fi
-
-getroll:
-	@echo Fetching feeds for roll ...
-	rm -rf _cache/roll/
-	mkdir -p _cache/roll/
-	ua="curl/$$(curl -V | head -n1 | cut -d' ' -f2) (Susam's Blogroll; https://susam.net/roll.html)"; \
-	while read -r url; do \
-	  domain=$$(echo "$$url" | sed -E 's/.*:\/\/(www\.|feeds\.)?([^/]*)\/.*/\2/'); \
-	  echo "Fetching $$url ($$domain) ..."; \
-	  curl -sSL -A "$$ua" -m 30 -o _cache/roll/"$$domain".xml "$$url"; \
-	done < content/roll.txt
-	date > _cache/roll/ok
-	@echo Done; echo
-
-devgetroll:
-	mv content/roll.txt content/roll.txt.bkp
-	echo 'https://susam.net/feed.xml' > content/roll.txt
-	make getroll
-	mv content/roll.txt.bkp content/roll.txt
-
-roll:
-	@echo Generating roll ...
-	if ! [ -e _cache/roll/ok ]; then make getroll; fi
-	CL_SOURCE_REGISTRY="/opt/cl/roll//" \
-	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:/opt/cache/cl/" \
-	sbcl --noinform --load roll.lisp --quit | tee _cache/roll/roll.log
-	if [ -e _site/ ]; then cp -v _cache/roll/roll.* _site/; fi
-	if [ -e _live/ ]; then cp -v _cache/roll/roll.* _live/; fi
-	@echo Done; echo
-
-reroll: getroll roll
-
-devroll:
-	@echo Generating development environment roll ...
-	if ! [ -e _cache/roll/ok ]; then make getroll; fi
-	if ! [ -e _site/ ]; then make dist; fi
-	CL_SOURCE_REGISTRY="/opt/cl/roll//" \
-	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
-	sbcl --noinform \
-	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	     --load roll.lisp \
-	     --quit | tee _cache/roll/roll.log
-	cp -v _cache/roll/roll.* _site/
-	@echo Done; echo
-
 
 # Development Targets
 # -------------------
