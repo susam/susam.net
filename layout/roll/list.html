@@ -1,11 +1,9 @@
 <h1>{{ title }}</h1>
-<div><em>Last {{ max-per-feed }} posts from my favourite weblogs</em></div>
-<div>({{ count }} {{ entry-label }})</div>
+<div><em>My favourite weblogs</em></div>
+<div>({{ count }} websites)</div>
 <ul class="blog">
 {{ body }}</ul>
-<p>
-  <em>
-    Generated on {{ gen-date }}.  See <a href="roll.log">roll.log</a>
-    for generator log.
-  </em>
+<p style="max-width: 20em; margin: 2em 0; font-style: italic">
+  To follow these websites in your feed reader, import
+  this <a href="roll.opml">OPML file</a>.
 </p>

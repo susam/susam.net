@@ -1292,6 +1292,47 @@ value, next-index."
     (aput "title" "Backlinks" params)
     (write-page dst list-layout params)))
 
+;;; Roll
+;;; ----
+
+(defun validate-name-order (items)
+  "Check that entries are arranged in the order of names."
+  (let ((prev-name)
+        (curr-name))
+    (dolist (item items)
+      (setf curr-name (getf item :name))
+      (when (and prev-name (string< curr-name prev-name))
+        (error "Incorrect order for roll entry: ~a" curr-name))
+      (setf prev-name curr-name))))
+
+(defun make-roll (page-layout params)
+  "Create blogroll."
+  (let ((entries (read-list "content/lisp/roll.lisp"))
+        (html-list-layout (read-file "layout/roll/list.html"))
+        (html-item-layout (read-file "layout/roll/item.html"))
+        (opml-list-layout (read-file "layout/roll/list.xml"))
+        (opml-item-layout (read-file "layout/roll/item.xml"))
+        (html-dst "_site/roll.html")
+        (opml-dst "_site/roll.opml")
+        (rendered-html-items)
+        (rendered-opml-items))
+    (set-nested-template html-list-layout page-layout)
+    (validate-name-order entries)
+    (dolist (entry entries)
+      (let ((item-params))
+        (aput "name" (getf entry :name) item-params)
+        (aput "home" (getf entry :home) item-params)
+        (aput "feed" (getf entry :feed) item-params)
+        (aput "domain" (parse-domain (getf entry :home)) item-params)
+        (push (render html-item-layout item-params) rendered-html-items)
+        (push (render opml-item-layout item-params) rendered-opml-items)))
+    (aput "body" (join-strings (reverse rendered-html-items)) params)
+    (aput "outlines" (join-strings (reverse rendered-opml-items)) params)
+    (aput "count" (length entries) params)
+    (aput "title" (render "{{ nick }}'s Blogroll" params) params)
+    (write-page html-dst html-list-layout params)
+    (write-page opml-dst opml-list-layout params)))
+
 ;;; CSS
 ;;; ---
 
@@ -1614,6 +1655,7 @@ value, next-index."
     (make-meets page-layout params)
     (make-activity page-layout params)
     (make-backlinks page-layout params)
+    (make-roll page-layout params)
     ;; Music
     (extend-list all-pages (make-music "content/music/*.html" page-layout params))
     ;; Blog.

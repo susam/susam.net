@@ -1,0 +1,1 @@
+      <outline type="rss" text="{{ name }}" title="{{ name }}" xmlUrl="{{ feed }}" htmlUrl="{{ home }}"/>
