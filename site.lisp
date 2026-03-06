@@ -406,19 +406,6 @@ value, next-index."
                              root zone-index zone-name)))
      (aput "zone-link" zone-link ,params)))
 
-(defun comment-slug (page)
-  "Return a slug to be used for the comment page."
-  (let ((neat-path (aget "neat-path" page))
-        (cslug (aget "slug" page))
-        (last)
-        (prev))
-    (when (or (string-starts-with "cc/" neat-path)
-              (string-starts-with "code/news/" neat-path))
-      (when (setf last (position #\/ neat-path :from-end t))
-        (when (setf prev (position #\/ neat-path :from-end t :end last))
-          (setf cslug (fstr "~a-~a" (subseq neat-path (1+ prev) last) cslug)))))
-    cslug))
-
 (defmacro add-page-params (dst page params)
   `(let* ((all-params (append ,page ,params))
           (dst-path (render ,dst all-params))
@@ -430,7 +417,6 @@ value, next-index."
      (aput "keys-for-list" (format-keys-for-list ,page) ,page)
      (aput "neat-path" (neat-path dst-path ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
-     (aput "comment-slug" (comment-slug ,page) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)))
@@ -662,29 +648,48 @@ value, next-index."
   "Parse page file."
   (read-page-content (read-file filename) filename))
 
-(defun make-page (src-path dst layout params)
+(defun add-overrides (page overrides)
+  "Add overrides to a page."
+  (aput "post-title" (aget "title" page) page)
+  (aput "post-path" (aget "neat-path" page) page)
+  (aput "comment-slug" (aget "slug" page) page)
+  (let ((neat-path (aget "neat-path" page))
+        (override))
+    (when (and (string= (aget "type" page) "post")
+               (or (string-starts-with "cc/" neat-path)
+                   (string-starts-with "code/news/" neat-path)))
+      (setf override (find-if (lambda (item)
+                                (string-starts-with (aget "prefix" item) neat-path))
+                              overrides))
+      (unless override
+        (error "Missing override for path: ~a" neat-path))
+      (aput "post-path" (render (aget "post-path" override) page) override)
+      (setf page (append override page))))
+  page)
+
+(defun make-page (src-path dst layout overrides params)
   "Generate page from content file."
   (let* ((page (read-page src-path))
          (body))
     ;; Set neat-url and tags-for-feed so that the returned page alist
     ;; can be used to render feeds.
     (add-page-params dst page params)
-    ;; Read content and merge its parameters with call parameters.
-    (setf params (append page params))
+    (setf page (append page params))
+    (setf page (add-overrides page overrides))
     ;; Run callbacks.
-    (invoke-callbacks params)
+    (invoke-callbacks page)
     ;; Render placeholders in page body if requested.
-    (when (string= (aget "render" params) "yes")
-      (aput "toc" (toc-html (aget "body" params) nil) params)
-      (aput "tocn" (toc-html (aget "body" params) t) params)
-      (setf body (render (aget "body" params) params))
-      (aput "body" body params)
+    (when (string= (aget "render" page) "yes")
+      (aput "toc" (toc-html (aget "body" page) nil) page)
+      (aput "tocn" (toc-html (aget "body" page) t) page)
+      (setf body (render (aget "body" page) page))
+      (aput "body" body page)
       ;; Update body in page to the rendered body.
       (aput "body" body page))
-    (write-page dst layout params)
+    (write-page dst layout page)
     page))
 
-(defun copy-page (src-path dst-path params)
+(defun copy-page (src-path dst-path overrides params)
   "Copy an HTML page to destination path."
   (uiop:copy-file src-path dst-path)
   (let* ((meta-path (string-replace ".html" ".aux.html" (namestring src-path)))
@@ -692,6 +697,8 @@ value, next-index."
     ;; Set neat-url and tags-for-feed so that the returned page alist
     ;; can be used to render feeds.
     (add-page-params dst-path page params)
+    (setf page (append page params))
+    (setf page (add-overrides page overrides))
     page))
 
 (defun sort-by-date (items)
@@ -705,11 +712,11 @@ value, next-index."
                    (string< (aget "pkey" x)
                             (aget "pkey" y)))))))
 
-(defun make-pages (src dst layout params)
+(defun make-pages (src dst layout overrides params)
   "Generate pages from content files."
   (let ((pages))
     (dolist (src-path (directory src))
-      (push (make-page src-path dst layout params) pages))
+      (push (make-page src-path dst layout overrides params) pages))
     pages))
 
 (defun select-listed-items (items)
@@ -862,10 +869,16 @@ value, next-index."
          (talk-layout-path "layout/comment/talk.html")
          (list-layout))
     (setf info (append info parent))
-    (aput "post-title" (aget "title" info) info)
-    (aput "post-path" (or (aget "neat-path" info)
-                          (neat-path dst-path params)) info)
-    (aput "post-comment-slug" (aget "comment-slug" info) params)
+    ;; Talk pages are being rendered for the very first time here, so
+    ;; they don't have post params for comments yet.  We populate them
+    ;; here.
+    (unless (aget "post-title" info)
+      (aput "post-title" (aget "title" info) info))
+    (unless (aget "post-path" info)
+      (aput "post-path" (neat-path dst-path params) info))
+    ;; Pick post params for comments and put them in the comments
+    ;; itself, so that all comment data is self-contained and they can
+    ;; be used on their own later to render the full comments page.
     (setf comments (enrich-comments comments info dst-path params))
     (cond (parent
            (setf list-layout (read-file "layout/comment/post.html"))
@@ -874,7 +887,6 @@ value, next-index."
            (setf slug-layout-path (render slug-layout-path info))
            (setf list-layout (read-file (if (probe-file slug-layout-path)
                                             slug-layout-path talk-layout-path)))
-           (string= (aget "slug" info) "guestbook")
            (add-page-params dst-path info params)))
     (set-nested-template list-layout page-layout)
     (setf params (append params info))
@@ -884,16 +896,13 @@ value, next-index."
 (defun make-void-comments (page page-layout params)
   "Generate a comment page with no comments."
   (aput "import" "" params)
-  (let ((none-layout (read-file "layout/comment/void.html"))
+  (let ((void-layout (read-file "layout/comment/void.html"))
         (dst-path (render "{{ apex }}comments/{{ comment-slug }}.html"
                           (append page params))))
-    (set-nested-template none-layout page-layout)
+    (set-nested-template void-layout page-layout)
     (setf params (append params page))
-    (aput "title" (fstr "Comments on ~a" (aget "title" page)) params)
-    (aput "post-title" (aget "title" page) params)
-    (aput "post-path" (aget "neat-path" page) params)
-    (aput "post-comment-slug" (aget "comment-slug" page) params)
-    (write-page dst-path none-layout params)))
+    (aput "title" (fstr "Comments on ~a" (aget "title" params)) params)
+    (write-page dst-path void-layout params)))
 
 (defun make-all-comments (comments page-layout params)
   "Generate consolidated comment list page for the full website."
@@ -906,17 +915,14 @@ value, next-index."
     (make-comment-list comments "{{ apex }}comments/index.html"
                        list-layout item-layout params)))
 
-(defun reset-pages-for-comments (pages)
-  "Update page metadata suitable for generating comment pages."
-  (loop for page in pages
-        collect (cons (cons "also" nil) page)))
-
 (defun select-uncommented-pages (pages commented-slugs)
   "Select the pages that have received no comments."
   (setf pages (remove-if-not
                (lambda (x) (string= (aget "type" x) "post")) pages))
-  (remove-if (lambda (x) (member (aget "comment-slug" x) commented-slugs
-                                 :test #'string=)) pages))
+  (setf pages (remove-if (lambda (x) (member (aget "comment-slug" x) commented-slugs
+                                             :test #'string=)) pages))
+  (setf pages (remove-duplicates pages :key (lambda (x) (aget "comment-slug" x))
+                                       :test #'string=)))
 
 (defun make-comments (pages page-layout params)
   "Generate comment list pages for all comment pages."
@@ -925,14 +931,14 @@ value, next-index."
         (commented-slugs)
         (parent)
         (comment-page))
-    (setf pages (reset-pages-for-comments pages))
+    (setf pages (loop for page in pages collect (cons (cons "also" nil) page)))
     (dolist (src (append (directory "content/comments/*.html")
                          (directory "content/talk/*.html")))
       (setf src (enough-namestring src))
       (multiple-value-bind (info comments) (read-comments src)
         (setf parent (page-by-comment-slug pages (aget "slug" info)))
         (setf (values comment-page comments)
-              (make-post-comments comments info parent page-layout params))
+              (make-post-comments comments info parent page-layout params)) ; Post comments.
         (when (string-starts-with "content/talk/" src)
           (push comment-page listed-comment-pages))
         (when (and (string-starts-with "content/comments/" src)
@@ -940,9 +946,9 @@ value, next-index."
           (error "Parent post is missing for comment ~a" (aget "slug" info)))
         (push (aget "slug" comment-page) commented-slugs)
         (extend-list all-comments comments)))
-    (make-all-comments all-comments page-layout params)
+    (make-all-comments all-comments page-layout params) ; Full comments.
     (dolist (page (select-uncommented-pages pages commented-slugs))
-      (make-void-comments page page-layout params))
+      (make-void-comments page page-layout params)) ; Void comments.
     listed-comment-pages))
 
 
@@ -964,27 +970,26 @@ value, next-index."
           (error "Duplicate key ~a in page ~a" key (aget "slug" page)))
         (setf (gethash key seen-keys) t)))))
 
-(defun make-tree-recursively (src dst page-layout post-layout params)
+(defun make-tree-recursively (src dst page-layout post-layout overrides params)
   "Recursively descend into a directory tree and render/copy all files."
   (make-directory dst)
-  (let ((pages)
-        (page))
+  (let ((pages))
     (dolist (pathname (uiop:directory-files src))
       (let* ((basename (file-namestring pathname))
              (destpath (namestring (merge-pathnames basename dst))))
         (cond ((string-ends-with ".page.html" basename)
+               (aput "type" "page" params)
                (setf destpath (string-replace ".page.html" ".html" destpath))
-               (setf page (make-page pathname destpath page-layout params))
-               (push (cons (cons "type" "page") page) pages))
+               (push (make-page pathname destpath page-layout overrides params) pages))
               ((string-ends-with ".post.html" basename)
+               (aput "type" "post" params)
                (setf destpath (string-replace ".post.html" ".html" destpath))
-               (setf page (make-page pathname destpath post-layout params))
-               (push (cons (cons "type" "post") page) pages))
+               (push (make-page pathname destpath post-layout overrides params) pages))
               ((string-ends-with ".aux.html" basename)
                (write-log "Skipping ~a" basename))
               ((string-ends-with ".html" basename)
-               (setf page (copy-page pathname destpath params))
-               (push (cons (cons "type" "aux") page) pages))
+               (aput "type" "standalone" params)
+               (push (copy-page pathname destpath overrides params) pages))
               (t
                (uiop:copy-file pathname destpath)))))
     (dolist (pathname (uiop:subdirectories src))
@@ -994,15 +999,17 @@ value, next-index."
         (setf pages (append pages (make-tree-recursively pathname destpath
                                                          page-layout
                                                          post-layout
+                                                         overrides
                                                          params)))))
     pages))
 
 (defun make-tree (page-layout params)
   "Make tree of files and folders from the content tree."
-  (let ((post-layout (read-file "layout/tree/post.html")))
+  (let ((post-layout (read-file "layout/tree/post.html"))
+        (overrides (read-list "content/lisp/overrides.lisp")))
     (set-nested-template post-layout page-layout)
     (make-tree-recursively "content/tree/" (aget "apex" params)
-                           page-layout post-layout params)))
+                           page-layout post-layout overrides params)))
 
 
 ;;; Directory Listing
@@ -1369,7 +1376,7 @@ value, next-index."
 (defun make-css (params)
   "Generate stylesheets for the main website."
   (make-pages "layout/css/*.css" "{{ apex }}css/{{ slug }}.css" "{{ body }}"
-              (append (main-style) params)))
+              nil (append (main-style) params)))
 
 (defun feed-css ()
   "Return stylesheet for feed as a string."
@@ -1381,7 +1388,7 @@ value, next-index."
 (defun make-xsl (params)
   "Generate stylesheet for feed."
   (make-pages "layout/blog/*.xsl" "{{ apex }}{{ slug }}.xsl" "{{ body }}"
-              (append (list (cons "css" (feed-css))) params)))
+              nil (append (list (cons "css" (feed-css))) params)))
 
 
 ;;; Music
@@ -1408,7 +1415,7 @@ value, next-index."
     (aput-list "callbacks" #'make-widget-callback params)
     ;; Render all music pages.
     (setf pages (make-pages src "{{ apex }}music/{{ slug }}.html"
-                            post-layout params))
+                            post-layout nil params))
     ;; Generate music list page.
     (aput "title" "Music" params)
     (make-page-list pages "{{ apex }}music/index.html"
