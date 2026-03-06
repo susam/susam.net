@@ -421,6 +421,26 @@ value, next-index."
      (aput "tags-for-list" (format-tags-for-list ,page) ,page)
      (aput "tags-for-page" (format-tags-for-page ,page root) ,page)))
 
+(defmacro add-comment-params (page overrides)
+  "Add overrides to a page."
+  `(let ((neat-path (aget "neat-path" ,page))
+         (override))
+     ;; Default comment parameters.
+     (aput "post-title" (aget "title" ,page) ,page)
+     (aput "post-path" (aget "neat-path" ,page) ,page)
+     (aput "comment-slug" (aget "slug" ,page) ,page)
+     ;; Overridden comment parameters if override exists.
+     (when (and (string= (aget "type" ,page) "post")
+                (or (string-starts-with "cc/" neat-path)
+                    (string-starts-with "code/news/" neat-path)))
+       (setf override (find-if (lambda (item)
+                                 (string-starts-with (aget "prefix" item) neat-path))
+                               ,overrides))
+       (unless override
+         (error "Missing override for path: ~a" neat-path))
+       (aput "post-path" (render (aget "post-path" override) ,page) override)
+       (setf ,page (append override ,page)))))
+
 (defmacro invoke-callbacks (params)
   "Run callbacks and add the parameters returned by it to params."
   `(dolist (callback (aget "callbacks" ,params))
@@ -648,25 +668,6 @@ value, next-index."
   "Parse page file."
   (read-page-content (read-file filename) filename))
 
-(defun add-overrides (page overrides)
-  "Add overrides to a page."
-  (aput "post-title" (aget "title" page) page)
-  (aput "post-path" (aget "neat-path" page) page)
-  (aput "comment-slug" (aget "slug" page) page)
-  (let ((neat-path (aget "neat-path" page))
-        (override))
-    (when (and (string= (aget "type" page) "post")
-               (or (string-starts-with "cc/" neat-path)
-                   (string-starts-with "code/news/" neat-path)))
-      (setf override (find-if (lambda (item)
-                                (string-starts-with (aget "prefix" item) neat-path))
-                              overrides))
-      (unless override
-        (error "Missing override for path: ~a" neat-path))
-      (aput "post-path" (render (aget "post-path" override) page) override)
-      (setf page (append override page))))
-  page)
-
 (defun make-page (src-path dst layout overrides params)
   "Generate page from content file."
   (let* ((page (read-page src-path))
@@ -675,16 +676,14 @@ value, next-index."
     ;; can be used to render feeds.
     (add-page-params dst page params)
     (setf page (append page params))
-    (setf page (add-overrides page overrides))
+    (add-comment-params page overrides)
     ;; Run callbacks.
     (invoke-callbacks page)
-    ;; Render placeholders in page body if requested.
+    ;; Parameters for dynamic content within pages.
     (when (string= (aget "render" page) "yes")
       (aput "toc" (toc-html (aget "body" page) nil) page)
       (aput "tocn" (toc-html (aget "body" page) t) page)
       (setf body (render (aget "body" page) page))
-      (aput "body" body page)
-      ;; Update body in page to the rendered body.
       (aput "body" body page))
     (write-page dst layout page)
     page))
@@ -697,8 +696,7 @@ value, next-index."
     ;; Set neat-url and tags-for-feed so that the returned page alist
     ;; can be used to render feeds.
     (add-page-params dst-path page params)
-    (setf page (append page params))
-    (setf page (add-overrides page overrides))
+    (add-comment-params page overrides)
     page))
 
 (defun sort-by-date (items)
@@ -869,8 +867,7 @@ value, next-index."
          (list-layout))
     (setf info (append info parent))
     ;; Talk pages are being rendered for the very first time here, so
-    ;; they don't have post params for comments yet.  We populate them
-    ;; here.
+    ;; they don't have comment params yet.  We populate them here.
     (unless (aget "post-title" info)
       (aput "post-title" (aget "title" info) info))
     (unless (aget "post-path" info)
