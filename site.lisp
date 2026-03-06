@@ -1393,7 +1393,7 @@ value, next-index."
 ;;; Music
 ;;; -----
 
-(defun make-music (src page-layout &optional params)
+(defun make-music (page-layout params)
   "Generate music list page."
   (let ((list-layout (read-file "layout/music/list.html"))
         (post-layout (read-file "layout/music/post.html"))
@@ -1406,14 +1406,13 @@ value, next-index."
     ;; Callback function to be passed as a parameter to renderer.
     (defun make-widget-callback (page)
       "Callback function to render music player widget."
-      (let* ((widget-params (append page params))
-             (rendered-widget (render widget-layout widget-params)))
-        (list (cons "widget" rendered-widget))))
+      (list (cons "widget" (render widget-layout page))))
     ;; Add parameters for music page rendering.
     (aput "import" "extra.css, music.css" params)
     (aput-list "callbacks" #'make-widget-callback params)
     ;; Render all music pages.
-    (setf pages (make-pages src "{{ apex }}music/{{ slug }}.html"
+    (setf pages (make-pages "content/music/*.html"
+                            "{{ apex }}music/{{ slug }}.html"
                             post-layout nil params))
     ;; Generate music list page.
     (aput "title" "Music" params)
@@ -1663,7 +1662,7 @@ value, next-index."
     (make-backlinks page-layout params)
     (make-roll page-layout params)
     ;; Music
-    (extend-list all-pages (make-music "content/music/*.html" page-layout params))
+    (extend-list all-pages (make-music page-layout params))
     ;; Blog.
     (make-blog "Main" "{{ author }}" "{{ apex }}index.html"
                all-pages page-layout params)
