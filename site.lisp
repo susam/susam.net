@@ -744,7 +744,6 @@ value, next-index."
     ;; Render each page.
     (dolist (page pages)
       (setf page (append page params))
-      (invoke-callbacks page)
       (push (render item-layout page) rendered-pages))
     ;; Add list parameters.
     (aput "body" (join-strings rendered-pages) params)
