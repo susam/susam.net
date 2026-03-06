@@ -725,7 +725,7 @@ Foo
 (test-case make-pages-single
   (write-file "test-tmp/content/foo.txt" "foo")
   (make-pages "test-tmp/content/foo.txt" "test-tmp/output/out.txt"
-              "[{{ body }}]" nil)
+              "[{{ body }}]" nil nil)
   (assert (string= (read-file "test-tmp/output/out.txt") "[foo]")))
 
 (test-case make-pages-multiple
@@ -733,7 +733,7 @@ Foo
   (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
   (make-pages "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
-              "[{{ body }}]" nil)
+              "[{{ body }}]" nil nil)
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo]"))
   (assert (string= (read-file "test-tmp/output/bar.txt") "[bar]"))
   (assert (string= (read-file "test-tmp/output/baz.txt") "[baz]")))
@@ -744,7 +744,7 @@ Foo
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
   (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]" nil)))
+                           "[{{ body }}]" nil nil)))
     (assert (= (length posts) 3))
     (assert (string= (aget "date" (first posts)) "2020-06-03"))
     (assert (string= (aget "date" (second posts)) "2020-06-02"))
@@ -753,7 +753,7 @@ Foo
 (test-case make-pages-filename-params
   (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
   (make-pages "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
-              "[{{ date }} {{ slug }} {{ body }}]" nil)
+              "[{{ date }} {{ slug }} {{ body }}]" nil nil)
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[2020-06-01 foo foo]")))
 
@@ -762,7 +762,7 @@ Foo
   (make-pages "test-tmp/content/*.txt"
               "test-tmp/output/{{ slug }}.txt"
               "[{{ date }} {{ slug }} {{ body }}]"
-              '(("date" . "2020-06-01") ("slug" . "quux")))
+              nil '(("date" . "2020-06-01") ("slug" . "quux")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[2020-06-01 foo foo]")))
 
@@ -774,6 +774,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
+              nil
               `(("callbacks" . (,#'callback))))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo apple]")))
@@ -786,6 +787,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }} {{ a }}]"
+              nil
               `(("a" . "apple") ("callbacks" . (,#'callback))))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo ant]")))
 
@@ -794,6 +796,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }}]"
+              nil
               '(("a" . "apple")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[foo {{ a }} bar]")))
@@ -803,6 +806,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ body }}]"
+              nil
               '(("a" . "apple") ("render" . "yes")))
   (assert (string= (read-file "test-tmp/output/foo.txt") "[foo apple bar]")))
 
@@ -811,6 +815,7 @@ Foo
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
+              nil
               '(("import" . "foo.css") ("root" . "")))
   (let ((s "[  <link rel=\"stylesheet\" href=\"../../css/foo.css\">
 foo]"))
@@ -821,6 +826,7 @@ foo]"))
   (make-pages "test-tmp/content/foo.txt"
               "test-tmp/output/foo.txt"
               "[{{ imports }}{{ body }}]"
+              nil
               '(("import" . "foo.js")))
   (assert (string= (read-file "test-tmp/output/foo.txt")
                    "[  <script src=\"../../js/foo.js\"></script>
@@ -832,7 +838,7 @@ foo]")))
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
   (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]" nil)))
+                           "[{{ body }}]" nil nil)))
     (make-page-list posts "test-tmp/list.html"
                     "[{{ count }} {{ body }}]"
                     "[{{ body }}]" nil))
@@ -845,7 +851,7 @@ foo]")))
   (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
   (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]" nil)))
+                           "[{{ body }}]" nil nil)))
     (make-page-list posts "test-tmp/list.html"
                     "[{{ a }} {{ body }}]"      ; Param used here
                     "[{{ a }} {{ body }}]"      ; and here.
@@ -863,7 +869,7 @@ foo]")))
   (let ((posts (make-pages "test-tmp/content/*.txt"
                            "test-tmp/output/{{ slug }}.txt"
                            "[{{ body }}]"
-                           nil)))
+                           nil nil)))
     ;; The call below passes a call param but it is going to be
     ;; overridden by post params.
     (make-page-list posts "test-tmp/list.html"
