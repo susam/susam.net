@@ -26,8 +26,8 @@ help:
 	@echo '  grepl re=PATTERN  Filter all access logs by regular expression pattern.'
 	@echo '  grepd re=PATTERN  Filter current access log by regular expression pattern.'
 	@echo '  grepv re=PATTERN  Filter visit logs by regular expression pattern.'
-	@echo '  lsform            List form data submitted.'
-	@echo '  rdform            Read form data submitted.'
+	@echo '  lsf               List form data submitted.'
+	@echo '  rdf               Read form data submitted.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -238,11 +238,11 @@ cache-visits:
 clean-visits:
 	rm -f /tmp/visitors.txt /tmp/visits.txt
 
-lsform:
+lsf:
 	ls -l /opt/data/form/*.txt | less -F
 
-rdform:
-	tail -n +1 /opt/data/form/*.txt | less -F
+rdf:
+	tail -vn +1 /opt/data/form/*.txt | less -F
 
 
 # Low-Level Targets
@@ -400,6 +400,9 @@ cvsplit:
 	sed -n 's/CV/Talks/; 1,/<main>/p' content/tree/cv.html >> content/tree/talks.html
 	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/talks.html
 	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/talks.html
+
+pc:
+	sed -nE '/<pre>/,/<\/pre>/{ /(<pre>|<\/pre>)/d; p; }' content/tree/pc.html > content/tree/pc.txt
 
 cat-my-text:
 	find content \( -name '*.html' -o -name '*.txt' \) \

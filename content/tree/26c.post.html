@@ -1,0 +1,189 @@
+<!-- date: 2026-03-25 -->
+<!-- title: Mar '26 Notes -->
+<!-- tag: Monthly, Mathematics -->
+<!-- key: mtsnt -->
+<!-- blog: Maze -->
+<!-- import: math.inc -->
+<!-- draft: yes -->
+<p>
+  This is my third set of monthly notes for this year.  In these
+  notes, I capture various interesting pieces of information and facts
+  I have stumbled upon during the month.  Like in the last two months,
+  I have been learning and exploring algebraic graph theory.  There
+  are mainly two books I have been reading: one by Godsil and Royle
+  and another by Norman Biggs, both titled <em>Algebraic Graph
+  Theory</em>.  So most of my notes come from my study of these books.
+</p>
+{{ tocn }}
+<h2 id="permutation">Permutation</h2>
+<p>
+  A permutation of a set \( X \) is a bijection \( X \to X \).
+</p>
+<p>
+  A permutation sends each element of a set to an element of the same
+  set such that every element of the set is sent to exactly once.  For
+  example, take \( X = \{ 1, 2, 3, 4, 5, 6 \} \) and define a map
+
+  \[
+    \pi : X \to X; \; x \mapsto 1 + ((x + 1) \bmod 6).
+  \]
+
+  This maps
+
+  \begin{align*}
+    1 &amp;\mapsto 3, \\
+    2 &amp;\mapsto 4, \\
+    3 &amp;\mapsto 5, \\
+    4 &amp;\mapsto 6, \\
+    5 &amp;\mapsto 1, \\
+    6 &amp;\mapsto 2.
+  \end{align*}
+</p>
+<p>
+  We can describe permutations more succinctly using cycle notation.
+  The cycle notation of a permutation \( \alpha \) consists of one or
+  more sequences written next to each other such that the sequences
+  are pairwise disjoint and \( \alpha \) maps each element in a
+  sequence to the next one on its right.  If the sequence is finite,
+  then \( \alpha \) maps the final element back to the first one.  Any
+  element that does not appear in a sequence is mapped to itself.  For
+  example the cycle notation for the above permutation is \( (1 3 5)(2
+  4 6) \).
+</p>
+<h2 id="group-homomorphism">Group Homomorphism</h2>
+<p>
+  A mapping \( \phi \) from a group \( G \) to a group \( H \) is a
+  group homomorphism if, for all \( x, y \in G \),
+
+  \[
+    \phi(xy) = \phi(x) \phi(y).
+  \]
+
+  We say that a group homomorphism is a map between the groups that
+  preserves the group operation.  In other words, a group homomorphism
+  sends products in \( G \) to products in \( H \).
+</p>
+<p>
+  For example, consider the groups \( (\mathbb{Z}, +) \) and \(
+  (\mathbb{Z_3}, +) \).  Then the map
+
+  \[
+    \phi : \mathbb{Z} \to \mathbb{Z_3}; \; n \mapsto n \bmod 3
+  \]
+
+  is a group homomorphism since
+
+  \[
+    \phi(x + y)
+    = (x + y) \bmod 3
+    = (x \bmod 3) + (y \bmod 3)
+    = \phi(x) + \phi(y)
+  \]
+
+   for all \( x, y \in \mathbb{Z} \).
+</p>
+<h2 id="Group-action">Group Action</h2>
+<p>
+  Let \( G \) be a group with identity element \( e \).  Let \( X \)
+  be a set.  A right action of \( G \) on \( X \) is a map
+
+  \[
+    \alpha : X \times G \to X
+  \]
+
+  such that
+
+  \begin{align*}
+    \alpha(x, e)            &amp;= x, \\
+    \alpha(\alpha(x, g), h) &amp;= \alpha(x, gh)
+  \end{align*}
+
+  for all \( x \in X \) and all \( g, h \in G \).  The two conditions
+  above are respectively called the identity and compatibility
+  properties of the group action.  If we denote \( \alpha(x, g) \) as
+  \( x^g \), then the notation for the two conditions can be
+  simplified to \( x^e = x \) and \( (x^g)^h = x^{gh} \) for all \( g,
+  h \in G \).
+</p>
+<p>
+  Take \( G = \mathbb{Z}_3 \) be the group under adddition modulo \( 3
+  \).  Then take \( X = \{ 1, 2, 3, 4, 5, 6 \} \).  Define the action
+  by
+
+  \[
+    x^g =
+      \begin{cases}
+        1 + ((x - 1 + g) \bmod 3) &amp; \text{if } x \in \{ 1, 2, 3 \}, \\
+        4 + ((x - 4 + g) \bmod 3) &amp; \text{if } x \in \{ 4, 5, 6 \}
+      \end{cases}
+  \]
+
+  Now \( G \) acts on \( X \).  Each \( g \in G \) acts as a
+  permutation of the elements of \( X \).  For example, the element \(
+  0 \in \mathbb{Z}_3 \) is the identity permutation.  The element \( 1
+  \in \mathbb{Z}_3 \) acts as the permutation \( (1 2 3) (4 5 6) \).
+  The element \( 2 \in \mathbb{Z}_3 \) acts as \( (1 3 2) (4 6 5) \).
+  This action splits \( X \) into two orbits \( \{ 1, 2, 3 \} \) and
+  \( \{ 4, 5, 6 \} \).
+</p>
+<h2 id="group-actions-as-permutations">Group Actions as Permutations</h2>
+<p>
+  Earlier, we saw an example of a group action and observed that each
+  element of the group acts as a permutation.  That wasn't merely a
+  coincidence.  It is indeed a general property of group actions.
+  Whenever a group \( G \) acts on a set \( X \), each element \( g
+  \in G \) determines a bijection \( X \to X \).  In other words,
+  every element of \( G \) acts as a permutation of the elements of \(
+  X \).  Let us see why this must be the case.
+</p>
+<p>
+  Let \( G \) act on a set \( X \).  Let \( g \in G \).  Define a map
+
+  \[
+    \alpha: X \to X; \; x \mapsto x^g.
+  \]
+
+  We show that \( \alpha \) is a bijection.  First we prove
+  injectivity.  Suppose \( x^g = y^g \).  Then
+
+  \begin{align*}
+  (x^g)^{g^{-1}} = (y^g)^{g^{-1}}
+  &amp; \implies x^{g g^{-1}} = y^{g g^{-1}} \\
+  &amp; \implies x^e = y^e \\
+  &amp; \implies x = y.
+  \end{align*}
+
+  This completes the proof of injectivity.  Note that the first and
+  last implications follow respectively from the compatibility and
+  identity properties of the group action.  Now we prove surjectivity.
+  Let \( y \in X \).  Take \( x = y^{g^{-1}} \).  Then
+
+  \[
+    x^g = (y^{g^{-1}})^g = y^{g^{-1} g} = y^e = y.
+  \]
+
+  Thus every element \( y \in X \) has a preimage.  Hence \( \alpha \)
+  is surjective.  Since we have already shown that \( \alpha \) is
+  injective, we now conclude that \( \alpha \) is bijective.
+</p>
+<h2 id="group-actions-as-group-homomorphisms">Group Actions as Group Homomorphisms</h2>
+<p>
+  A group action of \( G \) on \( X \) is a homomorphism \( G \to
+  \operatorname{Sym}(X) \).
+</p>
+<h2 id="orbit-stabiliser-theorem">Orbit-Stabiliser Theorem</h2>
+<p>
+  TODO.
+</p>
+<h2 id="stabiliser-index">Stabiliser Index</h2>
+<p>
+  In a vertex-transitive graph \( \Gamma \), for any vertex \( x \in
+  V(\Gamma) \), the index of the stabiliser \( G_x \) in \( G =
+  \operatorname{Aut}(\Gamma) \) is given by the equation
+
+  \[
+    \frac{\lvert G \rvert}{\lvert G_x \rvert} = \lvert V(\Gamma) \rvert.
+  \]
+
+  This follows directly from the orbit-stabiliser theorem.
+</p>
