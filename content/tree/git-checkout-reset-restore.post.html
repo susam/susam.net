@@ -1,0 +1,223 @@
+<!-- date: 2026-03-12 -->
+<!-- title: Git Checkout, Reset and Restore -->
+<!-- tag: Git, Technology, How-To -->
+<!-- key: gcrrp -->
+<!-- blog: Maze -->
+<!-- import: extra.css -->
+<p>
+  I have always used the <code>git checkout</code> and <code>git
+  reset</code> commands to reset my working tree or index but since
+  Git 2.23 there has been a <code>git restore</code> command available
+  for these purposes.  In this post, I record how some of the 'older'
+  commands I use map to the new ones.  Well, the new commands aren't
+  exactly new since Git 2.23 was released in 2019, so this post is
+  perhaps six years too late.  Even so, I want to write this down for
+  future reference.  It is worth noting that the old and new commands
+  are not always equivalent.  I'll talk more about this briefly as we
+  discuss the commands.  However, they can be used to perform similar
+  tasks.  Some of these tasks are discussed below.
+</p>
+{{ toc }}
+<h2 id="experimental-setup">Experimental Setup</h2>
+<p>
+  To experiment quickly, we first create an example Git repository.
+</p>
+<pre><code>mkdir foo/; cd foo/; touch a b c
+git init; git add a b c; git commit -m hello</code></pre>
+<p>
+  Now we make changes to the files and stage some of the changes.  We
+  then add more unstaged changes to one of the staged files.
+</p>
+<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<p>
+  At this point, the working tree and index look like this:
+</p>
+<pre><samp>$ <kbd>git status</kbd>
+On branch main
+Changes to be committed:
+  (use "git restore --staged &lt;file&gt;..." to unstage)
+        <span class="c2">modified:   a
+        modified:   b
+        new file:   d</span>
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        <span class="c4">modified:   b
+        modified:   c</span></samp></pre>
+<p>
+  File <code>a</code> has staged changes.  File <code>b</code> has
+  both staged and unstaged changes.  File <code>c</code> has only
+  unstaged changes.  File <code>d</code> is a new staged file.  In
+  each experiment below, we will work with this setup.
+</p>
+<p>
+  All results discussed in this post were obtained using Git 2.47.3 on
+  Debian 13.2 (Trixie).
+</p>
+<h2 id="reset-working-directory">Reset the Working Tree</h2>
+<p>
+  As a reminder, we will always use the following command between
+  experiments to ensure that we restore the experimental setup each
+  time:
+</p>
+<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<p>
+  To discard the changes in the working tree and reset the files in
+  the working tree from the index, I typically run:
+</p>
+<pre><code>git checkout .</code></pre>
+<p>
+  However, the modern way to do this is to use the following command:
+</p>
+<pre><code>git restore .</code></pre>
+<p>
+  Both commands leave the working tree and the index in the following
+  state:
+</p>
+<pre><samp>$ <kbd>git status</kbd>
+On branch main
+Changes to be committed:
+  (use "git restore --staged &lt;file&gt;..." to unstage)
+        <span class="c2">modified:   a
+        modified:   b
+        new file:   d</span></samp></pre>
+<p>
+  Both commands operate only on the working tree.  They do not alter
+  the index.  Therefore the staged changes remain intact in the index.
+</p>
+<h2 id="reset-index">Reset the Index</h2>
+<p>
+  Another common situation is when we have staged some changes but
+  want to unstage them.  First, we restore the experimental setup:
+</p>
+<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<p>
+  I normally run the following command to do so:
+</p>
+<pre><code>git reset</code></pre>
+<p>
+  The modern way to do this is:
+</p>
+<pre><code>git restore -S .</code></pre>
+<p>
+  Both commands leave the working tree and the index in the following
+  state:
+</p>
+<pre><samp>$ <kbd>git status</kbd>
+On branch main
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        <span class="c4">modified:   a
+        modified:   b
+        modified:   c</span>
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        <span class="c4">d</span>
+
+no changes added to commit (use "git add" and/or "git commit -a")</samp></pre>
+<p>
+  The <code>-S</code> (<code>--staged</code>) option tells <code>git
+  restore</code> to operate on the index (not the working tree) and
+  reset the index entries for the specified files to match the
+  version in <code>HEAD</code>.  The unstaged changes remain intact as
+  modified files in the working tree.  With the <code>-S</code>
+  option, no changes are made to the working tree.
+</p>
+<p>
+  From the arguments we can see that the old and new commands are not
+  exactly equivalent.  Without any arguments, the <code>git
+  reset</code> command resets the entire index to <code>HEAD</code>,
+  so all staged changes become unstaged.  Similarly, when we run
+  <code>git restore -S</code> without specifying a commit, branch or
+  tag using the <code>-s</code> (<code>--source</code>) option, it
+  defaults to resetting the index from <code>HEAD</code>.
+  The <code>.</code> at the end ensures that all paths under the
+  current directory are affected.  When we run the command at the
+  top-level directory of the repository, all paths are affected and
+  the entire index gets reset.  As a result, both the old and the new
+  commands accomplish the same result.
+</p>
+<h2 id="reset-working-directory-and-index">Reset the Working Tree and Index</h2>
+<p>
+  Once again, we restore the experimental setup.
+</p>
+<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<p>
+  This time we not only want to unstage the changes but also discard
+  the changes in the working tree.  In other words, we want to reset
+  both the working tree and the index from <code>HEAD</code>.  This is
+  a dangerous operation because any uncommitted changes discarded in
+  this manner cannot be restored using Git.
+</p>
+<pre><code>git reset --hard</code></pre>
+<p>
+  The modern way to do this is:
+</p>
+<pre><code>git restore -WS .</code></pre>
+<p>
+  The working tree is now clean:
+</p>
+<pre><samp>$ <kbd>git status</kbd>
+On branch main
+nothing to commit, working tree clean</samp></pre>
+<p>
+  The <code>-W</code> or <code>--worktree</code> option makes the
+  command operate on the working tree.  The <code>-S</code> option
+  resets the index as described in the previous section.  As a
+  result, this command unstages any changes and discards any
+  modifications in the working tree.
+</p>
+<p>
+  Note that when neither of these options is specified,
+  <code>-W</code> is implied by default.  That's why the
+  bare <code>git restore .</code> command in the previous section
+  discards the changes in the working tree.
+</p>
+<h2 id="summary">Summary</h2>
+<p>
+  The following table summarises how the three pairs of commands
+  discussed above affect the working tree and the index, assuming the
+  commands are run at the top-level directory of a repository.
+</p>
+<div style="overflow: auto">
+  <table class="grid" style="margin: 0">
+    <thead>
+      <tr>
+        <th>Old</th>
+        <th>New</th>
+        <th>Working Tree</th>
+        <th>Index</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="pre"><code>git checkout .</code></td>
+        <td class="pre"><code>git restore .</code></td>
+        <td>Reset to match the index.</td>
+        <td>No change.</td>
+      </tr>
+      <tr>
+        <td class="pre"><code>git reset</code></td>
+        <td class="pre"><code>git restore -S .</code></td>
+        <td>No change.</td>
+        <td>Reset to match <code>HEAD</code>.</td>
+      </tr>
+      <tr>
+        <td class="pre"><code>git reset --hard</code></td>
+        <td class="pre"><code>git restore -SW .</code></td>
+        <td>Reset to match <code>HEAD</code>.</td>
+        <td>Reset to match <code>HEAD</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  The <code>git restore</code> command is meant to provide a clearer
+  interface for resetting the working tree and the index.  I still use
+  the older commands out of habit.  Perhaps I will adopt the new ones
+  in another six years, but at least I have the mapping written down
+  now.
+</p>
