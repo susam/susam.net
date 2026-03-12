@@ -103,6 +103,9 @@ noscript div {
 .hl {
   color: {{ light-hl-color }};
 }
+.pre {
+  white-space: pre;
+}
 .wrap {
   word-break: break-all;
   white-space: pre-wrap;
@@ -111,6 +114,14 @@ noscript div {
   margin-top: 1.5em;
   font-weight: bold;
 }
+.c0 {color: #000} /* contrast: 18.1 */
+.c1 {color: #00c} /* contrast:  9.7 */
+.c2 {color: #050} /* constrast: 7.9 */
+.c3 {color: #055} /* contrast:  7.4 */
+.c4 {color: #900} /* contrast:  7.7 */
+.c5 {color: #808} /* contrast:  7.5 */
+.c6 {color: #440} /* contrast:  8.7 */
+.c7 {color: #444} /* contrast:  8.4 */
 @media (prefers-color-scheme: dark) {
   .soft img {
     opacity: 0.7; /* (0xbb - 0x11) / (0xff - 0x11) */
@@ -130,4 +141,12 @@ noscript div {
   .hl {
     color: {{ dark-hl-color }};
   }
+  .c0 {color: #aaa} /* contrast:  9.0 */
+  .c1 {color: #6bf} /* contrast: 10.1 */
+  .c2 {color: #0c0} /* contrast:  9.6 */
+  .c3 {color: #0cc} /* contrast: 10.5 */
+  .c4 {color: #f88} /* contrast:  9.1 */
+  .c5 {color: #f9f} /* contrast: 11.3 */
+  .c6 {color: #dd0} /* contrast: 14.4 */
+  .c7 {color: #ddd} /* contrast: 15.5 */
 }
