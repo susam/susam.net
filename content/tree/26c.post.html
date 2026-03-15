@@ -1,0 +1,1024 @@
+<!-- date: 2026-03-01 -->
+<!-- title: Mar '26 Notes -->
+<!-- tag: Monthly, Mathematics -->
+<!-- key: mtsnt -->
+<!-- blog: Maze -->
+<!-- import: math.inc -->
+<!-- draft: yes -->
+<p>
+  This is my third set of monthly notes for this year.  In these
+  notes, I capture various interesting facts and ideas I have stumbled
+  upon during the month.  Like in the last two months, I have been
+  learning and exploring algebraic graph theory.  The two main books I
+  have been reading are <em>Algebraic Graph Theory</em> by Godsil and
+  Royle and <em>Algebraic Graph Theory</em>, 2nd ed. by Norman Biggs.
+  Much of what appears here comes from my study of these books as well
+  as my own explorations and attempts to distill the ideas.  This post
+  is quite heavy on mathematics but there are some non-mathematical,
+  computing-related notes towards the end.
+</p>
+<p>
+  The level of exposition is quite uneven throughout these notes.
+  After all, they aren't meant to be a polished exposition but rather
+  notes I take for myself.  In some places I build concepts from first
+  principles, while in others I gloss over details and focus only on
+  the main results.
+</p>
+{{ tocn }}
+<h2 id="group-theory">Group Theory</h2>
+<h3 id="permutation">Permutation</h3>
+<p>
+  A <em>permutation</em> of a set \( X \) is a bijection \( X \to X
+  \).
+</p>
+<p>
+  For example, take \( X = \{ 1, 2, 3, 4, 5, 6 \} \) and define the
+  map
+
+  \[
+    \pi : X \to X; \; x \mapsto 1 + ((x + 1) \bmod 6).
+  \]
+
+  This maps
+
+  \begin{align*}
+    1 &amp;\mapsto 3, \\
+    2 &amp;\mapsto 4, \\
+    3 &amp;\mapsto 5, \\
+    4 &amp;\mapsto 6, \\
+    5 &amp;\mapsto 1, \\
+    6 &amp;\mapsto 2.
+  \end{align*}
+</p>
+<p>
+  We can describe permutations more succinctly using cycle notation.
+  The cycle notation of a permutation \( \pi \) consists of one or
+  more sequences written next to each other such that the sequences
+  are pairwise disjoint and \( \alpha \) maps each element in a
+  sequence to the next element on its right.  If the sequence is
+  finite, then \( \alpha \) maps the final element back to the first
+  one.  Any element that does not appear in any sequence is mapped to
+  itself.  For example the cycle notation for the above permutation is
+  \( (1 3 5)(2 4 6) \).
+</p>
+<h3 id="group-homomorphism">Group Homomorphism</h3>
+<p>
+  A map \( \phi : G \to H \) from a group \( (G, \ast) \) to a group
+  \( (H, \cdot) \) is a <em>group homomorphism</em> if, for all \( x, y
+  \in G \),
+
+  \[
+    \phi(x \ast y) = \phi(x) \cdot \phi(y).
+  \]
+
+  We say that a group homomorphism is a map between groups that
+  <em>preserves</em> the group operation.  In other words, a group
+  homomorphism <em>sends</em> products in \( G \) to products in \( H
+  \).  For example, consider the groups \( (\mathbb{Z}, +) \) and \(
+  (\mathbb{Z}_3, +) \).  Then the map
+
+  \[
+    \phi : \mathbb{Z} \to \mathbb{Z}_3; \; n \mapsto n \bmod 3
+  \]
+
+  is a group homomorphism because
+
+  \[
+    \phi(x + y)
+    = (x + y) \bmod 3
+    = (x \bmod 3) + (y \bmod 3)
+    = \phi(x) + \phi(y)
+  \]
+
+   for all \( x, y \in \mathbb{Z} \).  As another example, consider
+   the groups \( (\mathbb{R}_{\gt 0}, \times) \) and \( (\mathbb{R},
+   +) \).  Then the map
+
+  \[
+    \log : \mathbb{R}_{\gt 0} \to \mathbb{R}
+  \]
+
+  is a group homomorphism because
+
+  \[
+    \log(m \times n) = \log m + \log n.
+  \]
+
+  Note that a group homomorphism preserves the identity element.  For
+  example, \( 1 \) is the identity element of \( (\mathbb{R}_{\gt 0},
+  \times) \) and \( 0 \) is the identity element of \( (\mathbb{R}, +)
+  \) and indeed \( \log 1 = 0 \).  Also, a group homomorphism
+  preserves inverses.  Indeed \( \log m^{-1} = -\log m \) for all \( m
+  \in \mathbb{R}_{\gt 0} \).  These observations are proved in the
+  next two sections.
+</p>
+<h3 id="group-homomorphism-preserves-identities">Group Homomorphism Preserves Identity</h3>
+<p>
+  Let \( \phi : G \to H \) be a group homomorphism from \( (G, \ast)
+  \) to \( (H, \cdot) \).  Let \( e_1 \) be the identity in \( G \)
+  and let \( e_2 \) be the identity in \( H \).  Then \( \phi(e_1) =
+  e_2 \).
+
+
+  The proof is straightforward.  Note first that
+
+  \[
+    \phi(e_1) \cdot \phi(e_1)
+    = \phi(e_1 \ast e_1)
+    = \phi(e_1)
+  \]
+
+  Multiplying both sides on the right by \( \phi(e_1)^{-1} \), we get
+
+  \[
+    (\phi(e_1) \cdot \phi(e_1)) \cdot \phi(e_1)^{-1}
+    = \phi(e_1) \cdot \phi(e_1)^{-1}.
+  \]
+
+  Using the associative and inverse properties of groups, we can
+  simplify both sides to get
+
+  \[
+    \phi(e_1) = e_2.
+  \]
+</p>
+<h3 id="group-homomorphism-preserves-inverses">Group Homomorphism Preserves Inverses</h3>
+<p>
+  Let \( \phi : G \to H \) be a group homomorphism from \( (G, \ast)
+  \) to \( (H, \cdot) \).  Let \( e_1 \) be the identity in \( G \)
+  and let \( e_2 \) be the identity in \( H \).  Then for all \( x \in
+  G \), \(\phi(x^{-1}) = (\phi(x))^{-1} \).
+
+  The proof of this is straightforward too.  Note that
+
+  \[
+    \phi(x) \cdot \phi(x^{-1})
+    = \phi(x \ast x^{-1})
+    = \phi(e_1)
+    = e_2.
+  \]
+
+  Thus \( \phi(x^{-1}) \) is an inverse of \( \phi(x) \), so
+
+  \[
+    \phi(x^{-1}) = (\phi(x))^{-1}.
+  \]
+
+  The image of the inverse of an element is the inverse of the image
+  of that element.
+</p>
+<h3 id="image-of-a-group-homomorphism">Image of a Group Homomorphism</h3>
+<p>
+  Let \( \phi : G \to H \) be a group homomorphism.  Then the image of
+  the \( \phi \), denoted
+
+  \[
+    \phi(G) = \{ \phi(x) : x \in G \}
+  \]
+
+  is a subgroup of \( H \).  We will prove this now.
+</p>
+<p>
+  Let \( a, b \in \phi(G) \).  Then \( a = \phi(x) \) and \( b =
+  \phi(y) \) for some \( x, y \in G \).  Now \( ab = \phi(x)\phi(y) =
+  \phi(xy) \in \phi(G) \).  Therefore \( \phi(G) \) satisfies the
+  closure property.
+</p>
+<p>
+  Let \( e_1 \) and \( e_2 \) be the identities in \( G \) and \( H \)
+  respectively.  Since a group homomorphism preserves the identity, \(
+  \phi(e_1) = e_2 \).  Hence the identity of \( H \) lies in \(
+  \phi(G) \).
+</p>
+<p>
+  Finally, let \( a \in \phi(G) \).  Then \( a = \phi(x) \) for some
+  \( x \in G \).  Then \( a^{-1} = \phi(x)^{-1} = \phi(x^{-1}) \in
+  \phi(G) \).  Therefore \( \phi(G) \) satisfies the inverse property
+  as well.  Therefore \( \phi(G) \) is a subgroup of \( H \).
+</p>
+<h3 id="group-monomorphism">Group Monomorphism</h3>
+<p>
+  A map \( \phi : G \to H \) from a group \( (G, \ast) \) to a group
+  \( (H, \cdot) \) is a <em>group monomorphism</em> if \( \phi \) is a
+  homomorphism and is injective.
+</p>
+<h4 id="standard-proof">Standard Proof</h4>
+<p>
+  In other words, a homomorphism \( \phi \) is called a monomorphism
+  if, for all \( x, y \in G \),
+
+  \[
+    \phi(x) = \phi(y) \implies x = y.
+  \]
+
+  Let \( e_1 \) be the identity element of \( G \) and let \( e_2 \)
+  be the identity element of \( H \).  A useful result in group theory
+  states that a homomorphism \( \phi : G \to H \) is a monomorphism if
+  and only if its kernel is trivial, i.e.
+
+  \[
+    \ker(\phi) = \{ x \in G : \phi(x) = e_2 \} = \{ e_1 \}.
+  \]
+
+  To prove this, suppose \( \phi : G \to H \) is a monomorphism.
+  Since a homomorphism preserves the identity element, we have \(
+  \phi(e_1) = e_2 \).  Therefore
+
+  \[
+    e_1 \in \ker(\phi).
+  \]
+
+  Let \( x \in \ker(\phi) \).  Then \( \phi(x) = e_2 = \phi(e_1) \).
+  Since \( \phi \) is injective, \( x = e_1 \).  Therefore
+
+  \[
+    \ker(\phi) = \{ e_1 \}.
+  \]
+
+  Conversely, suppose \( \ker(\phi) = \{ e_1 \} \).  Let \( x, y \in G
+  \) such that \( \phi(x) = \phi(y) \).  Then
+
+  \[
+    \phi(x \ast y^{-1})
+    = \phi(x) \cdot \phi(y^{-1})
+    = \phi(x) \cdot (\phi(y))^{-1}
+    = \phi(y) \cdot (\phi(y))^{-1}
+    = e_2.
+  \]
+
+  Hence
+
+  \[
+    x \ast y^{-1} \in \ker(\phi) = \{ e_1 \},
+  \]
+
+  so
+
+  \[
+    x \ast y^{-1} = e_1.
+  \]
+
+  Multiplying both sides on the right by \( y \), we obtain
+
+  \[
+    x = y.
+  \]
+
+  This completes the proof.
+</p>
+<h4 id="alternate-arrangement">Alternate Proof</h4>
+<p>
+  Here I briefly discuss an alternate way to think about the above
+  proof.  The above proof is how most texts usually present these
+  arguments.  In particular, the proof of injectivity typically
+  proceeds by showing that equal images imply equal preimages.  It's a
+  standard proof technique.  When I think about these proofs, however,
+  the contrapositive argument feels more intuitive to me.  I prefer to
+  think about how unequal preimages must have unequal images.
+  Mathematically, there is no difference at all but the contrapositive
+  argument has always felt the most natural to me.  Let me briefly
+  describe how this proof runs in my mind when I think about it more
+  intuitively.
+</p>
+<p>
+  Suppose \( \phi \) is a monomophorism.  Since a homomorphism
+  preserves the identity element, clearly \( \phi(e_1) = e_2 \).
+  Since \( \phi \) is injective, it cannot map two distinct elements
+  of \( G \) to \( e_2 \).  Thus \( e_1 \) is the only element of \( G
+  \) that \( \phi \) maps to \( e_2 \) which means \( \ker(\phi) = \{
+  e_1 \} \).
+</p>
+<p>
+  To prove the converse, suppose \( \ker(\phi) = \{ e_1 \} \).
+  Consider distinct elements \( x, y \in G \).  Since \( x \ne y \),
+  we have \( x \ast y^{-1} \ne e_1 \).  Therefore \( x \ast y^{-1}
+  \notin \ker(\phi) \).  Thus \( \phi(x \ast y^{-1}) \ne e_2 \).
+  Since \( \phi \) is a homomorphism,
+
+  \[
+    \phi(x \ast y^{-1})
+    = \phi(x) \cdot \phi(y^{-1})
+    = \phi(x) \cdot \phi(y)^{-1}.
+  \]
+
+  Therefore \( \phi(x) \cdot \phi(y)^{-1} \ne e_2 \) which implies
+
+  \[
+    \phi(x) \ne \phi(y).
+  \]
+
+  This proves that \( \ker(\phi) = \{ e_1 \} \) implies that \( \phi
+  \) is injective and thus a monomorphism.
+</p>
+<h3 id="permutation-representation">Permutation Representation</h3>
+<p>
+  Let \( G \) be a group and \( X \) a set.  Then a homomorphism
+
+  \[
+    \phi : G \to \operatorname{Sym}(X)
+  \]
+
+  is called a <em>permutation representation</em> of \( G \) on \( X
+  \).  The homomorphism \( \phi \) maps each \( g \in G \) to a
+  permutation of \( X \).  We say that each \( g \in G \)
+  <em>induces</em> a permutation of \( X \).
+</p>
+<p>
+  For example, let \( G = (\mathbb{Z}_3, +) \) and \( X = \{ 0, 1, 2,
+  3, 4, 5 \} \).  Define the map \( \phi : G \to \operatorname{Sym}(X)
+  \) by
+
+  \begin{align*}
+    \phi(0) &amp;= (), \\
+    \phi(1) &amp;= (024)(135), \\
+    \phi(2) &amp;= (042)(153).
+  \end{align*}
+
+  It is easy to verify that this is a homomorphism.  Here is one way
+  to verify it:
+
+  \begin{align*}
+    \phi(0)\phi(1) &amp;= ()(024)(135) = (024)(135) = \phi(0 + 1), \\
+    \phi(0)\phi(2) &amp;= ()(042)(153) = (042)(153) = \phi(0 + 2), \\
+    &amp;\;\,\vdots \\
+    \phi(2)\phi(1) &amp;= (042)(153)(024)(135) = () = \phi(0) = \phi(2 + 1), \\
+    \phi(2)\phi(2) &amp;= (042)(153)(042)(153) = (024)(135) = \phi(1) = \phi(2 + 2).
+  \end{align*}
+
+  We will meet this homomorphism again in the form of group action \(
+  \alpha \) in the next section.
+</p>
+<h3 id="group-action">Group Action</h3>
+<p>
+  Let \( G \) be a group with identity element \( e \).  Let \( X \)
+  be a set.  A right action of \( G \) on \( X \) is a map
+
+  \[
+    \alpha : X \times G \to X
+  \]
+
+  such that
+
+  \begin{align*}
+    \alpha(x, e)            &amp;= x, \\
+    \alpha(\alpha(x, g), h) &amp;= \alpha(x, gh)
+  \end{align*}
+
+  for all \( x \in X \) and all \( g, h \in G \).  The two conditions
+  above are called the identity and compatibility properties of the
+  group action respectively.  Note that in a right action, the product
+  \( gh \) is applied left to right: \( g \) acts first and then \( h
+  \) acts.  If we denote \( \alpha(x, g) \) as \( x^g \), then the
+  notation for the two conditions can be simplified to \( x^e = x \)
+  and \( (x^g)^h = x^{gh} \) for all \( g, h \in G \).
+</p>
+<h4 id="why-right-group-action">Why Right Group Action?</h4>
+<p>
+  We discuss right group actions here instead of left group actions
+  because we want to use the notation \( \alpha(x, g) = x^g \), which
+  is quite convenient while studying permutations and graph
+  automorphisms.  It is perfectly possible to use left group actions
+  to study permutations as well.  However, we lose the benefit of the
+  convenient \( x^g \) notation.  In a left group action, the
+  compatibility property is \( \alpha(g, \alpha(h, x)) = \alpha(gh, x)
+  \), so if we were to use the notation \( \alpha(g, x) = x^g \), the
+  compatibility property would look like \( (x^h)^g = x^{gh} \).  This
+  reverses the order of exponents which can be confusing.  Right group
+  actions avoid this notational inconvenience.
+</p>
+<h4 id="group-action-example-1">Example 1</h4>
+<p>
+  Let \( G = \mathbb{Z}_3 \) be the group under addition modulo \( 3
+  \).  Let \( X = \{ 0, 1, 2, 3, 4, 5 \} \).  Define an action \(
+  \alpha \) of \( G \) on \( X \) by
+
+  \[
+    \alpha(x, g) = x^g = (x + 2g) \bmod 6.
+  \]
+
+  Each \( g \in G \) acts as a permutation of \( X \).  For example,
+  the element \( 0 \in \mathbb{Z}_3 \) acts as the identity
+  permutation.  The element \( 1 \in \mathbb{Z}_3 \) acts as the
+  permutation \( (0 2 4)(1 3 5) \).  The element \( 2 \in \mathbb{Z}_3
+  \) acts as the permutation \( (0 4 2)(1 5 3) \).  The following
+  table shows how each \( g \in G \) permutes \( X \).
+
+  \[
+    \begin{array}{c|ccc}
+      x_{\downarrow} \backslash g_{\rightarrow} &amp; 0 &amp; 1 &amp; 2 \\
+      \hline
+      0 &amp; 0 &amp; 2 &amp; 4 \\
+      1 &amp; 1 &amp; 3 &amp; 5 \\
+      2 &amp; 2 &amp; 4 &amp; 0 \\
+      3 &amp; 3 &amp; 5 &amp; 1 \\
+      4 &amp; 4 &amp; 0 &amp; 2 \\
+      5 &amp; 5 &amp; 1 &amp; 3 \\
+    \end{array}
+  \]
+
+  From the table we see that each \( g \in G \) permutes the elements
+  of \( \{ 0, 2, 4 \} \) among themselves.  Similarly, the elements of
+  \( \{ 1, 3, 5 \} \) are permuted among themselves.  These sets \(
+  \{0, 2, 4 \} \) and \( \{ 1, 3, 5 \} \) are called the
+  <em>orbits</em> of the action.  The concept of orbits is formally
+  introduced in its <a href="#orbits">own section further below</a>.
+</p>
+<h4 id="group-action-example-2">Example 2</h4>
+<p>
+  Now let \( G = \mathbb{Z}_6 \) be the group under addition modulo \(
+  6 \).  Let \( X = \{ 0, 1, \dots, 8 \} \).  Define an action \(
+  \beta \) of \( G \) on \( X \) by
+
+  \[
+    \beta(x, g) = x^g = (x + 3g) \bmod 9.
+  \]
+
+  Now the table for the action looks like this:
+
+  \[
+    \begin{array}{c|cccccc}
+      x_{\downarrow} \backslash g_{\rightarrow} &amp; 0 &amp; 1 &amp; 2 &amp; 3 &amp; 4 &amp; 5 \\
+      \hline
+      0 &amp; 0 &amp; 3 &amp; 6 &amp; 0 &amp; 3 &amp; 6 \\
+      1 &amp; 1 &amp; 4 &amp; 7 &amp; 1 &amp; 4 &amp; 7 \\
+      2 &amp; 2 &amp; 5 &amp; 8 &amp; 2 &amp; 5 &amp; 8 \\
+      3 &amp; 3 &amp; 6 &amp; 0 &amp; 3 &amp; 6 &amp; 0 \\
+      4 &amp; 4 &amp; 7 &amp; 1 &amp; 4 &amp; 7 &amp; 1 \\
+      5 &amp; 5 &amp; 8 &amp; 2 &amp; 5 &amp; 8 &amp; 2 \\
+      6 &amp; 6 &amp; 0 &amp; 3 &amp; 6 &amp; 0 &amp; 3 \\
+      7 &amp; 7 &amp; 1 &amp; 4 &amp; 7 &amp; 1 &amp; 4 \\
+      8 &amp; 8 &amp; 2 &amp; 5 &amp; 8 &amp; 2 &amp; 5
+    \end{array}
+  \]
+
+  This action splits \( X \) into three orbits \( \{ 0, 3, 6 \} \), \(
+  \{ 1, 4, 7 \} \) and \( \{ 2, 5, 8 \} \).
+</p>
+<h3 id="group-actions-induce-permutations">Group Actions Induce Permutations</h3>
+<p>
+  Earlier, we saw an example of a group action and observed that each
+  element of the group acts as a permutation.  That was not merely a
+  coincidence.  It is indeed a general property of group actions.
+  Whenever a group \( G \) acts on a set \( X \), each element \( g
+  \in G \) determines a bijection \( X \to X \).  In other words,
+  every element of \( G \) acts as a permutation of \( X \).  Let us
+  see why this must be the case.
+</p>
+<p>
+  Consider the group action \( \alpha : X \times G \to X \).  Fix \( g
+  \in G \) and let \( x \) vary over \( X \) to obtain the map
+
+  \[
+    \alpha_g : X \to X; \; x \mapsto \alpha(x, g).
+  \]
+
+  We show that \( \alpha_g \) is a bijection.  First we prove
+  injectivity.  Let \( e \) be the identity element of \( G \).
+  Let \( x, y \in X \).  Then
+
+  \begin{align*}
+    \alpha_g(x) = \alpha_g(y)
+    &amp; \implies \alpha(x, g) = \alpha(y, g) \\
+    &amp; \implies \alpha(\alpha(x, g), g^{-1}) = \alpha(\alpha(y, g), g^{-1}) \\
+    &amp; \implies \alpha(x, gg^{-1}) = \alpha(y, gg^{-1}) \\
+    &amp; \implies \alpha(x, e) = \alpha(y, e) \\
+    &amp; \implies x = y.
+  \end{align*}
+
+  The \( x^g \) notation allows us to write the above proof more
+  conveniently as follows:
+
+  \begin{align*}
+    \alpha_g(x) = \alpha_g(y)
+    &amp; \implies \alpha(x, g) = \alpha(y, g) \\
+    &amp; \implies (x^g)^{g^{-1}} = (y^g)^{g^{-1}} \\
+    &amp; \implies x^{g g^{-1}} = y^{g g^{-1}} \\
+    &amp; \implies x^e = y^e \\
+    &amp; \implies x = y.
+  \end{align*}
+
+  This completes the proof of injectivity.  Now we prove surjectivity.
+  Let \( y \in X \).  Take \( x = \alpha(y, g^{-1}) \).  Then
+
+  \[
+    \alpha_g(x)
+    = \alpha(x, g)
+    = \alpha(\alpha(y, g^{-1}), g)
+    = \alpha(y, g^{-1} g)
+    = \alpha(y, e)
+    = y.
+  \]
+
+  Again, if we write \( x = y^{g^{-1}} \), the above step can be
+  written more succinctly as
+
+  \[
+    \alpha_g(x) = x^g = (y^{g^{-1}})^g = y^{(g^{-1} g)} = y^e = y.
+  \]
+
+  Thus every element \( y \in X \) has a preimage in \( X \) under \(
+  \alpha_g \).  Hence \( \alpha_g \) is surjective.  Since we have
+  already shown that \( \alpha_g \) is injective, we now conclude that
+  \( \alpha_g \) is bijective.  Therefore \( \alpha_g \) is a
+  permutation of \( X \).  Stated symbolically,
+
+  \[
+    \alpha_g \in \operatorname{Sym}(X).
+  \]
+
+  Note that
+
+  \[
+    \alpha_g(x) = \alpha(x, g) = x^g.
+  \]
+
+  Thus both \( \alpha_g(x) \) and \( x^g \) serve as convenient
+  shorthands for \( \alpha(x, g) \).
+</p>
+<h3 id="group-actions-determine-permutation-representations">Group Actions Determine Permutation Representations</h3>
+<p>
+  We have seen that each group element \( g \in G \) induces, or acts
+  as, a permutation of \( X \).  Precisely speaking, each \( g \in G
+  \) determines a permutation \( \alpha_g \) of \( X \).  Now define a
+  map
+
+  \[
+    \phi: G \to \operatorname{Sym}(X); \; g \mapsto \alpha_g.
+  \]
+
+  We now show that this map is a homomorphism.  This means that we
+  want to show that \( \phi(gh) = \phi(g) \phi(h) \).  Since \(
+  \phi(g), \phi(h) \in \operatorname{Sym}(X) \), the right-hand side
+  is a product of permutations of \( X \).  We first define the
+  product of two permutations \( \pi, \rho : X \to X \) by
+
+  \[
+    \pi \rho : X \to X; \; x \mapsto \rho(\pi(x)).
+  \]
+
+  In other words, \( \pi \rho = \rho \circ \pi \).  Now
+
+  \begin{align*}
+    \phi(gh)(x)
+    &amp; = \alpha_{gh}(x) \\
+    &amp; = \alpha(x, gh) \\
+    &amp; = \alpha(\alpha(x, g), h) \\
+    &amp; = \alpha_h(\alpha_g(x)) \\
+    &amp; = (\alpha_h \circ \alpha_g)(x) \\
+    &amp; = (\alpha_g \alpha_h)(x) \\
+    &amp; = (\phi(g) \phi(h))(x).
+  \end{align*}
+
+  Since the above equality holds for all \( x \in X \), we conclude
+  that
+
+  \[
+    \phi(gh) = \phi(g) \phi(h).
+  \]
+
+  Hence \( \phi \) is a group homomorphism from \( G \) to \(
+  \operatorname{Sym}(X) \).  Therefore \( \phi \) is a permutation
+  representation of \( G \) on \( X \).  It maps each group element \(
+  g \in G \) to a permutation \( \alpha_g \in \operatorname{Sym}(X) \).
+</p>
+<p>
+  Note the multiple levels of abstraction here.  The group action \(
+  \alpha : X \times G \to X \) determines a permutation representation
+  \( \phi : G \to \operatorname{Sym}(X) \).  Each element \( g \in G
+  \) together with the group action \( \alpha \) determines a
+  permutation \( \alpha_g : X \to X \).
+</p>
+<p>
+  Also note that \( \phi(g)(x) = \alpha_g(x) = \alpha(g, x) = x^g \).
+  In fact, \( \phi(g) = \alpha_g \).
+</p>
+<h3 id="permutation-representations-determine-group-actions">Permutation Representations Determine Group Actions</h3>
+<p>
+  Consider a permutation representation \( \phi : G \to
+  \operatorname{Sym}(X) \).  Define a map
+
+  \[
+    \alpha : X \times G \to X; \; (x, g) \mapsto \phi(g)(x).
+  \]
+
+  First we verify the identity property of group actions.  Since \(
+  \phi \) is a homomorphism, it preserves the identity element.
+  Therefore \( \phi(e) \) is the identity permutation.  Hence
+
+  \[
+    \alpha(x, e) = \phi(e)(x) = x
+  \]
+
+  Now we verify the compatibility property of the action.  For all \(
+  g, h \in G \) and \( x \in X \), we have
+
+  \begin{align*}
+    \alpha(\alpha(x, g), h)
+    &amp; = \alpha(\phi(g)(x), h) \\
+    &amp; = \phi(h)(\phi(g)(x)) \\
+    &amp; = (\phi(h) \circ \phi(g))(x) \\
+    &amp; = (\phi(g)\phi(h))(x) \\
+    &amp; = \phi(gh)(x) \\
+    &amp; = \alpha(x, gh).
+  \end{align*}
+
+  This completes the proof of the fact that every permutation
+  representation determines a group action.
+</p>
+<h3 id="bijection-between-group-actions-and-permutation-representations">Bijection Between Group Actions and Permutation Representations</h3>
+<p>
+  There is a bijection between the group actions \( \alpha : X \times
+  G \to X \) and permutation representations \( \phi : G \to
+  \operatorname{Sym}(X) \).  We now show that these two constructions
+  are inverses of each other.
+</p>
+<p>
+  Given a right action \( \alpha : X \times G \to X \), define
+
+  \[
+    \phi_{\alpha} : G \to \operatorname{Sym}(X)
+    \quad \text{by} \quad
+    \phi_{\alpha}(g)(x) = \alpha(x, g).
+  \]
+
+  Given a permutation representation \( \phi : G \to
+  \operatorname{Sym}(X) \), define
+
+  \[
+    \alpha_{\phi} : X \times G \to X
+    \quad \text{by} \quad
+    \alpha_{\phi}(x, g) = \phi(g)(x).
+  \]
+
+  We now show that these two constructions undo each other.  Take an
+  arbitrary group action \( \alpha : X \times G \to X \) and construct
+  the corresponding permutation representation \( \phi_{\alpha} \).
+  Then take this permutation representation and construct the group
+  action \( \alpha_{\phi_{\alpha}} \).  But
+
+  \[
+    \alpha_{\phi_{\alpha}}(x, g)
+    = \phi_{\alpha}(g)(x)
+    = \alpha(x, g).
+  \]
+
+  Therefore \( \alpha_{\phi_{\alpha}} = \alpha \).  Similarly,
+  starting with the permutation representation \( \phi \), we get
+
+  \[
+    \phi_{\alpha_{\phi}}(g)(x)
+    = \alpha_{\phi}(x, g)
+    = \phi(g)(x).
+  \]
+
+  Therefore \( \phi_{\alpha_{\phi}} = \phi \).  Hence there is a
+  bijection between group actions \( \alpha : X \times G \to X \) and
+  permutation representations: \( \phi : G \to \operatorname{Sym}(X)
+  \).  In fact, a group action and the corresponding permutation
+  representation contain the same information, namely how the elements
+  \( g \in G \) acts as permutations of \( X \).  For this reason,
+  many advanced texts do not make any distinction between the group
+  action and its permutation representation.  They often use them
+  interchangeably even though technically they have different domains.
+</p>
+<h3 id="orbits">Orbits</h3>
+<p>
+  Let \( G \) act on a set \( X \).  For an element \( x \in X \), the
+  <em>orbit</em> of \( x \) under the action of \( G \) is the set of
+  all elements of \( X \) that can be reached from \( x \) by the
+  action of elements of \( G \).  Symbolically, the orbit of \( x \)
+  is the set
+
+  \[
+    x^G = \{ x^g : g \in G \}.
+  \]
+
+  In other words, the orbit of \( x \) contains every element of \( X
+  \) that \( x \) can be moved to by the group action.  If \( y \in
+  x^G \), then there exists some \( g \in G \) such that \( y = x^g
+  \).
+</p>
+<p>
+  The orbits of a group action partition the set \( X \).  That is,
+  every element of \( X \) lies in exactly one orbit and two orbits
+  are either identical or disjoint.  Thus the group action decomposes
+  the set \( X \) into disjoint subsets (the orbits), each consisting
+  of elements that can be transformed into one another by the action
+  of \( G \).
+</p>
+<h3 id="stabilisers">Stabilisers</h4>
+<p>
+  Let \( G \) be a group acting on a set \( X \).  For an element
+  \( x \in X \), the <em>stabiliser</em> of \( x \) is the set
+
+  \[
+    G_x = \{ g \in G : x^g = x \}.
+  \]
+
+  The stabiliser \( G_x \) consists of all elements of \( G \) that
+  fix the element \( x \).  The stabiliser \( G_x \) is a subgroup of
+  \( G \).  Indeed, the identity element \( e \in G \) satisfies \(
+  x^e = x \), so \( e \in G_x \).  If \( g, h \in G_x \), then \(
+  x^{gh} = (x^g)^h = x^h = x \).  If \( g \in G_x \), then \(
+  x^{g^{-1}} = (x^g)^{g^{-1}} = x^{g g^{-1}} = x^e = x \).
+</p>
+<p>
+  Intuitively, the stabiliser measures how much symmetry of the group
+  action leaves the element \( x \) unchanged.  The larger the
+  stabiliser, the more elements of \( G \) fix \( x \).
+</p>
+<h3 id="orbit-stabiliser-theorem">Orbit-Stabiliser Theorem</h3>
+<p>
+  Let \( G \) be a group acting on a set \( X \).  The
+  orbit-stabiliser theorem states that for any \( x \in X \),
+
+  \[
+    \lvert G_x \rvert \lvert x^G \rvert = \lvert G \rvert.
+  \]
+</p>
+<h3 id="faithful-actions">Faithful Actions</h3>
+<p>
+  Let \( G \) act on a set \( X \).  The action is
+  called <em>faithful</em> if distinct elements of \( G \) induce
+  distinct permutations of \( X \).  In other words, the only element
+  of \( G \) that acts as the identity permutation of \( X \) is the
+  identity element \( e \in G \).  Symbolically, the action is
+  faithful if
+
+  \[
+    g \ne e \implies \exists x \in X, \; x^g \ne x.
+  \]
+
+  Equivalently,
+
+  \[
+    \forall x \in X, \; x^g = x \implies g = e.
+  \]
+
+  The action is faithful if the only element of \( G \) that fixes
+  every element of \( X \) is the identity, i.e.
+
+  \[
+    \bigcap_{x \in X} G_x = \{ e \}.
+  \]
+
+  Recall that every group action determines a permutation
+  representation \( \phi : G \to \operatorname{Sym}(X) \).  From this
+  point of view, the action is faithful precisely when the
+  permutation representation is faithful, that is, when the
+  homomorphism \( \phi \) is injective (or equivalently when
+  \( \ker(\phi) = \{ e \} \)).
+</p>
+<h3 id="semiregular-actions">Semiregular Actions</h3>
+<p>
+  A group action of \( G \) on \( X \) is called <em>semiregular</em>
+  if no non-identity element of \( G \) fixes any element of \( X \).
+  In other words, whenever \( g \ne e \), the permutation of \( X \)
+  induced by \( g \) moves every element of \( X \).  Symbolically,
+
+  \[
+    g \ne e \implies \forall x \in X, \; x^g \ne x.
+  \]
+
+  Equivalently,
+
+  \[
+    \exists x \in X, \; x^g = x \implies g = e.
+  \]
+
+  The action is semiregular if
+
+  \[
+    \forall x \in X, \; G_x = \{ e \}.
+  \]
+
+  This is a stronger property than faithfulness.  Faithfulness only
+  guarantees that when \( g \ne e \), the element \( g \) moves at
+  least one element of \( X \).  But semiregularity guarantees that
+  when \( g \ne e \), the element \( g \) moves every element of \( X
+  \).  Therefore every semiregular action is faithful, but not every
+  faithful action is semiregular.
+</p>
+<h3 id="transitive-actions">Transitive Actions</h3>
+<p>
+  Let \( G \) act on a set \( X \).  The action is called
+  <em>transitive</em> if there is only one orbit.  In other words, the
+  action is transitive if every element of \( X \) can be reached from
+  any other element by the action of some element of \( G \).
+  Symbolically, the action is transitive if
+
+  \[
+    \forall x, y \in X \; \exists g \in G, \; x^g = y.
+  \]
+
+  Equivalently, the action is transitive if
+
+  \[
+    x^G = X
+  \]
+
+  for some (and hence every) \( x \in X \).
+</p>
+<h3 id="conjugacy">Conjugacy</h3>
+<p>
+  Let \( G \) be a group.  Let \( x, g \in G \).  The element
+
+  \[
+    g^{-1} x g
+  \]
+
+  is called the <em>conjugate</em> of \( x \) by \( g \).  Any element
+  \( y \in G \) that can be written as \( g^{-1} x g \) for some \( g
+  \in G \) is said to be a conjugate of \( x \).  The conjugacy class
+  of \( x \) in \( G \) is the set
+
+  \[
+    x^G = \{ g^{-1} x g : g \in G \}.
+  \]
+
+  In other words, the conjugacy class of \( x \) is the set of all
+  elements in \( G \) that are conjugate to \( x \).  Conjugation can
+  be seen as an action of a group on itself.  Define the map
+
+  \[
+    \alpha : G \times G \to G; \; (x, g) \mapsto g^{-1} x g.
+  \]
+
+  Note that
+
+  \[
+    \alpha(x, e) = e^{-1} x e = x
+  \]
+
+  and
+
+  \[
+    \alpha(\alpha(x, g), h)
+    = h^{-1} (g^{-1} x g) h
+    = (gh)^{-1} x (gh)
+    = \alpha(x, gh).
+  \]
+
+  Therefore \( \alpha \) satisfies the two defining properties of a
+  group action.  The conjugacy class \( x^G \) is precisely the orbit
+  of \( x \) under the conjugation action.  Therefore the orbits of
+  the conjugation action of \( G \) on itself are the conjugacy
+  classes of \( G \).
+</p>
+<h2 id="algeraic-graph-theory">Algebraic Graph Theory</h2>
+<h3 id="stabiliser-index">Stabiliser Index</h3>
+<p>
+  In a vertex-transitive graph \( \Gamma \), for any vertex \( x \in
+  V(\Gamma) \), the index of the stabiliser \( G_x \) in \( G =
+  \operatorname{Aut}(\Gamma) \) is given by the equation
+
+  \[
+    \frac{\lvert G \rvert}{\lvert G_x \rvert} = \lvert V(\Gamma) \rvert.
+  \]
+
+  This follows directly from the orbit-stabiliser theorem.
+</p>
+<h3 id="moore-graphs">Moore Graphs</h3>
+<p>
+  Graphs with diameter \( d \) and girth \( 2d + 1 \) are known as
+  Moore graphs.
+</p>
+<p>
+  There are an infinite number of Moore graphs with diameter \( 1 \)
+  since the complete graphs \( K_n \), where \( n \ge 3 \), have
+  diameter \( 1 \) and girth \( 3 \).
+</p>
+<p>
+  There are three known Moore graphs of diameter \( 2 \).  They are \(
+  C_5 \), \( J(5, 2, 0) \) also known as the Petersen graph and the
+  Hoffman-Singleton graph.  They are respectively \( 2 \)-regular, \(
+  3 \)-regular and \( 7 \)-regular.  There is a famous result that
+  proves that a Moore graph must be \( 2 \)-regular, \( 3 \)-regular,
+  \( 7 \)-regular or \( 57 \)-regular.  It is unknown currently
+  whether a \( 57 \)-regular Moore graph of diameter \( 2 \) exists.
+</p>
+<p>
+  There are infinitely many Moore graphs of diameter \( d \ge 3 \)
+  because the odd cycles \( C_{2d + 1} \) are \( 2 \)-regular graphs
+  with diameter \( d \) and girth \( 2d + 1 \) for all \( d \ge 1 \).
+  However, there are no \( k \)-regular Moore graphs for diameter \( d
+  \ge 3 \) when \( k \ge 3 \).
+</p>
+<h3 id="generalised-polygons">Generalised Polygons</h3>
+<p>
+  Bipartite graphs with diameter \( d \) and girth \( 2d \) are known
+  as generalised polygons.  This is easy to understand.  If we take a
+  classical \( d \)-gon and create the incidence graph of its vertices
+  and edges, then the incidence graph is the cycle \( C_{2d} \) which
+  has diameter \( d \) and girth \( 2d \).
+</p>
+<p>
+  The converse is not always true.  For example,
+  the <a href="https://en.wikipedia.org/wiki/Heawood_graph">Heawood
+  graph</a> which has diameter \( d = 3 \) and girth \( 2d = 6 \).  It
+  is the incidence graph of Fano plane, which is a projective plane
+  rather than a classical \( d \)-gon.
+</p>
+<p>
+  Although a generalised polygon is not always the incidence graph of
+  a classical polygon, the idea behind the definition comes from a
+  simple observation.  If we take a classical \( d \)-gon and form the
+  incidence graph of its vertices and edges, we obtain the cycle \(
+  C_{2d} \).  This graph is bipartite and has diameter \( d \) and
+  girth \( 2d \).  The definition of a generalised polygon abstracts
+  these properties.  Any bipartite graph with diameter \( d \) and
+  girth \( 2d \) is called a generalised polygon, even when it is not
+  the incidence graph of a classical \( d \)-gon.  In this way the
+  definition allows much richer graphs than simple cycles.
+</p>
+<h2 id="computing">Computing</h2>
+<h3 id="select-between-lines-inclusive">Select Between Lines, Inclusive</h3>
+<p>
+  Select text between two lines, including both lines:
+</p>
+<pre><code>sed '/pattern1/,/pattern2/!d'</code></pre>
+<pre><code>sed -n '/pattern1/,/pattern2/p'</code></pre>
+<p>
+  Here are some examples:
+</p>
+<pre><samp>$ <kbd>printf 'A\nB\nC\nD\nE\nF\nG\nH\n' | sed '/C/,/F/!d'</kbd>
+C
+D
+E
+F
+$ <kbd>printf 'A\nB\nC\nD\nE\nF\nG\nH\n' | sed -n '/C/,/F/p'</kbd>
+C
+D
+E
+F</samp></pre>
+<h3 id="select-between-lines-exclusive">Select Between Lines, Exclusive</h3>
+<p>
+  Select text between two lines, excluding both lines:
+</p>
+<pre><code>sed '/pattern1/,/pattern2/!d; //d'</code></pre>
+<p>
+  Here is an example usage:
+</p>
+<pre><samp>$ <kbd>printf 'A\nB\nC\nD\nE\nF\nG\nH\n' | sed '/C/,/F/!d; //d'</kbd>
+D
+E</samp></pre>
+<p>
+  The negated command <code>!d</code> deletes everything not matched
+  by the 2-address range <code>/C/,/F/</code>, i.e. it deletes
+  everything before the line matching <code>/C/</code> as well as
+  everything after the line matching <code>/F/</code>.  So we are left
+  with only the lines from <code>C</code> to <code>F</code>,
+  inclusive.  Finally, <code>//</code> (the empty regular expression)
+  reuses the most recently used regular expression.  So
+  when <code>/C/,/F/</code> matches <code>C</code>, the
+  command <code>//d</code> also matches <code>C</code> and deletes it.
+  Similarly, <code>F</code> is deleted too.  That's how we are left
+  with the lines between <code>C</code> and <code>F</code>, exclusive.
+</p>
+<p>
+  Here are some excerpts from
+  <a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sed.html">POSIX.1-2024</a>
+  that help understand the <code>!d</code> and <code>//d</code>
+  commands better:
+</p>
+<blockquote>
+  A function can be preceded by a <code>'!'</code> character, in which
+  case the function shall be applied if the addresses do not select
+  the pattern space.  Zero or more &lt;blank&gt; characters shall be
+  accepted before the <code>'!'</code> character.  It is unspecified
+  whether &lt;blank&gt; characters can follow the <code>'!'</code>
+  character, and conforming applications shall not follow
+  the <code>'!'</code> character with &lt;blank&gt; characters.
+</blockquote>
+<blockquote>
+  If an RE is empty (that is, no pattern is specified) <em>sed</em>
+  shall behave as if the last RE used in the last command applied
+  (either as an address or as part of a substitute command) was
+  specified.
+</blockquote>
+<h3 id="signing-and-verification-with-ssh-key">Signing and Verification with SSH Key</h3>
+<p>
+  Here are some minimal commands to demonstrate how we can sign some
+  text using SSH key and then later verify it.
+</p>
+<pre><code>ssh-keygen -t ed25519 -f key
+echo hello &gt; hello.txt
+ssh-keygen -Y sign -f key.pub -n file hello.txt
+echo "jdoe $(cat key.pub)" &gt; allowed.txt
+ssh-keygen -Y verify -f allowed.txt -I jdoe -n file -s hello.txt.sig &lt; hello.txt</code></pre>
+<p>
+  Here are some examples that demonstrate what the outputs and
+  signature file look like:
+</p>
+<pre><samp>$ <kbd>ssh-keygen -Y sign -f key.pub -n file hello.txt</kbd>
+Signing file hello.txt
+Write signature to hello.txt.sig</samp></pre>
+<pre><samp>$ <kbd>cat hello.txt.sig</kbd>
+-----BEGIN SSH SIGNATURE-----
+U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgAwP6RnmFVrZO0m/nRIHyvr2S19
+itsKegj9p/BZKqP1sAAAAEZmlsZQAAAAAAAAAGc2hhNTEyAAAAUwAAAAtzc2gtZWQyNTUx
+OQAAAEB8ylqjCLgInF8DvROnLSm1UUWd0VuLPesI+1NhMrV9BjH5lf0w20kHunJW3qRIjw
+Jfs9+q/e47KdlR8wBQaHYD
+-----END SSH SIGNATURE-----</samp></pre>
+<pre><samp>$ <kbd>ssh-keygen -Y verify -f allowed.txt -I jdoe -n file -s hello.txt.sig &lt; hello.txt</kbd>
+Good "file" signature for jdoe with ED25519 key SHA256:9ZJuUJNMy1UXo3AlQy8L7baD3LOfEbgQ30ELIt+8wWc</samp></pre>

@@ -26,6 +26,10 @@
   :home "https://sachachua.com/"
   :feed "https://sachachua.com/blog/feed/")
 
+ (:name "Susam Pal"
+  :home "https://susam.net/"
+  :feed "https://susam.net/feed.xml")
+
  (:name "Terence Eden"
   :home "https://shkspr.mobi/"
   :feed "https://shkspr.mobi/blog/feed/atom/")

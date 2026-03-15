@@ -90,10 +90,24 @@
   :txt2 "Microcentury"
   :url2 "microcentury.html")
 
+ (:date "2022-01-06"
+  :lang "English"
+  :txt1 "Data Science Weekly Newsletter, Issue 424"
+  :url1 "https://www.datascienceweekly.org/newsletter/data-science-weekly-newsletter-issue-424"
+  :txt2 "Integrating Factor"
+  :url2 "integrating-factor.html")
+
  (:date "2022-01-11"
   :lang "English"
   :txt1 "Pointer, Issue 281"
   :url1 "https://www.pointer.io/archives/95e44989f2/"
+  :txt2 "Simplicity of IRC"
+  :url2 "simplicity-of-irc.html")
+
+ (:date "2022-01-11"
+  :lang "English"
+  :txt1 "Simplicity of IRC"
+  :url1 "https://www.osnews.com/story/134425/simplicity-of-irc/"
   :txt2 "Simplicity of IRC"
   :url2 "simplicity-of-irc.html")
 
@@ -110,6 +124,13 @@
   :url1 "https://www.youtube.com/watch?v=IGt9Cc3OSVE&t=8169s"
   :txt2 "MinTOTP"
   :url2 "https://github.com/susam/mintotp")
+
+ (:date "2023-01-09"
+  :lang "English"
+  :txt1 "These Years in Common Lisp: 2022 in Review"
+  :url1 "https://lisp-journey.gitlab.io/blog/these-years-in-common-lisp-2022-in-review/"
+  :txt2 "Lisp in Vim"
+  :url2 "lisp-in-vim.html")
 
  (:date "2023-05-08"
   :lang "English"
@@ -227,6 +248,13 @@
   :lang "English"
   :txt1 "Dev Digest 110"
   :url1 "https://www.wearedevelopers.com/en/magazine/411/dev-digest-110---xy-marks-the-spotty-security"
+  :txt2 "Guess My RGB"
+  :url2 "myrgb.html")
+
+ (:date "2024-04-08"
+  :lang "English"
+  :txt1 "Weekly Foo #27"
+  :url1 "https://weeklyfoo.com/foos/foo-027/"
   :txt2 "Guess My RGB"
   :url2 "myrgb.html")
 
@@ -356,6 +384,13 @@
   :txt2 "URL in C"
   :url2 "url-in-c.html")
 
+ (:date "2025-12-02"
+  :lang "German"
+  :txt1 "WTF C Part 4"
+  :url1 "https://unixwork.de/blog/article?id=809"
+  :txt2 "URL in C"
+  :url2 "url-in-c.html")
+
  (:date "2025-12-06"
   :lang "English"
   :txt1 "Fizz Buzz in CSS"
@@ -395,7 +430,7 @@
   :lang "English"
   :txt1 "I Read a Very Fascinating Post"
   :url1 "https://vale.rocks/micros/20251214-0503"
-  :txt2 "I Fed 24 Years of My Blog Posts to a Markov Model"
+  :txt2 "Fed 24 Years of My Blog Posts to a Markov Model"
   :url2 "fed-24-years-of-posts-to-markov-model.html")
 
  (:date "2025-12-24"
@@ -419,6 +454,13 @@
   :txt2 "Writing First, Tooling Second"
   :url2 "writing-first-tooling-second.html")
 
+ (:date "2026-02-05"
+  :lang "French"
+  :txt1 "How Do AI chatbots Work?"
+  :url1 "https://couleur-science.eu/?d=987d1c--comment-fonctionnent-les-chatbot-ia"
+  :txt2 "Fed 24 Years of My Blog Posts to a Markov Model"
+  :url2 "fed-24-years-of-posts-to-markov-model.html")
+
  (:date "2026-02-13"
   :lang "English"
   :txt1 "Hacker Newsletter #782"
@@ -431,4 +473,19 @@
   :txt1 "Joy & Curiosity #74"
   :url1 "https://registerspill.thorstenball.com/p/joy-and-curiosity-74"
   :txt2 "Twenty Five Years of Computing"
-  :url2 "twenty-five-years-of-computing.html"))
+  :url2 "twenty-five-years-of-computing.html")
+
+ (:date "2026-02-17"
+  :lang "French"
+  :txt1 "About the Supposedly Social Networks"
+  :url1 "https://theologique.ch/blog/reseau-sociaux/"
+  :txt2 "Attention Media ≠ Social Media"
+  :url2 "attention-media-vs-social-networks.html")
+
+ (:date "2026-02-22"
+  :lang "German"
+  :txt1 "Anyone Who Experienced SchülerVZ/StudiVZ and Facebook"
+  :url1 "https://blog.holz.nu/2026/02/22/0.html"
+  :txt2 "Attention Media ≠ Social Media"
+  :url2 "attention-media-vs-social-networks.html")
+ )
