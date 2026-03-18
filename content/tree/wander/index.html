@@ -1,0 +1,343 @@
+<!--
+  Wander 0.1.0
+  Source: https://codeberg.org/susam/wander
+  Licence: MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Wander the Web</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        background: #696;
+        margin: 0;
+        padding: 1em;
+        line-height: 1.5;
+      }
+      button, input, noscript, dialog {
+        background: #bdb;
+        border-color: #363;
+        color: #030;
+        font-family: courier, monospace;
+        font-size: medium;
+        font-weight: bold;
+      }
+      button, input {
+        box-sizing: border-box;
+        margin-bottom: 1em;
+        margin-right: 0.25em;
+        min-height: 2.5em;
+        width: 6em;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:hover {
+        background: #9c9;
+      }
+      button:active {
+        background: #8c8;
+      }
+      header button:last-of-type {
+        margin-right: 0;
+      }
+      input {
+        padding-left: 0.5em;
+        margin-bottom: 1em;
+        width: 18.5em;
+      }
+      dialog {
+        border: thick solid;
+        max-width: 40em;
+        max-height: 80vh;
+        overflow: auto;
+      }
+      dialog h1 {
+        font-size: 1.5em;
+        margin: 0;
+        text-align: center;
+        padding-left: 2rem;
+        width: calc(100% - 4rem);
+        display: inline-block;
+      }
+      dialog h1, dialog > header > form {
+        display: inline-block;
+        vertical-align: top;
+      }
+      dialog > header > form > button {
+        padding: 0.25em;
+        width: 2em;
+        margin: 0;
+        min-height: 0;
+        height: auto;
+        vertical-align: top;
+        box-sizing: border-box;
+      }
+      dialog > form > button {
+        display: block;
+        margin: 2em auto 1em auto;
+      }
+      dialog button {
+        background: #aca;
+      }
+      dialog::backdrop {
+        background: #000;
+        opacity: 0.7;
+      }
+      #urlw, #bReload, #bGo, #bCopy {
+        display: none;
+      }
+      #urln {
+        margin-right: 0;
+      }
+      noscript {
+        border: medium double #600;
+        color: #600;
+        display: block;
+        font-size: x-large;
+        margin-bottom: 1em;
+        padding: 1em;
+        text-align: center;
+      }
+      iframe {
+        background: #fff;
+        border: thick solid #363;
+        box-sizing: border-box;
+        display: none;
+        height: calc(100vh - 12.5em);
+        width: 100%;
+      }
+      @media (min-width: 70em) {
+        iframe {
+          height: calc(100vh - 5.5em);
+        }
+        #urln {
+          display: none;
+        }
+        #bReload, #bGo, #bCopy, #urlw {
+          display: inline-block;
+        }
+        #urlw {
+          width: 25em;
+        }
+      }
+    </style>
+    <script src="wander.js"></script>
+    <script>
+      const LOGGING = true
+      const VERSION = '0.1.0'
+
+      function init () {
+        log(`Wander ${VERSION}`)
+        initConsole()
+        document.getElementById('bWander').addEventListener('click', wanderPage)
+        document.getElementById('bConsole').addEventListener('click', wanderConsole)
+        document.getElementById('bReload').addEventListener('click', reloadFrame)
+        document.getElementById('bGo').addEventListener('click', goLink)
+        document.getElementById('bCopy').addEventListener('click', copyLink)
+        document.getElementById('bAbout').addEventListener('click', showAbout)
+        document.getElementById('urln').addEventListener('keydown', keyHandler)
+        document.getElementById('urlw').addEventListener('keydown', keyHandler)
+        wanderPage()
+        log('Initialised')
+      }
+
+      function initConsole () {
+        const ul = document.getElementById('wanderers')
+        for (const url of window.wander.consoles) {
+          const li = document.createElement('li')
+          const a = document.createElement('a')
+          li.append(a)
+          ul.append(li)
+          a.href = url
+          a.textContent = url
+        }
+        document.getElementById('iframe').addEventListener('load', wanderDone)
+      }
+
+      function wanderPage () {
+        const iframe = document.getElementById('iframe')
+        const url = pick(filter(window.wander.pages))
+        document.getElementById('urln').value = url
+        document.getElementById('urlw').value = url
+        iframe.src = url
+        log('Wandering to', url)
+      }
+
+      function wanderDone () {
+        const iframe = document.getElementById('iframe')
+        log('Wandering complete')
+        if (iframe.style.display !== 'block') {
+          iframe.style.display = 'block'
+          log('Displayed iframe')
+        }
+        loadConsole()
+      }
+
+      function wanderConsole () {
+        document.getElementById('dConsole').showModal()
+      }
+
+      function loadConsole () {
+        const backup = window.wanderer
+        let url = pick(filter(window.wander.consoles))
+        if (!url.endsWith('/')) {
+          url += '/'
+        }
+        url += 'wander.js'
+        const script = document.createElement('script')
+        log('Loading next console', url)
+        script.addEventListener('load', function () {
+          log('Loaded next console', url)
+        })
+        script.addEventListener('error', function (e) {
+          log('Failed to load next console', url, e)
+          window.wanderer = backup
+          script.remove()
+        })
+        script.src = url
+        document.head.append(script)
+      }
+
+      function reloadFrame () {
+        const iframe = document.getElementById('iframe')
+        const src = iframe.src
+        iframe.src = src
+      }
+
+      function keyHandler (e) {
+        if (e.key === 'Enter') {
+          goLink()
+        }
+      }
+
+      function goLink () {
+        let value = visibleInput().value
+        if (!value.toLowerCase().startsWith('https:') &&
+            !value.toLowerCase().startsWith('http:')) {
+          value = matchingProtocol() + '//' + value
+        }
+        document.getElementById('urln').value = value
+        document.getElementById('urlw').value = value
+        document.getElementById('iframe').src = value
+      }
+
+      function copyLink () {
+        const input = visibleInput()
+        input.select()
+        document.execCommand('copy')
+        window.setTimeout(function () { input.blur() }, 125)
+      }
+
+      function showAbout () {
+        document.getElementById('dAbout').showModal()
+      }
+
+      function pick (items) {
+        return items[Math.floor(Math.random() * items.length)]
+      }
+
+      function filter (items) {
+        return items.filter(function (item) {
+          return item.startsWith(matchingProtocol())
+        })
+      }
+
+      function visibleInput () {
+        const urln = document.getElementById('urln')
+        const urlw = document.getElementById('urlw')
+        return urln.offsetParent ? urln : urlw
+      }
+
+      function matchingProtocol () {
+        let protocol = window.location.protocol
+        if (protocol !== 'http:' && protocol !== 'https:') {
+          protocol = 'https:'
+        }
+        return protocol
+      }
+
+      function log () {
+        if (LOGGING) {
+          const args = Array.prototype.slice.call(arguments)
+          console.log('[wander] ' + args.join(' '))
+        }
+      }
+
+      window.addEventListener('load', init)
+    </script>
+  </head>
+  <body>
+    <noscript>JavaScript is required to use this application.</noscript>
+    <header>
+      <button id="bWander">Wander</button><!--
+      --><button id="bConsole">Console</button><!--
+      --><button id="bReload">Reload</button><!--
+      --><input id="urlw" autocomplete="off"><!--
+      --><button id="bGo">Go</button><!--
+      --><button id="bCopy">Copy</button><!--
+      --><button id="bAbout">About</button><!--
+      --><input id="urln">
+    </header>
+    <iframe id="iframe"></iframe>
+    <dialog id="dConsole">
+      <header>
+        <h1>Wander to Another Console</h1><form method="dialog"><button>x</button></form>
+      </header>
+      <p>
+        By wandering to another console, you will leave the current
+        console on this website and reach a Wander console on a
+        different website.  You can then continue wandering the Web
+        using the console on that website.
+      </p>
+      <ul id="wanderers"></ul>
+      <p>
+        Note that you don't really need to change console to browse
+        the Wander network.  This console can fetch recommendations
+        from other consoles, then from the consoles they link to and
+        so on recursively.  However, you can switch consoles if you
+        prefer to browse the network from another website.
+      </p>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+    <dialog id="dAbout">
+      <header>
+        <h1>About Wander</h1><form method="dialog"><button>x</button></form>
+      </header>
+      <p>
+        Hello!  You are currently on a Wander console!  A Wander
+        console lets you browse random websites and pages from the
+        Wander community.  The Wander community consists of
+        individuals who develop and maintain their own personal
+        websites.
+      </p>
+      <p>
+        To set up your own Wander console, download
+        <a href="https://codeberg.org/susam/wander/archive/main.zip">this ZIP file</a>,
+        extract index.html and wander.js, and place them
+        in the /wander/ directory of your website. Then edit
+        wander.js by following the directions at
+        <a href="https://codeberg.org/susam/wander#readme">codeberg.org/susam/wander</a>.
+      </p>
+      <p>
+        That's it! Once your /wander/ directory is ready on your web
+        server, you can share a link to your Wander console in
+        <a href="https://codeberg.org/susam/wander/issues/1">this
+        community thread</a>.  Hopefully, someone will add your
+        console to theirs and you will become part of the Wander
+        network.
+      </p>
+      <p>
+        For more information about Wander, please
+        see <a href="https://codeberg.org/susam/wander#readme">codeberg.org/susam/wander</a>.
+      </p>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+  </body>
+</html>
