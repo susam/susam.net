@@ -1,97 +1,55 @@
 <!--
-  Wander 0.1.0
+  Wander 0.2.0.dev8
   Source: https://codeberg.org/susam/wander
   Licence: MIT
 -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Wander the Web</title>
+    <title>Wander Console - Discover the Small Web</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body {
-        background: #696;
-        margin: 0;
-        padding: 1em;
-        line-height: 1.5;
-      }
-      button, input, noscript, dialog {
+      /* Colours */
+      body { background: #696 }
+      button, input, dialog, noscript {
         background: #bdb;
         border-color: #363;
-        color: #030;
+        color: #030
+      }
+      button:hover { background: #9c9 }
+      button:active { background: #8c8 }
+      dialog { background: #cec }
+      dialog::backdrop { background: #0009 }
+      /* Body and header */
+      body {
+        line-height: 1.5;
+        margin: 0;
+      }
+      body, button, input {
         font-family: courier, monospace;
         font-size: medium;
         font-weight: bold;
       }
       button, input {
-        box-sizing: border-box;
-        margin-bottom: 1em;
-        margin-right: 0.25em;
         min-height: 2.5em;
-        width: 6em;
+        box-sizing: border-box;
       }
       button {
         cursor: pointer;
       }
-      button:hover {
-        background: #9c9;
-      }
-      button:active {
-        background: #8c8;
-      }
-      header button:last-of-type {
-        margin-right: 0;
-      }
       input {
         padding-left: 0.5em;
-        margin-bottom: 1em;
-        width: 18.5em;
       }
-      dialog {
-        border: thick solid;
-        max-width: 40em;
-        max-height: 80vh;
-        overflow: auto;
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        padding: 0.5em;
       }
-      dialog h1 {
-        font-size: 1.5em;
-        margin: 0;
-        text-align: center;
-        padding-left: 2rem;
-        width: calc(100% - 4rem);
-        display: inline-block;
-      }
-      dialog h1, dialog > header > form {
-        display: inline-block;
-        vertical-align: top;
-      }
-      dialog > header > form > button {
-        padding: 0.25em;
-        width: 2em;
-        margin: 0;
-        min-height: 0;
-        height: auto;
-        vertical-align: top;
-        box-sizing: border-box;
-      }
-      dialog > form > button {
-        display: block;
-        margin: 2em auto 1em auto;
-      }
-      dialog button {
-        background: #aca;
-      }
-      dialog::backdrop {
-        background: #000;
-        opacity: 0.7;
-      }
-      #urlw, #bReload, #bGo, #bCopy {
-        display: none;
-      }
-      #urln {
-        margin-right: 0;
-      }
+      header button { flex: 1 1 0% }
+      header input { flex: 0 0 100% }
+      #go-button, #open-button { display: none }
       noscript {
         border: medium double #600;
         color: #600;
@@ -101,52 +59,134 @@
         padding: 1em;
         text-align: center;
       }
-      iframe {
+      /* Dialog */
+      dialog {
+        border: thick solid;
+        max-width: 42em;
+        max-height: 80vh;
+        overflow: auto;
+      }
+      dialog header { padding: 0 }
+      dialog header::before { content: "" }
+      dialog header::before, dialog header form { flex: 1 1 0% }
+      dialog header form button {
+        box-sizing: border-box;
+        height: 2em;
+        min-height: 0;
+        padding: 0;
+        width: 2em;
+      }
+      dialog header h1 {
+        flex: 0 1 auto;
+        margin: 0;
+        text-align: center;
+      }
+      dialog header div {
+        flex: 0 0 100%;
+        text-align: center;
+      }
+      dialog header form {
+        text-align: right;
+      }
+      dialog h2 {
+        font-size: 1.2em;
+        margin: 1.5em 0 0 0;
+      }
+      dialog h2 + p {
+        margin-top: 0.25em;
+      }
+      dialog footer button {
+        width: 6em;
+        display: block;
+        margin: 0 auto;
+      }
+      /* Frames */
+      #wander-iframe {
         background: #fff;
         border: thick solid #363;
         box-sizing: border-box;
-        display: none;
-        height: calc(100vh - 12.5em);
+        height: calc(100vh - 6.5em);
         width: 100%;
       }
-      @media (min-width: 70em) {
-        iframe {
-          height: calc(100vh - 5.5em);
-        }
-        #urln {
-          display: none;
-        }
-        #bReload, #bGo, #bCopy, #urlw {
-          display: inline-block;
-        }
-        #urlw {
-          width: 25em;
-        }
+      #sandbox-iframe {
+        display: none;
+      }
+      /* Wide screen */
+      @media (min-width: 40em) {
+        body { padding: 1em }
+        header { padding: 0 0 1em 0 }
+        header input { order: 1; flex: 3 1 0% }
+        #go-button, #open-button, #about-button { order: 2; display: block }
+        #wander-iframe { height: calc(100vh - 5.5em) }
       }
     </style>
     <script src="wander.js"></script>
     <script>
       const LOGGING = true
-      const VERSION = '0.1.0'
+      const VERSION = '0.2.0.dev8'
+      const KEEP_CONSOLES = 1000
+
+      const IDLE_MODE = 0
+      const WANDERING_MODE = 1
+
+      const consoles = []
+      const pages = []
+      const ignores = []
+      const history = []
+
+      let mode = IDLE_MODE
+      let consolesFound = 0
+
+      const log = LOGGING ? console.log.bind(console, '[Wander]') : function () {}
 
       function init () {
         log(`Wander ${VERSION}`)
-        initConsole()
-        document.getElementById('bWander').addEventListener('click', wanderPage)
-        document.getElementById('bConsole').addEventListener('click', wanderConsole)
-        document.getElementById('bReload').addEventListener('click', reloadFrame)
-        document.getElementById('bGo').addEventListener('click', goLink)
-        document.getElementById('bCopy').addEventListener('click', copyLink)
-        document.getElementById('bAbout').addEventListener('click', showAbout)
-        document.getElementById('urln').addEventListener('keydown', keyHandler)
-        document.getElementById('urlw').addEventListener('keydown', keyHandler)
-        wanderPage()
+        initCustomStyle()
+        initCustomScript()
+        initListeners()
+        initConsoleList()
+        initVersion()
+        initIgnores(wander.ignore || [])
+        collectConsoles(window.location.href, wander.consoles || [])
+        collectPages(window.location.href, wander.pages || [])
+        pickPage()
         log('Initialised')
       }
 
-      function initConsole () {
-        const ul = document.getElementById('wanderers')
-        for (const url of window.wander.consoles) {
+      function initCustomStyle () {
+        const styles = wander.styles || []
+        for (const href of styles) {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = href
+          document.head.append(link)
+        }
+      }
+
+      function initCustomScript () {
+        const scripts = wander.scripts || []
+        for (const src of scripts) {
+          const script = document.createElement('script')
+          script.src = src
+          document.head.append(script)
+        }
+      }
+
+      function initListeners () {
+        document.getElementById('about-button').addEventListener('click', showAboutDialog)
+        document.getElementById('console-button').addEventListener('click', showConsoleDialog)
+        document.getElementById('open-button').addEventListener('click', openURL)
+        document.getElementById('go-button').addEventListener('click', gotoURL)
+        document.getElementById('url-input').addEventListener('keydown', handleURLInput)
+        document.getElementById('wander-button').addEventListener('click', pickPage)
+        document.getElementById('wander-iframe').addEventListener('load', pageLoadDone)
+        document.getElementById('wander-iframe').addEventListener('error', pageLoadError)
+        window.addEventListener('message', receiveMessage)
+      }
+
+      function initConsoleList () {
+        const ul = document.getElementById('console-dialog-list')
+        for (const url of wander.consoles || []) {
           const li = document.createElement('li')
           const a = document.createElement('a')
           li.append(a)
@@ -154,117 +194,306 @@
           a.href = url
           a.textContent = url
         }
-        document.getElementById('iframe').addEventListener('load', wanderDone)
       }
 
-      function wanderPage () {
-        const iframe = document.getElementById('iframe')
-        const url = pick(filter(window.wander.pages))
-        document.getElementById('urln').value = url
-        document.getElementById('urlw').value = url
-        iframe.src = url
-        log('Wandering to', url)
+      function initVersion () {
+        for (const element of document.querySelectorAll('.version')) {
+          element.textContent = VERSION
+        }
       }
 
-      function wanderDone () {
-        const iframe = document.getElementById('iframe')
-        log('Wandering complete')
+      function initIgnores (patterns) {
+        for (const pattern of patterns) {
+          ignores.push(pattern)
+        }
+      }
+
+      function collectConsoles (consoleURL, urls) {
+        const prevConsolesFound = consolesFound
+        for (const url of urls) {
+          const normURL = normaliseWanderURL(url)
+          if (!isGoodURL(normURL)) {
+            log(`Skipped incompatible console URL: ${consoleURL} => ${normURL}`)
+            continue
+          }
+          if (isDuplicateURL(consoles, normURL)) {
+            log(`Skipped duplicate console URL: ${consoleURL} => ${normURL}`)
+            continue
+          }
+          if (isIgnoredURL(ignores, normURL)) {
+            log(`Skipped ignored console URL: ${consoleURL} => ${normURL}`)
+            continue
+          }
+          consoles.push({ referrer: consoleURL, url: normURL })
+          consolesFound++
+          log(`Discovered console URL: ${consoleURL} => ${normURL} ` +
+              `(total ${consolesFound}, cached ${consoles.length})`)
+        }
+        if (consolesFound === prevConsolesFound) {
+          log(`No new consoles found at ${wanderJSURL(consoleURL)}`)
+          return
+        }
+        if (consoles.length > KEEP_CONSOLES) {
+          consoles.splice(0, consoles.length - KEEP_CONSOLES)
+        }
+        log('Trimmed console cache ' +
+            `(total ${consolesFound}, cached ${consoles.length})`)
+      }
+
+      function collectPages (consoleURL, urls) {
+        const goodPages = []
+        for (const newURL of urls) {
+          if (!isGoodURL(newURL)) {
+            log(`Skipped incompatible page URL: ${consoleURL} => ${newURL}`)
+            continue
+          }
+          if (isIgnoredURL(ignores, newURL)) {
+            log(`Skipped ignored page URL: ${consoleURL} => ${newURL}`)
+            continue
+          }
+          goodPages.push({ referrer: consoleURL, url: newURL })
+          log(`Discovered page URL: ${consoleURL} => ${newURL} (cached ${goodPages.length})`)
+        }
+        if (goodPages.length === 0) {
+          log(`WARNING: No good pages found at ${wanderJSURL(consoleURL)}`)
+          return
+        }
+        if (goodPages.length > 0) {
+          pages.length = 0
+          goodPages.forEach(function (item) { pages.push(item) })
+        }
+      }
+
+      function pickPage () {
+        if (pages.length === 0) {
+          log('WARNING: No valid pages available')
+          return
+        }
+        const iframe = document.getElementById('wander-iframe')
+        const page = pick(pages)
+        log('----- BEGIN WANDERING -----')
+        mode = WANDERING_MODE
+        document.getElementById('url-input').value = page.url
+        log(`Loading page: ${page.referrer} => ${page.url}`)
+        iframe.src = page.url
+        history.push(page)
+      }
+
+      function pageLoadDone () {
+        const iframe = document.getElementById('wander-iframe')
+        log('Loaded page')
         if (iframe.style.display !== 'block') {
           iframe.style.display = 'block'
           log('Displayed iframe')
         }
-        loadConsole()
-      }
-
-      function wanderConsole () {
-        document.getElementById('dConsole').showModal()
-      }
-
-      function loadConsole () {
-        const backup = window.wanderer
-        let url = pick(filter(window.wander.consoles))
-        if (!url.endsWith('/')) {
-          url += '/'
+        iframe.focus()
+        if (mode === WANDERING_MODE) {
+          log('----- END WANDERING -----')
+          mode = IDLE_MODE
+          pickConsole()
         }
-        url += 'wander.js'
-        const script = document.createElement('script')
-        log('Loading next console', url)
-        script.addEventListener('load', function () {
-          log('Loaded next console', url)
-        })
-        script.addEventListener('error', function (e) {
-          log('Failed to load next console', url, e)
-          window.wanderer = backup
-          script.remove()
-        })
-        script.src = url
-        document.head.append(script)
       }
 
-      function reloadFrame () {
-        const iframe = document.getElementById('iframe')
-        const src = iframe.src
-        iframe.src = src
+      function pageLoadError (e) {
+        log('ERROR:', e)
+        if (mode === WANDERING_MODE) {
+          log('----- FAILED WANDERING -----')
+        }
       }
 
-      function keyHandler (e) {
+      function showConsoleDialog () {
+        document.getElementById('host-console-link').textContent = window.location.href
+        document.getElementById('host-console-link').href = window.location.href
+        const ul = document.getElementById('history-list')
+        ul.textContent = ''
+        for (const item of history.slice().reverse()) {
+          const li = document.createElement('li')
+          const p = document.createElement('p')
+          const a1 = document.createElement('a')
+          const a2 = document.createElement('a')
+          const a3 = document.createElement('a')
+          const br = document.createElement('br')
+          ul.append(li)
+          li.append(p)
+          p.append(a1, br, a2, ' (', a3, ')')
+          a1.href = a1.textContent = item.url
+          a2.href = item.referrer
+          a2.textContent = item.referrer
+          a3.href = wanderJSURL(item.referrer)
+          a3.textContent = 'js'
+        }
+        document.getElementById('console-dialog').showModal()
+      }
+
+      function pickConsole () {
+        if (consoles.length === 0) {
+          log('WARNING: No valid consoles found')
+          return
+        }
+        const console = pick(consoles)
+        const jsURL = wanderJSURL(console.url)
+        const urlAsCode = JSON.stringify(console.url)
+        const sandbox = document.getElementById('sandbox-iframe')
+        log('Loading next console:', console.url)
+        log('Next console JS URL:', jsURL)
+        sandbox.srcdoc = `
+          <script src="${jsURL}"></scr` + `ipt>
+          <script>
+            parent.postMessage({ wander: wander, url: ${urlAsCode} }, '*')
+          </scr` + 'ipt>'
+      }
+
+      function receiveMessage (e) {
+        log(`Received message; origin: ${e.origin}; data: ${e.data}; event:`, e)
+        if (e.origin !== 'null') {
+          log('WARNING: Ignored message from untrusted origin:', e.origin)
+          return
+        }
+        if (e.source !== document.getElementById('sandbox-iframe').contentWindow) {
+          log('WARNING: Ignored message from untrusted source')
+          return
+        }
+        if (typeof e.data !== 'object' || e.data === null ||
+            typeof e.data.url !== 'string' ||
+            typeof e.data.wander !== 'object' || e.data.wander === null) {
+          log('WARNING: Ignored dodgy message:', e.data)
+          return
+        }
+        if (!isArrayOfStrings(e.data.wander.consoles) ||
+            !isArrayOfStrings(e.data.wander.pages)) {
+          log('WARNING: Ignored bad console data:', e.data)
+          return
+        }
+        log('Loaded next console:', e.data.url)
+        collectConsoles(e.data.url, e.data.wander.consoles || [])
+        collectPages(e.data.url, e.data.wander.pages || [])
+      }
+
+      function handleURLInput (e) {
         if (e.key === 'Enter') {
-          goLink()
+          gotoURL()
         }
       }
 
-      function goLink () {
-        let value = visibleInput().value
-        if (!value.toLowerCase().startsWith('https:') &&
-            !value.toLowerCase().startsWith('http:')) {
-          value = matchingProtocol() + '//' + value
-        }
-        document.getElementById('urln').value = value
-        document.getElementById('urlw').value = value
-        document.getElementById('iframe').src = value
+      function gotoURL () {
+        const url = document.getElementById('url-input').value
+        const normURL = normaliseGotoURL(url)
+        log('Navigating to URL:', normURL)
+        document.getElementById('url-input').value = normURL
+        document.getElementById('wander-iframe').src = normURL
       }
 
-      function copyLink () {
-        const input = visibleInput()
-        input.select()
-        document.execCommand('copy')
-        window.setTimeout(function () { input.blur() }, 125)
+      function openURL () {
+        window.open(document.getElementById('url-input').value)
       }
 
-      function showAbout () {
-        document.getElementById('dAbout').showModal()
+      function showAboutDialog () {
+        document.getElementById('about-dialog').showModal()
       }
 
       function pick (items) {
         return items[Math.floor(Math.random() * items.length)]
       }
 
-      function filter (items) {
-        return items.filter(function (item) {
-          return item.startsWith(matchingProtocol())
+      function isGoodURL (url) {
+        if (wander._skipURLCheck) {
+          return true
+        }
+        if (typeof url === 'string' && URL.canParse(url)) {
+          const mine = window.location.protocol
+          const theirs = new URL(url).protocol
+          return (['file:', 'http:', 'https:'].includes(theirs) &&
+                  ['file:', theirs].includes(mine))
+        }
+        return false
+      }
+
+      function isDuplicateURL (cache, url) {
+        return cache.some(function (item) {
+          return item.url === url
         })
       }
 
-      function visibleInput () {
-        const urln = document.getElementById('urln')
-        const urlw = document.getElementById('urlw')
-        return urln.offsetParent ? urln : urlw
+      function isIgnoredURL (ignores, url) {
+        return ignores.some(function (ignore) {
+          return isURLMatchingIgnore(ignore, url)
+        })
       }
 
-      function matchingProtocol () {
-        let protocol = window.location.protocol
-        if (protocol !== 'http:' && protocol !== 'https:') {
-          protocol = 'https:'
+      function isURLMatchingIgnore (ignore, url) {
+        function norm (s) {
+          s = s.replace(/^.*:\/\//, '') // Disregard protocol.
+          s = s.replace(/[?#].*$/, '') // Disregard query string and fragment.
+          s = s.toLowerCase() // Disregard case.
+          if (!s.endsWith('/')) s += '/' // Treat foo and foo/ as the same.
+          return s
         }
-        return protocol
+        return norm(url).startsWith(norm(ignore))
       }
 
-      function log () {
-        if (LOGGING) {
-          const args = Array.prototype.slice.call(arguments)
-          console.log('[wander] ' + args.join(' '))
-        }
+      function isArrayOfStrings (value) {
+        return value === undefined || (
+          Array.isArray(value) && value.every(function (v) {
+            return typeof v === 'string'
+          })
+        )
       }
+
+      function normaliseGotoURL (url) {
+        let result = url.trim()
+        const re = /^[A-Za-z][A-Za-z0-9+\-.]*:\/\// // RFC 3986, section 3.1.
+        if (!re.test(result)) {
+          let protocol = window.location.protocol
+          if (protocol !== 'http:' && protocol !== 'https:') {
+            protocol = 'https:'
+          }
+          result = protocol + '//' + result
+        }
+        return new URL(result).href
+      }
+
+      function normaliseWanderURL (url) {
+        if (url.endsWith('index.html')) {
+          url = url.slice(0, -'index.html'.length)
+        }
+        if (!url.endsWith('/')) {
+          url += '/'
+        }
+        return url
+      }
+
+      function wanderJSURL (wanderURL) {
+        // This function needs to work with relative paths, e.g.,
+        // 'foo/wander.html' as well for local testing.  That's why we
+        // don't use URL API since it needs complete URLs.
+        const normURL = normaliseWanderURL(wanderURL)
+        return normURL.slice(0, normURL.lastIndexOf('/') + 1) + 'wander.js'
+      }
+
+      function test () {
+        const assert = console.assert.bind(console)
+
+        assert(isURLMatchingIgnore('', ''))
+        assert(isURLMatchingIgnore('f', 'f'))
+        assert(isURLMatchingIgnore('http://foo/', 'ftp://foo/'))
+        assert(isURLMatchingIgnore('http://foo/', 'http://foo/'))
+        assert(isURLMatchingIgnore('http://foo/', 'http://foo'))
+        assert(isURLMatchingIgnore('http://foo', 'http://foo/'))
+        assert(isURLMatchingIgnore('http://foo/bar.html', 'http://foo/bar.html?hello'))
+
+        assert(!isURLMatchingIgnore('f', ''))
+        assert(!isURLMatchingIgnore('f/', 'fo'))
+        assert(!isURLMatchingIgnore('http://foo/bar', 'http://foo/'))
+        assert(!isURLMatchingIgnore('http://foo/', 'http://foobar'))
+        assert(!isURLMatchingIgnore('http://foo', 'http://foobar'))
+
+        assert(isIgnoredURL(['http://foo/bar'], 'http://foo/bar/'))
+        assert(isIgnoredURL(['http://foo/bar/'], 'http://foo/bar'))
+        assert(isIgnoredURL(['http://foo/bar/'], 'https://foo/bar'))
+        assert(!isIgnoredURL(['http://foo/bar/'], 'https://foo/barx'))
+      }
+
+      test()
 
       window.addEventListener('load', init)
     </script>
@@ -272,41 +501,53 @@
   <body>
     <noscript>JavaScript is required to use this application.</noscript>
     <header>
-      <button id="bWander">Wander</button><!--
-      --><button id="bConsole">Console</button><!--
-      --><button id="bReload">Reload</button><!--
-      --><input id="urlw" autocomplete="off"><!--
-      --><button id="bGo">Go</button><!--
-      --><button id="bCopy">Copy</button><!--
-      --><button id="bAbout">About</button><!--
-      --><input id="urln">
+      <button id="wander-button">Wander</button>
+      <button id="console-button">Console</button>
+      <button id="go-button">Go</button>
+      <button id="open-button">Open</button>
+      <button id="about-button">About</button>
+      <input id="url-input" autocomplete="off">
     </header>
-    <iframe id="iframe"></iframe>
-    <dialog id="dConsole">
+    <iframe id="wander-iframe"></iframe>
+    <iframe id="sandbox-iframe" sandbox="allow-scripts"></iframe>
+    <dialog id="console-dialog">
       <header>
-        <h1>Wander to Another Console</h1><form method="dialog"><button>x</button></form>
+        <h1>Console Explorer</h1><form method="dialog"><button>x</button></form>
       </header>
+      <h2>Host Console</h2>
       <p>
-        By wandering to another console, you will leave the current
-        console on this website and reach a Wander console on a
-        different website.  You can then continue wandering the Web
-        using the console on that website.
+        You are currently on <a id="host-console-link"></a>.
+        This console is helping you navigate the Wander network.
       </p>
-      <ul id="wanderers"></ul>
+      <h2>Console Neighbourhood</h2>
       <p>
-        Note that you don't really need to change console to browse
-        the Wander network.  This console can fetch recommendations
-        from other consoles, then from the consoles they link to and
-        so on recursively.  However, you can switch consoles if you
-        prefer to browse the network from another website.
+        Your host console lists the following consoles as its
+        neighbours:
       </p>
-      <form method="dialog">
-        <button>Close</button>
-      </form>
+      <ul id="console-dialog-list"></ul>
+      <p>
+        You can wander to a neighbouring console by clicking one of
+        the links above.  Note that you do not really need to change
+        console to browse the Wander network.  The host console can
+        fetch recommendations from other consoles, then from the
+        consoles they link to and so on recursively.
+      </p>
+      <h2>Wandering History</h2>
+      <p>
+        Your wandering history in reverse chronological order:
+      </p>
+      <ul id="history-list"></ul>
+      <p>
+        Each item above includes three links: the page recommended to
+        you, the console that recommended it and the wander.js file of
+        that console.
+      </p>
+      <footer><form method="dialog"><button>Close</button></form></footer>
     </dialog>
-    <dialog id="dAbout">
+    <dialog id="about-dialog">
       <header>
-        <h1>About Wander</h1><form method="dialog"><button>x</button></form>
+        <h1>Wander Console</h1><form method="dialog"><button>x</button></form>
+        <div>Version <span class="version">&nbsp;</span></div>
       </header>
       <p>
         Hello!  You are currently on a Wander console!  A Wander
@@ -317,7 +558,7 @@
       </p>
       <p>
         To set up your own Wander console, download
-        <a href="https://codeberg.org/susam/wander/archive/main.zip">this ZIP file</a>,
+        <a href="https://codeberg.org/susam/wander/archive/wander.zip">this ZIP file</a>,
         extract index.html and wander.js, and place them
         in the /wander/ directory of your website. Then edit
         wander.js by following the directions at
@@ -335,9 +576,7 @@
         For more information about Wander, please
         see <a href="https://codeberg.org/susam/wander#readme">codeberg.org/susam/wander</a>.
       </p>
-      <form method="dialog">
-        <button>Close</button>
-      </form>
+      <footer><form method="dialog"><button>Close</button></form></footer>
     </dialog>
   </body>
 </html>

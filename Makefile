@@ -26,8 +26,8 @@ help:
 	@echo '  grepl re=PATTERN  Filter all access logs by regular expression pattern.'
 	@echo '  grepd re=PATTERN  Filter current access log by regular expression pattern.'
 	@echo '  grepv re=PATTERN  Filter visit logs by regular expression pattern.'
-	@echo '  lsform            List form data submitted.'
-	@echo '  rdform            Read form data submitted.'
+	@echo '  lsf               List form data submitted.'
+	@echo '  rdf               Read form data submitted.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -105,7 +105,7 @@ http: rm live form
 	@echo Setting up HTTP website ...
 	ln -snf "$$PWD/_live" '/var/www/$(FQDN)'
 	ln -snf "$$PWD/etc/nginx/http.$(FQDN)" '/etc/nginx/sites-enabled/$(FQDN)'
-	ln -snf "$$PWD/etc/logrotate" /etc/logrotate.d/form
+	ln -snf "$$PWD/etc/logrotate" /etc/logrotate.d/susam
 	systemctl reload nginx
 	echo 127.0.0.1 '$(NAME)' >> /etc/hosts
 	@echo Done; echo
@@ -121,7 +121,7 @@ form:
 
 rm: checkroot
 	@echo Removing website ...
-	rm -f /etc/logrotate/form
+	rm -f /etc/logrotate.d/susam
 	rm -f '/etc/nginx/sites-enabled/$(FQDN)'
 	rm -f '/var/www/$(FQDN)'
 	systemctl reload nginx
@@ -157,10 +157,15 @@ backup:
 	ls -lh /opt/cache/
 	df -h /
 
-BOT_RE = tt-rss|netnewswire|AppEngine-Google|HeadlessChrome|FeedFetcher-Google|PetalBot
+BOT_RE = AppEngine-Google|Amazonbot|ChatGPT|Bot|HeadlessChrome|FeedFetcher-Google|OpenClaw|RSS
+
+NOISE_RE = \.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)
+
+nono:
+	grep -vE "$(NOISE_RE)"
 
 follow-log:
-	sudo tail -F /var/log/nginx/access.log | grep -vE "\.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)"
+	sudo tail -F /var/log/nginx/access.log | grep -vE "$(NOISE_RE)"
 
 follow-post:
 	tail -F /opt/log/form/form.log | grep POST
@@ -238,22 +243,27 @@ cache-visits:
 clean-visits:
 	rm -f /tmp/visitors.txt /tmp/visits.txt
 
-lsform:
+lsf:
 	ls -l /opt/data/form/*.txt | less -F
 
-rdform:
-	tail -n +1 /opt/data/form/*.txt | less -F
+rdf:
+	tail -vn +1 /opt/data/form/*.txt | less -F
 
 
 # Low-Level Targets
 # -----------------
 
-live: site
+live: site var
 	@echo Setting up live directory ...
+	ln -snf /opt/var/ _site/var
 	mv _live _gone || :
 	mv _site _live
 	rm -rf _gone
 	@echo Done; echo
+
+var:
+	mkdir -p /opt/var/
+	chown susam:susam /opt/var/
 
 site: katex
 	@echo Generating website ...
@@ -401,6 +411,9 @@ cvsplit:
 	sed -n '/Talks/,/<\/table>/p' content/tree/cv.html >> content/tree/talks.html
 	sed -n '/<\/main>/,$$p' content/tree/cv.html >> content/tree/talks.html
 
+pc:
+	sed -nE '/<pre>/,/<\/pre>/{ /(<pre>|<\/pre>)/d; p; }' content/tree/pc.html > content/tree/pc.txt
+
 cat-my-text:
 	find content \( -name '*.html' -o -name '*.txt' \) \
 	  ! -path 'content/comments/*' \
@@ -451,6 +464,7 @@ check-bre-and: cat-my-text
 	  s/, and after a while we began to take their complaints/x/g; \
 	  s/, and arithmetic expansion/x/g; \
 	  s/, and at the scale of the UID/x/g; \
+	  s/, and conforming applications shall not follow/x/g; \
 	  s/, and consider what I wanted to/x/g; \
 	  s/, and effectively subverts/x/g; \
 	  s/, and even deeper, to the well-being of the world/x/g; \
@@ -817,7 +831,10 @@ tidy: dist
 	grep -v '_site/nested-code-fences.html' | \
 	while read -r page; do \
 	  echo Tidying "$$page"; \
-	  sed 's/ method="dialog"//' "$$page" > /tmp/tmp.html; \
+	  sed ' \
+	    s/ method="dialog"//; \
+	    s/<ol type="[^"]*">/<ol>/; ' \
+	  "$$page" > /tmp/tmp.html; \
 	  tidy -q -e --warn-proprietary-attributes no /tmp/tmp.html || exit 1; \
 	done
 	@echo Done; echo

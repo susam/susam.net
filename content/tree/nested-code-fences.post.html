@@ -93,9 +93,10 @@
 </p>
 <h2 id="fancy-code-fences">Fancy Code Fences</h2>
 <p>
-  In CommonMark, there are two main ways to include triple backticks
-  within fenced code blocks.  First, we can use tildes as the code
-  fence:
+  In CommonMark, fenced code blocks are most commonly written using
+  triple backticks.  However, the specification also allows tildes as
+  an alternative fence.  This can be useful when the code itself
+  contains backticks.  Let us see an example:
 </p>
 <!-- Markdown #3a -->
 <pre><code>Corey, all grown up:
@@ -191,10 +192,10 @@
   There is another important but less well-known detail.  When the
   text inside an inline code span begins and ends with spaces, one
   space is removed from each end before rendering.  So
-  <code>`foo`</code> and <code>` foo `</code> are equivalent.
-  Therefore, when we need to put backticks within an inline code span,
-  we can start the code span using multiple backticks and a space.
-  For example:
+  <code>`foo`</code> and <code>`&nbsp;foo&nbsp;`</code> are
+  equivalent.  Therefore, when we need to put backticks within an
+  inline code span, we can start the code span using multiple
+  backticks and a space.  For example:
 </p>
 <!-- Markdown #5 -->
 <pre><code>Meet Corey's friend Becky Trace: `` `(o_o)` ``</code></pre>
