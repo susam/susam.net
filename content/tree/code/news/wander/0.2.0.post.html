@@ -1,0 +1,69 @@
+<!-- date: 2026-03-24 -->
+<!-- title: Wander 0.2.0 -->
+<!-- tag: Web, Technology -->
+<!-- key: wnztz -->
+<p>
+  Wander 0.2.0 is the second release of Wander, a small,
+  decentralised, self-hosted web console that lets visitors to your
+  website explore interesting websites and pages recommended by a
+  community of independent personal website owners.  To try it, go
+  to <a href="../../../wander/{{ index }}">susam.net/wander</a>.
+</p>
+<p>
+  This release brings a number of improvements.  When I released
+  version 0.1.0, it was the initial version of the software I was
+  using for my own website.  Naturally, I was the only user initially
+  and I only added trusted web pages to the recommendation list of my
+  console.  But ever since I
+  <a href="https://news.ycombinator.com/item?id=47422759">announced
+  this project on Hacker News</a>, it has received a good amount of
+  attention.  It has been less than a week since I announced it there
+  but over 30 people have set up a Wander console on their personal
+  websites.  There are now over a hundred web pages being recommended
+  by this network of consoles.  With the growth in the number of
+  people who have set up Wander console, came several feature
+  requests, most of which have been implemented already.  This release
+  makes these new features available.
+</p>
+<p>
+  Since Wander 0.2.0, the <code>wander.js</code> file of remote
+  consoles is executed in a sandbox <code>iframe</code> to ensure that
+  it has no side effects on the parent Wander console page.
+  Similarly, the pages recommended by the network are also loaded into
+  a sandbox <code>iframe</code>.
+</p>
+<p>
+  This release also brings several customisation features.  Console
+  owners can customise their Wander console by adding custom CSS or
+  JavaScript.  Console owners can also block certain URLs from ever
+  being recommended on their console.  This is especially important in
+  providing a good wandering experience to visitors.  Since this
+  network is completely decentralised, console owners can add any web
+  page they like to their console.  Sometimes they inadvertently add
+  pages that do not load successfully in the console due to frame
+  embedding restrictions.  This leads to an uneven wandering
+  experience because these page recommendations occasionally make it
+  to other consoles where they fail to load.  Console owners can now
+  block such URLs in their console to decrease the likelihood of these
+  failed page loads.  This helps make the wandering experience smoother.
+</p>
+<p>
+  Another significant feature in this release is the
+  expanded <strong>Console</strong> dialog box.  This dialog box now
+  shows various details about the console and the current wandering
+  session.  For example, it shows the console's configuration:
+  recommended pages, ignored URLs and linked consoles.  It also shows
+  a wandering history screen where you can see each link that was
+  recommended to you along with the console that recommendation came
+  from.  There is another screen that shows all the consoles
+  discovered during the discovery process.  Those who care about how
+  Wander works would find this dialog box quite useful.  To check it
+  out, go to
+  <a href="../../../wander/{{ index }}">my Wander console</a> and
+  explore.
+</p>
+<p>
+  To learn more about Wander, how it works and how to set it up,
+  please read the project README at
+  <a href="https://codeberg.org/susam/wander#readme">codeberg.org/susam/wander</a>.
+</p>
