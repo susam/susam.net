@@ -28,4 +28,31 @@ window.wander = {
     'https://xnacly.me/',
     'https://tonsky.me/',
   ],
+  // My console will never load these URLs.
+  ignore: [
+    // These pages fail to load in the console due to frame restrictions.
+    'https://cari.institute/',
+    'https://dbushell.com/',
+    'https://drkhsh.at/',
+    'https://hyperdoc.khinsen.net/',
+    'https://levels.io/',
+    'https://wdl.mcdaniel.edu/',
+    'https://www.honest-broker.com/',
+    'https://www.joshuamckiddy.com',
+    'https://www.strangeloopcanon.com/',
+
+    // Out of scope.  These are commercial platforms, not personal websites.
+    'https://medium.com/',
+    'https://substack.com/',
+
+    // These pages present distracting cookie banners.
+    'https://rickyyean.com/',
+
+    // SSL_ERROR_BAD_CERT_DOMAIN
+    'https://wander.liontask.dev/',
+
+    // Recommends too many AI-generated and startup-focused pages.
+    // Content focus differs from the small web emphasis of this project.
+    'https://www.davidtran.me/wander/',
+  ]
 }

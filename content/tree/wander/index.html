@@ -1,5 +1,5 @@
 <!--
-  Wander 0.2.0
+  Wander 0.3.0
   Source: https://codeberg.org/susam/wander
   Licence: MIT
 -->
@@ -23,6 +23,7 @@
       body {
         line-height: 1.5;
         margin: 0;
+        overflow-wrap: break-word;
       }
       body, button, input {
         font-family: courier, monospace;
@@ -63,9 +64,10 @@
       /* Dialog */
       dialog {
         border: thick solid;
+        box-sizing: border-box;
         margin: 1em auto;
         max-height: calc(100vh - 2em);
-        max-width: 42em;
+        max-width: calc(100% - 2em);
         overflow: auto;
       }
       dialog header { padding: 0 }
@@ -135,6 +137,7 @@
         body { padding: 1em }
         header { padding: 0 0 1em 0 }
         header input { order: 1; flex: 3 1 0% }
+        dialog { max-width: 45em }
         dialog nav button { flex: 0 0 calc((100% - 1em) / 3) }
         #go-button, #open-button, #about-button { order: 2; display: block }
         #wander-iframe { height: calc(100vh - 5.5em) }
@@ -142,21 +145,21 @@
     </style>
     <script src="wander.js"></script>
     <script>
-      const VERSION = '0.2.0'
+      const VERSION = '0.3.0'
       const LOGGING = true
       const TESTING = false
-      const KEEP_CONSOLES = 1000
-
+      const HISTORY_SIZE = 100
       const IDLE_MODE = 0
       const WANDERING_MODE = 1
 
-      const consoles = []
       const pages = []
       const ignores = []
-      const history = []
+      const visitedConsoles = []
+      const visitedPages = []
 
       let mode = IDLE_MODE
       let consolesFound = 0
+      let pagesPicked = 0
 
       const log = LOGGING ? console.log.bind(console, '[Wander]') : function () {}
 
@@ -249,7 +252,7 @@
             log(`Skipped incompatible console URL: ${consoleURL} => ${normURL}`)
             continue
           }
-          if (isDuplicateURL(consoles, normURL)) {
+          if (isDuplicateURL(visitedConsoles, normURL)) {
             log(`Skipped duplicate console URL: ${consoleURL} => ${normURL}`)
             continue
           }
@@ -257,20 +260,18 @@
             log(`Skipped ignored console URL: ${consoleURL} => ${normURL}`)
             continue
           }
-          consoles.push({ referrer: consoleURL, url: normURL })
+          visitedConsoles.push({ referrer: consoleURL, url: normURL })
           consolesFound++
           log(`Discovered console URL: ${consoleURL} => ${normURL} ` +
-              `(total ${consolesFound}, cached ${consoles.length})`)
+              `(total ${consolesFound}, saved ${visitedConsoles.length})`)
         }
         if (consolesFound === prevConsolesFound) {
           log(`No new consoles found at ${wanderJSURL(consoleURL)}`)
           return
         }
-        if (consoles.length > KEEP_CONSOLES) {
-          consoles.splice(0, consoles.length - KEEP_CONSOLES)
-        }
-        log('Trimmed console cache ' +
-            `(total ${consolesFound}, cached ${consoles.length})`)
+        trimHistory(visitedConsoles)
+        log('Trimmed console history ' +
+            `(total ${consolesFound}, saved ${visitedConsoles.length})`)
       }
 
       function collectPages (consoleURL, urls) {
@@ -280,12 +281,16 @@
             log(`Skipped incompatible page URL: ${consoleURL} => ${newURL}`)
             continue
           }
+          if (isDuplicateURL(visitedPages, newURL)) {
+            log(`Skipped recently visited page URL: ${consoleURL} => ${newURL}`)
+            continue
+          }
           if (isIgnoredURL(ignores, newURL)) {
             log(`Skipped ignored page URL: ${consoleURL} => ${newURL}`)
             continue
           }
           goodPages.push({ referrer: consoleURL, url: newURL })
-          log(`Discovered page URL: ${consoleURL} => ${newURL} (cached ${goodPages.length})`)
+          log(`Discovered page URL: ${consoleURL} => ${newURL} (saved ${goodPages.length})`)
         }
         if (goodPages.length === 0) {
           log(`WARNING: No good pages found at ${wanderJSURL(consoleURL)}`)
@@ -312,7 +317,11 @@
         document.getElementById('url-input').value = page.url
         log(`Loading page: ${page.referrer} => ${page.url}`)
         iframe.src = page.url
-        history.push(page)
+        visitedPages.push(page)
+        pagesPicked++
+        trimHistory(visitedPages)
+        log('Trimmed page history ' +
+            `(total ${pagesPicked}, saved ${visitedPages.length})`)
       }
 
       function pageLoadDone () {
@@ -338,11 +347,11 @@
       }
 
       function pickConsole () {
-        if (consoles.length === 0) {
+        if (visitedConsoles.length === 0) {
           log('WARNING: No valid consoles found')
           return
         }
-        const console = pick(consoles)
+        const console = pick(visitedConsoles)
         const jsURL = wanderJSURL(console.url)
         const urlAsCode = JSON.stringify(console.url)
         const iframe = document.getElementById('discovery-iframe')
@@ -404,11 +413,11 @@
         aConsoleLink.href = aConsoleLink.textContent = normBaseURL
         const lastPageLink = document.getElementById('last-page-link')
         const lastReferrerLink = document.getElementById('last-referrer-link')
-        if (history.length === 0) {
+        if (visitedPages.length === 0) {
           lastPageLink.textContent = lastReferrerLink.textContent = 'N/A'
           return
         }
-        const lastPage = history[history.length - 1]
+        const lastPage = visitedPages[visitedPages.length - 1]
         lastPageLink.textContent = ''
         lastPageLink.append(createExtLink(lastPage.url))
         lastReferrerLink.textContent = ''
@@ -446,11 +455,11 @@
       function setupConsoleDialogIgnores () {
         const ul = document.getElementById('ignores-list')
         ul.textContent = ''
-        if (wander.ignore.length === 0) {
+        if (ignores.length === 0) {
           createNoneItem(ul)
           return
         }
-        for (const url of wander.ignore) {
+        for (const url of ignores) {
           const li = document.createElement('li')
           ul.append(li)
           li.append(createExtLink(url))
@@ -458,13 +467,14 @@
       }
 
       function setupConsoleDialogHistory () {
+        document.getElementById('page-history-size').textContent = HISTORY_SIZE
         const ul = document.getElementById('history-list')
         ul.textContent = ''
-        if (history.length === 0) {
+        if (visitedPages.length === 0) {
           createNoneItem(ul)
           return
         }
-        for (const item of history.slice().reverse()) {
+        for (const item of visitedPages.slice().reverse()) {
           const li = document.createElement('li')
           const p = document.createElement('p')
           const br = document.createElement('br')
@@ -478,20 +488,21 @@
       }
 
       function setupConsoleDialogDiscovery () {
+        document.getElementById('console-history-size').textContent = HISTORY_SIZE
         const ul = document.getElementById('discovery-list')
         ul.textContent = ''
-        if (consoles.length === 0) {
+        if (visitedConsoles.length === 0) {
           createNoneItem(ul)
           return
         }
-        for (const item of consoles.slice().reverse()) {
+        for (const item of visitedConsoles.slice().reverse()) {
           const li = document.createElement('li')
           const p = document.createElement('p')
           const br = document.createElement('br')
           ul.append(li)
           li.append(p)
           p.append(
-            createConsoleLink(item.referrer), br, '\u21b3',
+            createConsoleLink(item.referrer), br, '\u21b3 ',
             createConsoleLink(item.url)
           )
         }
@@ -542,8 +553,8 @@
         return false
       }
 
-      function isDuplicateURL (cache, url) {
-        return cache.some(function (item) {
+      function isDuplicateURL (history, url) {
+        return history.some(function (item) {
           return item.url === url
         })
       }
@@ -647,6 +658,12 @@
         li.append('None')
       }
 
+      function trimHistory (history) {
+        if (history.length > HISTORY_SIZE) {
+          history.splice(0, history.length - HISTORY_SIZE)
+        }
+      }
+
       // Tests
       // -----
 
@@ -727,7 +744,7 @@
       <button id="about-button">About</button>
       <input id="url-input" autocomplete="off">
     </header>
-    <iframe id="wander-iframe" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts"></iframe>
+    <iframe id="wander-iframe" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin"></iframe>
     <iframe id="discovery-iframe" sandbox="allow-scripts"></iframe>
     <svg style="display: none">
       <symbol id="ext-icon" viewBox="0 0 16 16">
@@ -792,13 +809,12 @@
       <section id="pages-section">
         <h2>Pages</h2>
         <p>
-          This console recommends the following pages to the Wander
-          community:
+          This console recommends the following websites and pages to
+          the Wander community:
         </p>
         <ul id="pages-list"></ul>
         <p>
-          If you click on any link above, you will navigate away from
-          this console to the selected page.
+          If you click on any link above, it will open in a new tab.
         </p>
       </section>
       <section id="ignores-section">
@@ -825,7 +841,8 @@
         <h2>Wandering History</h2>
         <p>
           Your wandering history from the current session, in reverse
-          chronological order:
+          chronological order
+          (up to <span id="page-history-size"></span> pages):
         </p>
         <ul id="history-list"></ul>
         <p>
@@ -837,8 +854,8 @@
       <section id="discovery-section">
         <h2>Discovered Consoles</h2>
         <p>
-          The following consoles were discovered during this wandering
-          session:
+          The list below shows the most recently discovered consoles
+          in this session (up to <span id="console-history-size"></span>):
         </p>
         <ul id="discovery-list"></ul>
         <p>
@@ -884,9 +901,9 @@
         the Wander network.
       </p>
       <p>
-        For more information about Wander, please
-        see <a href="https://codeberg.org/susam/wander#readme"
-               target="_blank">codeberg.org/susam/wander</a>.
+        For more information about Wander, please see
+        <a href="https://codeberg.org/susam/wander#readme"
+           target="_blank">codeberg.org/susam/wander</a>.
       </p>
       <footer><form method="dialog"><button>Close</button></form></footer>
     </dialog>
