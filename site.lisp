@@ -1261,9 +1261,9 @@ value, next-index."
     (values (string-replace "www." "" host)
             (subseq url (1+ end-index)))))
 
-(defun format-backlink (s)
-  "Encode special characters as HTML entities."
-  (string-replace "&" "&amp;" s))
+(defun format-backlink (s params)
+  "Encode special characters and expand placeholders."
+  (render (string-replace "&" "&amp;" s) params))
 
 (defun format-lang (s)
   "Format the language text to be displayed along with a backlink."
@@ -1285,10 +1285,10 @@ value, next-index."
               item-params)
         (aput "lang" (format-lang (getf backlink :lang)) item-params)
         (aput "domain" (parse-domain (getf backlink :url1)) item-params)
-        (aput "txt1" (format-backlink (getf backlink :txt1)) item-params)
-        (aput "url1" (format-backlink (getf backlink :url1)) item-params)
-        (aput "txt2" (format-backlink (getf backlink :txt2)) item-params)
-        (aput "url2" (format-backlink (getf backlink :url2)) item-params)
+        (aput "txt1" (format-backlink (getf backlink :txt1) params) item-params)
+        (aput "url1" (format-backlink (getf backlink :url1) params) item-params)
+        (aput "txt2" (format-backlink (getf backlink :txt2) params) item-params)
+        (aput "url2" (format-backlink (getf backlink :url2) params) item-params)
         (push (render item-layout item-params) rendered-items)))
     (aput "body" (join-strings rendered-items) params)
     (aput "count" (length backlinks) params)
@@ -1455,7 +1455,7 @@ value, next-index."
 
 (defun tag-title (tag)
   "Determine title for a tag page."
-  (let* ((special-titles (list (cons "Monthly" "{{ nick }}'s Monthly Notes")
+  (let* ((special-titles (list (cons "Notes" "{{ nick }}'s Notes")
                                (cons "Puzzle" "{{ nick }}'s Puzzles")
                                (cons "Web" "{{ nick }}'s Web Posts")))
          (special-title (aget tag special-titles)))

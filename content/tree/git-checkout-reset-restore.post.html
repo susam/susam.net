@@ -1,6 +1,6 @@
 <!-- date: 2026-03-12 -->
 <!-- title: Git Checkout, Reset and Restore -->
-<!-- tag: Git, Technology, How-To -->
+<!-- tag: Technology, How-To -->
 <!-- key: gcrrp -->
 <!-- blog: Maze -->
 <!-- import: extra.css -->
@@ -28,7 +28,7 @@ git init; git add a b c; git commit -m hello</code></pre>
   Now we make changes to the files and stage some of the changes.  We
   then add more unstaged changes to one of the staged files.
 </p>
-<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<pre><code>date | tee a b c d; git add a b d; echo &gt; b</code></pre>
 <p>
   At this point, the working tree and index look like this:
 </p>
@@ -61,7 +61,7 @@ Changes not staged for commit:
   experiments to ensure that we restore the experimental setup each
   time:
 </p>
-<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<pre><code>date | tee a b c d; git add a b d; echo &gt; b</code></pre>
 <p>
   To discard the changes in the working tree and reset the files in
   the working tree from the index, I typically run:
@@ -91,7 +91,7 @@ Changes to be committed:
   Another common situation is when we have staged some changes but
   want to unstage them.  First, we restore the experimental setup:
 </p>
-<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<pre><code>date | tee a b c d; git add a b d; echo &gt; b</code></pre>
 <p>
   I normally run the following command to do so:
 </p>
@@ -144,7 +144,7 @@ no changes added to commit (use "git add" and/or "git commit -a")</samp></pre>
 <p>
   Once again, we restore the experimental setup.
 </p>
-<pre><code>echo x | tee -a a b c; touch d; git add a b d; echo x | tee -a b</code></pre>
+<pre><code>date | tee a b c d; git add a b d; echo &gt; b</code></pre>
 <p>
   This time we not only want to unstage the changes but also discard
   the changes in the working tree.  In other words, we want to reset
@@ -164,11 +164,11 @@ no changes added to commit (use "git add" and/or "git commit -a")</samp></pre>
 On branch main
 nothing to commit, working tree clean</samp></pre>
 <p>
-  The <code>-W</code> or <code>--worktree</code> option makes the
-  command operate on the working tree.  The <code>-S</code> option
-  resets the index as described in the previous section.  As a
-  result, this command unstages any changes and discards any
-  modifications in the working tree.
+  The <code>-W</code> (<code>--worktree</code>) option makes the
+  command operate on the working tree.  The <code>-S</code>
+  (<code>--staged</code>) option resets the index as described in the
+  previous section.  As a result, this command unstages any changes
+  and discards any modifications in the working tree.
 </p>
 <p>
   Note that when neither of these options is specified,

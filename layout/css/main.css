@@ -29,18 +29,18 @@ blockquote, pre, kbd, .highlight {
 }
 blockquote {
   border-left: thick solid {{ light-shade-color }};
-  margin: 1em 0;
 }
 pre {
   overflow: auto;
 }
 blockquote, pre, .highlight {
+  margin: 1em 0;
   padding: 0.5em;
 }
-blockquote *:first-child, .highlight *:first-child {
+blockquote > *:first-child, .highlight > *:first-child {
   margin-top: 0;
 }
-blockquote *:last-child, .highlight *:last-child {
+blockquote > *:last-child, .highlight > *:last-child {
   margin-bottom: 0;
 }
 pre, code, samp, kbd, .mono {

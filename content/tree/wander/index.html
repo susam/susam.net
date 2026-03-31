@@ -1,5 +1,5 @@
 <!--
-  Wander 0.3.0
+  Wander 0.4.0.dev4
   Source: https://codeberg.org/susam/wander
   Licence: MIT
 -->
@@ -145,16 +145,15 @@
     </style>
     <script src="wander.js"></script>
     <script>
-      const VERSION = '0.3.0'
+      const VERSION = '0.4.0.dev4'
       const LOGGING = true
-      const TESTING = false
       const HISTORY_SIZE = 100
       const IDLE_MODE = 0
       const WANDERING_MODE = 1
 
       const pages = []
       const ignores = []
-      const visitedConsoles = []
+      const consoles = []
       const visitedPages = []
 
       let mode = IDLE_MODE
@@ -174,8 +173,10 @@
         initConsoleDialog()
         initVersion()
         initIgnores(wander.ignore || [])
-        collectConsoles(normaliseWanderURL(window.location.href), wander.consoles || [])
-        collectPages(normaliseWanderURL(window.location.href), wander.pages || [])
+
+        const baseConsoleURL = normaliseWanderURL(window.location.href)
+        collectConsoles(baseConsoleURL, [baseConsoleURL].concat(wander.consoles || []))
+        collectPages(baseConsoleURL, wander.pages || [])
         pickPage()
         log('Initialised')
       }
@@ -248,11 +249,15 @@
         const prevConsolesFound = consolesFound
         for (const url of urls) {
           const normURL = normaliseWanderURL(url)
+          if (isFileURL(normURL)) {
+            log(`Skipped file URL: ${consoleURL} => ${normURL}`)
+            continue
+          }
           if (!isGoodURL(normURL)) {
             log(`Skipped incompatible console URL: ${consoleURL} => ${normURL}`)
             continue
           }
-          if (isDuplicateURL(visitedConsoles, normURL)) {
+          if (isDuplicateURL(consoles, normURL)) {
             log(`Skipped duplicate console URL: ${consoleURL} => ${normURL}`)
             continue
           }
@@ -260,18 +265,18 @@
             log(`Skipped ignored console URL: ${consoleURL} => ${normURL}`)
             continue
           }
-          visitedConsoles.push({ referrer: consoleURL, url: normURL })
+          consoles.push({ referrer: consoleURL, url: normURL })
           consolesFound++
           log(`Discovered console URL: ${consoleURL} => ${normURL} ` +
-              `(total ${consolesFound}, saved ${visitedConsoles.length})`)
+              `(total ${consolesFound}, saved ${consoles.length})`)
         }
         if (consolesFound === prevConsolesFound) {
           log(`No new consoles found at ${wanderJSURL(consoleURL)}`)
           return
         }
-        trimHistory(visitedConsoles)
+        trimHistory(consoles)
         log('Trimmed console history ' +
-            `(total ${consolesFound}, saved ${visitedConsoles.length})`)
+            `(total ${consolesFound}, saved ${consoles.length})`)
       }
 
       function collectPages (consoleURL, urls) {
@@ -312,11 +317,21 @@
         }
         const iframe = document.getElementById('wander-iframe')
         const page = pick(pages)
+        const referral = wander.referral
+        let url
         log('----- BEGIN WANDERING -----')
         mode = WANDERING_MODE
         document.getElementById('url-input').value = page.url
-        log(`Loading page: ${page.referrer} => ${page.url}`)
-        iframe.src = page.url
+        log(`Picked page: ${page.referrer} => ${page.url}`)
+        if (referral === 'no') {
+          url = page.url
+        } else if (referral === 'version') {
+          url = addVia(page.url, 'wander-' + VERSION)
+        } else {
+          url = addVia(page.url, normaliseWanderURL(location.href))
+        }
+        log(`Loading page: ${page.referrer} => ${url}`)
+        iframe.src = url
         visitedPages.push(page)
         pagesPicked++
         trimHistory(visitedPages)
@@ -347,11 +362,11 @@
       }
 
       function pickConsole () {
-        if (visitedConsoles.length === 0) {
+        if (consoles.length === 0) {
           log('WARNING: No valid consoles found')
           return
         }
-        const console = pick(visitedConsoles)
+        const console = pick(consoles)
         const jsURL = wanderJSURL(console.url)
         const urlAsCode = JSON.stringify(console.url)
         const iframe = document.getElementById('discovery-iframe')
@@ -422,6 +437,9 @@
         lastPageLink.append(createExtLink(lastPage.url))
         lastReferrerLink.textContent = ''
         lastReferrerLink.append(createConsoleLink(lastPage.referrer))
+        const baseJSLink = document.getElementById('base-js-link')
+        baseJSLink.textContent = ''
+        baseJSLink.append(createExtLink('wander.js', 'wander.js'))
       }
 
       function setupConsoleDialogNeighbours () {
@@ -491,11 +509,11 @@
         document.getElementById('console-history-size').textContent = HISTORY_SIZE
         const ul = document.getElementById('discovery-list')
         ul.textContent = ''
-        if (visitedConsoles.length === 0) {
+        if (consoles.length === 0) {
           createNoneItem(ul)
           return
         }
-        for (const item of visitedConsoles.slice().reverse()) {
+        for (const item of consoles.slice().reverse()) {
           const li = document.createElement('li')
           const p = document.createElement('p')
           const br = document.createElement('br')
@@ -540,8 +558,13 @@
         return items[Math.floor(Math.random() * items.length)]
       }
 
+      function isFileURL (url) {
+        return typeof url === 'string' && URL.canParse(url) &&
+          new URL(url).protocol === 'file:'
+      }
+
       function isGoodURL (url) {
-        if (wander._skipURLCheck) {
+        if (wander._checkURLs === 'no') {
           return true
         }
         if (typeof url === 'string' && URL.canParse(url)) {
@@ -565,15 +588,23 @@
         })
       }
 
+      // RFC 3986, section 3.1.
+      const PROTOCOL_RE = /^[A-Za-z][A-Za-z0-9+\-.]*:\/\//
+
       function isURLMatchingIgnore (ignore, url) {
         function norm (s) {
-          s = s.replace(/^.*:\/\//, '') // Disregard protocol.
+          s = s.replace(PROTOCOL_RE, '') // Disregard protocol.
           s = s.replace(/[?#].*$/, '') // Disregard query string and fragment.
           s = s.toLowerCase() // Disregard case.
           if (!s.endsWith('/')) s += '/' // Treat foo and foo/ as the same.
           return s
         }
-        return norm(url).startsWith(norm(ignore))
+        const re = new RegExp(
+          norm(ignore)
+            .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+            .replace(/\*/g, '.*')
+        )
+        return re.test(norm(url))
       }
 
       function isArrayOfStrings (value) {
@@ -586,8 +617,7 @@
 
       function normaliseGotoURL (url) {
         let result = url.trim()
-        const re = /^[A-Za-z][A-Za-z0-9+\-.]*:\/\// // RFC 3986, section 3.1.
-        if (!re.test(result)) {
+        if (!PROTOCOL_RE.test(result)) {
           let protocol = window.location.protocol
           if (protocol !== 'http:' && protocol !== 'https:') {
             protocol = 'https:'
@@ -613,7 +643,7 @@
       }
 
       function wanderJSURL (wanderURL) {
-        // This function needs to work with relative paths, e.g.,
+        // This function needs to work with relative paths, e.g.
         // 'foo/wander.html' as well for local testing.  That's why we
         // don't use URL API since it needs complete URLs.
         if (wanderURL.endsWith('/')) {
@@ -664,6 +694,21 @@
         }
       }
 
+      function addVia (websiteURL, consoleURL) {
+        const url = new URL(websiteURL)
+        const via = 'via=' + weakEncodeURIComponent(consoleURL)
+        url.search += url.search ? ('&' + via) : ('?' + via)
+        return url.href
+      }
+
+      function weakEncodeURIComponent (s) {
+        // Encode a Wander console URL for use as a query parameter
+        // value on another website, but keep ':' and '/' readable so
+        // the website owner can see the Wander console URL fairly
+        // intact in their logs and copy-paste it easily.
+        return encodeURIComponent(s).replace(/%2F/g, '/').replace(/%3A/g, ':')
+      }
+
       // Tests
       // -----
 
@@ -681,13 +726,31 @@
         assert(isURLMatchingIgnore('http://foo/', 'http://foo/'))
         assert(isURLMatchingIgnore('http://foo/', 'http://foo'))
         assert(isURLMatchingIgnore('http://foo', 'http://foo/'))
+        assert(isURLMatchingIgnore('http://foo/bar', 'http://foo/bar?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar', 'http://foo/bar/?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar/', 'http://foo/bar?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar/', 'http://foo/bar/?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar?baz', 'http://foo/bar?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar?baz', 'http://foo/bar/?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar/?baz', 'http://foo/bar?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar/?baz', 'http://foo/bar/?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar/#baz', 'http://foo/bar/?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar/?baz', 'http://foo/bar/#hello'))
         assert(isURLMatchingIgnore('http://foo/bar.html', 'http://foo/bar.html?hello'))
+        assert(isURLMatchingIgnore('http://foo/bar.html?hello', 'http://foo/bar.html'))
+        assert(isURLMatchingIgnore('http://*example/', 'http://fooexample/'))
+        assert(isURLMatchingIgnore('http://*example/', 'http://example/'))
+        assert(isURLMatchingIgnore('http://*example/', 'http://foo.example/'))
+        assert(isURLMatchingIgnore('http://*.example/', 'http://foo.example/'))
+        assert(isURLMatchingIgnore('http://*.example/', 'http://.example/'))
+        assert(isURLMatchingIgnore('http://*.example/', 'https://archive/*/https://foo.example/'))
 
         assert(!isURLMatchingIgnore('f', ''))
         assert(!isURLMatchingIgnore('f/', 'fo'))
         assert(!isURLMatchingIgnore('http://foo/bar', 'http://foo/'))
         assert(!isURLMatchingIgnore('http://foo/', 'http://foobar'))
         assert(!isURLMatchingIgnore('http://foo', 'http://foobar'))
+        assert(!isURLMatchingIgnore('http://*.example/', 'http://fooexample/'))
 
         assert(isIgnoredURL(['http://foo/bar'], 'http://foo/bar/'))
         assert(isIgnoredURL(['http://foo/bar/'], 'http://foo/bar'))
@@ -725,13 +788,26 @@
         assert(wanderJSURL('http://foo/') === 'http://foo/wander.js')
         assert(wanderJSURL('http://foo//') === 'http://foo//wander.js')
         assert(wanderJSURL('http://foo/bar.html') === 'http://foo/wander.js')
+
+        assert(addVia('https://foo/', 'https://bar/') === 'https://foo/?via=https://bar/')
+        assert(addVia('https://foo/', 'https://bar/@me') === 'https://foo/?via=https://bar/%40me')
+        assert(addVia('https://foo/', 'https://bar/?me') === 'https://foo/?via=https://bar/%3Fme')
+        assert(addVia('https://foo/', 'https://bar/#me') === 'https://foo/?via=https://bar/%23me')
+        assert(addVia('https://foo/?bar', 'https://bar/') === 'https://foo/?bar&via=https://bar/')
+        assert(addVia('https://foo/#bar', 'https://bar/') === 'https://foo/?via=https://bar/#bar')
+        assert(addVia('https://foo/#bar', 'https://bar/#me') === 'https://foo/?via=https://bar/%23me#bar')
+        assert(addVia('https://foo/?bar', 'https://bar/?me') === 'https://foo/?bar&via=https://bar/%3Fme')
+        assert(addVia('https://foo/?bar=baz', 'https://bar/?who=me') === 'https://foo/?bar=baz&via=https://bar/%3Fwho%3Dme')
+        assert(addVia('https://foo/?bar=baz#qux', 'https://bar/?who=me#me') === 'https://foo/?bar=baz&via=https://bar/%3Fwho%3Dme%23me#qux')
       }
+
+      const TESTING = false
 
       if (TESTING) {
         test()
+      } else {
+        window.addEventListener('load', init)
       }
-
-      window.addEventListener('load', init)
     </script>
   </head>
   <body>
@@ -744,7 +820,7 @@
       <button id="about-button">About</button>
       <input id="url-input" autocomplete="off">
     </header>
-    <iframe id="wander-iframe" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin"></iframe>
+    <iframe id="wander-iframe" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-same-origin allow-scripts"></iframe>
     <iframe id="discovery-iframe" sandbox="allow-scripts"></iframe>
     <svg style="display: none">
       <symbol id="ext-icon" viewBox="0 0 16 16">
@@ -824,6 +900,10 @@
         </p>
         <ul id="ignores-list"></ul>
         <p>
+          You might find the reasons for these ignore patterns in this
+          console's <span id="base-js-link"></span> file.
+        </p>
+        <p>
           A URL that matches an ignore pattern is never recommended in
           this console, even if it appears in the recommendation lists
           of this console or other remote consoles.
@@ -862,11 +942,6 @@
           Each item above includes four links: the recommending
           console and its wander.js file, followed by the recommended
           console and its wander.js file.
-        </p>
-        <p>
-          If you click on any link above, you will navigate away from
-          this console to the selected console.  The selected console
-          will then become your new base console.
         </p>
       </section>
       <footer><form method="dialog"><button>Close</button></form></footer>

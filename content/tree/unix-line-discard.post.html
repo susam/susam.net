@@ -34,8 +34,8 @@
   like <code>cat</code>, <code>sbcl</code>, etc. do not support key
   sequences like <code>C-a</code>, <code>C-k</code>, <code>C-u</code>,
   etc. the way Bash or Zsh does.  Despite this limitation,
-  typing <code>C-u</code> in <code>sbcl</code> would delete the
-  current line of input if the output of <code>stty -a</code>
-  indicates that the terminal has mapped this key sequence to the
-  operation of deleting the current line.
+  typing <code>C-u</code> in <code>cat</code> or <code>sbcl</code>
+  would delete the current line of input if the output of <code>stty
+  -a</code> indicates that the terminal has mapped this key sequence
+  to the operation of deleting the current line.
 </p>
