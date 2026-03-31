@@ -43,14 +43,14 @@ color: light-dark(#518, #96b);</code></pre>
   </li>
   <li>
     <p>
-      A related possibility: force link underlines. Some browsers
+      A related possibility: force link underlines.  Some browsers
       provide a native way of forcing them (Firefox does), but
       I&rsquo;ve become partial to a semitransparent-when-not-hovered
-      style since about 2018. From my own user styles:
+      style since about 2018.  From my own user styles:
     </p>
     <pre><code>:any-link {
         text-decoration: underline color-mix(in srgb, currentColor 30%, transparent) !important;
-        /* These are two extra properties not caught by the text-decoration shorthand, but relevant to reset. */
+        /* These are two extra properties not caught by the text-decoration shorthand, but relevant to reset.  */
         text-underline-offset: unset !important;
         text-decoration-skip-ink: unset !important;
 }</code></pre>
@@ -62,8 +62,8 @@ color: light-dark(#518, #96b);</code></pre>
 <p>
   Correction to my last comment:
   <code>toolkit.legacyUserProfileCustomizations.stylesheets</code> is
-  the Firefox pref to enable
-  userContent.css. (<code>layout.css.moz-document.content.enabled</code>
+  the Firefox pref to enable userContent.css.
+  (<code>layout.css.moz-document.content.enabled</code>
   makes <code>@-moz-document</code> work&mdash;quite useful in
   userContent.css, but distinct.)
 </p>

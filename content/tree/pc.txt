@@ -1,24 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>ASCII PC</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      body {
-        background: #010;
-        color: #3f3;
-        animation: glow 30s ease-in infinite;
-      }
-      @keyframes glow {
-        0% { background: #010; color: #3f3 }
-        50% { background: #100; color: #fc0 }
-        100% { background: #010; color: #3f3 }
-      }
-    </style>
-  </head>
-<body>
-<pre>
 
 
               ,-------------------------------------------.
@@ -55,6 +34,3 @@
    /  #### = = = = = = = = = = ###    #    = = = #  /
   /  ###  ### ============= ## ##  # # #  === = #  /
   `-----------------------------------------------'
-</pre>
-</body>
-</html>

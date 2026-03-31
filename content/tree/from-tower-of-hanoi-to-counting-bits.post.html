@@ -117,17 +117,23 @@
   </li>
 </ul>
 <h2 id="binary-puzzle">Binary Puzzle</h2>
+<p>
+  We will now explore the following puzzle in the remainder of this
+  post.
+</p>
 <div class="highlight">
-  What is the most efficient way to compute the number of \( 1 \)-bits
-  in
+  <p>
+    What is the most efficient way to compute the number of \( 1 \)-bits
+    in
 
-  \[
-    T_1 + T_2 + \dots + T_n
-  \]
+    \[
+      T_1 + T_2 + \dots + T_n
+    \]
 
-  where \( n \) is a positive integer, each \( T_i = 2^i - 1 \) for
-  integers \( 1 \le i \le n \) and efficiency is measured in terms of
-  time and space complexity?
+    where \( n \) is a positive integer, each \( T_i = 2^i - 1 \) for
+    integers \( 1 \le i \le n \) and efficiency is measured in terms of
+    time and space complexity?
+  </p>
 </div>
 <p>
   The naive approach involves adding all the \( n \) integers and
@@ -176,6 +182,6 @@
   be solved in \( O(\log n) \) time with \( O(\log n) \) space.
 </p>
 <p>
-  What would have taken 2 exbibytes and 1 bit of memory with the naive
-  approach requires 8 bytes and 1 bit of memory now.
+  What would have taken 2 exbibytes plus 1 bit of memory with the
+  naive approach requires 8 bytes plus 1 bit of memory now.
 </p>

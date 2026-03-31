@@ -49,6 +49,6 @@
   ("comment-slug" . "quickqwerty"))
 
  (("prefix" . "code/news/wander/")
-  ("post-path" . "wander.html")
+  ("post-path" . "wander/{{ index }}")
   ("post-title" . "Wander")
   ("comment-slug" . "wander")))

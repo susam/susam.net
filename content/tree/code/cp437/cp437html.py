@@ -5,9 +5,9 @@ template = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body {background: #000; color: #999; font-family: monospace}
-      table {border-collapse: collapse}
-      th, td {border: thin solid #333; padding: 0.5em; text-align: center}
+      body { background: #000; color: #999; font-family: monospace }
+      table { border-collapse: collapse }
+      th, td { border: thin solid #333; padding: 0.5em; text-align: center }
     </style>
   </head>
   <body>

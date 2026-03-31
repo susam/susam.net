@@ -1,32 +1,34 @@
-window.wander = {
+const wander = {
   // Other Wander consoles in my neighbourhood.
   consoles: [
-    'https://susam.net/wander/',
-    'https://dahlstrand.net/wander/',
-    'https://www.siddharthagolu.com/wander/',
-    'https://wander.liontask.dev/',
-    'https://juleskourelakos.com/wander/',
+    'https://aartaka.me/wander/',
     'https://bitzero.cloud/wander/',
+    'https://blog.gridranger.dev/wander/',
+    'https://dahlstrand.net/wander/',
+    'https://juleskourelakos.com/wander/',
+    'https://susam.net/wander/',
+    'https://www.siddharthagolu.com/wander/',
+    'https://heckmeck.de/wander/',
   ],
   // My recommendations.
   pages: [
-    'http://www.antonis.de/qbebooks/gwbasman/',
     'https://aartaka.me/',
+    'https://adelfaure.net/artware/ascii_might_fly/',
+    'https://chrismorgan.info/',
     'https://int10h.org/',
     'https://int10h.org/oldschool-pc-fonts/fontlist/',
+    'https://jgc.org/',
     'https://maxwellito.com/',
     'https://midnight.pub/',
+    'https://quarters.captaintouch.com/blog/',
     'https://sachachua.com/',
     'https://susam.net/',
     'https://thejeshgn.com/',
-    'https://www.bitsavers.org/',
-    'https://www.norvig.com/',
-    'https://chrismorgan.info/',
-    'https://quarters.captaintouch.com/blog/',
-    'https://www.evalapply.org/',
-    'https://jgc.org/',
-    'https://xnacly.me/',
     'https://tonsky.me/',
+    'https://www.bitsavers.org/',
+    'https://www.evalapply.org/',
+    'https://www.norvig.com/',
+    'https://xnacly.me/',
   ],
   // My console will never load these URLs.
   ignore: [
@@ -39,11 +41,13 @@ window.wander = {
     'https://wdl.mcdaniel.edu/',
     'https://www.honest-broker.com/',
     'https://www.joshuamckiddy.com',
+    'https://www.math.colostate.edu/',
     'https://www.strangeloopcanon.com/',
 
     // Out of scope.  These are commercial platforms, not personal websites.
     'https://medium.com/',
-    'https://substack.com/',
+    'https://*.substack.com/',
+    'https://*.wordpress.com/',
 
     // These pages present distracting cookie banners.
     'https://rickyyean.com/',
@@ -54,5 +58,9 @@ window.wander = {
     // Recommends too many AI-generated and startup-focused pages.
     // Content focus differs from the small web emphasis of this project.
     'https://www.davidtran.me/wander/',
+
+    // Some people have incorrectly added this UI wrapper URL instead
+    // of the actual Wander console URL which is located at /wander/.
+    'https://blog.gridranger.dev/navigator/',
   ]
 }
