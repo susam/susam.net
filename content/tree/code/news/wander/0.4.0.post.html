@@ -1,0 +1,149 @@
+<!-- date: 2026-04-04 -->
+<!-- title: Wander Console 0.4.0 -->
+<!-- tag: Web, Technology -->
+<!-- key: wnzfz -->
+<p>
+  Wander Console 0.4.0 is the fourth release of Wander, a small,
+  decentralised, self-hosted web console that lets visitors to your
+  website explore interesting websites and pages recommended by a
+  community of independent website owners.  To try it, go
+  to <a href="../../../wander/{{ index }}">susam.net/wander/</a>.
+</p>
+<p>
+  This release brings a few small additions as well as a few minor
+  fixes.  The sections below discuss them.
+</p>
+{{ toc }}
+<h2 id="wildcard-patterns">Wildcard Patterns</h2>
+<p>
+  Wander Console now supports wildcard patterns in ignore lists.  An
+  asterisk (<code>*</code>) anywhere in an ignore pattern matches zero
+  or more characters in URLs.  For example, an ignore pattern
+  like <code>https://*.midreadpopup.example/</code> can be used to
+  ignore URLs such as this:
+</p>
+<ul>
+  <li><code>https://alice.midreadpopup.example/</code></li>
+  <li><code>https://bob.jones.midreadpopup.example/</code></li>
+</ul>
+<p>
+  These ignore patterns are specified in a console's
+  <code>wander.js</code> file.  These are very important for providing
+  a good wandering experience to visitors.  The owner of a console
+  decides what links they want to ignore in their ignore patterns.
+  The ignore list typically contains commercial websites that do not
+  fit the spirit of the small web, as well as defunct or incompatible
+  websites that do not load in the console.  A console with a well
+  maintained ignore list ensures that a visitor to that console has a
+  lower likelihood of encountering commercial or broken websites.
+</p>
+<p>
+  For a complete description of the ignore patterns, see
+  <a href="https://codeberg.org/susam/wander#customise-ignore-list">Customise
+  Ignore List</a>.
+</p>
+<h2 id="the-via-query-parameter">The 'via' Query Parameter</h2>
+<p>
+  By <a href="https://codeberg.org/susam/wander/issues/1#issuecomment-11795493">popular
+  demand</a>, Wander now adds a <code>via=</code> query parameter
+  while loading a recommended web page in the console.  The value of
+  this parameter is the console that loaded the recommended page.  For
+  example, if you encounter <a href="https://midnight.pub/">midnight.pub/</a>
+  while using the console at <a href="../../../wander/{{ index }}">susam.net/wander/</a>,
+  the console loads the page using the following URL:
+</p>
+<pre><code>https://midnight.pub/?via=https://susam.net/wander/</code></pre>
+<p>
+  This allows the owner of the recommended website to see, via their
+  access logs, that the visit originated from a Wander Console.  While
+  this is the default behaviour now, it can be customised in two ways.
+  The value can be changed from the full URL of the Wander Console to
+  a small identifier that identifies the version of Wander Console
+  used (e.g. <code>via=wander-0.4.0</code>).  The query parameter can
+  be disabled as well.  For more details,
+  see <a href="https://codeberg.org/susam/wander#customise-via-parameter">Customise
+  'via' Parameter</a>.
+</p>
+<h2 id="console-picker-algorithm">Console Picker Algorithm</h2>
+<p>
+  In earlier versions of the console, when a visitor came to your
+  console to explore the Wander network, it picked the first
+  recommendation from the list of recommended pages in it
+  (i.e. your <code>wander.js</code> file).  But subsequent
+  recommendations came from your neighbours' consoles and then their
+  neighbours' consoles and so on recursively.  Your console (the
+  starting console) was not considered again unless some other console
+  in the network linked back to your console.
+</p>
+<p>
+  A common way to ensure that your console was also considered in
+  subsequent recommendations too was to add a link to your console in
+  your own console (i.e. in your <code>wander.js</code>).  Yes, this
+  created self-loops in the network but this wasn't considered a
+  problem.  In fact, this was considered desirable, so that when the
+  console picked a console from the pool of discovered consoles to
+  find the next recommendation, it considered itself to be part of the
+  pool.  This workaround is no longer necessary.
+</p>
+<p>
+  Since version 0.4.0 of Wander, each console will always consider
+  itself to be part of the pool from which it picks consoles.  This
+  means that the web pages recommended by the starting console have a
+  fair chance of being picked for the next web page recommendation.
+</p>
+<h2 id="allow-links-that-open-in-new-tab">Allow Links that Open in New Tab</h2>
+<p>
+  The Wander Console loads the recommended web pages in an
+  <code>&lt;iframe&gt;</code> element that has sandbox restrictions
+  enabled.  The sandbox properties restrict the side effects the
+  loaded web page can have on the parent Wander Console window.  For
+  example, with the sandbox restrictions enabled, a loaded web page
+  cannot redirect the parent website to another website.  In fact,
+  these days most modern browsers block this and show a warning
+  anyway, but we also block this at a sandbox level too in the console
+  implementation.
+</p>
+<p>
+  It turned out that our aggressive sandbox restrictions also blocked
+  legitimate websites from opening a link in a new tab.  We decided
+  that opening a link in a new tab is harmless behaviour and we have
+  relaxed the sandbox restrictions a little bit to allow it.  Of
+  course, when you click such a link within Wander console, the link
+  will open in a new tab of your web browser (not within Wander
+  Console, as the console does not have any notion of tabs).
+</p>
+<h2 id="community">Community</h2>
+<p>
+  Although I developed this project on a whim, one early morning while
+  taking a short break from my ongoing studies of algebraic graph
+  theory, the <a href="https://news.ycombinator.com/item?id=47422759">subsequent
+  warm reception</a> on Hacker News has led to a growing community of
+  Wander Console owners.  There are two places where the community
+  hangs out at the moment:
+</p>
+<ol>
+  <li>
+    New consoles are announced in this thread on Codeberg:
+    <a href="https://codeberg.org/susam/wander/issues/1">Share Your
+    Wander Console</a>.
+  </li>
+  <li>
+    We also have an Internet Relay Chat (IRC) channel
+    named <a href="http://web.libera.chat/#wander">#wander</a> on the
+    Libera IRC network.  This is a channel for people who enjoy
+    building personal websites and want to talk to each other.  You
+    are welcome to join this channel, share your console URL, link to
+    your website or recent articles as well as share links to other
+    non-commercial personal websites.
+  </li>
+</ol>
+<p>
+  If you own a personal website but you have not set up a Wander
+  Console yet, I suggest that you consider setting one up for
+  yourself.  You can see what it looks like by visiting mine at
+  <a href="../../../wander/{{ index }}">/wander/</a>.  To set up your
+  own, follow these
+  instructions: <a href="https://codeberg.org/susam/wander#install">Install</a>.
+  It just involves copying two files to your web server.  It is about
+  as simple as it gets.
+</p>
