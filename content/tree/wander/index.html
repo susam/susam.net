@@ -1,5 +1,5 @@
 <!--
-  Wander 0.4.0.dev4
+  Wander 0.4.0
   Source: https://codeberg.org/susam/wander
   Licence: MIT
 -->
@@ -145,7 +145,7 @@
     </style>
     <script src="wander.js"></script>
     <script>
-      const VERSION = '0.4.0.dev4'
+      const VERSION = '0.4.0'
       const LOGGING = true
       const HISTORY_SIZE = 100
       const IDLE_MODE = 0
@@ -328,7 +328,7 @@
         } else if (referral === 'version') {
           url = addVia(page.url, 'wander-' + VERSION)
         } else {
-          url = addVia(page.url, normaliseWanderURL(location.href))
+          url = addVia(page.url, normaliseWanderURL(window.location.href))
         }
         log(`Loading page: ${page.referrer} => ${url}`)
         iframe.src = url
