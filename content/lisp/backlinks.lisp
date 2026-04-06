@@ -223,6 +223,13 @@
   :txt2 "Guess My RGB"
   :url2 "myrgb.html")
 
+ (:date "2024-03-31"
+  :lang "English"
+  :txt1 "My RGB"
+  :url1 "https://www.onfocus.com/2024/03/8636/myrgb"
+  :txt2 "Guess My RGB"
+  :url2 "myrgb.html")
+
  (:date "2024-04-01"
   :lang "English"
   :txt1 "Guess My RGB, a Simple Color Matching Game"
@@ -514,6 +521,13 @@
   :lang "English"
   :txt1 "Wander: A Decentralized Console for the Small Web"
   :url1 "https://boingboing.net/2026/03/19/wander-a-decentralized-console-for-the-small-web.html"
+  :txt2 "Wander"
+  :url2 "wander/{{ index }}")
+
+ (:date "2026-03-19"
+  :lang "English"
+  :txt1 "Wander the Web"
+  :url1 "https://imperfect.bearblog.dev/wander-the-web/"
   :txt2 "Wander"
   :url2 "wander/{{ index }}")
 

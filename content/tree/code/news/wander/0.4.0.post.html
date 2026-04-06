@@ -2,6 +2,7 @@
 <!-- title: Wander Console 0.4.0 -->
 <!-- tag: Web, Technology -->
 <!-- key: wnzfz -->
+<!-- import: extra.css -->
 <p>
   Wander Console 0.4.0 is the fourth release of Wander, a small,
   decentralised, self-hosted web console that lets visitors to your
@@ -9,9 +10,16 @@
   community of independent website owners.  To try it, go
   to <a href="../../../wander/{{ index }}">susam.net/wander/</a>.
 </p>
+<figure>
+  <img src="https://susam.github.io/blob/img/wander/wander-0.4.0.png"
+       title="A screenshot of Wander Console 0.4.0">
+  <figcaption>A screenshot of Wander Console 0.4.0</figcaption>
+</figure>
 <p>
   This release brings a few small additions as well as a few minor
-  fixes.  The sections below discuss them.
+  fixes.  You can find the previous release pages here:
+  <a href="./{{ index }}">/code/news/wander/</a>.  The sections below
+  discuss the current release.
 </p>
 {{ toc }}
 <h2 id="wildcard-patterns">Wildcard Patterns</h2>
@@ -28,14 +36,15 @@
 </ul>
 <p>
   These ignore patterns are specified in a console's
-  <code>wander.js</code> file.  These are very important for providing
-  a good wandering experience to visitors.  The owner of a console
-  decides what links they want to ignore in their ignore patterns.
-  The ignore list typically contains commercial websites that do not
-  fit the spirit of the small web, as well as defunct or incompatible
-  websites that do not load in the console.  A console with a well
-  maintained ignore list ensures that a visitor to that console has a
-  lower likelihood of encountering commercial or broken websites.
+  <a href="../../../wander/wander.js">wander.js</a> file.  These are
+  very important for providing a good wandering experience to
+  visitors.  The owner of a console decides what links they want to
+  ignore in their ignore patterns.  The ignore list typically contains
+  commercial websites that do not fit the spirit of the small web, as
+  well as defunct or incompatible websites that do not load in the
+  console.  A console with a well maintained ignore list ensures that
+  a visitor to that console has a lower likelihood of encountering
+  commercial or broken websites.
 </p>
 <p>
   For a complete description of the ignore patterns, see
@@ -98,7 +107,7 @@
   enabled.  The sandbox properties restrict the side effects the
   loaded web page can have on the parent Wander Console window.  For
   example, with the sandbox restrictions enabled, a loaded web page
-  cannot redirect the parent website to another website.  In fact,
+  cannot redirect the parent window to another website.  In fact,
   these days most modern browsers block this and show a warning
   anyway, but we also block this at a sandbox level too in the console
   implementation.
@@ -115,13 +124,14 @@
 <h2 id="community">Community</h2>
 <p>
   Although I developed this project on a whim, one early morning while
-  taking a short break from my ongoing studies of algebraic graph
-  theory, the <a href="https://news.ycombinator.com/item?id=47422759">subsequent
-  warm reception</a> on Hacker News has led to a growing community of
-  Wander Console owners.  There are two places where the community
-  hangs out at the moment:
+  taking a short break from my <a href="../../../26c.html">ongoing
+  studies</a> of algebraic graph theory, the subsequent warm
+  reception <a href="https://news.ycombinator.com/item?id=47422759">on
+  Hacker News</a> and <a href="https://lobste.rs/s/hjipba">Lobsters</a>
+  has led to a growing community of Wander Console owners.  There are
+  two places where the community hangs out at the moment:
 </p>
-<ol>
+<ul>
   <li>
     New consoles are announced in this thread on Codeberg:
     <a href="https://codeberg.org/susam/wander/issues/1">Share Your
@@ -136,7 +146,7 @@
     your website or recent articles as well as share links to other
     non-commercial personal websites.
   </li>
-</ol>
+</ul>
 <p>
   If you own a personal website but you have not set up a Wander
   Console yet, I suggest that you consider setting one up for

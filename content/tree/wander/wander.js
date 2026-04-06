@@ -21,7 +21,7 @@ const wander = {
     'https://maxwellito.com/',
     'https://midnight.pub/',
     'https://quarters.captaintouch.com/blog/',
-    'https://sachachua.com/',
+    'https://sachachua.com/blog/',
     'https://susam.net/',
     'https://thejeshgn.com/',
     'https://tonsky.me/',
