@@ -224,15 +224,11 @@
 <p>
   A map \( \phi : G \to H \) from a group \( (G, \ast) \) to a group
   \( (H, \cdot) \) is a <em>group monomorphism</em> if \( \phi \) is a
-  homomorphism and is injective.
-</p>
-<h4 id="standard-proof">Standard Proof</h4>
-<p>
-  In other words, a homomorphism \( \phi \) is called a monomorphism
-  if, for all \( x, y \in G \),
+  homomorphism and is injective.  In other words, a homomorphism \(
+  \phi \) is called a monomorphism if, for all \( x, y \in G \),
 
   \[
-    \phi(x) = \phi(y) \implies x = y.
+  \phi(x) = \phi(y) \implies x = y.
   \]
 
   Let \( e_1 \) be the identity element of \( G \) and let \( e_2 \)
@@ -244,9 +240,13 @@
     \ker(\phi) = \{ x \in G : \phi(x) = e_2 \} = \{ e_1 \}.
   \]
 
-  To prove this, suppose \( \phi : G \to H \) is a monomorphism.
-  Since a homomorphism preserves the identity element, we have \(
-  \phi(e_1) = e_2 \).  Therefore
+  Let us prove this now.
+</p>
+<h4 id="standard-proof">Standard Proof</h4>
+<p>
+  Suppose \( \phi : G \to H \) is a monomorphism.  Since a
+  homomorphism preserves the identity element, we have \( \phi(e_1) =
+  e_2 \).  Therefore
 
   \[
     e_1 \in \ker(\phi).
@@ -1076,7 +1076,7 @@
 
   Therefore \( g^{-1} G_x g = G_{x^g} \).
 </p>
-<h2 id="algeraic-graph-theory">Algebraic Graph Theory</h2>
+<h2 id="algebraic-graph-theory">Algebraic Graph Theory</h2>
 <h3 id="stabiliser-index">Stabiliser Index</h3>
 <p>
   In a vertex-transitive graph \( \Gamma \), for any \( x \in
@@ -1101,7 +1101,8 @@
 </p>
 <p>
   A directed graph is <em>strongly connected</em> if for every ordered
-  pair of vertices \( (u, v) \) there is a from \( u \) to \( v \).
+  pair of vertices \( (u, v) \) there is a path from \( u \) to \( v
+  \).
 </p>
 <h3 id="shunting">Shunting</h3>
 <p>
@@ -1144,7 +1145,7 @@
   corollary of this is that for an automorphism \( h \), we have
 
   \[
-    \delta^{g^{-1}} \in S(\gamma) \iff \delta \in S(\gamma^g).
+    \delta^{h^{-1}} \in S(\gamma) \iff \delta \in S(\gamma^h).
   \]
 
   This is the form that will be useful soon.
@@ -1213,10 +1214,11 @@
 </p>
 <p>
   Now by the <a href="#shunting">shunting result</a> discussed
-  previously, \( \alpha \) can be sent to any \( 3 \)-arc of \( P \).
-  Therefore all \( 3 \)-arcs of \( P \) belong to \( \alpha^H \).
-  Therefore the automorphisms in \( H \) can send any \( 3 \)-arc of
-  \( P \) to any other thus making \( P \) \( 3 \)-arc transitive.
+  previously, \( \alpha \) can be sent to any \( 3 \)-arc of \( P \)
+  by repeated shunting.  Therefore all \( 3 \)-arcs of \( P \) belong
+  to \( \alpha^H \).  Therefore the automorphisms in \( H \) can send
+  any \( 3 \)-arc of \( P \) to any other thus making \( P \) \( 3
+  \)-arc transitive.
 </p>
 <h3 id="moore-graphs">Moore Graphs</h3>
 <p>

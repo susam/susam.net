@@ -1,5 +1,5 @@
 <!--
-  Wander 0.5.0
+  Wander 0.6.0.dev1
   Source: https://codeberg.org/susam/wander
   Licence: MIT
 -->
@@ -19,6 +19,8 @@
       button:disabled, button:disabled:hover, button:disabled:active { background: #cec }
       dialog { background: #cec }
       dialog::backdrop { background: #0009 }
+      dialog details[open] { background: #bdb }
+
       /* Body and header */
       body {
         line-height: 1.5;
@@ -103,7 +105,8 @@
         text-align: center;
       }
       dialog details {
-        padding-left: 2em;
+        margin-left: 1em;
+        padding-left: 0.5em;
       }
       dialog details p {
         padding-left: 1em;
@@ -142,7 +145,7 @@
     </style>
     <script src="wander.js"></script>
     <script>
-      const VERSION = '0.5.0'
+      const VERSION = '0.6.0.dev1'
       const LOGGING = true
       const HISTORY_SIZE = 100
       const IDLE_MODE = 0
@@ -480,7 +483,7 @@
         crawlConsoleMap[baseURL] = {
           depth: 0,
           referrers: [],
-          visited: false,
+          visited: true
         }
         saveCrawlConsoles(baseURL, wander.consoles || [], wander.pages || [])
         log('Starting crawl')

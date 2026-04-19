@@ -243,10 +243,10 @@ cache-visits:
 clean-visits:
 	rm -f /tmp/visitors.txt /tmp/visits.txt
 
-lsf:
+ls:
 	ls -l /opt/data/form/*.txt | less -F
 
-rdf:
+rd:
 	tail -vn +1 /opt/data/form/*.txt | less -F
 
 
