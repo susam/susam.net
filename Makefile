@@ -1014,6 +1014,18 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
+push:
+	git remote remove cb || :
+	git remote remove gh || :
+	git remote remove origin || :
+	git remote add cb git@codeberg.org:susam/susam.net.git
+	git remote add gh git@github.com:susam/susam.net.git
+	git remote add origin $$(git remote get-url cb) || :
+	git push --tags cb main
+	git push --tags gh main
+	git push -f cb cu
+	git push -f gh cu
+
 # Publish website.
 copub: co cu gh cb
 
