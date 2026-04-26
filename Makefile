@@ -1021,6 +1021,8 @@ push:
 	git remote add cb git@codeberg.org:susam/susam.net.git
 	git remote add gh git@github.com:susam/susam.net.git
 	git remote add origin $$(git remote get-url cb) || :
+	git push origin main
+	git push origin cu
 	git push --tags cb main
 	git push --tags gh main
 	git push -f cb cu
