@@ -4,8 +4,8 @@ body {
   line-height: 1.5;
   margin: 0 auto;
   max-width: 40em;
+  overflow-wrap: break-word
   padding: 0 1em;
-  word-break: break-word;
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 1.25em 0 0.25em 0;
