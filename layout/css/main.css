@@ -4,8 +4,8 @@ body {
   line-height: 1.5;
   margin: 0 auto;
   max-width: 40em;
-  overflow-wrap: break-word;
   padding: 0 1em;
+  word-break: break-word;
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 1.25em 0 0.25em 0;
@@ -61,14 +61,13 @@ pre .cursor {
   color: {{ light-fill-color }};
 }
 kbd {
-  border: thin solid {{ light-shade-color }};
-  box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
+  border: 0.1em solid {{ light-shade-color }};
   border-radius: 0.2em;
-  padding: 0.1em 0.2em;
+  border-bottom-width: 0.2em;
+  padding: 0.1em 0.5em;
 }
 samp kbd {
   border: none;
-  box-shadow: none;
   padding: 0;
 }
 ul.blog {
@@ -113,7 +112,10 @@ footer nav a:last-child  {
   }
   blockquote, pre, kbd, .highlight {
     background: {{ dark-fill-color }};
-    box-shadow: 0 0 0.5em {{ dark-shade-color }};
+    border: 0.1em solid {{ dark-shade-color }};
+  }
+  kbd {
+    border-bottom-width: inherit;
   }
   blockquote {
     border-left-color: {{ dark-shade-color }};
@@ -127,10 +129,6 @@ footer nav a:last-child  {
   pre .cursor {
     background: {{ dark-samp-color }};
     color: {{ dark-fill-color }};
-  }
-  kbd {
-    border-color: {{ dark-shade-color }};
-    box-shadow: 0 0.15em 0.15em {{ dark-shade-color }};
   }
   hr {
     border-bottom-color: {{ dark-line-color }};
