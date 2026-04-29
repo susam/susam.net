@@ -1,0 +1,183 @@
+<!-- date: 2026-04-29 -->
+<!-- title: Multiple URLs in Git Remote -->
+<!-- tag: Git, Technology -->
+<!-- key: muigr -->
+<!-- blog: Maze -->
+<!-- import: math.inc -->
+<p>
+  Typically a Git remote contains a single URL.  For example, when we
+  clone a repository, a remote named <code>origin</code> is
+  automatically created and its URL is set to the location of the
+  upstream repository.  For example:
+</p>
+<pre>
+<samp>$ <kbd>git remote -v</kbd>
+origin  https://codeberg.org/spxy/spica.git (fetch)
+origin  https://codeberg.org/spxy/spica.git (push)
+$ <kbd>sed '/remote/,$!d' .git/config</kbd>
+[remote "origin"]
+        url = https://codeberg.org/spxy/spica.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+        remote = origin
+        merge = refs/heads/main</samp>
+</pre>
+<p>
+  A perhaps less known detail is that we can set multiple URLs for a
+  remote.  For example:
+</p>
+<pre>
+<samp>$ <kbd>git remote set-url origin --add https://github.com/spxy/spica.git</kbd>
+$ <kbd>git remote -v</kbd>
+origin  https://codeberg.org/spxy/spica.git (fetch)
+origin  https://codeberg.org/spxy/spica.git (push)
+origin  https://github.com/spxy/spica.git (push)
+$ <kbd>sed '/remote/,$!d' .git/config</kbd>
+[remote "origin"]
+        url = https://codeberg.org/spxy/spica.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = https://github.com/spxy/spica.git
+[branch "main"]
+        remote = origin
+        merge = refs/heads/main</samp>
+</pre>
+<p>
+  As evident from the above output, with multiple URLs for the same
+  remote, the first one becomes the fetch URL whereas all URLs become
+  push URLs.  For example:
+</p>
+<pre>
+<samp>$ <kbd>git pull</kbd>
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 327 bytes | 109.00 KiB/s, done.
+From https://codeberg.org/spxy/spica
+   d473dde..31db503  main       -&gt; origin/main
+Updating d473dde..31db503
+Fast-forward
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+$ <kbd>git log --oneline</kbd>
+31db503 (HEAD -&gt; main, origin/main, origin/HEAD) Explain that Spica is a binary star system
+d473dde Create README.md</samp>
+</pre>
+<p>
+  The output above confirms that the fetch was performed from the
+  first remote URL.  Although the output shows that
+  <code>origin</code> contains commit 31db503, it is possible
+  that not all remote locations for <code>origin</code> have received
+  this commit yet.  Since we have not configured a
+  <code>pushurl</code>, pushes are sent to all remote URLs by default.
+  For example:
+</p>
+<pre>
+<samp>$ <kbd>echo 'It is about 250 light years away from the Sun.' &gt;&gt; README.md</kbd>
+$ <kbd>git add README.md</kbd>
+$ <kbd>git commit -m 'Mention distance from the Sun'</kbd>
+[main 816998d] Mention distance from the Sun
+ 1 file changed, 1 insertion(+)
+$ <kbd>git push</kbd>
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 325 bytes | 325.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://codeberg.org/spxy/spica.git
+   31db503..816998d  main -&gt; main
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (9/9), 791 bytes | 791.00 KiB/s, done.
+Total 9 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), done.
+To https://github.com/spxy/spica.git
+ * [new branch]      main -&gt; main
+$ <kbd>git log --oneline</kbd>
+816998d (HEAD -&gt; main, origin/main, origin/HEAD) Mention distance from the Sun
+31db503 Explain that Spica is a binary star system
+d473dde Create README.md</samp>
+</pre>
+<p>
+  A <code>pushurl</code> can be set as follows:
+</p>
+<pre>
+<samp>$ <kbd>git remote set-url --push origin https://github.com/spxy/spica.git</kbd>
+$ <kbd>git remote -v</kbd>
+origin  https://codeberg.org/spxy/spica.git (fetch)
+origin  https://github.com/spxy/spica.git (push)
+$ <kbd>sed '/remote/,$!d' .git/config</kbd>
+[remote "origin"]
+        url = https://codeberg.org/spxy/spica.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = https://github.com/spxy/spica.git
+        pushurl = https://github.com/spxy/spica.git
+[branch "main"]
+        remote = origin
+        merge = refs/heads/main</samp>
+</pre>
+<p>
+  When one or more <code>pushurl</code> locations are set, pushes are
+  sent to only those locations.  Fetches continue to occur from the
+  first URL as before.
+</p>
+<pre>
+<samp>$ <kbd>echo 'Its two stars orbit each other roughly every four days.' &gt;&gt; README.md</kbd>
+$ <kbd>git add README.md</kbd>
+$ <kbd>git commit -m 'Mention the four-day orbital period'</kbd>
+[main 2e9f4e8] Mention the four-day orbital period
+ 1 file changed, 1 insertion(+)
+$ <kbd>git push</kbd>
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 342 bytes | 342.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/spxy/spica.git
+   816998d..2e9f4e8  main -&gt; main
+$ <kbd>git log --oneline</kbd>
+2e9f4e8 (HEAD -&gt; main, origin/main, origin/HEAD) Mention the four-day orbital period
+816998d Mention distance from the Sun
+31db503 Explain that Spica is a binary star system
+d473dde Create README.md</samp>
+</pre>
+<p>
+  Note that in this case, the new commit has been pushed only to the
+  second remote URL.  If we perform a pull, Git will fetch changes
+  from the first remote URL and will move <code>origin/main</code>
+  back to the latest commit available there.  For example:
+</p>
+<pre>
+<samp>$ <kbd>git pull</kbd>
+From https://codeberg.org/spxy/spica
+ + 2e9f4e8...816998d main       -&gt; origin/main  (forced update)
+Already up to date.
+$ <kbd>git log --oneline</kbd>
+2e9f4e8 (HEAD -&gt; main) Mention the four-day orbital period
+816998d (origin/main, origin/HEAD) Mention distance from the Sun
+31db503 Explain that Spica is a binary star system
+d473dde Create README.md</samp>
+</pre>
+<p>
+  For this reason, configuring a separate <code>pushurl</code> should
+  be done with care.  It is useful only in a narrow range of scenarios
+  such as fetching from a primary repository that we want to treat as
+  read-only while pushing changes to a mirror.
+</p>
+<p>
+  The difference between <code>pushurl</code> and a normal remote URL
+  is explained in <code>man git-fetch</code> as well as <code>man
+  git-push</code> of Git 2.54.0 as follows:
+</p>
+<blockquote>
+  The &lt;pushurl&gt; is used for pushes only.  It is optional and
+  defaults to &lt;URL&gt;.  Pushing to a remote affects all defined
+  pushurls or all defined urls if no pushurls are defined.  Fetch,
+  however, will only fetch from the first defined url if multiple urls
+  are defined.
+</blockquote>
