@@ -21,8 +21,11 @@ const wander = {
     'https://maxwellito.com/',
     'https://midnight.pub/',
     'https://quarters.captaintouch.com/blog/',
-    'https://sachachua.com/',
+    'https://sachachua.com/blog/',
     'https://susam.net/',
+    'https://susam.net/invaders.html',
+    'https://susam.net/jokes.html',
+    'https://susam.net/myrgb.html',
     'https://thejeshgn.com/',
     'https://tonsky.me/',
     'https://www.bitsavers.org/',
@@ -62,5 +65,9 @@ const wander = {
     // Some people have incorrectly added this UI wrapper URL instead
     // of the actual Wander console URL which is located at /wander/.
     'https://blog.gridranger.dev/navigator/',
+
+    // Interesting website recommending websites belonging to people
+    // named Josh.  However, this is a directory, not a personal website.
+    'https://joshing.you/wander/',
   ]
 }
