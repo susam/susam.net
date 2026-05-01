@@ -833,6 +833,8 @@ value, next-index."
   "Enrich a comment by adding relevant page metadata to it."
   (let ((enriched-comments))
     (dolist (comment comments)
+      (let ((body (aget "body" comment)))
+        (aput "body" (render body params) comment))
       (aput "unlist" (aget "unlist" page) comment)
       (aput "post-title" (aget "post-title" page) comment)
       (aput "post-path" (aget "post-path" page) comment)

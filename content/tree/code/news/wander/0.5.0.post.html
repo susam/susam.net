@@ -4,34 +4,33 @@
 <!-- key: wnzfv -->
 <!-- import: extra.css -->
 <p>
-  Wander Console 0.5.0 is the fourth release of Wander, a small,
-  decentralised, self-hosted web console that lets visitors to your
-  website explore interesting websites and pages recommended by a
+  Wander Console 0.5.0 is out.  It is the fifth release of Wander, a
+  small, decentralised, self-hosted web console that lets visitors to
+  your website explore interesting websites and pages recommended by a
   community of independent website owners.  To try it, go
-  to <a href="../../../wander/{{ index }}">susam.net/wander/</a>.
+  to <a href="../../../wander/{{ index }}">susam.net/wander/</a>.  To
+  learn more about how it works and how to set it up on your website,
+  see the project <a href="https://codeberg.org/susam/wander#readme">README</a>.
 </p>
 <figure>
   <img src="https://susam.github.io/blob/img/wander/wander-0.4.0.png"
-       title="A screenshot of Wander Console">
+       alt="A screenshot of Wander Console">
   <figcaption>A screenshot of Wander Console</figcaption>
 </figure>
 <p>
-  The big feature in this release is a built-in console crawler.  To
-  try the console crawler, go to
+  The big feature in this release is a built-in console network
+  crawler.  To try the console crawler, go to
   <a href="../../../wander/{{ index }}">susam.net/wander/</a>
-  &gt; <strong>Console</strong> &gt; <strong>Crawl</strong>.  You
-  should see an output like the following:
+  &gt; <strong>Console</strong> &gt; <strong>Crawl</strong>.  It
+  performs a breadth-first search (BFS) traversal of the Wander
+  network and lists all discovered consoles and page recommendations
+  in a single pane.
 </p>
 <figure>
   <img src="https://susam.github.io/blob/img/wander/wander-0.5.0.png"
-       title="A screenshot of Wander Console Crawler">
+       alt="A screenshot of Wander Console Crawler">
   <figcaption>A screenshot of Wander Console Crawler</figcaption>
 </figure>
-<p>
-  The console crawler traverses the Wander network from the base
-  console to find other consoles directly or indirectly reachable from
-  it.
-</p>
 <p>
   If you have set up a Wander Console instance for yourself on your
   website, I recommend upgrading to the latest version to use this
@@ -47,8 +46,8 @@
   yet, I suggest that you consider setting one up for yourself.  You
   can see what it looks like by visiting mine at
   <a href="../../../wander/{{ index }}">/wander/</a>.  To set up your
-  own, follow these
-  instructions: <a href="https://codeberg.org/susam/wander#install">Install</a>.
-  It just involves copying two files to your web server.  It is about
-  as simple as it gets.
+  own, follow these instructions from the README:
+  <a href="https://codeberg.org/susam/wander#install">Install</a>.  It
+  just involves copying two files to your web server.  It is as simple
+  as that.
 </p>

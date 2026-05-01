@@ -118,6 +118,13 @@
   :txt2 "Paredit Slurp and Barf Mnemonics"
   :url2 "https://susam.net/paredit-slurp-and-barf-mnemonics.html")
 
+ (:date "2022-03-03"
+  :lang "English"
+  :txt1 "This Week In Python"
+  :url1 "https://bas.codes/posts/this-week-python-001"
+  :txt2 "Peculiar Self References"
+  :url2 "peculiar-self-references.html")
+
  (:date "2022-05-25"
   :lang "English"
   :txt1 "Challenge The Cyber 2022 Challenges Discord Q&A"
@@ -223,6 +230,13 @@
   :txt2 "Guess My RGB"
   :url2 "myrgb.html")
 
+ (:date "2024-03-31"
+  :lang "English"
+  :txt1 "My RGB"
+  :url1 "https://www.onfocus.com/2024/03/8636/myrgb"
+  :txt2 "Guess My RGB"
+  :url2 "myrgb.html")
+
  (:date "2024-04-01"
   :lang "English"
   :txt1 "Guess My RGB, a Simple Color Matching Game"
@@ -303,7 +317,7 @@
  (:date "2025-04-11"
   :lang "English"
   :txt1 "This Week In Python"
-  :url1 "https://dev.to/bascodes/this-week-in-python-4cpp"
+  :url1 "https://bas.codes/posts/this-week-python-107"
   :txt2 "Elliptical Python Programming"
   :url2 "elliptical-python-programming.html")
 
@@ -454,6 +468,13 @@
   :txt2 "The IndieWeb Doesn't Need to 'Take Off'"
   :url2 "indieweb-does-not-need-to-take-off.html")
 
+ (:date "2026-01-08"
+  :lang "English"
+  :txt1 "A4 Paper Stories"
+  :url1 "https://aman.bh/bookmarks/2026/01/08/a4-paper-stories"
+  :txt2 "A4 Paper Stories"
+  :url2 "a4-paper-stories.html")
+
  (:date "2026-01-23"
   :lang "English"
   :txt1 "Web Review, Week 2026-04"
@@ -493,14 +514,14 @@
   :lang "French"
   :txt1 "About the Supposedly Social Networks"
   :url1 "https://theologique.ch/blog/reseau-sociaux/"
-  :txt2 "Attention Media ≠ Social Media"
+  :txt2 "Attention Media ≠ Social Networks"
   :url2 "attention-media-vs-social-networks.html")
 
  (:date "2026-02-22"
   :lang "German"
   :txt1 "Anyone Who Experienced SchülerVZ/StudiVZ and Facebook"
   :url1 "https://blog.holz.nu/2026/02/22/0.html"
-  :txt2 "Attention Media ≠ Social Media"
+  :txt2 "Attention Media ≠ Social Networks"
   :url2 "attention-media-vs-social-networks.html")
 
  (:date "2026-03-06"
@@ -514,20 +535,69 @@
   :lang "English"
   :txt1 "Wander: A Decentralized Console for the Small Web"
   :url1 "https://boingboing.net/2026/03/19/wander-a-decentralized-console-for-the-small-web.html"
-  :txt2 "Wander"
+  :txt2 "Wander Console"
+  :url2 "https://codeberg.org/susam/wander")
+
+ (:date "2026-03-19"
+  :lang "English"
+  :txt1 "Wander the Web"
+  :url1 "https://imperfect.bearblog.dev/wander-the-web/"
+  :txt2 "Wander Console"
   :url2 "wander/{{ index }}")
 
  (:date "2026-03-19"
   :lang "English"
   :txt1 "Get Wandering"
   :url1 "https://sigkill.sh/get-wandering/"
-  :txt2 "Wander"
+  :txt2 "Wander Console"
   :url2 "wander/{{ index }}")
 
  (:date "2026-03-19"
   :lang "English"
   :txt1 "Strapping on Web Side Cars from the Small Web"
   :url1 "https://cogdogblog.com/2026/03/web-side-cars/"
-  :txt2 "Wander"
-  :url2 "wander/{{ index }}")
+  :txt2 "Wander Console"
+  :url2 "https://codeberg.org/susam/wander")
+
+ (:date "2026-03-25"
+  :lang "English"
+  :txt1 "Let's Wander!"
+  :url1 "https://heckmeck.de/blog/lets-wander/"
+  :txt2 "Wander Console"
+  :url2 "https://codeberg.org/susam/wander")
+
+ (:date "2026-04-06"
+  :lang "English"
+  :txt1 "Discover the Small Web"
+  :url1 "https://iwebthings.joejenett.com/discover-the-small-web/"
+  :txt2 "Wander Console"
+  :url2 "https://codeberg.org/susam/wander")
+
+ (:date "2026-04-14"
+  :lang "English"
+  :txt1 "Wander Console Added"
+  :url1 "https://stackofgoats.studio/blog/wander-console/"
+  :txt2 "Wander Console"
+  :url2 "https://codeberg.org/susam/wander")
+
+ (:date "2026-04-15"
+  :lang "English"
+  :txt1 "Print HTTP Headers and Pretty-Print JSON Response"
+  :url1 "https://blog.x-way.org/Linux/2024/04/15/Print-HTTP-Headers-and-Pretty-Print-JSON-Response.html"
+  :txt2 "Pretty-Printing JSON Response with HTTP Headers"
+  :url2 "pretty-print-json-response-with-http-headers.html")
+
+ (:date "2026-04-25"
+  :lang "Chinese"
+  :txt1 "Taxodium Zine #48"
+  :url1 "https://taxodium.ink/48.html"
+  :txt2 "Writing First, Tooling Second"
+  :url2 "writing-first-tooling-second.html")
+
+ (:date "2026-04-26"
+  :lang "English"
+  :txt1 "Creating Weave"
+  :url1 "https://codycollier.com/lx/2025/2025-04-26-creating-weave.html"
+  :txt2 "Hacker News Hug of Deaf"
+  :url2 "hn-bell.html")
  )

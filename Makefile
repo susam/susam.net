@@ -139,7 +139,7 @@ rm: checkroot
 recu: checkroot
 	git checkout cu
 	git reset --hard HEAD~5
-	git pull
+	git pull origin cu
 	make live
 
 restart:
@@ -243,10 +243,10 @@ cache-visits:
 clean-visits:
 	rm -f /tmp/visitors.txt /tmp/visits.txt
 
-lsf:
+ls:
 	ls -l /opt/data/form/*.txt | less -F
 
-rdf:
+rd:
 	tail -vn +1 /opt/data/form/*.txt | less -F
 
 
@@ -850,6 +850,7 @@ tidy: dist
 
 check-links:
 	@echo "NOTE: Ensure 'make run-site-deep' is running before running this target"; echo
+	sed -i .bkp 's/$${jsURL}/wander.js/' _site/foo/bar/baz/qux/_site/wander/index.html
 	-wget -r -l 0 --spider -nd -nv http://localhost:8000/ -o run.log
 	grep -B1 broken run.log
 	@echo Done; echo
@@ -1013,20 +1014,6 @@ post-subscriber1:
 
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
-
-push:
-	git remote remove cb || :
-	git remote remove gh || :
-	git remote remove origin || :
-	git remote add cb git@codeberg.org:susam/susam.net.git
-	git remote add gh git@github.com:susam/susam.net.git
-	git remote add origin $$(git remote get-url cb) || :
-	git push origin main
-	git push origin cu
-	git push --tags cb main
-	git push --tags gh main
-	git push -f cb cu
-	git push -f gh cu
 
 # Publish website.
 copub: co cu gh cb
