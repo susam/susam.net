@@ -50,7 +50,7 @@ help:
 	@echo '  run-site-deep     Serve website from a subdirectory path.'
 	@echo '  run-dist-deep     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
-	@echo '  checks            Run checks on source suitable to be run before push.'
+	@echo '  chk               Run checks on source suitable to be run before push.'
 	@echo '  tidy              Run HTML Tidy on the generated website.'
 	@echo '  check-links       Check broken links in a locally running website.'
 	@echo '  check-paths       Check live website paths and redirects.'
@@ -374,7 +374,7 @@ ls-tag:
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
-checks: \
+chk: \
   cvsplit \
   check-abbrev-spacing \
   check-bre-and \
@@ -645,7 +645,7 @@ check-entities:
 	  /<style>/,/<\/style>/d; \
 	' | \
 	tr -s ' \n' ' ' | \
-	sed -e 's/<[^>]*>//g' -e '\
+	sed -e 's/<[^<>]*>//g' -e '\
 	  s/C:\\>lynx susam\.net/x/g; \
 	  s/<!--/x/g; \
 	  s/-->/x/g; \
@@ -654,7 +654,7 @@ check-entities:
 	  s/&[0-9A-Za-z]*;/x/g; \
 	' > /tmp/tr
 	grep -Ei '[<>&]' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}[<>&].{0,30}' /tmp/err || true
+	grep -Eino '.{0,30}([<>&]).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure that 'i.e.' and 'e.g.' are preceded by commas.

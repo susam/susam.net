@@ -416,7 +416,7 @@ node {
 
     def pivot = numbers[0]
     def others = numbers.drop(1)
-    def lo = others.findAll { it <= pivot }
+    def lo = others.findAll { it &lt;= pivot }
     def hi = others.findAll { it &gt; pivot }
     def builds = [:]
     def results = [lo: [], hi: []]

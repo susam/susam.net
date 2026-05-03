@@ -253,8 +253,7 @@
   When I log into my Debian 13.2 system via SSH, I find
   that <kbd>ctrl</kbd>+<kbd>o</kbd> does not enable output discarding.
 </p>
-<pre>
-<samp>$ <kbd>stty -a | grep 'discard\|flush'</kbd>
+<pre><samp>$ <kbd>stty -a | grep 'discard\|flush'</kbd>
 werase = ^W; lnext = ^V; discard = ^O; min = 1; time = 0;
 echoctl echoke -flusho -extproc
 $ <kbd>ping 127.0.0.1</kbd>
@@ -266,13 +265,11 @@ PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
 <kbd>^C</kbd>
 --- 127.0.0.1 ping statistics ---
 4 packets transmitted, 4 received, 0% packet loss, time 3079ms
-rtt min/avg/max/mdev = 0.021/0.031/0.049/0.010 ms</samp>
-</pre>
+rtt min/avg/max/mdev = 0.021/0.031/0.049/0.010 ms</samp></pre>
 <p>
   On macOS 15.3.2, with the Terminal app, it does work as expected.
 </p>
-<pre>
-<samp>$ <kbd>stty -a | grep 'discard\|flush'</kbd>
+<pre><samp>$ <kbd>stty -a | grep 'discard\|flush'</kbd>
 	-echoprt -altwerase -noflsh -tostop -flusho pendin -nokerninfo
 cchars: discard = ^O; dsusp = ^Y; eof = ^D; eol = &lt;undef&gt;
 $ <kbd>ping 127.0.0.1</kbd>
@@ -282,8 +279,7 @@ PING 127.0.0.1 (127.0.0.1): 56 data bytes
 <kbd>^O^C</kbd>
 --- 127.0.0.1 ping statistics ---
 9 packets transmitted, 9 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 0.068/0.171/0.362/0.087 ms</samp>
-</pre>
+round-trip min/avg/max/stddev = 0.068/0.171/0.362/0.087 ms</samp></pre>
 <h3 id="other-stuff">Other Stuff</h3>
 <p>
   My initial draft of this post had a few additional sections that have
