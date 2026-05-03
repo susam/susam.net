@@ -1457,10 +1457,7 @@ value, next-index."
 
 (defun tag-title (tag)
   "Determine title for a tag page."
-  (let* ((special-titles (list (cons "Notes" "{{ nick }}'s Notes")
-                               (cons "Puzzle" "{{ nick }}'s Puzzles")
-                               (cons "Web" "{{ nick }}'s Web Posts")))
-         (special-title (aget tag special-titles)))
+  (let* ((special-title (aget tag (read-list "content/lisp/tag.lisp"))))
     (if special-title special-title "{{ nick }}'s {{ tag }} Pages")))
 
 (defun make-tags (pages page-layout params)
