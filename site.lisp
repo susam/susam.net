@@ -960,6 +960,14 @@ value, next-index."
       (when (not (aget key page))
         (error "Missing key ~a for page ~a" key (aget "slug" page))))))
 
+(defun validate-unique-dates (pages)
+  "Validate all dates are unique."
+  (let ((seen-dates (make-hash-table :test #'equal)))
+    (dolist (page pages)
+      (when (gethash (aget "date" page) seen-dates)
+        (error "Duplicate date ~a in page ~a" (aget "date" page) (aget "slug" page)))
+      (setf (gethash (aget "date" page) seen-dates) t))))
+
 (defun validate-unique-keys (pages)
   (let ((seen-keys (make-hash-table :test #'equal)))
     (dolist (page pages)
@@ -1669,6 +1677,7 @@ value, next-index."
     (extend-list all-pages pages)
     ;; Aggregates validation.
     (validate-required-params all-pages)
+    (validate-unique-dates all-pages)
     (validate-unique-keys all-pages)
     ;; Aggregates rendering.
     (make-tags all-pages page-layout params)
