@@ -52,6 +52,7 @@ help:
 	@echo '  run-form          Run form application locally.'
 	@echo '  chk               Run checks on source suitable to be run before push.'
 	@echo '  tidy              Run HTML Tidy on the generated website.'
+	@echo '  xmllint           Run XML Linter on the generated website.'
 	@echo '  check-links       Check broken links in a locally running website.'
 	@echo '  check-paths       Check live website paths and redirects.'
 	@echo '  check-form-rate   Check rate-limiting of form.'
@@ -398,7 +399,8 @@ chk: \
   check-quote \
   check-rendering \
   check-sentence-spacing \
-  tidy
+  tidy \
+  xmllint
 
 cvsplit:
 	: > content/tree/foss.html
@@ -845,6 +847,14 @@ tidy: dist
 	    s/<ol type="[^"]*">/<ol>/; ' \
 	  "$$page" > /tmp/tmp.html; \
 	  tidy -q -e --warn-proprietary-attributes no /tmp/tmp.html || exit 1; \
+	done
+	@echo Done; echo
+
+xmllint: dist
+	find _site -name "*.xml" | \
+	while read -r xml; do \
+	  echo Linting "$$xml"; \
+	  xmllint --noout "$$xml"; \
 	done
 	@echo Done; echo
 

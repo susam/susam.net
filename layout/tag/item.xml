@@ -1,15 +1,15 @@
-<item>
-<title>{{ title }}</title>
-<link>{{ neat-url }}</link>
-<guid isPermaLink="false">{{ pkey }}</guid>
-<pubDate>{{ rss-date }}</pubDate>
-<description>
-<![CDATA[
-{{ body }}<!-- ### -->
-<p>
-  <a href="{{ neat-url }}">Read on website</a> |
+  <entry>
+    <title>{{ title }}</title>
+    <link href="{{ neat-url }}"/>
+    <id>urn:uuid:{{ uuid }}</id>
+    <updated>{{ iso-date }}</updated>
+    <content type="html">
+<!-- BEGIN HTML -->
+{{ escaped-body }}<!-- ### -->
+&lt;p&gt;
+  &lt;a href="{{ neat-url }}"&gt;Read on website&lt;/a&gt; |
   {{ tags-for-feed }}
-</p>
-]]>
-</description>
-</item>
+&lt;/p&gt;
+<!-- END HTML -->
+    </content>
+  </entry>
