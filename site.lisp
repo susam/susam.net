@@ -153,6 +153,18 @@
                                     (fstr "~%")
                                     (fstr "~a~a~%" indent line))))))
 
+(defun html-escape (text)
+  "Escape special characters in HTML."
+  (with-output-to-string (out)
+    (loop for c across text
+          do (case c
+               (#\& (write-string "&amp;" out))
+               (#\< (write-string "&lt;" out))
+               (#\> (write-string "&gt;" out))
+               (#\" (write-string "&quot;" out))
+               (#\' (write-string "&apos;" out))
+               (t (write-char c out))))))
+
 (defmacro aput (key value alist)
   "Add key-value pair to alist."
   `(push (cons ,key ,value) ,alist))
@@ -191,7 +203,6 @@
          (hh (truncate abs-minutes 60))
          (mm (mod abs-minutes 60)))
     (format nil "~a~2,'0d~2,'0d" sign hh mm)))
-
 
 
 ;;; Tool Definitions
@@ -259,14 +270,12 @@ value, next-index."
   (nth (1- month-number) '("Jan" "Feb" "Mar" "Apr" "May" "Jun"
                            "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")))
 
-(defun format-rss-date (universal-time)
+(defun format-iso-date (universal-time)
   "Convert universal-time (integer) to RFC-2822 date string."
-  (multiple-value-bind (second minute hour date month year day dst tz)
+  (multiple-value-bind (second minute hour date month year)
       (decode-universal-time universal-time 0)
-    (declare (ignore dst))
-    (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d ~a"
-            (weekday-name day) date (month-name month) year
-            hour minute second (format-tz tz))))
+    (format nil "~4,'0d-~2,'0d-~2,'0dT~2,'0d:~2,'0d:~2,'0dZ"
+            year month date hour minute second)))
 
 (defun format-short-date (universal-time)
   "Convert universal-time (integer) to a simple human-readable date."
@@ -289,7 +298,7 @@ value, next-index."
      (when date
        (aput "short-date" (format-short-date (parse-content-date date)) ,item)
        (aput "long-date" (format-long-date (parse-content-date date)) ,item)
-       (aput "rss-date" (format-rss-date (parse-content-date date)) ,item))))
+       (aput "iso-date" (format-iso-date (parse-content-date date)) ,item))))
 
 (defun date-slug (filename)
   "Parse filename to extract date and slug."
@@ -414,7 +423,6 @@ value, next-index."
      (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
      (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
      (aput "more" (also-html (aget "also" ,params) ,params) ,params)
-     (aput "keys-for-list" (format-keys-for-list ,page) ,page)
      (aput "neat-path" (neat-path dst-path ,params) ,page)
      (aput "neat-url" (neat-url dst-path ,params) ,page)
      (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
@@ -584,15 +592,6 @@ value, next-index."
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
 
-(defun format-keys-for-html (page indent)
-  "Create HTML to display keys."
-  (let ((html "")
-        (sep ""))
-    (dolist (key (aget "keys" page))
-      (setf html (fstr "~a~a<a href=\"?~a\">~a</a>" html sep key key))
-      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
-    html))
-
 (defun format-tags-for-page (page root)
   "Create HTML to display tags on a page."
   (format-tags-for-html page 2 root))
@@ -600,10 +599,6 @@ value, next-index."
 (defun format-tags-for-list (page)
   "Create HTML to display tags on the full page list."
   (format-tags-for-html page 4 ""))
-
-(defun format-keys-for-list (page)
-  "Create HTML to display keys on the short link list."
-  (format-keys-for-html page 4))
 
 (defun format-tags-for-feed (page params)
   "Create HTML to display tags for the given page."
@@ -616,7 +611,7 @@ value, next-index."
       (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
                        html sep site-url tag tag))
       (setf sep (fstr " |~%  ")))
-    html))
+    (html-escape html)))
 
 (defun write-page (dst-path layout params)
   "Render given layout with given parameters and write page."
@@ -654,11 +649,9 @@ value, next-index."
                                   (format-short-date (parse-content-date updated)))
               page)))
     ;; Other metadata to be parsed.
-    (aput "keys" (string-split (aget "key" page) ", ") page)
     (aput "tags" (string-split (aget "tag" page) ", ") page)
     (aput "blogs" (string-split (aget "blog" page) ", ") page)
     (aput "blog-name" (car (aget "blogs" page)) page)
-    (aput "pkey" (car (aget "keys" page)) page)
     ;; Draft status.
     (setf draft (aget "draft" page))
     (aput "draft-mark" (if draft " [draft]" "") page)
@@ -686,6 +679,7 @@ value, next-index."
       (setf body (render (aget "body" page) page))
       (aput "body" body page))
     (write-page dst layout page)
+    (aput "escaped-body" (html-escape (aget "body" page)) page)
     page))
 
 (defun copy-page (src-path dst-path overrides params)
@@ -697,6 +691,7 @@ value, next-index."
     ;; can be used to render feeds.
     (add-page-params dst-path page params)
     (add-comment-params page overrides)
+    (aput "escaped-body" (html-escape (aget "body" page)) page)
     page))
 
 (defun sort-by-date (items)
@@ -704,11 +699,14 @@ value, next-index."
   (sort (copy-list items)
         (lambda (x y)
           (or (string< (aget "date" x)
-                       (aget "date" y))
-              (and (string= (aget "date" x)
-                            (aget "date" y))
-                   (string< (aget "pkey" x)
-                            (aget "pkey" y)))))))
+                       (aget "date" y))))))
+
+(defun max-date (items)
+  "Return the maximum date from the given items."
+  (reduce
+   (lambda (x y)
+     (if (string> x y) x y))
+   (mapcar (lambda (x) (aget "date" x)) items)))
 
 (defun make-pages (src dst layout overrides params)
   "Generate pages from content files."
@@ -751,6 +749,7 @@ value, next-index."
 
 (defun make-feed-list (pages limit dst list-layout item-layout params)
   "Generate feed list for pages that are not draft and allowed to be listed."
+  (aput "iso-date" (format-iso-date (parse-content-date (max-date pages))) params)
   (make-page-list (last-n limit (sort-by-date (select-feeding-items pages)))
                   dst list-layout item-layout params))
 
@@ -938,6 +937,7 @@ value, next-index."
         (setf (values comment-page comments)
               (make-post-comments comments info parent page-layout params)) ; Post comments.
         (when (string-starts-with "content/talk/" src)
+          (aput "escaped-body" (html-escape (aget "body" comment-page)) comment-page)
           (push comment-page listed-comment-pages))
         (when (and (string-starts-with "content/comments/" src)
                    (not parent))
@@ -956,7 +956,7 @@ value, next-index."
 (defun validate-required-params (pages)
   "Validate pages to ensure required parameters exist."
   (dolist (page pages)
-    (dolist (key '("date" "tag" "key"))
+    (dolist (key '("date" "tag" "uuid"))
       (when (not (aget key page))
         (error "Missing key ~a for page ~a" key (aget "slug" page))))))
 
@@ -967,14 +967,6 @@ value, next-index."
       (when (gethash (aget "date" page) seen-dates)
         (error "Duplicate date ~a in page ~a" (aget "date" page) (aget "slug" page)))
       (setf (gethash (aget "date" page) seen-dates) t))))
-
-(defun validate-unique-keys (pages)
-  (let ((seen-keys (make-hash-table :test #'equal)))
-    (dolist (page pages)
-      (dolist (key (aget "keys" page))
-        (when (gethash key seen-keys)
-          (error "Duplicate key ~a in page ~a" key (aget "slug" page)))
-        (setf (gethash key seen-keys) t)))))
 
 (defun make-tree-recursively (src dst page-layout post-layout overrides params)
   "Recursively descend into a directory tree and render/copy all files."
@@ -1152,10 +1144,13 @@ value, next-index."
 ;;; Meets
 ;;; -----
 
-(defun format-meet-date (date)
+(defun format-meet-date (universal-time)
   "Format meeting entry date for display in meeting list page."
-  (string-replace " " "&nbsp;"
-                  (subseq (format-rss-date (parse-content-date date)) 0 22)))
+  (multiple-value-bind (second minute hour date month year day)
+      (decode-universal-time universal-time 0)
+    (declare (ignore second))
+    (format nil "~a,&nbsp;~2,'0d&nbsp;~a&nbsp;~4,'0d&nbsp;~2,'0d:~2,'0d&nbsp;UTC"
+            (weekday-name day) date (month-name month) year hour minute)))
 
 (defun future-p (meet)
   "Whether the given meeting entry is scheduled for future."
@@ -1173,7 +1168,7 @@ value, next-index."
     (aput "row-id" row-id params)
     (aput "upcoming" upcoming-attr params)
     (aput "class" (if (future-p meet) "future" "past") params)
-    (aput "date" (format-meet-date (getf meet :date)) params)
+    (aput "date" (format-meet-date (parse-content-date (getf meet :date))) params)
     (aput "duration" (getf meet :duration) params)
     (aput "members" (if (future-p meet) "-" (getf meet :members)) params)
     (aput "topic" topic params)
@@ -1477,8 +1472,7 @@ value, next-index."
          (item-xml (read-file "layout/tag/item.xml"))
          (tags-dst "{{ apex }}tag/index.html")
          (list-dst "{{ apex }}tag/{{ tag-slug }}.html")
-         (mini-feed-dst "{{ apex }}tag/{{ tag-slug }}.xml")
-         (full-feed-dst "{{ apex }}tag/{{ tag-slug }}-full.xml")
+         (feed-dst "{{ apex }}tag/{{ tag-slug }}.xml")
          (tags (collect-tags pages))
          (tag)
          (pages))
@@ -1497,15 +1491,14 @@ value, next-index."
       (setf pages (cdr tag-entry))
       (aput "tag" tag params)
       (aput "tag-slug" (tag-slug tag) params)
+      (aput "feed-id" (neat-url (render feed-dst params) params) params)
       (aput "title" (render (tag-title tag) params) params)
       (aput "subtitle" "" params)
       (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
-      (aput "description" (render "Feed for {{ nick }}'s {{ tag }} Pages" params)
-            params)
+      (aput "description" (render "Feed for {{ title }}" params) params)
       (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
       (make-page-list pages list-dst list-layout item-layout params)
-      (make-feed-list pages 20 mini-feed-dst feed-xml item-xml params)
-      (make-feed-list pages 10000 full-feed-dst feed-xml item-xml params))))
+      (make-feed-list pages 20 feed-dst feed-xml item-xml params))))
 
 (defun make-full (pages page-layout params)
   "Generate page list for the full website."
@@ -1516,24 +1509,21 @@ value, next-index."
     (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
     (make-page-list pages "{{ apex }}pages.html" list-layout item-layout params)))
 
-(defun make-short (pages page-layout params)
-  "Generate a short links listing page."
-  (let ((list-layout (read-file "layout/short/list.html"))
-        (item-layout (read-file "layout/short/item.html")))
-    (set-nested-template list-layout page-layout)
-    (aput "title" "Short Links" params)
-    (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
-    (make-page-list pages "{{ apex }}p/index.html" list-layout item-layout params)))
-
 (defun make-feed (pages params)
   "Generate feed for the complete website."
   (let ((feed-xml (read-file "layout/tag/feed.xml"))
         (item-xml (read-file "layout/tag/item.xml")))
+    (aput "feed-id" (fstr "urn:uuid:~a" (aget "site-uuid" params)) params)
     (aput "title" (aget "author" params) params)
     (aput "link" (aget "site-url" params) params)
     (aput "description" (render "{{ nick }}'s Feed" params) params)
-    (make-feed-list pages 20 "{{ apex }}feed.xml" feed-xml item-xml params)
-    (make-feed-list pages 10000 "{{ apex }}feed-full.xml" feed-xml item-xml params)))
+    ;; TODO: Remove the following temporary RSS to Atom migration
+    ;; workaround when there are at least 10 new entries in the feed.
+    ;; ----- BEGIN WORKAROUND -----
+    ;; Temporarily prevent old posts from reappearing in the feeds with new IDs.
+    (setf pages (remove-if-not (lambda (p) (string>= (aget "date" p) "2026-05-03")) pages))
+    ;; ----- END WORKAROUND -----
+    (make-feed-list pages 20 "{{ apex }}feed.xml" feed-xml item-xml params)))
 
 
 ;;; Activity Log
@@ -1678,11 +1668,9 @@ value, next-index."
     ;; Aggregates validation.
     (validate-required-params all-pages)
     (validate-unique-dates all-pages)
-    (validate-unique-keys all-pages)
     ;; Aggregates rendering.
     (make-tags all-pages page-layout params)
     (make-full all-pages page-layout params)
-    (make-short all-pages page-layout (cons (cons "import" "noindex.inc") params))
     (make-feed all-pages params)
     ;; Directory indices.
     (make-tree-list (aget "apex" params) "Tree" page-layout params)

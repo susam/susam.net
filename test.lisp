@@ -79,6 +79,7 @@
 (defvar *site-mode* nil)
 
 (load "site.lisp")
+
 ;;; Test Cases for Reusable Definitions
 ;;; -----------------------------------
 
@@ -261,6 +262,12 @@
   (assert (string= (indent-lines 4 (fstr "x~%")) (fstr "    x~%")))
   (assert (string= (indent-lines 4 (fstr "x~%y~%")) (fstr "    x~%    y~%"))))
 
+(test-case html-escape
+  (assert (string= (html-escape "<foo>") "&lt;foo&gt;"))
+  (assert (string= (html-escape "\"foo'") "&quot;foo&apos;"))
+  (assert (string= (html-escape "foo & bar") "foo & bar"))
+  (assert (string= (html-escape "foo & bar" :amp t) "foo &amp; bar")))
+
 (test-case parse-tz
   (assert (= (parse-tz "+0000") 0))
   (assert (= (parse-tz "+0100") -1))
@@ -325,13 +332,13 @@
   (assert (string= (month-name 11) "Nov"))
   (assert (string= (month-name 12) "Dec")))
 
-(test-case format-rss-date
-  (flet ((f (x) (format-rss-date (parse-content-date x))))
-    (assert (string= (f "2020-06-01") "Mon, 01 Jun 2020 00:00:00 +0000"))
-    (assert (string= (f "2020-06-01 09:00") "Mon, 01 Jun 2020 09:00:00 +0000"))
-    (assert (string= (f "2020-06-01 09:00:10") "Mon, 01 Jun 2020 09:00:10 +0000"))
-    (assert (string= (f "2020-06-01 14:30:10 +0530") "Mon, 01 Jun 2020 09:00:10 +0000"))
-    (assert (string= (f "2020-06-01 04:30:10 +0530") "Sun, 31 May 2020 23:00:10 +0000"))))
+(test-case format-iso-date
+  (flet ((f (x) (format-iso-date (parse-content-date x))))
+    (assert (string= (f "2020-06-01") "2020-06-01T00:00:00Z"))
+    (assert (string= (f "2020-06-01 09:00") "2020-06-01T09:00:00Z"))
+    (assert (string= (f "2020-06-01 09:00:10") "2020-06-01T09:00:10Z"))
+    (assert (string= (f "2020-06-01 14:30:10 +0530") "2020-06-01T09:00:10Z"))
+    (assert (string= (f "2020-06-01 04:30:10 +0530") "2020-05-31T23:00:10Z"))))
 
 (test-case format-short-date
   (flet ((f (x) (format-short-date (parse-content-date x))))
@@ -559,7 +566,7 @@ Foo
     (assert (string= (aget "slug" post) "quux-quuz"))
     (assert (string= (aget "title" post) "Foo Bar"))
     (assert (string= (aget "body" post) "Baz Qux"))
-    (assert (string= (aget "rss-date" post) "Mon, 01 Jun 2020 00:00:00 +0000"))
+    (assert (string= (aget "iso-date" post) "2020-06-01T00:00:00Z"))
     (assert (string= (aget "short-date" post) "01 Jun 2020"))))
 
 (test-case read-page-without-date
@@ -890,7 +897,7 @@ yz
                    '((("body" . "x
 ")
                       ("commenter" . "Alice")
-                      ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                      ("iso-date" . "2020-06-01T07:08:09Z")
                       ("long-date" . "01 Jun 2020 07:08 UTC")
                       ("short-date" . "01 Jun 2020")
                       ("name" . "Alice")
@@ -899,7 +906,7 @@ yz
                    '((("body" . "yz
 ")
                       ("commenter" . "<a href=\"https://example.com/\">Bob</a>")
-                      ("rss-date" . "Tue, 02 Jun 2020 17:18:19 +0000")
+                      ("iso-date" . "2020-06-02T17:18:19Z")
                       ("long-date" . "02 Jun 2020 17:18 UTC")
                       ("short-date" . "02 Jun 2020")
                       ("url" . "https://example.com/")
@@ -911,7 +918,7 @@ yz
 <!-- name: Alice -->
 Bar")
   (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
-                 '((("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                 '((("iso-date" . "2020-06-01T07:08:09Z")
                     ("long-date" . "01 Jun 2020 07:08 UTC")
                     ("short-date" . "01 Jun 2020")
                     ("date" . "2020-06-01 07:08:09 +0000")
@@ -919,7 +926,7 @@ Bar")
                    ((("comment-file-serial" . 1)
                      ("body" . "Bar")
                      ("commenter" . "Alice")
-                     ("rss-date" . "Mon, 01 Jun 2020 07:08:09 +0000")
+                     ("iso-date" . "2020-06-01T07:08:09Z")
                      ("long-date" . "01 Jun 2020 07:08 UTC")
                      ("short-date" . "01 Jun 2020")
                      ("name" . "Alice")
@@ -936,8 +943,7 @@ Y
 <!-- author: Carol -->
 Z")
   (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
-                 '((("rss-date"
-                     . "Mon, 01 Jun 2020 00:00:01 +0000")
+                 '((("iso-date" . "2020-06-01T00:00:01Z")
                     ("long-date" . "01 Jun 2020 00:00 UTC")
                     ("short-date" . "01 Jun 2020")
                     ("date" . "2020-06-01 00:00:01 +0000")
@@ -947,8 +953,7 @@ Z")
                      ("body" . "X
 ")
                      ("commenter")
-                     ("rss-date"
-                      . "Mon, 01 Jun 2020 00:00:01 +0000")
+                     ("iso-date" . "2020-06-01T00:00:01Z")
                      ("long-date" . "01 Jun 2020 00:00 UTC")
                      ("short-date" . "01 Jun 2020")
                      ("author" . "Alice")
@@ -957,16 +962,14 @@ Z")
                      ("body" . "Y
 ")
                      ("commenter")
-                     ("rss-date"
-                      . "Tue, 02 Jun 2020 00:00:02 +0000")
+                     ("iso-date" . "2020-06-02T00:00:02Z")
                      ("long-date" . "02 Jun 2020 00:00 UTC")
                      ("short-date" . "02 Jun 2020")
                      ("author" . "Bob")
                      ("date" . "2020-06-02 00:00:02 +0000"))
                     (("comment-file-serial" . 3) ("body" . "Z")
                      ("commenter")
-                     ("rss-date"
-                      . "Wed, 03 Jun 2020 00:00:03 +0000")
+                     ("iso-date" . "2020-06-03T00:00:03Z")
                      ("long-date" . "03 Jun 2020 00:00 UTC")
                      ("short-date" . "03 Jun 2020")
                      ("author" . "Carol")
