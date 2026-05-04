@@ -47,7 +47,7 @@
   the <code>&lt;guid&gt;</code> element for the items in an RSS feed,
   the <code>&lt;id&gt;</code> element of the entries in an Atom feed
   needs to be a URI.  It turns out UUID URNs are a common choice for
-  such a URI.  I ran the following shell command to replace all
+  such a URI.  I wrote the following shell command to replace all
   occurrences of the <code>key</code> attribute
   with <code>uuid</code>:
 </p>
@@ -129,9 +129,45 @@
   workaround</a> in my site generator to exclude posts published before
   this change from the feed.
 </p>
+<p>
+  That was the only workaround I had to implement.  Fortunately, my
+  feed file had a neutral name like <code>feed.xml</code>, rather than
+  a format-specific name like <code>rss.xml</code>, so I could avoid a
+  URL change and the subsequent overhead of setting up redirects.
+</p>
+<h2 id="does-it-matter">Does It Matter?</h2>
+<p>
+  Does any of this matter today?  I think it does.  Contrary to the
+  recurring claim that RSS and Atom are dead, most of the traffic to my
+  personal website still comes from web feeds, even in 2026.  Every
+  time I publish a new post, I can see a good number of visitors
+  arriving from feed readers.  From the referrer data in my web server
+  logs (which is not completely reliable but still offers some
+  insight), the three largest sources of traffic to my website are
+  web feeds, newsletters and search engines, in that order.
+</p>
+<p>
+  On the topic of newsletters, I was surprised to discover just how
+  many technology newsletters there are on the Web and how active
+  their user bases are.  Once in a while, a newsletter picks up one of
+  my silly or quirky posts, which then brings a large number of visits
+  from its followers.
+</p>
+<p>
+  Back to the topic of web feeds, there is indeed a decent user base
+  around RSS and Atom feeds.  A good number of visitors to my website
+  arrive by clicking a feed entry that shows up in their feed
+  reader.  I know this with some confidence by looking at
+  the <code>referer</code> (sic) headers of visits to my HTML pages
+  and the subsequent browsing of the website, as opposed to the
+  isolated and automated fetches of the XML feeds.  So there must be a
+  reasonably active base of users around web feeds.  It is a bit like
+  being part of an invisible social network that we know exists and
+  that we can measure through indirect evidence.
+</p>
 <h2 id="references">References</h2>
 <p>
-  I found these three resources useful while implementing the change:
+  I found these three resources useful while switching to Atom feeds:
 </p>
 <ul>
   <li>
