@@ -1,0 +1,146 @@
+<!-- date: 2026-05-04 -->
+<!-- title: From RSS to Atom -->
+<!-- tag: Web, Technology -->
+<!-- uuid: 02ace576-3514-4a90-bb09-d8641aec617e -->
+<!-- blog: Maze -->
+<!-- import: math.inc -->
+<p>
+  Yesterday, I switched my website from RSS feeds to Atom feeds.  In
+  case you are wondering whether you have somehow landed on an ancient
+  post from 2010, no, you have not.  Yes, this is the year 2026, and I
+  have finally switched from RSS feeds to Atom feeds.  Yes, I am
+  fifteen, or perhaps twenty, years too late.
+</p>
+{{ toc }}
+<h2 id="impulse-coding">Impulse Coding</h2>
+<p>
+  I have always wanted to do this but could never make the time for
+  it.  Finally, it happened while I was giving my brain some rest from
+  my <a href="26c.html">ongoing</a> algebraic graph theory studies.
+  That's when I felt like spending a little time on my website and
+  doing a little Lisp to change the feeds from RSS to Atom.  I suppose
+  this was <em>impulse coding</em>, a bit like impulse buying, except
+  that I ended up with an Atom feed instead of a new book.
+</p>
+<p>
+  I find it quite surprising that when I have plenty of time, it
+  usually does not occur to me to do these things, but when I am too
+  busy and really short of time, these little ideas possess me during
+  the short breaks I take.  My personal website is one of my passion
+  projects.  Common Lisp is one of my favourite programming languages.
+  So any time spent on this passion project using my favourite
+  programming language is a very relaxing experience for me.  It
+  serves as an ideal break between intense study sessions.  It took
+  about an hour to implement the changes needed to make the switch
+  from RSS to Atom.  In the end, I could go back to my studies
+  reinvigorated.
+</p>
+<p>
+  In case you are curious, here is the Git commit where I implemented
+  the change from RSS to Atom:
+  <a href="https://codeberg.org/susam/susam.net/commit/596e1dd">596e1dd</a>.
+  As you might notice, a large portion of the change consists of
+  replacing the <code>key</code> attribute in each post with
+  the <code>uuid</code> attribute.  The <code>key</code> attribute
+  value was used as the value of the <code>&lt;guid&gt;</code> element
+  in the RSS feeds.  While an arbitrary short string could serve as
+  the <code>&lt;guid&gt;</code> element for the items in an RSS feed,
+  the <code>&lt;id&gt;</code> element of the entries in an Atom feed
+  needs to be a URI.  It turns out UUID URNs are a common choice for
+  such a URI.  I ran the following shell command to replace all
+  occurrences of the <code>key</code> attribute
+  with <code>uuid</code>:
+</p>
+<pre><code>find . -type f -name '*.html' -exec sh -c '
+  for f do
+    sed "s/^&lt;!-- key: .* --&gt;/&lt;!-- uuid: $(uuidgen) --&gt;/g" "$f" &gt; tmp &amp;&amp;
+    mv tmp "$f"
+  done
+' sh {} +</code></pre>
+<p>
+  The rest of the changes went into the
+  <a href="https://codeberg.org/susam/susam.net/src/tag/0.8.0/layout/tag/feed.xml">feed</a>
+  <a href="https://codeberg.org/susam/susam.net/src/tag/0.8.0/layout/tag/item.xml">templates</a>
+  and the Common Lisp <a href="https://codeberg.org/susam/susam.net/src/tag/0.8.0/site.lisp">program</a>
+  that statically generates the feeds along with the website.
+</p>
+<p>
+  For examples of the resulting feeds, see
+  <a href="feed.xml">feed.xml</a> and
+  <a href="tag/absurd.xml">absurd.xml</a>.  The first is the main
+  website feed and the second is an example of a tag-specific feed.
+  Yes, the aforementioned Common Lisp program generates a feed for
+  each <a href="tag/{{ index }}">tag</a>.  As of today, the main feed
+  at <a href="feed.xml">feed.xml</a> contains only two entries even
+  though this website has over <a href="pages.html">200 pages</a>.  I
+  explain the reason later in
+  <a href="#temporary-workaround">Temporary Workaround</a>.
+</p>
+<h2 id="atom-entries">Atom Entries</h2>
+<p>
+  Here is an example Atom entry from my feeds:
+</p>
+<pre><code>&lt;entry&gt;
+  &lt;title&gt;A4 Paper Stories&lt;/title&gt;
+  &lt;link href="https://susam.net/a4-paper-stories.html"/&gt;
+  &lt;id&gt;urn:uuid:06e5304d-c242-481c-bf94-e23b019b0a36&lt;/id&gt;
+  &lt;updated&gt;2026-01-06T00:00:00Z&lt;/updated&gt;
+  &lt;content type="html"&gt;
+    &amp;lt;p&amp;gt;I sometimes resort to a rather common measuring ...
+  &lt;/content&gt;
+&lt;/entry&gt;</code></pre>
+<p>
+  The ellipsis (<code>...</code>) denotes content I have omitted for
+  the sake of brevity.
+</p>
+<p>
+  I like how each entry in the feed now has its own UUIDv4.  I also
+  like that timestamps in an Atom feed are in the
+  <code>date-time</code> format specified in
+  <a href="https://www.rfc-editor.org/rfc/rfc3339.html">RFC 3339</a>,
+  which also happens to be a profile of ISO 8601.  Further, I like
+  that I can explicitly declare the content type to be HTML.  Commonly
+  used values for the content type attribute are <code>text</code>,
+  <code>html</code> and <code>xhtml</code>.  If it is
+  <code>html</code>, the content should be escaped HTML.  If it is
+  <code>xhtml</code>, the content should be an
+  XHTML <code>&lt;div&gt;</code> element containing valid XHTML.
+  Explicit content type support is likely the biggest advantage of
+  Atom over RSS.  In comparison,
+  <a href="https://www.rssboard.org/rss-specification">RSS 2.0</a>
+  does not specify any way to declare the content type.  So feed
+  readers have to inspect the content and guess what the content type
+  might be.
+</p>
+<h2 id="temporary-workaround">Temporary Workaround</h2>
+<p>
+  As I mentioned before, as of today, the
+  <a href="feed.xml">main feed</a> contains only two entries.  That's
+  because only new posts published since the migration to Atom are now
+  included in the feed.  This was done to avoid spamming subscribers.
+  The Atom specification's requirement that each entry's ID must be a
+  URI has caused the IDs of every entry to change.  If I were to
+  include the older posts from before the change in the feed, then
+  those posts would appear as new unread items.  Subscribers can find
+  this quite annoying.  In fact, I have received a few
+  <a href="https://news.ycombinator.com/item?id=40680890">complaints</a>
+  about this in the past.  So I was careful this time.  I have a little
+  <a href="https://codeberg.org/susam/susam.net/src/tag/0.8.0/site.lisp#L1520-L1525">one-liner
+  workaround</a> in my site generator to exclude posts published before
+  this change from the feed.
+</p>
+<h2 id="references">References</h2>
+<p>
+  I found these three resources useful while implementing the change:
+</p>
+<ul>
+  <li>
+    <a href="https://validator.w3.org/feed/docs/atom.html">W3C Introduction to Atom</a>
+  </li>
+  <li>
+    <a href="https://validator.w3.org/feed/">W3C Feed Validation Service</a>
+  </li>
+  <li>
+    <a href="https://www.rfc-editor.org/rfc/rfc4287">RFC 4287</a>: The Atom Syndication Format
+  </li>
+</ul>

@@ -458,6 +458,7 @@ check-bre-and: cat-my-text
 	  s/, and 11/x/g; \
 	  s/, and 9[., ]/x/g; \
 	  s/, and Hello World, from the future/x/g; \
+	  s/, and I have finally switched from RSS feeds/x/g; \
 	  s/, and I.ll do my best to/x/g; \
 	  s/, and \/n\/ or \/ŋ\//x/g; \
 	  s/, and \\( \\tau \\)/x/g; \
@@ -505,6 +506,7 @@ check-bre-or: cat-my-text
 	  s/, or calling a function that does any of those operations/x/g; \
 	  s/, or most simply l[ag]/x/g; \
 	  s/, or other behavior where this International Standard/x/g; \
+	  s/, or perhaps twenty/x/g; \
 	  s/, or pinhole camera/x/g; \
 	  s/, or simply move on to other subjects and forget/x/g; \
 	  s/, or spelling is bound to contain at least one eror/x/g; \
