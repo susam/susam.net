@@ -1,5 +1,5 @@
 <!--
-  Wander 0.6.0.dev1
+  Wander 0.6.0
   Source: https://codeberg.org/susam/wander
   Licence: MIT
 -->
@@ -104,12 +104,15 @@
       dialog header + div {
         text-align: center;
       }
-      dialog details {
-        margin-left: 1em;
-        padding-left: 0.5em;
+      dialog details summary {
+        padding-left: 2em;
+        text-indent: -1em;
       }
       dialog details p {
-        padding-left: 1em;
+        padding-left: 2em;
+      }
+      dialog details ul {
+        padding-left: 4em;
       }
       dialog footer button {
         width: 6em;
@@ -145,7 +148,7 @@
     </style>
     <script src="wander.js"></script>
     <script>
-      const VERSION = '0.6.0.dev1'
+      const VERSION = '0.6.0'
       const LOGGING = true
       const HISTORY_SIZE = 100
       const IDLE_MODE = 0
@@ -356,21 +359,11 @@
         }
         const iframe = document.getElementById('wander-iframe')
         const page = pick(pages)
-        const referral = wander.referral
-        let url
         log('----- BEGIN WANDERING -----')
         mode = WANDERING_MODE
         document.getElementById('url-input').value = page.url
-        log(`Picked page: ${page.referrer} => ${page.url}`)
-        if (referral === 'no') {
-          url = page.url
-        } else if (referral === 'version') {
-          url = addVia(page.url, 'wander-' + VERSION)
-        } else {
-          url = addVia(page.url, normaliseWanderURL(window.location.href))
-        }
-        log(`Loading page: ${page.referrer} => ${url}`)
-        iframe.src = url
+        log(`Loading page: ${page.referrer} => ${page.url}`)
+        iframe.src = page.url
         visitedPages.push(page)
         pagesPicked++
         trimHistory(visitedPages)
@@ -472,6 +465,7 @@
         crawlConsoleQueue.length = 0
         crawlConsoleCounter = 0
         crawlPageCounter = 0
+        cdj()
         // Reset dialog.
         document.getElementById('crawl-console-info').textContent = 'Crawling ...'
         document.getElementById('crawl-console-list').textContent = ''
@@ -482,6 +476,7 @@
         const baseURL = normaliseWanderURL(window.location.href)
         crawlConsoleMap[baseURL] = {
           depth: 0,
+          id: 'crawl-console-' + ++crawlConsoleCounter,
           referrers: [],
           visited: true
         }
@@ -546,6 +541,15 @@
         }
         const label = countWord(count, type)
         info.textContent = `Found ${label}:`
+      }
+
+      function cdj () {
+        const data = {
+          date: formatTime(),
+          consoles: crawlConsoleMap,
+          pages: crawlPageMap
+        }
+        log(JSON.stringify(data, null, 2))
       }
 
       // Loader
@@ -630,7 +634,7 @@
       function setupConsoleDialogNeighbours () {
         const ul = document.getElementById('neighbours-list')
         ul.textContent = ''
-        if (wander.consoles.length === 0) {
+        if (!wander.consoles || wander.consoles.length === 0) {
           createNoneItem(ul)
           return
         }
@@ -644,7 +648,7 @@
       function setupConsoleDialogPages () {
         const ul = document.getElementById('pages-list')
         ul.textContent = ''
-        if (wander.pages.length === 0) {
+        if (!wander.pages || wander.pages.length === 0) {
           createNoneItem(ul)
           return
         }
@@ -881,21 +885,6 @@
         }
       }
 
-      function addVia (websiteURL, consoleURL) {
-        const url = new URL(websiteURL)
-        const via = 'via=' + weakEncodeURIComponent(consoleURL)
-        url.search += url.search ? ('&' + via) : ('?' + via)
-        return url.href
-      }
-
-      function weakEncodeURIComponent (s) {
-        // Encode a Wander console URL for use as a query parameter
-        // value on another website, but keep ':' and '/' readable so
-        // the website owner can see the Wander console URL fairly
-        // intact in their logs and copy-paste it easily.
-        return encodeURIComponent(s).replace(/%2F/g, '/').replace(/%3A/g, ':')
-      }
-
       function countWord (count, word) {
         if (count !== 1) {
           word += 's'
@@ -904,7 +893,11 @@
       }
 
       function log () {
-        if (LOGGING) { console.log.apply(console, [formatTime(), '[Wander]'].concat(Array.from(arguments))) }
+        if (LOGGING) {
+          console.log.apply(
+            console, [formatTime(), '[Wander]'].concat(Array.from(arguments))
+          )
+        }
       }
 
       function formatTime () {
@@ -992,21 +985,6 @@
         assert(wanderJSURL('http://foo/w') === 'http://foo/w/wander.js')
         assert(wanderJSURL('http://foo/w/') === 'http://foo/w/wander.js')
         assert(wanderJSURL('http://foo/bar.html') === 'http://foo/wander.js')
-
-        assert(addVia('https://foo/', 'https://bar/') === 'https://foo/?via=https://bar/')
-        assert(addVia('https://foo/', 'https://bar/@me') === 'https://foo/?via=https://bar/%40me')
-        assert(addVia('https://foo/', 'https://bar/?me') === 'https://foo/?via=https://bar/%3Fme')
-        assert(addVia('https://foo/', 'https://bar/#me') === 'https://foo/?via=https://bar/%23me')
-        assert(addVia('https://foo/?bar', 'https://bar/') === 'https://foo/?bar&via=https://bar/')
-        assert(addVia('https://foo/#bar', 'https://bar/') === 'https://foo/?via=https://bar/#bar')
-        assert(addVia('https://foo/#bar', 'https://bar/#me') === 'https://foo/?via=https://bar/%23me#bar')
-        assert(addVia('https://foo/?bar', 'https://bar/?me') === 'https://foo/?bar&via=https://bar/%3Fme')
-        assert(addVia(
-          'https://foo/?bar=baz', 'https://bar/?who=me') ===
-          'https://foo/?bar=baz&via=https://bar/%3Fwho%3Dme')
-        assert(addVia(
-          'https://foo/?bar=baz#qux', 'https://bar/?who=me#me') ===
-          'https://foo/?bar=baz&via=https://bar/%3Fwho%3Dme%23me#qux')
       }
 
       const TESTING = false
@@ -1179,33 +1157,28 @@
       </header>
       <div>Version <span class="version">&nbsp;</span></div>
       <p>
-        Hello!  You are currently on a Wander console!  A Wander
-        console lets you browse random websites and pages from the
-        Wander community.  The Wander community consists of
-        individuals who develop and maintain their own personal
-        websites.
+        Wander Console lets you discover random personal websites from
+        the Wander community.
       </p>
       <p>
-        To set up your own Wander console, download
-        <a href="https://codeberg.org/susam/wander/archive/wander.zip" target="_blank">this
-        ZIP file</a>, extract index.html and wander.js and place them
-        in the /wander/ directory of your website.  Then edit
-        wander.js by following the directions at
+        To learn more about Wander or set up your own console, see
         <a href="https://codeberg.org/susam/wander#readme"
-           target="_blank">codeberg.org/susam/wander</a>.
+           target="_blank">codeberg.org/susam/wander<svg>
+            <use href="#ext-icon"></use></svg></a>.
       </p>
       <p>
-        That's it!  Once your /wander/ directory is ready on your web
-        server, you can share a link to your Wander console in
-        <a href="https://codeberg.org/susam/wander/issues/1"
-           target="_blank">this community thread</a>.  Hopefully, someone
-        will add your console to theirs and you will become part of
-        the Wander network.
+        Wander Console is free and open source software.  You can use,
+        copy, modify, merge, publish, distribute, sublicence and/or
+        sell copies of it, under the terms of the
+        <a href="https://codeberg.org/susam/wander/src/branch/main/LICENCE.md"
+           target="_blank">MIT Licence<svg><use href="#ext-icon"></use></svg></a>.
       </p>
       <p>
-        For more information about Wander, please see
-        <a href="https://codeberg.org/susam/wander#readme"
-           target="_blank">codeberg.org/susam/wander</a>.
+        This software is provided "AS IS", WITHOUT WARRANTY OF ANY
+        KIND, express or implied.  See the
+        <a href="https://codeberg.org/susam/wander/src/branch/main/LICENCE.md"
+           target="_blank">licence<svg><use href="#ext-icon"></use></svg></a>
+        for details.
       </p>
       <footer><form method="dialog"><button>Close</button></form></footer>
     </dialog>
