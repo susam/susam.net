@@ -6,13 +6,21 @@
          placeholder="Your name">
   <input type="url" id="url" name="url" value="{{ url }}"
          placeholder="Link to your profile on GitHub, Codeberg, Mastodon, etc. (Optional)">
-  <textarea id="comment" name="comment" required
+  <textarea id="comment" name="comment" maxlength="{{ required
             placeholder="Your comment">{{ comment }}</textarea>
   <input type="hidden" name="slug" value="{{ slug }}">
   <input type="hidden" name="{{ ukey }}" value="{{ uval }}">
   <input type="hidden" name="{{ vkey }}" value="{{ vval }}">
   <button>Submit Comment</button>
 </form>
+<p>
+  <strong>Note:</strong> Not all comments are published.  In
+  particular, rants, even when relevant, are generally not
+  published.  Please see the link below for more information.
+</p>
+<div class="guide">
+  <a href="../../commenting.html">Read Privacy Notice</a>
+</div>
 <div class="privacy">
   <a href="../../privacy.html">Read Privacy Notice</a>
 </div>
