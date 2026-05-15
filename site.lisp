@@ -876,6 +876,8 @@ value, next-index."
     ;; itself, so that all comment data is self-contained and they can
     ;; be used on their own later to render the full comments page.
     (setf comments (enrich-comments comments info dst-path params))
+    (when (string= (aget "reverse" info) "yes")
+      (setf comments (reverse comments)))
     (cond (parent
            (setf list-layout (read-file "layout/comment/post.html"))
            (aput "title" (fstr "Comments on ~a" (aget "title" parent)) params))
