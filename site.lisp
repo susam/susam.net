@@ -760,18 +760,10 @@ value, next-index."
 (defun read-comment (text start-index)
   "Read a single comment from a comment file."
   (let ((start-token "<!-- ") ; Header prefix.
-        (commenter)           ; Rendered commenter display name.
-        (url)                 ; URL of commenter.
         (comment)             ; Parsed comment parameters.
         (next-index))         ; Index at which to search next comment.
     (setf (values comment start-index) (read-headers text start-index))
     (insert-formatted-dates comment)
-    ;; Determine commenter's display name.
-    (setf commenter (aget "name" comment))
-    (setf url (aget "url" comment))
-    (when url
-      (setf commenter (fstr "<a href=\"~a\">~a</a>" url commenter)))
-    (aput "commenter" commenter comment)
     ;; Select content until next header or end-of-text as body.
     (setf next-index (search start-token text :start2 start-index))
     (aput "body" (subseq text start-index next-index) comment)
@@ -832,6 +824,13 @@ value, next-index."
   "Enrich a comment by adding relevant page metadata to it."
   (let ((enriched-comments))
     (dolist (comment comments)
+      (aput "commenter" (aget "name" comment) comment)
+      (when (string= (aget "name" comment) (aget "author" params))
+        (aput "url" (aget "site-url" params) comment))
+      (when (aget "url" comment)
+        (aput "commenter" (fstr "<a href=\"~a\">~a</a>"
+                                (aget "url" comment)
+                                (aget "commenter" comment)) comment))
       (let ((body (aget "body" comment)))
         (aput "body" (render body params) comment))
       (aput "unlist" (aget "unlist" page) comment)
