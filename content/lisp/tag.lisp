@@ -2,4 +2,5 @@
  ("HTML" . "{{ nick }}'s HTML Tools and Games")
  ("Notes" . "{{ nick }}'s Notes")
  ("Puzzle" . "{{ nick }}'s Puzzles")
+ ("Story" . "{{ nick }}'s Stories")
  ("Web" . "{{ nick }}'s Web Posts"))
