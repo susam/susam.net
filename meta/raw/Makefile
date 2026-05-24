@@ -62,6 +62,7 @@ fd-100-logo: clean
 	convert logo_008.png -sample '1920x1500!' logo-star-centre.png
 	convert logo_009.png -sample '1920x1500!' logo-circle.png
 	convert logo_010.png -sample '1920x1500!' logo-circle-centre.png
+	convert logo_010.png -sample '1920x1500!' logo-cs.png
 	cp logo-circles.png ../content/tree/files/blog/
 	cp logo-line.png ../content/tree/files/blog/
 	cp logo-square.png ../content/tree/files/blog/
