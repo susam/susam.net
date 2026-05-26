@@ -24,7 +24,7 @@ still survives on my current website.
 On 13 May 2006, I began blogging at [susampal.blogspot.com][BP] via
 [Blogger][BL].
 
-On 15 May 2007, I registered the domain susam.in and began hosting a
+On 15 May 2007, I registered the domain `susam.in` and began hosting a
 static website consisting of my open source projects.
 
 On 20 Oct 2011, I began hosting dynamic web pages on the website
@@ -37,8 +37,7 @@ On 16 Feb 2019, I turned my website into a static website generated
 with a modified version of [makesite.py][PYCODE].
 
 On 16 Aug 2021, I turned my website into a static website generated
-with my own [Common Lisp][CLCODE] program. This program is inspired by
-and based on [makesite.py][PYCODE].
+with my own [Common Lisp][CLCODE] program.
 
 On 06 Jan 2022, I moved my website to [susam.net][WEBSITE].
 

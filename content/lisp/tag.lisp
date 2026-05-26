@@ -1,5 +1,5 @@
 (("Absurd" . "{{ nick }}'s Absurd Explorations")
- ("HTML" . "{{ nick }}'s HTML Tools and Games")
+ ("HTML" . "{{ nick }}'s HTML Tools")
  ("Notes" . "{{ nick }}'s Notes")
  ("Puzzle" . "{{ nick }}'s Puzzles")
  ("Story" . "{{ nick }}'s Stories")

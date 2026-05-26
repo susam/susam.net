@@ -44,7 +44,7 @@
             <a href="{{ root }}{{ index }}">Home</a>
             <a href="{{ root }}links.html">Links</a>
             <a href="{{ root }}about.html">About</a>
-            <a href="https://github.com/susam">GitHub</a>
+            <a href="https://codeberg.org/susam">Codeberg</a>
             <a href="https://mastodon.social/@susam">Mastodon</a>
           </nav>
           <p>

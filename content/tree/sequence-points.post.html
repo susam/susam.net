@@ -17,10 +17,10 @@ int main()
     return 0;
 }</code></pre>
 <p>
-  The output is <code>5 6 5</code> when compiled with GCC and
-  <code>6 6 6</code> when compiled with the C compiler that comes with
-  Microsoft Visual Studio.  The versions of the compilers with which I
-  got these results are:
+  On my system, the output was <code>5 6 5</code> with GCC and <code>6
+  6 6</code> with the C compiler that came with Microsoft Visual
+  Studio.  The versions of the compilers with which I got these
+  results are:
 </p>
 <ul>
   <li>
@@ -44,8 +44,8 @@ int main()
     return 0;
 }</code></pre>
 <p>
-  In this case, I got the output <code>17</code> with both the
-  compilers.
+  In this case, I got the output <code>17</code> with both these
+  compiler versions.
 </p>
 <p>
   The behaviour of such C programs is undefined.  Consider the
@@ -56,8 +56,8 @@ int main()
   <li><code>a += a++ + a++;</code></li>
 </ul>
 <p>
-  We will see below that in both the statements, the variable is
-  modified twice between two consecutive sequence points.  If the
+  We will see below that in both statements, the variable is modified
+  more than once between two consecutive sequence points.  If the
   value of a variable is modified more than once between two
   consecutive sequence points, the behaviour is undefined.  Such code
   may behave differently when compiled with different compilers.
@@ -88,7 +88,9 @@ int main()
   </p>
 </blockquote>
 <p>
-  In the next paragraph, they write,
+  Note that the comma (<code>,</code>) mentioned here is the comma
+  operator, not the comma that separates function arguments.  In the
+  next paragraph, they write,
 </p>
 <blockquote>
   <p>
@@ -123,8 +125,20 @@ printf("%d %d\n", n, power(2, n));</code></pre>
 <p>
   To read more about this, download the
   <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf">C99
-  standard</a>, go to section 5.1.2.3 (Program execution) and see the
-  second point which mentions:
+  standard</a> and go to section 4 (Conformance) and read the second
+  point:
+</p>
+<blockquote>
+  If a "shall" or "shall not" requirement that appears outside of a
+  constraint is violated, the behavior is undefined.  Undefined
+  behavior is otherwise indicated in this International Standard by
+  the words "undefined behavior" or by the omission of any explicit
+  definition of behavior.  There is no difference in emphasis among
+  these three; they all describe "behavior that is undefined".
+</blockquote>
+<p>
+  Next go to section 5.1.2.3 (Program execution) and see the second
+  point which mentions:
 </p>
 <blockquote>
   Accessing a volatile object, modifying an object, modifying a file,
@@ -161,15 +175,15 @@ printf("%d %d\n", n, power(2, n));</code></pre>
 <p>
   there is a sequence point after the evaluation of the three
   arguments (<code>i</code>, <code>i--</code> and <code>++i</code>)
-  and before the <code>printf()</code> function is called.  But none
-  of the items specified in Annex C implies that there is a sequence
-  point between the evaluation of the arguments.  Yet the value
-  of <code>i</code> is modified more than once during the evaluation
-  of these arguments.  This makes the behaviour of this statement
-  undefined.  Further, the value of <code>i</code> is being read not
-  only for determining what it must be updated to but also for using
-  as arguments to the <code>printf()</code> call.  This also makes the
-  behaviour of this code undefined.
+  and before the <code>printf()</code> function is called.  But there
+  is no sequence point between the evaluations of the individual
+  arguments.  Yet the value of <code>i</code> is modified more than
+  once during the evaluation of these arguments.  This makes the
+  behaviour of this statement undefined.  Further, the value
+  of <code>i</code> is being read not only for determining what it
+  must be updated to but also for using as arguments to
+  the <code>printf()</code> call.  This also makes the behaviour of
+  this code undefined.
 </p>
 <p>
   Let us see another example of a sequence point from Annex C.
@@ -190,7 +204,7 @@ printf("%d %d\n", n, power(2, n));</code></pre>
 <p>
   there is a sequence point at the end of the complete expression
   (marked with a semicolon) but there is no other sequence point
-  before it.  Yet the value of <code>a</code> is modified twice before
-  the sequence point.  Thus the behaviour of this statement is
-  undefined.
+  before it.  Yet the value of <code>a</code> is modified more than
+  once before the sequence point.  Thus the behaviour of this
+  statement is undefined.
 </p>

@@ -6,36 +6,37 @@
 <!-- import: extra.css -->
 <p>
   Last evening, a short blog post appeared in my feed reader that felt
-  as if it spoke directly to me.  It is Chris Morgan's short and
-  excellent post called <a href="https://chrismorgan.info/no-query-strings">I've
-  banned query strings</a>.
+  as if it spoke directly to me.  It is Chris Morgan's excellent post
+  <cite><a href="https://chrismorgan.info/no-query-strings">I've banned
+  query strings</a></cite>.
 </p>
+{{ toc }}
 <h2 id="wisdom-on-the-web">Wisdom on the Web</h2>
 <p>
   <a href="https://chrismorgan.info/">Chris</a> is someone whose
   Internet comments I have been reading for about half a decade now.
-  I first stumbled upon his comments when he left very detailed
-  <a href="https://news.ycombinator.com/item?id=25321222#25322611">feedback</a>
-  on one of my collections of CSS rules on Hacker News.  I am by no
-  means a web developer.  I have spent most of my
+  I first stumbled upon his comments on Hacker News, where he left
+  very detailed <a href="https://news.ycombinator.com/item?id=25321222#25322611">feedback</a>
+  on a small collection of boilerplate CSS rules I had shared there.
+  I am by no means a web developer.  I have spent most of my
   <a href="twenty-five-years-of-computing.html">professional life</a>
   doing systems programming in C and C++.  However, developing
   websites and writing
   <a href="tag/html.html">small HTML tools</a> has been a long-time
   hobby for me.  I have learnt most of my web development skills as a
   hobbyist by studying what other people do: first by viewing the
-  source of websites I liked in the early 2000s, and later by
+  source of websites I liked in the early 2000s and later by
   occasionally getting possessed by the urge to implement a new game
   or tool and searching
   <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">MDN Web
-  Docs</a> to learn whatever I needed to implement those hobby
-  projects.  One problem with learning a skill this way is that you
-  sometimes pick up habits and practices that are fashionable but not
-  necessarily optimal or correct.  So it was really valuable to me
-  when Chris commented on my collection of boilerplate CSS rules.  It
-  helped me improve my CSS a lot.  In fact, a few of the lessons from
-  his comment have really stuck with me; I keep them in mind whenever
-  I make a hobby HTML project: always retain underlines in links and
+  Docs</a> to learn whatever I needed to make it work.  One problem
+  with learning a skill this way is that you sometimes pick up habits
+  and practices that are fashionable but not necessarily optimal or
+  correct.  So it was really valuable to me when Chris commented on my
+  collection of boilerplate CSS rules.  It helped me improve my CSS a
+  lot.  In fact, a few of the lessons from his comment have really
+  stuck with me; I keep them in mind whenever I make a hobby HTML
+  project: always retain underlines in links and
   <a href="more-purple-links-please.html">retain purple</a> for
   visited links.
 </p>
@@ -46,8 +47,8 @@
   carefully, even when the project isn't mine.  I always end up
   learning something nice and useful from his comments.  Here is one
   such recent example from the Lobsters story
-  <a href="https://lobste.rs/s/crcktq/adding_author_context_rss#c_wb5ryy">Adding
-  author context to RSS</a>.
+  <cite><a href="https://lobste.rs/s/crcktq/adding_author_context_rss#c_wb5ryy">Adding
+  author context to RSS</a></cite>.
 </p>
 <h2 id="wander-on-the-web">Wander on the Web</h2>
 <p>
@@ -61,24 +62,27 @@
   by the Wander community.
 </p>
 <p>
-  What is the Wander community?  It is simply the set of website owners
-  who have chosen to host this tool on their websites.  The tool
-  consists of one HTML file that implements the console and one
-  JavaScript file where the website owner defines a list of neighbouring
-  consoles along with a list of web pages they recommend.  If you copy
-  these two files to your web server, you instantly have a Wander
-  console live on the Web.  You don't need any server-side logic or
-  server-side software beyond a basic web server to run Wander Console.
-  You can even host it in constrained environments like Codeberg Pages
-  or GitHub Pages.  When you click the 'Wander' button, the console
-  connects to other remote consoles, fetches web page recommendations,
-  picks one randomly and loads it in your web browser.  There are
-  currently over 50 websites hosting this tool.  Together, they
-  recommend over 1500 web pages.  You can find a recent snapshot of
-  the list of known consoles and the pages they recommend at
-  <a href="https://susam.codeberg.page/wcn/">susam.codeberg.page/wcn/</a>.
+  The tool consists of one HTML file that implements the console and
+  one JavaScript file where the website owner defines a list of
+  neighbouring consoles along with a list of web pages they recommend.
+  If you copy these two files to your web server, you instantly have a
+  Wander console live on the Web.  You don't need any server-side
+  logic or server-side software beyond a basic web server to run
+  Wander Console.  You can even host it in constrained environments
+  like Codeberg Pages or GitHub Pages.  When you click the 'Wander'
+  button, the console connects to other remote consoles, fetches web
+  page recommendations, picks one randomly and loads it in your web
+  browser.  It is a bit like the now defunct
+  <a href="https://en.wikipedia.org/wiki/StumbleUpon">StumbleUpon</a>
+  but it is completely decentralised.  It is also a bit like web rings
+  except that the community network is not restricted to being a
+  cycle; it is a graph that can take any shape.
 </p>
 <p>
+  There are currently over 50 websites hosting this tool.  Together,
+  they recommend over 1500 web pages.  You can find a recent snapshot
+  of the list of known consoles and the pages they recommend at
+  <a href="https://susam.codeberg.page/wcn/">susam.codeberg.page/wcn/</a>.
   To learn more about this tool or to set it up on your website,
   please see <a href="https://codeberg.org/susam/wander#readme">codeberg.org/susam/wander</a>.
 </p>
@@ -134,11 +138,12 @@
   read more algebraic graph theory literature and I really needed a
   break.  During another such break, I revisited that feature request
   and, despite my reservations, decided to implement it anyway.
+  During yet another such break, I am writing this post.
 </p>
 <p>
   Normally, I don't like adding too many new features to my little
   projects.  I want them to have a limited scope.  I also want them to
-  become stable over time.  After such a project has fulfilled some
+  become stable over time.  After a project has fulfilled some
   essential requirements I had, I just want to call it feature
   complete and never add another feature to it again.  I'll fix bugs,
   of course.  But I don't like to keep adding new features endlessly.
@@ -154,10 +159,12 @@
   implemented the referral query string feature anyway.  While doing
   so, I added an opt-out mechanism to the configuration, so that if
   someone else didn't like the feature, they could disable it for
-  themselves.  The fact that I didn't have a lot of time to reason
-  through the implications of this feature meant that I just went
-  ahead and implemented it without thinking about it critically.  As
-  the famous quote from Jurassic Park goes:
+  themselves.  This was another mistake.  A questionable feature like
+  this should be implemented as an opt-in feature, not an opt-out
+  feature, if implemented at all.  The fact that I didn't have a lot
+  of time to reason through the implications of this feature meant
+  that I just went ahead and implemented it without thinking about it
+  critically.  As the famous quote from Jurassic Park goes:
 </p>
 <blockquote>
   Your scientists were so preoccupied with whether or not they could
@@ -165,45 +172,70 @@
 </blockquote>
 <h2 id="broken-urls">Broken URLs</h2>
 <p>
-  It would soon turn out that my gut feeling was correct.  After I
-  implemented that feature, one of my favourite pages refused to load
-  in the console:
+  It soon turned out that my gut feeling was correct.  After I
+  implemented that feature, a page from one of my favourite websites
+  refused to load in the console.  To illustrate the problem, here are
+  a few similar but slightly different URLs for that page:
 </p>
-<p class="textcenter">
-  <a href="https://int10h.org/oldschool-pc-fonts/fontlist/">https://int10h.org/oldschool-pc-fonts/fontlist/</a>
+<ul>
+  <li><a href="https://int10h.org/oldschool-pc-fonts/fontlist/">https://int10h.org/oldschool-pc-fonts/fontlist/</a></li>
+  <li><a href="https://int10h.org/oldschool-pc-fonts/fontlist/?2">https://int10h.org/oldschool-pc-fonts/fontlist/?2</a>
+  <li><a href="https://int10h.org/oldschool-pc-fonts/fontlist/?foo">https://int10h.org/oldschool-pc-fonts/fontlist/?foo</a></li>
+</ul>
+<p>
+  The first and second URLs load fine, but the third URL returns an
+  HTTP 404 error page.  The website uses the query string to determine
+  which one of its several font collections to show.  So when we add
+  an arbitrary query string to the URL, the website tries to interpret
+  it as a font collection identifier and the page fails to load.  That
+  is why, when my tool added the <code>via=</code> query parameter to
+  the first URL, the page failed to load.
 </p>
 <p>
-  Normally, the above URL would load fine, but now the console was
-  altering the URL by adding a query string to it while loading it.
-  The modified URL would not load.  For example, try visiting the
-  following modified URL:
-</p>
-<p class="textcenter">
-  <a href="https://int10h.org/oldschool-pc-fonts/fontlist/?foo">https://int10h.org/oldschool-pc-fonts/fontlist/?foo</a>
-</p>
-<p>
-  The above URL returns an HTTP 404 error page.  Now, with a little
-  time to breathe and some hindsight, I could articulate why adding
-  referral query strings to a working URL is such a bad idea.
-  Altering a URL gives you a <em>new</em> URL.  The new URL could
-  point to a totally different resource, or to no resource at all,
-  even if the alteration is as small as adding a seemingly harmless
-  query string.  By adding the referral query string, I had
-  effectively broken a working URL belonging to a website I am
+  Later, with a little time to breathe and some hindsight, I could
+  articulate why adding referral query strings to a working URL was
+  such a bad idea.  Altering a URL gives you a <em>new</em> URL.  The
+  new URL could point to a completely different resource, or to no
+  resource at all, even if the alteration is as small as adding a
+  seemingly harmless query string.  By adding the referral query
+  string, I had effectively broken a working URL from a website I am
   very <a href="https://news.ycombinator.com/item?id=39419054#39439453">fond</a>
-  of.  There is also a moral question here about whether it is okay to
-  modify a given URL on behalf of the user in order to insert a
-  referral query string into it.  I think it isn't.
+  of.
+</p>
+<h2 id="qualms">Qualms</h2>
+<p>
+  It is also worth asking whether an HTML tool should concern itself
+  with referral query strings at all when web browsers already have a
+  mechanism for this: the HTTP <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Referer">Referer</a>
+  header, governed by <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Referrer-Policy">Referrer-Policy</a>.
+  That policy can be set at the server level, the document level or
+  even on individual links.  The Web standards already provide
+  deliberate controls to decide how much referrer information should be
+  sent.  Appending referral query strings to URLs bypasses those controls.
+  It moves a privacy and attribution concern out of the
+  referrer mechanism and embeds it into the destination URL instead.
+  I don't think an HTML tool should do that.
+</p>
+<p>
+  There is also a moral question here about whether it is
+  okay to modify a given URL on behalf of the user in order to insert
+  a referral query string into it.  I think it isn't.
 </p>
 <h2 id="conclusion">Conclusion</h2>
 <p>
-  In the end, I decided to remove the misguided referral query string feature from
-  Wander Console.  But my ongoing research work left me with no time
-  to do it.  When Chris's post <a href="https://chrismorgan.info/no-query-strings">I've
-  banned query strings</a> appeared in my feed reader last evening, it
-  pushed me enough to sacrifice a little time from my academic hobby
-  and devote it to removing that ill-considered feature.  The feature
-  is now gone.  See commit
+  In the end, I decided to remove the referral query string feature
+  from Wander Console.  One might wonder why I couldn't simply leave
+  the feature in as an opt-in.  Well, the answer is that once I had
+  deemed the feature misguided, I no longer wanted it to be part of my
+  software in any form.  The project is still new and we are still in
+  the days of 0.x releases, so if there is a good time to remove
+  features, this is it.  But my ongoing research work left me with no
+  time to do it.  Finally, when the post
+  <cite><a href="https://chrismorgan.info/no-query-strings">I've
+  banned query strings</a></cite> appeared in my feed reader last
+  evening, it nudged me just enough to take a little time away from my
+  academic hobby and devote it to removing that ill-considered
+  feature.  The feature is now gone.  See commit
   <a href="https://codeberg.org/susam/wander/commit/b26d77c4da9ec11b655ba64a4ae4f3af56e06370">b26d77c</a>
   for details.  The latest release, version 0.6.0, does not have it
   anymore.

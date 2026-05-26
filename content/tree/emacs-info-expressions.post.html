@@ -1,4 +1,4 @@
-<!-- date: 2025-12-01 -->
+<!-- date: 2024-04-12 -->
 <!-- title: Emacs Info Expressions -->
 <!-- tag: Emacs, Technology -->
 <!-- uuid: bd6aab8e-e759-4b73-ab97-036e386d65f3 -->
@@ -53,12 +53,19 @@
 </p>
 <pre><code>(info "(emacs) Branches")</code></pre>
 <p>
-  The person who receives this <code>info</code> expression can visit
+  Note that if you are running Emacs in a terminal, <code>C-0 c</code>
+  may not work because most terminals do not recognise
+  <code>C-0</code> as a key combination.  Fortunately, Emacs supports
+  <code>C-u 0</code> and <code>M-0</code> as alternative ways to enter
+  the zero prefix argument.  Therefore, if you are using Emacs in a
+  terminal, type <code>C-u 0 c</code> or <code>M-0 c</code> instead.
+</p>
+<p>
+  The person who receives the <code>info</code> expression can visit
   the corresponding section of the manual simply by evaluating it.
   For example, after copying the expression in Emacs, they could
   type <code>C-y C-x C-e</code> to paste the expression into a buffer
   and evaluate it immediately.  Alternatively, they might want to
-  type <code>M-: C-y RET</code> to bring the
-  <code>eval-expression</code> minibuffer, paste the expression there
-  and evaluate it.
+  type <code>M-: C-y RET</code> to bring the <code>eval-expression</code>
+  minibuffer, paste the expression there and evaluate it.
 </p>

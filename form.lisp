@@ -208,7 +208,7 @@
   "Return a message that describes that user input has been left intact."
   (format nil "~@{~a~}"
           "Your input is left intact below in case you want to "
-          "edit, copy, or resubmit it."))
+          "edit, copy or resubmit it."))
 
 (defun reject-comment-p (options ip current-time params)
   "Validate post and return a list of error messages on failure."

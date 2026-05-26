@@ -2,35 +2,43 @@
 <!-- title: Don't Roll Your Own ... -->
 <!-- tag: Web, Technology -->
 <!-- uuid: 78208b12-52d0-473f-b325-527720307e2d -->
-<!-- blog: Main -->
+<!-- blog: Maze -->
 <!-- import: extra.css -->
 <p>
-  Among computer programmers, and especially among those who work on
-  security-sensitive systems, there is a well-known maxim: <em>Don't
-  roll your own crypto.</em>  Of course, you can roll your own crypto
-  for learning purposes.  But if you are going to use cryptography in
-  software or services that serve others, you must never implement the
-  cryptographic primitives yourself, or, worse, develop your own
-  cryptographic algorithms and use them in your software.  I have seen
-  several flawed home-grown RC4 implementations early in my career,
-  with issues like improper initialisation vectors, predictable
-  keystreams and partial leakage of plaintext into ciphertext, putting
-  users' sensitive data at risk.  If you are considering cryptography
-  for software with actual users, the advice 'don't roll your own
-  crypto' is sound.  You must always use an established, vetted
-  software package or tool to do the cryptography for you.
+  This is going to be a rant about modern web design practices.  But
+  before I get to that, let me begin with a familiar principle from
+  the world of cryptography.  Among software developers, and
+  especially among those who work on security-sensitive systems, there
+  is a well-known maxim: <em>Don't roll your own crypto.</em>  This
+  does not mean that nobody is allowed to write cryptographic code.
+  Someone has to.  It means that, for ordinary production software
+  that protects sensitive data of users, we should not rely on a
+  private, unreviewed implementation that has not been vetted by the
+  wider software development community.  We should use established,
+  vetted software packages or tools wherever possible.
 </p>
 <p>
-  Fortunately, most of the industry does take the 'don't roll your own
-  crypto' advice quite seriously.  No major e-commerce site or bank
-  uses home-grown cryptography for its web services.  In fact, in
-  regulated domains such as payments, healthcare, government systems
-  and personal data processing, doing so could violate requirements
-  for strong cryptography, possibly leading to hefty financial
-  penalties.  But regrettably, there are many other domains of
-  computing where I think you shouldn't be rolling your own X, where X
-  is something that matters to users, and yet many software developers
-  decide to implement X themselves.  Here I present a list of such X.
+  Fortunately, it is now standard industry practice to avoid rolling
+  your own crypto and instead use cryptographic algorithms and
+  packages that have been peer reviewed and stood the test of time.
+  It wasn't so some twenty years ago.  I have seen several flawed
+  home-grown RC4 implementations early in my career, with issues like
+  improper initialisation vectors, predictable keystreams and partial
+  leakage of plaintext into ciphertext, putting sensitive data of
+  users at risk.  But today, major e-commerce websites or banks
+  typically do not use home-grown cryptography for its web services.
+  In fact, in regulated domains such as payments, healthcare and
+  personal data processing, doing so could violate requirements for
+  strong cryptography, possibly leading to hefty financial penalties.
+</p>
+<p>
+  Website design is obviously not cryptography.  A broken scroll bar
+  is not the same kind of failure as a broken encryption scheme.  But
+  I wish there were a similar maxim for website design as well.  There
+  are many aspects of websites where, I think, developers should not
+  be rolling their own X, especially when X is something browsers
+  already do well and something users depend on every day.  Here I
+  present a list of such X.
 </p>
 <ul>
   <li>
@@ -56,40 +64,59 @@
   </li>
 </ul>
 <p>
-  The one that bothers me the most is custom scroll behaviour on
-  websites.  I am used to how page scrolling responds to my mouse,
-  touchpad or keyboard input.  When you override the default scrolling
-  behaviour of the web browser with your own implementation, it
-  'breaks' the page for me.  The page now moves too slowly or too
-  quickly when I scroll.  Keyboard scrolling may or may not work.  You
-  take something I am so familiar with that I don't even think about
-  it, and turn it into something unfamiliar that I now have to think
-  about.
+  Of course, there are valid scenarios where you may need to roll your
+  own X.  But here I want to focus on the cases where you should not
+  roll your own X, and how doing so can lead to a worse user
+  experience, at least in my experience.  I am not saying that nobody
+  should ever build anything themselves.  As someone who does a lot of
+  creative computing myself and develops fun tools from time to time,
+  I am a big proponent of developing your own stuff.  But when it
+  comes to developing user interface features for serious websites
+  that people need to use to get their work done, I wish the software
+  development community were more conservative in deciding what fancy
+  feature goes into a website and what is left out.  Do keep in mind
+  that I am no expert in user experience.  Far from it.  So none of
+  what I am saying here should be taken as a recommendation.  But I am
+  a <em>user</em> of the Web, and as a user, I have found some modern
+  web design patterns to be frustrating.  This post is a lament from
+  one user of the Web, not a design guide.
+</p>
+<p>
+  Of all the things I mentioned above, the one that bothers me the
+  most is custom scroll behaviour on websites.  I am used to how page
+  scrolling responds to my mouse, touchpad or keyboard input.  When
+  you override the default scrolling behaviour of the web browser with
+  your own implementation, it 'breaks' the page for me.  The page now
+  moves too slowly or too quickly when I scroll.  Keyboard scrolling
+  may or may not work.  You take something I am so familiar with that
+  I don't even think about it, and turn it into something unfamiliar
+  that I now have to think about.
 </p>
 <p>
   Custom link navigation is another pet peeve of mine.  Web browsers
-  can already handle links very well.  You shouldn't have to mess with
-  that behaviour at all.  If you think you need to, reconsider what
-  you are trying to achieve and if it is really so important as to
-  disrupt normal link navigation.  The worst offender I have found
-  here is GitHub.  When you click on a link on GitHub, say, a file
-  link or an issue link, it triggers a massive piece of functionality
-  implemented in JavaScript that handles the link click for you.  If
-  you don't believe me, visit your favourite project on GitHub using
-  Firefox or Chrome, type <kbd>F12</kbd> to open the browser's
-  developer tools, then go to the 'Debugger' or 'Sources' tab, find
-  'Event Listener Breakpoints' on the left sidebar, expand 'Mouse' and
-  select 'click'.  Then click on a link on GitHub and see what
-  happens.
+  can already handle links very well.  You could say that this is the
+  whole reason web browsers even exist.  Following links is their
+  bread and butter.  You shouldn't have to mess with that behaviour at
+  all.  If you think you need to, reconsider what you are trying to
+  achieve and whether it is really so important as to disrupt normal
+  link navigation.  The worst offender I have found here is GitHub.
+  When you click on a link on GitHub, say, a file link or an issue
+  link, it triggers a massive piece of functionality implemented in
+  JavaScript that handles the link click for you.  If you don't
+  believe me, visit your favourite project on GitHub using Firefox or
+  Chrome, type <kbd>F12</kbd> to open the browser's developer tools,
+  then go to the 'Debugger' or 'Sources' tab, find 'Event Listener
+  Breakpoints' on the right sidebar, expand 'Mouse' and select
+  'click'.  Then click on a link on GitHub and see what happens.
 </p>
 <figure>
   <img src="files/blog/ghdbg.png" alt="Screenshot of a GitHub repository page with the browser's developer tools open, paused in the JavaScript debugger on a click event listener.">
 </figure>
 <p>
   I'm sure I am not the only one who has noticed that, on GitHub, a
-  clicked link sometimes takes too long to load.  Often it is easier to
-  open the link in a new tab than to wait for GitHub's JavaScript code
-  to handle the navigation in the current tab.
+  clicked link sometimes takes too long to load.  Ironically, it is
+  often faster to open the link in a new tab than to wait for GitHub's
+  JavaScript code to handle the navigation in the current tab.
 </p>
 <p>
   A custom password input field is another such hazard.  Fortunately,
@@ -113,21 +140,40 @@
   date range.  But that is okay.  You can provide two date input
   fields, one for the start date and one for the end date.  I am
   willing to pay the small price of using two different inputs to
-  select a date range if that means I can use dates the same way
-  everywhere.  What I am not willing to do is learn ten different ways
-  of using the date selector in ten different implementations across
-  ten different websites.  I already know how the date picker in my
-  web browser works, and I want to use that.
+  select a date range if that means I can use my favourite web browser
+  to navigate the calendar and select dates the same way everywhere.
+  What I am less inclined to do is to learn ten different ways of
+  using the date selector in ten different implementations across ten
+  different websites.  Right now the implementations of date selector
+  are all over the place.  Some require you to zoom out of the month
+  view to enter a year view, where you can select years. While you are
+  there, you cannot change the month again until you return to the
+  month view.  Some require you to click the previous-year button
+  literally forty times to select your year of birth if you are old
+  enough.  Some do not let you type the date at all.  No.  I do not
+  want to learn your calendar widget.  I just want to use the date
+  picker in my favourite browser, which is quite sane.  Saner than
+  your custom implementation.  If you need to have a calendar widget
+  to support browsers with inadequate native date-picker support,
+  perhaps that support can be added alongside the native date picker
+  rather than as a replacement for it.  For example, the
+  ordinary <code>&lt;input type="date"&gt;</code> element could be
+  left intact, with a custom widget provided <em>in addition</em> to
+  it so that users can manipulate the same field.
 </p>
 <p>
-  In general, just stop rolling your own form controls.  They almost
+  In general, just stop messing with the form controls.  They almost
   always introduce new problems while solving some existing ones.  And
   while you are at it, don't keep changing your website layout and
   interface every few months!  I may adapt to the new design, but my
   ageing relatives cannot.  For them, every time you change the user
-  interface, it amounts to learning a whole new tool.  Imagine how you
-  would feel if a Linux distribution decided to redesign all its core
-  commands and their command-line options every few months.  Or
-  imagine how you would feel if the buttons of your washing machine
-  were rearranged every morning.  It wouldn't be pleasant!
+  interface, it amounts to learning a whole new tool.  If every
+  website keeps doing this every few months, they have to spend a
+  significant amount of time relearning familiar things for no
+  functional benefit.  Please just let them enjoy their retirement.
+  Imagine how you would feel if a Linux distribution decided to
+  redesign all its core commands and their command-line options every
+  few months.  Or imagine how you would feel if the buttons of your
+  washing machine were rearranged every morning.  It wouldn't be
+  pleasant!
 </p>

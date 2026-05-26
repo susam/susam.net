@@ -29,7 +29,7 @@ button {
 button:active {
   background: {{ light-fill-color }};
 }
-.privacy {
+.guide, .privacy {
   text-align: center;
 }
 .status {

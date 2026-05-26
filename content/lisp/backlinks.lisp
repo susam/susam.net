@@ -600,4 +600,18 @@
   :url1 "https://codycollier.com/lx/2025/2025-04-26-creating-weave.html"
   :txt2 "Hacker News Hug of Deaf"
   :url2 "hn-bell.html")
+
+ (:date "2026-05-11"
+  :lang "French"
+  :txt1 "Wander Offers Reading Recommendations for Exploring the Web"
+  :url1 "https://theologique.ch/blog/wander/"
+  :txt2 "Wander Console"
+  :url2 "https://codeberg.org/susam/wander")
+
+ (:date "2026-05-13"
+  :lang "French"
+  :txt1 "The Overflow, Issue 329: The Heart of Our Technology"
+  :url1 "https://stackoverflow.blog/newsletter/issue-329-the-heart-of-our-technology/"
+  :txt2 "Three Inverse Laws of AI"
+  :url2 "inverse-laws-of-robotics.html")
  )

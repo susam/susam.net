@@ -26,8 +26,8 @@ help:
 	@echo '  grepl re=PATTERN  Filter all access logs by regular expression pattern.'
 	@echo '  grepd re=PATTERN  Filter current access log by regular expression pattern.'
 	@echo '  grepv re=PATTERN  Filter visit logs by regular expression pattern.'
-	@echo '  lsf               List form data submitted.'
-	@echo '  rdf               Read form data submitted.'
+	@echo '  ls                List form data submitted.'
+	@echo '  rd                Read form data submitted.'
 	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
@@ -42,6 +42,7 @@ help:
 	@echo '  opt               Create directories at /opt for testing.'
 	@echo '  comment           Create comment file for filename in FILE macro.'
 	@echo '  loop              Run a loop to create website directory repeatedly.'
+	@echo '  lsc               List comment counts in descending order.'
 	@echo '  ref               Create reference directories for the current website.'
 	@echo '  diff              Create new websites and compare against reference directories.'
 	@echo '  test              Test Common Lisp program.'
@@ -325,6 +326,12 @@ opt:
 loop:
 	while true; do make dist; sleep 5; done
 
+lsc:
+	(find content/comments -name '*.html' && find content/talk -name '*.html') | \
+	while read -r f; do \
+	  echo $$(grep '<!-- date:' "$$f" "$$f" | wc -l) "$$f"; \
+	done | sort -rn | less -F
+
 ref:
 	rm -rf _ref/
 	mkdir _ref/
@@ -465,6 +472,7 @@ check-bre-and: cat-my-text
 	  s/, and \\( \\theta \\)/x/g; \
 	  s/, and a great number of contorted trees/x/g; \
 	  s/, and after a while we began to take their complaints/x/g; \
+	  s/, and all is fair in/x/g; \
 	  s/, and arithmetic expansion/x/g; \
 	  s/, and at the scale of the UID/x/g; \
 	  s/, and conforming applications shall not follow/x/g; \
@@ -511,6 +519,7 @@ check-bre-or: cat-my-text
 	  s/, or simply move on to other subjects and forget/x/g; \
 	  s/, or spelling is bound to contain at least one eror/x/g; \
 	  s/, or the Poincar&eacute; conjecture, really matter?/x/g; \
+	  s/, or to no resource at all/x/g; \
 	  s/, or typographical error/x/g; \
 	' > /tmp/tr
 	grep -Ei ', or([^a-z]|$$)' /tmp/tr > /tmp/err || true
@@ -556,6 +565,8 @@ check-bre-spell-iz: cat-my-text
 	  s/[^A-Za-z]box-sizing[^A-Za-z]/x/g; \
 	  s/[^A-Za-z]horizon/x/g; \
 	  s/[^A-Za-z]netizens[^A-Za-z]/x/g; \
+	  s/[^A-Za-z]prize$$/x/g; \
+	  s/[^A-Za-z]prize[^A-Za-z]/x/g; \
 	  s/[^A-Za-z]quiz/x/g; \
 	  s/[^A-Za-z]resizing[^A-Za-z]/x/g; \
 	  s/[^A-Za-z]seize[^A-Za-z]/x/g; \
@@ -1027,20 +1038,17 @@ post-subscriber1:
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
 
-# Publish website.
-copub: co cu gh cb
-
-mirrors: gh cb
-
-# Commit changes to the content update ('cu') branch.
-co:
-	git checkout cu
-	git status
-	@echo
-	@echo 'Press ENTER to proceed to commit.  Press Ctrl+C to cancel.' && read
-	@echo
-	git add -p
-	git commit --amend --reset-author
+cc:
+	git remote remove cc || :
+	git remote add cc git@codeberg.org:susam/$(FQDN).git
+	git remote set-url cc --add git@github.com:susam/$(FQDN).git
+	git remote remove origin || :
+	git remote add origin "$$(git remote get-url cc)"
+	git remote -v
+	git push -u origin main --tags
+	git push cc main --tags
+	git push -fu origin cu
+	git push -f cc cu
 
 # Publish the content update ('cu') branch to the web server.
 cu:
@@ -1059,42 +1067,22 @@ pull-backup:
 	ssh susam.net "tar -czf - -C /opt/data/ form/" > ~/bkp/form-$$(date "+%Y-%m-%d_%H-%M-%S").tgz
 	ls -lh ~/bkp/
 
-GIT_SRC = https://github.com/susam/susam.net
-
-mirror: site
+gitsite: site
 	@echo Creating mirror ...
 	rm -rf /tmp/mirror/
 	mv _site /tmp/mirror/
-	git rev-parse --short HEAD > /tmp/rev.txt
-	printf '%b' "# Mirror of Susam's Website\n\n\
-Automatically generated from \
-commit [$$(cat /tmp/rev.txt)]($(GIT_SRC)/commit/$$(cat /tmp/rev.txt)) \
-of <$(GIT_SRC)>.\n\n\
-Visit <$(WEB_URL)> to visit the mirror.\n\n\
-Visit <https://susam.net/> to visit the original website.\n" > /tmp/mirror/README.md
 	cd /tmp/mirror/ && git init
 	cd /tmp/mirror/ && git config user.name "Susam Pal"
 	cd /tmp/mirror/ && git config user.email susam@susam.net
 	cd /tmp/mirror/ && git add .
-	cd /tmp/mirror/ && git commit -m "Generated from $(GIT_SRC)"
+	cd /tmp/mirror/ && git commit -m "Mirror website"
 	cd /tmp/mirror/ && git log
-	cat /tmp/mirror/README.md
 	@echo Done; echo
 
-push-mirror:
-	make mirror GIT_DST=$(GIT_DST) WEB_URL=$(WEB_URL)
+mirror: gitsite
 	@echo Publishing mirror to $(WEB_URL) ...
 	cd /tmp/mirror/ && git remote remove origin || :
-	cd /tmp/mirror/ && git remote add origin "$(GIT_DST)"
+	cd /tmp/mirror/ && git remote add origin git@codeberg.org:susam/pages.git
+	cd /tmp/mirror/ && git remote set-url origin --add git@github.com:susam/susam.github.io.git
 	cd /tmp/mirror/ && git push -f origin main
 	@echo Done; echo
-
-gh:
-	make push-mirror \
-	  GIT_DST=git@github.com:susam/susam.github.io.git \
-	  WEB_URL=https://susam.github.io/
-
-cb:
-	make push-mirror \
-	  GIT_DST=ssh://git@codeberg.org/susam/pages.git \
-	  WEB_URL=https://susam.codeberg.page/
