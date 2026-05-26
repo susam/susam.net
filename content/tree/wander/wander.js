@@ -58,8 +58,13 @@ const wander = {
     // SSL_ERROR_BAD_CERT_DOMAIN
     'https://wander.liontask.dev/',
 
-    // Recommends too many AI-generated and startup-focused pages.
-    // Content focus differs from the small web emphasis of this project.
+    // Nothing personal against this console.  I am thankful to the
+    // console owner for setting up one of the earliest consoles in
+    // the community network.  However, this console appears to
+    // recommend too many AI-generated and startup-focused pages,
+    // which is a bit inconsistent with my focus on the small web.  So
+    // I would rather not have its recommendations appear on my
+    // console.
     'https://www.davidtran.me/wander/',
 
     // Some people have incorrectly added this UI wrapper URL instead

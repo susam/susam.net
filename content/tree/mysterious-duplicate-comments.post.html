@@ -1,16 +1,18 @@
 <!-- date: 2022-03-12 -->
-<!-- title: Comfort of Bloated Web -->
+<!-- title: The Curious Case of Duplicate Comments -->
 <!-- tag: Web, Technology -->
 <!-- uuid: a8c1d3aa-88b8-430d-89fa-bc159f0ee3e5 -->
 <!-- blog: Maze -->
 <p>
-  There is a tiny <a href="form/comment/?post=hello">comment form</a>
-  application on this website to accept comments from visitors and
-  save them on the file system of the web server for me to review
-  later and publish.  This form is the only thing on this website that
-  is dynamic in nature.  Everything else on this website is static in
-  nature.
+  There is a tiny <a href="form/comment/{{ index }}?post=hello">comment form</a>
+  service on this website to accept comments from visitors and save
+  them on the file system of the web server for me to review later and
+  publish.  This form is the only thing on this website that is
+  dynamic in nature.  Everything else on this website is static.  The
+  little comment form has led me to an interesting curiosity.  I
+  sometimes see visitors submit a duplicate copy of their comment.
 </p>
+{{ toc }}
 <h2 id="mysterious-copies">Mysterious Copies</h2>
 <p>
   Most of this website is made of handcrafted HTML.  The blog posts
@@ -51,17 +53,17 @@
   I don't think it is doing that."
 </p>
 <p>
-  I responded, "Hi!  Thank you for contacting me about this issue.
+  I responded, 'Hi!  Thank you for contacting me about this issue.
   What do you mean it does not accept your comment?  Do you see an
-  error?"
+  error?'
 </p>
 <p>
-  "There is no error.  In fact, after submitting, I get a success
-  message that says, 'Comment was submitted successfully.  It may be
-  published after review.'"
+  'There is no error.  After submitting, I get a success message that
+  says, "Comment was submitted successfully.  It may be published
+  after review."'
 </p>
 <p>
-  "That sounds about right.  So what's the problem?"
+  'That sounds about right.  So what's the problem?'
 </p>
 <p>
   In the meantime, I performed some testing at my end to find that the
@@ -70,9 +72,9 @@
   saved neatly on the server for me to review later and publish.
 </p>
 <p>
-  Before I could share my findings, they continued, "Well!  That
+  Before I could share my findings, they continued, 'Well!  That
   success message appears almost instantly.  It couldn't be storing my
-  comment successfully that fast, could it?"
+  comment successfully that fast, could it?'
 </p>
 <p>
   That is when the mystery unfolded for me!  The issue was that the
@@ -84,44 +86,52 @@
   fine.  In all of these cases, they were skeptical about the success
   message because it appeared much sooner than they expected.
 </p>
-<h2 id="bloated-expectations">Bloated Expectations</h2>
+<h2 id="fast-but-unsettling">Fast But Unsettling</h2>
 <p>
   Depending on where the visitor is located, the comment form on this
   website may take anywhere between 30 ms to 900 ms (and very rarely a
   little longer) to accept the user's comment, save it successfully
-  and then display a success message to the user.  But apparently, a
-  few hundred millseconds is too fast for many people to be able to
-  trust that the comment application is actually doing its job.  I
-  presume that they have become so used to waiting for at least a
-  second or more for dynamic pages to load that a web application that
-  finishes its job in a few milliseconds appears to be fishy.
+  and then display a success message to the user.  However, a response
+  that arrives within a few hundred milliseconds can sometimes feel a
+  little too quick to be reassuring.  I presume that many of us have
+  become accustomed to visible signs of activity when submitting
+  forms, so a web application that finishes its job in a few hundred
+  milliseconds may not always provide enough time for that sense of
+  confirmation to settle in.
 </p>
 <p>
   I must clarify here that the duplicate comment submissions do not
-  bother me at all.  The duplicate comments I receive is a very small
+  bother me at all.  The duplicate comments I receive are a very small
   fraction of the total number of comments.  I just find it
-  interesting that users can mistrust a simple piece of software that
-  does a simple thing in a reasonable amount of time.  I had one
-  visitor to my website even say, "I really was expecting a spinning
-  wheel on the browser tab or some sort of progress indicator to be
-  assured that it is saving my comment.  The instant success message
-  took me by surprise!"  They felt nervous that their comment was not
-  saved and resubmitted the comment again.
+  interesting that a simple piece of software doing a simple thing
+  quickly can sometimes leave a user wondering whether it really did
+  its job.  I had one visitor to my website even say, 'I really was
+  expecting a spinning wheel on the browser tab or some sort of
+  progress indicator to be assured that it is saving my comment.  The
+  instant success message took me by surprise!'  They felt unsure that
+  their comment had been saved and resubmitted the comment again.
 </p>
+<h2 id="conclusion">Conclusion</h2>
 <p>
-  As a result of these conversations, I have sometimes even wondered
-  whether I should add some artificial delay in the comment
-  application before responding with a success message to satisfy the
-  expectations of people who are so used to the bloated web.  Of
-  course, I am not actually going to do that.  I want to keep it
-  simple.  I do not like adding artificial restrictions to a simple
-  piece of functionality.  Further, I do not mind the duplicate
-  comment submissions at all.  However, I cannot help but remark that
-  the users of the web today have become so comfortable with the
-  bloated web that a simple web application without bells and whistles
-  that is fast and responsive makes them nervous!
+  The thought of disabling the form or even showing a different page
+  altogether has crossed my mind several times.  In fact, an older
+  version of this website, written in PHP, did have a comment form
+  that showed a dedicated success page on submission.  The case of
+  duplicate comments still used to occur then.  I am no user
+  experience expert, but I do not usually like adding artificial
+  features or restrictions merely to conform to modern web design
+  conventions.  As a user of the Web, I have often wondered why
+  websites cannot leave the input form alone after successful comment
+  submissions.  I am not convinced the reasons are sufficient to
+  introduce such artificial restrictions.  This is my personal
+  website.  As much as visitors have certain expectations about how a
+  comment form should behave, whatever solution is implemented should
+  make me happy too.  After all, it is my passion project that I work
+  on out of love for computing and the Web!  So I am leaving my
+  comment form alone for now, since I am not sure what a good solution
+  to this phenomenon is that suits my taste and preferences as well.
 </p>
-<h2 id="update">Update</h2>
+<h2 id="update-1">Update #1</h2>
 <p>
   <strong>Update on 13 Mar 2022:</strong> Many commenters to this post
   have suggested that the issue here might not be the fast response of
@@ -148,10 +158,10 @@
   wants to post another comment immediately after the first one?  What
   if someone wants to edit their previous comment slightly and repost
   it?  Do I need to force the user to hop through separate links and
-  buttons to be able to do these simple tasks?  "But every other
-  website clears, disables or removes the form elements," you might
+  buttons to be able to do these simple tasks?  'But every other
+  website clears, disables or removes the form elements', you might
   rightfully offer as a counterpoint.  I know.  I know.  But why is it
-  so that the "right" user experience nowadays involves artifically
+  so that the 'right' user experience nowadays involves artifically
   encumbering the user or hiding the user's own submitted text from
   themselves?
 </p>
@@ -176,9 +186,32 @@
   However, heeding some of the other advice I have received in the
   comments section, I have now made two tiny changes to the comment
   form application that is consistent with its original spirit of
-  simplicity, minimalism and statelessness.  I have moved the success
-  message to the top of the response page.  I have also added
-  additional text in the success message that explains that the
-  submitted input has been left intact in case the submitter wants to
-  copy it or edit it and resubmit it.
+  simplicity, minimalism and statelessness:
+</p>
+<ul>
+  <li>
+    I have moved the success message to the top of the response page.
+  </li>
+  <li>
+    I have also added additional text in the success message that
+    explains that the submitted input has been left intact in case the
+    submitter wants to copy it or edit it and resubmit it.
+  </li>
+</ul>
+<p>
+  I hope these tiny updates will help reduce the incidence of
+  duplicate comments.  I will keep an eye on how the comment form is
+  used over time and post another update later.
+</p>
+<h2 id="update-2">Update #2</h2>
+<p>
+  <strong>Update on 24 May 2026:</strong> Four years have passed since
+  I last updated this post.  It is time for another update.
+  In <a href="#update-1">Update #1</a>, I shared that I had made two
+  small adjustments to the comment form.  The success message was
+  moved to the top of the page and additional text was added to
+  highlight that the comment text has been left intact and explain
+  why.  I am happy to report that, since those changes were made,
+  there has not been a single occurrence of duplicate comment
+  submission again!
 </p>

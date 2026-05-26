@@ -10,6 +10,10 @@
   :home "https://aartaka.me/"
   :feed "https://aartaka.me/rss.xml")
 
+ (:name "Chris Morgan"
+  :home "https://chrismorgan.info/"
+  :feed "https://chrismorgan.info/*.feed")
+
  (:name "Max"
   :home "https://maxwellito.com/"
   :feed "https://maxwellito.com/feed")
