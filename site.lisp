@@ -1,7 +1,7 @@
 ;;;; Site Generator
 ;;;; ==============
 
-;;;; Copyright (c) 2021-2025 Susam Pal
+;;;; Copyright (c) 2021-2026 Susam Pal
 ;;;;
 ;;;; You can use, copy, modify, merge, publish, distribute,
 ;;;; sublicense, and/or sell copies of it, under the terms of the MIT
@@ -9,9 +9,6 @@
 ;;;;
 ;;;; This software is provided "AS IS", WITHOUT WARRANTY OF ANY KIND,
 ;;;; express or implied.  See COPYRIGHT.md for complete details.
-
-;;;; This site generator is inspired by and based on my lovely wife's
-;;;; <https://github.com/sunainapai/makesite/>.
 
 (require "uiop")
 
@@ -53,7 +50,6 @@
   (dolist (pathname (uiop:subdirectories src))
     (let* ((basename (directory-basename pathname))
            (destpath (merge-pathnames basename dst)))
-      (make-directory destpath)
       (copy-directory pathname destpath))))
 
 (defun read-file (filename)
@@ -69,6 +65,11 @@
   (make-directory filename)
   (with-open-file (f filename :direction :output :if-exists :error)
     (write-sequence text f)))
+
+(defun copy-file (src-path dst-path)
+  "Write text to file and close the file."
+  (make-directory dst-path)
+  (uiop:copy-file src-path dst-path))
 
 (defun write-log (fmt &rest args)
   "Log message with specified arguments."
@@ -143,74 +144,25 @@
   "Repeat string count number of times."
   (join-strings (loop repeat count collect string)))
 
-(defun indent-lines (count string)
-  "Indent lines by count spaces."
-  (let* ((clean-string (string-right-trim '(#\Newline) string))
-         (lines (string-split clean-string (fstr "~%")))
-         (indent (repeat-string count " ")))
-    (join-strings (loop for line in lines
-                        collect (if (zerop (length line))
-                                    (fstr "~%")
-                                    (fstr "~a~a~%" indent line))))))
+(defun aget (key alist)
+  "Given a key, return its value found in alist."
+  (cdr (assoc key alist :test #'string=)))
 
-(defun html-escape (text)
-  "Escape special characters in HTML."
-  (with-output-to-string (out)
-    (loop for c across text
-          do (case c
-               (#\& (write-string "&amp;" out))
-               (#\< (write-string "&lt;" out))
-               (#\> (write-string "&gt;" out))
-               (#\" (write-string "&quot;" out))
-               (#\' (write-string "&apos;" out))
-               (t (write-char c out))))))
+(defun aset (key value alist)
+  "Set value for existing key in alist."
+  (setf (cdr (assoc key alist :test #'string=)) value)
+  alist)
 
 (defmacro aput (key value alist)
   "Add key-value pair to alist."
   `(push (cons ,key ,value) ,alist))
-
-(defmacro aput-list (key value alist)
-  "Add value to a list corresponding to the key in alist."
-  `(progn
-     (unless (assoc ,key ,alist :test #'string=)
-       (push (cons ,key ()) ,alist))
-     (push ,value (cdr (assoc ,key ,alist :test #'string=)))))
-
-(defun aget (key alist)
-  "Given a key, return its value found in the list of parameters."
-  (cdr (assoc key alist :test #'string=)))
-
-(defun last-n (n sequence)
-  "Return at most the last n elements of a sequence as a new sequence."
-  (subseq sequence (max 0 (- (length sequence) n))))
-
-(defmacro extend-list (old-list new-list)
-  "Append new-list to old-list and return the resulting list."
-  `(setf ,old-list (append ,old-list ,new-list)))
-
-(defun parse-tz (tz-string)
-  "Parse time zone string like to CL-friendly rational, e.g., +0530 as -9/2."
-  (let* ((sign (if (char= (char tz-string 0) #\-) 1 -1))
-         (hours (parse-integer tz-string :start 1 :end 3))
-         (minutes (parse-integer tz-string :start 3)))
-    (* sign (+ hours (/ minutes 60)))))
-
-(defun format-tz (tz)
-  "Format tz (rational) into a +HHMM format time zone string."
-  (let* ((minutes (* -60 tz))
-         (sign (if (minusp minutes) "-" "+"))
-         (abs-minutes (abs minutes))
-         (hh (truncate abs-minutes 60))
-         (mm (mod abs-minutes 60)))
-    (format nil "~a~2,'0d~2,'0d" sign hh mm)))
 
 
 ;;; Tool Definitions
 ;;; ----------------
 
 (defun read-header-line (text next-index)
-  "Parse one line of header in text and return multiple values: key,
-value, next-index."
+  "Parse one line of header in text."
   (let* ((start-token "<!-- ")
          (end-token (format nil " -->~%"))
          (sep-token ": ")
@@ -241,9 +193,44 @@ value, next-index."
       (push (cons key val) headers))
     (values headers next-index)))
 
+(defun render (template params)
+  "Render parameter tokens in template with their values from params."
+  (with-output-to-string (s)
+    (let* ((ltoken "{{ ")
+           (rtoken " }}")
+           (next-index 0)     ; Next place to start searching "{{ ".
+           (start-index)      ; Starting of "{{ ".
+           (end-index))       ; Starting of " }}".
+      (loop
+        ;; Look for ltoken and extract static text before it.
+        (setf start-index (search ltoken template :start2 next-index))
+        (unless start-index
+          (return))
+        (format s "~a" (subseq template next-index start-index))
+        ;; Extract parameter name between ltoken and rtoken.
+        (incf start-index (length ltoken))
+        (setf end-index (search rtoken template :start2 start-index))
+        (let* ((key (subseq template start-index end-index))
+               (val (aget key params)))
+          ;; If key exists in params, replace key with value.
+          ;; Otherwise, leave the key intact in text.
+          (if val
+              (format s "~a" val)
+              (format s "~a~a~a" ltoken key rtoken)))
+        (setf next-index (+ end-index (length rtoken))))
+      ;; Extract static text after the last parameter token.
+      (format s "~a" (subseq template next-index)))))
+
 (defun weekday-name (weekday-index)
   "Given an index, return the corresponding day of week."
   (nth weekday-index '("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun")))
+
+(defun parse-tz (tz-string)
+  "Parse time zone string like to CL-friendly rational, e.g., +0530 as -9/2."
+  (let* ((sign (if (char= (char tz-string 0) #\-) 1 -1))
+         (hours (parse-integer tz-string :start 1 :end 3))
+         (minutes (parse-integer tz-string :start 3)))
+    (* sign (+ hours (/ minutes 60)))))
 
 (defun parse-content-date (date-string)
   "Parse yyyy-mm-dd[ HH:MM:[:SS[ TZ]]] date to universal time (integer)."
@@ -292,203 +279,186 @@ value, next-index."
     (format nil "~2,'0d ~a ~4,'0d~a~2,'0d:~2,'0d ~a"
             date (month-name month) year sep hour minute "UTC")))
 
-(defmacro insert-formatted-dates (item)
-  "Insert formatted dates into the given page or comment."
-  `(let ((date (aget "date" ,item)))
-     (when date
-       (aput "short-date" (format-short-date (parse-content-date date)) ,item)
-       (aput "long-date" (format-long-date (parse-content-date date)) ,item)
-       (aput "iso-date" (format-iso-date (parse-content-date date)) ,item))))
 
-(defun date-slug (filename)
-  "Parse filename to extract date and slug."
-  (let* ((basename (file-namestring filename))
-         (slug)
-         (date))
-    (setf basename (string-replace ".aux.html" ".html" basename))
-    (setf basename (string-replace ".page.html" ".html" basename))
-    (setf basename (string-replace ".post.html" ".html" basename))
-    (cond ((and (>= (length basename) 11)
-               (every #'digit-char-p (loop for i in '(0 1 2 3 5 6 8 9)
-                                           collect (char basename i))))
-           (setf date (subseq basename 0 10))
-           (setf slug (subseq basename 11 (position #\. basename :from-end t))))
-          (t
-           (setf slug (subseq basename 0 (position #\. basename :from-end t)))))
-    (values date slug)))
 
-(defun render (template params)
-  "Render parameter tokens in template with their values from params."
-  (with-output-to-string (s)
-    (let* ((start-token "{{ ")
-           (end-token " }}")
-           (next-index 0)     ; Next place to start searching "{{".
-           (start-index)      ; Starting of "{{ ".
-           (end-index))       ; Starting of " }}".
-      (loop
-        ;; Look for start-token and extract static text before it.
-        (setf start-index (search start-token template :start2 next-index))
-        (unless start-index
-          (return))
-        (format s "~a" (subseq template next-index start-index))
-        ;; Extract parameter name between start-token and end-token.
-        (incf start-index (length start-token))
-        (setf end-index (search end-token template :start2 start-index))
-        (let* ((key (subseq template start-index end-index))
-               (val (aget key params)))
-          ;; If key exists in params, replace key with value.
-          ;; Otherwise, leave the key intact in text.
-          (if val
-              (format s "~a" val)
-              (format s "{{ ~a }}" key)))
-        (setf next-index (+ end-index (length end-token))))
-      ;; Extract static text after the last parameter token.
-      (format s "~a" (subseq template next-index)))))
+;;; Documents
+;;; ---------
 
-(defmacro set-nested-template (template outer-template)
-  "Set template to outer-template rendered with inner-template."
-  `(setf ,template (render ,outer-template (list (cons "body" ,template)))))
+(defun read-content (text)
+  "Parse content file."
+  (let ((doc))
+    (multiple-value-bind (headers next-index) (read-headers text 0)
+      (setf doc (append headers doc))
+      (aput "body" (subseq text next-index) doc))
+    doc))
 
-(defun head-css-html (name root)
-  "Create HTML tag for CSS."
-  (fstr "  <link rel=\"stylesheet\" href=\"~acss/~a\">~%" root name))
+(defun write-docs (docs)
+  (setf docs (remove-if-not (lambda (d) (member (aget "doc-type" d) '("page" "post")
+                                                :test #'string=)) docs)))
 
-(defun head-js-html (name root)
-  "Create HTML tag for JavaScript."
-  (fstr "  <script src=\"~ajs/~a\"></script>~%" root name))
-
-(defun head-inc-html (name params)
-  "Render include file for inclusion in a page."
-  (render (read-file (fstr "layout/include/~a" name)) params))
-
-(defun head-html (import-header params)
+(defun head-html (head import root includes)
   "Given the value of an import header, return HTML code for it."
-  (let ((names (string-split import-header ", "))
-        (root (aget "root" params))
+  (let ((names (append (string-split head ", ")
+                       (string-split import ", ")))
+        (html)
         (snippets))
     (dolist (name names)
       (cond ((string-ends-with ".css" name)
-             (push (head-css-html name root) snippets))
+             (setf html (fstr "  <link rel=\"stylesheet\" href=\"~acss/~a\">~%" root name)))
             ((string-ends-with ".js" name)
-             (push (head-js-html name root) snippets))
+             (setf html (fstr "  <script src=\"~ajs/~a\"></script>~%" root name)))
             ((string-ends-with ".inc" name)
-             (push (head-inc-html name params) snippets))
+             (setf html (render (aget name includes) (list (cons "root" root)))))
             (t
-             (error "Unknown import type ~a in ~a" name import-header))))
-    (if snippets (fstr "~{~a~}" (reverse snippets)) "")))
+             (error "Unknown import type ~a" name)))
+      (push html snippets))
+    (join-strings snippets)))
 
-(defun also-html (fname params)
-  "Given the name of an also-file, return content from it."
-  (if fname
-      (render (read-file (fstr "layout/also/~a" fname)) params)
-      ""))
 
-(defun relative-root-path (path params)
+;;; Tree
+;;; ----
+
+(defun parse-slug (filename suffix)
+  (subseq filename 0 (- (length filename) (length suffix))))
+
+(defun doc-path (src-path src-dir remove-suffix add-suffix)
+  (let* ((rel-path (enough-namestring (truename src-path) (truename src-dir)))
+         (base-len (- (length rel-path) (length remove-suffix))))
+    (concatenate 'string (subseq rel-path 0 base-len) add-suffix)))
+
+(defun all-files (src-dir)
+  "Recursively find all files in the given directory."
+  (append (uiop:directory-files src-dir)
+          (mapcan #'all-files (uiop:subdirectories src-dir))))
+
+(defun read-comments (filename)
+  (format t ":::: filename: ~a~%" filename))
+
+(defun read-docs (src-dir)
+  (let ((docs))
+    (dolist (src-path (all-files src-dir))
+      (let ((basename (file-namestring src-path))
+            (src-path (enough-namestring src-path (truename ".")))
+            (doc))
+        (aput "src-path" src-path doc)
+        ;; Both doc-type and doc-path are set in the following 'cond'.
+        ;; The doc-path value decides all paths like dst-path, neat-path, etc.
+        (cond
+          ;; Auxilliary files
+          ((string-ends-with ".aux.html" basename)
+           (aput "doc-type" "aux" doc)
+           (setf doc (nconc doc (read-content (read-file src-path)))))
+          ;; Comment files.
+          ((string-ends-with ".cm.html" basename)
+           (aput "doc-type" "cm" doc)
+           (aput "doc-path" (doc-path src-path src-dir ".cm.html" ".html") doc)
+           (setf doc (nconc doc (read-comments (read-file src-path)))))
+          ;; CSS files.
+          ((string-ends-with ".css.css" basename)
+           (aput "doc-type" "css" doc)
+           (aput "doc-path" (doc-path src-path src-dir ".css.css" ".css") doc)
+           (setf doc (nconc doc (read-content (read-file src-path)))))
+          ;; Renderable pages.
+          ((string-ends-with ".page.html" basename)
+           (aput "doc-type" "page" doc)
+           (aput "doc-path" (doc-path src-path src-dir ".page.html" ".html") doc)
+           (setf doc (nconc doc (read-content (read-file src-path)))))
+          ;; Renderable posts.
+          ((string-ends-with ".post.html" basename)
+           (aput "doc-type" "post" doc)
+           (aput "doc-path" (doc-path src-path src-dir ".post.html" ".html") doc)
+           (setf doc (nconc doc (read-content (read-file src-path)))))
+          ;; Raw files
+          (t
+           (aput "doc-type" "raw" doc)
+           (aput "doc-path" (doc-path src-path src-dir "" "") doc)))
+        (push doc docs)))
+    docs))
+
+(defun read-includes (src-dir)
+  (loop for src-path in (uiop:directory-files src-dir)
+        collect (cons (file-namestring src-path) (read-file src-path))))
+
+(defun read-layouts (src-dir)
+  "Read all layout files SRC-DIR."
+  (loop for src-path in (uiop:directory-files src-dir)
+        collect (cons (pathname-name src-path)
+                      (read-content (read-file src-path)))))
+
+
+(defun fill-layouts (layouts)
+  "Render each layout within its parent layout (if any) recursively."
+  (let ((results))
+    (dolist (layout layouts)
+      (let* ((layout-name (car layout))
+             (layout-alist (cdr layout))
+             (result (aget "body" layout-alist))
+             (parent-name))
+        (loop
+          (unless (setf parent-name (aget "layout" layout-alist))
+            (return))
+          (setf layout-alist (aget parent-name layouts))
+          (setf result (render (aget "body" layout-alist)
+                               (list (cons "body" result)))))
+        (push (cons layout-name result) results)))
+    results))
+
+(defun root-path (path)
   "Return relative path to web root from the given rendered file path."
-  (let ((depth (count #\/ (string-replace (aget "apex" params) "" path))))
+  (let ((depth (count #\/ path)))
     (if (zerop depth) "./" (repeat-string depth "../"))))
 
 (defun neat-path (path params)
   "Create canonical path component of the URL for the given rendered file path."
-  (setf path (string-replace "index.html" (aget "index" params) path))
-  (string-replace (aget "apex" params) "" path))
+  (string-replace "index.html" (aget "index" params) path))
 
 (defun neat-url (path params)
-  "Create canonical URL for the given rendered file path."
-  (push (cons "index" "") params)
-  (fstr "~a~a" (aget "site-url" params) (neat-path path params)))
+  (concatenate 'string (aget "site-url" params)
+               (string-replace "index.html" "" path)))
 
-(defmacro add-zone-params (dst-path params)
-  `(let ((blog-name (aget "blog-name" ,params))
-         (root (relative-root-path ,dst-path ,params))
-         (zone-link "")
-         (zone-name)
-         (zone-index))
-     (cond ((string-starts-with (render "{{ apex }}cc/" ,params) ,dst-path)
-            (setf zone-index (render "cc/{{ index }}" ,params))
-            (setf zone-name "Club"))
-           ((string/= blog-name "Main")
-            (setf zone-index (fstr "~a.html" (string-downcase blog-name)))
-            (setf zone-name blog-name)))
-     (when (and zone-index zone-name)
-       (setf zone-link (fstr "~%    <a href=\"~a~a\">~a</a>"
-                             root zone-index zone-name)))
-     (aput "zone-link" zone-link ,params)))
+(defun zone-link (doc zones params)
+  (let* ((doc-path (aget "doc-path" doc))
+         (lists (aget "lists" doc))
+         (zone (find-if (lambda (z)
+                          (or (string-starts-with (first z) doc-path)
+                              (member (first z) lists :test #'string=))) zones)))
+    (if zone
+        (fstr "~%    <a href=\"~a\">~a</a>"
+              (render (second zone) (append doc params)) (third zone)) "")))
 
-(defmacro add-page-params (dst page params)
-  `(let* ((all-params (append ,page ,params))
-          (dst-path (render ,dst all-params))
-          (root (relative-root-path dst-path ,params)))
-     (aput "root" root ,params)
-     (aput "heads" (head-html (aget "head" ,params) ,params) ,params)
-     (aput "imports" (head-html (aget "import" ,params) ,params) ,params)
-     (aput "more" (also-html (aget "also" ,params) ,params) ,params)
-     (aput "neat-path" (neat-path dst-path ,params) ,page)
-     (aput "neat-url" (neat-url dst-path ,params) ,page)
-     (aput "tags-for-feed" (format-tags-for-feed ,page ,params) ,page)
-     (aput "tags-for-list" (format-tags-for-list ,page) ,page)
-     (aput "tags-for-page" (format-tags-for-page ,page root) ,page)))
+(defun fill-docs (docs includes params)
+  (let ((results))
+    (dolist (doc docs)
+      (let* ((doc-path (aget "doc-path" doc))
+             (dst-path (render "{{ pub }}{{ doc-path }}" (append doc params)))
+             (root (root-path doc-path)))
+        (aput "dst-path" dst-path doc)
+        (aput "root" root doc)
+        (aput "heads" (head-html (aget "head" params)
+                                 (aget "import" doc) root includes) doc)
+        (aput "neat-path" (neat-path doc-path params) doc)
+        (aput "neat-url" (neat-url doc-path params) doc))
+      (push doc results))
+    results))
 
-(defmacro add-comment-params (page overrides)
-  "Add overrides to a page."
-  `(let ((neat-path (aget "neat-path" ,page))
-         (override))
-     ;; Default comment parameters.
-     (aput "post-title" (aget "title" ,page) ,page)
-     (aput "post-path" (aget "neat-path" ,page) ,page)
-     (aput "comment-slug" (aget "slug" ,page) ,page)
-     ;; Overridden comment parameters if override exists.
-     (when (and (string= (aget "type" ,page) "post")
-                (or (string-starts-with "cc/" neat-path)
-                    (string-starts-with "code/news/" neat-path)))
-       (setf override (find-if (lambda (item)
-                                 (string-starts-with (aget "prefix" item) neat-path))
-                               ,overrides))
-       (unless override
-         (error "Missing override for path: ~a" neat-path))
-       (aput "post-path" (render (aget "post-path" override) ,page) override)
-       (setf ,page (append override ,page)))))
+(defun update-mark (date)
+  "Format update date. "
+  (concatenate 'string " | Updated on "
+               (format-short-date (parse-content-date date))))
 
-(defmacro invoke-callbacks (params)
-  "Run callbacks and add the parameters returned by it to params."
-  `(dolist (callback (aget "callbacks" ,params))
-     (setf ,params (append (funcall callback ,params) ,params))))
+(defun tag-slug (tag)
+  "Convert tag title to tag slug."
+  (substitute #\- #\Space (string-downcase tag)))
 
-(defun extra-markup (text)
-  "Add extra markup to the page to create heading anchor links."
-  (with-output-to-string (ss)
-    (let* ((h-begin-index)              ; ->  <h1 id="foo">
-           (h-close-index)              ; ->  </h1>
-           (id-end-index)               ;     <h1 id="foo"   <-
-           (next-index 0))              ;     <h1            <-
-      (loop
-       (setf h-begin-index (search "<h" text :start2 next-index))
-       (unless h-begin-index
-         (return))
-       (cond ((and (digit-char-p (char text (+ h-begin-index 2)))
-                   (substring-at "id=\"" text (+ h-begin-index 4)))
-              (setf id-end-index (search "\"" text :start2 (+ h-begin-index 8)))
-              (setf h-close-index (search "</h" text :start2 (+ id-end-index 2)))
-              (format ss "~a<a href=\"#~a\"></a></h"
-                      (subseq text next-index h-close-index)
-                      (subseq text (+ h-begin-index 8) id-end-index))
-              (setf next-index (+ h-close-index 3)))
-             (t
-              (format ss "~a" (subseq text next-index (+ h-begin-index 2)))
-              (setf next-index (+ h-begin-index 2)))))
-      (format ss "~a" (subseq text next-index)))))
-
-(defun latex-markup (text)
-  "Reformat LaTeX code to make the punctuation stick to formulas."
-  (setf text (string-replace " \\)." ".  \\)" text))
-  (setf text (string-replace " \\)?" "?  \\)" text))
-  (setf text (string-replace " \\)," ", \\)" text))
-  (setf text (string-replace " \\);" "; \\)" text)))
-
-(defun format-markup (text)
-  "Perform final formatting to pages before rendering them."
-  (setf text (extra-markup text))
-  (setf text (latex-markup text)))
+(defun format-tags (tags indent root)
+  "Create HTML to display tags."
+  (let ((html "")
+        (sep ""))
+    (dolist (tag tags)
+      (setf tag (tag-slug tag))
+      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>" html sep root tag tag))
+      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
+    html))
 
 (defun toc-indent (level)
   "Create leading indentation items in table of contents."
@@ -563,1062 +533,52 @@ value, next-index."
           (format tt "~a</li>~%" (toc-indent (decf indent))))
         (format tt "~a" close-tag)))))
 
-(defun format-size (size)
-  "Convert size in bytes to human-readable size."
-  (let ((powers (list (cons (expt 2 30) "G")
-                      (cons (expt 2 20) "M")
-                      (cons (expt 2 10) "K")
-                      (cons (expt 2  0) "B")))
-        (chosen-power)
-        (chosen-suffix))
-    (dolist (entry powers)
-      (setf chosen-power (car entry))
-      (setf chosen-suffix (cdr entry))
-      (when (<= chosen-power size)
-        (return)))
-    (fstr "~a&nbsp;~a" (round (/ size chosen-power)) chosen-suffix)))
+(defun fill-ren-docs (docs zones params)
+  "Fill parameters in renderable documents."
+  (let ((results))
+    (dolist (doc docs)
+      (let* ((date (aget "date" doc))
+             (lists (string-split (aget "list" doc) ", "))
+             (tags (string-split (aget "tag" doc) ", "))
+             (toc (aget "toc" doc))
+             (update (aget "update" doc)))
+        (aput "draft-mark" (if (aget "draft" doc) " [draft]" "") doc)
+        (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
+        (aput "lists" lists doc)
+        (aput "short-date" (format-short-date (parse-content-date date)) doc)
+        (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
+        (aput "tags" tags doc)
+        (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
+        (aput "toc" (toc-html (aget "body" doc) (string= toc "num")) doc)
+        (aput "update-mark" (if update (update-mark update) "") doc)
+        (aput "zone-link" (zone-link doc zones params) doc))
+      (push doc results))
+    results))
+
+(defun render-body-docs (docs params)
+  (dolist (doc docs)
+    (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
+    (write-file (aget "dst-path" doc) (render (aget "body" doc) params))))
+
+(defun render-layout-docs (docs layouts params)
+  (dolist (doc docs)
+    (let* ((layout (aget (aget "doc-type" doc) layouts))
+           (body (render (aget "body" doc) (append doc params)))
+           (param (list (cons "body" body)))
+           (final (render layout (append param doc params))))
+      (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
+      (write-file (aget "dst-path" doc) final))))
+
+(defun select-docs (docs &rest types)
+  "Select documents that match the given types."
+  (remove-if-not (lambda (doc)
+                   (member (aget "doc-type" doc) types :test #'string=)) docs))
+
+(defun copy-docs (docs)
+  (dolist (doc docs)
+    (write-log "Copying ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
+    (copy-file (aget "src-path" doc) (aget "dst-path" doc))))
 
-(defun tag-slug (tag)
-  "Convert tag title to tag slug."
-  (substitute #\- #\Space (string-downcase tag)))
-
-(defun format-tags-for-html (page indent root)
-  "Create HTML to display tags."
-  (let ((html "")
-        (sep ""))
-    (dolist (tag (aget "tags" page))
-      (setf tag (tag-slug tag))
-      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>" html sep root tag tag))
-      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
-    html))
-
-(defun format-tags-for-page (page root)
-  "Create HTML to display tags on a page."
-  (format-tags-for-html page 2 root))
-
-(defun format-tags-for-list (page)
-  "Create HTML to display tags on the full page list."
-  (format-tags-for-html page 4 ""))
-
-(defun format-tags-for-feed (page params)
-  "Create HTML to display tags for the given page."
-  (let ((html "")
-        (sep "")
-        (site-url (aget "site-url" params))
-        (tags (aget "tags" page)))
-    (dolist (tag tags)
-      (setf tag (tag-slug tag))
-      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>"
-                       html sep site-url tag tag))
-      (setf sep (fstr " |~%  ")))
-    (html-escape html)))
-
-(defun write-page (dst-path layout params)
-  "Render given layout with given parameters and write page."
-  (setf dst-path (render dst-path params))
-  ;; Standalone pages (e.g., ls.html, comment pages, guestbook, etc.)
-  ;; need neat-url to be set for rendering the canonical link tag.
-  ;; This function happens to be one common place where the neat-url
-  ;; parameter can be added to all such pages.
-  (add-page-params dst-path params params)
-  (add-zone-params dst-path params)
-  ;; Perform format-markup only for .html pages.
-  (write-log "Writing ~a ..." dst-path)
-  (write-file dst-path (format-markup (render layout params))))
-
-
-;;; Pages
-;;; -----
-
-(defun read-page-content (text filename)
-  "Parse content file."
-  (let ((page)
-        (draft))
-    (multiple-value-bind (date slug) (date-slug filename)
-      (aput "date" date page)
-      (aput "slug" slug page))
-    (multiple-value-bind (headers next-index) (read-headers text 0)
-      (setf page (append headers page))
-      (aput "body" (subseq text next-index) page))
-    (insert-formatted-dates page)
-    ;; Updated date.
-    (aput "update-mark" "" page)
-    (let ((updated (aget "updated" page)))
-      (when updated
-        (aput "update-mark" (fstr " | Updated on ~a"
-                                  (format-short-date (parse-content-date updated)))
-              page)))
-    ;; Other metadata to be parsed.
-    (aput "tags" (string-split (aget "tag" page) ", ") page)
-    (aput "blogs" (string-split (aget "blog" page) ", ") page)
-    (aput "blog-name" (car (aget "blogs" page)) page)
-    ;; Draft status.
-    (setf draft (aget "draft" page))
-    (aput "draft-mark" (if draft " [draft]" "") page)
-    page))
-
-(defun read-page (filename)
-  "Parse page file."
-  (read-page-content (read-file filename) filename))
-
-(defun make-page (src-path dst layout overrides params)
-  "Generate page from content file."
-  (let* ((page (read-page src-path))
-         (body))
-    ;; Set neat-url and tags-for-feed so that the returned page alist
-    ;; can be used to render feeds.
-    (add-page-params dst page params)
-    (setf page (append page params))
-    (add-comment-params page overrides)
-    ;; Run callbacks.
-    (invoke-callbacks page)
-    ;; Parameters for dynamic content within pages.
-    (when (string= (aget "render" page) "yes")
-      (aput "toc" (toc-html (aget "body" page) nil) page)
-      (aput "tocn" (toc-html (aget "body" page) t) page)
-      (setf body (render (aget "body" page) page))
-      (aput "body" body page))
-    (write-page dst layout page)
-    (aput "escaped-body" (html-escape (aget "body" page)) page)
-    page))
-
-(defun copy-page (src-path dst-path overrides params)
-  "Copy an HTML page to destination path."
-  (uiop:copy-file src-path dst-path)
-  (let* ((meta-path (string-replace ".html" ".aux.html" (namestring src-path)))
-         (page (read-page meta-path)))
-    ;; Set neat-url and tags-for-feed so that the returned page alist
-    ;; can be used to render feeds.
-    (add-page-params dst-path page params)
-    (add-comment-params page overrides)
-    (aput "escaped-body" (html-escape (aget "body" page)) page)
-    page))
-
-(defun sort-by-date (items)
-  "Sort items in chronological order."
-  (sort (copy-list items)
-        (lambda (x y)
-          (or (string< (aget "date" x)
-                       (aget "date" y))))))
-
-(defun max-date (items)
-  "Return the maximum date from the given items."
-  (reduce
-   (lambda (x y)
-     (if (string> x y) x y))
-   (mapcar (lambda (x) (aget "date" x)) items)))
-
-(defun make-pages (src dst layout overrides params)
-  "Generate pages from content files."
-  (let ((pages))
-    (dolist (src-path (directory src))
-      (push (make-page src-path dst layout overrides params) pages))
-    pages))
-
-(defun select-listed-items (items)
-  "Select items that are allowed to be listed on pages."
-  (remove-if (lambda (item) (string= (aget "unlist" item) "yes")) items))
-
-(defun select-feeding-items (items)
-  "Select items that are allowed to be listed on web feeds."
-  (remove-if (lambda (item) (or (string= (aget "unfeed" item) "yes")
-                                (string= (aget "unlist" item) "yes")
-                                (string= (aget "draft" item) "yes"))) items))
-
-(defun select-blog-items (names items)
-  "Select items belonging to any of the specified blogs."
-  (remove-if-not
-   (lambda (item)
-     (intersection names (aget "blogs" item) :test #'string=))
-   items))
-
-(defun make-page-list (pages dst list-layout item-layout params)
-  "Generate list page for content pages that are allowed to be listed."
-  (setf pages (sort-by-date (select-listed-items pages)))
-  (let ((count (length pages))
-        (rendered-pages))
-    ;; Render each page.
-    (dolist (page pages)
-      (setf page (append page params))
-      (push (render item-layout page) rendered-pages))
-    ;; Add list parameters.
-    (aput "body" (join-strings rendered-pages) params)
-    (aput "count" count params)
-    ;; Determine destination path and URL.
-    (write-page dst list-layout params)))
-
-(defun make-feed-list (pages limit dst list-layout item-layout params)
-  "Generate feed list for pages that are not draft and allowed to be listed."
-  (aput "iso-date" (format-iso-date (parse-content-date (max-date pages))) params)
-  (make-page-list (last-n limit (sort-by-date (select-feeding-items pages)))
-                  dst list-layout item-layout params))
-
-
-;;; Comments
-;;; --------
-
-(defun read-comment (text start-index)
-  "Read a single comment from a comment file."
-  (let ((start-token "<!-- ") ; Header prefix.
-        (comment)             ; Parsed comment parameters.
-        (next-index))         ; Index at which to search next comment.
-    (setf (values comment start-index) (read-headers text start-index))
-    (insert-formatted-dates comment)
-    ;; Select content until next header or end-of-text as body.
-    (setf next-index (search start-token text :start2 start-index))
-    (aput "body" (subseq text start-index next-index) comment)
-    (values comment next-index)))
-
-(defun read-comments (filename)
-  "Read all comments from a comment file."
-  (let ((text (read-file filename))
-        (next-index 0)
-        (slug (nth-value 1 (date-slug filename)))
-        (serial 0)
-        (info)
-        (comment)
-        (comments))
-    (loop
-      (aput "slug" slug info)
-      (setf (values comment next-index) (read-comment text next-index))
-      (cond ((and (zerop serial) (aget "title" comment))
-             (setf info (read-page-content (subseq text 0 next-index) filename)))
-            (t
-             (let ((date (aget "date" comment)))
-               (when (and (consp comments) (string< date (aget "date" (car comments))))
-                 (error "Incorrect order for comment ~a in ~a" date filename))
-               (unless (and (= (length date) 25) (string-ends-with " +0000" date))
-                 (error "Time zone missing in comment date ~a in ~a" date filename)))
-             (aput "comment-file-serial" (incf serial) comment)
-             (push comment comments)))
-      (unless next-index
-        (return)))
-    ;; Backfill date into the page information.
-    (setf comments (reverse comments))
-    (aput "date" (aget "date" (car comments)) info)
-    (insert-formatted-dates info)
-    (values info comments)))
-
-(defun make-comment-list (comments dst list-layout item-layout params)
-  "Generate comment list page.  Honour the order of comments provided."
-  (let* ((post-import (aget "import" params))
-         (comment-dst (render dst params))
-         (comment-count (length comments))
-         (comment-label (if (= comment-count 1) "comment" "comments"))
-         (common-params)
-         (rendered-comments))
-    (aput "comment-count" comment-count common-params)
-    (aput "comment-label" comment-label common-params)
-    (dolist (comment comments)
-      (push (render item-layout (append comment common-params)) rendered-comments))
-    ;; Inherit imports from post.
-    (if post-import
-        (setf post-import (fstr "comment.css, ~a" post-import))
-        (setf post-import "comment.css"))
-    (aput "import" post-import params)
-    ;; Determine destination path and URL.
-    (aput "body" (join-strings (reverse rendered-comments)) params)
-    (write-page comment-dst list-layout params)))
-
-(defun enrich-comments (comments page dst-path params)
-  "Enrich a comment by adding relevant page metadata to it."
-  (let ((enriched-comments))
-    (dolist (comment comments)
-      (aput "commenter" (aget "name" comment) comment)
-      (when (string= (aget "name" comment) (aget "author" params))
-        (aput "url" (aget "site-url" params) comment))
-      (when (aget "url" comment)
-        (aput "commenter" (fstr "<a href=\"~a\">~a</a>"
-                                (aget "url" comment)
-                                (aget "commenter" comment)) comment))
-      (let ((body (aget "body" comment)))
-        (aput "body" (render body params) comment))
-      (aput "unlist" (aget "unlist" page) comment)
-      (aput "post-title" (aget "post-title" page) comment)
-      (aput "post-path" (aget "post-path" page) comment)
-      (aput "comment-page-path" (neat-path dst-path params) comment)
-      (aput "comment-class" (if (string= (aget "name" comment)
-                                         (aget "author" params))
-                                "author" "visitor") comment)
-      (push comment enriched-comments))
-    (reverse enriched-comments)))
-
-(defun number-comments (comments)
-  "Sort comments by date and number them."
-  (setf comments (sort-by-date comments))
-  (loop for comment in comments
-        for serial from 1 to (length comments)
-        do (aput "comment-list-serial" serial comment)
-        collect comment))
-
-(defun page-by-comment-slug (pages cslug)
-  "Find a page by the given slug in the given list of pages."
-  (find cslug pages :test #'string=
-        :key (lambda (page) (aget "comment-slug" page))))
-
-(defun make-post-comments (comments info parent page-layout params)
-  "Generate comment list page for a particular page."
-  (let* ((item-layout (read-file "layout/comment/item.html"))
-         (dst-path (render "{{ apex }}comments/{{ slug }}.html"
-                           (append info params)))
-         ;; slug-layout if present overrides talk-layout.
-         (slug-layout-path "layout/comment/{{ slug }}.html")
-         (talk-layout-path "layout/comment/talk.html")
-         (list-layout))
-    (setf info (append info parent))
-    ;; Talk pages are being rendered for the very first time here, so
-    ;; they don't have comment params yet.  We populate them here.
-    (unless (aget "post-title" info)
-      (aput "post-title" (aget "title" info) info))
-    (unless (aget "post-path" info)
-      (aput "post-path" (neat-path dst-path params) info))
-    ;; Pick post params for comments and put them in the comments
-    ;; itself, so that all comment data is self-contained and they can
-    ;; be used on their own later to render the full comments page.
-    (setf comments (enrich-comments comments info dst-path params))
-    (when (string= (aget "reverse" info) "yes")
-      (setf comments (reverse comments)))
-    (cond (parent
-           (setf list-layout (read-file "layout/comment/post.html"))
-           (aput "title" (fstr "Comments on ~a" (aget "title" parent)) params))
-          (t
-           (setf slug-layout-path (render slug-layout-path info))
-           (setf list-layout (read-file (if (probe-file slug-layout-path)
-                                            slug-layout-path talk-layout-path)))
-           (add-page-params dst-path info params)))
-    (set-nested-template list-layout page-layout)
-    (setf params (append params info))
-    (make-comment-list comments dst-path list-layout item-layout params)
-    (values info comments)))
-
-(defun make-void-comments (page page-layout params)
-  "Generate a comment page with no comments."
-  (aput "import" "" params)
-  (let ((void-layout (read-file "layout/comment/void.html"))
-        (dst-path (render "{{ apex }}comments/{{ comment-slug }}.html"
-                          (append page params))))
-    (set-nested-template void-layout page-layout)
-    (setf params (append params page))
-    (aput "title" (fstr "Comments on ~a" (aget "title" params)) params)
-    (write-page dst-path void-layout params)))
-
-(defun make-all-comments (comments page-layout params)
-  "Generate consolidated comment list page for the full website."
-  (let ((list-layout (read-file "layout/comment/list-all.html"))
-        (item-layout (read-file "layout/comment/item-all.html")))
-    (set-nested-template list-layout page-layout)
-    (aput "import" "extra.css, math.inc" params)
-    (aput "title" "All Comments" params)
-    (setf comments (reverse (number-comments (select-listed-items comments))))
-    (make-comment-list comments "{{ apex }}comments/index.html"
-                       list-layout item-layout params)))
-
-(defun select-uncommented-pages (pages commented-slugs)
-  "Select the pages that have received no comments."
-  (setf pages (remove-if-not
-               (lambda (x) (string= (aget "type" x) "post")) pages))
-  (setf pages (remove-if (lambda (x) (member (aget "comment-slug" x) commented-slugs
-                                             :test #'string=)) pages))
-  (setf pages (remove-duplicates pages :key (lambda (x) (aget "comment-slug" x))
-                                       :test #'string=)))
-
-(defun make-comments (pages page-layout params)
-  "Generate comment list pages for all comment pages."
-  (let ((all-comments)
-        (listed-comment-pages)
-        (commented-slugs)
-        (parent)
-        (comment-page))
-    (setf pages (loop for page in pages collect (cons (cons "also" nil) page)))
-    (dolist (src (append (directory "content/comments/*.html")
-                         (directory "content/talk/*.html")))
-      (setf src (enough-namestring src))
-      (multiple-value-bind (info comments) (read-comments src)
-        (setf parent (page-by-comment-slug pages (aget "slug" info)))
-        (setf (values comment-page comments)
-              (make-post-comments comments info parent page-layout params)) ; Post comments.
-        (when (string-starts-with "content/talk/" src)
-          (aput "escaped-body" (html-escape (aget "body" comment-page)) comment-page)
-          (push comment-page listed-comment-pages))
-        (when (and (string-starts-with "content/comments/" src)
-                   (not parent))
-          (error "Parent post is missing for comment ~a" (aget "slug" info)))
-        (push (aget "slug" comment-page) commented-slugs)
-        (extend-list all-comments comments)))
-    (make-all-comments all-comments page-layout params) ; Full comments.
-    (dolist (page (select-uncommented-pages pages commented-slugs))
-      (make-void-comments page page-layout params)) ; Void comments.
-    listed-comment-pages))
-
-
-;;; Tree
-;;; ----
-
-(defun validate-required-params (pages)
-  "Validate pages to ensure required parameters exist."
-  (dolist (page pages)
-    (dolist (key '("date" "tag" "uuid"))
-      (when (not (aget key page))
-        (error "Missing key ~a for page ~a" key (aget "slug" page))))))
-
-(defun validate-unique-dates (pages)
-  "Validate all dates are unique."
-  (let ((seen-dates (make-hash-table :test #'equal)))
-    (dolist (page pages)
-      (when (gethash (aget "date" page) seen-dates)
-        (error "Duplicate date ~a in page ~a" (aget "date" page) (aget "slug" page)))
-      (setf (gethash (aget "date" page) seen-dates) t))))
-
-(defun make-tree-recursively (src dst page-layout post-layout overrides params)
-  "Recursively descend into a directory tree and render/copy all files."
-  (make-directory dst)
-  (let ((pages))
-    (dolist (pathname (uiop:directory-files src))
-      (let* ((basename (file-namestring pathname))
-             (destpath (namestring (merge-pathnames basename dst))))
-        (cond ((string-ends-with ".page.html" basename)
-               (aput "type" "page" params)
-               (setf destpath (string-replace ".page.html" ".html" destpath))
-               (push (make-page pathname destpath page-layout overrides params) pages))
-              ((string-ends-with ".post.html" basename)
-               (aput "type" "post" params)
-               (setf destpath (string-replace ".post.html" ".html" destpath))
-               (push (make-page pathname destpath post-layout overrides params) pages))
-              ((string-ends-with ".aux.html" basename)
-               (write-log "Skipping ~a" basename))
-              ((string-ends-with ".html" basename)
-               (aput "type" "standalone" params)
-               (push (copy-page pathname destpath overrides params) pages))
-              (t
-               (uiop:copy-file pathname destpath)))))
-    (dolist (pathname (uiop:subdirectories src))
-      (let* ((basename (directory-basename pathname))
-             (destpath (merge-pathnames basename dst)))
-        (make-directory destpath)
-        (setf pages (append pages (make-tree-recursively pathname destpath
-                                                         page-layout
-                                                         post-layout
-                                                         overrides
-                                                         params)))))
-    pages))
-
-(defun make-tree (page-layout params)
-  "Make tree of files and folders from the content tree."
-  (let ((post-layout (read-file "layout/tree/post.html"))
-        (overrides (read-list "content/lisp/overrides.lisp")))
-    (set-nested-template post-layout page-layout)
-    (make-tree-recursively "content/tree/" (aget "apex" params)
-                           page-layout post-layout overrides params)))
-
-
-;;; Directory Listing
-;;; -----------------
-
-(defun make-directory-index (current-pathname paths-and-sizes
-                             dst-filenames page-layout params)
-  "Render index pages for the given current directory."
-  (let* ((list-layout (read-file "layout/index/list.html"))
-         (item-layout (read-file "layout/index/item.html"))
-         (fs-path)
-         (rendered-rows))
-    (set-nested-template list-layout page-layout)
-    (setf paths-and-sizes (sort paths-and-sizes
-                                (lambda (x y) (string> (car x) (car y)))))
-    (dolist (entry paths-and-sizes)
-      (let ((item-params params))
-        (setf fs-path (car entry))
-        (aput "fs-path" fs-path item-params)
-        (aput "size" (cdr entry) item-params)
-        (when (string-ends-with "/" fs-path)
-          (setf fs-path (fstr "~aindex.html" fs-path)))
-        (if (string= fs-path "index.html")
-            (aput "neat-path" fs-path item-params)
-            (aput "neat-path" (neat-path fs-path params) item-params))
-        (push (render item-layout item-params) rendered-rows)))
-    (aput "rows" (join-strings rendered-rows) params)
-    (dolist (dst-path dst-filenames)
-      (setf dst-path (enough-namestring (merge-pathnames dst-path current-pathname)))
-      (unless (probe-file dst-path)
-        (write-page dst-path list-layout params)))))
-
-(defun visit-directory (apex-pathname current-pathname dst-filenames title
-                        page-layout params max-render-depth)
-  "Make index pages for the given directory and its subdirectories recursively."
-  (let ((url-path (enough-namestring current-pathname apex-pathname))
-        (total-size 0)
-        (paths-and-sizes)
-        (size))
-    ;; Collect subdirectories.
-    (dolist (path (uiop:subdirectories current-pathname))
-      (setf size (visit-directory apex-pathname path dst-filenames title
-                                  page-layout params (1- max-render-depth)))
-      (push (cons (directory-basename path) (format-size size)) paths-and-sizes)
-      (incf total-size size))
-    ;; Collect files.
-    (dolist (path (uiop:directory-files current-pathname))
-      (setf size (with-open-file (stream path) (file-length stream)))
-      (push (cons (file-namestring path) (format-size size)) paths-and-sizes)
-      (incf total-size size))
-    ;; Render tree.
-    (unless (equal apex-pathname current-pathname)
-      (push (cons "../" "-") paths-and-sizes))
-    (push (cons "./" (format-size total-size)) paths-and-sizes)
-    (aput "url-path" (if (string= url-path "") "/" url-path) params)
-    (aput "title" (render title params) params)
-    (when (plusp max-render-depth)
-      (make-directory-index current-pathname paths-and-sizes dst-filenames
-                            page-layout params))
-    ;; Return total size of current directory tree to caller.
-    total-size))
-
-(defun make-directory-lists (path page-layout &optional params)
-  "Make index pages for each site directory and subdirectories recursively."
-  (visit-directory (truename (aget "apex" params)) (truename path)
-                   '("index.html" "ls.html") "Index of {{ url-path }}"
-                   page-layout params 100))
-
-(defun collect-tree-paths (apex-pathname current-pathname page-layout params)
-  "Collect paths from the given directory and its subdirectories recursively."
-  (let ((paths))
-    ;; Collect subdirectories.
-    (dolist (path (uiop:subdirectories current-pathname))
-      (push (enough-namestring path apex-pathname) paths)
-      (setf paths (append (collect-tree-paths apex-pathname path
-                                              page-layout params) paths)))
-    ;; Collect files.
-    (dolist (path (uiop:directory-files current-pathname))
-      (push (enough-namestring path apex-pathname) paths))
-    paths))
-
-(defun render-tree-paths (paths dst-path title page-layout params)
-  "Render the given list of paths into a page with a flat HTML list."
-  (let* ((list-layout (read-file "layout/tree/list.html"))
-         (item-layout (read-file "layout/tree/item.html"))
-         (rendered-items))
-    (set-nested-template list-layout page-layout)
-    ;; Directory path (e.g., cc/) and index path (e.g., cc/index.html)
-    ;; are duplicates.  Therefore, do not list index path.
-    (setf paths (remove-if (lambda (path) (string-ends-with "/index.html" path))
-                           paths))
-    (dolist (fs-path (sort paths #'string>))
-      (let ((item-params params))
-        (aput "fs-path" fs-path item-params)
-        (when (string-ends-with "/" fs-path)
-          (setf fs-path (fstr "~aindex.html" fs-path)))
-        (aput "neat-path" (neat-path fs-path params) item-params)
-        (push (render item-layout item-params) rendered-items)))
-    (aput "title" title params)
-    (aput "items" (join-strings rendered-items) params)
-    (write-page dst-path list-layout params)))
-
-(defun make-tree-list (path title page-layout params)
-  "Generate a flat tree listing of the given directory."
-  (let ((paths (collect-tree-paths (truename path) (truename path)
-                                   page-layout params))
-        (dst-path (namestring (merge-pathnames "TREE.html" path))))
-    (render-tree-paths paths dst-path title page-layout params)))
-
-
-;;; Blog
-;;; ----
-
-(defun make-blog (name title dst pages page-layout params)
-  "Generate blog post pages for all posts in a blog directory."
-  (let* ((list-layout (read-file "layout/blog/list.html"))
-         (item-layout (read-file "layout/blog/item.html"))
-         (desc-path (fstr "layout/blog/~a.html" (string-downcase name)))
-         (desc-layout (if (probe-file desc-path) (read-file desc-path) "")))
-    ;; Combine layout to form final layout.
-    (set-nested-template list-layout page-layout)
-    ;; Read and render all pages.
-    (aput "blog-name" name params)
-    (aput "blog-slug" (string-downcase name) params)
-    (setf pages (select-blog-items (list name) pages))
-    ;; Create blog list page.
-    (aput "description" (render desc-layout params) params)
-    (aput "page-label" (if (= (length pages) 1) "post" "posts") params)
-    (aput "title" (render title params) params)
-    (aput "subtitle" "" params)
-    (make-page-list pages dst list-layout item-layout params)))
-
-
-;;; Meets
-;;; -----
-
-(defun format-meet-date (universal-time)
-  "Format meeting entry date for display in meeting list page."
-  (multiple-value-bind (second minute hour date month year day)
-      (decode-universal-time universal-time 0)
-    (declare (ignore second))
-    (format nil "~a,&nbsp;~2,'0d&nbsp;~a&nbsp;~4,'0d&nbsp;~2,'0d:~2,'0d&nbsp;UTC"
-            (weekday-name day) date (month-name month) year hour minute)))
-
-(defun future-p (meet)
-  "Whether the given meeting entry is scheduled for future."
-  (minusp (getf meet :members)))
-
-(defun find-meet-track (slug slugs)
-  (second (first (remove-if-not (lambda (x) (string= (first x) slug)) slugs))))
-
-(defun meet-row-html (meet previous-meet slugs row-id layout params)
-  "Create HTML to represent a single row of meeting entry."
-  (let ((upcoming-attr (if (and previous-meet (not (future-p previous-meet))
-                                (future-p meet)) " id=\"upcoming\"" ""))
-        (topic (fstr "~a: ~a" (find-meet-track (getf meet :slug) slugs)
-                     (getf meet :topic))))
-    (aput "row-id" row-id params)
-    (aput "upcoming" upcoming-attr params)
-    (aput "class" (if (future-p meet) "future" "past") params)
-    (aput "date" (format-meet-date (parse-content-date (getf meet :date))) params)
-    (aput "duration" (getf meet :duration) params)
-    (aput "members" (if (future-p meet) "-" (getf meet :members)) params)
-    (aput "topic" topic params)
-    (render layout params)))
-
-(defun meet-rows-html (meets slugs layout params)
-  "Create HTML to represent all rows of meeting entries"
-  (let ((previous-meet nil))
-    (join-strings
-     (loop for row-id from 1 to (length meets)
-           for meet in meets
-           collect (meet-row-html meet previous-meet slugs row-id layout params)
-           do (setf previous-meet meet)))))
-
-(defun meet-log-path (current-slug other-slug)
-  "Return relative path to meeting track log page."
-  (let* ((prefix (if current-slug "../" ""))
-         (middle (if other-slug (fstr "~a/" other-slug) "")))
-    (fstr "~a~alog.html" prefix middle)))
-
-(defun meet-tracks-html (current-slug slugs)
-  "Create HTML to list all meeting tracks."
-  (join-strings (loop for (slug track) in (reverse slugs)
-                      collect (fstr "<li><a href=\"~a\">~a</a></li>~%"
-                                    (meet-log-path current-slug slug)
-                                    (if track track "All Meetings")))))
-
-(defun select-meets (slug meets)
-  "Filter meets to select the ones with the specified slug."
-  (remove-if-not (lambda (x) (string= (getf x :slug) slug)) meets))
-
-(defun make-meet-log (meets slug slugs track list-layout item-layout params)
-  "Create meeting log page for the given list of meets."
-  (setf meets (if slug (select-meets slug meets) meets))
-  (let* ((past-meets (loop for m in meets when (not (future-p m)) collect m))
-         (past-count (length past-meets))
-         (minutes (reduce #'+ (loop for m in past-meets collect (getf m :duration))))
-         (members (reduce #'+ (loop for m in past-meets collect (getf m :members))))
-         (dst (if slug "{{ apex }}cc/{{ slug }}/log.html" "{{ apex }}cc/log.html")))
-    (aput "head" (fstr "~a, extra.css, meets.css, math.inc"
-                       (aget "head" params)) params)
-    (aput "title" (fstr "~a Meeting Log" (if slug track "Full")) params)
-    (aput "subtitle" "" params)
-    (aput "slug" (if slug slug "index") params) ; Needed by next call.
-    (aput "track-path"
-          (render (if slug "../{{ slug }}/{{ index }}" "../{{ index }}")
-                  params) params)
-    (aput "track-name" (if track track "club") params)
-    (aput "other-title" (if slug "Other Tracks" "Individual Tracks") params)
-    (aput "other" (if slug "other" "individual") params)
-    (aput "rows" (meet-rows-html meets slugs item-layout params) params)
-    (aput "total-count" past-count params)
-    (aput "meeting-label" (if (= past-count 1) "meeting" "meetings") params)
-    (aput "total-minutes" minutes params)
-    (aput "total-hours" (fstr "~,1f" (/ minutes 60)) params)
-    (aput "tracks" (meet-tracks-html slug slugs) params)
-    ;; Avoid division-by-zero with a fake count.
-    (when (zerop past-count)
-      (setf past-count 1))
-    (aput "average-minutes" (fstr "~,1f" (/ minutes past-count)) params)
-    (aput "average-members" (fstr "~,1f" (/ members past-count)) params)
-    (write-page dst list-layout params)))
-
-(defun validate-date-order (items)
-  "Check that entries are arranged in chronological order."
-  (let ((prev-date)
-        (curr-date))
-    (dolist (item items)
-      (setf curr-date (getf item :date))
-      (when (and prev-date (string< curr-date prev-date))
-        (error "Incorrect order for item ~a" curr-date))
-      (setf prev-date curr-date))))
-
-(defun make-meets (page-layout params)
-  "Create meeting log pages for all tracks."
-  (let ((meets (read-list "content/lisp/meet.lisp"))
-        (slugs (read-list "content/lisp/slug.lisp"))
-        (list-layout (read-file "layout/meets/list.html"))
-        (item-layout (read-file "layout/meets/item.html")))
-    (set-nested-template list-layout page-layout)
-    (validate-date-order meets)
-    (push (list nil nil) slugs)
-    (loop for (slug track) in slugs
-          do (make-meet-log meets slug slugs track
-                            list-layout item-layout params))))
-
-;;; Backlinks
-;;; ---------
-
-(defun parse-domain (url)
-  "Parse printable domain name from URL."
-  (let* ((start-index (+ (search "://" url) 3))
-         (end-index (position #\/ url :start start-index))
-         (host (subseq url start-index end-index)))
-    (values (string-replace "www." "" host)
-            (subseq url (1+ end-index)))))
-
-(defun format-backlink (s params)
-  "Encode special characters and expand placeholders."
-  (render (string-replace "&" "&amp;" s) params))
-
-(defun format-lang (s)
-  "Format the language text to be displayed along with a backlink."
-  (if (string= s "English") "" (fstr " (~a)" s)))
-
-(defun make-backlinks (page-layout params)
-  "Create backlinks page."
-  (let ((backlinks (read-list "content/lisp/backlinks.lisp"))
-        (list-layout (read-file "layout/backlinks/list.html"))
-        (item-layout (read-file "layout/backlinks/item.html"))
-        (dst "_site/backlinks.html")
-        (rendered-items))
-    (set-nested-template list-layout page-layout)
-    (validate-date-order backlinks)
-    (dolist (backlink backlinks)
-      (let ((item-params))
-        (aput "short-date"
-              (format-short-date (parse-content-date (getf backlink :date)))
-              item-params)
-        (aput "lang" (format-lang (getf backlink :lang)) item-params)
-        (aput "domain" (parse-domain (getf backlink :url1)) item-params)
-        (aput "txt1" (format-backlink (getf backlink :txt1) params) item-params)
-        (aput "url1" (format-backlink (getf backlink :url1) params) item-params)
-        (aput "txt2" (format-backlink (getf backlink :txt2) params) item-params)
-        (aput "url2" (format-backlink (getf backlink :url2) params) item-params)
-        (push (render item-layout item-params) rendered-items)))
-    (aput "body" (join-strings rendered-items) params)
-    (aput "count" (length backlinks) params)
-    (aput "title" "Backlinks" params)
-    (write-page dst list-layout params)))
-
-;;; Roll
-;;; ----
-
-(defun validate-name-order (items)
-  "Check that entries are arranged in the order of names."
-  (let ((prev-name)
-        (curr-name))
-    (dolist (item items)
-      (setf curr-name (getf item :name))
-      (when (and prev-name (string< curr-name prev-name))
-        (error "Incorrect order for roll entry: ~a" curr-name))
-      (setf prev-name curr-name))))
-
-(defun make-roll (page-layout params)
-  "Create blogroll."
-  (let ((entries (read-list "content/lisp/roll.lisp"))
-        (html-list-layout (read-file "layout/roll/list.html"))
-        (html-item-layout (read-file "layout/roll/item.html"))
-        (opml-list-layout (read-file "layout/roll/list.xml"))
-        (opml-item-layout (read-file "layout/roll/item.xml"))
-        (html-dst "_site/roll.html")
-        (opml-dst "_site/roll.opml")
-        (rendered-html-items)
-        (rendered-opml-items))
-    (set-nested-template html-list-layout page-layout)
-    (validate-name-order entries)
-    (dolist (entry entries)
-      (let ((item-params))
-        (aput "name" (getf entry :name) item-params)
-        (aput "home" (getf entry :home) item-params)
-        (aput "feed" (getf entry :feed) item-params)
-        (aput "domain" (parse-domain (getf entry :home)) item-params)
-        (push (render html-item-layout item-params) rendered-html-items)
-        (push (render opml-item-layout item-params) rendered-opml-items)))
-    (aput "body" (join-strings (reverse rendered-html-items)) params)
-    (aput "outlines" (join-strings (reverse rendered-opml-items)) params)
-    (aput "count" (length entries) params)
-    (aput "title" (render "{{ nick }}'s Blogroll" params) params)
-    (write-page html-dst html-list-layout params)
-    (write-page opml-dst opml-list-layout params)))
-
-;;; CSS
-;;; ---
-
-(defun main-style ()
-  "Return primary style and color scheme for the website."
-  (list
-   ;; HTML elements.
-   (cons "font-family" "georgia, serif")
-   ;; Light color scheme.
-   (cons "light-fill-color" "#eee")     ; contrast  1.2
-   (cons "light-shade-color" "#ccc")    ; contrast  1.6
-   (cons "light-code-color" "#050")     ; contrast  2.3,  7.9,  9.1
-   (cons "light-samp-color" "#730")     ; contrast  2.3,  8.0,  9.3
-   (cons "light-hl-color" "#808")       ; contrast  2.4,  7.5,  8.7
-   (cons "light-line-color" "#999")     ; contrast  2.8
-   (cons "light-success-color" "#060")  ; contrast  7.2
-   (cons "light-error-color" "#900")    ; contrast  8.9
-   ;; Dark color scheme.
-   (cons "dark-background-color" "#111")
-   (cons "dark-body-color" "#bbb")      ; contrast 10.9,  9.8
-   (cons "dark-link-color" "#9bf")      ; contrast  1.0,  9.8,  9.8
-   (cons "dark-visited-color" "#a9f")   ; contrast  1.3,  7.8,  9.8
-   (cons "dark-hover-color" "#9cf")     ; contrast  1.1, 11.2,  9.8
-   (cons "dark-active-color" "#f99")    ; contrast  1.1,  9.2,  9.8
-   (cons "dark-fill-color" "#000")      ; contrast  1.1
-   (cons "dark-shade-color" "#333")     ; contrast  1.5
-   (cons "dark-code-color" "#9c6")      ; contrast  1.0, 11.2, 10.1
-   (cons "dark-samp-color" "#db0")      ; contrast  1.0, 11.2, 10.1
-   (cons "dark-hl-color" "#f9c")        ; contrast  1.0, 10.7,  9.6
-   (cons "dark-line-color" "#666")      ; contrast  3.3
-   (cons "dark-success-color" "#3c6")   ; contrast  9.0
-   (cons "dark-error-color" "#f99")))   ; contrast  9.2
-
-(defun make-css (params)
-  "Generate stylesheets for the main website."
-  (make-pages "layout/css/*.css" "{{ apex }}css/{{ slug }}.css" "{{ body }}"
-              nil (append (main-style) params)))
-
-(defun feed-css ()
-  "Return stylesheet for feed as a string."
-  (let* ((css (main-style))
-         (styles (list (render (read-file "layout/css/main.css") css)
-                       (render (read-file "layout/css/extra.css") css))))
-    (fstr "~%~a" (indent-lines 10 (join-strings styles)))))
-
-(defun make-xsl (params)
-  "Generate stylesheet for feed."
-  (make-pages "layout/blog/*.xsl" "{{ apex }}{{ slug }}.xsl" "{{ body }}"
-              nil (append (list (cons "css" (feed-css))) params)))
-
-
-;;; Music
-;;; -----
-
-(defun make-music (page-layout params)
-  "Generate music list page."
-  (let ((list-layout (read-file "layout/music/list.html"))
-        (post-layout (read-file "layout/music/post.html"))
-        (item-layout (read-file "layout/music/item.html"))
-        (widget-layout (read-file "layout/music/widget.html"))
-        (pages))
-    ;; Combine layouts to form final layouts.
-    (set-nested-template list-layout page-layout)
-    (set-nested-template post-layout page-layout)
-    ;; Callback function to be passed as a parameter to renderer.
-    (defun make-widget-callback (page)
-      "Callback function to render music player widget."
-      (list (cons "widget" (render widget-layout page))))
-    ;; Add parameters for music page rendering.
-    (aput "import" "extra.css, music.css" params)
-    (aput-list "callbacks" #'make-widget-callback params)
-    ;; Render all music pages.
-    (setf pages (make-pages "content/music/*.html"
-                            "{{ apex }}music/{{ slug }}.html"
-                            post-layout nil params))
-    ;; Generate music list page.
-    (aput "title" "Music" params)
-    (make-page-list pages "{{ apex }}music/index.html"
-                    list-layout item-layout params)
-    pages))
-
-
-;;; Tags and Feeds
-;;; --------------
-
-(defun collect-tags (pages)
-  "Group page by tags and return an alist of tag and page list."
-  (setf pages (select-listed-items pages))
-  (let ((tags))
-    (dolist (page pages)
-      (dolist (tag (aget "tags" page))
-        (aput-list tag page tags)))
-    (sort tags
-          (lambda (x y)
-            (or (< (length (cdr x)) (length (cdr y)))
-                (and (= (length (cdr x)) (length (cdr y)))
-                     (string< (car x) (car y))))))))
-
-(defun tags-html (tags params)
-  "Render tag list as HTML."
-  (let ((item-layout (read-file "layout/tag/tag.html"))
-        (tag)
-        (pages)
-        (count)
-        (rendered-tags))
-    ;; Render each tag-map entry.
-    (dolist (tag-entry tags)
-      (setf tag (car tag-entry))
-      (setf pages (cdr tag-entry))
-      (setf count (length pages))
-      (aput "tag-slug" (tag-slug tag) params)
-      (aput "tag" tag params)
-      (aput "count" count params)
-      (aput "page-label" (if (= count 1) "page" "pages") params)
-      (push (render item-layout params) rendered-tags))
-    (join-strings rendered-tags)))
-
-(defun tag-title (tag)
-  "Determine title for a tag page."
-  (let* ((special-title (aget tag (read-list "content/lisp/tag.lisp"))))
-    (if special-title special-title "{{ nick }}'s {{ tag }} Pages")))
-
-(defun make-tags (pages page-layout params)
-  "Generate tag index, tag lists, and tag feeds."
-  (let* ((tags-layout (read-file "layout/tag/tags.html"))
-         (list-layout (read-file "layout/tag/list.html"))
-         (item-layout (read-file "layout/tag/item.html"))
-         (feed-xml (read-file "layout/tag/feed.xml"))
-         (item-xml (read-file "layout/tag/item.xml"))
-         (tags-dst "{{ apex }}tag/index.html")
-         (list-dst "{{ apex }}tag/{{ tag-slug }}.html")
-         (feed-dst "{{ apex }}tag/{{ tag-slug }}.xml")
-         (tags (collect-tags pages))
-         (tag)
-         (pages))
-    (set-nested-template tags-layout page-layout)
-    (set-nested-template list-layout page-layout)
-    ;; Tag index page.
-    (aput "tag-list" (tags-html tags params) params)
-    (aput "tag-count" (length tags) params)
-    (aput "tag-label" (if (= (length tags) 1) "tag" "tags") params)
-    (aput "title" (render "{{ nick }}'s Tags" params) params)
-    (aput "subtitle" "" params)
-    (write-page tags-dst tags-layout params)
-    ;; Tag list page for each tag.
-    (dolist (tag-entry tags)
-      (setf tag (car tag-entry))
-      (setf pages (cdr tag-entry))
-      (aput "tag" tag params)
-      (aput "tag-slug" (tag-slug tag) params)
-      (aput "feed-id" (neat-url (render feed-dst params) params) params)
-      (aput "title" (render (tag-title tag) params) params)
-      (aput "subtitle" "" params)
-      (aput "link" (render "{{ site-url }}tag/{{ tag-slug }}.html" params) params)
-      (aput "description" (render "Feed for {{ title }}" params) params)
-      (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
-      (make-page-list pages list-dst list-layout item-layout params)
-      (make-feed-list pages 20 feed-dst feed-xml item-xml params))))
-
-(defun make-full (pages page-layout params)
-  "Generate page list for the full website."
-  (let ((list-layout (read-file "layout/full/list.html"))
-        (item-layout (read-file "layout/full/item.html")))
-    (set-nested-template list-layout page-layout)
-    (aput "title" "All Pages" params)
-    (aput "page-label" (if (= (length pages) 1) "page" "pages") params)
-    (make-page-list pages "{{ apex }}pages.html" list-layout item-layout params)))
-
-(defun make-feed (pages params)
-  "Generate feed for the complete website."
-  (let ((feed-xml (read-file "layout/tag/feed.xml"))
-        (item-xml (read-file "layout/tag/item.xml")))
-    (aput "feed-id" (fstr "urn:uuid:~a" (aget "site-uuid" params)) params)
-    (aput "title" (aget "author" params) params)
-    (aput "link" (aget "site-url" params) params)
-    (aput "description" (render "{{ nick }}'s Feed" params) params)
-    ;; TODO: Remove the following temporary RSS to Atom migration
-    ;; workaround when there are at least 10 new entries in the feed.
-    ;; ----- BEGIN WORKAROUND -----
-    ;; Temporarily prevent old posts from reappearing in the feeds with new IDs.
-    (setf pages (remove-if-not (lambda (p) (string>= (aget "date" p) "2026-05-03")) pages))
-    ;; ----- END WORKAROUND -----
-    (make-feed-list pages 20 "{{ apex }}feed.xml" feed-xml item-xml params)))
-
-
-;;; Activity Log
-;;; ------------
-
-(defun make-link (link params)
-  "Create a neat link for display in HTML."
-  (let ((site-url (aget "site-url" params))
-        (href link))
-    (multiple-value-bind (domain path) (parse-domain link)
-      (when (string-starts-with site-url link)
-        (setf href (fstr "~a~a" (aget "root" params) path)))
-      (fstr "<a href=\"~a\">~a/~a</a>" href domain path))))
-
-(defun activity-body (body params)
-  "Format activity body."
-  (let* ((angle-start)
-         (angle-end))
-    (loop
-     (setf angle-start (search "<http" body))
-     (setf angle-end (search ">" body))
-     (unless (and angle-start angle-end)
-       (return))
-     (setf body (fstr "~a&lt;~a&gt;~a"
-                      (subseq body 0 angle-start)
-                      (make-link (subseq body (1+ angle-start) angle-end) params)
-                      (subseq body (1+ angle-end))))))
-  body)
-
-(defun activity-row-html (item prev-date params)
-  "Format activity entry as HTML."
-  (with-output-to-string (s)
-    (format s "  <tr id=\"~a\">~%" (getf item :serial))
-    (format s "    <td>&nbsp;~a<a href=\"#~a\"></a></td>~%"
-            (getf item :serial) (getf item :serial))
-    (when (string/= (getf item :date) prev-date)
-      (format s "    <td rowspan=\"~a\">~a</td>~%" (getf item :day-serial) (getf item :date)))
-    (format s "    <td class=\"mins\">~a</td>~%" (getf item :mins))
-    (format s "    <td>~a</td>~%" (getf item :type))
-    (format s "    <td>~a</td>~%" (activity-body (getf item :body) params))
-    (format s "  </tr>~%")))
-
-(defun read-activity-entry (line)
-  "Parse a singe line of activity entry"
-  (let* ((date (subseq line 0 10))
-         (mins (subseq line 12 14))
-         (delim (position #\] line))
-         (type (subseq line 17 delim))
-         (body (subseq line (+ delim 2))))
-    (list
-     :date date
-     :mins mins
-     :type type
-     :body body)))
-
-(defun read-activity ()
-  "Read activity entries."
-  (let* ((data (read-file "content/tree/dd/dd.txt"))
-         (lines (string-split data (fstr "~%")))
-         (serial 1)
-         (day-serial)
-         (prev-date)
-         (item)
-         (items))
-    (dolist (line lines)
-      (setf item (read-activity-entry line))
-      (if (string= (getf item :date) prev-date)
-          (incf day-serial)
-          (setf day-serial 1))
-      (setf (getf item :serial) serial)
-      (setf (getf item :day-serial) day-serial)
-      (push item items)
-      (setf prev-date (getf item :date))
-      (incf serial))
-    (reverse items)))
-
-(defun make-activity (page-layout params)
-  "Create activity log page."
-  (let ((items (read-activity))
-        (list-layout (read-file "layout/activity/list.html"))
-        (dst-path "_site/dd/index.html")
-        (rendered-items)
-        (prev-date))
-    (set-nested-template list-layout page-layout)
-    (validate-date-order items)
-    (add-page-params dst-path params params)
-    (dolist (item (reverse items))
-      (push (activity-row-html item prev-date params) rendered-items)
-      (setf prev-date (getf item :date)))
-    (aput "title" "Activity Log" params)
-    (aput "head" (fstr "~a, extra.css, activity.css, math.inc"
-                       (aget "head" params)) params)
-    (aput "rows" (join-strings (reverse rendered-items)) params)
-    (write-page "_site/dd/index.html" list-layout params)))
 
 ;;; Complete Website
 ;;; ----------------
@@ -1628,55 +588,25 @@ value, next-index."
   default local parameters.")
 
 (defun main ()
-  "Generate entire website."
-  (let ((params (list (cons "apex" "_site/")
-                      (cons "current-year" (nth-value 5 (get-decoded-time)))
-                      (cons "head" "main.css")
-                      (cons "index" "")
-                      (cons "head" "main.css")
-                      (cons "render" "yes")))
-        (page-layout (read-file "layout/page.html"))
-        (pages)
-        (all-pages))
-    (remove-directory (aget "apex" params))
-    ;; If params file exists, merge it with local params.
-    (when (probe-file "params.lisp")
-      (setf params (append (read-list "params.lisp") params)))
-    ;; If *params* exists, merge it with local params.
-    (when *params*
-      (setf params (append *params* params)))
+  "Generate website."
+  (let* ((params (list (cons "head" "main.css")
+                       (cons "index" "")
+                       (cons "pub" "_site/")
+                       (cons "year" (nth-value 5 (get-decoded-time)))))
+         (params (nconc *params* (read-list "params.lisp") params))
+         (config (read-list "config.lisp"))
+         (layouts (fill-layouts (read-layouts "layout/")))
+         (includes (read-includes "includes/"))
+         (zones (aget "zones" config))
+         (all-docs (fill-docs (read-docs "content/tree/") includes params))
+         (css-docs (select-docs all-docs "css"))
+         (ren-docs (fill-ren-docs (select-docs all-docs "post" "page") zones params)))
+    (remove-directory (aget "pub" params))
     ;; Dependencies.
-    (copy-directory "_cache/katex/" (render "{{ apex }}js/katex/" params))
-    ;; Stylesheets.
-    (make-css params)
-    (make-xsl params)
-    ;; Tree.
-    (setf all-pages (make-tree page-layout params))
-    (make-meets page-layout params)
-    (make-activity page-layout params)
-    (make-backlinks page-layout params)
-    (make-roll page-layout params)
-    ;; Music
-    (extend-list all-pages (make-music page-layout params))
-    ;; Blog.
-    (make-blog "Main" "{{ author }}" "{{ apex }}index.html"
-               all-pages page-layout params)
-    (make-blog "Maze" "{{ nick }}'s {{ blog-name }}"
-               "{{ apex }}{{ blog-slug }}.html" all-pages page-layout params)
-    ;; Comments.
-    (setf pages (make-comments all-pages page-layout params))
-    (extend-list all-pages pages)
-    ;; Aggregates validation.
-    (validate-required-params all-pages)
-    (validate-unique-dates all-pages)
-    ;; Aggregates rendering.
-    (make-tags all-pages page-layout params)
-    (make-full all-pages page-layout params)
-    (make-feed all-pages params)
-    ;; Directory indices.
-    (make-tree-list (aget "apex" params) "Tree" page-layout params)
-    (make-directory-lists (aget "apex" params) page-layout params))
-  t)
+    (copy-directory "_cache/katex/" (render "{{ pub }}js/katex/" params))
+    (render-body-docs css-docs (aget "main-style" config))
+    (render-layout-docs ren-docs layouts params)
+    (copy-docs (select-docs all-docs "raw"))))
 
 (when *site-mode*
   (main))

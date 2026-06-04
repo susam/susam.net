@@ -25,10 +25,10 @@ a:empty {
   visibility: visible;
 }
 blockquote, pre, kbd, .highlight {
-  background: {{ light-fill-color }};
+  background: {{ lt-fill-colour }};
 }
 blockquote {
-  border-left: thick solid {{ light-shade-color }};
+  border-left: thick solid {{ lt-edge-colour }};
 }
 pre {
   overflow: auto;
@@ -51,18 +51,18 @@ pre code, pre samp, pre kbd, .mono kbd {
   font-size: 1.0em;
 }
 code, samp kbd {
-  color: {{ light-code-color }};
+  color: {{ lt-code-colour }};
 }
 samp {
-  color: {{ light-samp-color }};
+  color: {{ lt-samp-colour }};
 }
 pre .cursor {
-  background: {{ light-samp-color }};
-  color: {{ light-fill-color }};
+  background: {{ lt-samp-colour }};
+  color: {{ lt-fill-colour }};
 }
 kbd {
-  border: thin solid {{ light-shade-color }};
-  box-shadow: 0 0.15em 0.15em {{ light-shade-color }};
+  border: thin solid {{ lt-edge-colour }};
+  box-shadow: 0 0.15em 0.15em {{ lt-edge-colour }};
   border-radius: 0.2em;
   padding: 0.1em 0.2em;
 }
@@ -82,7 +82,7 @@ ul.blog li {
 hr {
   margin: 1.5em auto;
   border: 0;
-  border-bottom: 0.15em dotted {{ light-line-color }};
+  border-bottom: 0.15em dotted {{ lt-line-colour }};
 }
 footer {
   text-align: center;
@@ -96,43 +96,40 @@ footer nav a:last-child  {
 }
 @media (prefers-color-scheme: dark) {
   body {
-    background: {{ dark-background-color }};
-    color: {{ dark-body-color }};
+    background: {{ dk-bg-colour }};
+    color: {{ dk-body-colour }};
   }
   a:link {
-    color: {{ dark-link-color }};
+    color: {{ dk-link-colour }};
   }
   a:visited {
-    color: {{ dark-visited-color }};
-  }
-  a:focus, a:hover {
-    color: {{ dark-hover-color }};
+    color: {{ dk-lv-colour }};
   }
   a:active {
-    color: {{ dark-active-color }};
+    color: {{ dk-la-colour }};
   }
   blockquote, pre, kbd, .highlight {
-    background: {{ dark-fill-color }};
-    box-shadow: 0 0 0.5em {{ dark-shade-color }};
+    background: {{ dk-fill-colour }};
+    box-shadow: 0 0 0.5em {{ dk-edge-colour }};
   }
   blockquote {
-    border-left-color: {{ dark-shade-color }};
+    border-left-color: {{ dk-edge-colour }};
   }
   code, pre kbd {
-    color: {{ dark-code-color }};
+    color: {{ dk-code-colour }};
   }
   samp {
-    color: {{ dark-samp-color }};
+    color: {{ dk-samp-colour }};
   }
   pre .cursor {
-    background: {{ dark-samp-color }};
-    color: {{ dark-fill-color }};
+    background: {{ dk-samp-colour }};
+    color: {{ dk-fill-colour }};
   }
   kbd {
-    border-color: {{ dark-shade-color }};
-    box-shadow: 0 0.15em 0.15em {{ dark-shade-color }};
+    border-color: {{ dk-edge-colour }};
+    box-shadow: 0 0.15em 0.15em {{ dk-edge-colour }};
   }
   hr {
-    border-bottom-color: {{ dark-line-color }};
+    border-bottom-color: {{ dk-line-colour }};
   }
 }

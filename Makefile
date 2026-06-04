@@ -276,7 +276,12 @@ dist: katex
 	@echo Generating distributable website ...
 	sbcl --eval '(setf *break-on-signals* t)' \
 	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	     --script site.lisp
+	     --script site.lisp 2>&1 | tee dist.log
+	@[ -s dist.log ] && \
+	  echo '============================================================' && \
+	  grep -C10 Backtrace dist.log && \
+	  echo '============================================================'; :
+	! grep -q Backtrace dist.log
 	@echo Done; echo
 
 serve:

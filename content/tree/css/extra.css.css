@@ -13,7 +13,7 @@ figure img, figure video {
   width: 100%;
 }
 .lightshadow img {
-  box-shadow: 0em 0em 0.5em {{ light-line-color }};
+  box-shadow: 0em 0em 0.5em {{ lt-line-colour }};
 }
 figcaption {
   font-size: medium;
@@ -66,15 +66,15 @@ table.top td {
   vertical-align: top;
 }
 table, thead, tr, th, td {
-  border-color: {{ light-line-color }};
+  border-color: {{ lt-line-colour }};
 }
 noscript div {
-  border: medium double {{ light-error-color }};
-  color: {{ light-error-color }};
+  border: medium double {{ lt-err-colour }};
+  color: {{ lt-err-colour }};
   padding: 0 1em;
 }
 .box {
-  border: thin solid {{ light-line-color }};
+  border: thin solid {{ lt-line-colour }};
   margin: 1em 0;
   padding: 1em;
 }
@@ -100,9 +100,6 @@ noscript div {
 .ctrl-l:before {
   content: "^L";
 }
-.hl {
-  color: {{ light-hl-color }};
-}
 .pre {
   white-space: pre;
 }
@@ -116,7 +113,7 @@ noscript div {
 }
 .c0 {color: #000} /* contrast: 18.1 */
 .c1 {color: #00c} /* contrast:  9.7 */
-.c2 {color: #050} /* constrast: 7.9 */
+.c2 {color: #050} /* contrast:  7.9 */
 .c3 {color: #055} /* contrast:  7.4 */
 .c4 {color: #900} /* contrast:  7.7 */
 .c5 {color: #808} /* contrast:  7.5 */
@@ -130,7 +127,7 @@ noscript div {
     box-shadow: none;
   }
   table, thead, tr, th, td, .email {
-    border-color: {{ dark-line-color }};
+    border-color: {{ dk-line-colour }};
   }
   .light {
     display: none;
@@ -139,7 +136,7 @@ noscript div {
     display: block;
   }
   .hl {
-    color: {{ dark-hl-color }};
+    color: {{ dk-hl-colour }};
   }
   .c0 {color: #aaa} /* contrast:  9.0 */
   .c1 {color: #6bf} /* contrast: 10.1 */

@@ -2,7 +2,7 @@ form {
   margin: 1em 0;
 }
 input, textarea, button {
-  border-color: {{ light-line-color }};
+  border-color: {{ lt-line-colour }};
   font-family: {{ font-family }};
   font-size: 1em;
   margin-top: 1em;
@@ -11,7 +11,7 @@ input:first-child {
   margin-top: 0;
 }
 input, textarea {
-  border: thin solid {{ light-line-color }};
+  border: thin solid {{ lt-line-colour }};
   box-sizing: border-box;
   width: 100%;
   padding: 0.5em;
@@ -27,7 +27,7 @@ button {
   display: block;
 }
 button:active {
-  background: {{ light-fill-color }};
+  background: {{ lt-fill-colour }};
 }
 .guide, .privacy {
   text-align: center;
@@ -42,28 +42,28 @@ button:active {
   margin: 1em 0;
 }
 .status.success {
-  color: {{ light-success-color }};
-  border-color: {{ light-success-color }};
+  color: {{ lt-okay-colour }};
+  border-color: {{ lt-okay-colour }};
 }
 .status.error {
-  color: {{ light-error-color }};
-  border-color: {{ light-error-color }};
+  color: {{ lt-err-colour }};
+  border-color: {{ lt-err-colour }};
 }
 @media (prefers-color-scheme: dark) {
   input, textarea, button {
-    background: {{ dark-fill-color }};
-    color: {{ dark-body-color }};
-    border-color: {{ dark-line-color }};
+    background: {{ dk-fill-colour }};
+    color: {{ dk-body-colour }};
+    border-color: {{ dk-line-colour }};
   }
   button:active {
-    background: {{ dark-shade-color }};
+    background: {{ dk-edge-colour }};
   }
   .status.error {
-    color: {{ dark-error-color }};
-    border-color: {{ dark-error-color }};
+    color: {{ dk-err-colour }};
+    border-color: {{ dk-err-colour }};
   }
   .status.success {
-    color: {{ dark-success-color }};
-    border-color: {{ dark-success-color }};
+    color: {{ dk-okay-colour }};
+    border-color: {{ dk-okay-colour }};
   }
 }
