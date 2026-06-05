@@ -651,6 +651,8 @@ value, next-index."
     ;; Other metadata to be parsed.
     (aput "tags" (string-split (aget "tag" page) ", ") page)
     (aput "blogs" (string-split (aget "blog" page) ", ") page)
+    (when (and (string>= (aget "date" page) "2022-02-28") (string/= (aget "slug" page) "links"))
+      (aput "blogs" (list "Maze") page))
     (aput "blog-name" (car (aget "blogs" page)) page)
     ;; Draft status.
     (setf draft (aget "draft" page))
