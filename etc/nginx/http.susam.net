@@ -25,17 +25,20 @@ server {
         proxy_set_header User-Agent $http_user_agent;
         proxy_set_header X-Forwarded-For $remote_addr;
     }
+    location ~ ^/[a-z-]+$ {
+        if (-f $document_root$uri.html) {
+            return 302 $uri.html$is_args$args;
+        }
+    }
     include /opt/data/*.nginx;
     location ~ /Makefile$ {
         default_type text/plain;
     }
     # Redirects.
-    rewrite ^/(?:blog|maze)/(?:rss/|rss.xml|feed.xml)$ /obsolete.xml redirect;
-    rewrite ^/(?:blog|maze)/([^./]*)(?:\.html|/)?$ /$1.html redirect;
+    rewrite ^/(?:blog|maze)/(?:rss/|rss\.xml|feed\.xml)$ /obsolete.xml redirect;
+    rewrite ^/(?:blog|maze)/([^./]+)(?:\.html|/)?$ /$1.html redirect;
     # Short URLs.
-    rewrite ^/(about|cfrs|cmd|fxyt|invaders|myrgb|now|nq)$ /$1.html redirect;
     rewrite ^/inv$ /invaders.html redirect;
-    rewrite ^/notes-2026-02.html$ /26b.html redirect;
 }
 
 # http://(www.susam.net|susam.in)/ => http://susam.net/

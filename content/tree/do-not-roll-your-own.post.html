@@ -99,24 +99,24 @@
   bread and butter.  You shouldn't have to mess with that behaviour at
   all.  If you think you need to, reconsider what you are trying to
   achieve and whether it is really so important as to disrupt normal
-  link navigation.  The worst offender I have found here is GitHub.
-  When you click on a link on GitHub, say, a file link or an issue
-  link, it triggers a massive piece of functionality implemented in
-  JavaScript that handles the link click for you.  If you don't
-  believe me, visit your favourite project on GitHub using Firefox or
-  Chrome, type <kbd>F12</kbd> to open the browser's developer tools,
-  then go to the 'Debugger' or 'Sources' tab, find 'Event Listener
-  Breakpoints' on the right sidebar, expand 'Mouse' and select
-  'click'.  Then click on a link on GitHub and see what happens.
+  link navigation.  Let me share an example.  When you click on a link
+  on GitHub, say, a file link or an issue link, it triggers a massive
+  piece of functionality implemented in JavaScript that handles the
+  link click for you.  To verify this, visit your favourite project on
+  GitHub using Firefox or Chrome, type <kbd>F12</kbd> to open the
+  browser's developer tools, then go to the 'Debugger' or 'Sources'
+  tab, find 'Event Listener Breakpoints' on the right sidebar, expand
+  'Mouse' and select 'click'.  Then click on a link on GitHub and see
+  what happens.
 </p>
 <figure>
   <img src="files/blog/ghdbg.png" alt="Screenshot of a GitHub repository page with the browser's developer tools open, paused in the JavaScript debugger on a click event listener.">
 </figure>
 <p>
-  I'm sure I am not the only one who has noticed that, on GitHub, a
-  clicked link sometimes takes too long to load.  Ironically, it is
-  often faster to open the link in a new tab than to wait for GitHub's
-  JavaScript code to handle the navigation in the current tab.
+  I'm sure I am not the only one who has noticed that, a clicked link
+  sometimes takes too long to load.  Ironically, it is often faster to
+  open the link in a new tab than to wait for the JavaScript code to
+  handle the navigation in the current tab.
 </p>
 <p>
   A custom password input field is another such hazard.  Fortunately,
