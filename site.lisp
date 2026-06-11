@@ -334,7 +334,7 @@
   (append (uiop:directory-files src-dir)
           (mapcan #'all-files (uiop:subdirectories src-dir))))
 
-(defun read-content-block (text start-index)
+(defun read-block (text start-index)
   "Read a single block from a multi-block content file."
   (let ((start-token "<!-- ")  ; Header delimiter.
         (blck)                 ; Parsed block headers and body.
@@ -344,13 +344,13 @@
     (aput "body" (subseq text start-index next-index) blck)
     (values blck next-index)))
 
-(defun read-content-blocks (text)
+(defun read-blocks (text)
   "Read all comments from a comment file."
   (let ((next-index 0)
         (blocks)
         (blck))
     (loop
-      (setf (values blck next-index) (read-content-block text next-index))
+      (setf (values blck next-index) (read-block text next-index))
       (push blck blocks)
       (unless next-index
         (return)))
@@ -371,7 +371,7 @@
     html))
 
 (defun read-cm-doc (text)
-  (let ((blocks (read-content-blocks text))
+  (let ((blocks (read-blocks text))
         (doc))
     (when (aget "title" (car blocks))
       (setf doc (car blocks))
@@ -388,14 +388,15 @@
       (push blck results))
     results))
 
-(defun fill-cm-docs (docs doc-map cmo params)
+(defun fill-cm (docs doc-map cmo params)
+  (format t ":::: cmo: ~a~%" cmo)
   (let ((results))
     (dolist (doc docs)
-      (aput "import" (hget ))
       (aput "blocks" (fill-cm-blocks (aget "blocks" doc)) doc)
-      (let* ((date (aget "date" doc))
-             (tags (string-split (aget "tag" doc) ", "))
-)
+      (let* ((doc-info (hget (pathname-name (aget "doc-path" doc)) doc-map))
+             (date (aget "date" doc))
+             (tags (string-split (aget "tag" doc) ", ")))
+        (aput "import" (aget "import" doc-info) doc)
         (aput "short-date" (format-short-date (parse-content-date date)) doc)
         (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
         (aput "tags-for-list" (format-tags tags 4 "") doc)
@@ -496,7 +497,7 @@
         (fstr "~%    <a href=\"~a\">~a</a>"
               (render (second zone) (append doc params)) (third zone)) "")))
 
-(defun fill-docs (docs includes params)
+(defun fill-paths (docs params)
   (let ((results))
     (dolist (doc docs)
       (let* ((doc-path (aget "doc-path" doc))
@@ -504,10 +505,17 @@
              (root (root-path doc-path)))
         (aput "dst-path" dst-path doc)
         (aput "root" root doc)
-        (aput "heads" (head-html (aget "import" params)
-                                 (aget "import" doc) root includes) doc)
         (aput "neat-path" (neat-path doc-path params) doc)
         (aput "neat-url" (neat-url doc-path params) doc))
+      (push doc results))
+    results))
+
+(defun fill-imports (docs includes params)
+  (let ((results))
+    (dolist (doc docs)
+      (aput "heads" (head-html (aget "import" params)
+                               (aget "import" doc)
+                               (aget "root" doc) includes) doc)
       (push doc results))
     results))
 
@@ -592,27 +600,25 @@
 (defun find-cmo (doc-path cmo)
   (cdr (find-if (lambda (x) (string-starts-with (car x) doc-path)) cmo)))
 
-(defun fill-ren-docs (docs zones cmo params)
+(defun fill-render (docs zones params)
   "Fill parameters in renderable documents."
   (let ((results))
     (dolist (doc docs)
       (aput "draft-mark" (if (aget "draft" doc) " [draft]" "") doc)
-      (aput "update-mark" (if update (update-mark update) "") doc)
       (aput "zone-link" (zone-link doc zones params) doc)
-      (let* ((cmo (find-cmo (aget "doc-path" doc) cmo))
-             (date (aget "date" doc))
+      (let* ((date (aget "date" doc))
              (lists (string-split (aget "list" doc) ", "))
              (tags (string-split (aget "tag" doc) ", "))
              (toc (aget "toc" doc))
              (update (aget "update" doc)))
-        (aput "cm-slug" (third cmo) doc)
         (aput "lists" lists doc)
         (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
         (aput "short-date" (format-short-date (parse-content-date date)) doc)
         (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
         (aput "tags-for-list" (format-tags tags 4 "") doc)
         (aput "tags-for-feed" (format-tags tags 2 (aget "site-url" params)) doc)
-        (aput "toc" (toc-html (aget "body" doc) (string= toc "num")) doc))
+        (aput "toc" (toc-html (aget "body" doc) (string= toc "num")) doc)
+        (aput "update-mark" (if update (update-mark update) "") doc))
       (push doc results))
     results))
 
@@ -638,14 +644,18 @@
 (defun render-cm-blocks (blocks layouts params)
   (let (results)
     (dolist (blck blocks)
-      )
+      (let ((result))
+        (setf result (render (aget "body" blck) (append blck params)))
+        (setf result (render (aget "cm-item" layouts) (list (cons "body" result))))
+        (push result results)))
     results))
 
 (defun render-cm-docs (docs layouts params)
   (dolist (doc docs)
-    (let* ((blocks (render-cm-blocks (aget "blocks" doc) layouts params))
-           (body-param (list (cons "body" (join-strings blocks))))
-           (final (render layout (append param doc params))))
+    (let* ((rendered-blocks (render-cm-blocks (aget "blocks" doc) layouts params))
+           (body-param (list (cons "body" (join-strings rendered-blocks))))
+           (layout (aget "cm-page" layouts))
+           (final (render layout (append body-param doc params))))
       (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
       (write-file (aget "dst-path" doc) final))))
 
@@ -663,12 +673,18 @@
   default local parameters.")
 
 (defun make-doc-map (docs)
-  "Create a hash table mapping doc pathname names to doc metadata."
-  (let ((doc-map (make-hash-table :test #'string=)))
+  "Create hashtable to map document slugs to document metadata."
+  (let ((count-map (make-hash-table :test #'equal))
+        (doc-map (make-hash-table :test #'equal)))
     (dolist (doc docs)
-      (hset (pathname-name (aget "doc-path" doc))
-            (list (cons "import" (aget "import" doc)))
-            doc-map))
+      (let ((name (pathname-name (aget "doc-path" doc))))
+        (hset name (1+ (or (hget name count-map) 0)) count-map)))
+    (dolist (doc docs)
+      (let ((name (pathname-name (aget "doc-path" doc))))
+        (when (= 1 (hget name count-map))
+          (hset name
+                (list (cons "import" (aget "import" doc)))
+                doc-map))))
     doc-map))
 
 (defun main ()
@@ -683,14 +699,19 @@
          (includes (read-includes "includes/"))
          (cmo (aget "cmo" config))
          (zones (aget "zones" config))
-         (all-docs (fill-docs (read-docs "content/tree/") includes params))
+         (all-docs (fill-paths (read-docs "content/tree/") params))
          (ren-docs (select-docs all-docs "post" "page"))
          (doc-map (make-doc-map ren-docs))
-         (ren-docs (fill-ren-docs (select-docs all-docs "post" "page") cmo zones params))
-         (cm-docs (fill-cm-docs (select-docs all-docs "cm") doc-map params)))
+         (cm-docs (select-docs all-docs "cm")))
+    ;; Set up dependencies.
     (remove-directory (aget "pub" params))
-    ;; Dependencies.
     (copy-directory "_cache/katex/" (render "{{ pub }}js/katex/" params))
+    ;; Fill documents.
+    (setf ren-docs (fill-render ren-docs zones params))
+    (setf cm-docs (fill-cm cm-docs doc-map cmo params))
+    ;; Fill imports.
+    (setf ren-docs (fill-imports ren-docs includes params))
+    (setf cm-docs (fill-imports cm-docs includes params))
     (render-body-docs (select-docs all-docs "css") (aget "style" config))
     (render-layout-docs ren-docs layouts params)
     (render-cm-docs cm-docs layouts params)
