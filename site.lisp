@@ -148,14 +148,17 @@
   "Given a key, return its value found in alist."
   (cdr (assoc key alist :test #'string=)))
 
-(defun aset (key value alist)
-  "Set value for existing key in alist."
-  (setf (cdr (assoc key alist :test #'string=)) value)
-  alist)
-
 (defmacro aput (key value alist)
   "Add key-value pair to alist."
   `(push (cons ,key ,value) ,alist))
+
+(defun hget (key table)
+  "Given a key, return its value found in hash table."
+  (gethash key table))
+
+(defun hset (key value table)
+  "Set key-value pair in hash table."
+  (setf (gethash key table) value))
 
 
 ;;; Tool Definitions
@@ -331,8 +334,74 @@
   (append (uiop:directory-files src-dir)
           (mapcan #'all-files (uiop:subdirectories src-dir))))
 
-(defun read-comments (filename)
-  (format t ":::: filename: ~a~%" filename))
+(defun read-content-block (text start-index)
+  "Read a single block from a multi-block content file."
+  (let ((start-token "<!-- ")  ; Header delimiter.
+        (blck)                 ; Parsed block headers and body.
+        (next-index))          ; Index at which to search next subdoc.
+    (setf (values blck start-index) (read-headers text start-index))
+    (setf next-index (search start-token text :start2 start-index))
+    (aput "body" (subseq text start-index next-index) blck)
+    (values blck next-index)))
+
+(defun read-content-blocks (text)
+  "Read all comments from a comment file."
+  (let ((next-index 0)
+        (blocks)
+        (blck))
+    (loop
+      (setf (values blck next-index) (read-content-block text next-index))
+      (push blck blocks)
+      (unless next-index
+        (return)))
+    (reverse blocks)))
+
+(defun tag-slug (tag)
+  "Convert tag title to tag slug."
+  (substitute #\- #\Space (string-downcase tag)))
+
+(defun format-tags (tags indent root)
+  "Create HTML to display tags."
+  (let ((html "")
+        (sep ""))
+    (dolist (tag tags)
+      (setf tag (tag-slug tag))
+      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>" html sep root tag tag))
+      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
+    html))
+
+(defun read-cm-doc (text)
+  (let ((blocks (read-content-blocks text))
+        (doc))
+    (when (aget "title" (car blocks))
+      (setf doc (car blocks))
+      (setf blocks (cdr blocks)))
+    (aput "date" (aget "date" (car blocks)) doc)
+    (aput "blocks" blocks doc)
+    doc))
+
+(defun fill-cm-blocks (blocks)
+  (let ((results))
+    (dolist (blck blocks)
+      (let* ((date (aget "date" blck)))
+        (aput "long-date" (format-long-date (parse-content-date date)) blck))
+      (push blck results))
+    results))
+
+(defun fill-cm-docs (docs doc-map cmo params)
+  (let ((results))
+    (dolist (doc docs)
+      (aput "import" (hget ))
+      (aput "blocks" (fill-cm-blocks (aget "blocks" doc)) doc)
+      (let* ((date (aget "date" doc))
+             (tags (string-split (aget "tag" doc) ", "))
+)
+        (aput "short-date" (format-short-date (parse-content-date date)) doc)
+        (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
+        (aput "tags-for-list" (format-tags tags 4 "") doc)
+        (aput "tags-for-feed" (format-tags tags 2 (aget "site-url" params)) doc))
+      (push doc results))
+    results))
 
 (defun read-docs (src-dir)
   (let ((docs))
@@ -352,7 +421,7 @@
           ((string-ends-with ".cm.html" basename)
            (aput "doc-type" "cm" doc)
            (aput "doc-path" (doc-path src-path src-dir ".cm.html" ".html") doc)
-           (setf doc (nconc doc (read-comments (read-file src-path)))))
+           (setf doc (nconc doc (read-cm-doc (read-file src-path)))))
           ;; CSS files.
           ((string-ends-with ".css.css" basename)
            (aput "doc-type" "css" doc)
@@ -376,15 +445,16 @@
     docs))
 
 (defun read-includes (src-dir)
+  "Read include files from given source directory."
   (loop for src-path in (uiop:directory-files src-dir)
-        collect (cons (file-namestring src-path) (read-file src-path))))
+        collect (cons (file-namestring src-path)
+                      (read-file src-path))))
 
 (defun read-layouts (src-dir)
-  "Read all layout files SRC-DIR."
+  "Read layout files from given source directory."
   (loop for src-path in (uiop:directory-files src-dir)
         collect (cons (pathname-name src-path)
                       (read-content (read-file src-path)))))
-
 
 (defun fill-layouts (layouts)
   "Render each layout within its parent layout (if any) recursively."
@@ -434,7 +504,7 @@
              (root (root-path doc-path)))
         (aput "dst-path" dst-path doc)
         (aput "root" root doc)
-        (aput "heads" (head-html (aget "head" params)
+        (aput "heads" (head-html (aget "import" params)
                                  (aget "import" doc) root includes) doc)
         (aput "neat-path" (neat-path doc-path params) doc)
         (aput "neat-url" (neat-url doc-path params) doc))
@@ -445,20 +515,6 @@
   "Format update date. "
   (concatenate 'string " | Updated on "
                (format-short-date (parse-content-date date))))
-
-(defun tag-slug (tag)
-  "Convert tag title to tag slug."
-  (substitute #\- #\Space (string-downcase tag)))
-
-(defun format-tags (tags indent root)
-  "Create HTML to display tags."
-  (let ((html "")
-        (sep ""))
-    (dolist (tag tags)
-      (setf tag (tag-slug tag))
-      (setf html (fstr "~a~a<a href=\"~atag/~a.html\">#~a</a>" html sep root tag tag))
-      (setf sep (fstr " |~%~a" (repeat-string indent " "))))
-    html))
 
 (defun toc-indent (level)
   "Create leading indentation items in table of contents."
@@ -533,25 +589,30 @@
           (format tt "~a</li>~%" (toc-indent (decf indent))))
         (format tt "~a" close-tag)))))
 
-(defun fill-ren-docs (docs zones params)
+(defun find-cmo (doc-path cmo)
+  (cdr (find-if (lambda (x) (string-starts-with (car x) doc-path)) cmo)))
+
+(defun fill-ren-docs (docs zones cmo params)
   "Fill parameters in renderable documents."
   (let ((results))
     (dolist (doc docs)
-      (let* ((date (aget "date" doc))
+      (aput "draft-mark" (if (aget "draft" doc) " [draft]" "") doc)
+      (aput "update-mark" (if update (update-mark update) "") doc)
+      (aput "zone-link" (zone-link doc zones params) doc)
+      (let* ((cmo (find-cmo (aget "doc-path" doc) cmo))
+             (date (aget "date" doc))
              (lists (string-split (aget "list" doc) ", "))
              (tags (string-split (aget "tag" doc) ", "))
              (toc (aget "toc" doc))
              (update (aget "update" doc)))
-        (aput "draft-mark" (if (aget "draft" doc) " [draft]" "") doc)
-        (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
+        (aput "cm-slug" (third cmo) doc)
         (aput "lists" lists doc)
-        (aput "short-date" (format-short-date (parse-content-date date)) doc)
         (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
-        (aput "tags" tags doc)
+        (aput "short-date" (format-short-date (parse-content-date date)) doc)
         (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
-        (aput "toc" (toc-html (aget "body" doc) (string= toc "num")) doc)
-        (aput "update-mark" (if update (update-mark update) "") doc)
-        (aput "zone-link" (zone-link doc zones params) doc))
+        (aput "tags-for-list" (format-tags tags 4 "") doc)
+        (aput "tags-for-feed" (format-tags tags 2 (aget "site-url" params)) doc)
+        (aput "toc" (toc-html (aget "body" doc) (string= toc "num")) doc))
       (push doc results))
     results))
 
@@ -564,8 +625,8 @@
   (dolist (doc docs)
     (let* ((layout (aget (aget "doc-type" doc) layouts))
            (body (render (aget "body" doc) (append doc params)))
-           (param (list (cons "body" body)))
-           (final (render layout (append param doc params))))
+           (body-param (list (cons "body" body)))
+           (final (render layout (append body-param doc params))))
       (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
       (write-file (aget "dst-path" doc) final))))
 
@@ -573,6 +634,20 @@
   "Select documents that match the given types."
   (remove-if-not (lambda (doc)
                    (member (aget "doc-type" doc) types :test #'string=)) docs))
+
+(defun render-cm-blocks (blocks layouts params)
+  (let (results)
+    (dolist (blck blocks)
+      )
+    results))
+
+(defun render-cm-docs (docs layouts params)
+  (dolist (doc docs)
+    (let* ((blocks (render-cm-blocks (aget "blocks" doc) layouts params))
+           (body-param (list (cons "body" (join-strings blocks))))
+           (final (render layout (append param doc params))))
+      (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
+      (write-file (aget "dst-path" doc) final))))
 
 (defun copy-docs (docs)
   (dolist (doc docs)
@@ -587,25 +662,38 @@
   "Global parameters that may be provided externally to override any
   default local parameters.")
 
+(defun make-doc-map (docs)
+  "Create a hash table mapping doc pathname names to doc metadata."
+  (let ((doc-map (make-hash-table :test #'string=)))
+    (dolist (doc docs)
+      (hset (pathname-name (aget "doc-path" doc))
+            (list (cons "import" (aget "import" doc)))
+            doc-map))
+    doc-map))
+
 (defun main ()
   "Generate website."
-  (let* ((params (list (cons "head" "main.css")
-                       (cons "index" "")
+  (let* ((params (list (cons "index" "")
+                       (cons "import" "main.css")
                        (cons "pub" "_site/")
                        (cons "year" (nth-value 5 (get-decoded-time)))))
          (params (nconc *params* (read-list "params.lisp") params))
          (config (read-list "config.lisp"))
          (layouts (fill-layouts (read-layouts "layout/")))
          (includes (read-includes "includes/"))
+         (cmo (aget "cmo" config))
          (zones (aget "zones" config))
          (all-docs (fill-docs (read-docs "content/tree/") includes params))
-         (css-docs (select-docs all-docs "css"))
-         (ren-docs (fill-ren-docs (select-docs all-docs "post" "page") zones params)))
+         (ren-docs (select-docs all-docs "post" "page"))
+         (doc-map (make-doc-map ren-docs))
+         (ren-docs (fill-ren-docs (select-docs all-docs "post" "page") cmo zones params))
+         (cm-docs (fill-cm-docs (select-docs all-docs "cm") doc-map params)))
     (remove-directory (aget "pub" params))
     ;; Dependencies.
     (copy-directory "_cache/katex/" (render "{{ pub }}js/katex/" params))
-    (render-body-docs css-docs (aget "main-style" config))
+    (render-body-docs (select-docs all-docs "css") (aget "style" config))
     (render-layout-docs ren-docs layouts params)
+    (render-cm-docs cm-docs layouts params)
     (copy-docs (select-docs all-docs "raw"))))
 
 (when *site-mode*
