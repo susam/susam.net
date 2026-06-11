@@ -1,18 +1,7 @@
 ;;; Copyright (c) 2022-2026 Susam Pal
 ;;; All rights reserved.
 
-(("cmo" . (("cc-iant" "cc/iant/notes.html" "IANT")
-           ("cc-ms-emacs" "cc/mastering-emacs/notes.html" "Mastering Emacs")
-           ("cfrs" "cfrs.html" "CFRS[]")
-           ("fxyt" "fxyt.html" "FXYT")
-           ("hnskins" "code/news/hnskins/{{ index }}" "HN Skins")
-           ("mathb" "code/news/mathb/{{ index }}" "MathB")
-           ("mvs" "code/news/mvs/{{ index }}" )
-           ("myrgb" "myrgb.html" "Guess My RGB")
-           ("nq" "nq.html" "Nerd Quiz")
-           ("quickqwerty" "quickqwerty.html" "QuickQWERTY")
-           ("wander" "wander/{{ index }}" "Wander Console")))
- ("style" . (("font-family" . "georgia, serif")
+(("style" . (("font-family" . "georgia, serif")
              ;; Light colour scheme.
              ("lt-fill-colour" . "#eee") ; 1.2
              ("lt-edge-colour" . "#ccc") ; 1.6
