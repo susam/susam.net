@@ -1050,8 +1050,11 @@ cc:
 	git remote remove origin || :
 	git remote add origin "$$(git remote get-url cc)"
 	git remote -v
+	git checkout main
+	git pull
 	git push -u origin main --tags
 	git push cc main --tags
+	git checkout cu
 	git push -fu origin cu
 	git push -f cc cu
 
