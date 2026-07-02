@@ -6,7 +6,7 @@ section h2 {
   margin-top: 0;
 }
 section {
-  border: thin solid {{ light-line-color }};
+  border: thin solid {{ lt-line-colour }};
   padding: 0.625em;
   margin: 1em 0;
 }
@@ -19,6 +19,6 @@ section.author {
 }
 @media (prefers-color-scheme: dark) {
   section {
-    border-color: {{ dark-line-color }};
+    border-color: {{ dk-line-colour }};
   }
 }

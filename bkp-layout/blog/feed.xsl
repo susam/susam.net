@@ -48,7 +48,7 @@
             <a href="https://mastodon.social/@susam">Mastodon</a>
           </nav>
           <p>
-            &#xa9; 2001&#x2013;{{ current-year }} {{ author }}
+            &#xa9; {{ start-year }}&#x2013;{{ year }} {{ author }}
           </p>
         </footer>
       </body>

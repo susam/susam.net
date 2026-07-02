@@ -1,4 +1,6 @@
   <link rel="stylesheet" href="{{ root }}js/katex/katex.min.css">
+  <script defer src="{{ root }}js/katex/katex.min.js"></script>
+  <script defer src="{{ root }}js/katex/contrib/auto-render.min.js"></script>
   <style>
     .katex {font-size: 1.1em }
     .katex a:link {text-decoration: none}
@@ -10,8 +12,6 @@
       /* See also: <https://github.com/KaTeX/KaTeX/issues/3254> */
     }
   </style>
-  <script defer src="{{ root }}js/katex/katex.min.js"></script>
-  <script defer src="{{ root }}js/katex/contrib/auto-render.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       renderMathInElement(document.body, {

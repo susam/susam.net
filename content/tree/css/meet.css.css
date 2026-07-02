@@ -3,10 +3,10 @@ body {
 }
 .future {
   font-style: italic;
-  background: {{ light-fill-color }};
+  background: {{ lt-fill-colour }};
 }
 @media (prefers-color-scheme: dark) {
   .future {
-    background: {{ dark-fill-color }};
+    background: {{ dk-fill-colour }};
   }
 }

@@ -269,14 +269,23 @@ var:
 
 site: katex
 	@echo Generating website ...
-	sbcl --script site.lisp
+	# The following command intentionally ends with a semicolon to force
+	# make to execute it through the shell.  This keeps 'time' output
+	# consistent with that of 'make dist'.
+	time sbcl --script site.lisp;
 	@echo Done; echo
 
 dist: katex
 	@echo Generating distributable website ...
-	sbcl --eval '(setf *break-on-signals* t)' \
-	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	     --script site.lisp
+	time sbcl --noinform \
+	          --eval '(setf *break-on-signals* t)' \
+	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	          --script site.lisp 2>&1 | tee dist.log
+	@[ -s dist.log ] && \
+	  echo '============================================================' && \
+	  grep -C10 Backtrace dist.log && \
+	  echo '============================================================'; :
+	! grep -q Backtrace dist.log
 	@echo Done; echo
 
 serve:
@@ -1045,8 +1054,11 @@ cc:
 	git remote remove origin || :
 	git remote add origin "$$(git remote get-url cc)"
 	git remote -v
+	git fetch
+	git checkout main
 	git push -u origin main --tags
 	git push cc main --tags
+	git checkout cu
 	git push -fu origin cu
 	git push -f cc cu
 

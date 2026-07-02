@@ -1,8 +1,8 @@
-;;; Copyright (c) 2022 Susam Pal
+;;; Copyright (c) 2022-2026 Susam Pal
 ;;; All rights reserved.
 
 (("author" . "Susam Pal")
- ("initial-year" . 2001)
+ ("start-year" . 2001)
  ("nick" . "Susam")
  ("subtitle" . " - Susam Pal")
  ("site-url" . "https://susam.net/")
