@@ -405,8 +405,8 @@
 ;;; ---------
 
 (defun head-html (imports root includes)
-  "Given list of imports, return HTML code for it."
-  (let ((html)
+  "Given a list of import names, return HTML for all given imports."
+ (let ((html)
         (snippets))
     (dolist (name imports)
       (cond ((string-ends-with ".css" name)
@@ -425,7 +425,9 @@
   (aput "head" (head-html (append (string-split (aget "import" params) ", ")
                                   (string-split (aget "import" doc) ", ")
                                   (string-split extra-imports ", "))
-                          (aget "root" doc) includes) doc)
+                          (aget "root" doc)
+                          includes)
+        doc)
   doc)
 
 
@@ -587,8 +589,50 @@
   doc)
 
 
+;;; Document Renderers
+;;; ------------------
+
+(defun render-doc (doc layouts params)
+  "Render the given document within a layout matching its document type."
+  (let* ((layout (aget (aget "doc-type" doc) layouts))
+         (body (render (aget "body" doc) (append doc params)))
+         (body-param (list (cons "body" body))))
+    (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
+    (write-file (aget "dst-path" doc)
+                (render layout (append body-param doc params)))))
+
+(defun copy-doc (doc)
+  "Copy a raw document file to publication directory."
+  (write-log "Copying ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
+  (copy-file (aget "src-path" doc) (aget "dst-path" doc)))
+
+
+;;; Sorting, Filtering and Validations
+;;; ----------------------------------
+
+(defun sort-by-date (items)
+  "Sort items in chronological order."
+  (setf items (copy-list items))
+  (sort items (lambda (x y) (string< (aget "date" x) (aget "date" y)))))
+
+(defun yes-p (key alist)
+  "Check if the value of key in alist is yes."
+  (string= (aget key alist) "yes"))
+
+(defun filter-items (items &rest keys)
+  "Remove items whose ignored keys are set."
+  (remove-if (lambda (item) (some (lambda (key) (yes-p key item)) keys)) items))
+
+
 ;;; Comments
 ;;; --------
+
+(defun number-blocks (blocks serial-key)
+  "Insert one-based serial number to each comment block."
+  (loop for blk in blocks
+        for serial from 1
+        do (aput serial-key serial blk)
+        collect blk))
 
 (defun fill-cm-block (blk params)
   "Insert comment parameters into a comment block."
@@ -603,14 +647,8 @@
     (aput "cm-long-date" (format-long-date (parse-content-date date)) blk))
   blk)
 
-(defun number-blocks (blocks serial-key)
-  "Insert one-based serial number to each comment block."
-  (loop for blk in blocks
-        for serial from 1
-        do (aput serial-key serial blk)
-        collect blk))
-
 (defun fill-cm-doc (cm-doc doc-map params)
+  "Insert comment parameters into a comment document."
   (let* ((blocks (aget "blocks" cm-doc))
          (cm-slug (doc-slug cm-doc))
          (on-doc (hget cm-slug doc-map))
@@ -619,17 +657,19 @@
     (setf blocks (number-blocks blocks "cm-fserial"))
     (setf blocks (mapp #'fill-cm-block blocks params))
     (aset "blocks" blocks cm-doc)
-    (aput "cmid" cm-slug cm-doc) ; Required for 'Post Comment' link.
+    (aput "cmid" cm-slug cm-doc) ; Used in 'Post Comment' link.
     (aput "cm-count" (length blocks) cm-doc)
     (when (and on-doc self-title)
       (err "Comment document ~a cannot have both on-doc and self-title" cm-slug))
     (unless (or on-doc self-title)
       (error "Comment document ~a must have either on-doc or self-title" cm-slug))
     (when (aget "title" cm-doc)
+      (aput "cm-doc-type" (or (aget "cm-doc-type" cm-doc) "cm-solo") cm-doc)
       (aput "tags-for-feed" (format-tags tags 2 (aget "site-url" params)) cm-doc)
       (aput "tags-for-list" (format-tags tags 4 "") cm-doc)
       (aput "tags-for-page" (format-tags tags 2 (aget "root" cm-doc)) cm-doc))
     (when on-doc
+      (aput "cm-doc-type" "cm-on" cm-doc)
       (aput "import" (aget "import" on-doc) cm-doc)
       (aput "on-hidden" (aget "hide" on-doc) cm-doc)
       (aput "on-path" (aget "neat-path" on-doc) cm-doc)
@@ -637,17 +677,8 @@
       (aput "title" (fstr "Comments on ~a" (aget "title" on-doc)) cm-doc)))
   cm-doc)
 
-(defun sort-by-date (items)
-  "Sort items in chronological order."
-  (setf items (copy-list items))
-  (sort items (lambda (x y) (string< (aget "date" x) (aget "date" y)))))
-
-(defun filter-items (items &rest keys)
-  "Select items whose ignored keys are not set to yes."
-  (remove-if (lambda (item)
-               (some (lambda (key) (string= (aget key item) "yes")) keys)) items))
-
-(defun collect-cm-all (cm-docs)
+(defun collect-cm-all-blocks (cm-docs)
+  "Collect all blocks from the given comment documents."
   (let ((cm-all))
     (dolist (cm-doc cm-docs)
       (dolist (blk (aget "blocks" cm-doc))
@@ -662,40 +693,20 @@
     (setf cm-all (sort-by-date cm-all))
     (number-blocks cm-all "cm-gserial")))
 
-(defun read-includes (src-dir)
-  "Read include files from given source directory."
-  (loop for src-path in (uiop:directory-files src-dir)
-        collect (cons (file-namestring src-path)
-                      (read-file src-path))))
-
-(defun read-layouts (src-dir)
-  "Read layout files from given source directory."
-  (loop for src-path in (uiop:directory-files src-dir)
-        collect (cons (pathname-name src-path)
-                      (read-content (read-file src-path)))))
-
 (defun fill-layout (layout layouts)
-  "Render each layout within its parent layout (if any) recursively."
+  "Render each layout within its parent layout (if any) iteratively."
   (let* ((layout-name (car layout))
          (layout-alist (cdr layout))
          (result (aget "body" layout-alist))
-         (parent-name))
+         parent-name)
     (loop
       (unless (setf parent-name (aget "layout" layout-alist))
         (return))
       (setf layout-alist (aget parent-name layouts))
+      ;; Replace {{ body }} in parent layout text with current layout text.
       (setf result (render (aget "body" layout-alist)
                            (list (cons "body" result)))))
     (cons layout-name result)))
-
-(defun render-docs (docs layouts params)
-  (dolist (doc docs)
-    (let* ((layout (aget (aget "doc-type" doc) layouts))
-           (body (render (aget "body" doc) (append doc params)))
-           (body-param (list (cons "body" body))))
-      (write-log "Writing ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
-      (write-file (aget "dst-path" doc)
-                  (render layout (append body-param doc params))))))
 
 (defun select-docs (docs &rest types)
   "Select documents that match the given types."
@@ -703,56 +714,43 @@
                    (member (aget "doc-type" doc) types :test #'string=)) docs))
 
 (defun render-cm-block (blk layout params)
+  "Render a given comment document block"
   (let* ((rendered-body (render (aget "body" blk) params))
          (body-param (list (cons "body" rendered-body))))
     (render layout (append body-param blk params))))
 
-(defun render-cm-doc (cm-doc item-layout doc-layout params)
-  (let* ((blocks (aget "blocks" cm-doc))
+(defun render-cm-doc (cm-doc layouts params)
+  "Render a given comment document."
+  (let* ((cm-doc-type (aget "cm-doc-type" cm-doc))
+         (cm-item-type (fstr "~a-item" cm-doc-type))
+         (cm-doc-layout (aget cm-doc-type layouts))
+         (cm-item-layout (or (aget cm-item-type layouts)
+                             (aget "cm-on-item" layouts)))
+         (blocks (aget "blocks" cm-doc))
          (count (length blocks))
          (label (if (= count 1) "comment" "comments"))
          (cm-params (append params (list (cons "cm-count" count)
                                          (cons "cm-label" label)
                                          (cons "root" (aget "root" cm-doc)))))
-         (rendered-blocks (mapp #'render-cm-block blocks item-layout cm-params))
+         (rendered-blocks (mapp #'render-cm-block blocks cm-item-layout cm-params))
          (body-params (list (cons "body" (join-strings rendered-blocks))))
          (dst-path (aget "dst-path" cm-doc)))
     (write-log "Writing ~a ~a" (aget "doc-type" cm-doc) dst-path)
-    (write-file dst-path (render doc-layout (append body-params cm-doc params)))))
+    (write-file dst-path (render cm-doc-layout (append body-params cm-doc params)))))
 
-(defun render-cm-docs (cm-docs layouts params)
-  (dolist (cm-doc cm-docs)
-    (render-cm-doc cm-doc
-                   (aget "cm-item" layouts)
-                   (aget (or (aget "layout" cm-doc)
-                             (when (aget "title" cm-doc) "cm-solo")
-                             "cm-page") layouts)
-                   params)))
-
-(defun render-cm-all (blocks layouts params)
-  (let ((cm-doc (list (cons "blocks" (reverse blocks))
-                      (cons "doc-path" "cm/index.html")
-                      (cons "title" "All Comments"))))
+(defun render-cm-vdocs (all-blocks layouts params)
+  "Render all comments and no comments pages."
+  (dolist (cm-doc (list (list (cons "blocks" (reverse all-blocks))
+                              (cons "cm-doc-type" "cm-all")
+                              (cons "doc-path" "cm/index.html")
+                              (cons "title" "All Comments"))
+                        (list (cons "blocks" nil)
+                              (cons "cm-doc-type" "cm-none")
+                              (cons "doc-path" "cm/none.html")
+                              (cons "title" "No Comments"))))
     (setf cm-doc (fill-paths cm-doc params))
     (setf cm-doc (fill-head cm-doc nil "comment.css" params))
-    (render-cm-doc cm-doc
-                   (aget "cm-item-all" layouts)
-                   (aget "cm-list-all" layouts)
-                   params)))
-
-(defun render-cm-none (layouts params)
-  (let* ((layout (aget "cm-none" layouts))
-         (cm-doc (list (cons "doc-path" "cm/none.html")
-                       (cons "title" "Comments"))))
-    (setf cm-doc (fill-paths cm-doc params))
-    (setf cm-doc (fill-head cm-doc nil "comment.css" params))
-    (write-log "Writing layout ~a" (aget "dst-path" cm-doc))
-    (write-file (aget "dst-path" cm-doc) (render layout (append cm-doc params)))))
-
-(defun copy-docs (docs)
-  (dolist (doc docs)
-    (write-log "Copying ~a ~a" (aget "doc-type" doc) (aget "dst-path" doc))
-    (copy-file (aget "src-path" doc) (aget "dst-path" doc))))
+    (render-cm-doc cm-doc layouts params)))
 
 
 ;;; Complete Website
@@ -761,6 +759,18 @@
 (defvar *params* nil
   "Global parameters that may be provided externally to override any
   default local parameters.")
+
+(defun read-layouts (src-dir)
+  "Read layout files from given source directory."
+  (loop for src-path in (uiop:directory-files src-dir)
+        collect (cons (pathname-name src-path)
+                      (read-content (read-file src-path)))))
+
+(defun read-includes (src-dir)
+  "Read include files from given source directory."
+  (loop for src-path in (uiop:directory-files src-dir)
+        collect (cons (file-namestring src-path)
+                      (read-file src-path))))
 
 (defun doc-id (doc)
   "Determine the document ID value (onid) of a document."
@@ -807,7 +817,7 @@
          (cm-docs (select-docs all-docs "cm"))
          (doc-map (make-doc-map (select-docs all-docs "post" "page" "aux")))
          (cm-map (make-cm-map cm-docs))
-         (cm-all))
+         (cm-all-blocks))
     ;; Set up dependencies.
     (remove-directory (aget "pub" params))
     (copy-directory "_cache/katex/" (render "{{ pub }}js/katex/" params))
@@ -817,17 +827,14 @@
     ;; Fill imports.
     (setf ren-docs (mapp #'fill-head ren-docs includes "" params))
     (setf cm-docs (mapp #'fill-head cm-docs includes "comment.css" params))
-    (setf cm-all (collect-cm-all cm-docs))
-    ;; Render stylesheets.
-    (render-docs (select-docs all-docs "css") layouts (aget "style" config))
-    ;; Render pages and posts.
-    (render-docs ren-docs layouts params)
-    ;; Render comments.
-    (render-cm-docs cm-docs layouts params)
-    (render-cm-none layouts params)
-    (render-cm-all cm-all layouts params)
+    (setf cm-all-blocks (collect-cm-all-blocks cm-docs))
+    ;; Render output documents.
+    (mapp #'render-doc (select-docs all-docs "css") layouts (aget "style" config))
+    (mapp #'render-doc ren-docs layouts params)
+    (mapp #'render-cm-doc cm-docs layouts params)
+    (render-cm-vdocs cm-all-blocks layouts params)
     ;; Copy raw files.
-    (copy-docs (select-docs all-docs "raw"))))
+    (mapp #'copy-doc (select-docs all-docs "raw"))))
 
 (when *site-mode*
   (main))
