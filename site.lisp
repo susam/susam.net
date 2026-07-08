@@ -164,13 +164,28 @@
   "Put a new key value pair in alist."
   `(push (cons ,key ,value) ,alist))
 
+(defmacro aput-list (key value alist)
+  "Add value to a list corresponding to the key in alist."
+  `(progn
+     (unless (assoc ,key ,alist :test #'string=)
+       (push (cons ,key ()) ,alist))
+     (push ,value (cdr (assoc ,key ,alist :test #'string=)))))
+
 (defun hget (key table)
   "Given a key, return its value found in hash table."
   (gethash key table))
 
+(defun hmake ()
+  "Create a hash table suitable for string keys."
+  (make-hash-table :test #'equal))
+
 (defun hset (key value table)
   "Set key-value pair in hash table."
   (setf (gethash key table) value))
+
+(defun hpush (key value table)
+  "Push given value to the list value for key in hash table."
+  (push value (gethash key table)))
 
 (defun mapp (function items &rest args)
   "Map given function over items and return a new list."
@@ -619,7 +634,7 @@
   "Check if the value of key in alist is yes."
   (string= (aget key alist) "yes"))
 
-(defun filter-items (items &rest keys)
+(defun filter-out (items &rest keys)
   "Remove items whose ignored keys are set."
   (remove-if (lambda (item) (some (lambda (key) (yes-p key item)) keys)) items))
 
@@ -689,7 +704,7 @@
         (aput "on-title" (or (aget "on-title" cm-doc)
                              (aget "title" cm-doc)) blk)
         (push blk cm-all)))
-    (setf cm-all (filter-items cm-all "on-hidden"))
+    (setf cm-all (filter-out cm-all "on-hidden"))
     (setf cm-all (sort-by-date cm-all))
     (number-blocks cm-all "cm-gserial")))
 
@@ -753,6 +768,18 @@
     (render-cm-doc cm-doc layouts params)))
 
 
+;;; Tags
+;;; ----
+
+(defun collect-tags (docs)
+  "Group pages by tags; return an alist of tags and page lists."
+  (setf docs (filter-out docs "hide"))
+  (let ((tag-map (hmake)))
+    (dolist (doc docs)
+      (dolist (tag (aget "tags" doc))
+        (hpush tag doc tag-map)))))
+
+
 ;;; Complete Website
 ;;; ----------------
 
@@ -778,8 +805,8 @@
 
 (defun make-doc-map (docs)
   "Create hashtable to map document slugs to document metadata."
-  (let ((count-map (make-hash-table :test #'equal))
-        (doc-map (make-hash-table :test #'equal)))
+  (let ((count-map (hmake))
+        (doc-map (hmake)))
     (dolist (doc docs)
       (let ((onid (doc-id doc)))
         (hset onid (1+ (or (hget onid count-map) 0)) count-map)))
@@ -791,7 +818,7 @@
 
 (defun make-cm-map (cm-docs)
   "Create a hash table containing the document slugs."
-  (let ((cm-map (make-hash-table :test #'equal)))
+  (let ((cm-map (hmake)))
     (dolist (cm-doc cm-docs)
       (let ((slug (doc-slug cm-doc)))
         (when (hget slug cm-map)
