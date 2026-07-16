@@ -462,7 +462,7 @@
   (concatenate 'string (aget "site-url" params)
                (string-replace "index.html" "" path)))
 
-(defun fill-paths (doc params)
+(defun fill-path (doc params)
   "Insert path parameters into the given document."
   (aput "dst-path" (render "{{ pub }}{{ doc-path }}" (append doc params)) doc)
   (let* ((doc-path (aget "doc-path" doc)))
@@ -492,7 +492,7 @@
 (defun zone-link (doc zones params)
   "Create HTML for zone link for the given document."
   (let* ((doc-path (aget "doc-path" doc))
-         (lists (aget "lists" doc))
+         (lists (string-split (aget "list" doc) ", "))
          (zone (find-if (lambda (z)
                           (or (string-starts-with (first z) doc-path)
                               (member (first z) lists :test #'string=))) zones)))
@@ -588,12 +588,10 @@
   (let* ((cm-doc (hget (or (aget "cmid" doc) (doc-slug doc)) cm-map))
          (cm-path (if cm-doc (aget "neat-path" cm-doc) "cm/none.html"))
          (date (aget "date" doc))
-         (lists (string-split (aget "list" doc) ", "))
          (tags (string-split (aget "tag" doc) ", "))
          (toc (aget "toc" doc))
          (update (aget "update" doc)))
     (aput "cm-path" cm-path doc)
-    (aput "lists" lists doc)
     (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
     (aput "short-date" (format-short-date (parse-content-date date)) doc)
     (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
@@ -630,13 +628,13 @@
   (setf items (copy-list items))
   (sort items (lambda (x y) (string< (aget "date" x) (aget "date" y)))))
 
-(defun yes-p (key alist)
-  "Check if the value of key in alist is yes."
-  (string= (aget key alist) "yes"))
+(defun yes-p (string)
+  "Check if the given string has the value 'yes'."
+  (string= string "yes"))
 
 (defun filter-out (items &rest keys)
   "Remove items whose ignored keys are set."
-  (remove-if (lambda (item) (some (lambda (key) (yes-p key item)) keys)) items))
+  (remove-if (lambda (item) (some (lambda (key) (yes-p (aget key item))) keys)) items))
 
 
 ;;; Comments
@@ -763,7 +761,7 @@
                               (cons "cm-doc-type" "cm-none")
                               (cons "doc-path" "cm/none.html")
                               (cons "title" "No Comments"))))
-    (setf cm-doc (fill-paths cm-doc params))
+    (setf cm-doc (fill-path cm-doc params))
     (setf cm-doc (fill-head cm-doc nil "comment.css" params))
     (render-cm-doc cm-doc layouts params)))
 
@@ -771,14 +769,35 @@
 ;;; Tags
 ;;; ----
 
-(defun collect-tags (docs)
-  "Group pages by tags; return an alist of tags and page lists."
+(defun make-tag-map (docs)
+  "Group pages by tags; return a map of tags and page lists."
   (setf docs (filter-out docs "hide"))
   (let ((tag-map (hmake)))
     (dolist (doc docs)
-      (dolist (tag (aget "tags" doc))
-        (hpush tag doc tag-map)))))
+      (dolist (tag (string-split (aget "tag" doc) ", "))
+        (hpush tag doc tag-map)))
+    tag-map))
 
+(defun tag-counts (tag-map)
+  "Return keys sorted by their list-value lengths in descending order."
+  (let (pairs)
+    (maphash (lambda (k v) (push (cons k (length v)) pairs)) tag-map)
+    (sort pairs #'< :key #'cdr)))
+
+(defun render-tag (tag-count tag-map tag-page-layout tag-item-layout params)
+  (let* ((name (car tag-count))
+         (count (cdr tag-count))
+         (slug (tag-slug name))
+         (docs (hget name tag-map))
+         (vdoc (list (cons "doc-path" (fstr "tag/~a.html" slug)))))
+    (dolist (doc docs)
+      )
+    (format t ":::: tag-page-layout: ~a~%" tag-page-layout)
+    (format t ":::: tag-item-layout: ~a~%" tag-item-layout)
+    (format t ":::: params: ~a~%" params)
+    (format t ":::: name: ~a [~a] (~a)~%" name slug count)
+    (dolist (doc docs)
+      (format t ":::: doc-path: ~a~%" (aget "doc-path" doc)))))
 
 ;;; Complete Website
 ;;; ----------------
@@ -839,10 +858,14 @@
          (layouts (mapp #'fill-layout raw-layouts raw-layouts))
          (includes (read-includes "includes/"))
          (zones (aget "zones" config))
-         (all-docs (mapp #'fill-paths (find-docs "content/tree/") params))
-         (ren-docs (select-docs all-docs "post" "page"))
+         (all-docs (mapp #'fill-path (find-docs "content/tree/") params))
+         (ren-docs (select-docs all-docs "page" "post"))
          (cm-docs (select-docs all-docs "cm"))
-         (doc-map (make-doc-map (select-docs all-docs "post" "page" "aux")))
+         (doc-map (make-doc-map (select-docs all-docs "aux" "page" "post")))
+         (tag-map (make-tag-map all-docs))
+         (tag-counts (tag-counts tag-map))
+         (tag-page-layout (aget "tag-page" layouts))
+         (tag-item-layout (aget "page-item" layouts))
          (cm-map (make-cm-map cm-docs))
          (cm-all-blocks))
     ;; Set up dependencies.
@@ -860,6 +883,9 @@
     (mapp #'render-doc ren-docs layouts params)
     (mapp #'render-cm-doc cm-docs layouts params)
     (render-cm-vdocs cm-all-blocks layouts params)
+    (format t ":::: tag-map: ~a~%" tag-map)
+    (format t ":::: tag-counts: ~a~%" tag-counts)
+    (mapp #'render-tag tag-counts tag-map tag-page-layout tag-item-layout params)
     ;; Copy raw files.
     (mapp #'copy-doc (select-docs all-docs "raw"))))
 

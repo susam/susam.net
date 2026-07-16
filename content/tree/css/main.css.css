@@ -71,12 +71,12 @@ samp kbd {
   box-shadow: none;
   padding: 0;
 }
-ul.blog {
+ul.sp {
   margin-top: 1.5em;
   list-style-type: none;
   padding: 0;
 }
-ul.blog li {
+ul.sp li {
   margin: 1em 0;
 }
 hr {
