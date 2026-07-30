@@ -888,8 +888,7 @@
          (zones (aget "zones" config))
          (all-docs (mapp #'fill-path (find-docs "content/tree/") params))
          (ren-docs (select-docs all-docs "page" "post"))
-         (list-docs (mapp #'fill-list-doc
-                          (select-docs all-docs "aux" "page" "post")))
+         (list-docs (mapp #'fill-list-doc (select-docs all-docs "aux" "page" "post")))
          (cm-docs (select-docs all-docs "cm"))
          (doc-map (make-doc-map (select-docs all-docs "aux" "page" "post")))
          (tag-map (make-tag-map list-docs))
