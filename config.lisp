@@ -36,8 +36,6 @@
                   ("Puzzle" . "{{ nick }}'s Puzzles")
                   ("Story" . "{{ nick }}'s Stories")
                   ("Web" . "{{ nick }}'s Web Posts")))
- ;; Map zone key -> (index path, zone name).
- ;; Zone key may be either list name or doc-path prefix.
+ ;; Map zone-key to footer links: (zone-key zone-foot-link zone-foot-name).
  ("zones" . (("alt" "{{ root }}maze.html" "Maze")
              ("cc/" "{{ root }}cc/{{ index }}" "Club"))))
-

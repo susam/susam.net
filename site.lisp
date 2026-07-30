@@ -492,10 +492,10 @@
 (defun zone-link (doc zones params)
   "Create HTML for zone link for the given document."
   (let* ((doc-path (aget "doc-path" doc))
-         (lists (string-split (aget "list" doc) ", "))
+         (doc-zones (string-split (aget "zone" doc) ", "))
          (zone (find-if (lambda (z)
                           (or (string-starts-with (first z) doc-path)
-                              (member (first z) lists :test #'string=))) zones)))
+                              (member (first z) doc-zones :test #'string=))) zones)))
     (if zone (fstr "~%    <a href=\"~a\">~a</a>"
                    (render (second zone) (append doc params)) (third zone)) "")))
 
