@@ -581,9 +581,16 @@
           (format tt "~a</li>~%" (toc-indent (decf indent))))
         (format tt "~a" close-tag)))))
 
+(defun fill-list-doc (doc)
+  "Insert placeholder values needed when listing a document."
+  (aput "draft-mark" (if (aget "draft" doc) " [draft]" "") doc)
+  (aput "short-date" (format-short-date
+                      (parse-content-date (aget "date" doc))) doc)
+  doc)
+
 (defun fill-ren-doc (doc cm-map zones params)
   "Insert placeholder values to renderable documents."
-  (aput "draft-mark" (if (aget "draft" doc) " [draft]" "") doc)
+  (setf doc (fill-list-doc doc))
   (aput "zone-link" (zone-link doc zones params) doc)
   (let* ((cm-doc (hget (or (aget "cmid" doc) (doc-slug doc)) cm-map))
          (cm-path (if cm-doc (aget "neat-path" cm-doc) "cm/none.html"))
@@ -593,7 +600,6 @@
          (update (aget "update" doc)))
     (aput "cm-path" cm-path doc)
     (aput "iso-date" (format-iso-date (parse-content-date date)) doc)
-    (aput "short-date" (format-short-date (parse-content-date date)) doc)
     (aput "tags-for-page" (format-tags tags 2 (aget "root" doc)) doc)
     (aput "tags-for-list" (format-tags tags 4 "") doc)
     (aput "tags-for-feed" (format-tags tags 2 (aget "site-url" params)) doc)
@@ -736,7 +742,8 @@
   "Render a given comment document."
   (let* ((cm-doc-type (aget "cm-doc-type" cm-doc))
          (cm-item-type (fstr "~a-item" cm-doc-type))
-         (cm-doc-layout (aget cm-doc-type layouts))
+         (cm-doc-layout (or (aget (fstr "~a-list" cm-doc-type) layouts)
+                            (aget cm-doc-type layouts)))
          (cm-item-layout (or (aget cm-item-type layouts)
                              (aget "cm-on-item" layouts)))
          (blocks (aget "blocks" cm-doc))
@@ -784,20 +791,41 @@
     (maphash (lambda (k v) (push (cons k (length v)) pairs)) tag-map)
     (sort pairs #'< :key #'cdr)))
 
-(defun render-tag (tag-count tag-map tag-page-layout tag-item-layout params)
+(defun render-item (doc item-layout root params)
+  (render item-layout (append (list (cons "root" root)) doc params)))
+
+(defun render-list (docs vdoc list-layout item-layout params)
+  (setf docs (reverse (sort-by-date docs)))
+  (setf vdoc (fill-path vdoc params))
+  (setf vdoc (fill-head vdoc nil "" params))
+  (let* ((rendered-items (mapp #'render-item docs item-layout
+                               (aget "root" vdoc) params))
+         (body-params (list (cons "body" (join-strings rendered-items)))))
+    (write-log "Writing list ~a" (aget "dst-path" vdoc))
+    (write-file (aget "dst-path" vdoc)
+                (render list-layout (append body-params vdoc params)))))
+
+(defun tag-title (name special-titles params)
+  "Determine the title for a tag page."
+  (render (or (aget name special-titles) "{{ nick }}'s {{ tag-name }} Pages")
+          (list* (cons "tag-name" name) params)))
+
+(defun render-tag (tag-count tag-map special-titles layouts params)
   (let* ((name (car tag-count))
          (count (cdr tag-count))
-         (slug (tag-slug name))
          (docs (hget name tag-map))
-         (vdoc (list (cons "doc-path" (fstr "tag/~a.html" slug)))))
-    (dolist (doc docs)
-      )
-    (format t ":::: tag-page-layout: ~a~%" tag-page-layout)
-    (format t ":::: tag-item-layout: ~a~%" tag-item-layout)
-    (format t ":::: params: ~a~%" params)
-    (format t ":::: name: ~a [~a] (~a)~%" name slug count)
-    (dolist (doc docs)
-      (format t ":::: doc-path: ~a~%" (aget "doc-path" doc)))))
+         (vdoc (list (cons "doc-path" (fstr "tag/~a.html" (tag-slug name)))
+                     (cons "title" (tag-title name special-titles params))
+                     (cons "subtitle" "")
+                     (cons "tag-name" name)
+                     (cons "tag-slug" (tag-slug name))
+                     (cons "count" count)
+                     (cons "page-label" (if (= count 1) "page" "pages")))))
+    (format t ":::: tag: ~a -> ~a~%" name count)
+    (render-list docs vdoc
+                 (aget "tag-page-list" layouts)
+                 (aget "tag-page-item" layouts) params)))
+
 
 ;;; Complete Website
 ;;; ----------------
@@ -818,8 +846,8 @@
         collect (cons (file-namestring src-path)
                       (read-file src-path))))
 
-(defun doc-id (doc)
-  "Determine the document ID value (onid) of a document."
+(defun doc-on-id (doc)
+  "Return the document's effective on-id used by comments."
   (or (aget "onid" doc) (doc-slug doc)))
 
 (defun make-doc-map (docs)
@@ -827,10 +855,10 @@
   (let ((count-map (hmake))
         (doc-map (hmake)))
     (dolist (doc docs)
-      (let ((onid (doc-id doc)))
+      (let ((onid (doc-on-id doc)))
         (hset onid (1+ (or (hget onid count-map) 0)) count-map)))
     (dolist (doc docs)
-      (let ((onid (doc-id doc)))
+      (let ((onid (doc-on-id doc)))
         (when (= 1 (hget onid count-map))
           (hset onid doc doc-map))))
     doc-map))
@@ -847,25 +875,25 @@
 
 (defun main ()
   "Generate website."
-  (let* ((params (list (cons "index" "")
+  (let* ((config (read-list "config.lisp"))
+         (params (list (cons "index" "")
                        (cons "import" "main.css")
                        (cons "pub" "_site/")
                        (cons "year" (nth-value 5 (get-decoded-time)))
                        (cons "zone-link" "")))
-         (params (nconc *params* (read-list "params.lisp") params))
-         (config (read-list "config.lisp"))
+         (params (nconc *params* (aget "params" config) params))
          (raw-layouts (read-layouts "layout/"))
          (layouts (mapp #'fill-layout raw-layouts raw-layouts))
          (includes (read-includes "includes/"))
          (zones (aget "zones" config))
          (all-docs (mapp #'fill-path (find-docs "content/tree/") params))
          (ren-docs (select-docs all-docs "page" "post"))
+         (list-docs (mapp #'fill-list-doc
+                          (select-docs all-docs "aux" "page" "post")))
          (cm-docs (select-docs all-docs "cm"))
          (doc-map (make-doc-map (select-docs all-docs "aux" "page" "post")))
-         (tag-map (make-tag-map all-docs))
+         (tag-map (make-tag-map list-docs))
          (tag-counts (tag-counts tag-map))
-         (tag-page-layout (aget "tag-page" layouts))
-         (tag-item-layout (aget "page-item" layouts))
          (cm-map (make-cm-map cm-docs))
          (cm-all-blocks))
     ;; Set up dependencies.
@@ -883,9 +911,7 @@
     (mapp #'render-doc ren-docs layouts params)
     (mapp #'render-cm-doc cm-docs layouts params)
     (render-cm-vdocs cm-all-blocks layouts params)
-    (format t ":::: tag-map: ~a~%" tag-map)
-    (format t ":::: tag-counts: ~a~%" tag-counts)
-    (mapp #'render-tag tag-counts tag-map tag-page-layout tag-item-layout params)
+    (mapp #'render-tag tag-counts tag-map (aget "tag-titles" config) layouts params)
     ;; Copy raw files.
     (mapp #'copy-doc (select-docs all-docs "raw"))))
 

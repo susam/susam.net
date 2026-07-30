@@ -115,8 +115,8 @@
      (aput "heads" (head-html "main.css" ,params) ,params)
      (aput "imports" (head-html "form.css" ,params) ,params)
      (aput "more" (also-html (aget "also" ,params) ,params) ,params)
-     (when (probe-file "params.lisp")
-       (setf params (append (read-list "params.lisp") params)))))
+     (setf params (append (aget "params" (read-list "config.lisp"))
+                          params))))
 
 (defun form-index-page ()
   "Return HTML response for form index page."

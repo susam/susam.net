@@ -1,7 +1,13 @@
 ;;; Copyright (c) 2022-2026 Susam Pal
 ;;; All rights reserved.
 
-(("style" . (("font-family" . "georgia, serif")
+(("params" . (("author" . "Susam Pal")
+              ("start-year" . 2001)
+              ("nick" . "Susam")
+              ("subtitle" . " - Susam Pal")
+              ("site-url" . "https://susam.net/")
+              ("site-uuid" . "92c43730-c96a-44a7-a2c3-ed18dcc268f7")))
+ ("style" . (("font-family" . "georgia, serif")
              ;; Light colour scheme.
              ("lt-fill-colour" . "#eee") ; 1.2
              ("lt-edge-colour" . "#ccc") ; 1.6
@@ -24,7 +30,14 @@
              ("dk-link-colour" . "#9bf") ; 1.0, 9.8, 9.8
              ("dk-lv-colour" . "#a9f")   ; 1.3, 7.8, 9.8
              ("dk-la-colour" . "#f99"))) ; 1.1, 9.2, 9.8
+ ("tag-titles" . (("Absurd" . "{{ nick }}'s Absurd Explorations")
+                  ("HTML" . "{{ nick }}'s HTML Tools")
+                  ("Notes" . "{{ nick }}'s Notes")
+                  ("Puzzle" . "{{ nick }}'s Puzzles")
+                  ("Story" . "{{ nick }}'s Stories")
+                  ("Web" . "{{ nick }}'s Web Posts")))
  ;; Map zone key -> (index path, zone name).
  ;; Zone key may be either list name or doc-path prefix.
  ("zones" . (("alt" "{{ root }}maze.html" "Maze")
              ("cc/" "{{ root }}cc/{{ index }}" "Club"))))
+
