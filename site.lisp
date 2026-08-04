@@ -152,6 +152,10 @@
   "Repeat string count number of times."
   (join-strings (loop repeat count collect string)))
 
+(defun plural (count word)
+  "Pluralise word unless count is one."
+  (if (= count 1) word (fstr "~as" word)))
+
 (defun aget (key alist)
   "Given a key, return its value found in alist."
   (cdr (assoc key alist :test #'string=)))
@@ -631,7 +635,6 @@
 
 (defun sort-by-date (items)
   "Sort items in chronological order."
-  (setf items (copy-list items))
   (sort items (lambda (x y) (string< (aget "date" x) (aget "date" y)))))
 
 (defun yes-p (string)
@@ -748,7 +751,7 @@
                              (aget "cm-on-item" layouts)))
          (blocks (aget "blocks" cm-doc))
          (count (length blocks))
-         (label (if (= count 1) "comment" "comments"))
+         (label (plural count "comment"))
          (cm-params (append params (list (cons "cm-count" count)
                                          (cons "cm-label" label)
                                          (cons "root" (aget "root" cm-doc)))))
@@ -789,13 +792,12 @@
   "Return keys sorted by their list-value lengths in descending order."
   (let (pairs)
     (maphash (lambda (k v) (push (cons k (length v)) pairs)) tag-map)
-    (sort pairs #'< :key #'cdr)))
+    (sort pairs #'> :key #'cdr)))
 
 (defun render-item (doc item-layout root params)
   (render item-layout (append (list (cons "root" root)) doc params)))
 
 (defun render-list (docs vdoc list-layout item-layout params)
-  (setf docs (reverse (sort-by-date docs)))
   (setf vdoc (fill-path vdoc params))
   (setf vdoc (fill-head vdoc nil "" params))
   (let* ((rendered-items (mapp #'render-item docs item-layout
@@ -810,6 +812,22 @@
   (render (or (aget name special-titles) "{{ nick }}'s {{ tag-name }} Pages")
           (list* (cons "tag-name" name) params)))
 
+(defun render-tag-index (tag-counts layouts params)
+  "Render the index of all tags."
+  (let ((docs (loop for (name . count) in tag-counts
+                    collect (list (cons "tag-name" name)
+                                  (cons "tag-slug" (tag-slug name))
+                                  (cons "count" count)
+                                  (cons "page-label" (plural count "page")))))
+        (vdoc (list (cons "doc-path" "tag/index.html")
+                    (cons "title" (render "{{ nick }}'s Tags" params))
+                    (cons "subtitle" "")
+                    (cons "all-tags-count" (length tag-counts))
+                    (cons "all-tags-label" (plural (length tag-counts) "tag")))))
+    (render-list docs vdoc
+                 (aget "tag-all-list" layouts)
+                 (aget "tag-all-item" layouts) params)))
+
 (defun render-tag (tag-count tag-map special-titles layouts params)
   (let* ((name (car tag-count))
          (count (cdr tag-count))
@@ -820,9 +838,9 @@
                      (cons "tag-name" name)
                      (cons "tag-slug" (tag-slug name))
                      (cons "count" count)
-                     (cons "page-label" (if (= count 1) "page" "pages")))))
+                     (cons "page-label" (plural count "page")))))
     (format t ":::: tag: ~a -> ~a~%" name count)
-    (render-list docs vdoc
+    (render-list (reverse (sort-by-date docs)) vdoc
                  (aget "tag-page-list" layouts)
                  (aget "tag-page-item" layouts) params)))
 
@@ -910,6 +928,7 @@
     (mapp #'render-doc ren-docs layouts params)
     (mapp #'render-cm-doc cm-docs layouts params)
     (render-cm-vdocs cm-all-blocks layouts params)
+    (render-tag-index tag-counts layouts params)
     (mapp #'render-tag tag-counts tag-map (aget "tag-titles" config) layouts params)
     ;; Copy raw files.
     (mapp #'copy-doc (select-docs all-docs "raw"))))
