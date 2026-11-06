@@ -7,19 +7,23 @@
   <link rel="canonical" href="{{ neat-url }}">
   <link rel="icon" type="image/png" href="{{ root }}favicon.png">
   <link rel="alternate" type="application/atom+xml" title="{{ nick }}'s Feed" href="{{ root }}feed.xml">
-{{ heads }}{{ imports }}</head>
+{{ head }}</head>
 <body>
 <main>
 {{ body }}</main>
-{{ more }}<footer>
+<footer>
   <hr>
   <nav>
     <a href="{{ root }}{{ index }}">Home</a>{{ zone-link }}
     <a href="{{ root }}links.html">Links</a>
+    <a href="{{ root }}feed.xml">Feed</a>
+    <a href="{{ root }}form/subscribe/{{ index }}">Subscribe</a>
+    <a href="{{ root }}wander/{{ index }}">Wander</a>
     <a href="{{ root }}about.html">About</a>
+    <a href="https://codeberg.org/susam">Codeberg</a>
+    <a href="https://mastodon.social/@susam">Mastodon</a>
   </nav>
-  <p>&copy; {{ initial-year }}&ndash;{{ current-year }} {{ author }}</p>
-  <p>Opinions are my own and do not represent those of my employer.</p>
+  <p>&copy; {{ start-year }}&ndash;{{ year }} {{ author }}</p>
 </footer>
 </body>
 </html>

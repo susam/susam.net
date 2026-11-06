@@ -27,7 +27,7 @@
 
 (defun set-dev-path ()
   "Utility function to be run manually in development environment."
-  (setf *default-pathname-defaults* (truename "~/git/susam.net/")))
+  (setf *default-pathname-defaults* (truename "~/src/susam.net/")))
 
 (defmacro test-case (name &body body)
   "Execute a test case and print pass or fail status."
@@ -79,6 +79,7 @@
 (defvar *site-mode* nil)
 
 (load "site.lisp")
+
 
 ;;; Test Cases for Reusable Definitions
 ;;; -----------------------------------
@@ -140,7 +141,7 @@
     (assert (string= (read-file "test-tmp/foo.txt") text))))
 
 (test-case read-write-file-multiple-lines
-  (let ((text (format nil "foo~%bar~%baz~%")))
+  (let ((text (fstr "foo~%bar~%baz~%")))
     (write-file "test-tmp/foo.txt" text)
     (assert (string= (read-file "test-tmp/foo.txt") text))))
 
@@ -216,31 +217,31 @@
   (assert (equal (string-split "foo: bar: : baz: " ": ") '("foo" "bar" "" "baz")))
   (assert (equal (string-split "foo::bar:::baz:" ":") '("foo" ""  "bar" "" "" "baz"))))
 
-(test-case string-split-ignore-empty-splits
-  (assert (not (string-split "" ":" :ignore-empty t)))
-  (assert (not (string-split "" ": " :ignore-empty t)))
-  (assert (equal (string-split "foo" ":" :ignore-empty t) '("foo")))
-  (assert (equal (string-split "foo:" ":" :ignore-empty t) '("foo")))
-  (assert (equal (string-split "foo:bar" ":" :ignore-empty t) '("foo" "bar")))
-  (assert (equal (string-split "foo:bar" ":" :ignore-empty t) '("foo" "bar")))
-  (assert (equal (string-split "foo" ": " :ignore-empty t) '("foo")))
-  (assert (equal (string-split "foo:" ": " :ignore-empty t) '("foo:")))
-  (assert (equal (string-split "foo: " ": " :ignore-empty t) '("foo")))
-  (assert (equal (string-split "foo:bar" ": " :ignore-empty t) '("foo:bar")))
-  (assert (equal (string-split "foo: bar" ": " :ignore-empty t) '("foo" "bar")))
-  (assert (equal (string-split "foo: bar: baz" ": " :ignore-empty t) '("foo" "bar" "baz")))
-  (assert (equal (string-split "foo: bar: baz: " ": " :ignore-empty t) '("foo" "bar" "baz")))
-  (assert (equal (string-split "foo: bar: : baz: " ": " :ignore-empty t) '("foo" "bar" "baz")))
-  (assert (equal (string-split "foo::bar:::baz:" ":" :ignore-empty t) '("foo" "bar" "baz"))))
+(test-case string-split-empty-fields
+  (assert (not (string-split "" ":")))
+  (assert (not (string-split "" ": ")))
+  (assert (equal (string-split "foo" ":") '("foo")))
+  (assert (equal (string-split "foo:" ":") '("foo")))
+  (assert (equal (string-split "foo:bar" ":") '("foo" "bar")))
+  (assert (equal (string-split "foo:bar" ":") '("foo" "bar")))
+  (assert (equal (string-split "foo" ": ") '("foo")))
+  (assert (equal (string-split "foo:" ": ") '("foo:")))
+  (assert (equal (string-split "foo: " ": ") '("foo")))
+  (assert (equal (string-split "foo:bar" ": ") '("foo:bar")))
+  (assert (equal (string-split "foo: bar" ": ") '("foo" "bar")))
+  (assert (equal (string-split "foo: bar: baz" ": ") '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo: bar: baz: " ": ") '("foo" "bar" "baz")))
+  (assert (equal (string-split "foo: bar: : baz: " ": ") '("foo" "bar" "" "baz")))
+  (assert (equal (string-split "foo::bar:::baz:" ":") '("foo" "" "bar" "" "" "baz"))))
 
-(test-case join-strings
-  (assert (string= (join-strings '()) ""))
-  (assert (string= (join-strings '("")) ""))
-  (assert (string= (join-strings '("" "")) ""))
-  (assert (string= (join-strings '("foo")) "foo"))
-  (assert (string= (join-strings '("foo" "")) "foo"))
-  (assert (string= (join-strings '("foo" "bar")) "foobar"))
-  (assert (string= (join-strings '("foo" "bar" "baz")) "foobarbaz")))
+(test-case join-string-list
+  (assert (string= (join-string-list '()) ""))
+  (assert (string= (join-string-list '("")) ""))
+  (assert (string= (join-string-list '("" "")) ""))
+  (assert (string= (join-string-list '("foo")) "foo"))
+  (assert (string= (join-string-list '("foo" "")) "foo"))
+  (assert (string= (join-string-list '("foo" "bar")) "foobar"))
+  (assert (string= (join-string-list '("foo" "bar" "baz")) "foobarbaz")))
 
 (test-case repeat-string
   (assert (string= (repeat-string 0 "") ""))
@@ -262,11 +263,11 @@
   (assert (string= (indent-lines 4 (fstr "x~%")) (fstr "    x~%")))
   (assert (string= (indent-lines 4 (fstr "x~%y~%")) (fstr "    x~%    y~%"))))
 
-(test-case html-escape
-  (assert (string= (html-escape "<foo>") "&lt;foo&gt;"))
-  (assert (string= (html-escape "\"foo'") "&quot;foo&apos;"))
-  (assert (string= (html-escape "foo & bar") "foo &amp; bar"))
-  (assert (string= (html-escape "foo & bar") "foo &amp; bar")))
+(test-case xml-escape
+  (assert (string= (xml-escape "<foo>") "&lt;foo&gt;"))
+  (assert (string= (xml-escape "\"foo'") "&quot;foo&apos;"))
+  (assert (string= (xml-escape "foo & bar") "foo &amp; bar"))
+  (assert (string= (xml-escape "foo & bar") "foo &amp; bar")))
 
 (test-case parse-tz
   (assert (= (parse-tz "+0000") 0))
@@ -274,40 +275,56 @@
   (assert (= (parse-tz "+0530") -11/2))
   (assert (= (parse-tz "-0500") 5)))
 
-(test-case format-tz
-  (assert (string= (format-tz 0) "+0000"))
-  (assert (string= (format-tz -1) "+0100"))
-  (assert (string= (format-tz -11/2) "+0530"))
-  (assert (string= (format-tz 5) "-0500")))
+(test-case iso-date
+  (assert (string= (iso-date "2020-06-01 09:00:10 +0000") "2020-06-01T09:00:10Z"))
+  (assert (string= (iso-date "2020-06-01 10:00:10 +0100") "2020-06-01T09:00:10Z"))
+  (assert (string= (iso-date "2020-06-01 14:30:10 +0530") "2020-06-01T09:00:10Z"))
+  (assert (string= (iso-date "2020-06-01 04:00:10 -0500") "2020-06-01T09:00:10Z")))
 
 
 ;;; Test Cases for Tool Definitions
 ;;; -------------------------------
 
 (test-case read-header-line
-  (let ((text (format nil "<!-- k1: v1 -->~%")))
+  (let ((text (fstr "<!-- k1: v1 -->~%")))
     (assert (equal (multiple-value-list (read-header-line text 0)) '("k1" "v1" 16)))
     (assert (equal (multiple-value-list (read-header-line text 16)) '(nil nil 16)))))
 
 (test-case read-header-line-empty-value
-  (let ((text (format nil "<!-- k1:  -->~%")))
+  (let ((text (fstr "<!-- k1:  -->~%")))
     (assert (equal (multiple-value-list (read-header-line text 0)) '("k1" "" 14)))
     (assert (equal (multiple-value-list (read-header-line text 14)) '(nil nil 14)))))
 
 (test-case read-header-lines
-  (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
+  (let ((text (fstr "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
     (assert (equal (multiple-value-list (read-header-line text 0)) '("k1" "v1" 16)))
     (assert (equal (multiple-value-list (read-header-line text 16)) '("k2" "v2" 32)))
     (assert (equal (multiple-value-list (read-header-line text 32)) '(nil nil 32)))))
 
 (test-case read-headers
-  (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
+  (let ((text (fstr "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
     (assert (equal (multiple-value-list (read-headers text 0))
                    '((("k2" . "v2") ("k1" . "v1")) 32))))
-  (let ((text (format nil "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
+  (let ((text (fstr "<!-- k1: v1 -->~%<!-- k2: v2 -->~%body")))
     (assert (equal (multiple-value-list (read-headers text 16))
                    '((("k2" . "v2")) 32))))
   (assert (equal (multiple-value-list (read-headers "body" 0)) '(nil 0))))
+
+(test-case read-multi-content
+  (let* ((nl (fstr "~%"))
+         (text (join-strings "<!-- title: Discussion -->" nl
+                             "<p>Intro</p>" nl
+                             "<!-- date: 2020-06-01 09:00:00 +0000 -->" nl
+                             "<!-- name: Alice -->" nl "first" nl
+                             "<!-- date: 2020-06-02 09:00:00 +0000 -->" nl
+                             "<!-- name: Bob -->" nl "second"))
+         (doc (read-multi-content text))
+         (blocks (aget "blocks" doc)))
+    (assert (string= (aget "title" doc) "Discussion"))
+    (assert (string= (aget "body" doc) (fstr "<p>Intro</p>~%")))
+    (assert (string= (aget "date" doc) "2020-06-01 09:00:00 +0000"))
+    (assert (equal (mapcar (lambda (blk) (aget "name" blk)) blocks)
+                   '("Alice" "Bob")))))
 
 (test-case weekday-name
   (assert (string= (weekday-name 0) "Mon"))
@@ -359,12 +376,12 @@
     (assert (string= (f "2020-06-01 14:30:10 +0530") "01 Jun 2020 at 09:00 UTC"))
     (assert (string= (f "2020-06-01 04:30:10 +0530") "31 May 2020 at 23:00 UTC"))))
 
-(test-case date-slug
-  (assert (equal (multiple-value-list (date-slug "foo")) '(nil "foo")))
-  (assert (equal (multiple-value-list (date-slug "foo-bar.html")) '(nil "foo-bar")))
-  (assert (equal (multiple-value-list (date-slug "/foo-bar.html")) '(nil "foo-bar")))
-  (assert (equal (multiple-value-list (date-slug "2020-06-01-foo.html")) '("2020-06-01" "foo")))
-  (assert (equal (multiple-value-list (date-slug "/2020-06-01-foo.html")) '("2020-06-01" "foo"))))
+(test-case doc-path
+  (assert (string= (doc-path "foo/bar/baz.page.html" "foo/bar/") "baz.html"))
+  (assert (string= (doc-path "foo/bar/baz.qux.page.html" "foo/bar/") "baz.qux.html"))
+  (assert (string= (doc-path "foo/bar/baz/qux.page.html" "foo/") "bar/baz/qux.html"))
+  (assert (string= (doc-path "foo/bar/baz/qux.page.html" "foo/bar/") "baz/qux.html"))
+  (assert (string= (doc-path "foo/bar/baz/qux.page.html" "foo/bar/baz/") "qux.html")))
 
 (test-case aput
   (let ((alist))
@@ -410,25 +427,25 @@
     (assert (equal (last-n 6 seq) '(10 20 30 40 50)))
     (assert (equal (last-n 10 seq) '(10 20 30 40 50)))))
 
-(test-case extra-markup
-  (assert (string= (extra-markup "") ""))
-  (assert (string= (extra-markup "foo") "foo"))
-  (assert (string= (extra-markup "<h1>Foo</h1>") "<h1>Foo</h1>"))
-  (assert (string= (extra-markup "<hx id=\"foo\">Foo</hx>")
+(test-case refine-headings
+  (assert (string= (refine-headings "") ""))
+  (assert (string= (refine-headings "foo") "foo"))
+  (assert (string= (refine-headings "<h1>Foo</h1>") "<h1>Foo</h1>"))
+  (assert (string= (refine-headings "<hx id=\"foo\">Foo</hx>")
                    "<hx id=\"foo\">Foo</hx>"))
-  (assert (string= (extra-markup "<h1 id=\"foo\">Foo</h1>")
+  (assert (string= (refine-headings "<h1 id=\"foo\">Foo</h1>")
                    "<h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>"))
-  (assert (string= (extra-markup "begin<h1 id=\"foo\">Foo</h1>end")
+  (assert (string= (refine-headings "begin<h1 id=\"foo\">Foo</h1>end")
                    "begin<h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>end"))
-  (assert (string= (extra-markup "Hello
+  (assert (string= (refine-headings "Hello
 <h1 id=\"foo\">Foo</h1>
 <h2 id=\"bar\">Bar</h2>")
                    "Hello
 <h1 id=\"foo\">Foo<a href=\"#foo\"></a></h1>
 <h2 id=\"bar\">Bar<a href=\"#bar\"></a></h2>")))
 
-(test-case extra-markup-format-control-in-text
-  (assert (string= (extra-markup "~a") "~a")))
+(test-case refine-headings-format-control-in-text
+  (assert (string= (refine-headings "~a") "~a")))
 
 (test-case toc-html-none
   (let ((toc (fstr "<h2 id=\"contents\">Contents</h2>~%")))
@@ -558,47 +575,6 @@ Foo
 </ol>"))
     (assert (string= (toc-html body t) toc))))
 
-(test-case read-page
-  (write-file "test-tmp/2020-06-01-quux-quuz.html"
-              (format nil "<!-- title: Foo Bar -->~%Baz Qux"))
-  (let ((post (read-page "test-tmp/2020-06-01-quux-quuz.html")))
-    (assert (string= (aget "date" post) "2020-06-01"))
-    (assert (string= (aget "slug" post) "quux-quuz"))
-    (assert (string= (aget "title" post) "Foo Bar"))
-    (assert (string= (aget "body" post) "Baz Qux"))
-    (assert (string= (aget "iso-date" post) "2020-06-01T00:00:00Z"))
-    (assert (string= (aget "short-date" post) "01 Jun 2020"))))
-
-(test-case read-page-without-date
-  (write-file "test-tmp/quux-quuz.html" "Baz Qux")
-  (let ((params (read-page "test-tmp/quux-quuz.html")))
-    (assert (eq (aget "date" params) nil))
-    (assert (string= (aget "slug" params) "quux-quuz"))
-    (assert (string= (aget "body" params) "Baz Qux"))))
-
-(test-case read-page-date-in-filename-only
-  (write-file "test-tmp/2020-06-01-quux-quuz.html" "Baz Qux")
-  (let ((params (read-page "test-tmp/2020-06-01-quux-quuz.html")))
-    (assert (string= (aget "date" params) "2020-06-01"))
-    (assert (string= (aget "slug" params) "quux-quuz"))
-    (assert (string= (aget "body" params) "Baz Qux"))))
-
-(test-case read-page-date-in-header-only
-  (write-file "test-tmp/quux-quuz.html"
-              (format nil "<!-- date: 2020-06-02 -->~%Baz Qux"))
-  (let ((params (read-page "test-tmp/quux-quuz.html")))
-    (assert (string= (aget "date" params) "2020-06-02"))
-    (assert (string= (aget "slug" params) "quux-quuz"))
-    (assert (string= (aget "body" params) "Baz Qux"))))
-
-(test-case read-page-date-in-filename-and-header
-  (write-file "test-tmp/2020-06-01-quux-quuz.html"
-              (format nil "<!-- date: 2020-06-02 -->~%Baz Qux"))
-  (let ((params (read-page "test-tmp/2020-06-01-quux-quuz.html")))
-    (assert (string= (aget "date" params) "2020-06-02"))
-    (assert (string= (aget "slug" params) "quux-quuz"))
-    (assert (string= (aget "body" params) "Baz Qux"))))
-
 (test-case render
   (let* ((template "Foo {{ var-x }} Baz {{ var-y }} Quux")
          (params '(("var-x" . "Bar") ("var-y" . "Qux")))
@@ -634,377 +610,64 @@ Foo
 
 (test-case render-head-html-css
   (let ((s "  <link rel=\"stylesheet\" href=\"css/foo.css\">~%"))
-    (assert (string= (head-html "foo.css" '(("root" . "")))
-                     (format nil s)))))
+    (assert (string= (head-html '("foo.css") "" nil "no")
+                     (fstr s)))))
 
 (test-case render-head-html-js
-  (assert (string= (head-html "foo.js" '(("root" . "")))
-                   (format nil "  <script src=\"js/foo.js\"></script>~%"))))
-
-(test-case render-head-html-inc
-  (assert (string= (head-html "test.inc" '())
-                   (format nil "  <!-- {{ a }} test include -->~%"))))
-
-(test-case render-head-html-inc-params
-  (assert (string= (head-html "test.inc" '(("a" . "apple")))
-                   (format nil "  <!-- apple test include -->~%"))))
+  (assert (string= (head-html '("foo.js") "" nil "no")
+                   (fstr "  <script src=\"js/foo.js\"></script>~%"))))
 
 (test-case render-head-html-css-root
   (let ((s "  <link rel=\"stylesheet\" href=\"../css/foo.css\">~%"))
-    (assert (string= (head-html "foo.css" '(("root" . "../")))
-                     (format nil s)))))
+    (assert (string= (head-html '("foo.css") "../" nil "no")
+                     (fstr s)))))
 
 (test-case render-head-html-js-root
   (let ((s "  <script src=\"../js/foo.js\"></script>~%"))
-    (assert (string= (head-html "foo.js" '(("root" . "../")))
-                     (format nil s)))))
+    (assert (string= (head-html '("foo.js") "../" nil "no")
+                     (fstr s)))))
 
-(test-case render-head-html-js-css-inc
+(test-case render-head-html-js-css
   (assert (string=
-           (head-html "foo.css, bar.js, test.inc, baz.css, qux.js, test.inc"
-                      '(("root" . "") ("a" . "apple")))
+           (head-html '("foo.css" "bar.js" "baz.css" "qux.js") "" nil "no")
            "  <link rel=\"stylesheet\" href=\"css/foo.css\">
   <script src=\"js/bar.js\"></script>
-  <!-- apple test include -->
   <link rel=\"stylesheet\" href=\"css/baz.css\">
   <script src=\"js/qux.js\"></script>
-  <!-- apple test include -->
 ")))
 
-(test-case set-nested-template
-  (let ((layout "{{ foo }}"))
-    (set-nested-template layout "{{ foo }}{{ body }}{{ baz }}")
-    (assert (string= layout "{{ foo }}{{ foo }}{{ baz }}")))
-  (let ((layout "foo"))
-    (set-nested-template layout "foo {{ body }} bar")
-    (assert (string= layout "foo foo bar"))))
+(test-case fill-layout-simple
+  (let* ((layouts '(("page" . (("body" . "begin-page {{ body }} end-page")))
+                    ("post" . (("body" . "begin-post {{ body }} end-post")
+                               ("layout" . "page")))))
+         (post (assoc "post" layouts :test #'string=))
+         (filled (fill-layout post layouts)))
+    (assert (equal filled
+                   (cons "post" "begin-page begin-post {{ body }} end-post end-page")))))
 
-(test-case relative-root-path
-  (let ((params '(("apex" . "_site/"))))
-    (assert (string= (relative-root-path "_site/" params) "./"))
-    (assert (string= (relative-root-path "_site/index.html" params) "./"))
-    (assert (string= (relative-root-path "_site/foo" params) "./"))
-    (assert (string= (relative-root-path "_site/foo/" params) "../"))
-    (assert (string= (relative-root-path "_site/foo/index.html" params) "../"))
-    (assert (string= (relative-root-path "_site/foo/bar" params) "../"))
-    (assert (string= (relative-root-path "_site/foo/bar/" params) "../../"))
-    (assert (string= (relative-root-path "_site/foo/bar/index.html" params) "../../"))))
+(test-case fill-layout-nested
+  (let* ((layouts '(("page" . (("body" . "begin-page {{ body }} end-page")))
+                    ("post" . (("body" . "begin-post {{ body }} end-post")
+                               ("layout" . "page")))
+                    ("nest" . (("body" . "begin-nest {{ body }} end-nest")
+                               ("layout" . "post")))))
+         (nest (assoc "nest" layouts :test #'string=))
+         (filled (fill-layout nest layouts)))
+    (assert (equal filled
+                   (cons "nest"
+                         (join-strings "begin-page begin-post begin-nest"
+                                       " {{ body }} "
+                                       "end-nest end-post end-page"))))))
 
-(test-case add-page-params-imports
-  (let ((params '(("apex" . "_site/")
-                  ("import" . "foo.js")))
-        (result (format nil "  <script src=\"~~ajs/foo.js\"></script>~%"))
-        (page))
-    (add-page-params "_site/" page params)
-    (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-page-params "_site/foo.html" page params)
-    (assert (string= (aget "imports" params) (format nil result "./")))
-    (add-page-params "_site/foo/" page params)
-    (assert (string= (aget "imports" params) (format nil result "../")))
-    (add-page-params "_site/foo/bar.html" page params)
-    (assert (string= (aget "imports" params) (format nil result "../")))))
-
-(test-case add-page-params-neat-url
-  (let ((params '(("apex" . "_site/")
-                  ("site-url" . "https://example.com/")))
-        (page))
-    (add-page-params "_site/" page params)
-    (assert (string= (aget "neat-url" page) "https://example.com/"))
-    (add-page-params "_site/foo/" page params)
-    (assert (string= (aget "neat-url" page) "https://example.com/foo/"))
-    (add-page-params "_site/foo/bar/" page params)
-    (assert (string= (aget "neat-url" page) "https://example.com/foo/bar/"))))
-
-(test-case add-page-params-neat-url-index
-  (let ((params '(("apex" . "_site/")
-                  ("site-url" . "https://example.com/")))
-        (page))
-    (add-page-params "_site/index.html" page params)
-    (assert (string= (aget "neat-url" page) "https://example.com/"))
-    (add-page-params "_site/foo/index.html" page params)
-    (assert (string= (aget "neat-url" page) "https://example.com/foo/"))
-    (add-page-params "_site/foo/bar/index.html" page params)
-    (assert (string= (aget "neat-url" page)
-                     "https://example.com/foo/bar/"))))
-
-(test-case make-pages-single
-  (write-file "test-tmp/content/foo.txt" "foo")
-  (make-pages "test-tmp/content/foo.txt" "test-tmp/output/out.txt"
-              "[{{ body }}]" nil nil)
-  (assert (string= (read-file "test-tmp/output/out.txt") "[foo]")))
-
-(test-case make-pages-multiple
-  (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
-  (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (make-pages "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
-              "[{{ body }}]" nil nil)
-  (assert (string= (read-file "test-tmp/output/foo.txt") "[foo]"))
-  (assert (string= (read-file "test-tmp/output/bar.txt") "[bar]"))
-  (assert (string= (read-file "test-tmp/output/baz.txt") "[baz]")))
-
-(test-case make-pages-multiple-sort
-  (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
-  (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (let ((posts (make-pages "test-tmp/content/*.txt"
-                           "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]" nil nil)))
-    (assert (= (length posts) 3))
-    (assert (string= (aget "date" (first posts)) "2020-06-03"))
-    (assert (string= (aget "date" (second posts)) "2020-06-02"))
-    (assert (string= (aget "date" (third posts)) "2020-06-01"))))
-
-(test-case make-pages-filename-params
-  (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (make-pages "test-tmp/content/*.txt" "test-tmp/output/{{ slug }}.txt"
-              "[{{ date }} {{ slug }} {{ body }}]" nil nil)
-  (assert (string= (read-file "test-tmp/output/foo.txt")
-                   "[2020-06-01 foo foo]")))
-
-(test-case make-pages-filename-params-overrides-call-params
-  (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (make-pages "test-tmp/content/*.txt"
-              "test-tmp/output/{{ slug }}.txt"
-              "[{{ date }} {{ slug }} {{ body }}]"
-              nil '(("date" . "2020-06-01") ("slug" . "quux")))
-  (assert (string= (read-file "test-tmp/output/foo.txt")
-                   "[2020-06-01 foo foo]")))
-
-(test-case make-pages-callback
-  (defun callback (params)
-    (declare (ignore params))
-    '(("a" . "apple")))
-  (write-file "test-tmp/content/foo.txt" "foo")
-  (make-pages "test-tmp/content/foo.txt"
-              "test-tmp/output/foo.txt"
-              "[{{ body }} {{ a }}]"
-              nil
-              `(("callbacks" . (,#'callback))))
-  (assert (string= (read-file "test-tmp/output/foo.txt")
-                   "[foo apple]")))
-
-(test-case make-pages-callback-params-overrides-call-params
-  (defun callback (params)
-    (declare (ignore params))
-    '(("a" . "ant")))
-  (write-file "test-tmp/content/foo.txt" "foo")
-  (make-pages "test-tmp/content/foo.txt"
-              "test-tmp/output/foo.txt"
-              "[{{ body }} {{ a }}]"
-              nil
-              `(("a" . "apple") ("callbacks" . (,#'callback))))
-  (assert (string= (read-file "test-tmp/output/foo.txt") "[foo ant]")))
-
-(test-case make-pages-no-content-rendering
-  (write-file "test-tmp/content/foo.txt" "foo {{ a }} bar")
-  (make-pages "test-tmp/content/foo.txt"
-              "test-tmp/output/foo.txt"
-              "[{{ body }}]"
-              nil
-              '(("a" . "apple")))
-  (assert (string= (read-file "test-tmp/output/foo.txt")
-                   "[foo {{ a }} bar]")))
-
-(test-case make-pages-content-rendering
-  (write-file "test-tmp/content/foo.txt" "foo {{ a }} bar")
-  (make-pages "test-tmp/content/foo.txt"
-              "test-tmp/output/foo.txt"
-              "[{{ body }}]"
-              nil
-              '(("a" . "apple") ("render" . "yes")))
-  (assert (string= (read-file "test-tmp/output/foo.txt") "[foo apple bar]")))
-
-(test-case make-pages-import-css
-  (write-file "test-tmp/content/foo.txt" "foo")
-  (make-pages "test-tmp/content/foo.txt"
-              "test-tmp/output/foo.txt"
-              "[{{ imports }}{{ body }}]"
-              nil
-              '(("import" . "foo.css") ("root" . "")))
-  (let ((s "[  <link rel=\"stylesheet\" href=\"../../css/foo.css\">
-foo]"))
-    (assert (string= (read-file "test-tmp/output/foo.txt") s))))
-
-(test-case make-pages-import-js
-  (write-file "test-tmp/content/foo.txt" "foo")
-  (make-pages "test-tmp/content/foo.txt"
-              "test-tmp/output/foo.txt"
-              "[{{ imports }}{{ body }}]"
-              nil
-              '(("import" . "foo.js")))
-  (assert (string= (read-file "test-tmp/output/foo.txt")
-                   "[  <script src=\"../../js/foo.js\"></script>
-foo]")))
-
-(test-case make-page-list
-  (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
-  (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (let ((posts (make-pages "test-tmp/content/*.txt"
-                           "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]" nil nil)))
-    (make-page-list posts "test-tmp/list.html"
-                    "[{{ count }} {{ body }}]"
-                    "[{{ body }}]" nil))
-  (assert (string= (read-file "test-tmp/list.html")
-                   "[3 [baz][bar][foo]]")))
-
-(test-case make-page-list-post-call-params
-  (write-file "test-tmp/content/2020-06-01-foo.txt" "foo")
-  (write-file "test-tmp/content/2020-06-02-bar.txt" "bar")
-  (write-file "test-tmp/content/2020-06-03-baz.txt" "baz")
-  (let ((posts (make-pages "test-tmp/content/*.txt"
-                           "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]" nil nil)))
-    (make-page-list posts "test-tmp/list.html"
-                    "[{{ a }} {{ body }}]"      ; Param used here
-                    "[{{ a }} {{ body }}]"      ; and here.
-                    '(("a" . "apple")))) ; Call param.
-  (assert (string= (read-file "test-tmp/list.html")
-                   "[apple [apple baz][apple bar][apple foo]]")))
-
-(test-case make-page-list-post-params-override-call-params
-  (write-file "test-tmp/content/2020-06-01-foo.txt"
-              (format nil "<!-- a: air -->~%foo")) ; Post param.
-  (write-file "test-tmp/content/2020-06-02-bar.txt"
-              (format nil "<!-- a: ant -->~%bar")) ; Post param.
-  (write-file "test-tmp/content/2020-06-03-baz.txt"
-              (format nil "<!-- a: ash -->~%baz")) ; Post param.
-  (let ((posts (make-pages "test-tmp/content/*.txt"
-                           "test-tmp/output/{{ slug }}.txt"
-                           "[{{ body }}]"
-                           nil nil)))
-    ;; The call below passes a call param but it is going to be
-    ;; overridden by post params.
-    (make-page-list posts "test-tmp/list.html"
-                    "[{{ a }} {{ body }}]"  ; Param used here
-                    "[{{ a }} {{ body }}]"  ; and here.
-                    '(("a" . "apple"))))
-  (assert (string= (read-file "test-tmp/list.html")
-                   "[apple [ash baz][ant bar][air foo]]")))
-
-(test-case read-comment
-  (let ((text "<!-- date: 2020-06-01 07:08:09 +0000 -->
-<!-- name: Alice -->
-x
-<!-- date: 2020-06-02 17:18:19 +0000 -->
-<!-- name: Bob -->
-<!-- url: https://example.com/ -->
-yz
-"))
-    (assert (equal (multiple-value-list (read-comment text 0))
-                   '((("body" . "x
-")
-                      ("iso-date" . "2020-06-01T07:08:09Z")
-                      ("long-date" . "01 Jun 2020 07:08 UTC")
-                      ("short-date" . "01 Jun 2020")
-                      ("name" . "Alice")
-                      ("date" . "2020-06-01 07:08:09 +0000")) 64)))
-    (assert (equal (multiple-value-list (read-comment text 64))
-                   '((("body" . "yz
-")
-                      ("iso-date" . "2020-06-02T17:18:19Z")
-                      ("long-date" . "02 Jun 2020 17:18 UTC")
-                      ("short-date" . "02 Jun 2020")
-                      ("url" . "https://example.com/")
-                      ("name" . "Bob")
-                      ("date" . "2020-06-02 17:18:19 +0000")) nil)))))
-
-(test-case read-comments-single
-  (write-file "test-tmp/foo.txt" "<!-- date: 2020-06-01 07:08:09 +0000 -->
-<!-- name: Alice -->
-Bar")
-  (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
-                 '((("iso-date" . "2020-06-01T07:08:09Z")
-                    ("long-date" . "01 Jun 2020 07:08 UTC")
-                    ("short-date" . "01 Jun 2020")
-                    ("date" . "2020-06-01 07:08:09 +0000")
-                    ("slug" . "foo"))
-                   ((("comment-file-serial" . 1)
-                     ("body" . "Bar")
-                     ("iso-date" . "2020-06-01T07:08:09Z")
-                     ("long-date" . "01 Jun 2020 07:08 UTC")
-                     ("short-date" . "01 Jun 2020")
-                     ("name" . "Alice")
-                     ("date" . "2020-06-01 07:08:09 +0000")))))))
-
-(test-case read-comments-multiple
-  (write-file "test-tmp/foo.txt" "<!-- date: 2020-06-01 00:00:01 +0000 -->
-<!-- author: Alice -->
-X
-<!-- date: 2020-06-02 00:00:02 +0000 -->
-<!-- author: Bob -->
-Y
-<!-- date: 2020-06-03 00:00:03 +0000 -->
-<!-- author: Carol -->
-Z")
-  (assert (equal (multiple-value-list (read-comments "test-tmp/foo.txt"))
-                 '((("iso-date" . "2020-06-01T00:00:01Z")
-                    ("long-date" . "01 Jun 2020 00:00 UTC")
-                    ("short-date" . "01 Jun 2020")
-                    ("date" . "2020-06-01 00:00:01 +0000")
-                    ("slug" . "foo") ("slug" . "foo")
-                    ("slug" . "foo"))
-                   ((("comment-file-serial" . 1)
-                     ("body" . "X
-")
-                     ("iso-date" . "2020-06-01T00:00:01Z")
-                     ("long-date" . "01 Jun 2020 00:00 UTC")
-                     ("short-date" . "01 Jun 2020")
-                     ("author" . "Alice")
-                     ("date" . "2020-06-01 00:00:01 +0000"))
-                    (("comment-file-serial" . 2)
-                     ("body" . "Y
-")
-                     ("iso-date" . "2020-06-02T00:00:02Z")
-                     ("long-date" . "02 Jun 2020 00:00 UTC")
-                     ("short-date" . "02 Jun 2020")
-                     ("author" . "Bob")
-                     ("date" . "2020-06-02 00:00:02 +0000"))
-                    (("comment-file-serial" . 3) ("body" . "Z")
-                     ("iso-date" . "2020-06-03T00:00:03Z")
-                     ("long-date" . "03 Jun 2020 00:00 UTC")
-                     ("short-date" . "03 Jun 2020")
-                     ("author" . "Carol")
-                     ("date" . "2020-06-03 00:00:03 +0000")))))))
-
-(test-case make-comment-list
-  (let ((comments '((("date" . "2020-06-01")
-                     ("author" . "Alice")
-                     ("body" . "Foo"))
-                    (("date" . "2020-06-02")
-                     ("author" . "Bob")
-                     ("body" . "Bar"))
-                    (("date" . "2020-06-03")
-                     ("author" . "Carol")
-                     ("body" . "Baz")))))
-    (make-comment-list comments
-                       "test-tmp/{{ slug }}.html"
-                       "[{{ title }} {{ post-title }} {{ body }}]"
-                       (join-strings '("[{{ date }} {{ author }} {{ body }} "
-                                       "{{ comment-count }} {{ comment-label }}]"))
-                       '(("slug" . "foo")
-                         ("title" . "Comments on Foo")
-                         ("post-title" . "Foo")))
-    (assert(string= (read-file "test-tmp/foo.html")
-                    (join-strings '("[Comments on Foo Foo "
-                                    "[2020-06-01 Alice Foo 3 comments]"
-                                    "[2020-06-02 Bob Bar 3 comments]"
-                                    "[2020-06-03 Carol Baz 3 comments]]"))))))
-
-(test-case make-comment-list-imports
-  (make-comment-list '((("date" . "2020-06-01")
-                        ("author" . "Alice")
-                        ("body" . "Foo")))
-                     "test-tmp/comments.html"
-                     "[{{ imports }}]"
-                     "[{{ body }}]"
-                     '(("root" . "") ("slug" . "foo") ("title" . "Foo")))
-  (assert
-   (string= (read-file "test-tmp/comments.html")
-            "[  <link rel=\"stylesheet\" href=\"../css/comment.css\">
-]")))
+(test-case root-path
+  (assert (string= (root-path "") "./"))
+  (assert (string= (root-path "index.html") "./"))
+  (assert (string= (root-path "foo") "./"))
+  (assert (string= (root-path "foo/") "../"))
+  (assert (string= (root-path "foo/index.html") "../"))
+  (assert (string= (root-path "foo/bar") "../"))
+  (assert (string= (root-path "foo/bar/") "../../"))
+  (assert (string= (root-path "foo/bar/index.html") "../../")))
 
 ;; End test cases.
 

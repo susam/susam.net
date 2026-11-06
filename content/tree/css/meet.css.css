@@ -1,0 +1,12 @@
+body {
+  max-width: 72em;
+}
+.future {
+  font-style: italic;
+  background: {{ lt-fill-colour }};
+}
+@media (prefers-color-scheme: dark) {
+  .future {
+    background: {{ dk-fill-colour }};
+  }
+}

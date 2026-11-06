@@ -10,7 +10,7 @@ __pycache__/
 _site/
 _live/
 _gone/
-_cache/
+_fs/
 node_modules/
 texmf/
 venv

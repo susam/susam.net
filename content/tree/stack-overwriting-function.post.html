@@ -2,7 +2,7 @@
 <!-- title: Stack Overwriting Function -->
 <!-- tag: C, Programming, Technology, Puzzle -->
 <!-- uuid: f3b1492a-0182-4341-a30d-0fce7a3d6f70 -->
-<!-- blog: Main -->
+<!-- zone: main -->
 <!-- import: extra.css -->
 <h2 id="skipping-over-a-function-call">Skipping Over a Function Call</h2>
 <p>
@@ -101,7 +101,7 @@ Disassembly of section .text:
 0000000000000000 &lt;f&gt;:
    0:   55                      push   %rbp
    1:   48 89 e5                mov    %rsp,%rbp
-   <span class="hl">4:   c6 45 ff 07             movb   $0x7,-0x1(%rbp)</span>
+   <span class="c5">4:   c6 45 ff 07             movb   $0x7,-0x1(%rbp)</span>
    8:   c9                      leaveq
    9:   c3                      retq
 
@@ -112,7 +112,7 @@ Disassembly of section .text:
   13:   e8 00 00 00 00          callq  18 &lt;main+0xe&gt;
   18:   b8 00 00 00 00          mov    $0x0,%eax
   1d:   e8 00 00 00 00          callq  22 &lt;main+0x18&gt;
-  <span class="hl">22:   bf 00 00 00 00          mov    $0x0,%edi
+  <span class="c5">22:   bf 00 00 00 00          mov    $0x0,%edi
   27:   e8 00 00 00 00          callq  2c &lt;main+0x22&gt;</span>
   2c:   bf 00 00 00 00          mov    $0x0,%edi
   31:   e8 00 00 00 00          callq  36 &lt;main+0x2c&gt;
@@ -281,7 +281,7 @@ _f:
   00000000: 55                 push        ebp
   00000001: 8B EC              mov         ebp,esp
   00000003: 51                 push        ecx
-  <span class="hl">00000004: C6 45 FF 07        mov         byte ptr [ebp-1],7</span>
+  <span class="c5">00000004: C6 45 FF 07        mov         byte ptr [ebp-1],7</span>
   00000008: 8B E5              mov         esp,ebp
   0000000A: 5D                 pop         ebp
   0000000B: C3                 ret
@@ -296,7 +296,7 @@ _main:
   00000018: E8 00 00 00 00     call        _printf
   0000001D: 83 C4 04           add         esp,4
   00000020: E8 00 00 00 00     call        _f
-  <span class="hl">00000025: 68 00 00 00 00     push        offset $SG2225
+  <span class="c5">00000025: 68 00 00 00 00     push        offset $SG2225
   0000002A: E8 00 00 00 00     call        _printf
   0000002F: 83 C4 04           add         esp,4</span>
   00000032: 68 00 00 00 00     push        offset $SG2226

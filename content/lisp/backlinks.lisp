@@ -431,7 +431,7 @@
   :txt1 "2025-12-08 Emacs news"
   :url1 "https://sachachua.com/blog/2025/12/2025-12-08-emacs-news/"
   :txt2 "Emacs Info Expressions"
-  :url2 "emacs-info-expression.html")
+  :url2 "emacs-info-expressions.html")
 
  (:date "2025-12-08"
   :lang "English"

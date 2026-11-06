@@ -10,8 +10,9 @@ help:
 	@echo '  https             Reinstall live website and serve with Nginx via HTTPS.'
 	@echo '  http              Reinstall live website and serve with Nginx via HTTP.'
 	@echo '  rm                Uninstall live website.'
-	@echo '  recu              Pull and deploy content updates.'
-	@echo '  check-form-live   Check forms work correctly on live website.'
+	@echo '  cu                Pull and deploy content updates.'
+	@echo '  restart           Restart Nginx and the form service.'
+	@echo '  check-form-live   Check forms on the live website.'
 	@echo
 	@echo 'Monitoring targets to run on live server:'
 	@echo '  follow-log        Follow access logs on live server.'
@@ -29,69 +30,67 @@ help:
 	@echo '  ls                List form data submitted.'
 	@echo '  rd                Read form data submitted.'
 	@echo
+	@echo 'Local targets that SSH to the live server:'
+	@echo '  scu               Publish content updates and deploy them.'
+	@echo '  scure             Publish content updates, deploy and restart services.'
+	@echo '  sbkp              Pull a backup of form data from the live server.'
+	@echo '  sfs               Redownload the file store and deploy the site.'
+	@echo '  sync              Copy local source to the live server and deploy it.'
+	@echo
+	@echo 'Local publishing targets:'
+	@echo '  cc                Set up remotes and publish branches.'
+	@echo '  mirror            Publish a generated website mirror.'
+	@echo
 	@echo 'Low-level targets:'
 	@echo '  live              Generate live directory for website.'
 	@echo '  site              Generate website.'
+	@echo '  fs                Download file store.'
+	@echo '  rmfs              Remove the downloaded file store.'
+	@echo '  refs              Remove and redownload the file store.'
 	@echo '  dist              Generate website for distribution as zip/tarball.'
 	@echo '  serve             Serve _site/ directory via a local HTTP server.'
 	@echo '  deep              Put website in a directory deeply nested within _site/.'
 	@echo
 	@echo 'Development targets:'
 	@echo '  clean             Clean temporary files.'
-	@echo '  clean-all         Clean temporary files more aggressively.'
 	@echo '  opt               Create directories at /opt for testing.'
-	@echo '  comment           Create comment file for filename in FILE macro.'
 	@echo '  loop              Run a loop to create website directory repeatedly.'
 	@echo '  lsc               List comment counts in descending order.'
 	@echo '  ref               Create reference directories for the current website.'
 	@echo '  diff              Create new websites and compare against reference directories.'
-	@echo '  test              Test Common Lisp program.'
+	@echo '  profile           Profile website generation.'
 	@echo '  run-site          Serve website locally via a local HTTP server.'
 	@echo '  run-dist          Serve distribution locally via a local HTTP server.'
 	@echo '  run-site-deep     Serve website from a subdirectory path.'
 	@echo '  run-dist-deep     Serve distribution from a subdirectory path.'
 	@echo '  run-form          Run form application locally.'
-	@echo '  chk               Run checks on source suitable to be run before push.'
+	@echo
+	@echo 'Checks to run in development environment:'
+	@echo '  test              Test the Common Lisp program.'
+	@echo '  chk               Run source checks suitable before push.'
 	@echo '  tidy              Run HTML Tidy on the generated website.'
 	@echo '  xmllint           Run XML Linter on the generated website.'
-	@echo '  check-links       Check broken links in a locally running website.'
-	@echo '  check-paths       Check live website paths and redirects.'
-	@echo '  check-form-rate   Check rate-limiting of form.'
-	@echo '  check-form-dev    Check forms work correctly in local dev environment.'
-	@echo '  pub               Publish updated website on live server and mirror.'
-	@echo '  main              Publish main branch on primary server only.'
-	@echo '  cu                Publish content updates on primary server only.'
-	@echo '  cure              Publish content updates on primary server and restart web server.'
-	@echo '  gh                Publish website on GitHub mirror only.'
-	@echo '  cb                Publish website on GitHub mirror only.'
-	@echo '  pull-backup       Pull a backup of cache from live server.'
+	@echo '  check-links       Check links in a locally running website.'
+	@echo '  check-form-rate   Check live form rate limiting from any host.'
+	@echo '  check-form-dev    Check forms in the local dev environment.'
 	@echo
 	@echo 'Default target:'
 	@echo '  help              Show this help message.'
 
 
-# Targets for Live Server
-# -----------------------
+# Targets To Run On Live Server
+# -----------------------------
 
 setup: debs cldeps
 
 debs:
 	apt-get update
-	apt-get -y install nginx certbot sbcl
+	apt-get -y install nginx certbot sbcl time
 
-cldeps:
+cldeps: fs
 	rm -rf /opt/cl/
 	mkdir -p /opt/cl/form/
-	set -x; while read -r url; do curl -sSL "$$url" | \
-	tar -C /opt/cl/form/ -xz; done < meta/cldeps/form.txt
-
-quicklisp:
-	rm -rf /opt/quicklisp.lisp /opt/quicklisp
-	curl https://beta.quicklisp.org/quicklisp.lisp -o /opt/quicklisp.lisp
-	sbcl --load /opt/quicklisp.lisp \
-	     --eval '(quicklisp-quickstart:install :path "/opt/quicklisp/")' \
-	     --quit
-	chown -R www-data:www-data /opt/quicklisp
+	cp -R _fs/opt/cl/form/. /opt/cl/form/
 
 https: http
 	@echo Setting up HTTPS website ...
@@ -138,7 +137,7 @@ rm: checkroot
 	crontab -l | grep -v "^#" || :
 	@echo Done; echo
 
-recu: checkroot
+cu: checkroot
 	git checkout cu
 	git reset --hard HEAD~5
 	git pull origin cu
@@ -148,20 +147,21 @@ restart:
 	systemctl restart nginx form
 	systemctl --no-pager status nginx form
 
+check-form-live: checkroot
+	make check-form URL=https://susam.net/ SLEEP=15
+
 checkroot:
 	@echo Checking if current user is root ...
 	[ $$(id -u) = 0 ]
 	@echo Done; echo
 
-backup:
-	tar -caf "/opt/cache/form-$$(date "+%Y-%m-%d_%H-%M-%S").tgz" -C /opt/data/ form/
-	ls -1 /opt/cache/form-*.tgz | sort -r | tail -n +100 | xargs rm -vf
-	ls -lh /opt/cache/
-	df -h /
 
-BOT_RE = AppEngine-Google|Amazonbot|ChatGPT|Bot|HeadlessChrome|FeedFetcher-Google|OpenClaw|RSS
+# Monitoring Targets To Run On Live Server
+# ----------------------------------------
 
-NOISE_RE = \.(css|js|ico|png|ttf|woff|xml)|$(BOT_RE)
+BOT_RE = AppEngine-Google|Amazonbot|Barkrowler|ChatGPT|Bot|HeadlessChrome|InfoHubFetcher|FeedFetcher-Google|OpenClaw|RSS
+
+NOISE_RE = \.(css|js|ico|png|ttf|woff|xml)|robots\.txt|$(BOT_RE)
 
 nono:
 	grep -vE "$(NOISE_RE)"
@@ -252,31 +252,109 @@ rd:
 	tail -vn +1 /opt/data/form/*.txt | less -F
 
 
+# Local Targets That SSH To The Live Server
+# -----------------------------------------
+
+scu:
+	git push origin main
+	git push -f origin cu
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make cu"
+
+scure:
+	git push origin main
+	git push -f origin cu
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make cu restart"
+
+sbkp:
+	mkdir -p ~/bkp/
+	ssh susam.net "tar -czf - -C /opt/data/ form/" > ~/bkp/form-$$(date "+%Y-%m-%d_%H-%M-%S").tgz
+	ls -lh ~/bkp/
+
+sfs:
+	ssh -t susam.net "cd /opt/susam.net/ && sudo make refs cu"
+
+sync:
+	tar --format=ustar -czf /tmp/susam.net.tgz -X .gitignore --exclude=.git .
+	scp /tmp/susam.net.tgz susam.net:/tmp/susam.net.tgz
+	ssh -t susam.net " \
+	  sudo rm -rf /tmp/susam.net/ && \
+	  sudo mkdir -p /tmp/susam.net/ /opt/susam.net/ && \
+	  sudo tar -xf /tmp/susam.net.tgz -C /tmp/susam.net/ && \
+	  sudo cp -R /tmp/susam.net/. /opt/susam.net/ && \
+	  cd /opt/susam.net/ && sudo make live"
+
+
+# Local Publishing Targets
+# ------------------------
+
+cc:
+	git remote remove cc || :
+	git remote add cc git@codeberg.org:susam/$(FQDN).git
+	git remote set-url cc --add git@github.com:susam/$(FQDN).git
+	git remote remove origin || :
+	git remote add origin git@github.com:susam/$(FQDN).git
+	git remote -v
+	git fetch
+	git push origin main
+	git push cc main --tags
+	git push -fu origin cu
+	git push -f cc cu
+
+gitsite: site
+	@echo Creating mirror ...
+	rm -rf /tmp/mirror/
+	mv _site /tmp/mirror/
+	cd /tmp/mirror/ && git init
+	cd /tmp/mirror/ && git config user.name "Susam Pal"
+	cd /tmp/mirror/ && git config user.email susam@susam.net
+	cd /tmp/mirror/ && git add .
+	cd /tmp/mirror/ && git commit -m "Mirror website"
+	cd /tmp/mirror/ && git log
+	@echo Done; echo
+
+mirror: gitsite
+	@echo Publishing mirror to $(WEB_URL) ...
+	cd /tmp/mirror/ && git remote remove origin || :
+	cd /tmp/mirror/ && git remote add origin git@github.com:susam/susam.github.io.git
+	cd /tmp/mirror/ && git remote set-url origin --add git@codeberg.org:susam/pages.git
+	cd /tmp/mirror/ && git push -f origin main
+	@echo Done; echo
+
+
 # Low-Level Targets
 # -----------------
 
-live: site var
+live: site
 	@echo Setting up live directory ...
-	ln -snf /opt/var/ _site/var
 	mv _live _gone || :
 	mv _site _live
 	rm -rf _gone
 	@echo Done; echo
 
-var:
-	mkdir -p /opt/var/
-	chown susam:susam /opt/var/
-
-site: katex
+site: fs
 	@echo Generating website ...
-	sbcl --script site.lisp
+	# The following command intentionally ends with a semicolon to force
+	# make to execute it through the shell.  This keeps 'time' output
+	# consistent with that of 'make dist'.
+	time sbcl --script site.lisp;
 	@echo Done; echo
 
-dist: katex
+profile: fs
+	@echo Profiling website generation ...
+	sbcl --non-interactive --eval '(defvar *site-mode* nil)' --load site.lisp --eval '(sb-profile:profile "CL-USER")' --eval '(main)' --eval '(sb-profile:report :limit 10)'
+	@echo Done; echo
+
+dist: fs
 	@echo Generating distributable website ...
-	sbcl --eval '(setf *break-on-signals* t)' \
-	     --eval '(defvar *params* (list (cons "index" "index.html")))' \
-	     --script site.lisp
+	time sbcl --noinform \
+	          --eval '(setf *break-on-signals* t)' \
+	          --eval '(defvar *params* (list (cons "index" "index.html")))' \
+	          --script site.lisp 2>&1 | tee dist.log
+	@[ -s dist.log ] && \
+	  echo '============================================================' && \
+	  grep -C10 Backtrace dist.log && \
+	  echo '============================================================'; :
+	! grep -q Backtrace dist.log
 	@echo Done; echo
 
 serve:
@@ -288,25 +366,19 @@ deep:
 	mv _site/ _prep/foo/bar/baz/qux/
 	mv _prep/ _site/
 
-katex:
-	mkdir -p _cache/
-	if ! [ -e _cache/katex/ ]; then \
-	    echo Downloading KaTeX ...; \
-	    curl -sSLo _cache/katex.tar.gz https://github.com/KaTeX/KaTeX/releases/download/v0.16.22/katex.tar.gz; \
-	    tar -xvf _cache/katex.tar.gz -C _cache/; \
-	else \
-	    echo KaTeX is already cached.; \
-	fi
+fs: _fs/
 
-mathjax:
-	mkdir -p _cache/
-	if ! [ -e _cache/mathjax/ ]; then \
-	    echo Cloning MathJax ...; \
-	    git -C _cache/ clone -b 3.2.0 --depth 1 https://github.com/mathjax/mathjax.git; \
-	    rm -rf _cache/mathjax/.git; \
-	else \
-	    echo MathJax is already cached.; \
-	fi
+_fs/:
+	echo Downloading FS ...
+	curl -L https://github.com/susam/fs/archive/main.tar.gz | tar -xz
+	mv fs-main/ _fs/
+	du -sh _fs/
+
+rmfs:
+	rm -rf _fs/
+
+refs: rmfs fs
+
 
 # Development Targets
 # -------------------
@@ -327,7 +399,7 @@ loop:
 	while true; do make dist; sleep 5; done
 
 lsc:
-	(find content/comments -name '*.html' && find content/talk -name '*.html') | \
+	(find content/tree/cm -name '*.disc.html' && find content/tree -maxdepth 1 -name '*.talk.html') | \
 	while read -r f; do \
 	  echo $$(grep '<!-- date:' "$$f" "$$f" | wc -l) "$$f"; \
 	done | sort -rn | less -F
@@ -371,41 +443,38 @@ serve-form: site
 	ASDF_OUTPUT_TRANSLATIONS="/opt/cl/:~/cache/cl/" \
 	sbcl --load form.lisp
 
-# List metadata.
 ls-unlist:
 	grep -r 'unlist:' content
 
 ls-tag:
 	grep -r 'tag:' content
 
-# Checks
+
+# Checks To Run In Development Environment
+# ----------------------------------------
+
+check-form-rate:
+	n=0; while [ $$n -le 60 ]; do printf "$$n $$(date +%H:%M:%S) "; \
+	curl -sSI https://susam.net/form/ | head -n 1; n=$$(( $$n + 1 )); \
+	sleep 1; done
+	@echo Done; echo
+
 test:
 	sbcl --noinform --eval "(defvar *quit* t)" --script test.lisp
 
 chk: \
   cvsplit \
   check-abbrev-spacing \
-  check-bre-and \
-  check-bre-or \
+  check-sentence-spacing \
   check-bre-respectively \
-  check-bre-spell-iz \
-  check-bre-spell-yze \
-  check-bre-spell-color \
-  check-bre-spell-center \
-  check-bre-spell-license \
-  check-bre-thatis \
   check-copyright \
   check-entities \
-  check-general-thatis \
-  check-tex-end \
-  check-tex-ltgt \
   check-tex-site \
   check-newline \
   check-nginx \
   check-pre \
   check-quote \
   check-rendering \
-  check-sentence-spacing \
   tidy \
   xmllint
 
@@ -425,11 +494,11 @@ pc:
 
 cat-my-text:
 	find content \( -name '*.html' -o -name '*.txt' \) \
-	  ! -path 'content/comments/*' \
-	  ! -path 'content/talk/*' \
+	  ! -name '*.disc.html' \
+	  ! -name '*.talk.html' \
 	  ! -path 'content/licence/mit.html' \
 	  -exec cat {} + > /tmp/cat
-	sed -n '/name: Susam/,/date:/p' content/comments/*.html >> /tmp/cat
+	sed -n '/name: Susam/,/date:/p' content/tree/cm/*.disc.html content/tree/*.talk.html >> /tmp/cat
 
 cat-all-text:
 	find content -type f \
@@ -456,195 +525,55 @@ check-abbrev-spacing: cat-all-text
 	grep -En '\. {2,}[a-z]' /tmp/tr | tee /tmp/err || true
 	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
-# Check that there is no serial comma before 'and'.
-check-bre-and: cat-my-text
-	tr -s ' \n' ' ' < /tmp/cat | \
-	sed -e 's/<[^>]*>//g' -e '\
-	  s/, And Jill came tumbling after/x)/g; \
-	  s/, and .,.\.) For example, in a statement like/x/g; \
-	  s/, and 11/x/g; \
-	  s/, and 9[., ]/x/g; \
-	  s/, and Hello World, from the future/x/g; \
-	  s/, and I have finally switched from RSS feeds/x/g; \
-	  s/, and I.ll do my best to/x/g; \
-	  s/, and \/n\/ or \/ŋ\//x/g; \
-	  s/, and \\( \\tau \\)/x/g; \
-	  s/, and \\( \\theta \\)/x/g; \
-	  s/, and a great number of contorted trees/x/g; \
-	  s/, and after a while we began to take their complaints/x/g; \
-	  s/, and all is fair in/x/g; \
-	  s/, and arithmetic expansion/x/g; \
-	  s/, and at the scale of the UID/x/g; \
-	  s/, and conforming applications shall not follow/x/g; \
-	  s/, and consider what I wanted to/x/g; \
-	  s/, and effectively subverts/x/g; \
-	  s/, and even deeper, to the well-being of the world/x/g; \
-	  s/, and finally/x/g; \
-	  s/, and in the days before ubiquitous computing/x/g; \
-	  s/, and keeping fun in the house/x/g; \
-	  s/, and language that each implementation documents/x/g; \
-	  s/, and log\.brigg\./x/g; \
-	  s/, and may belong to a fork outside of the repository/x/g; \
-	  s/, and odd, outlandish, swampy trees/x/g; \
-	  s/, and off-by-one errors\. The punchline/x/g; \
-	  s/, and second, as a homophone/x/g; \
-	  s/, and suggested that never knowing the exact answer/x/g; \
-	  s/, and symbolic forms often replaces the conceptual/x/g; \
-	  s/, and the absurdity of including off-by-one errors/x/g; \
-	  s/, and the man.s response that he has quit drinking/x/g; \
-	  s/, and the third orders a quarter of a beer/x/g; \
-	  s/, and their inclusion in a list of "hard things"/x/g; \
-	  s/, and therefore cannot create an off-by-one error/x/g; \
-	  s/, and they are not self-sustaining --- they depend/x/g; \
-	  s/, and we should be open to all interpretations/x/g; \
-	  s/, and we will have a much more careful review process/x/g; \
-	  s/, and with at least as many backticks/x/g; \
+check-sentence-spacing: cat-all-text
+	awk '{printf "%s  ", $$0}' /tmp/cat | \
+	sed -e " \
+	  s/  *'On Painting': '[^']*'/x/g; \
+	  s/  *'The Code Book': '[^']*'/x/g; \
+	  s/  *'Treasure Island': '[^']*'/x/g; \
+	  s/  *Control: '[^']*'/x/g; \
+	  s/  *Cosmos: '[^']*'/x/g; \
+	  s/  *Cosmos: '[^']*'/x/g; \
+	  s/  *Grip: '[^']*'/x/g; \
+	  s/  *Relativity: '[^']*'/x/g; \
+	  s/  *Sentences: '[^']*'/x/g; \
+	  s/  *Test: '[^']*'/x/g; \
+	  s/  *Words: '[^']*'/x/g; \
+	  s/ ? '/x/g; \
+	" -e ' \
+	  s/<code>[^<]*<\/code>/x/g; \
+	  s/<kbd>[^<]*<\/kbd>/x/g; \
+	  s/<samp>[^<]*<\/samp>/x/g; \
+	' -e ' \
+	  s/" \. "/x/g; \
+	  s/  *Hyperspace: "[^"]*"/x/g; \
+	  s/  *Sentences: "[^"]*"/x/g; \
+	  s/  *Test: "[^"]*"/x/g; \
+	  s/ ? [0-9A-Za-z`(-]/x/g; \
+	  s/(n - 1)! \\,/x/g; \
+	  s/0B66:[^<]*<\/samp>/x/g; \
+	  s/117C:[^<]*<\/samp>/x/g; \
+	  s/<!-- [0-9][0-9]*\./<!-- x/g; \
+	  s/<!-- title: [^>]*[?.] -->/<!-- x -->/g; \
+	  s/? "/x/g; \
+	  s/Mr\./x/g; \
+	  s/[a-z]\. [a-z]/x/g; \
+	  s/\( [A-Z]\.\)\{1,3\}/ x/g; \
+	  s/\.\.\./x/g; \
+	  s/\\left\./x/g; \
+	  s/e\.g\./x/g; \
+	  s/ed\. [a-z(]/x/g; \
+	  s/etc\. [a-z]/x/g; \
+	  s/i\.e\./x/g; \
 	' > /tmp/tr
-	grep -Ei ', and([^a-z]|$$)' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}, and([^a-z]|$$).{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure there is no serial comma before 'or'.
-check-bre-or: cat-my-text
-	tr -s ' \n' ' ' < /tmp/cat | \
-	sed -e 's/<[^>]*>//g' -e '\
-	  s/, or [0-9.]* beers/x/g; \
-	  s/, or a play on words/x/g; \
-	  s/, or a comment, the characters \/\/ introduce a comment/x/g; \
-	  s/, or calling a function that does any of those operations/x/g; \
-	  s/, or most simply l[ag]/x/g; \
-	  s/, or other behavior where this International Standard/x/g; \
-	  s/, or perhaps twenty/x/g; \
-	  s/, or pinhole camera/x/g; \
-	  s/, or simply move on to other subjects and forget/x/g; \
-	  s/, or spelling is bound to contain at least one eror/x/g; \
-	  s/, or the Poincar&eacute; conjecture, really matter?/x/g; \
-	  s/, or to no resource at all/x/g; \
-	  s/, or typographical error/x/g; \
-	' > /tmp/tr
-	grep -Ei ', or([^a-z]|$$)' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}, or([^a-z]|$$).{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
+	grep -Ei '[.?!] [^ ]' /tmp/tr > /tmp/err || true
+	grep -Eino '.{0,30}[.?!] [^ ].{0,30}' /tmp/err || true
+	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure there is no comma before 'respectively'.
 check-bre-respectively: cat-my-text
 	tr -s ' \n' ' ' < /tmp/cat | grep -Ei ', respectively' > /tmp/err || true
 	grep -Eino '.{0,30}, respectively.{0,30}|$$)' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure '-ize' spellings do not occur.
-check-bre-spell-iz: cat-my-text
-	sed ' \
-	  s/0ZTIz/x/g; \
-	  s/<code>[^<]*<\/code>/x/g; \
-	  s/<em>The Customize Interface<\/em>/x/g; \
-	  s/Customize Jenkins/x/g; \
-	  s/ELIZA/x/g; \
-	  s/Erase Customizations/x/g; \
-	  s/I apologize for any confusion/x/g; \
-	  s/I apologize for misunderstanding the joke/x/g; \
-	  s/I apologize for the error/x/g; \
-	  s/M-x customize[-a-z]* RET/x/g; \
-	  s/MessageFTS_docsize/x/g; \
-	  s/Optimizing Compiler/x/g; \
-	  s/Registrant Organization/x/g; \
-	  s/ResizableDoubleArray/x/g; \
-	  s/Revert This Session.s Customizations/x/g; \
-	  s/Size$$/x/g; \
-	  s/Size[^a-z]/x/g; \
-	  s/Sizing[^a-z]/x/g; \
-	  s/Undo Edits in Customization Buffer/x/g; \
-	  s/[^A-Za-z]AUTHorize[^A-Za-z]/x/g; \
-	  s/[^A-Za-z]Dehumanized$$/x/g; \
-	  s/[^A-Za-z][Hh]orizontal[^A-Za-z]/x/g; \
-	  s/[^A-Za-z][Rr]esize/x/g; \
-	  s/[^A-Za-z][Ss]ize$$/x/g; \
-	  s/[^A-Za-z][Ss]ize[^A-Za-z]/x/g; \
-	  s/[^A-Za-z][Ss]ize[ds]$$/x/g; \
-	  s/[^A-Za-z][Ss]ize[ds][^A-Za-z]/x/g; \
-	  s/[^A-Za-z]box-sizing[^A-Za-z]/x/g; \
-	  s/[^A-Za-z]horizon/x/g; \
-	  s/[^A-Za-z]netizens[^A-Za-z]/x/g; \
-	  s/[^A-Za-z]prize$$/x/g; \
-	  s/[^A-Za-z]prize[^A-Za-z]/x/g; \
-	  s/[^A-Za-z]quiz/x/g; \
-	  s/[^A-Za-z]resizing[^A-Za-z]/x/g; \
-	  s/[^A-Za-z]seize[^A-Za-z]/x/g; \
-	  s/[^A-Za-z]sizeof[^A-Za-z]/x/g; \
-	  s/[_-]SIZE/x/g; \
-	  s/initializer (6.7.8)/x/g; \
-	  s/izz/x/g; \
-	  s/package-initialize/x/g; \
-	  s/public synchronized/x/g; \
-	  s/these two backtick strings, normalized in the/x/g; \
-	  s/traumatized by Java-esque/x/g; \
-	  s/[^A-Za-z]verizon/x/g; \
-	  s/[^A-Za-z]wizards\{0,1\}[^A-Za-z]/x/g; \
-	' /tmp/cat > /tmp/tr
-	grep -Ei 'iz[a-z]' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}iz[a-z].{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure '-yze' spellings do not occur.
-check-bre-spell-yze: cat-my-text
-	sed ' \
-	  s/Field\.Index\.ANALYZED/x/g; \
-	  s/StandardAnalyzer/x/g; \
-	' /tmp/cat > /tmp/tr
-	grep -in 'yze' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}yze.{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure 'color' spelling does not occur.
-check-bre-spell-color: cat-my-text
-	sed ' \
-	  s/<code>[^<]*<\/code>/x/g; \
-	  s/<em>Supported colors<\/em>/x/g; \
-	  s/color: #/x/g; \
-	  s/color: inherit/x/g; \
-	  s/color: linear-gradient/x/g; \
-	  s/currentColor/x/g; \
-	  s/href="[^"]*"/x/g; \
-	  s/id="[^"]*"/x/g; \
-	  s/prefers-color-scheme/x/g; \
-	  s/src="[^"]*"/x/g; \
-	  s/style="[^"]*"/x/g; \
-	  s/style\.accentColor/x/g; \
-	  s/style\.color/x/g; \
-	' /tmp/cat > /tmp/tr
-	grep -Ei 'color' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}color.{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure 'center' spelling does not occur.
-check-bre-spell-center: cat-my-text
-	sed ' \
-	  s/\.center/x/g; \
-	  s/align-items: center/x/g; \
-	  s/justify-content: center/x/g; \
-	  s/style\.[A-Za-z]* = .center./x/g; \
-	  s/text-align: center/x/g; \
-	  s/class="[^"]*"/x/g; \
-	  s/style="[^"]*"/x/g; \
-	' /tmp/cat > /tmp/tr
-	grep -Ei 'center' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}center.{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure 'license' spelling does not occur.
-check-bre-spell-license: cat-my-text
-	sed ' \
-	  s/"credits" or "license" for more information/x/g; \
-	  s/<code>[^<]*<\/code>/x/g; \
-	  s/[^A-Za-z]LICENSE\.md[^A-Za-z]/x/g; \
-	' /tmp/cat > /tmp/tr
-	grep -Ei 'license' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}license.{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure 'i.e.' and 'e.g.' are not followed by comma.
-check-bre-thatis: cat-my-text
-	grep -E '(i\.e\.|e\.\g.),' /tmp/cat | tee /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure copyright footers have the current year.
@@ -671,54 +600,6 @@ check-entities:
 	grep -Ei '[<>&]' /tmp/tr > /tmp/err || true
 	grep -Eino '.{0,30}([<>&]).{0,30}' /tmp/err || true
 	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure that 'i.e.' and 'e.g.' are preceded by commas.
-check-general-thatis:
-	find content \( -name '*.html' -o -name '*.txt' \) -exec cat {} + | \
-	tr -s ' \n' ' ' > /tmp/tr
-	grep -Ei '[^,] (i\.e\.|e\.g\.)' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}[^,] (i\.e\.|e\.g\.).{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-# Ensure '\)' is not preceded by punctuation.  For example, '.  \)'
-# and ', \)' are considered errors.  However, certain symbols are
-# allowed before '\)' as they commonly appear in mathematical
-# expressions within LaTeX delimiters.  For example, ') \)' and '} \)'
-# are permitted.
-check-tex-end:
-	find content -name '*.html' -exec cat {} + | \
-	tr -s ' \n' ' ' | \
-	sed 's/<code>[^<]*<\/code>/x/g' | \
-	tr -s ' \n' ' ' | \
-	sed "s/' \\\\)/\\\\prime \\\\)/g" > /tmp/tr
-	grep -Ei '[^])}+*0-9A-Za-z] \\\)' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}[^])}+*0-9A-Za-z] \\\).{0,30}' /tmp/err || true
-	@! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
-
-NX = NX=$$(printf '\nx'); NL=$${NX%x}
-NL = \\$${NL}
-
-# Ensure that \lt and \gt is used in LaTeX instead of &lt; and &gt;.
-check-tex-ltgt:
-	# Match \( =>     Regex \\(     => Shell \\\\(.
-	# Match \[ =>     Regex \\\[    => Shell \\\\\\[.
-	# Match \] =>     Regex \\]     => Shell \\\\].
-	# Match \begin => Regex \\begin => Shell \\\\begin.
-	$(NX); find content -name '*.html' -exec cat {} + | \
-	tr -s ' \n' ' ' | \
-	sed "\
-	  s/<code>[^<]*<\/code>/x/g; \
-	  s/\&gt;\&gt;\&gt;/x/g; \
-	  s/\\\\(/$(NL)&/g; \
-	  s/\\\\)/&$(NL)/g; \
-	  s/\\\\\\[/$(NL)&/g; \
-	  s/\\\\]/&$(NL)/g; \
-	  s/\\\\begin{[^}]*}/$(NL)&/g; \
-	  s/\\\\end{[^}]*}/&$(NL)/g; \
-	" | grep -Ei '\\\(|\\\)|\\\[|\\\]|\\begin|\\end' > /tmp/tr
-	grep '&[lg]t;' /tmp/tr > /tmp/err || true
-	cat /tmp/err
-	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Ensure that sentence-ending punctuation does not appear in the
 # generated website, as web browsers may place such punctuation on the
@@ -775,9 +656,10 @@ check-nginx:
 	diff -u /tmp/http.susam.net /tmp/https.susam.net
 	echo "$@: PASS"
 
+# Check that <pre> elements contain <code> or <samp> elements.
 check-pre:
 	find content -name '*.html' \
-	  ! -path 'content/comments/eql.html' \
+	  ! -path 'content/tree/cm/eql.disc.html' \
 	  ! -path 'content/tree/cfrs.html' \
 	  ! -path 'content/tree/code/web/miller-rabin-speed-test.html' \
 	  ! -path 'content/tree/code/test/lorem.page.html' \
@@ -800,52 +682,6 @@ check-quote:
 check-rendering:
 	grep -r --include '*.html' --include '*.xml' --include '*.css' '{{' _site; [ $$? = 1 ]
 	echo "$@: PASS"
-
-# Ensure double spaces between sentences.
-check-sentence-spacing: cat-all-text
-	awk '{printf "%s  ", $$0}' /tmp/cat | \
-	sed -e " \
-	  s/  *'On Painting': '[^']*'/x/g; \
-	  s/  *'The Code Book': '[^']*'/x/g; \
-	  s/  *'Treasure Island': '[^']*'/x/g; \
-	  s/  *Control: '[^']*'/x/g; \
-	  s/  *Cosmos: '[^']*'/x/g; \
-	  s/  *Cosmos: '[^']*'/x/g; \
-	  s/  *Grip: '[^']*'/x/g; \
-	  s/  *Relativity: '[^']*'/x/g; \
-	  s/  *Sentences: '[^']*'/x/g; \
-	  s/  *Test: '[^']*'/x/g; \
-	  s/  *Words: '[^']*'/x/g; \
-	  s/ ? '/x/g; \
-	" -e ' \
-	  s/<code>[^<]*<\/code>/x/g; \
-	  s/<kbd>[^<]*<\/kbd>/x/g; \
-	  s/<samp>[^<]*<\/samp>/x/g; \
-	' -e ' \
-	  s/" \. "/x/g; \
-	  s/  *Hyperspace: "[^"]*"/x/g; \
-	  s/  *Sentences: "[^"]*"/x/g; \
-	  s/  *Test: "[^"]*"/x/g; \
-	  s/ ? [0-9A-Za-z`(-]/x/g; \
-	  s/(n - 1)! \\,/x/g; \
-	  s/0B66:[^<]*<\/samp>/x/g; \
-	  s/117C:[^<]*<\/samp>/x/g; \
-	  s/<!-- [0-9][0-9]*\./<!-- x/g; \
-	  s/<!-- title: [^>]*[?.] -->/<!-- x -->/g; \
-	  s/? "/x/g; \
-	  s/Mr\./x/g; \
-	  s/[a-z]\. [a-z]/x/g; \
-	  s/\( [A-Z]\.\)\{1,3\}/ x/g; \
-	  s/\.\.\./x/g; \
-	  s/\\left\./x/g; \
-	  s/e\.g\./x/g; \
-	  s/ed\. [a-z(]/x/g; \
-	  s/etc\. [a-z]/x/g; \
-	  s/i\.e\./x/g; \
-	' > /tmp/tr
-	grep -Ei '[.?!] [^ ]' /tmp/tr > /tmp/err || true
-	grep -Eino '.{0,30}[.?!] [^ ].{0,30}' /tmp/err || true
-	! [ -s /tmp/err ] && echo "$@: PASS" || (echo "$@: ERROR" && false)
 
 # Run HTML tidy on the website.
 tidy: dist
@@ -877,38 +713,6 @@ check-links:
 	-wget -r -l 0 --spider -nd -nv http://localhost:8000/ -o run.log
 	grep -B1 broken run.log
 	@echo Done; echo
-
-check-paths:
-	# Blog legacy URL redirects
-	curl -sSI https://susam.in/about.html | grep 'Location: https://susam.net/about.html'
-	curl -sSI https://susam.net/blog/feed.xml | grep 'Location: https://susam.net/feed.xml'
-	# HTTPS redirects
-	curl -sSI http://susam.net/fd-100.html | grep 'Location: https://susam.net/fd-100.html'
-	curl -sSI http://susam.net/blog/fd-100.html | grep 'Location: https://susam.net/blog/fd-100.html'
-	# Main Blog
-	curl -sSI https://susam.net/fd-100.html | grep '200 OK'
-	curl -sSI https://susam.net/comments/fd-100.html | grep '200 OK'
-	@echo Done; echo
-
-check-js:
-	npm install --no-save standard eslint-plugin-html
-	find . -name "*.html" | grep -v _site/ | xargs npx standard --plugin html
-	@echo Done; echo
-
-list-no-meta:
-	grep -r --include "*.page.html" -L date: content; echo
-	grep -r -l date: --exclude-dir comments content | xargs grep -L tag:; echo
-	grep -r --include "????-??-??-*.html" --exclude-dir comments -L tag:; echo
-	@echo Done; echo
-
-check-form-rate:
-	n=0; while [ $$n -le 60 ]; do printf "$$n $$(date +%H:%M:%S) "; \
-	curl -sSI https://susam.net/form/ | head -n 1; n=$$(( $$n + 1 )); \
-	sleep 1; done
-	@echo Done; echo
-
-check-form-live: checkroot
-	make check-form URL=https://susam.net/ SLEEP=15
 
 check-form-dev:
 	make check-form URL=http://localhost:4242/ SLEEP=0
@@ -1037,52 +841,3 @@ post-subscriber1:
 
 post-subscriber2:
 	curl -sS 'localhost:4242/form/subscribe/' -d email=foo@example.com -d name= -d stack=cadr | grep '<li>'
-
-cc:
-	git remote remove cc || :
-	git remote add cc git@codeberg.org:susam/$(FQDN).git
-	git remote set-url cc --add git@github.com:susam/$(FQDN).git
-	git remote remove origin || :
-	git remote add origin "$$(git remote get-url cc)"
-	git remote -v
-	git push -u origin main --tags
-	git push cc main --tags
-	git push -fu origin cu
-	git push -f cc cu
-
-# Publish the content update ('cu') branch to the web server.
-cu:
-	git push origin main
-	git push -f origin cu
-	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu"
-
-# Publish the content update ('cu') branch and restart the web server.
-cure:
-	git push origin main
-	git push -f origin cu
-	ssh -t susam.net "cd /opt/susam.net/ && sudo make recu restart"
-
-pull-backup:
-	mkdir -p ~/bkp/
-	ssh susam.net "tar -czf - -C /opt/data/ form/" > ~/bkp/form-$$(date "+%Y-%m-%d_%H-%M-%S").tgz
-	ls -lh ~/bkp/
-
-gitsite: site
-	@echo Creating mirror ...
-	rm -rf /tmp/mirror/
-	mv _site /tmp/mirror/
-	cd /tmp/mirror/ && git init
-	cd /tmp/mirror/ && git config user.name "Susam Pal"
-	cd /tmp/mirror/ && git config user.email susam@susam.net
-	cd /tmp/mirror/ && git add .
-	cd /tmp/mirror/ && git commit -m "Mirror website"
-	cd /tmp/mirror/ && git log
-	@echo Done; echo
-
-mirror: gitsite
-	@echo Publishing mirror to $(WEB_URL) ...
-	cd /tmp/mirror/ && git remote remove origin || :
-	cd /tmp/mirror/ && git remote add origin git@codeberg.org:susam/pages.git
-	cd /tmp/mirror/ && git remote set-url origin --add git@github.com:susam/susam.github.io.git
-	cd /tmp/mirror/ && git push -f origin main
-	@echo Done; echo

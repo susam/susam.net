@@ -1,0 +1,69 @@
+form {
+  margin: 1em 0;
+}
+input, textarea, button {
+  border-color: {{ lt-line-colour }};
+  font-family: {{ font-family }};
+  font-size: 1em;
+  margin-top: 1em;
+}
+input:first-child {
+  margin-top: 0;
+}
+input, textarea {
+  border: thin solid {{ lt-line-colour }};
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5em;
+}
+textarea {
+  min-height: 10em;
+}
+button {
+  min-width: 75%;
+  min-height: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+button:active {
+  background: {{ lt-fill-colour }};
+}
+.guide, .privacy {
+  text-align: center;
+}
+.status {
+  display: none;
+}
+.status.success, .status.error {
+  display: block;
+  border-width: medium;
+  border-style: double;
+  margin: 1em 0;
+}
+.status.success {
+  color: {{ lt-okay-colour }};
+  border-color: {{ lt-okay-colour }};
+}
+.status.error {
+  color: {{ lt-err-colour }};
+  border-color: {{ lt-err-colour }};
+}
+@media (prefers-color-scheme: dark) {
+  input, textarea, button {
+    background: {{ dk-fill-colour }};
+    color: {{ dk-body-colour }};
+    border-color: {{ dk-line-colour }};
+  }
+  button:active {
+    background: {{ dk-edge-colour }};
+  }
+  .status.error {
+    color: {{ dk-err-colour }};
+    border-color: {{ dk-err-colour }};
+  }
+  .status.success {
+    color: {{ dk-okay-colour }};
+    border-color: {{ dk-okay-colour }};
+  }
+}

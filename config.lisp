@@ -1,0 +1,53 @@
+;;; Copyright (c) 2022-2026 Susam Pal
+;;; All rights reserved.
+
+(("params" . (("author" . "Susam Pal")
+              ("start-year" . 2001)
+              ("nick" . "Susam")
+              ("subtitle" . " - Susam Pal")
+              ("site-url" . "https://susam.net/")
+              ("site-uuid" . "92c43730-c96a-44a7-a2c3-ed18dcc268f7")))
+
+ ;; Stylesheet parameters.
+ ("style" . (("font-family" . "georgia, serif")
+             ;; Light colour scheme.
+             ("lt-fill-colour" . "#eee") ; 1.2
+             ("lt-edge-colour" . "#ccc") ; 1.6
+             ("lt-code-colour" . "#050") ; 2.3, 7.9, 9.1
+             ("lt-samp-colour" . "#730") ; 2.3, 8.0, 9.3
+             ("lt-line-colour" . "#999") ; 2.8
+             ("lt-okay-colour" . "#060") ; 7.2
+             ("lt-err-colour" . "#900")  ; 8.9
+             ;; Dark scheme overrides.
+             ("dk-fill-colour" . "#000") ; 1.1
+             ("dk-edge-colour" . "#333") ; 1.5
+             ("dk-code-colour" . "#9c6") ; 1.0, 11.2, 10.1
+             ("dk-samp-colour" . "#db0") ; 1.0, 11.2, 10.1
+             ("dk-line-colour" . "#666") ; 3.3
+             ("dk-okay-colour" . "#3c6") ; 9.0
+             ("dk-err-colour" . "#f99")
+             ;; Dark scheme special colours.
+             ("dk-bg-colour" . "#111")
+             ("dk-body-colour" . "#bbb") ; 10.9, 9.8
+             ("dk-link-colour" . "#9bf") ; 1.0, 9.8, 9.8
+             ("dk-lv-colour" . "#a9f")   ; 1.3, 7.8, 9.8
+             ("dk-la-colour" . "#f99"))) ; 1.1, 9.2, 9.8
+
+ ;; Tags: (tag-name . tag-title).
+ ("tags" . (("Absurd" . "{{ nick }}'s Absurd Explorations")
+            ("HTML" . "{{ nick }}'s HTML Tools")
+            ("Music" . "{{ nick }}'s Music")
+            ("Notes" . "{{ nick }}'s Notes")
+            ("Puzzle" . "{{ nick }}'s Puzzles")
+            ("Story" . "{{ nick }}'s Stories")
+            ("Web" . "{{ nick }}'s Web Posts")
+            (nil . "{{ nick }}'s {{ tag-name }} Pages")))
+
+ ;; Zones: (zone-key zone-list-path zone-title zone-link-text).
+ ("zones" . (("main" "index.html" "{{ author }}" nil)
+             ("alt" "maze.html" "{{ nick }}'s Maze" "Maze")
+             ("cc/" "cc/index.html" nil "Club")))
+
+ ;; Meets: (meet-slug meet-title)
+ ("meets" . (("iant" "Introduction to Analytic Number Theory")
+             ("mastering-emacs" "Mastering Emacs"))))

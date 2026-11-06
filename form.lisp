@@ -110,13 +110,12 @@
      (aput "root" "../../" ,params)
      (aput "index" "" ,params)
      (aput "zone-link" "" ,params)
-     (aput "current-year" (nth-value 5 (get-decoded-time)) ,params)
+     (aput "year" (nth-value 5 (get-decoded-time)) ,params)
      (aput "neat-url" (fstr "https://susam.net~a" (hunchentoot:request-uri*)) ,params)
-     (aput "heads" (head-html "main.css" ,params) ,params)
-     (aput "imports" (head-html "form.css" ,params) ,params)
-     (aput "more" (also-html (aget "also" ,params) ,params) ,params)
-     (when (probe-file "params.lisp")
-       (setf params (append (read-list "params.lisp") params)))))
+     (aput "head" (head-html '("main.css" "form.css")
+                              (aget "root" ,params) nil "no") ,params)
+     (setf params (append (aget "params" (read-list "config.lisp"))
+                          params))))
 
 (defun form-index-page ()
   "Return HTML response for form index page."
@@ -131,7 +130,7 @@
 (defun format-status (lines)
   "Format status lines for display in form response."
   (setf lines (loop for x in lines collect (format nil "<li>~a</li>~%" x)))
-  (setf lines (join-strings lines))
+  (setf lines (join-string-list lines))
   (setf lines (format nil "<ul>~%~a</ul>~%" lines)))
 
 (defun read-options (directory)
@@ -346,7 +345,7 @@
     (when (getf options :read-only)
       (push "New requests have been disabled temporarily." errors))
     (when (> (length (aget "email" params)) max-email-length)
-      (push "Email exceeds ~a characters." max-email-length) errors)
+      (push (format nil "Email exceeds ~a characters." max-email-length) errors))
     (when (setf result (dodgy-ip-p options ip))
       (push (format nil "IP address ~a is banned." result) errors))
     (when (setf result (global-flood-p options current-time *last-post-time*))

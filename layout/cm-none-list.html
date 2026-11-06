@@ -1,0 +1,17 @@
+<!-- layout: page -->
+<h1>{{ title }}</h1>
+<p>No comments yet!</p>
+<div><a href="../form/comment/{{ index }}?p=new">Post Comment</a></div>
+<script>
+  try {
+    const a = document.querySelector('a')
+    const ref = new URL(document.referrer)
+    if (ref.origin === window.location.origin) {
+      const url = new URL(a.href)
+      url.searchParams.set('p', ref.pathname)
+      a.href = url.href
+    }
+  } catch (e) {
+    console.log('referrer:', document.referrer, '; error:', e)
+  }
+</script>
