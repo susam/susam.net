@@ -36,7 +36,6 @@
  ;; Tags: (tag-name . tag-title).
  ("tags" . (("Absurd" . "{{ nick }}'s Absurd Explorations")
             ("HTML" . "{{ nick }}'s HTML Tools")
-            ("Music" . "{{ nick }}'s Music")
             ("Notes" . "{{ nick }}'s Notes")
             ("Puzzle" . "{{ nick }}'s Puzzles")
             ("Story" . "{{ nick }}'s Stories")
@@ -46,6 +45,7 @@
  ;; Zones: (zone-key zone-list-path zone-title zone-link-text).
  ("zones" . (("main" "index.html" "{{ author }}" nil)
              ("alt" "maze.html" "{{ nick }}'s Maze" "Maze")
+             ("music" "music/index.html" "{{ nick }}'s Music" "Music")
              ("cc/" "cc/index.html" nil "Club")))
 
  ;; Meets: (meet-slug meet-title)

@@ -610,16 +610,11 @@
       (setf sep (fstr " |~%~a" (repeat-string indent " "))))
     html))
 
-(defun doc-in-zone-p (doc zone)
-  "Check whether a document belongs to the given zone."
-  (let ((key (first zone)))
-    (or (and (string-ends-with "/" key)
-             (string-starts-with key (aget "doc-path" doc)))
-        (member key (csv-split (aget "zone" doc)) :test #'string=))))
-
 (defun zone-link (doc zones params)
   "Create HTML for zone link for the given document."
-  (let ((zone (find-if (lambda (z) (doc-in-zone-p doc z)) zones)))
+  (let* ((zone-key (find-if (lambda (key) (find key zones :key #'first :test #'string=))
+                            (csv-split (aget "zone" doc))))
+         (zone (find zone-key zones :key #'first :test #'string=)))
     ;; If zone-link-text is set, create zone-link.
     (if (fourth zone)
         (fstr "~%    <a href=\"~a~a\">~a</a>"
@@ -796,6 +791,13 @@
 
 ;;; Filters
 ;;; -------
+
+(defun doc-in-zone-p (doc zone)
+  "Check whether a document belongs to the given zone."
+  (let ((key (first zone)))
+    (or (and (string-ends-with "/" key)
+             (string-starts-with key (aget "doc-path" doc)))
+        (member key (csv-split (aget "zone" doc)) :test #'string=))))
 
 (defun sort-by-date (items)
   "Sort items in chronological order."
