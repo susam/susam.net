@@ -78,13 +78,23 @@
         padding: 0.5em;
       }
       table {
-        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
         border-collapse: collapse;
       }
       th, td {
         border: thin solid #999;
         padding: 0.3em 0.4em;
         text-align: left;
+      }
+      .toc table {
+        width: 100%;
+      }
+      .toc th:not(:last-child), .toc td:not(:last-child) {
+        text-align: center;
+      }
+      .toc th:last-child, .toc td:last-child {
+        padding-left: 2em;
       }
       dialog::backdrop {
         background: #000;
@@ -719,6 +729,7 @@
         th2.innerHTML = 'Question'
         th3.innerHTML = 'Title'
         div.append(h1, table)
+        table.className = 'toc'
         table.append(trHead)
         trHead.append(th1, th2, th3)
         for (let n = 1; n <= maxSet(); n++) {
@@ -934,7 +945,7 @@
           date: '2025-10-12',
           title: 'Lat Pull-Down',
           tags: [
-            'Health',
+            'Anatomy',
             'Terminology'
           ],
           authors: [
@@ -1240,11 +1251,11 @@
           ],
           question: 'What is the meaning of the term <em>tree well</em>?',
           options: [
-            'An area of loose snow around the trunk of a tree.',
-            'A natural spring at the base of a tree.',
-            'A pit dug for planting a tree.',
-            'A brick structure built around a tree for protection and irrigation.',
-            'A cleared ring of soil around a tree to prevent competing vegetation.'
+            'An area of loose snow around the trunk of a tree',
+            'A natural spring at the base of a tree',
+            'A pit dug for planting a tree',
+            'A brick structure built around a tree for protection and irrigation',
+            'A cleared ring of soil around a tree to prevent competing vegetation'
           ],
           explanation: 'A <em>tree well</em> is a depression that forms around the base of a\ntree when snow accumulates around it.  The lower branches of trees\nprevent snow from settling closely around the trunk, leaving a loose,\nhidden cavity.\n\nTree wells can pose a danger to skiers and snowboarders, who may fall\ninto the concealed cavity and become trapped in the loose snow.'
         },
@@ -1285,7 +1296,103 @@
             'An inability to recognise familiar voices',
             'Heightened sensitivity to all sound'
           ],
-          explanation: 'The word <em>misophonia</em> comes from the Greek <em>misos</em>,\nmeaning hatred and <em>phone</em>, meaning sound.  Literally, it\nmeans hatred of sound.  In clinical psychology, however, this term\nrefers to a condition in which particular ordinary sounds such as\nchewing, tapping or breathing trigger intense feelings of irritation,\nanger or distress.  Unlike general sound sensitivity, the reaction is\nusually tied to specific trigger sounds.'
+          explanation: 'The word <em>misophonia</em> comes from the Greek <em>misos</em>\nmeaning hatred and <em>phone</em> meaning sound.  Literally, it means\nhatred of sound.  In clinical psychology, however, this term refers to\na condition in which particular ordinary sounds such as chewing,\ntapping or breathing trigger intense feelings of irritation, anger or\ndistress.  Unlike general sound sensitivity, the reaction is usually\ntied to specific trigger sounds.'
+        },
+        {
+          date: '2026-03-02',
+          title: 'Hart\'s Rules',
+          tags: [
+            'Literature'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is Hart\'s Rules?',
+          options: [
+            'A long running style guide in the English language for editors and\nauthors.',
+            'A handbook outlining standard laboratory safety procedures in chemical\nresearch.',
+            'A mathematical treatise proposing formal rules for symbolic logic and\nproof systems.',
+            'A clinical manual classifying rare auditory processing disorders in\nneurology.'
+          ],
+          explanation: 'Hart\'s Rules is the oldest continuously updated style guide in\nEnglish.  The first edition appeared in 1893 under the title <em>Rules\nfor Compositors and Readers at the University Press, Oxford</em>.  It\nwas compiled by Horace Hart, an English printer and biographer.\n\nAlthough it was originally produced for internal use at Oxford\nUniversity Press, it soon gained a wide readership among authors and\nprinters.  Copies circulated informally and were even resold in London\nbookshops without Hart\'s permission.  In response, Hart issued a\ncommercial edition in 1904 for a broader audience.  The handbook has\nsince been revised and expanded several times.  The most recent\nedition, published in 2014, is titled <em>New Hart\'s Rules: The Oxford\nStyle Guide</em>, 2nd ed.'
+        },
+        {
+          date: '2026-03-09',
+          title: 'Cat Brain',
+          tags: [
+            'Biology',
+            'Anatomy'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'What is the approximate size of a domestic cat\'s brain?',
+          options: [
+            'About the size of a walnut',
+            'About the size of a pea',
+            'About the size of a golf ball',
+            'About the size of a tennis ball',
+            'About the size of a cat\'s femur'
+          ],
+          explanation: 'The brain of a domestic cat is roughly the size of a walnut.  It is\nabout 5 cm in length.  It typically has a mass between 25 g and 30 g.\nA cat\'s brain usually has a mass of less than 1% of its total body\nmass.  By comparison, the human brain has a mass of about 2% of the\ntotal body mass.\n\nDespite its small size, a cat\'s brain is highly specialised for\nsensory information processing, balance and motor control.  Cats rely\nheavily on vision, hearing, smell and whisker-based touch.  The feline\nbrain is good at observational learning and problem-solving as well as\nretaining long-term memories.'
+        },
+        {
+          date: '2026-03-09',
+          title: 'Print Between Matching Lines',
+          tags: [
+            'Computing',
+            'Unix'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'Which of the following Unix commands prints lines between a line\ncontaining the letter <code>A</code> and a line containing the letter\n<code>B</code>, excluding the two matching lines?',
+          options: [
+            '<code>sed \'/A/,/B/!d; //d\'</code>',
+            '<code>sed \'s/A/B/g\'</code>',
+            '<code>sed \'/A/,/B/d\'</code>',
+            '<code>sed \'/A/,/B/!d\'</code>',
+            '<code>sed -n \'/A/,/B/p\'</code>'
+          ],
+          explanation: 'The correct answer is <code>sed \'/A/,/B/!d; //d\'</code>.\n\nHere is a working example:\n\n<pre><samp>$ <kbd>printf \'1\\n2\\nA\\nX\\nY\\nB\\n4\\n5\\n\' | sed \'/A/,/B/!d; //d\'</kbd>\nX\nY</samp></pre>\n\nThe negated command <code>!d</code> deletes everything not matched by\nthe 2-address range <code>/A/,/B/</code>, i.e. it deletes everything\nbefore the line matching <code>/A/</code> as well as everything after\nthe line matching <code>/B/</code>.  This leaves only the lines from\n<code>A</code> to <code>B</code>, inclusive. Finally, <code>//</code>\n(the empty regular expression) reuses the most recently used regular\nexpression.  So when <code>/A/,/B/</code> matches <code>A</code>, the\ncommand <code>//d</code> matches <code>A</code> and deletes it.\nSimilarly, when <code>/A/,/B/</code> matches <code>B</code>, the\ncommand <code>//d</code> matches <code>B</code> and deletes it.  In\nthe end, we are left with the lines between <code>A</code> and\n<code>B</code>, exclusive.\n\nThe command <code>sed \'s/A/B/g\'</code> substitutes all occurrences of\n<code>A</code> with <code>B</code> on each line as shown below:\n\n<pre><samp>$ <kbd>printf \'1\\n2\\nA\\nX\\nY\\nB\\n4\\n5\\n\' | sed \'s/A/B/g\'</kbd>\n1\n2\nB\nX\nY\nB\n4\n5</samp></pre>\n\nThe command <code>sed \'/A/,/B/d\'</code> deletes everything from the\nline matching <code>/A/</code> to the line matching <code>/B/</code>,\nincluding the matching lines.  For example:\n\n<pre><samp>$ <kbd>printf \'1\\n2\\nA\\nX\\nY\\nB\\n4\\n5\\n\' | sed \'/A/,/B/d\'</kbd>\n1\n2\n4\n5</samp></pre>\n\nThe command <code>sed \'/A/,/B/!d\'</code> deletes everything not\nmatched by the 2-address range <code>/A/,/B/</code>.\n\n<pre><samp>$ <kbd>printf \'1\\n2\\nA\\nX\\nY\\nB\\n4\\n5\\n\' | sed \'/A/,/B/!d\'</kbd>\nA\nX\nY\nB</samp></pre>\n\nThe <code>-n</code> option of the command <code>sed -n\n\'/A/,/B/p\'</code> first suppresses the default behaviour of printing\neach line to output.  Then the remainder of the command then prints\nonly lines matched by the 2-address range <code>/A/,/B/</code>.  The\nend result is the same as that of the above command.  Here is an\nexample:\n\n<pre><samp>$ <kbd>printf \'1\\n2\\nA\\nX\\nY\\nB\\n4\\n5\\n\' | sed -n \'/A/,/B/p\'</kbd>\nA\nX\nY\nB</samp></pre>'
+        },
+        {
+          date: '2026-11-22',
+          title: 'Music Note Values',
+          tags: [
+            'Music'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'In musical notation, what are the British names for whole, half,\nquarter and eighth notes, respectively?',
+          options: [
+            'Semibreve, minim, crotchet and quaver',
+            'Minim, semibreve, quaver and crotchet',
+            'Semibreve, crotchet, minim and semiquaver',
+            'Breve, minim, crotchet and semiquaver',
+            'Whole note, half note, quarter note and eighth note'
+          ],
+          explanation: 'The British names for whole, half, quarter and eighth notes are\nsemibreve, minim, crotchet and quaver, respectively.  The table below\nshows these and other note values with their American equivalents.  Each\nvalue is half as long as the one above it.\n\n<table>\n<thead>\n<tr><th>British Name</th><th>American Name</th></tr>\n</thead>\n<tbody>\n<tr><td>Breve</td><td>Double whole note</td></tr>\n<tr><td>Semibreve</td><td>Whole note</td></tr>\n<tr><td>Minim</td><td>Half note</td></tr>\n<tr><td>Crotchet</td><td>Quarter note</td></tr>\n<tr><td>Quaver</td><td>Eighth note</td></tr>\n<tr><td>Semiquaver</td><td>Sixteenth note</td></tr>\n<tr><td>Demisemiquaver</td><td>Thirty-second note</td></tr>\n<tr><td>Hemidemisemiquaver</td><td>Sixty-fourth note</td></tr>\n</tbody>\n</table>\n\nShorter note values are very rare in musical notation.  A 128th note is\ncalled a semihemidemisemiquaver, and a 256th note a\ndemisemihemidemisemiquaver.'
+        },
+        {
+          date: '2026-11-23',
+          title: 'ID3v2.3 Frame IDs',
+          tags: [
+            'Computing',
+            'Audio'
+          ],
+          authors: [
+            'Susam Pal'
+          ],
+          question: 'According to the ID3v2.3 specification, which frame IDs identify the\nsong title, lead artist and year, respectively?',
+          options: [
+            '<code>TIT2</code>, <code>TPE1</code>, <code>TYER</code>',
+            '<code>TT2</code>, <code>TP1</code>, <code>TYE</code>',
+            '<code>TIT2</code>, <code>TPE1</code>, <code>TDRC</code>',
+            '<code>TIT1</code>, <code>TPE3</code>, <code>TCOP</code>'
+          ],
+          explanation: 'In an MP3 file, an ID3 tag stores metadata such as the title, artist,\nalbum, year and copyright information.  ID3v2 tags organise this\ninformation into frames.  Each frame has an ID that indicates what\ninformation it stores.\n\nIn ID3v2.3, the <code>TIT2</code> frame stores the song title,\n<code>TPE1</code> stores the lead artist or performer and\n<code>TYER</code> stores the year.\n\nIn ID3v2.2, <code>TT2</code>, <code>TP1</code> and <code>TYE</code>\nidentified the same fields as <code>TIT2</code>, <code>TPE1</code> and\n<code>TYER</code>, respectively.  ID3v2.2 used three-character frame\nIDs.\n\nID3v2.4 uses <code>TDRC</code> for recording time, but this frame ID\nis not defined in ID3v2.3.\n\nThe frame IDs <code>TIT1</code>, <code>TPE3</code> and\n<code>TCOP</code> are valid in ID3v2.3, but identify a content group\ndescription, a conductor and a copyright message, respectively.'
         }
       ]
     </script>
@@ -1327,7 +1434,7 @@
           quiz set, a hash like <a href="#q1">#q1</a> loads a specific
           question.  Further, you can extend the latter by specifying
           multiple comma separated integers to create an assorted
-          quiz, e.g. <a href="#q1,2,3">#q1,2,3</a>.
+          quiz, for example, <a href="#q1,2,3">#q1,2,3</a>.
         </p>
         <h2>Issues</h2>
         <p>
